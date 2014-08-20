@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<coverage xmlns:py="http://purl.org/kid/ns#" generated="${date}" clover="${version}" >
+  <project timestamp="${date}" name="NoseXUnit">
+    <metrics packages="${len(sources)}" elements="${sources.all()}" coveredelements="${sources.exe()}" statements="${sources.all()}" coveredstatements="${sources.exe()}" complexity="${sources.cyclo()}" files="${len(sources)}" loc="${sources.lines()}" ncloc="${sources.all()}" classes="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+    <package py:for="entity in sources" name="${entity.full()}">
+      <metrics elements="${entity.all()}" coveredelements="${entity.exe()}" statements="${entity.all()}" coveredstatements="${entity.exe()}" complexity="${entity.cyclo()}" files="1" loc="${entity.lines()}" ncloc="${entity.all()}" classes="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+    </package>
+  </project>
+  <testproject timestamp="${date}" name="NoseXUnit">
+    <metrics coveredelements="0" packages="0" coveredconditionals="0" ncloc="0" statements="0" loc="0" complexity="0" files="0" conditionals="0" coveredstatements="0" coveredmethods="0" methods="0" classes="0" elements="0"/>
+  </testproject>
+</coverage>

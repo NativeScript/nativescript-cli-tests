@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-03.dtd">
+<?python
+def percent(per):
+    if per == 0.0: return '0.0'
+    else: return '%.16f' % (per/100, )
+def cyclo(cyc):
+    return '%.1f' % cyc
+?>
+<coverage xmlns:py="http://purl.org/kid/ns#" line-rate="${percent(sources.percent())}" branch-rate="${percent(sources.percent())}" version="${version}" timestamp="${date}">
+  <packages>
+    <package py:for="entity in sources" name="${entity.full()}" line-rate="${percent(entity.percent())}" branch-rate="${percent(entity.percent())}" complexity="${cyclo(entity.cyclo())}">
+      <classes />
+    </package>
+  </packages>
+</coverage>
