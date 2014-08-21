@@ -34,7 +34,7 @@ TARGET_COVER = os.path.join(TARGET, 'cover')
 # Prefix
 # ------
 # Prefix for core report file
-PREFIX_CORE = 'TEST-'
+PREFIX_CORE = ''
 
 # Extension
 # ---------
