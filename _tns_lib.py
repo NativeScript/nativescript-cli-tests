@@ -80,3 +80,20 @@ def GetCLIBuildVersion():
     command="tns --version"
     outp=runAUT(command)
     return outp
+
+def KillProcess(processName, commandLine=None ):
+    result = False
+    for proc in psutil.process_iter():
+        if processName in str(proc):
+            if commandLine == None:
+                proc.kill()
+                print "Process : {0} has been killed".format(processName)
+                result = True
+            else:
+                for commandLineOptions in proc.cmdline:
+                    if commandLine in commandLineOptions:
+                        proc.kill()
+                        print "Process : {0} with {1} command line options, has been killed".format(processName,commandLineOptions)
+                        result = True
+                        break
+    return result
