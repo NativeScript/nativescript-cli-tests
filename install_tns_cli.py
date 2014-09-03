@@ -9,7 +9,7 @@ def InstallCLI(pathToPackage=None):
     if 'BUILD_CLI_PATH' in os.environ:
         location = os.path.join(os.environ['BUILD_CLI_PATH'],"nativescript.tgz")
         shutil.copy2(location.strip(), (os.path.join(os.getcwd(),"nativescript.tgz")))
-    else:
+    if pathToPackage != None:
         shutil.copy2(pathToPackage, (os.path.join(os.getcwd(),"nativescript.tgz")))
 
     installCommand = "npm i -g nativescript.tgz"
