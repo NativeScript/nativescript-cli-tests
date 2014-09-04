@@ -28,7 +28,7 @@ class TNSSmokeTests(unittest.TestCase):
         
     def test_021_CreateProjectWithPath(self):
         projName = "TNS_Javascript"
-        CleanupFolder('folder');
+        CleanupFolder('./folder');
         CreateProject(projName, 'folder/subfolder/')
         assert(CheckFilesExists('folder/subfolder/' + projName, 'template_javascript_files.txt'))        
 

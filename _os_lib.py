@@ -45,7 +45,10 @@ def runAUT(cmd, set_timeout=None, getOutput=True):
     return out.strip('\n\r')
 
 def CleanupFolder(folder):
-    shutil.rmtree(folder, False, None)
+    try:
+        shutil.rmtree(folder, False, None)
+    except Exception: 
+        pass
     
 def CheckOutput(output, file):
     f = open('testdata/' + file)
