@@ -1,8 +1,9 @@
-import time, os, shutil, smtplib, sys,install_tns_cli, platform
+import time, os, shutil, smtplib, sys, install_tns_cli, platform
 import tns_smoke_tests
 from _tns_lib import *
+from _os_lib import *
 
-smokeTestResult=""
+smokeTestResult = ""
 
 def ExecuteTests():
     print "####RUNNING TESTS####"
@@ -17,7 +18,7 @@ def AnalyzeResultAndExit():
         exit(0)
 
 if __name__ == '__main__':
-    install_tns_cli.UninstallCLI() # remove older cli if exists
+    install_tns_cli.UninstallCLI()  # remove older cli if exists
     install_tns_cli.InstallCLI()
 
     ExecuteTests()
