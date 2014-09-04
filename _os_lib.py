@@ -29,7 +29,7 @@ def runAUT(cmd, set_timeout=None, getOutput=True):
         thread.join(set_timeout)
     if thread.is_alive():
         print '#### Process has timeouted at ', time.strftime("%X")
-        KillProcess("node", "appbuilder")  # kill node.js instance if appbuilder has started it
+        KillProcess("node", "tns")  # kill node.js instance if tns has started it
         thread.join()
     # do get whenever exist in the pipe
     out = "NOT_COLLECTED"
@@ -45,10 +45,7 @@ def runAUT(cmd, set_timeout=None, getOutput=True):
     return out.strip('\n\r')
 
 def CleanupFolder(folder):
-    try:
-        shutil.rmtree(folder, False, None)
-    except Exception: 
-        pass
+    shutil.rmtree(folder, True, None)
     
 def CheckOutput(output, file):
     f = open('testdata/' + file)
