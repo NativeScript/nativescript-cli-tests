@@ -1,4 +1,4 @@
-import unittest, os, sys, platform, subprocess, threading, Queue, psutil, time, shutil, glob, HTMLParser, urllib, urllib2, zipfile, datetime
+import unittest, os, sys, platform, subprocess, threading, Queue, psutil, time, shutil, glob, HTMLParser, urllib, urllib2, datetime
 
 default_timeout = 120  # seconds
 default_output_file = "output.txt"

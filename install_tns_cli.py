@@ -1,4 +1,4 @@
-import os, platform, shutil
+import os, shutil
 from _os_lib import runAUT
 
 def InstallCLI(pathToPackage=None):

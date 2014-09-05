@@ -1,4 +1,4 @@
-import time, os, shutil, smtplib, sys, install_tns_cli, platform
+import time, os, shutil, sys, install_tns_cli
 import tns_smoke_tests
 from _tns_lib import *
 from _os_lib import *

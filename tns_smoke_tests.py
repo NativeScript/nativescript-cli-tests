@@ -1,4 +1,4 @@
-import unittest, os, sys, platform, HTMLTestRunner
+import unittest, os, sys, HTMLTestRunner
 from _tns_lib import *
 from _os_lib import *
 
