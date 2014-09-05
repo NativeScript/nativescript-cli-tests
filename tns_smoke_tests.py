@@ -3,6 +3,10 @@ from _tns_lib import *
 from _os_lib import *
 
 class TNSSmokeTests(unittest.TestCase):
+    
+    tnsPath = os.path.join('node_modules', '.bin', 'tns');
+    nativescriptPath = os.path.join('node_modules', '.bin', 'nativescript');
+            
     def setUp(self):
         print self.id()
 
@@ -10,13 +14,13 @@ class TNSSmokeTests(unittest.TestCase):
         pass
 
     def test_010_TNSHelp(self):
-        command = "tns help"
+        command = self.tnsPath + " help"
         output = runAUT(command)
         CheckOutput(output, 'help_output.txt')
         assert not ("Error" in output)
 
     def test_011_NativescriptHelp(self):
-        command = "nativescript help"
+        command = self.nativescriptPath + " help"
         output = runAUT(command)
         CheckOutput(output, 'help_output.txt')
         assert not ("Error" in output)

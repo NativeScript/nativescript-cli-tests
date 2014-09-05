@@ -11,11 +11,11 @@ def InstallCLI(pathToPackage=None):
     if pathToPackage != None:
         shutil.copy2(pathToPackage, (os.path.join(os.getcwd(), "nativescript.tgz")))
 
-    installCommand = "npm i -g nativescript.tgz"
+    installCommand = "npm i nativescript.tgz"
     output = runAUT(installCommand)
     print output
 
 def UninstallCLI():
-    uninstallCommand = "npm rm -g nativescript"
+    uninstallCommand = "npm rm nativescript"
     output = runAUT(uninstallCommand)
     print output
