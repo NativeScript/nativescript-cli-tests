@@ -351,7 +351,7 @@ class TNSTests(unittest.TestCase):
         
         command = self.tnsPath + " feature-usage-tracking"
         output = runAUT(command)   
-        assert ("Feature usage tracking is disabled." in output)    
+        assert ("Feature usage tracking is disabled" in output)    
         assert not ("Error" in output)    
 
     def test_121_FeatureUsageTrackingEnable(self):
