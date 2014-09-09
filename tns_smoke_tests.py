@@ -49,7 +49,8 @@ class TNSTests(unittest.TestCase):
         
         command = self.tnsPath + " platform list --path TNS_Javascript"
         output = runAUT(command) 
-        assert ("Available platforms for this OS:  android" in output)      
+        assert ("Available platforms for this OS:" in output)      
+        assert ("android" in output)    
         assert ("No installed platforms found. Use $ tns platform add" in output)    
         assert not ("Error" in output)  
          
@@ -87,7 +88,8 @@ class TNSTests(unittest.TestCase):
         command = self.tnsPath + " platform list --path TNS_Javascript"
         output = runAUT(command) 
         assert ("The project is not prepared for any platform" in output)      
-        assert ("Installed platforms:  android" in output)    
+        assert ("Installed platforms:" in output)      
+        assert ("android" in output)    
         assert not ("Error" in output)                    
  
     #===========================================================================
@@ -126,7 +128,8 @@ class TNSTests(unittest.TestCase):
         
         command = self.tnsPath + " platform list --path TNS_Javascript"
         output = runAUT(command) 
-        assert ("Available platforms for this OS:  android" in output)      
+        assert ("Available platforms for this OS:" in output)      
+        assert ("android" in output)    
         assert ("No installed platforms found. Use $ tns platform add" in output)    
         assert not ("Error" in output)                   
  
