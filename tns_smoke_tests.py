@@ -392,11 +392,13 @@ class TNSTests_OSX(unittest.TestCase):
     #===========================================================================
 
 def RunTests():
-    print "OS Name : ", os.name
+    
+    print "OS Name : ", os.name    
     print "Platform : ", platform.platform()
+    
     suite = unittest.TestLoader().loadTestsFromTestCase(TNSTests_Common)
 
-    if 'mac' in os.name:
+    if 'Darwin' in platform.platform():
         suite.addTests(TNSTests_OSX)
         
     result = ""
