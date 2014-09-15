@@ -284,7 +284,10 @@ class TNSTests_Common(unittest.TestCase):
         assert not ("Error" in output)         
 
 class TNSTests_OSX(unittest.TestCase):
-             
+
+    tnsPath = os.path.join('node_modules', '.bin', 'tns');
+    nativescriptPath = os.path.join('node_modules', '.bin', 'nativescript');
+              
     def test_042_PlatformAddIOS(self):
         command = self.tnsPath + " platform add ios --path TNS_Javascript"
         output = runAUT(command)     
@@ -398,9 +401,7 @@ def RunTests():
     suite = unittest.TestLoader().loadTestsFromTestCase(TNSTests_Common)
 
     if 'posix' in os.name:
-        suite.addTests(TNSTests_OSX)
-    else:
-        print "OS Name : ", os.name 
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TNSTests_OSX))
         
     result = ""
     with open ("Report.html", "w") as f:
