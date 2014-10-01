@@ -1,14 +1,15 @@
-import time, os, shutil, sys, install_tns_cli
-import tns_smoke_tests
-from _tns_lib import *
-from _os_lib import *
+from helpers._os_lib import KillProcess
+from helpers._tns_lib import UninstallCLI, InstallCLI
+from helpers.emulator import StopEmulators
+import tns_tests_runner
+
 
 smokeTestResult = ""
 
 def ExecuteTests():
     print "####RUNNING TESTS####"
     global smokeTestResult
-    smokeTestResult = str(tns_smoke_tests.RunTests())
+    smokeTestResult = str(tns_tests_runner.RunTests())
 
 def AnalyzeResultAndExit():
     global smokeTestResult
@@ -18,8 +19,12 @@ def AnalyzeResultAndExit():
         exit(0)
 
 if __name__ == '__main__':
-    install_tns_cli.UninstallCLI()  # remove older cli if exists
-    install_tns_cli.InstallCLI()
+    
+    KillProcess("adb") # sometimes running adb can cause issues with install/uninstall
+    StopEmulators(); # sometimes running smulators may  cause issues with tests
+    
+    UninstallCLI()  # remove older cli if exists
+    InstallCLI()
 
     ExecuteTests()
     AnalyzeResultAndExit()
