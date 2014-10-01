@@ -33,7 +33,16 @@ class TNSTests_Android(unittest.TestCase):
         assert ("Available platforms for this OS:  android" in output)      
         assert ("No installed platforms found. Use $ tns platform add" in output)    
         assert not ("Error" in output)  
+
+    def test_111_ListDevicesAndroid(self):
+                
+        command = self.tnsPath + " list-devices android"
+        output = runAUT(command)     
         
+        assert ("Cannot find connected devices." in output) 
+        assert ("Reconnect any connected devices, verify that your system recognizes them, and run this command again" in output)     
+        assert not ("Error" in output)
+                
     #===========================================================================
     # Currently we execute this test list on all platforms and we can not run this test on Windows
     # TODO: Separate iOS test in another test suite.

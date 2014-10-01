@@ -40,8 +40,18 @@ class TNSTests_OSX(unittest.TestCase):
         
         command = self.tnsPath + " platform add ios --path TNS_Javascript"
         output = runAUT(command)     
+        assert ("Copying template files..." in output)
+        assert ("Project successfully created." in output)
         assert not ("Error" in output)  
         
+    def test_112_ListDevicesiOS(self):
+                
+        command = self.tnsPath + " list-devices ios"
+        output = runAUT(command)     
+        
+        assert not ("Error" in output)  
+        assert not ("Android" in output)
+              
     #===========================================================================
     # Currently we execute this test list on all platforms and we can not run this test on Windows
     # TODO: Separate iOS test in another test suite.

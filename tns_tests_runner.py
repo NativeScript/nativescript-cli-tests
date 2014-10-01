@@ -1,4 +1,3 @@
-import os
 import platform
 import unittest
 
@@ -15,7 +14,7 @@ def RunTests():
     
     suite = unittest.TestLoader().loadTestsFromTestCase(TNSTests_Common)    
     
-    if 'posix' in os.name:
+    if 'Darwin' in platform.platform():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TNSTests_OSX))
     else:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TNSTests_Android))

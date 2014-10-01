@@ -242,22 +242,22 @@ class TNSTests_Common(unittest.TestCase):
         assert ("Before building for iOS device, verify that you have configured a valid pair of certificate and provisioning profile on your OS X system." in output) 
         assert not ("Error" in output) 
 
-    def test_091_DeployPlatformAndroidWihtoutRunningDevice(self):
+    def test_091_DeployPlatformAndroidonNotRunningDevice(self):
         
         self.test_061_PreparePlatformAndroid()
                 
-        command = self.tnsPath + " deploy android --path TNS_Javascript"
+        command = self.tnsPath + " deploy android --device fakeDevice --path TNS_Javascript"
         output = runAUT(command)  
         
         assert ("BUILD SUCCESSFUL" in output) 
         assert ("Project successfully built" in output)   
         
-        assert ("Cannot find connected devices." in output) 
-        assert ("Reconnect any connected devices, verify that your system recognizes them, and run this command again" in output)      
+        assert ("Cannot resolve the specified connected device by the provided index or identifier." in output) 
+        assert ("To list currently connected devices and verify that the specified index or identifier exists, run 'appbuilder device'." in output)      
               
         assert not ("Error" in output) 
         
-    def test_091_DeployPlatformAndroidWihtRunningDevice(self):
+    def test_092_DeployPlatformAndroidWihtRunningDevice(self):
         
         StartEmulator();
         WaitForEmulator();
@@ -279,14 +279,6 @@ class TNSTests_Common(unittest.TestCase):
                  
     def test_110_ListDevices(self):
         
-        command = self.tnsPath + " list-devices"
-        output = runAUT(command)     
-        assert ("Cannot find connected devices." in output) 
-        assert ("Reconnect any connected devices, verify that your system recognizes them, and run this command again" in output)     
-        assert not ("Error" in output) 
-
-    def test_111_ListDevicesAndroid(self):
-                
         StartEmulator();
         WaitForEmulator();
                 
@@ -296,7 +288,7 @@ class TNSTests_Common(unittest.TestCase):
         assert ("Android emulator-5554" in output) 
         assert not ("Reconnect any connected devices, verify that your system recognizes them, and run this command again" in output)     
         assert not ("Error" in output)
-        
+
     def test_120_FeatureUsageTracking(self):
         
         command = self.tnsPath + " feature-usage-tracking"
