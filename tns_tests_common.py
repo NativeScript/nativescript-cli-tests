@@ -207,6 +207,9 @@ class TNSTests_Common(unittest.TestCase):
 
     def test_081_EmulatePlatformAndroid(self):
   
+        StartEmulator(); # TODO: Try the same without starting simulator
+        WaitForEmulator();
+        
         self.test_061_PreparePlatformAndroid()
                 
         command = self.tnsPath + " emulate android --path TNS_Javascript"
@@ -215,7 +218,6 @@ class TNSTests_Common(unittest.TestCase):
         assert ("BUILD SUCCESSFUL" in output) 
         assert ("Project successfully built" in output) 
           
-        assert ("Starting Android emulator" in output) 
         assert ("installing" in output) 
         assert ("running" in output) 
         assert ("TNS_Javascript-debug.apk through adb" in output) 
