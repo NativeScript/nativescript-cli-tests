@@ -22,6 +22,7 @@ def InstallCLI(pathToPackage=None):
     output = runAUT(installCommand)
     print output
     
+    # TODO: Remove this check after https://github.com/NativeScript/nativescript-cli/issues/113 is fixed
     if "Linux" in platform.platform():
         addExecute = "chmod u+x node_modules/nativescript/resources/platform-tools/android/linux/adb"
         output = runAUT(addExecute)

@@ -207,7 +207,7 @@ class TNSTests_Common(unittest.TestCase):
 
     def test_081_EmulatePlatformAndroid(self):
   
-        StartEmulator(); # TODO: Try the same without starting simulator
+        StartEmulator();
         WaitForEmulator();
         
         self.test_061_PreparePlatformAndroid()
@@ -222,8 +222,6 @@ class TNSTests_Common(unittest.TestCase):
         assert ("running" in output) 
         assert ("TNS_Javascript-debug.apk through adb" in output) 
         assert not ("Error" in output) 
-        
-        # TODO: Check that emulator process is running
          
     def test_090_DeployPlatform(self):
         
@@ -256,7 +254,8 @@ class TNSTests_Common(unittest.TestCase):
         
         assert ("Cannot resolve the specified connected device by the provided index or identifier." in output) 
         assert ("To list currently connected devices and verify that the specified index or identifier exists, run 'appbuilder device'." in output)      
-              
+        # TODO: Update assert message after https://github.com/NativeScript/nativescript-cli/issues/112 is fixed
+        
         assert not ("Error" in output) 
         
     def test_092_DeployPlatformAndroidWihtRunningDevice(self):
@@ -276,9 +275,53 @@ class TNSTests_Common(unittest.TestCase):
         assert ("Successfully deployed on device with identifier" in output)      
               
         assert not ("Error" in output) 
+
+    def test_100_RunPlatform(self):
+        
+        self.test_061_PreparePlatformAndroid()
                 
-        # TODO: Check that file really exists on device
-                 
+        command = self.tnsPath + " run --path TNS_Javascript"
+        output = runAUT(command)     
+        
+        assert ("No platform specified." in output) 
+        assert ("tns run <Platform> [--device <Device ID>] [--emulator]" in output)  
+        assert ("nativescript run <Platform> [--device <Device ID>] [--emulator]" in output)  
+        assert ("Runs your project on a connected device or in the native emulator, if configured. This is shorthand for prepare, build, and deploy." in output)
+        assert ("Before building for the Android emulator, verify that you have met the following requirements." in output)
+        assert ("You have added the file paths to the following directories from the Android SDK to your PATH environment variable." in output)
+        assert ("You have created at least one device with the Android Virtual Device manager." in output)
+        assert ("Before building for the iOS simulator, verify that you have installed the ios-sim npm package." in output)
+        assert ("Before building for iOS device, verify that you have configured a valid pair of certificate and provisioning profile on your OS X system." in output)
+        assert ("--device - Specifies a connected device on which to run the app." in output) 
+        assert ("--emulator - If set, runs the app in the native emulator for the target platform, if configured." in output)   
+                                       
+        assert not ("Error" in output) 
+         
+    def test_101_RunPlatformAndroidOnMissingDevice(self):
+        
+        self.test_061_PreparePlatformAndroid()
+        
+        command = self.tnsPath + " run android --device fakeDevice --path TNS_Javascript"
+        output = runAUT(command)     
+        assert ("Cannot resolve the specified connected device by the provided index or identifier." in output)
+        assert ("To list currently connected devices and verify that the specified index or identifier exists, run 'appbuilder device'." in output)                    
+        # TODO: Update assert message after https://github.com/NativeScript/nativescript-cli/issues/112 is fixed
+        
+    def test_102_RunPlatformAndroid(self):
+        
+        # TODO: Remove starting emulator after https://github.com/NativeScript/nativescript-cli/issues/114 is fixed.
+        StartEmulator();
+        WaitForEmulator();
+        
+        self.test_061_PreparePlatformAndroid()
+        
+        command = self.tnsPath + " run android --emulator --path TNS_Javascript"
+        output = runAUT(command)     
+        assert ("BUILD SUCCESSFUL" in output)
+        assert ("installing" in output)     
+        assert ("running" in output)     
+        assert ("TNS_Javascript-debug.apk through adb" in output) 
+                                             
     def test_110_ListDevices(self):
         
         StartEmulator();

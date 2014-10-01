@@ -20,7 +20,6 @@ def AnalyzeResultAndExit():
 
 if __name__ == '__main__':
     
-    KillProcess("adb") # sometimes running adb can cause issues with install/uninstall
     StopEmulators(); # sometimes running smulators may  cause issues with tests
     
     UninstallCLI()  # remove older cli if exists

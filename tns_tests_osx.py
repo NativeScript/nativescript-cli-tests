@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from helpers._os_lib import runAUT, CleanupFolder
+from helpers._os_lib import runAUT, CleanupFolder, IsRunningProcess, KillProcess
 from helpers._tns_lib import CreateProject
 from helpers.emulator import StopEmulators
 
@@ -44,6 +44,83 @@ class TNSTests_OSX(unittest.TestCase):
         assert ("Project successfully created." in output)
         assert not ("Error" in output)  
         
+    def test_052_PlatformRemoveIOS(self):        
+                
+        CreateProject("TNS_Javascript")
+        
+        command = self.tnsPath + " platform remove ios --path TNS_Javascript"
+        output = runAUT(command)     
+        assert ("The platform ios is not added to this project. Please use 'tns platform add <platform>'" in output)
+
+        command = self.tnsPath + " platform add ios --path TNS_Javascript"
+        output = runAUT(command)     
+        assert ("Project successfully created." in output)     
+        
+        command = self.tnsPath + " platform list --path TNS_Javascript"
+        output = runAUT(command)     
+        assert ("Installed platforms:  ios" in output)    
+        
+        command = self.tnsPath + " platform remove ios --path TNS_Javascript"
+        output = runAUT(command)     
+        assert not ("Error" in output)    
+        
+        command = self.tnsPath + " platform list --path TNS_Javascript"
+        output = runAUT(command)     
+        assert ("No installed platforms found. Use $ tns platform add" in output)  
+
+    def test_062_PreparePlatformIOS(self):        
+                
+        self.test_042_PlatformAddIOS();
+        
+        command = self.tnsPath + " prepare ios --path TNS_Javascript"
+        output = runAUT(command)     
+        assert ("Project successfully prepared" in output)
+
+    def test_072_BuildPlatformIOS(self):        
+                
+        self.test_062_PreparePlatformIOS();
+        
+        command = self.tnsPath + " build ios --path TNS_Javascript"
+        output = runAUT(command)     
+        assert ("Project successfully built" in output)
+
+    def test_082_EmulatePlatformIOS(self):        
+                
+        KillProcess("iOS Simulator")        
+        self.test_062_PreparePlatformIOS();
+        
+        command = self.tnsPath + " emulate ios --path TNS_Javascript"
+        output = runAUT(command)     
+        assert ("Project successfully built" in output)
+        assert ("Starting iOS Simulator" in output)
+        
+        assert (IsRunningProcess("iOS Simulator"))
+        KillProcess("iOS Simulator")
+
+#===============================================================================
+#     def test_092_DeployPlatformIOS(self):        
+#                 
+#         KillProcess("iOS Simulator")
+#         
+#         self.test_062_PreparePlatformIOS();
+#         
+#         command = self.tnsPath + " deploy ios --path TNS_Javascript"
+#         output = runAUT(command)     
+#         
+#         assert (IsRunningProcess("iOS Simulator"))
+# 
+#     def test_102_RunPlatformIOS(self):        
+#                 
+#         KillProcess("iOS Simulator")
+#         
+#         self.test_062_PreparePlatformIOS();
+#         
+#         command = self.tnsPath + " run ios --path TNS_Javascript"
+#         output = runAUT(command)     
+#         
+#         assert (IsRunningProcess("iOS Simulator"))
+#===============================================================================
+                                                 
     def test_112_ListDevicesiOS(self):
                 
         command = self.tnsPath + " list-devices ios"
@@ -51,104 +128,3 @@ class TNSTests_OSX(unittest.TestCase):
         
         assert not ("Error" in output)  
         assert not ("Android" in output)
-              
-    #===========================================================================
-    # Currently we execute this test list on all platforms and we can not run this test on Windows
-    # TODO: Separate iOS test in another test suite.
-    # def test_052_PlatformRemoveIOS(self):
-    #     command = self.tnsPath + " platform remove ios"
-    #     output = runAUT(command)     
-    #     assert not ("Error" in output)           
-    #===========================================================================
-
-    #===========================================================================
-    # Currently we execute this test list on all platforms and we can not run this test on Windows
-    # TODO: Separate iOS test in another test suite.
-    # def test_062_PreparePlatformIOS(self):
-    #     command = self.tnsPath + " prepare ios"
-    #     output = runAUT(command)     
-    #     assert not ("Error" in output)  
-    #===========================================================================
-
-    #===========================================================================
-    # Currently we execute this test list on all platforms and we can not run this test on Windows
-    # TODO: Separate iOS test in another test suite.
-    # def test_072_BuildPlatformIOS(self):
-    #     command = self.tnsPath + " build ios"
-    #     output = runAUT(command)     
-    #     assert not ("Error" in output)  
-    #===========================================================================
-
-    #===============================================================================
-    # Currently we have no emulators on some of the test agents. 
-    # TODO: Install emulators on all test agents.
-    #     def test_081_EmulatePlatformAndroid(self):
-    # 
-    #         self.test_061_PreparePlatformAndroid()
-    #                 
-    #         command = self.tnsPath + " emulate android --path TNS_Javascript"
-    #         output = runAUT(command)     
-    #         assert ("BUILD SUCCESSFUL" in output) 
-    #         assert not ("Error" in output) 
-    #         
-    #         time.sleep(5)
-    #         
-    #     if "win" in platform.uname():
-    #         runAUT("taskkill /IM emulator-x86.exe")
-    #     else:
-    #         runAUT("adb -s emulator-5554 emu kill")                
-    #===============================================================================
- 
-    #===========================================================================
-    # Currently we execute this test list on all platforms and we can not run this test on Windows
-    # TODO: Separate iOS test in another test suite.
-    # def test_082_EmulatePlatformIOS(self):
-    #     command = self.tnsPath + " emulate ios"
-    #     output = runAUT(command)     
-    #     assert not ("Error" in output)  
-    #===========================================================================
-
-    #===========================================================================
-    # Currently we have no emulators on some of the test agents. 
-    # TODO: Install emulators on all test agents.
-    # def test_091_DeployPlatformAndroid(self):
-    #     command = self.tnsPath + " deploy android"
-    #     output = runAUT(command)     
-    #     assert not ("Error" in output)                    
-    #===========================================================================
- 
-    #===========================================================================
-    # Currently we execute this test list on all platforms and we can not run this test on Windows
-    # TODO: Separate iOS test in another test suite.
-    # def test_092_DeployPlatformIOS(self):
-    #     command = self.tnsPath + " deploy ios"
-    #     output = runAUT(command)     
-    #     assert not ("Error" in output) 
-    #===========================================================================
-  
-    #===========================================================================
-    # Currently we have no emulators on some of the test agents. 
-    # TODO: Install emulators on all test agents.
-    # def test_100_RunPlatform(self):
-    #     command = self.tnsPath + " run"
-    #     output = runAUT(command)     
-    #     assert not ("Error" in output) 
-    #===========================================================================
-         
-    #===========================================================================
-    # Currently we have no emulators on some of the test agents. 
-    # TODO: Install emulators on all test agents.
-    # def test_101_RunPlatformAndroid(self):
-    #     command = self.tnsPath + " run android"
-    #     output = runAUT(command)     
-    #     assert not ("Error" in output)                    
-    #===========================================================================
- 
-    #===========================================================================
-    # Currently we execute this test list on all platforms and we can not run this test on Windows
-    # TODO: Separate iOS test in another test suite.
-    # def test_102_RunPlatformIOS(self):
-    #     command = self.tnsPath + " run ios"
-    #     output = runAUT(command)     
-    #     assert not ("Error" in output) 
-    #===========================================================================

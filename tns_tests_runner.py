@@ -22,7 +22,6 @@ def RunTests():
     with open ("Report.html", "w") as f:
         descr = "Platform : {0};  nativescript-cli build version : {1}".format(platform.platform(), GetCLIBuildVersion())
         runner = HTMLTestRunner.HTMLTestRunner(stream=f, title='TNS_CLI_tests', description=descr)
-        # runner = unittest.runner.TextTestRunner()
         result = runner.run(suite)
     return result
 

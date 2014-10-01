@@ -79,6 +79,14 @@ def CheckFilesExists(rootFolder, listFile):
     assert(expected_lines == total)
     return True
 
+def IsRunningProcess(processName):
+    result = False
+    for proc in psutil.process_iter():
+        if processName in str(proc):
+            result = True
+            
+    return result 
+          
 def KillProcess(processName, commandLine=None):
     result = False
     for proc in psutil.process_iter():

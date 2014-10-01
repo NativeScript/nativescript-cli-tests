@@ -6,7 +6,7 @@ from helpers._os_lib import KillProcess, runAUT
 
 def StartEmulator(name="Nexus4"):
     
-    KillProcess("emulator")
+    StopEmulators()
     
     print os.name
     
@@ -14,8 +14,6 @@ def StartEmulator(name="Nexus4"):
         runAUT("emulator -avd Nexus4 -no-skin -no-audio -no-window", None, False)
     else:                      
         runAUT("emulator -avd Nexus4 -no-skin -no-audio -no-window &", None, False)
-
-    # TODO: Try to start it without runAUT
 
 def WaitForEmulator():
 
@@ -27,5 +25,4 @@ def WaitForEmulator():
             break
 
 def StopEmulators():
-    KillProcess("adb")
     KillProcess("emulator")
