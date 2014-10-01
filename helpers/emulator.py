@@ -18,7 +18,7 @@ def StartEmulator(name="Nexus4"):
     #print "Execute: " + command        
     #os.system(command)
     
-    runAUT("emulator -avd Nexus4 &", None, False)
+    runAUT("emulator -avd Nexus4 -no-skin -no-audio -no-window &", None, False)
 
 def WaitForEmulator():
 

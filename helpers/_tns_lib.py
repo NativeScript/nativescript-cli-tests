@@ -1,8 +1,10 @@
 import os
+import platform
 import shutil
 import time
 
 from _os_lib import runAUT
+
 
 tnsPath = os.path.join('node_modules', '.bin', 'tns');
 
@@ -19,6 +21,11 @@ def InstallCLI(pathToPackage=None):
     installCommand = "npm i nativescript.tgz"
     output = runAUT(installCommand)
     print output
+    
+    if "Linux" in platform.platform():
+        addExecute = "chmod u+x node_modules/nativescript/resources/platform-tools/android/linux/adb"
+        output = runAUT(addExecute)
+        print output
 
 def UninstallCLI():    
     uninstallCommand = "npm rm nativescript"
