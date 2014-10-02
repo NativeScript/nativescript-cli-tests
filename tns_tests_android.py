@@ -1,15 +1,11 @@
-import os
 import unittest
 
 from helpers._os_lib import runAUT, CleanupFolder
-from helpers._tns_lib import CreateProject
+from helpers._tns_lib import CreateProject, tnsPath
 from helpers.emulator import StopEmulators
 
 
 class TNSTests_Android(unittest.TestCase):
-
-    tnsPath = os.path.join('node_modules', '.bin', 'tns');
-    nativescriptPath = os.path.join('node_modules', '.bin', 'nativescript');
 
     def setUp(self):
         print "#####"
@@ -28,7 +24,7 @@ class TNSTests_Android(unittest.TestCase):
                 
         CreateProject("TNS_Javascript")
         
-        command = self.tnsPath + " platform list --path TNS_Javascript"
+        command = tnsPath + " platform list --path TNS_Javascript"
         output = runAUT(command) 
         assert ("Available platforms for this OS:  android" in output)      
         assert ("No installed platforms found. Use $ tns platform add" in output)    
@@ -36,7 +32,7 @@ class TNSTests_Android(unittest.TestCase):
 
     def test_111_ListDevicesAndroid(self):
                 
-        command = self.tnsPath + " list-devices android"
+        command = tnsPath + " list-devices android"
         output = runAUT(command)     
         
         assert ("Cannot find connected devices." in output) 

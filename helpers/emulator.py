@@ -13,7 +13,12 @@ def CreateEmulator():
         print "x86 abi is not available for 'android-17' target. Will create device with default abi."
         output = runAUT("echo no | android create avd -n TempDevice -t android-17 -f")
         if ("Error:" in output):
-            raise NameError("Failed to create android with 'echo no | android create avd -n TempDevice -t android-17 -f' command. Plase make sure you have 'android-17' target.")    
+            print "Target 'android-17' is not available, will try with target 'android-17'"
+            output = runAUT("echo no | android create avd -n TempDevice -t android-19 -f")
+            if ("Error:" in output):
+                raise NameError("Failed to create android with 'echo no | android create avd -n TempDevice -t android-19 -f' command. Plase make sure you have 'android-17' target.")
+    
+    print "New avd with name TempDevice created successfully."    
     
 def StartEmulator():
     

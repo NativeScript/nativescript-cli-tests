@@ -1,15 +1,12 @@
-import os, unittest
+import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, CheckOutput, CheckFilesExists
-from helpers._tns_lib import CreateProject
+from helpers._tns_lib import CreateProject, tnsPath, nativescriptPath
 from helpers.emulator import StopEmulators, StartEmulator
 
 
 class TNSTests_Common(unittest.TestCase):
     
-    tnsPath = os.path.join('node_modules', '.bin', 'tns');
-    nativescriptPath = os.path.join('node_modules', '.bin', 'nativescript');
-            
     def setUp(self):
         print "#####"
         print "Cleanup test folders started..."
@@ -24,13 +21,13 @@ class TNSTests_Common(unittest.TestCase):
         StopEmulators()
 
     def test_010_TNSHelp(self):
-        command = self.tnsPath + " help"
+        command = tnsPath + " help"
         output = runAUT(command)
         CheckOutput(output, 'help_output.txt')
         assert not ("Error" in output)
 
     def test_011_NativescriptHelp(self):
-        command = self.nativescriptPath + " help"
+        command = nativescriptPath + " help"
         output = runAUT(command)
         CheckOutput(output, 'help_output.txt')
         assert not ("Error" in output)
@@ -50,7 +47,7 @@ class TNSTests_Common(unittest.TestCase):
         
         self.test_020_CreateProject()
         
-        command = self.tnsPath + " platform add --path TNS_Javascript"
+        command = tnsPath + " platform add --path TNS_Javascript"
         output = runAUT(command)
         assert ("No platform specified. Please specify a platform to add" in output)      
         assert ("$ tns platform add <Platform>" in output)    
@@ -69,7 +66,7 @@ class TNSTests_Common(unittest.TestCase):
         
         self.test_020_CreateProject()
         
-        command = self.tnsPath + " platform add android --path TNS_Javascript"
+        command = tnsPath + " platform add android --path TNS_Javascript"
         output = runAUT(command)     
         assert ("Copying template files..." in output)  
         assert ("Updated project.properties" in output)  
@@ -77,7 +74,7 @@ class TNSTests_Common(unittest.TestCase):
         assert ("Project successfully created." in output)
         assert not ("Error" in output) 
         
-        command = self.tnsPath + " platform list --path TNS_Javascript"
+        command = tnsPath + " platform list --path TNS_Javascript"
         output = runAUT(command) 
         assert ("The project is not prepared for any platform" in output)      
         assert ("Installed platforms:  android" in output)      
@@ -87,7 +84,7 @@ class TNSTests_Common(unittest.TestCase):
 
         self.test_020_CreateProject()
         
-        command = self.tnsPath + " platform remove --path TNS_Javascript"
+        command = tnsPath + " platform remove --path TNS_Javascript"
         output = runAUT(command)             
         assert ("No platform specified. Please specify a platform to remove" in output) 
         assert ("$ tns platform remove <Platform>" in output)
@@ -104,11 +101,11 @@ class TNSTests_Common(unittest.TestCase):
 
         self.test_041_PlatformAddAndroid();
  
-        command = self.tnsPath + " platform remove android --path TNS_Javascript"
+        command = tnsPath + " platform remove android --path TNS_Javascript"
         output = runAUT(command)    
         assert not ("Error" in output) 
         
-        command = self.tnsPath + " platform list --path TNS_Javascript"
+        command = tnsPath + " platform list --path TNS_Javascript"
         output = runAUT(command) 
         assert ("Available platforms for this OS:" in output)      
         assert ("android" in output)    
@@ -119,7 +116,7 @@ class TNSTests_Common(unittest.TestCase):
            
         self.test_041_PlatformAddAndroid();
                 
-        command = self.tnsPath + " prepare --path TNS_Javascript"
+        command = tnsPath + " prepare --path TNS_Javascript"
         output = runAUT(command)  
         assert ("No platform specified." in output)  
         assert ("$ tns prepare <Platform>" in output)
@@ -136,7 +133,7 @@ class TNSTests_Common(unittest.TestCase):
         
         self.test_041_PlatformAddAndroid();
                 
-        command = self.tnsPath + " prepare android --path TNS_Javascript"
+        command = tnsPath + " prepare android --path TNS_Javascript"
         output = runAUT(command) 
         assert ("Project successfully prepared" in output)      
         assert not ("Error" in output)                    
@@ -145,7 +142,7 @@ class TNSTests_Common(unittest.TestCase):
         
         self.test_020_CreateProject()       
         
-        command = self.tnsPath + " prepare android --path TNS_Javascript"
+        command = tnsPath + " prepare android --path TNS_Javascript"
         output = runAUT(command) 
         
         assert ("The platform android is not added to this project. Please use 'tns platform add <platform>'" in output)    
@@ -163,7 +160,7 @@ class TNSTests_Common(unittest.TestCase):
         
         self.test_061_PreparePlatformAndroid()
         
-        command = self.tnsPath + " build --path TNS_Javascript"
+        command = tnsPath + " build --path TNS_Javascript"
         output = runAUT(command)   
           
         assert ("No platform specified." in output)    
@@ -183,7 +180,7 @@ class TNSTests_Common(unittest.TestCase):
         
         self.test_061_PreparePlatformAndroid()
                 
-        command = self.tnsPath + " build android --path TNS_Javascript"
+        command = tnsPath + " build android --path TNS_Javascript"
         output = runAUT(command)     
         assert ("BUILD SUCCESSFUL" in output) 
         assert ("Project successfully built" in output) 
@@ -196,7 +193,7 @@ class TNSTests_Common(unittest.TestCase):
             
         self.test_061_PreparePlatformAndroid()
                   
-        command = self.tnsPath + " emulate --path TNS_Javascript"
+        command = tnsPath + " emulate --path TNS_Javascript"
         output = runAUT(command)     
         
         assert ("No platform specified." in output) 
@@ -209,31 +206,29 @@ class TNSTests_Common(unittest.TestCase):
         assert ("Builds and runs the project in the native emulator for the selected target platform." in output) 
         assert not ("Error" in output) 
 
-    # TODO: Uncomment after https://github.com/NativeScript/nativescript-cli/issues/116 is fixed
-    #===========================================================================
-    #  def test_081_EmulatePlatformAndroid(self):
-    # 
-    #      StartEmulator();
-    #       
-    #      self.test_061_PreparePlatformAndroid()
-    #               
-    #      command = self.tnsPath + " emulate android --emulator --path TNS_Javascript"
-    #      output = runAUT(command)   
-    #       
-    #      assert ("BUILD SUCCESSFUL" in output) 
-    #      assert ("Project successfully built" in output) 
-    #         
-    #      assert ("installing" in output) 
-    #      assert ("running" in output) 
-    #      assert ("TNS_Javascript-debug.apk through adb" in output) 
-    #      assert not ("Error" in output) 
-    #===========================================================================
+    @unittest.skip("Skip until https://github.com/NativeScript/nativescript-cli/issues/116 is fixed")
+    def test_081_EmulatePlatformAndroid(self):
+     
+        StartEmulator();
+           
+        self.test_061_PreparePlatformAndroid()
+                   
+        command = tnsPath + " emulate android --emulator --path TNS_Javascript"
+        output = runAUT(command)   
+           
+        assert ("BUILD SUCCESSFUL" in output) 
+        assert ("Project successfully built" in output) 
+             
+        assert ("installing" in output) 
+        assert ("running" in output) 
+        assert ("TNS_Javascript-debug.apk through adb" in output) 
+        assert not ("Error" in output) 
          
     def test_090_DeployPlatform(self):
         
         self.test_061_PreparePlatformAndroid()
                 
-        command = self.tnsPath + " deploy --path TNS_Javascript"
+        command = tnsPath + " deploy --path TNS_Javascript"
         output = runAUT(command)  
            
         assert ("No platform specified." in output) 
@@ -252,7 +247,7 @@ class TNSTests_Common(unittest.TestCase):
         
         self.test_061_PreparePlatformAndroid()
                 
-        command = self.tnsPath + " deploy android --device fakeDevice --path TNS_Javascript"
+        command = tnsPath + " deploy android --device fakeDevice --path TNS_Javascript"
         output = runAUT(command)  
         
         assert ("BUILD SUCCESSFUL" in output) 
@@ -270,7 +265,7 @@ class TNSTests_Common(unittest.TestCase):
         
         self.test_061_PreparePlatformAndroid()
                 
-        command = self.tnsPath + " deploy android --path TNS_Javascript"
+        command = tnsPath + " deploy android --path TNS_Javascript"
         output = runAUT(command)  
         
         assert ("BUILD SUCCESSFUL" in output) 
@@ -285,7 +280,7 @@ class TNSTests_Common(unittest.TestCase):
         
         self.test_061_PreparePlatformAndroid()
                 
-        command = self.tnsPath + " run --path TNS_Javascript"
+        command = tnsPath + " run --path TNS_Javascript"
         output = runAUT(command)     
         
         assert ("No platform specified." in output) 
@@ -306,34 +301,32 @@ class TNSTests_Common(unittest.TestCase):
         
         self.test_061_PreparePlatformAndroid()
         
-        command = self.tnsPath + " run android --device fakeDevice --path TNS_Javascript"
+        command = tnsPath + " run android --device fakeDevice --path TNS_Javascript"
         output = runAUT(command)     
         assert ("Cannot resolve the specified connected device by the provided index or identifier." in output)
         assert ("To list currently connected devices and verify that the specified index or identifier exists, run 'appbuilder device'." in output)                    
         # TODO: Update assert message after https://github.com/NativeScript/nativescript-cli/issues/112 is fixed
     
-    # TODO: Uncomment after https://github.com/NativeScript/nativescript-cli/issues/116 is fixed        
-    #===========================================================================
-    # def test_102_RunPlatformAndroid(self):
-    #     
-    #     # TODO: Remove starting emulator after https://github.com/NativeScript/nativescript-cli/issues/114 is fixed.
-    #     StartEmulator();
-    #     
-    #     self.test_061_PreparePlatformAndroid()
-    #     
-    #     command = self.tnsPath + " run android --emulator --path TNS_Javascript"
-    #     output = runAUT(command)     
-    #     assert ("BUILD SUCCESSFUL" in output)
-    #     assert ("installing" in output)     
-    #     assert ("running" in output)     
-    #     assert ("TNS_Javascript-debug.apk through adb" in output) 
-    #===========================================================================
+    @unittest.skip("Skip until https://github.com/NativeScript/nativescript-cli/issues/116 is fixed")
+    def test_102_RunPlatformAndroid(self):
+         
+        # TODO: Remove starting emulator after https://github.com/NativeScript/nativescript-cli/issues/114 is fixed.
+        StartEmulator();
+         
+        self.test_061_PreparePlatformAndroid()
+         
+        command = tnsPath + " run android --emulator --path TNS_Javascript"
+        output = runAUT(command)     
+        assert ("BUILD SUCCESSFUL" in output)
+        assert ("installing" in output)     
+        assert ("running" in output)     
+        assert ("TNS_Javascript-debug.apk through adb" in output) 
                                              
     def test_110_ListDevices(self):
         
         StartEmulator();
                 
-        command = self.tnsPath + " list-devices"
+        command = tnsPath + " list-devices"
         output = runAUT(command)     
         
         assert ("Android emulator-5554" in output) 
@@ -342,37 +335,37 @@ class TNSTests_Common(unittest.TestCase):
 
     def test_120_FeatureUsageTracking(self):
         
-        command = self.tnsPath + " feature-usage-tracking"
+        command = tnsPath + " feature-usage-tracking"
         output = runAUT(command)   
         assert ("Feature usage tracking is disabled" in output)    
         assert not ("Error" in output)    
 
     def test_121_FeatureUsageTrackingEnable(self):
         
-        command = self.tnsPath + " feature-usage-tracking enable"
+        command = tnsPath + " feature-usage-tracking enable"
         output = runAUT(command)   
         assert ("Feature usage tracking is now enabled." in output)    
         assert not ("Error" in output)  
         
-        command = self.tnsPath + " feature-usage-tracking status"
+        command = tnsPath + " feature-usage-tracking status"
         output = runAUT(command)   
         assert ("Feature usage tracking is enabled." in output)    
         assert not ("Error" in output)  
  
     def test_122_FeatureUsageTrackingDisable(self):
         
-        command = self.tnsPath + " feature-usage-tracking disable"
+        command = tnsPath + " feature-usage-tracking disable"
         output = runAUT(command)   
         assert ("Feature usage tracking is now disabled." in output)    
         assert not ("Error" in output)  
         
-        command = self.tnsPath + " feature-usage-tracking status"
+        command = tnsPath + " feature-usage-tracking status"
         output = runAUT(command)   
         assert ("Feature usage tracking is disabled." in output)    
         assert not ("Error" in output) 
          
     def test_123_FeatureUsageTrackingWithInvalidParameter(self):
-        command = self.tnsPath + " feature-usage-tracking invalidParam"
+        command = tnsPath + " feature-usage-tracking invalidParam"
         output = runAUT(command)   
         assert ("Invalid parameter" in output)  
         assert ("$ tns feature-usage-tracking [<Command>]" in output)   

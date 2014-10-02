@@ -2,7 +2,6 @@ from helpers._tns_lib import UninstallCLI, InstallCLI
 from helpers.emulator import CreateEmulator
 import tns_tests_runner
 
-
 smokeTestResult = ""
 
 def ExecuteTests():

@@ -86,6 +86,15 @@ def IsRunningProcess(processName):
             result = True
             
     return result 
+
+def WaitForProcess(processName):
+    result = False
+    for counter in range(1, 10):
+        time.sleep(5)
+        if IsRunningProcess(processName):
+            result = True 
+            break 
+    return result;
           
 def KillProcess(processName, commandLine=None):
     result = False

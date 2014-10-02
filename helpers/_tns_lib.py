@@ -5,8 +5,8 @@ import time
 
 from _os_lib import runAUT
 
-
 tnsPath = os.path.join('node_modules', '.bin', 'tns');
+nativescriptPath = os.path.join('node_modules', '.bin', 'nativescript');
 
 def InstallCLI(pathToPackage=None):
     """
