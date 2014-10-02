@@ -1,4 +1,5 @@
 import os
+import re
 import time
 
 from helpers._os_lib import KillProcess, runAUT
@@ -28,6 +29,7 @@ def StartEmulator():
 
     # Retry to start emulator if it is not running
     if WaitForEmulator():
+        print "Emulator is started successfully."
         pass
     else:
         KillProcess("adb")
@@ -37,21 +39,20 @@ def StartEmulator():
         else:                      
             runAUT(startCommand + " &", None, False)
     
-    # Raise error if emulator is still not running                  
-    if WaitForEmulator():
-        print "Emulator is started successfully."
-    else:
-        raise NameError("Wait for emulator failed!")
+        # Raise error if emulator is still not running                  
+        if WaitForEmulator():
+            print "Emulator is started successfully."
+        else:
+            raise NameError("Wait for emulator failed!")
 
 def WaitForEmulator():
     result = False
     for counter in range(1, 10):
         time.sleep(5)
         output = runAUT("adb devices");
-        print output
-        if "emulator-5554device" in output.replace(" ", ""):
-            result = True
-            break   
+        if "emulator-5554device" in re.sub(re.compile(r'\s+'), '', output):
+            result = True 
+            break 
     return result;
                    
 def StopEmulators():

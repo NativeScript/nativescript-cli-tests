@@ -2,7 +2,7 @@ import os, unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, CheckOutput, CheckFilesExists
 from helpers._tns_lib import CreateProject
-from helpers.emulator import StopEmulators, StartEmulator, WaitForEmulator
+from helpers.emulator import StopEmulators, StartEmulator
 
 
 class TNSTests_Common(unittest.TestCase):
@@ -191,7 +191,11 @@ class TNSTests_Common(unittest.TestCase):
  
   
         self.test_061_PreparePlatformAndroid()
-              
+ 
+    def test_080_EmulatePlatform(self):
+            
+        self.test_061_PreparePlatformAndroid()
+                  
         command = self.tnsPath + " emulate --path TNS_Javascript"
         output = runAUT(command)     
         
@@ -208,7 +212,6 @@ class TNSTests_Common(unittest.TestCase):
     def test_081_EmulatePlatformAndroid(self):
   
         StartEmulator();
-        WaitForEmulator();
         
         self.test_061_PreparePlatformAndroid()
                 
@@ -261,7 +264,6 @@ class TNSTests_Common(unittest.TestCase):
     def test_092_DeployPlatformAndroidWihtRunningDevice(self):
         
         StartEmulator();
-        WaitForEmulator();
         
         self.test_061_PreparePlatformAndroid()
                 
@@ -311,7 +313,6 @@ class TNSTests_Common(unittest.TestCase):
         
         # TODO: Remove starting emulator after https://github.com/NativeScript/nativescript-cli/issues/114 is fixed.
         StartEmulator();
-        WaitForEmulator();
         
         self.test_061_PreparePlatformAndroid()
         
@@ -325,7 +326,6 @@ class TNSTests_Common(unittest.TestCase):
     def test_110_ListDevices(self):
         
         StartEmulator();
-        WaitForEmulator();
                 
         command = self.tnsPath + " list-devices"
         output = runAUT(command)     
