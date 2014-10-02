@@ -16,21 +16,43 @@ def CreateEmulator():
     
 def StartEmulator():
     
+    print "Starting emulator on {0} OS".format(os.name) 
     StopEmulators()    
-    print os.name    
+    startCommand = "emulator -avd TempDevice -no-skin -no-audio -no-window"     
+   
+    # Start emulator
     if 'nt' in os.name:
-        runAUT("emulator -avd TempDevice -no-skin -no-audio -no-window", None, False)
+        runAUT(startCommand, None, False)
     else:                      
-        runAUT("emulator -avd TempDevice -no-skin -no-audio -no-window &", None, False)
+        runAUT(startCommand + " &", None, False)
+
+    # Retry to start emulator if it is not running
+    if WaitForEmulator():
+        pass
+    else:
+        KillProcess("adb")
+        StopEmulators()
+        if 'nt' in os.name:
+            runAUT(startCommand, None, False)
+        else:                      
+            runAUT(startCommand + " &", None, False)
+    
+    # Raise error if emulator is still not running                  
+    if WaitForEmulator():
+        print "Emulator is started successfully."
+    else:
+        raise NameError("Wait for emulator failed!")
 
 def WaitForEmulator():
-
-    for counter in range(1, 5):
-        time.sleep(10)
+    result = False
+    for counter in range(1, 10):
+        time.sleep(5)
         output = runAUT("adb devices");
         print output
         if "emulator-5554device" in output.replace(" ", ""):
-            break
-
+            result = True
+            break   
+    return result;
+                   
 def StopEmulators():
     KillProcess("emulator")
