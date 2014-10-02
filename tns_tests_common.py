@@ -209,22 +209,25 @@ class TNSTests_Common(unittest.TestCase):
         assert ("Builds and runs the project in the native emulator for the selected target platform." in output) 
         assert not ("Error" in output) 
 
-    def test_081_EmulatePlatformAndroid(self):
-  
-        StartEmulator();
-        
-        self.test_061_PreparePlatformAndroid()
-                
-        command = self.tnsPath + " emulate android --path TNS_Javascript"
-        output = runAUT(command)   
-        
-        assert ("BUILD SUCCESSFUL" in output) 
-        assert ("Project successfully built" in output) 
-          
-        assert ("installing" in output) 
-        assert ("running" in output) 
-        assert ("TNS_Javascript-debug.apk through adb" in output) 
-        assert not ("Error" in output) 
+    # TODO: Uncomment after https://github.com/NativeScript/nativescript-cli/issues/116 is fixed
+    #===========================================================================
+    #  def test_081_EmulatePlatformAndroid(self):
+    # 
+    #      StartEmulator();
+    #       
+    #      self.test_061_PreparePlatformAndroid()
+    #               
+    #      command = self.tnsPath + " emulate android --emulator --path TNS_Javascript"
+    #      output = runAUT(command)   
+    #       
+    #      assert ("BUILD SUCCESSFUL" in output) 
+    #      assert ("Project successfully built" in output) 
+    #         
+    #      assert ("installing" in output) 
+    #      assert ("running" in output) 
+    #      assert ("TNS_Javascript-debug.apk through adb" in output) 
+    #      assert not ("Error" in output) 
+    #===========================================================================
          
     def test_090_DeployPlatform(self):
         
@@ -308,20 +311,23 @@ class TNSTests_Common(unittest.TestCase):
         assert ("Cannot resolve the specified connected device by the provided index or identifier." in output)
         assert ("To list currently connected devices and verify that the specified index or identifier exists, run 'appbuilder device'." in output)                    
         # TODO: Update assert message after https://github.com/NativeScript/nativescript-cli/issues/112 is fixed
-        
-    def test_102_RunPlatformAndroid(self):
-        
-        # TODO: Remove starting emulator after https://github.com/NativeScript/nativescript-cli/issues/114 is fixed.
-        StartEmulator();
-        
-        self.test_061_PreparePlatformAndroid()
-        
-        command = self.tnsPath + " run android --emulator --path TNS_Javascript"
-        output = runAUT(command)     
-        assert ("BUILD SUCCESSFUL" in output)
-        assert ("installing" in output)     
-        assert ("running" in output)     
-        assert ("TNS_Javascript-debug.apk through adb" in output) 
+    
+    # TODO: Uncomment after https://github.com/NativeScript/nativescript-cli/issues/116 is fixed        
+    #===========================================================================
+    # def test_102_RunPlatformAndroid(self):
+    #     
+    #     # TODO: Remove starting emulator after https://github.com/NativeScript/nativescript-cli/issues/114 is fixed.
+    #     StartEmulator();
+    #     
+    #     self.test_061_PreparePlatformAndroid()
+    #     
+    #     command = self.tnsPath + " run android --emulator --path TNS_Javascript"
+    #     output = runAUT(command)     
+    #     assert ("BUILD SUCCESSFUL" in output)
+    #     assert ("installing" in output)     
+    #     assert ("running" in output)     
+    #     assert ("TNS_Javascript-debug.apk through adb" in output) 
+    #===========================================================================
                                              
     def test_110_ListDevices(self):
         
