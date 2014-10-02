@@ -1,6 +1,5 @@
-from helpers._os_lib import KillProcess
 from helpers._tns_lib import UninstallCLI, InstallCLI
-from helpers.emulator import StopEmulators
+from helpers.emulator import CreateEmulator
 import tns_tests_runner
 
 
@@ -20,8 +19,8 @@ def AnalyzeResultAndExit():
 
 if __name__ == '__main__':
     
-    StopEmulators(); # sometimes running smulators may  cause issues with tests
-    
+    CreateEmulator()
+   
     UninstallCLI()  # remove older cli if exists
     InstallCLI()
 

@@ -4,16 +4,23 @@ import time
 from helpers._os_lib import KillProcess, runAUT
 
 
-def StartEmulator(name="Nexus4"):
+def CreateEmulator():
     
     StopEmulators()
+    output = runAUT("echo no | android create avd -n TempDevice -t android-17 -b x86 -f")
+    if ("Error:" in output):        
+        print "x86 abi is not available for 'android-17' target. Will create device with default abi."
+        if ("Error:" in output):
+            raise NameError("Failed to create android with 'echo no | android create avd -n TempDevice -t android-17 -f' command. Plase make sure you have 'android-17' target.")    
     
-    print os.name
+def StartEmulator():
     
+    StopEmulators()    
+    print os.name    
     if 'nt' in os.name:
-        runAUT("emulator -avd Nexus4 -no-skin -no-audio -no-window", None, False)
+        runAUT("emulator -avd TempDevice -no-skin -no-audio -no-window", None, False)
     else:                      
-        runAUT("emulator -avd Nexus4 -no-skin -no-audio -no-window &", None, False)
+        runAUT("emulator -avd TempDevice -no-skin -no-audio -no-window &", None, False)
 
 def WaitForEmulator():
 
