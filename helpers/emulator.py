@@ -62,7 +62,7 @@ def StartEmulator():
 
 def WaitForEmulator():
     result = False
-    for counter in range(1, 10):
+    for counter in range(1, 20):
         time.sleep(5)
         output = runAUT("adb devices");
         if "emulator-5554device" in re.sub(re.compile(r'\s+'), '', output):
