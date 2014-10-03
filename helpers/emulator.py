@@ -2,23 +2,33 @@ import os
 import re
 import time
 
-from helpers._os_lib import KillProcess, runAUT
-
+from helpers._os_lib import runAUT, KillProcess
 
 def CreateEmulator():
-    
-    StopEmulators()
-    output = runAUT("echo no | android create avd -n TempDevice -t android-17 -b x86 -f")
-    if ("Error:" in output):        
-        print "x86 abi is not available for 'android-17' target. Will create device with default abi."
-        output = runAUT("echo no | android create avd -n TempDevice -t android-17 -f")
-        if ("Error:" in output):
-            print "Target 'android-17' is not available, will try with target 'android-17'"
-            output = runAUT("echo no | android create avd -n TempDevice -t android-19 -f")
-            if ("Error:" in output):
-                raise NameError("Failed to create android with 'echo no | android create avd -n TempDevice -t android-19 -f' command. Plase make sure you have 'android-17' target.")
-    
-    print "New avd with name TempDevice created successfully."    
+
+    emulatorCreated = False    
+    for apiLevel in range (17, 20):
+        command="echo no | android create avd -n TempDevice -t android-{0} -b x86 -f".format(apiLevel)
+        output = runAUT(command)
+        if ("Error" in output):
+            print "Failed to create emulator with android-{0} target and x86 abi.".format(apiLevel)
+            command = "echo no | android create avd -n TempDevice -t android-{0} -f".format(apiLevel)
+            output = runAUT(command)
+            if ("Error" in output):
+                print "Failed to create emulator with android-{0} target and default abi.".format(apiLevel)
+            else:
+                print "Emulator with android-{0} target created successfully.".format(apiLevel)
+                emulatorCreated = True 
+                break;
+        else:
+            print "Emulator with android-{0} target created successfully.".format(apiLevel)
+            emulatorCreated = True
+            break;
+
+    if (emulatorCreated):
+        pass
+    else:
+        raise NameError("Failed to create emulator!")
     
 def StartEmulator():
     

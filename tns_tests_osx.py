@@ -85,7 +85,7 @@ class TNSTests_OSX(unittest.TestCase):
         KillProcess("iOS Simulator")        
         self.test_062_PreparePlatformIOS();
         
-        command = tnsPath + " emulate ios --path TNS_Javascript"
+        command = tnsPath + " emulate ios --emulator --path TNS_Javascript"
         output = runAUT(command)     
         assert ("Project successfully built" in output)
         assert ("Starting iOS Simulator" in output)
@@ -93,29 +93,33 @@ class TNSTests_OSX(unittest.TestCase):
         assert (WaitForProcess("iOS Simulator"))
         KillProcess("iOS Simulator")
 
-#===============================================================================
-#     def test_092_DeployPlatformIOS(self):        
-#                 
-#         KillProcess("iOS Simulator")
-#         
-#         self.test_062_PreparePlatformIOS();
-#         
-#         command = tnsPath + " deploy ios --path TNS_Javascript"
-#         output = runAUT(command)     
-#         
-#         assert (IsRunningProcess("iOS Simulator"))
-# 
-#     def test_102_RunPlatformIOS(self):        
-#                 
-#         KillProcess("iOS Simulator")
-#         
-#         self.test_062_PreparePlatformIOS();
-#         
-#         command = tnsPath + " run ios --path TNS_Javascript"
-#         output = runAUT(command)     
-#         
-#         assert (IsRunningProcess("iOS Simulator"))
-#===============================================================================
+    def test_092_DeployPlatformIOS(self):        
+                 
+        KillProcess("iOS Simulator")
+         
+        self.test_062_PreparePlatformIOS();
+         
+        command = tnsPath + " deploy ios --emulator --path TNS_Javascript"
+        output = runAUT(command)     
+        assert ("Project successfully built" in output)
+        assert ("Starting iOS Simulator" in output)
+                
+        assert (WaitForProcess("iOS Simulator"))
+        KillProcess("iOS Simulator")
+ 
+    def test_102_RunPlatformIOS(self):        
+                 
+        KillProcess("iOS Simulator")
+         
+        self.test_062_PreparePlatformIOS();
+         
+        command = tnsPath + " run ios --emulator --path TNS_Javascript"
+        output = runAUT(command)     
+        assert ("Project successfully built" in output)
+        assert ("Starting iOS Simulator" in output)
+         
+        assert (WaitForProcess("iOS Simulator"))
+        KillProcess("iOS Simulator")
                                                  
     def test_112_ListDevicesiOS(self):
                 
