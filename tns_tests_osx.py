@@ -12,7 +12,7 @@ class TNSTests_OSX(unittest.TestCase):
         print "Cleanup test folders started..."
         CleanupFolder('./folder');
         CleanupFolder('./TNS_Javascript');
-        runAUT("sudo find /var/folders/ -type d -name '*TNS_Javascript-Prefix-*' -exec rm -rf {} \;") # Delete precompiled headers
+        runAUT("sudo find /var/folders/ -name '*TNS_Javascript-*' -exec rm -rf {} \;") # Delete precompiled headers
         print "Cleanup test folders completed!"
         print "#####"
         
