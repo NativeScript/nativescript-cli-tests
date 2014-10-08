@@ -100,10 +100,10 @@ class TNSTests_OSX(unittest.TestCase):
          
         self.test_062_PreparePlatformIOS();
          
-        command = tnsPath + " deploy ios --emulator --path TNS_Javascript"
+        command = tnsPath + " deploy ios --path TNS_Javascript"
         output = runAUT(command)     
         assert ("Project successfully built" in output)
-        assert ("Starting iOS Simulator" in output)
+        assert ("Successfully deployed" in output)
                 
         #assert (WaitForProcess("iOS Simulator"))
         KillProcess("iOS Simulator")
