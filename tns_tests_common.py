@@ -1,7 +1,8 @@
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, CheckOutput, CheckFilesExists
-from helpers._tns_lib import CreateProject, tnsPath, nativescriptPath
+from helpers._tns_lib import CreateProject, tnsPath, nativescriptPath, \
+    AddPlatform, GetAndroidFrameworkPath
 from helpers.emulator import StopEmulators, StartEmulator
 
 
@@ -47,8 +48,7 @@ class TNSTests_Common(unittest.TestCase):
         
         self.test_020_CreateProject()
         
-        command = tnsPath + " platform add --path TNS_Javascript"
-        output = runAUT(command)
+        output = AddPlatform(None, GetAndroidFrameworkPath(), "TNS_Javascript")
         assert ("No platform specified. Please specify a platform to add" in output)      
         assert ("$ tns platform add <Platform>" in output)    
         assert ("$ nativescript platform add <Platform>" in output)   
@@ -66,8 +66,7 @@ class TNSTests_Common(unittest.TestCase):
         
         self.test_020_CreateProject()
         
-        command = tnsPath + " platform add android --path TNS_Javascript"
-        output = runAUT(command)     
+        output = AddPlatform("android", GetAndroidFrameworkPath(), "TNS_Javascript")
         assert ("Copying template files..." in output)  
         assert ("Updated project.properties" in output)  
         assert ("Updated local.properties" in output)  

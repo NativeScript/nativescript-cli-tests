@@ -1,7 +1,7 @@
 import unittest
 
-from helpers._os_lib import runAUT, CleanupFolder, KillProcess, WaitForProcess
-from helpers._tns_lib import CreateProject, tnsPath
+from helpers._os_lib import runAUT, CleanupFolder, KillProcess
+from helpers._tns_lib import CreateProject, tnsPath, AddPlatform, GetIOSFrameworkPath
 from helpers.emulator import StopEmulators
 
 
@@ -34,9 +34,7 @@ class TNSTests_OSX(unittest.TestCase):
     def test_042_PlatformAddIOS(self):        
                 
         CreateProject("TNS_Javascript")
-        
-        command = tnsPath + " platform add ios --path TNS_Javascript"
-        output = runAUT(command)     
+        output = AddPlatform("ios", GetIOSFrameworkPath(), "TNS_Javascript");    
         assert ("Copying template files..." in output)
         assert ("Project successfully created." in output)
         assert not ("Error" in output)  
@@ -49,8 +47,7 @@ class TNSTests_OSX(unittest.TestCase):
         output = runAUT(command)     
         assert ("The platform ios is not added to this project. Please use 'tns platform add <platform>'" in output)
 
-        command = tnsPath + " platform add ios --path TNS_Javascript"
-        output = runAUT(command)     
+        output = AddPlatform("ios", GetIOSFrameworkPath(), "TNS_Javascript"); 
         assert ("Project successfully created." in output)     
         
         command = tnsPath + " platform list --path TNS_Javascript"

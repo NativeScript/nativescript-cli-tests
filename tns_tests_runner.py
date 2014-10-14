@@ -7,12 +7,11 @@ from tns_tests_common import TNSTests_Common
 from tns_tests_android import TNSTests_Android
 from tns_tests_osx import TNSTests_OSX
 
-
 def RunTests():
     
     print "Platform : ", platform.platform()
     
-    suite = unittest.TestLoader().loadTestsFromTestCase(TNSTests_Common)    
+    suite = unittest.TestLoader().loadTestsFromTestCase(TNSTests_Common)
     
     if 'Darwin' in platform.platform():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TNSTests_OSX))
