@@ -97,8 +97,8 @@ class TNSTests_OSX(unittest.TestCase):
          
         self.test_062_PreparePlatformIOS();
         
-        command = tnsPath + "security unlock-keychain -p '' $KEYCHAIN"
-        output = runAUT(command)  
+        command = "security unlock-keychain -p '' $KEYCHAIN"
+        runAUT(command)  
          
         command = tnsPath + " deploy ios --path TNS_Javascript"
         output = runAUT(command)     
