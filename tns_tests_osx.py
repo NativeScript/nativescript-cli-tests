@@ -99,7 +99,7 @@ class TNSTests_OSX(unittest.TestCase):
         
         command = "security unlock-keychain -p '' $KEYCHAIN"
         runAUT(command)  
-         
+        
         command = tnsPath + " deploy ios --path TNS_Javascript"
         output = runAUT(command)     
         assert ("Project successfully built" in output)
