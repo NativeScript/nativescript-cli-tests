@@ -33,7 +33,7 @@ def CreateEmulator():
 def StartEmulator():
     
     print "Starting emulator on {0} OS".format(os.name) 
-    StopEmulators()    
+
     startCommand = "emulator -avd TempDevice -no-skin -no-audio -no-window"     
    
     # Start emulator

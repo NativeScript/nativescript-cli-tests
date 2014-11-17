@@ -208,6 +208,7 @@ class TNSTests_Common(unittest.TestCase):
 
     def test_081_EmulatePlatformAndroid(self):
      
+        StartEmulator()
         self.test_061_PreparePlatformAndroid()
                    
         command = tnsPath + " emulate android --emulator --path TNS_Javascript"
@@ -242,7 +243,7 @@ class TNSTests_Common(unittest.TestCase):
         assert ("Before building for iOS device, verify that you have configured a valid pair of certificate and provisioning profile on your OS X system." in output) 
         assert not ("Error" in output) 
 
-    def test_091_DeployPlatformAndroidonNotRunningDevice(self):
+    def test_091_DeployPlatformAndroidOnMissingDevice(self):
         
         self.test_061_PreparePlatformAndroid()
                 
@@ -258,7 +259,7 @@ class TNSTests_Common(unittest.TestCase):
         
         assert not ("Error" in output) 
         
-    def test_092_DeployPlatformAndroidWihtRunningDevice(self):
+    def test_092_DeployPlatformAndroidWithRunningDevice(self):
         
         StartEmulator();
         
@@ -307,13 +308,15 @@ class TNSTests_Common(unittest.TestCase):
         # TODO: Update assert message after https://github.com/NativeScript/nativescript-cli/issues/112 is fixed
     
     def test_102_RunPlatformAndroidOnEmulator(self):
+        
+        StartEmulator()
          
         self.test_061_PreparePlatformAndroid()
          
         command = tnsPath + " run android --emulator --path TNS_Javascript"
         output = runAUT(command)     
         assert ("BUILD SUCCESSFUL" in output)
-        assert ("Starting Android emulator with image" in output)
+
         assert ("installing" in output)     
         assert ("running" in output)     
         assert ("TNS_Javascript-debug.apk through adb" in output) 
