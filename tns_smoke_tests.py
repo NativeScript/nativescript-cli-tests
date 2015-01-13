@@ -232,14 +232,14 @@ class TNSTests_Common(unittest.TestCase):
         assert ("$ tns deploy ios [--device <Device ID>]" in output) 
         assert ("$ nativescript deploy android [--device <Device ID>]" in output) 
         assert ("$ nativescript deploy ios [--device <Device ID>]" in output) 
-        assert ("Builds and deploys the project to a connected physical or virtual device." in output) 
-        assert ("<Device ID> is the index or name of the target device as listed by $ tns list-devices." in output) 
+        assert ("Builds and deploys the project to a connected physical or virtual device" in output) 
+        assert ("<Device ID> is the index or name of the target device as listed by $ tns device" in output) 
         assert ("Before building for iOS device, verify that you have configured a valid pair of certificate and provisioning profile on your OS X system." in output) 
         assert not ("Error" in output) 
          
     def test_110_ListDevices(self):
         
-        command = self.tnsPath + " list-devices"
+        command = self.tnsPath + " device"
         output = runAUT(command)     
         assert not ("Error" in output) 
         # TODO: Add more asserts once we have final QA environment

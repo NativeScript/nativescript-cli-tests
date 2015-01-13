@@ -124,7 +124,7 @@ class TNSTests_OSX(unittest.TestCase):
                                                  
     def test_112_ListDevicesiOS(self):
                 
-        command = tnsPath + " list-devices ios"
+        command = tnsPath + " device ios"
         output = runAUT(command)     
         
         assert not ("Error" in output)  

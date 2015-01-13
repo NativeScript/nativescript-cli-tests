@@ -32,7 +32,7 @@ class TNSTests_Android(unittest.TestCase):
 
     def test_111_ListDevicesAndroid(self):
                 
-        command = tnsPath + " list-devices android"
+        command = tnsPath + " device android"
         output = runAUT(command)     
         
         assert ("Cannot find connected devices." in output) 
