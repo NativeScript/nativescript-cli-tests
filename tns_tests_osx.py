@@ -127,5 +127,5 @@ class TNSTests_OSX(unittest.TestCase):
         command = tnsPath + " device ios"
         output = runAUT(command)     
         
-        assert not ("Error" in output)  
-        assert not ("Android" in output)
+		assert ("iPhone" in output)
+        assert not ("Error" in output)
