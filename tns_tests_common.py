@@ -208,10 +208,9 @@ class TNSTests_Common(unittest.TestCase):
 
     def test_081_EmulatePlatformAndroid(self):
      
-        StartEmulator()
         self.test_061_PreparePlatformAndroid()
                    
-        command = tnsPath + " emulate android --emulator --path TNS_Javascript"
+        command = tnsPath + " emulate android --path TNS_Javascript"
         output = runAUT(command)   
            
         assert ("BUILD SUCCESSFUL" in output) 
@@ -221,6 +220,38 @@ class TNSTests_Common(unittest.TestCase):
         assert ("running" in output) 
         assert ("TNS_Javascript-debug.apk through adb" in output) 
         assert not ("Error" in output) 
+        
+        StopEmulators();
+        
+    def test_082_EmulatePlatformAndroidOnSpecifiedAvd(self):
+     
+        self.test_061_PreparePlatformAndroid()
+                   
+        command = tnsPath + " emulate android --avd Api17 --path TNS_Javascript"
+        output = runAUT(command)   
+           
+        assert ("BUILD SUCCESSFUL" in output) 
+        assert ("Project successfully built" in output) 
+      
+        assert ("Starting Android emulator with image Api17" in output) 
+                    
+        assert ("installing" in output) 
+        assert ("running" in output) 
+        assert ("TNS_Javascript-debug.apk through adb" in output) 
+        assert not ("Error" in output) 
+        
+        command = tnsPath + " emulate android --avd Api17 --path TNS_Javascript"
+        output = runAUT(command)   
+           
+        assert ("BUILD SUCCESSFUL" in output) 
+        assert ("Project successfully built" in output) 
+      
+        assert not ("Starting Android emulator with image" in output) 
+                    
+        assert ("installing" in output) 
+        assert ("running" in output) 
+        assert ("TNS_Javascript-debug.apk through adb" in output) 
+        assert not ("Error" in output)       
         
         StopEmulators();
          
