@@ -3,7 +3,7 @@ import unittest
 from helpers._os_lib import CleanupFolder, runAUT, CheckOutput, CheckFilesExists
 from helpers._tns_lib import CreateProject, tnsPath, nativescriptPath, \
     AddPlatform, GetAndroidFrameworkPath
-from helpers.emulator import StopEmulators, StartEmulator
+from helpers.emulator import StopEmulators
 
 
 class TNSTests_Common(unittest.TestCase):
@@ -292,8 +292,9 @@ class TNSTests_Common(unittest.TestCase):
         
     def test_092_DeployPlatformAndroidWithRunningDevice(self):
         
-        StartEmulator();
-        
+        output = runAUT("emulator -avd Api19");
+        assert not ("Error" in output) 
+                
         self.test_061_PreparePlatformAndroid()
                 
         command = tnsPath + " deploy android --path TNS_Javascript"
@@ -307,6 +308,21 @@ class TNSTests_Common(unittest.TestCase):
               
         assert not ("Error" in output) 
 
+    def test_093_DeployPlatformAndroidWithoutRunningDevice(self):        
+        
+        self.test_061_PreparePlatformAndroid()
+                
+        command = tnsPath + " deploy android --path TNS_Javascript"
+        output = runAUT(command)  
+        
+        assert ("BUILD SUCCESSFUL" in output) 
+        assert ("Project successfully built" in output)   
+        
+        assert ("TNS_Javascript-debug.apk" in output) 
+        assert ("Successfully deployed on device with identifier" in output)      
+              
+        assert not ("Error" in output) 
+        
     def test_100_RunPlatform(self):
         
         self.test_061_PreparePlatformAndroid()
@@ -340,7 +356,7 @@ class TNSTests_Common(unittest.TestCase):
     
     def test_102_RunPlatformAndroidOnEmulator(self):
         
-        StartEmulator()
+        runAUT("emulator -avd Api19");
          
         self.test_061_PreparePlatformAndroid()
          
@@ -356,12 +372,12 @@ class TNSTests_Common(unittest.TestCase):
                                                    
     def test_110_ListDevices(self):
         
-        StartEmulator();
+        runAUT("emulator -avd Api19");
                 
         command = tnsPath + " device"
         output = runAUT(command)     
         
-        assert ("Android emulator-5554" in output) 
+        assert ("Android emulator-" in output) 
         assert not ("Reconnect any connected devices, verify that your system recognizes them, and run this command again" in output)     
         assert not ("Error" in output)
 
