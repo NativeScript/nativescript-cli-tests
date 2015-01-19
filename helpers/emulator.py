@@ -30,11 +30,11 @@ def CreateEmulator():
     else:
         raise NameError("Failed to create emulator!")
     
-def StartEmulator():
+def StartEmulator(EmulatorName):
     
     print "Starting emulator on {0} OS".format(os.name) 
 
-    startCommand = "emulator -avd TempDevice -no-skin -no-audio -no-window"     
+    startCommand = "emulator -avd " + EmulatorName + " -no-skin -no-audio -no-window"     
    
     # Start emulator
     if 'nt' in os.name:
@@ -62,7 +62,7 @@ def StartEmulator():
 
 def WaitForEmulator():
     result = False
-    for counter in range(1, 20):
+    for counter in range(1, 30):
         time.sleep(5)
         output = runAUT("adb devices");
         if "emulator-5554device" in re.sub(re.compile(r'\s+'), '', output):

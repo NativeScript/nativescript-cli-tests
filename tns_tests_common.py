@@ -3,7 +3,7 @@ import unittest
 from helpers._os_lib import CleanupFolder, runAUT, CheckOutput, CheckFilesExists
 from helpers._tns_lib import CreateProject, tnsPath, nativescriptPath, \
     AddPlatform, GetAndroidFrameworkPath
-from helpers.emulator import StopEmulators
+from helpers.emulator import StopEmulators, StartEmulator
 
 
 class TNSTests_Common(unittest.TestCase):
@@ -292,8 +292,7 @@ class TNSTests_Common(unittest.TestCase):
         
     def test_092_DeployPlatformAndroidWithRunningDevice(self):
         
-        output = runAUT("emulator -avd Api19");
-        assert not ("Error" in output) 
+        StartEmulator("Api17");
                 
         self.test_061_PreparePlatformAndroid()
                 
@@ -319,9 +318,9 @@ class TNSTests_Common(unittest.TestCase):
         assert ("Project successfully built" in output)   
         
         assert ("TNS_Javascript-debug.apk" in output) 
-        assert ("Successfully deployed on device with identifier" in output)      
-              
-        assert not ("Error" in output) 
+        assert ("Cannot find connected devices." in output)      
+        assert ("Reconnect any connected devices" in output) 
+        assert ("and run this command again" in output)        
         
     def test_100_RunPlatform(self):
         
@@ -356,7 +355,7 @@ class TNSTests_Common(unittest.TestCase):
     
     def test_102_RunPlatformAndroidOnEmulator(self):
         
-        runAUT("emulator -avd Api19");
+        StartEmulator("Api19");
          
         self.test_061_PreparePlatformAndroid()
          
@@ -372,7 +371,7 @@ class TNSTests_Common(unittest.TestCase):
                                                    
     def test_110_ListDevices(self):
         
-        runAUT("emulator -avd Api19");
+        StartEmulator("Api19");
                 
         command = tnsPath + " device"
         output = runAUT(command)     
