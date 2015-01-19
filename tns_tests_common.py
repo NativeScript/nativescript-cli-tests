@@ -210,12 +210,12 @@ class TNSTests_Common(unittest.TestCase):
      
         self.test_061_PreparePlatformAndroid()
                    
-        command = tnsPath + " emulate android --path TNS_Javascript"
+        command = tnsPath + " emulate android --path TNS_Javascript --timeout 600"
         output = runAUT(command)   
            
         assert ("BUILD SUCCESSFUL" in output) 
         assert ("Project successfully built" in output) 
-             
+        assert ("Starting Android emulator with image" in output)     
         assert ("installing" in output) 
         assert ("running" in output) 
         assert ("TNS_Javascript-debug.apk through adb" in output) 
@@ -227,20 +227,20 @@ class TNSTests_Common(unittest.TestCase):
      
         self.test_061_PreparePlatformAndroid()
                    
-        command = tnsPath + " emulate android --avd Api17 --path TNS_Javascript"
+        command = tnsPath + " emulate android --avd Api19 --path TNS_Javascript --timeout 600"
         output = runAUT(command)   
            
         assert ("BUILD SUCCESSFUL" in output) 
         assert ("Project successfully built" in output) 
       
-        assert ("Starting Android emulator with image Api17" in output) 
+        assert ("Starting Android emulator with image Api19" in output) 
                     
         assert ("installing" in output) 
         assert ("running" in output) 
         assert ("TNS_Javascript-debug.apk through adb" in output) 
         assert not ("Error" in output) 
         
-        command = tnsPath + " emulate android --avd Api17 --path TNS_Javascript"
+        command = tnsPath + " emulate android --avd Api19 --path TNS_Javascript --timeout 600"
         output = runAUT(command)   
            
         assert ("BUILD SUCCESSFUL" in output) 
