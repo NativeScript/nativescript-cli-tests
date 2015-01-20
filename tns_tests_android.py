@@ -3,6 +3,8 @@ import unittest
 from helpers._os_lib import runAUT, CleanupFolder
 from helpers._tns_lib import CreateProject, tnsPath
 from helpers.emulator import StopEmulators
+from tns_smoke_tests import TNSTests_Common
+
 
 # This class runs only on Linux and Windows test nodes
 class TNSTests_Android(unittest.TestCase):
@@ -32,7 +34,7 @@ class TNSTests_Android(unittest.TestCase):
         
     def test_093_DeployPlatformAndroidWithoutRunningDevice(self):        
         
-        self.test_061_PreparePlatformAndroid()
+        TNSTests_Common.test_061_PreparePlatformAndroid();
                 
         command = tnsPath + " deploy android --path TNS_Javascript"
         output = runAUT(command)  

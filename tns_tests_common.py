@@ -128,7 +128,7 @@ class TNSTests_Common(unittest.TestCase):
         assert ("Copies common and relevant platform-specific content from the app directory to the subdirectory for the selected target platform" in output)  
         assert ("This lets you build the project with the SDK for the selected platform." in output)  
         assert not ("Error" in output) 
-         
+                 
     def test_061_PreparePlatformAndroid(self):
         
         self.test_041_PlatformAddAndroid();
@@ -370,7 +370,7 @@ class TNSTests_Common(unittest.TestCase):
         if 'nt' not in os.name:
             command = tnsPath + " run android --emulator --path TNS_Javascript"
         else:
-            command = tnsPath + " run android --device emulator-5554 --path TNS_Javascrip --timeout 600"
+            command = tnsPath + " run android --device emulator-5554 --path TNS_Javascript --timeout 600"
         
         output = runAUT(command)     
         assert ("BUILD SUCCESSFUL" in output)
