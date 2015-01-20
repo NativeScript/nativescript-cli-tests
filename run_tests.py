@@ -1,5 +1,4 @@
 from helpers._tns_lib import UninstallCLI, InstallCLI
-from helpers.emulator import CreateEmulator
 import tns_tests_runner
 
 smokeTestResult = ""
@@ -17,8 +16,6 @@ def AnalyzeResultAndExit():
         exit(0)
 
 if __name__ == '__main__':
-    
-    CreateEmulator()
    
     UninstallCLI()  # remove older cli if exists
     InstallCLI()
