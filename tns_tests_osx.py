@@ -4,7 +4,7 @@ from helpers._os_lib import runAUT, CleanupFolder, KillProcess
 from helpers._tns_lib import CreateProject, tnsPath, AddPlatform, GetIOSFrameworkPath
 from helpers.emulator import StopEmulators
 
-
+# This class runs only on OSX test nodes
 class TNSTests_OSX(unittest.TestCase):
 
     def setUp(self):

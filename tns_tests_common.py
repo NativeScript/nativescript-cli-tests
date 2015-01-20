@@ -6,7 +6,7 @@ from helpers._tns_lib import CreateProject, tnsPath, nativescriptPath, \
     AddPlatform, GetAndroidFrameworkPath
 from helpers.emulator import StopEmulators, StartEmulator
 
-
+# This class runs only on all test nodes
 class TNSTests_Common(unittest.TestCase):
     
     def setUp(self):
@@ -330,21 +330,6 @@ class TNSTests_Common(unittest.TestCase):
               
         assert not ("Error" in output) 
 
-    def test_093_DeployPlatformAndroidWithoutRunningDevice(self):        
-        
-        self.test_061_PreparePlatformAndroid()
-                
-        command = tnsPath + " deploy android --path TNS_Javascript"
-        output = runAUT(command)  
-        
-        assert ("BUILD SUCCESSFUL" in output) 
-        assert ("Project successfully built" in output)   
-        
-        assert ("TNS_Javascript-debug.apk" in output) 
-        assert ("Cannot find connected devices." in output)      
-        assert ("Reconnect any connected devices" in output) 
-        assert ("and run this command again" in output)        
-        
     def test_100_RunPlatform(self):
         
         self.test_061_PreparePlatformAndroid()
