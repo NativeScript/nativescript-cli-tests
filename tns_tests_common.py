@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, CheckOutput, CheckFilesExists
@@ -196,7 +197,7 @@ class TNSTests_Common(unittest.TestCase):
         command = tnsPath + " emulate --path TNS_Javascript"
         output = runAUT(command)     
         
-        assert ("You need to provide all the required parameters." in output) 
+        assert ("You need to provide all the required parameters." in output) 
         assert ("$ tns emulate <Platform>" in output) 
         assert ("$ nativescript emulate <Platform>" in output) 
         assert ("$ tns emulate android" in output) 
@@ -208,6 +209,15 @@ class TNSTests_Common(unittest.TestCase):
 
     def test_081_EmulatePlatformAndroid(self):
      
+        # Start emulator on Linux and Mac 
+        # Reason:
+        # On Linux and Mac nodes we have no active UI session.
+        # CLI start emulator with default params.
+        # Emulator started with default params require active UI session.
+        
+        if 'nt' not in os.name:
+            StartEmulator("Api19");
+            
         self.test_061_PreparePlatformAndroid()
                    
         command = tnsPath + " emulate android --path TNS_Javascript --timeout 600"
@@ -215,7 +225,10 @@ class TNSTests_Common(unittest.TestCase):
            
         assert ("BUILD SUCCESSFUL" in output) 
         assert ("Project successfully built" in output) 
-        assert ("Starting Android emulator with image" in output)     
+        
+        if 'nt' in os.name:
+            assert ("Starting Android emulator with image" in output)    
+         
         assert ("installing" in output) 
         assert ("running" in output) 
         assert ("TNS_Javascript-debug.apk through adb" in output) 
@@ -225,6 +238,15 @@ class TNSTests_Common(unittest.TestCase):
         
     def test_082_EmulatePlatformAndroidOnSpecifiedAvd(self):
      
+        # Start emulator on Linux and Mac 
+        # Reason:
+        # On Linux and Mac nodes we have no active UI session.
+        # CLI start emulator with default params.
+        # Emulator started with default params require active UI session.
+        
+        if 'nt' not in os.name:
+            StartEmulator("Api19");
+             
         self.test_061_PreparePlatformAndroid()
                    
         command = tnsPath + " emulate android --avd Api19 --path TNS_Javascript --timeout 600"
@@ -233,7 +255,8 @@ class TNSTests_Common(unittest.TestCase):
         assert ("BUILD SUCCESSFUL" in output) 
         assert ("Project successfully built" in output) 
       
-        assert ("Starting Android emulator with image Api19" in output) 
+        if 'nt' in os.name:
+            assert ("Starting Android emulator with image Api19" in output) 
                     
         assert ("installing" in output) 
         assert ("running" in output) 
@@ -359,14 +382,21 @@ class TNSTests_Common(unittest.TestCase):
          
         self.test_061_PreparePlatformAndroid()
          
-        command = tnsPath + " run android --emulator --path TNS_Javascript"
+        if 'nt' not in os.name:
+            command = tnsPath + " run android --emulator --path TNS_Javascript"
+        else:
+            command = tnsPath + " run android --device emulator-5554 --path TNS_Javascrip --timeout 600"
+        
         output = runAUT(command)     
         assert ("BUILD SUCCESSFUL" in output)
 
-        assert ("installing" in output)     
-        assert ("running" in output)     
-        assert ("TNS_Javascript-debug.apk through adb" in output) 
-        
+        if 'nt' not in os.name:
+            assert ("installing" in output)     
+            assert ("running" in output)     
+            assert ("TNS_Javascript-debug.apk through adb" in output) 
+        else:
+            assert ("Successfully deployed on device with identifier 'emulator-5554'" in output)  
+                    
         StopEmulators();
                                                    
     def test_110_ListDevices(self):
