@@ -337,16 +337,16 @@ class TNSTests_Common(unittest.TestCase):
         command = tnsPath + " deploy android --path TNS_Javascript"
         output = runAUT(command)  
         
-        assert ("BUILD SUCCESSFUL" in output) 
-        assert ("Project successfully built" in output)   
-        
-        if 'nt' in os.name:
+        if 'Darwin' not in os.name:
+            assert ("BUILD SUCCESSFUL" in output) 
+            assert ("Project successfully built" in output)   
             assert ("TNS_Javascript-debug.apk" in output) 
             assert ("Cannot find connected devices." in output)      
             assert ("Reconnect any connected devices" in output) 
             assert ("and run this command again" in output)       
         else:
-            assert ("deployed" in output)     
+            assert ("BUILD SUCCESSFUL" in output) 
+            assert ("Project successfully built" in output)   
 
     def test_100_RunPlatform(self):
         
