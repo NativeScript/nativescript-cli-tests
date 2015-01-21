@@ -1,10 +1,12 @@
 import os
+import platform
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, CheckOutput, CheckFilesExists
 from helpers._tns_lib import CreateProject, tnsPath, nativescriptPath, \
     AddPlatform, GetAndroidFrameworkPath
 from helpers.emulator import StopEmulators, StartEmulator
+
 
 # This class runs only on all test nodes
 class TNSTests_Common(unittest.TestCase):
@@ -337,16 +339,18 @@ class TNSTests_Common(unittest.TestCase):
         command = tnsPath + " deploy android --path TNS_Javascript"
         output = runAUT(command)  
         
-        if 'Darwin' not in os.name:
+        if 'Darwin' in platform.platform():
+            assert ("BUILD SUCCESSFUL" in output) 
+            assert ("Project successfully built" in output) 
+            assert ("Successfully deployed on device with identifier" in output) 
+        else:
             assert ("BUILD SUCCESSFUL" in output) 
             assert ("Project successfully built" in output)   
             assert ("TNS_Javascript-debug.apk" in output) 
             assert ("Cannot find connected devices." in output)      
             assert ("Reconnect any connected devices" in output) 
-            assert ("and run this command again" in output)       
-        else:
-            assert ("BUILD SUCCESSFUL" in output) 
-            assert ("Project successfully built" in output)   
+            assert ("and run this command again" in output)      
+  
 
     def test_100_RunPlatform(self):
         
