@@ -3,9 +3,10 @@ import unittest
 
 from helpers import HTMLTestRunner
 from helpers._tns_lib import GetCLIBuildVersion
-from tns_tests_common import TNSTests_Common
 from tns_tests_android import TNSTests_Android
+from tns_tests_common import TNSTests_Common
 from tns_tests_osx import TNSTests_OSX
+
 
 def RunTests():
     

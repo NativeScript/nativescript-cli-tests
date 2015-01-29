@@ -124,7 +124,7 @@ class TNSTests_Common(unittest.TestCase):
                 
         command = tnsPath + " prepare --path TNS_Javascript"
         output = runAUT(command)  
-        assert ("You need to provide all the required parameters." in output)  
+        assert ("You need to provide all the required parameters." in output)  
         assert ("$ tns prepare <Platform>" in output)
         assert ("$ nativescript prepare <Platform>" in output)
         assert ("$ tns prepare android" in output)

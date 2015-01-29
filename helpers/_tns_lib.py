@@ -71,6 +71,8 @@ def GetCLIBuildVersion():
 def GetAndroidFrameworkPath():
     
     frameworkPath = None
+    if os.path.isfile("tns-android.tgz"):
+        frameworkPath = "tns-android.tgz"  
     if os.path.isfile("tns-android-pr-latest.tgz"):
         frameworkPath = "tns-android-pr-latest.tgz"  
     if os.path.isfile("tns-android-stable-latest.tgz"):
@@ -82,6 +84,8 @@ def GetAndroidFrameworkPath():
 def GetIOSFrameworkPath():
     
     frameworkPath = None
+    if os.path.isfile("tns-ios.tgz"):
+        frameworkPath = "tns-ios.tgz"  
     if os.path.isfile("tns-ios-pr-latest.tgz"):
         frameworkPath = "tns-ios-pr-latest.tgz"  
     if os.path.isfile("tns-ios-stable-latest.tgz"):
