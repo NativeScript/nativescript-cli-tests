@@ -36,6 +36,24 @@ class TNSTests_Common(unittest.TestCase):
         CheckOutput(output, 'help_output.txt')
         assert not ("Error" in output)
         
+    def test_012_CommandHelp(self):
+        command = tnsPath + " create --help"
+        output = runAUT(command)
+        CheckOutput(output, 'create_help_output.txt')
+        assert not ("Error" in output)
+ 
+    def test_013_CommandHelp(self):
+        command = tnsPath + " create -h"
+        output = runAUT(command)
+        CheckOutput(output, 'create_help_output.txt')
+        assert not ("Error" in output)
+
+    def test_014_CommandHelp(self):
+        command = tnsPath + " create ?"
+        output = runAUT(command)
+        CheckOutput(output, 'create_help_output.txt')
+        assert not ("Error" in output)
+                       
     def test_020_CreateProject(self):
         projName = "TNS_Javascript"
         CreateProject(projName)
@@ -461,3 +479,17 @@ class TNSTests_Common(unittest.TestCase):
         assert ("enable - Enables anonymous usage statistics tracking." in output)  
         assert ("disable - Disables anonymous usage statistics tracking." in output)  
         assert not ("Error" in output)
+        
+    def test_200_InvalidCommand(self):
+        
+        command = tnsPath + " invalidCommand"
+        output = runAUT(command)   
+        assert ("Unknown command" in output)    
+        assert ("Use 'NativeScript help' for help." in output) 
+        
+    def test_201_InvalidCommand(self):
+        
+        command = tnsPath + " 4"
+        output = runAUT(command)   
+        assert ("Unknown command" in output)    
+        assert ("Use 'NativeScript help' for help." in output) 
