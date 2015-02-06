@@ -73,3 +73,4 @@ def WaitForEmulator():
 def StopEmulators():
     KillProcess("emulator")
     KillProcess("emulator64-arm")
+    KillProcess("emulator64-x86")
