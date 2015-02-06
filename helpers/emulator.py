@@ -34,13 +34,13 @@ def StartEmulator(EmulatorName):
     
     print "Starting emulator on {0} OS".format(os.name) 
 
-    startCommand = "emulator -avd " + EmulatorName + " -no-skin -no-audio -no-window"     
+    startCommand = "emulator -avd " + EmulatorName   
    
     # Start emulator
     if 'nt' in os.name:
-        runAUT(startCommand, None, False)
+        runAUT(startCommand, 300, False)
     else:                      
-        runAUT(startCommand + " &", None, False)
+        runAUT(startCommand + " &", 300, False)
 
     # Retry to start emulator if it is not running
     if WaitForEmulator():
