@@ -1,6 +1,6 @@
 import os, threading, psutil, time, shutil
 
-default_timeout = 120  # seconds
+default_timeout = 180  # seconds
 default_output_file = "output.txt"
 DEBUG = 0
 

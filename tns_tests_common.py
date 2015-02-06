@@ -245,7 +245,7 @@ class TNSTests_Common(unittest.TestCase):
         self.test_061_PreparePlatformAndroid()
                    
         command = tnsPath + " emulate android --path TNS_Javascript --timeout 600"
-        output = runAUT(command)   
+        output = runAUT(command, 600)   
            
         assert ("BUILD SUCCESSFUL" in output) 
         assert ("Project successfully built" in output) 
@@ -274,7 +274,7 @@ class TNSTests_Common(unittest.TestCase):
         self.test_061_PreparePlatformAndroid()
                    
         command = tnsPath + " emulate android --avd Api19 --path TNS_Javascript --timeout 600"
-        output = runAUT(command)   
+        output = runAUT(command, 600)  
            
         assert ("BUILD SUCCESSFUL" in output) 
         assert ("Project successfully built" in output) 
@@ -416,7 +416,7 @@ class TNSTests_Common(unittest.TestCase):
         else:
             command = tnsPath + " run android --device emulator-5554 --path TNS_Javascript --timeout 600"
         
-        output = runAUT(command)     
+        output = runAUT(command, 600)     
         assert ("BUILD SUCCESSFUL" in output)
 
         if 'nt' not in os.name:
