@@ -1,41 +1,21 @@
 import os
 import re
 import time
+import platform
 
 from helpers._os_lib import runAUT, KillProcess
 
-def CreateEmulator():
-
-    emulatorCreated = False    
-    for apiLevel in range (17, 20):
-        command="echo no | android create avd -n TempDevice -t android-{0} -b x86 -f".format(apiLevel)
-        output = runAUT(command)
-        if ("Error" in output):
-            print "Failed to create emulator with android-{0} target and x86 abi.".format(apiLevel)
-            command = "echo no | android create avd -n TempDevice -t android-{0} -f".format(apiLevel)
-            output = runAUT(command)
-            if ("Error" in output):
-                print "Failed to create emulator with android-{0} target and default abi.".format(apiLevel)
-            else:
-                print "Emulator with android-{0} target created successfully.".format(apiLevel)
-                emulatorCreated = True 
-                break;
-        else:
-            print "Emulator with android-{0} target created successfully.".format(apiLevel)
-            emulatorCreated = True
-            break;
-
-    if (emulatorCreated):
-        pass
-    else:
-        raise NameError("Failed to create emulator!")
-    
 def StartEmulator(EmulatorName):
     
-    print "Starting emulator on {0} OS".format(os.name) 
+    print "Starting emulator on {0}".format(platform.platform()) 
 
     startCommand = "emulator -avd " + EmulatorName   
    
+    # Linux test node has no active UI session.
+    # Emulator also should be started without UI on this node.
+    if 'Linux' in platform.platform():
+        startCommand = startCommand  + " -no-skin -no-audio -no-window"  
+          
     # Start emulator
     if 'nt' in os.name:
         runAUT(startCommand, 300, False)
