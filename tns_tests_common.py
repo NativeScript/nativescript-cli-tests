@@ -110,6 +110,7 @@ class TNSTests_Common(unittest.TestCase):
         
         command = tnsPath + " platform remove --path TNS_Javascript"
         output = runAUT(command)             
+        
         assert ("No platform specified. Please specify a platform to remove" in output) 
         assert ("$ tns platform remove <Platform>" in output)
         assert ("$ nativescript platform remove <Platform>" in output)
@@ -142,7 +143,7 @@ class TNSTests_Common(unittest.TestCase):
                 
         command = tnsPath + " prepare --path TNS_Javascript"
         output = runAUT(command)  
-        assert ("You need to provide all the required parameters." in output)  
+ 
         assert ("$ tns prepare <Platform>" in output)
         assert ("$ nativescript prepare <Platform>" in output)
         assert ("$ tns prepare android" in output)
@@ -187,7 +188,6 @@ class TNSTests_Common(unittest.TestCase):
         command = tnsPath + " build --path TNS_Javascript"
         output = runAUT(command)   
           
-        assert ("You need to provide all the required parameters." in output)    
         assert ("$ tns build <Platform> [--device] [--release]" in output)
         assert ("$ nativescript build <Platform> [--device] [--release]" in output)
         assert ("$ tns build android [--release]" in output)
@@ -221,7 +221,6 @@ class TNSTests_Common(unittest.TestCase):
         command = tnsPath + " emulate --path TNS_Javascript"
         output = runAUT(command)     
         
-        assert ("You need to provide all the required parameters." in output) 
         assert ("$ tns emulate <Platform>" in output) 
         assert ("$ nativescript emulate <Platform>" in output) 
         assert ("$ tns emulate android" in output) 
@@ -309,7 +308,6 @@ class TNSTests_Common(unittest.TestCase):
         command = tnsPath + " deploy --path TNS_Javascript"
         output = runAUT(command)  
            
-        assert ("You need to provide all the required parameters." in output) 
         assert ("$ tns deploy <Platform> [--device <Device ID>]" in output) 
         assert ("$ nativescript deploy <Platform> [--device <Device ID>]" in output) 
         assert ("$ tns deploy android [--device <Device ID>]" in output) 
@@ -381,7 +379,6 @@ class TNSTests_Common(unittest.TestCase):
         command = tnsPath + " run --path TNS_Javascript"
         output = runAUT(command)     
         
-        assert ("You need to provide all the required parameters." in output) 
         assert ("tns run <Platform> [--device <Device ID>] [--emulator]" in output)  
         assert ("nativescript run <Platform> [--device <Device ID>] [--emulator]" in output)  
         assert ("Runs your project on a connected device or in the native emulator, if configured. This is shorthand for prepare, build, and deploy." in output)
