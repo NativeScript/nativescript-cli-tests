@@ -476,7 +476,13 @@ class TNSTests_Common(unittest.TestCase):
         assert ("enable - Enables anonymous usage statistics tracking." in output)  
         assert ("disable - Disables anonymous usage statistics tracking." in output)  
         assert not ("Error" in output)
+ 
+    def test_130_DeviceLogInvalidDevice(self):
         
+        command = tnsPath + " device log --device InvalidDeviceId"
+        output = runAUT(command)   
+        assert ("Cannot resolve the specified connected device by the provided index or identifier" in output)    
+
     def test_200_InvalidCommand(self):
         
         command = tnsPath + " invalidCommand"

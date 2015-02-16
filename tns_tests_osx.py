@@ -1,8 +1,10 @@
+from time import sleep
 import unittest
 
 from helpers._os_lib import runAUT, CleanupFolder, KillProcess
 from helpers._tns_lib import CreateProject, tnsPath, AddPlatform, GetIOSFrameworkPath
-from helpers.emulator import StopEmulators
+from helpers.emulator import StopEmulators, StartEmulator
+
 
 # This class runs only on OSX test nodes
 class TNSTests_OSX(unittest.TestCase):
@@ -126,3 +128,21 @@ class TNSTests_OSX(unittest.TestCase):
         
         assert ("iOS" in output)
         assert not ("Error" in output)
+    
+    def test_131_DeviceLogEmulator(self):
+        
+        StartEmulator("Api19");
+                
+        command = tnsPath + " device log --device emulator-5554 > emuLog.txt"
+        runAUT(command, None, False)  
+        
+        sleep(10)
+        
+        try:
+            KillProcess("node", "tns")
+        except Exception:
+            pass
+                
+        command = "cat emuLog.txt"
+        output = runAUT(command)   
+        assert not ("Cannot resolve the specified connected device by the provided index or identifier" in output)  
