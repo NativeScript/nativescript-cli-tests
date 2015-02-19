@@ -11,10 +11,9 @@ def StartEmulator(EmulatorName):
 
     startCommand = "emulator -avd " + EmulatorName   
    
-    # Linux test node has no active UI session.
-    # Emulator also should be started without UI on this node.
-    if 'Linux' in platform.platform():
-        startCommand = startCommand  + " -no-skin -no-audio -no-window"  
+    # Linux and OSX test nodes has no active UI session.
+    if not 'nt' in os.name:
+        startCommand = startCommand  + " -no-skin -no-audio -no-window"
           
     # Start emulator
     if 'nt' in os.name:
