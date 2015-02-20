@@ -79,7 +79,31 @@ class TNSTests_OSX(unittest.TestCase):
         command = tnsPath + " build ios --path TNS_Javascript"
         output = runAUT(command)     
         assert ("Project successfully built" in output)
+        
+        command = "cat TestApp/platforms/ios/TestApp.xcodeproj/project.xcworkspace/contents.xcworkspacedata"
+        output = runAUT(command)     
+        assert not ("__PROJECT_NAME__.xcodeproj" in output)
 
+    def test_073_BuildPlatformIOSInRelease(self):        
+                
+        self.test_062_PreparePlatformIOS();
+        
+        command = tnsPath + " build ios --release --device --path TNS_Javascript"
+        output = runAUT(command)     
+        assert ("Project successfully built" in output)
+        
+        command = "mv TNS_Javascript/platforms/ios/build/device/TNS_Javascript.ipa TNS_Javascript-ipa.tgz"
+        output = runAUT(command)    
+        
+        command = "tar -xvf TNS_Javascript-ipa.tgz"
+        output = runAUT(command)     
+        
+        command = "lipo -info Payload/TNS_Javascript.app/TNS_Javascript"
+        output = runAUT(command)     
+         
+        assert ("armv7" in output)
+        assert ("arm64" in output)
+        
     def test_082_EmulatePlatformIOS(self):        
                 
         KillProcess("iOS Simulator")        
@@ -145,4 +169,4 @@ class TNSTests_OSX(unittest.TestCase):
                 
         command = "cat emuLog.txt"
         output = runAUT(command)   
-        assert not ("Cannot resolve the specified connected device by the provided index or identifier" in output)  
+        assert not ("Cannot resolve the specified connected device by the provided index or identifier" in output) 

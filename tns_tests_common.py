@@ -76,14 +76,11 @@ class TNSTests_Common(unittest.TestCase):
         output = AddPlatform(None, GetAndroidFrameworkPath(), "TNS_Javascript")
         assert ("No platform specified. Please specify a platform to add" in output)      
         assert ("$ tns platform add <Platform>" in output)    
-        assert ("$ nativescript platform add <Platform>" in output)   
         assert ("$ tns platform add android" in output)     
         assert ("$ tns platform add ios" in output)  
-        assert ("$ nativescript platform add android" in output)  
-        assert ("$ nativescript platform add ios" in output)    
         assert ("Configures the current project to target the selected platform." in output)
-        assert ("In this version of the Telerik NativeScript CLI, you can target iOS and Android, based on your system." in output)  
-        assert ("On Windows systems, you can target Android." in output)  
+        assert ("In this version of the NativeScript CLI, you can target iOS and Android, based on your system." in output)  
+        assert ("On Windows and Linux systems, you can target Android. " in output)  
         assert ("On OS X systems, you can target Android and iOS." in output)  
         assert not ("Error" in output) 
 
@@ -113,11 +110,8 @@ class TNSTests_Common(unittest.TestCase):
         
         assert ("No platform specified. Please specify a platform to remove" in output) 
         assert ("$ tns platform remove <Platform>" in output)
-        assert ("$ nativescript platform remove <Platform>" in output)
         assert ("$ tns platform remove android" in output)
         assert ("$ tns platform remove ios" in output)
-        assert ("$ nativescript platform remove android" in output)
-        assert ("$ nativescript platform remove ios" in output)
         assert ("Removes the selected platform from the platforms that the project currently targets." in output)
         assert ("This operation deletes the subdirectory for the selected platform from the platforms directory." in output)
         assert not ("Error" in output) 
@@ -145,11 +139,8 @@ class TNSTests_Common(unittest.TestCase):
         output = runAUT(command)  
  
         assert ("$ tns prepare <Platform>" in output)
-        assert ("$ nativescript prepare <Platform>" in output)
         assert ("$ tns prepare android" in output)
         assert ("$ tns prepare ios" in output)
-        assert ("$ nativescript prepare android" in output)  
-        assert ("$ nativescript prepare ios" in output)  
         assert ("Copies common and relevant platform-specific content from the app directory to the subdirectory for the selected target platform" in output)  
         assert ("This lets you build the project with the SDK for the selected platform." in output)  
         assert not ("Error" in output) 
@@ -172,11 +163,8 @@ class TNSTests_Common(unittest.TestCase):
         
         assert ("The platform android is not added to this project. Please use 'tns platform add <platform>'" in output)    
         assert ("$ tns prepare <Platform>" in output)
-        assert ("$ nativescript prepare <Platform>" in output)
         assert ("$ tns prepare android" in output)
         assert ("$ tns prepare ios" in output)
-        assert ("$ nativescript prepare android" in output)  
-        assert ("$ nativescript prepare ios" in output)  
         assert ("Copies common and relevant platform-specific content from the app directory to the subdirectory for the selected target platform" in output)  
         assert ("This lets you build the project with the SDK for the selected platform." in output) 
         assert not ("Error" in output)     
@@ -188,16 +176,12 @@ class TNSTests_Common(unittest.TestCase):
         command = tnsPath + " build --path TNS_Javascript"
         output = runAUT(command)   
           
-        assert ("$ tns build <Platform> [--device] [--release]" in output)
-        assert ("$ nativescript build <Platform> [--device] [--release]" in output)
-        assert ("$ tns build android [--release]" in output)
-        assert ("$ tns build ios [--device] [--release]" in output)
-        assert ("$ nativescript build android [--release]" in output)  
-        assert ("$ nativescript build ios [--device] [--release]" in output)  
-        assert ("Builds the project for the selected target platform and produces an application package that you can manually deploy on device or in the native emulator." in output)  
-        assert ("Before building for iOS device, verify that you have configured a valid pair of certificate and provisioning profile on your OS X system." in output) 
-        assert ("--release - If set, produces a release build. Otherwise, produces a debug build." in output)  
-        assert ("--device - This flag is applicable only to iOS. If set, produces an application package that you can deploy on device." in output)  
+        assert ("$ tns build <Command>" in output)
+        assert ("You must run the create command with a related command" in output)
+        assert ("Builds the project for the selected target platform and produces an application package that you can manually deploy on device or in the native emulator" in output)
+        assert ("<Command> is a related command that sets a target platform for the build command" in output) 
+        assert ("android - Builds the project for Android and produces an APK that you can manually deploy on device or in the native emulator" in output)  
+        assert ("ios - Builds the project for iOS and produces an APP or IPA that you can manually deploy in the iOS Simulator or on device, respectively" in output)  
         assert not ("Error" in output)   
          
     def test_071_BuildPlatformAndroid(self):
@@ -221,13 +205,10 @@ class TNSTests_Common(unittest.TestCase):
         command = tnsPath + " emulate --path TNS_Javascript"
         output = runAUT(command)     
         
-        assert ("$ tns emulate <Platform>" in output) 
-        assert ("$ nativescript emulate <Platform>" in output) 
-        assert ("$ tns emulate android" in output) 
-        assert ("$ tns emulate ios" in output) 
-        assert ("$ nativescript emulate android" in output) 
-        assert ("$ nativescript emulate ios" in output) 
-        assert ("Builds and runs the project in the native emulator for the selected target platform." in output) 
+        assert ("$ tns emulate emulate <Command> [--release]" in output) 
+        assert ("android - Builds the specified project in the cloud and runs it in the native Android emulator" in output) 
+        assert ("ios - Builds the specified project in the cloud and runs it in the native iOS Simulator" in output) 
+        assert ("--release - If set, produces a release build. Otherwise, produces a debug build" in output) 
         assert not ("Error" in output) 
 
     def test_081_EmulatePlatformAndroid(self):
@@ -309,14 +290,11 @@ class TNSTests_Common(unittest.TestCase):
         output = runAUT(command)  
            
         assert ("$ tns deploy <Platform> [--device <Device ID>]" in output) 
-        assert ("$ nativescript deploy <Platform> [--device <Device ID>]" in output) 
         assert ("$ tns deploy android [--device <Device ID>]" in output) 
         assert ("$ tns deploy ios [--device <Device ID>]" in output) 
-        assert ("$ nativescript deploy android [--device <Device ID>]" in output) 
-        assert ("$ nativescript deploy ios [--device <Device ID>]" in output) 
-        assert ("Builds and deploys the project to a connected physical or virtual device." in output) 
-        assert ("<Device ID> is the index or name of the target device as listed by $ tns device." in output) 
-        assert ("Before building for iOS device, verify that you have configured a valid pair of certificate and provisioning profile on your OS X system." in output) 
+        assert ("Builds and deploys the project to a connected physical or virtual device" in output) 
+        assert ("<Device ID> is the index or name of the target device as listed by $ tns device" in output) 
+        assert ("Before building for iOS device, verify that you have configured a valid pair of certificate and provisioning profile on your OS X system" in output) 
         assert not ("Error" in output) 
 
     def test_091_DeployPlatformAndroidOnMissingDevice(self):
@@ -378,17 +356,11 @@ class TNSTests_Common(unittest.TestCase):
                 
         command = tnsPath + " run --path TNS_Javascript"
         output = runAUT(command)     
-        
-        assert ("tns run <Platform> [--device <Device ID>] [--emulator]" in output)  
-        assert ("nativescript run <Platform> [--device <Device ID>] [--emulator]" in output)  
-        assert ("Runs your project on a connected device or in the native emulator, if configured. This is shorthand for prepare, build, and deploy." in output)
-        assert ("Before building for the Android emulator, verify that you have met the following requirements." in output)
-        assert ("You have added the file paths to the following directories from the Android SDK to your PATH environment variable." in output)
-        assert ("You have created at least one device with the Android Virtual Device manager." in output)
-        assert ("Before building for the iOS simulator, verify that you have installed the ios-sim npm package." in output)
-        assert ("Before building for iOS device, verify that you have configured a valid pair of certificate and provisioning profile on your OS X system." in output)
-        assert ("--device - Specifies a connected device on which to run the app." in output) 
-        assert ("--emulator - If set, runs the app in the native emulator for the target platform, if configured." in output)   
+    
+        assert ("$ tns run <Command>" in output)  
+        assert ("<Command> is a related command that sets a target platform for the run command. You can run the following related commands" in output)
+        assert ("android - Runs your project on a connected Android device or in a native Android emulator, if configured" in output)
+        assert ("ios - Runs your project on a connected iOS device or in the iOS Simulator, if configured" in output)
                                        
         assert not ("Error" in output) 
          
