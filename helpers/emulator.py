@@ -1,4 +1,3 @@
-import os
 import re
 import time
 import platform
@@ -12,13 +11,10 @@ def StartEmulator(EmulatorName):
     startCommand = "emulator -avd " + EmulatorName   
    
     # Linux and OSX test nodes has no active UI session.
-    if not 'nt' in os.name:
-        startCommand = startCommand  + " -no-skin -no-audio -no-window"
-          
-    # Start emulator
-    if 'nt' in os.name:
+    if 'Windows' in platform.platform():
         runAUT(startCommand, 300, False)
-    else:                      
+    else:          
+        startCommand = startCommand  + " -no-skin -no-audio -no-window"            
         runAUT(startCommand + " &", 300, False)
 
     # Retry to start emulator if it is not running
@@ -28,7 +24,7 @@ def StartEmulator(EmulatorName):
     else:
         KillProcess("adb")
         StopEmulators()
-        if 'nt' in os.name:
+        if 'Windows' in platform.platform():
             runAUT(startCommand, None, False)
         else:                      
             runAUT(startCommand + " &", None, False)
