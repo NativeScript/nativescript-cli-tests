@@ -1,0 +1,9 @@
+Usage:
+    $ tns device list-applications [--device <Device ID>]
+
+Lists the installed applications on all connected Android and iOS devices.
+
+<Device ID> is the device index or identifier as listed by run $ tns device
+
+Options:
+   --device - If multiple devices are connected, sets the device for which you want to list all currently installed applications.

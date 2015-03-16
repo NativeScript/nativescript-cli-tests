@@ -1,0 +1,15 @@
+Usage:
+    $ tns platform <Command>
+    $ nativescript platform <Command>
+
+You must run the platform command with a related command.
+
+<Command> is a related command that extends the platform command. You can run the following related commands:
+    list - Lists all platforms that the project currently targets. You can build and deploy your project only for
+           these target platforms.
+    add - Configures the current project to target the selected platform. After adding the target platform, you can
+          build and deploy your app on devices which run on the platform.
+    remove - Removes the selected platform from the platforms that the project currently targets. After removing
+             the target platform, you can no longer build and deploy your app on devices which run on the platform.
+             This operation deletes all platform-specific files and subdirectories from your project.
+    update - Updates the NativeScript runtime for the specified platform.

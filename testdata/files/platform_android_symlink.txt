@@ -1,0 +1,9 @@
+/.project
+AndroidManifest.xml
+build.xml
+local.properties
+proguard-project.txt
+project.properties
+res/values/strings.xml
+res/values/styles.xml
+res/values-v21/styles.xml

@@ -1,5 +1,15 @@
-from helpers._tns_lib import UninstallCLI, InstallCLI
+import os
+import platform
+
+from helpers._os_lib import CleanupFolder, runAUT
+from helpers._tns_lib import UninstallCLI, InstallCLI, GetAndroidRuntime, GetiOSRuntime, \
+    androidRuntimeSymlinkPath, iosRuntimeSymlinkPath, androidRuntimePath, \
+    iosRuntimePath
+from helpers.device import StopEmulators, StartEmulator
 import tns_tests_runner
+
+if 'Darwin' in platform.platform():
+    from helpers._tns_lib import keychainPass, keychain
 
 smokeTestResult = ""
 
@@ -17,8 +27,45 @@ def AnalyzeResultAndExit():
 
 if __name__ == '__main__':
    
-    UninstallCLI()  # remove older cli if exists
+    # Cleanup old runtimes
+    CleanupFolder(os.path.split(androidRuntimeSymlinkPath)[0])
+    CleanupFolder(os.path.split(iosRuntimeSymlinkPath)[0])
+    if os.path.isfile(androidRuntimePath):
+        os.remove(androidRuntimePath)
+    if os.path.isfile(iosRuntimePath):
+        os.remove(iosRuntimePath)
+        
+    # Cleanup folders created by test execution
+    CleanupFolder('./TNS App')
+    CleanupFolder('./TNS App')
+    CleanupFolder('./TNS_TempApp')
+    CleanupFolder('./folder')
+    CleanupFolder('./template')
+                
+    # Uninstall previous CLI and install latest   
+    UninstallCLI()
     InstallCLI()
-
+    
+    # Get latest Android and iOS runtimes
+    GetAndroidRuntime()
+    if 'Darwin' in platform.platform():
+        GetiOSRuntime()
+        runAUT("security lock-keychain " + keychain)
+        runAUT("security unlock-keychain -p '" + keychainPass + "' " + keychain)
+        
+    # For FULL test run emulator should be running        
+    if ('TESTRUN' in os.environ):
+        if ("FULL" in os.environ['TESTRUN']):    
+            StopEmulators()    
+            StartEmulator(emulatorName="Api17", port="5554", waitFor=False)  
+                
+    # Execute tests
     ExecuteTests()
+    
+    # For FULL test run emulator should be running        
+    if ('TESTRUN' in os.environ):
+        if ("FULL" in os.environ['TESTRUN']):    
+            StopEmulators()
+    
+    # Exit        
     AnalyzeResultAndExit()

@@ -1,0 +1,10 @@
+Usage:
+    $ tns build <Command>
+
+You must run the create command with a related command.
+
+Builds the project for the selected target platform and produces an application package that you can manually deploy on device or in the native emulator.
+
+<Command> is a related command that sets a target platform for the build command. You can run the following related commands:
+    android - Builds the project for Android and produces an APK that you can manually deploy on device or in the native emulator.
+    ios - Builds the project for iOS and produces an APP or IPA that you can manually deploy in the iOS Simulator or on device, respectively.

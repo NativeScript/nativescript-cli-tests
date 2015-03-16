@@ -1,19 +1,29 @@
 import os
 import platform
 import shutil
-import time
 
-from _os_lib import runAUT
+from helpers._os_lib import runAUT, FileExists, ExtractArchive
+
 
 tnsPath = os.path.join('node_modules', '.bin', 'tns');
 nativescriptPath = os.path.join('node_modules', '.bin', 'nativescript');
+androidRuntimePath = "tns-android.tgz"
+iosRuntimePath = "tns-ios.tgz"
+androidRuntimeSymlinkPath = os.path.join('tns-android', 'package')
+iosRuntimeSymlinkPath = os.path.join('tns-ios', 'package')
+
+androidKeyStorePath = os.environ['androidKeyStorePath']
+androidKeyStorePassword = os.environ['androidKeyStorePassword']
+androidKeyStoreAlias = os.environ['androidKeyStoreAlias']
+androidKeyStoreAliasPassword = os.environ['androidKeyStoreAliasPassword']
+
+if 'Darwin' in platform.platform():
+    keychain = os.environ['KEYCHAIN']
+    keychainPass = os.environ['KEYCHAIN_PASS']
 
 def InstallCLI(pathToPackage=None):
-    """
-    """
-    print os.environ
-    if 'BUILD_CLI_PATH' in os.environ:
-        location = os.path.join(os.environ['BUILD_CLI_PATH'], "nativescript.tgz")
+    if 'CLI_PATH' in os.environ:
+        location = os.path.join(os.environ['CLI_PATH'], "nativescript.tgz")
         shutil.copy2(location.strip(), (os.path.join(os.getcwd(), "nativescript.tgz")))
     if pathToPackage != None:
         shutil.copy2(pathToPackage, (os.path.join(os.getcwd(), "nativescript.tgz")))
@@ -22,75 +32,89 @@ def InstallCLI(pathToPackage=None):
     output = runAUT(installCommand)
     print output
     
-    # TODO: Remove this check after https://github.com/NativeScript/nativescript-cli/issues/113 is fixed
-    if "Linux" in platform.platform():
-        addExecute = "chmod u+x node_modules/nativescript/resources/platform-tools/android/linux/adb"
-        output = runAUT(addExecute)
-        print output
+    # TODO: Remove this check after https://github.com/NativeScript/nativescript-cli/issues/113 and https://github.com/NativeScript/nativescript-cli/issues/263 fixed
+    #if "Linux" in platform.platform():
+    #    addExecute = "chmod u+x node_modules/nativescript/resources/platform-tools/android/linux/adb"
+    #    output = runAUT(addExecute)
+    #    print output
 
-def UninstallCLI():    
+def GetAndroidRuntime():    
+    if 'ANDROID_PATH' in os.environ:
+        location = os.path.join(os.environ['ANDROID_PATH'], androidRuntimePath)
+        shutil.copy2(location.strip(), (os.path.join(os.getcwd(), androidRuntimePath)))
+    if FileExists(os.path.join(os.getcwd(), androidRuntimePath)):
+        ExtractArchive(androidRuntimePath, os.path.splitext(androidRuntimePath)[0])
+    
+def GetiOSRuntime():    
+    if 'IOS_PATH' in os.environ:
+        location = os.path.join(os.environ['IOS_PATH'], iosRuntimePath)
+        shutil.copy2(location.strip(), (os.path.join(os.getcwd(), iosRuntimePath)))
+    if FileExists(os.path.join(os.getcwd(), iosRuntimePath)):
+        ExtractArchive(iosRuntimePath, os.path.splitext(iosRuntimePath)[0])
+               
+def UninstallCLI():        
     uninstallCommand = "npm rm nativescript"
     output = runAUT(uninstallCommand)
     print output
 
 def CreateProject(projName, path=None, appId=None, copyFrom=None):
-    shutil.rmtree(projName, True)  # make sure no old project exists
-    time.sleep(1)  # to be sure that shutil has finished
+    
+    # TODO: It looks we don't need this code. Delete if no problems found until next release
+    #shutil.rmtree(projName, True)  # make sure no old project exists
+    #time.sleep(1)  # to be sure that shutil has finished
     
     command = tnsPath + " create {0}".format(projName)
     
     if path != None:
-        command += " --path " + path;
+        command += " --path " + path
     if appId != None:
-        command += " --appid " + path;
+        command += " --appid " + appId
     if copyFrom != None:
-        command += " --copy-from " + path;
+        command += " --copy-from " + copyFrom
 
     outp = runAUT(command)
-    assert("{0} was successfully created".format(projName) in outp)
+    assert("{0} was successfully created".format(projName.replace("\"", "")) in outp)
 
-def AddPlatform(platform=None, frameworkPath=None, path=None):
+def PlatformAdd(platform=None, frameworkPath=None, path=None, symlink=False):
  
     command = tnsPath + " platform add"
     
-    if platform != None:
-        command += " {0}".format(platform);
-    if frameworkPath != None:
-        command += " --frameworkPath {0}".format(frameworkPath);
-    if path != None:
-        command += " --path {0}".format(path);
+    if platform is not None:
+        command += " {0}".format(platform)
+        
+    if frameworkPath is not None:
+        command += " --frameworkPath {0}".format(frameworkPath)
+        
+    if path is not None:
+        command += " --path {0}".format(path)
+        
+    if symlink is True:
+        command += " --symlink"
+        
+    return runAUT(command)
 
-    outp = runAUT(command)
-    return outp
+def Prepare(path=None, platform=None, assertSuccess=True):
+ 
+    command = tnsPath + " prepare"
     
+    if platform is not None:
+        command += " {0}".format(platform)
+        
+    if path is not None:
+        command += " --path {0}".format(path)
+
+    output = runAUT(command)
+    
+    if (assertSuccess):
+        assert ("Project successfully prepared" in output)
+    
+    return output
+
+def CreateProjectAndAddPlatform(projName, platform=None, frameworkPath=None, symlink=False): 
+    CreateProject(projName)
+    output = PlatformAdd(platform, frameworkPath, projName, symlink)
+    assert("Copying template files..." in output)
+    assert("Project successfully created" in output)
+
 def GetCLIBuildVersion():
-    command = tnsPath + " --version"
-    outp = runAUT(command)
-    return outp
-
-def GetAndroidFrameworkPath():
-    
-    frameworkPath = None
-    if os.path.isfile("tns-android.tgz"):
-        frameworkPath = "tns-android.tgz"  
-    if os.path.isfile("tns-android-pr-latest.tgz"):
-        frameworkPath = "tns-android-pr-latest.tgz"  
-    if os.path.isfile("tns-android-stable-latest.tgz"):
-        frameworkPath = "tns-android-stable-latest.tgz"  
-    if os.path.isfile("tns-android-release-latest.tgz"):
-        frameworkPath = "tns-android-release-latest.tgz"      
-    return frameworkPath;
-        
-def GetIOSFrameworkPath():
-    
-    frameworkPath = None
-    if os.path.isfile("tns-ios.tgz"):
-        frameworkPath = "tns-ios.tgz"  
-    if os.path.isfile("tns-ios-pr-latest.tgz"):
-        frameworkPath = "tns-ios-pr-latest.tgz"  
-    if os.path.isfile("tns-ios-stable-latest.tgz"):
-        frameworkPath = "tns-ios-stable-latest.tgz"  
-    if os.path.isfile("tns-ios-release-latest.tgz"):
-        frameworkPath = "tns-ios-release-latest.tgz"      
-    return frameworkPath;
-        
+    return runAUT(tnsPath + " --version")

@@ -1,4 +1,6 @@
 import os, threading, psutil, time, shutil
+import tarfile
+
 
 default_timeout = 180  # seconds
 default_output_file = "output.txt"
@@ -45,11 +47,12 @@ def runAUT(cmd, set_timeout=None, getOutput=True):
     print "##### OUTPUT END #####"
     return out.strip('\n\r')
 
-def CleanupFolder(folder):
-    shutil.rmtree(folder, True, None)
-    
-def CheckOutput(output, file):
-    f = open('testdata/' + file)
+def CleanupFolder(folder, ignoreFail=True):
+    shutil.rmtree(folder, ignoreFail, None)
+
+# Check if output of command contains string from file
+def CheckOutput(output, fileName):
+    f = open('testdata/outputs/' + fileName)
     expected_lines = 0
     for line in f:
         expected_lines += 1
@@ -60,8 +63,9 @@ def CheckOutput(output, file):
             return False
     return True
 
-def CheckFilesExists(rootFolder, listFile):
-    f = open('testdata/' + listFile)
+# Check if folder contains list of files
+def CheckFilesExists(rootFolder, listFile, ignoreFileCount=True):
+    f = open('testdata/files/' + listFile)
     expected_lines = 0
     for line in f:
         expected_lines += 1
@@ -76,26 +80,32 @@ def CheckFilesExists(rootFolder, listFile):
         print files
     print "Total files : ", total
     print "Expected lines : ", expected_lines
-    assert(expected_lines == total)
-    return True
+    
+    if ignoreFileCount:
+        return True
+    else:
+        assert(expected_lines == total)
 
+# Check if folder is empty
+def IsEmpty(path):
+    if os.listdir(path) == []: 
+        return True
+    else: 
+        return False
+
+def FileExists(path):
+    if os.path.exists(path): 
+        return True
+    else: 
+        return False
+    
 def IsRunningProcess(processName):
     result = False
     for proc in psutil.process_iter():
         if processName in str(proc):
-            result = True
-            
+            result = True  
     return result 
 
-def WaitForProcess(processName):
-    result = False
-    for counter in range(1, 10):
-        time.sleep(5)
-        if IsRunningProcess(processName):
-            result = True 
-            break 
-    return result;
-          
 def KillProcess(processName, commandLine=None):
     result = False
     for proc in psutil.process_iter():
@@ -112,3 +122,12 @@ def KillProcess(processName, commandLine=None):
                         result = True
                         break
     return result
+
+def ExtractArchive(fileName, folder):
+    if (fileName.endswith(".tgz")):
+        tar = tarfile.open(fileName)
+        tar.extractall(path=os.path.join(os.getcwd(), folder))
+        tar.close()
+        print "{0} extracted in {1}".format(fileName, folder)
+    else:
+        print "Failed to extract {0}".format(fileName)

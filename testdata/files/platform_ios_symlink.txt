@@ -1,0 +1,16 @@
+Metadata
+NativeScript.framework
+TNS_App/build.xcconfig
+TNS_App/en.lproj
+TNS_App/en.lproj/InfoPlist.strings
+TNS_App/Images.xcassets
+TNS_App/Images.xcassets/AppIcon.appiconset
+TNS_App/Images.xcassets/AppIcon.appiconset/Contents.json
+TNS_App/Images.xcassets/LaunchImage.launchimage
+TNS_App/Images.xcassets/LaunchImage.launchimage/Contents.json
+TNS_App/main.m
+TNS_App/TNS_App-Info.plist
+TNS_App/TNS_App-Prefix.pch
+TNS_App.xcodeproj
+TNS_App.xcodeproj/project.pbxproj
+TNSDebugging.framework

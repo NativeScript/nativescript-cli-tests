@@ -1,0 +1,11 @@
+Usage:
+    $ tns device [<Command>]
+
+Lists all recognized connected devices with serial number and index, grouped by platform
+
+<Command> is a related command that extends the device command. You can run the following related commands:
+    android - Lists all recognized connected Android physical and running Android virtual devices.
+    ios - Lists all recognized connected iOS devices.
+    log - Opens the device log stream for a selected connected device.
+    list-applications - Lists the installed applications on all connected Android or iOS devices.
+    run - Runs the selected application on a connected

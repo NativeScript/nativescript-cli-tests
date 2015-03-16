@@ -1,0 +1,9 @@
+Usage:
+    $ tns prepare <Platform>
+
+Platform-specific usage:
+    $ tns prepare android
+    $ tns prepare ios
+
+Copies common and relevant platform-specific content from the app directory to the subdirectory for the selected target platform
+in the platforms directory. This lets you build the project with the SDK for the selected platform.

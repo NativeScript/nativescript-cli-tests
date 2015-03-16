@@ -1,0 +1,9 @@
+Usage:
+    $ tns device log --device <Device ID>
+
+Opens the device log stream for a selected connected device.
+
+<Device ID> is the device index or identifier as listed by $ tns device
+
+Options:
+   --device - If multiple devices are connected, sets the device for which you want to stream the log in the console.

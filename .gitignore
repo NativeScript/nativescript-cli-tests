@@ -1,6 +1,12 @@
+.settings
 *.pyc
 output.txt
 Report.*
 node_modules
 *.tgz
 TNS_*
+setup*
+tns-android
+tns-ios
+template
+deviceLog.txt
