@@ -46,5 +46,5 @@ Run Tests
 ===
 
 ```Shell
-	python run_tests.py
-	```
+python run_tests.py
+```
