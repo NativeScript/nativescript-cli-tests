@@ -7,5 +7,5 @@ Lists all recognized connected devices with serial number and index, grouped by 
     android - Lists all recognized connected Android physical and running Android virtual devices.
     ios - Lists all recognized connected iOS devices.
     log - Opens the device log stream for a selected connected device.
-    list-applications - Lists the installed applications on all connected Android or iOS devices.
+    list-applications - Lists the installed applications on all connected
     run - Runs the selected application on a connected
