@@ -43,7 +43,7 @@ class Emulate_OSX(unittest.TestCase):
         assert ("Project successfully built" in output)   
         assert ("Starting iOS Simulator" in output) 
         assert ("Session started without errors" in output) 
-        assert IsRunningProcess("iOS Simulator")
+        assert IsRunningProcess("Simulator")
         
     def test_400_Emulate_InvalidDevice(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  

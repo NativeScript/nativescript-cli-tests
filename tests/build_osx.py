@@ -22,25 +22,7 @@ class Build_OSX(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    def test_010_Build_iOS_WithPrepare(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)     
-        Prepare(path="TNS_App", platform="ios") 
-        
-        output = runAUT(tnsPath + " build ios --path TNS_App")
-        
-        # Even if project is already prepared build will prepare it again
-        assert ("Project successfully prepared" in output) 
-        assert ("build/emulator/TNS_App.app" in output)  
-        assert ("** BUILD SUCCEEDED **" in output)
-        assert ("Project successfully built" in output)         
-        assert FileExists("TNS_App/platforms/ios/build/emulator/TNS_App.app")
-        
-        # Verify Xcode project name is not empty
-        command = "cat TNS_App/platforms/ios/TNS_App.xcodeproj/project.xcworkspace/contents.xcworkspacedata"
-        output = runAUT(command)     
-        assert not ("__PROJECT_NAME__.xcodeproj" in output)
-    
-    def test_011_Build_iOS_WithOutPrepare(self):
+    def test_001_Build_iOS(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)     
         output = runAUT(tnsPath + " build ios --path TNS_App")
         assert ("Project successfully prepared" in output) 
@@ -49,21 +31,7 @@ class Build_OSX(unittest.TestCase):
         assert ("Project successfully built" in output)         
         assert FileExists("TNS_App/platforms/ios/build/emulator/TNS_App.app")
             
-    def test_012_Build_iOS_InsideProject(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
-        
-        currentDir = os.getcwd()   
-        os.chdir(os.path.join(currentDir,"TNS_App"))    
-        output = runAUT(os.path.join("..", tnsPath) + " build ios --path TNS_App")
-        os.chdir(currentDir);
-
-        assert ("Project successfully prepared" in output) 
-        assert ("build/emulator/TNS_App.app" in output)  
-        assert ("** BUILD SUCCEEDED **" in output)
-        assert ("Project successfully built" in output)         
-        assert FileExists("TNS_App/platforms/ios/build/emulator/TNS_App.app")
-
-    def test_013_Build_iOS_Release(self):
+    def test_002_Build_iOS_Release(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)     
         output = runAUT(tnsPath + " build ios --path TNS_App --release")
         assert ("Project successfully prepared" in output) 
@@ -73,7 +41,7 @@ class Build_OSX(unittest.TestCase):
         assert ("Project successfully built" in output)         
         assert FileExists("TNS_App/platforms/ios/build/emulator/TNS_App.app")
 
-    def test_014_Build_iOS_ForDevice(self):
+    def test_003_Build_iOS_ForDevice(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)     
         output = runAUT(tnsPath + " build ios --path TNS_App --forDevice")
         assert ("Project successfully prepared" in output) 
@@ -84,7 +52,7 @@ class Build_OSX(unittest.TestCase):
         assert ("Project successfully built" in output)         
         assert FileExists("TNS_App/platforms/ios/build/device/TNS_App.ipa")
         
-    def test_015_Build_iOS_Release_ForDevice(self):
+    def test_004_Build_iOS_Release_ForDevice(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)     
         output = runAUT(tnsPath + " build ios --path TNS_App --forDevice --release")
         assert ("Project successfully prepared" in output) 
@@ -102,7 +70,7 @@ class Build_OSX(unittest.TestCase):
         assert ("armv7" in output)
         assert ("arm64" in output)       
 
-    def test_016_Build_iOS_None_SymlinkProject(self):
+    def test_200_Build_iOS_None_SymlinkProject(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath)     
         output = runAUT(tnsPath + " build ios --path TNS_App --forDevice --release")
         assert ("Project successfully prepared" in output) 
@@ -112,7 +80,39 @@ class Build_OSX(unittest.TestCase):
         assert ("** BUILD SUCCEEDED **" in output)
         assert ("Project successfully built" in output)         
         assert FileExists("TNS_App/platforms/ios/build/device/TNS_App.ipa")  
-               
+
+    def test_201_Build_iOS_InsideProject(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
+        
+        currentDir = os.getcwd()   
+        os.chdir(os.path.join(currentDir,"TNS_App"))    
+        output = runAUT(os.path.join("..", tnsPath) + " build ios --path TNS_App")
+        os.chdir(currentDir);
+
+        assert ("Project successfully prepared" in output) 
+        assert ("build/emulator/TNS_App.app" in output)  
+        assert ("** BUILD SUCCEEDED **" in output)
+        assert ("Project successfully built" in output)         
+        assert FileExists("TNS_App/platforms/ios/build/emulator/TNS_App.app")
+
+    def test_202_Build_iOS_WithPrepare(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)     
+        Prepare(path="TNS_App", platform="ios") 
+        
+        output = runAUT(tnsPath + " build ios --path TNS_App")
+        
+        # Even if project is already prepared build will prepare it again
+        assert ("Project successfully prepared" in output) 
+        assert ("build/emulator/TNS_App.app" in output)  
+        assert ("** BUILD SUCCEEDED **" in output)
+        assert ("Project successfully built" in output)         
+        assert FileExists("TNS_App/platforms/ios/build/emulator/TNS_App.app")
+        
+        # Verify Xcode project name is not empty
+        command = "cat TNS_App/platforms/ios/TNS_App.xcodeproj/project.xcworkspace/contents.xcworkspacedata"
+        output = runAUT(command)     
+        assert not ("__PROJECT_NAME__.xcodeproj" in output)
+                               
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/277")             
     def test_400_Build_iOS_WhenPlatformIsNotAdded(self):
         CreateProject(projName="TNS_App")
@@ -123,6 +123,5 @@ class Build_OSX(unittest.TestCase):
     def test_401_Build_iOS_WithWrongParam(self):
         CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " build iOS --debug --path TNS_App")
-        assert ("The input is not valid sub-command for 'build' command" in output)
-        assert ("Usage:" in output)
+        assert ("The option 'debug' is not supported." in output)
         assert not ("error" in output)

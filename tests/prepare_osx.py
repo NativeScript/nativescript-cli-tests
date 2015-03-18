@@ -20,7 +20,7 @@ class Prepare_OSX(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    def test_010_Prepare_iOS(self):
+    def test_001_Prepare_iOS(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         output = runAUT(tnsPath + " prepare ios --path TNS_App")
         assert("Project successfully prepared" in output)

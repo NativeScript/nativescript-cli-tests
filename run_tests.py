@@ -53,19 +53,16 @@ if __name__ == '__main__':
         runAUT("security lock-keychain " + keychain)
         runAUT("security unlock-keychain -p '" + keychainPass + "' " + keychain)
         
-    # For FULL test run emulator should be running        
-    if ('TESTRUN' in os.environ):
-        if ("FULL" in os.environ['TESTRUN']):    
-            StopEmulators()    
-            StartEmulator(emulatorName="Api17", port="5554", waitFor=False)  
+    # Start emulator  
+    if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):   
+        StartEmulator(emulatorName="Api17", port="5554", waitFor=False)  
                 
     # Execute tests
     ExecuteTests()
     
-    # For FULL test run emulator should be running        
-    if ('TESTRUN' in os.environ):
-        if ("FULL" in os.environ['TESTRUN']):    
-            StopEmulators()
+    # Stop running emulators 
+    if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):       
+        StopEmulators()
     
     # Exit        
     AnalyzeResultAndExit()

@@ -25,25 +25,15 @@ class Deploy_Linux(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    def test_010_Deploy_Android(self):
+    def test_001_Deploy_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " deploy android --path TNS_App")
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         assert ("Successfully deployed on device with identifier" in output)  
         #TODO: Get device id and verify files are deployed and process is running on this device 
-        
-    def test_011_Deploy_Android_InsideProject(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
-        currentDir = os.getcwd()   
-        os.chdir(os.path.join(currentDir,"TNS_App"))    
-        output = runAUT(os.path.join("..", tnsPath) + " deploy android --path TNS_App")
-        os.chdir(currentDir);
-        assert ("Project successfully prepared" in output) 
-        assert ("Project successfully built" in output)   
-        assert ("Successfully deployed on device with identifier" in output)  
-        
-    def test_012_Deploy_Android_ReleaseConfiguration(self):
+       
+    def test_002_Deploy_Android_ReleaseConfiguration(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " deploy android --keyStorePath " + androidKeyStorePath + 
                         " --keyStorePassword " + androidKeyStorePassword + 
@@ -55,14 +45,24 @@ class Deploy_Linux(unittest.TestCase):
         assert ("Successfully deployed on device with identifier" in output)         
         #TODO: Get device id and verify files are deployed and process is running on this device
  
-    def test_013_Deploy_Android_DeviceId(self):
+    def test_200_Deploy_Android_DeviceId(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " deploy android --device emulator-5554 --path TNS_App")
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         assert ("Successfully deployed on device with identifier 'emulator-5554'" in output)  
         #TODO: Get device id and verify files are deployed and process is running on this device 
-                       
+
+    def test_201_Deploy_Android_InsideProject(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
+        currentDir = os.getcwd()   
+        os.chdir(os.path.join(currentDir,"TNS_App"))    
+        output = runAUT(os.path.join("..", tnsPath) + " deploy android --path TNS_App")
+        os.chdir(currentDir);
+        assert ("Project successfully prepared" in output) 
+        assert ("Project successfully built" in output)   
+        assert ("Successfully deployed on device with identifier" in output)  
+                               
     def test_400_Deploy_MissingPlatform(self):
         CreateProject(projName="TNS_App")  
         output = runAUT(tnsPath + " deploy android --path TNS_App")

@@ -31,9 +31,6 @@ def RunTests():
     
     print "Platform : ", platform.platform()        
     
-    # Basic suite should be able to run on all environments where Nativescript CLI can be installed
-    # Basic suite does not depend on specific test environment 
-    #
     # Android Requirements:
     # - Valid pair of keyStore and password
     #
@@ -49,12 +46,32 @@ def RunTests():
     # - androidKeyStoreAliasPassword
     # - KEYCHAIN - Keychain for signing iOS Apps
     # - KEYCHAIN_PASS - Keychain password
-    
+    #
+    # Test name convention:
+    # 001 - 199 - High priority
+    # 200 - 299 - Medium priority
+    # 300 - 399 - Low priority
+    # 400 - 499 - Negative tests  
+    # 
+    # TESTRUN Types:
+    # SMOKE 
+    # - Runs basic tests with High priority. 
+    # DEFAULT
+    # - Runs basic tests plus tests that require emulator or simulator (all priorities)  
+    # - Following Android Emulators should be available
+    #    Api17 - Android emulator with API17
+    #    Api19 - Android emulator with API19
+    # FULL
+    # - Runs all tests
+    # - At least one real Android device must be attached to Linux hosts
+    # - At least one real iOS device must be attached to OSX hosts        
+       
     suite = unittest.TestLoader().loadTestsFromTestCase(Version)   
+
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))    
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace)) 
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(FeatureUsageTracking))
-               
+                           
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))    
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_Linux))    
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_Linux)) 
@@ -64,32 +81,33 @@ def RunTests():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX)) 
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_OSX))      
+        
+    if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']): 
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
+        if 'Darwin' in platform.platform():
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_OSX))
     
-    # TESTRUN=FULL suppose test are executed in specific test environment
-    # Following Android Emulators should be available: 
-    # Api17 - Android emulator with API17  
-    # Api19 - Android emulator with API19
-    # At least one real Android device must be attached to Linux hosts
-    # At least one real iOS device must be attached to OSX hosts
-    # No attached real devices on Windows hosts    
-    if ('TESTRUN' in os.environ) and ("FULL" in os.environ['TESTRUN']):    
+    if ('TESTRUN' in os.environ) and ("FULL" in os.environ['TESTRUN']):  
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Deploy_Linux))
-            #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_Linux))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_Linux))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Device_Linux))       
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Debug_Linux)) 
             if 'Darwin' in platform.platform():
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Deploy_OSX))
-                #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_OSX))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_OSX))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_OSX))
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Device_OSX))  
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Debug_OSX))   
-    else:
-        # Ignore negative tests in SMOKE TEST RUN (test with id above 400)
-        for test in suite:
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Debug_OSX))  
+    
+    # Smoke test runs only high priority tests             
+    if ('TESTRUN' in os.environ) and ("SMOKE" in os.environ['TESTRUN']): 
+        for test in suite:            
             if test._testMethodName.find('test_4') >= 0:
                 setattr(test,test._testMethodName,lambda: test.skipTest('Skip negative tests in SMOKE TEST run.'))          
-                                               
+            if test._testMethodName.find('test_3') >= 0:
+                setattr(test,test._testMethodName,lambda: test.skipTest('Skip low priority tests in SMOKE TEST run.')) 
+            if test._testMethodName.find('test_2') >= 0:
+                setattr(test,test._testMethodName,lambda: test.skipTest('Skip medium priority tests in SMOKE TEST run.')) 
+                                                                               
     with open ("Report.html", "w") as f:
         descr = "Platform : {0};  nativescript-cli build version : {1}".format(platform.platform(), GetCLIBuildVersion())
         runner = HTMLTestRunner.HTMLTestRunner(stream=f, title='TNS_CLI_tests', description=descr)

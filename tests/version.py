@@ -17,7 +17,7 @@ class Version(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    def test_010_Version(self):
+    def test_001_Version(self):
         output = runAUT(tnsPath + " --version")
         a = re.compile('^\d+\.\d+\.\d+(-\d+)?$')
         assert (a.match(output))

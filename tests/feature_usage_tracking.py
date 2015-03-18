@@ -17,18 +17,18 @@ class FeatureUsageTracking(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    def test_010_FeatureUsageTracking(self):
+    def test_001_FeatureUsageTracking(self):
         output = runAUT(tnsPath + " feature-usage-tracking")   
         assert ("Feature usage tracking is" in output)    
         
-    def test_011_FeatureUsageTracking_Enable(self):
+    def test_002_FeatureUsageTracking_Enable(self):
         output = runAUT(tnsPath + " feature-usage-tracking enable")   
         assert ("Feature usage tracking is now enabled." in output)    
         
         output = runAUT(tnsPath + " feature-usage-tracking status")   
         assert ("Feature usage tracking is enabled." in output)    
  
-    def test_012_FeatureUsageTracking_Disable(self):
+    def test_003_FeatureUsageTracking_Disable(self):
         output = runAUT(tnsPath + " feature-usage-tracking disable")   
         assert ("Feature usage tracking is now disabled." in output)    
         

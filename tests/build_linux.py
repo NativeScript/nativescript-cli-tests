@@ -23,19 +23,7 @@ class Build_Linux(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    def test_010_Build_Android_WithPrepare(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
-        Prepare(path="TNS_App", platform="android") 
-        output = runAUT(tnsPath + " build android --path TNS_App")
-        
-        # Even if project is already prepared build will prepare it again
-        assert ("Project successfully prepared" in output) 
-        assert ("Creating TNS_App-debug-unaligned.apk and signing it with a debug key..." in output)  
-        assert ("BUILD SUCCESSFUL" in output)
-        assert ("Project successfully built" in output)         
-        assert FileExists("TNS_App/platforms/android/bin/TNS_App-debug.apk")
-                
-    def test_011_Build_Android_WithOutPrepare(self):
+    def test_001_Build_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
         output = runAUT(tnsPath + " build android --path TNS_App")
         
@@ -46,18 +34,7 @@ class Build_Linux(unittest.TestCase):
         assert ("Project successfully built" in output)        
         assert FileExists("TNS_App/platforms/android/bin/TNS_App-debug.apk")
                     
-    def test_012_Build_Android_InsideProject(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
-        currentDir = os.getcwd()   
-        os.chdir(os.path.join(currentDir,"TNS_App"))    
-        output = runAUT(os.path.join("..", tnsPath) + " build android --path TNS_App")
-        os.chdir(currentDir);
-        assert ("Project successfully prepared" in output) 
-        assert ("BUILD SUCCESSFUL" in output)
-        assert ("Project successfully built" in output)   
-        assert FileExists("TNS_App/platforms/android/bin/TNS_App-debug.apk")
-        
-    def test_013_Build_Android_Release(self):
+    def test_002_Build_Android_Release(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
         output = runAUT(tnsPath + " build android --keyStorePath " + androidKeyStorePath + 
                         " --keyStorePassword " + androidKeyStorePassword + 
@@ -74,7 +51,7 @@ class Build_Linux(unittest.TestCase):
     # Note: This test fails only on Windows.
     # TODO: Ignore tests at runtime (in tns_tests_runner.py). This will allow test to be ignored only on specific OS
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/282")         
-    def test_014_Build_SymlinkProject(self):
+    def test_003_Build_SymlinkProject(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="android", path="TNS_App", frameworkPath=androidRuntimeSymlinkPath, symlink=True)
         assert("Project successfully created" in output)
@@ -82,7 +59,30 @@ class Build_Linux(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)  
-               
+
+    def test_200_Build_Android_InsideProject(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
+        currentDir = os.getcwd()   
+        os.chdir(os.path.join(currentDir,"TNS_App"))    
+        output = runAUT(os.path.join("..", tnsPath) + " build android --path TNS_App")
+        os.chdir(currentDir);
+        assert ("Project successfully prepared" in output) 
+        assert ("BUILD SUCCESSFUL" in output)
+        assert ("Project successfully built" in output)   
+        assert FileExists("TNS_App/platforms/android/bin/TNS_App-debug.apk")
+
+    def test_201_Build_Android_WithPrepare(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
+        Prepare(path="TNS_App", platform="android") 
+        output = runAUT(tnsPath + " build android --path TNS_App")
+        
+        # Even if project is already prepared build will prepare it again
+        assert ("Project successfully prepared" in output) 
+        assert ("Creating TNS_App-debug-unaligned.apk and signing it with a debug key..." in output)  
+        assert ("BUILD SUCCESSFUL" in output)
+        assert ("Project successfully built" in output)         
+        assert FileExists("TNS_App/platforms/android/bin/TNS_App-debug.apk")
+                               
     def test_400_Build_MissingPlatform(self):
         output = runAUT(tnsPath + " build")
         assert CheckOutput(output, 'build_help_output.txt')

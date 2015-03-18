@@ -25,15 +25,7 @@ class Device_Linux(unittest.TestCase):
     def tearDown(self):        
         pass
     
-    def test_010_Device_Log_Android(self): 
-        if (GetDeviceCount(platform="android") > 1): 
-            output = runAUT(tnsPath + " device log")
-            assert ("More than one device found. Specify device explicitly." in output) 
-        else:
-            print "Prerequisites not met. This test requires at least two attached devices."
-            assert (False)
-
-    def test_020_Device_ListApplications_And_Run_Android(self):          
+    def test_001_Device_ListApplications_And_Run_Android(self):          
         deviceId = GetPhysicalDeviceId(platform="android");
         if (deviceId is not None): 
             
@@ -66,7 +58,15 @@ class Device_Linux(unittest.TestCase):
         else:
             print "Prerequisites not met. This test requires at least one real android device."
             assert (False)             
-       
+ 
+    def test_002_Device_Log_Android(self): 
+        if (GetDeviceCount(platform="android") > 1): 
+            output = runAUT(tnsPath + " device log")
+            assert ("More than one device found. Specify device explicitly." in output) 
+        else:
+            print "Prerequisites not met. This test requires at least two attached devices."
+            assert (False)
+                  
     def test_400_Device_InvalidPlatform(self):
         output = runAUT(tnsPath + " device windows")
         assert ("'windows' is not a valid device platform." in output) 

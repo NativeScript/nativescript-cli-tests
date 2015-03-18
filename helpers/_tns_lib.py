@@ -31,12 +31,6 @@ def InstallCLI(pathToPackage=None):
     installCommand = "npm i nativescript.tgz"
     output = runAUT(installCommand)
     print output
-    
-    # TODO: Remove this check after https://github.com/NativeScript/nativescript-cli/issues/113 and https://github.com/NativeScript/nativescript-cli/issues/263 fixed
-    #if "Linux" in platform.platform():
-    #    addExecute = "chmod u+x node_modules/nativescript/resources/platform-tools/android/linux/adb"
-    #    output = runAUT(addExecute)
-    #    print output
 
 def GetAndroidRuntime():    
     if 'ANDROID_PATH' in os.environ:

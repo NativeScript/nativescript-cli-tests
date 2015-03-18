@@ -23,7 +23,7 @@ class Create(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    def test_010_CreateProject(self):        
+    def test_001_CreateProject(self):        
         CreateProject(projName="TNS_App")        
         output = runAUT("cat TNS_App/.tnsproject")
         assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
@@ -31,7 +31,7 @@ class Create(unittest.TestCase):
         # TODO: Uncomment this after TNS template on Github is OK
         #assert(CheckFilesExists(projName, 'template_javascript_files.txt'))
         
-    def test_011_CreateProjectWithPath(self):
+    def test_002_CreateProjectWithPath(self):
         CreateProject(projName="TNS_App", path='folder/subfolder/')
         output = runAUT("cat folder/subfolder/TNS_App/.tnsproject")
         assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
@@ -39,12 +39,12 @@ class Create(unittest.TestCase):
         # TODO: Uncomment this after TNS template on Github is OK
         # assert(CheckFilesExists('folder/subfolder/' + projName, 'template_javascript_files.txt'))
         
-    def test_012_CreateProjectWithAppId(self):
+    def test_003_CreateProjectWithAppId(self):
         CreateProject(projName = "TNS_App", appId="org.nativescript.MyApp")
         output = runAUT("cat TNS_App/.tnsproject")
         assert ("\"id\": \"org.nativescript.MyApp\"" in output)
         
-    def test_013_CreateProjectWithCopyFrom(self):        
+    def test_004_CreateProjectWithCopyFrom(self):        
         # Create initial template project
         CreateProject(projName="template")
         
@@ -64,7 +64,7 @@ class Create(unittest.TestCase):
         output = runAUT("cat TNS_App/app/README.md")
         assert ("myTemplate" in output)        
  
-    def test_014_CreateProjectWithSpaceInName(self):        
+    def test_005_CreateProjectWithSpaceInName(self):        
         CreateProject(projName="\"TNS App\"");        
         output = runAUT("cat \"TNS App/.tnsproject\"");
         assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
@@ -83,8 +83,8 @@ class Create(unittest.TestCase):
         CreateProject(projName="template")
         
         output = runAUT(tnsPath + " create TNS_App -copy-from template")
-        assert ("The parameter template is not valid for this command" in output)
-        assert ("Usage" in output)
+        assert not ("successfully created" in output)
+        assert ("nativescript help" in output)
     
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/271")     
     def test_403_CreateProjectWithWrongCopyFromCommand(self):      

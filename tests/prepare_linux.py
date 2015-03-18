@@ -20,7 +20,7 @@ class Prepare_Linux(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    def test_010_Prepare_Android(self): 
+    def test_001_Prepare_Android(self): 
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         output = runAUT(tnsPath + " prepare android --path TNS_App")
         assert("Project successfully prepared" in output)
@@ -31,7 +31,7 @@ class Prepare_Linux(unittest.TestCase):
         assert not FileExists('TNS_App/platforms/android/assets/tns_modules/application/application.android.js')
         assert not FileExists('TNS_App/platforms/android/assets/tns_modules/application/application.ios.js')
         
-    def test_011_Prepare_Android_InsideProject(self):
+    def test_200_Prepare_Android_InsideProject(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)    
         currentDir = os.getcwd()   
         os.chdir(os.path.join(currentDir,"TNS_App"))    

@@ -24,16 +24,36 @@ class Emulate_Linux(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    def test_010_Emulate_Android_InRunningEmulator(self):
+    def test_001_Emulate_Android_InRunningEmulator(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " emulate android --path TNS_App")
         assert ("Project successfully prepared" in output) 
-        assert ("Project successfully built" in output)   
+        assert ("Project successfully built" in output) 
         assert ("installing" in output) 
         assert ("running" in output)   
+        assert not ("Starting Android emulator with image" in output)
         #TODO: Get device id and verify files are deployed and process is running on this device 
         
-    def test_011_Emulate_Android_InsideProject_InRunningEmulator(self):
+    def test_002_Emulate_Android_ReleaseConfiguration(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
+        output = runAUT(tnsPath + " emulate android --keyStorePath " + androidKeyStorePath + 
+                        " --keyStorePassword " + androidKeyStorePassword + 
+                        " --keyStoreAlias " + androidKeyStoreAlias + 
+                        " --keyStoreAliasPassword " + androidKeyStoreAliasPassword + 
+                        " --release --path TNS_App")
+        assert ("Project successfully prepared" in output) 
+        assert ("Project successfully built" in output)   
+        assert ("installing" in output) 
+        assert ("running" in output)          
+        assert not ("Starting Android emulator with image" in output)
+        #TODO: Get device id and verify files are deployed and process is running on this device
+ 
+    #TODO: Implement this test 
+    @unittest.skip("Not implemented.")     
+    def test_014_Emulate_Android_Genymotion(self):
+        pass
+
+    def test_200_Emulate_Android_InsideProject_InRunningEmulator(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
         currentDir = os.getcwd()   
         os.chdir(os.path.join(currentDir,"TNS_App"))    
@@ -45,20 +65,7 @@ class Emulate_Linux(unittest.TestCase):
         assert ("running" in output)   
         #TODO: Get device id and verify files are deployed and process is running on this device
         
-    def test_012_Emulate_Android_ReleaseConfiguration(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
-        output = runAUT(tnsPath + " emulate android --keyStorePath " + androidKeyStorePath + 
-                        " --keyStorePassword " + androidKeyStorePassword + 
-                        " --keyStoreAlias " + androidKeyStoreAlias + 
-                        " --keyStoreAliasPassword " + androidKeyStoreAliasPassword + 
-                        " --release --path TNS_App")
-        assert ("Project successfully prepared" in output) 
-        assert ("Project successfully built" in output)   
-        assert ("installing" in output) 
-        assert ("running" in output)          
-        #TODO: Get device id and verify files are deployed and process is running on this device
- 
-    def test_013_Emulate_Android_AvdName(self):
+    def test_201_Emulate_Android_AvdName(self):
         StopEmulators();
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " emulate android --avd Api19 --path TNS_App")
@@ -68,12 +75,7 @@ class Emulate_Linux(unittest.TestCase):
         assert ("installing" in output) 
         assert ("running" in output)   
         #TODO: Get device id and verify files are deployed and process is running on this device 
-
-    #TODO: Implement this test 
-    @unittest.skip("Not implemented.")     
-    def test_014_Emulate_Android_Genymotion(self):
-        pass
-                               
+                                       
     def test_400_Emulate_MissingPlatform(self):
         CreateProject(projName="TNS_App")  
         output = runAUT(tnsPath + " emulate android --path TNS_App")

@@ -21,8 +21,8 @@ class Deploy_OSX(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/293")  
-    def test_010_Deploy_iOS_Simulator(self):
+    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/248")  
+    def test_001_Deploy_iOS_Simulator(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
         output = runAUT(tnsPath + " deploy ios --path TNS_App")
         assert ("Project successfully prepared" in output) 
@@ -31,7 +31,7 @@ class Deploy_OSX(unittest.TestCase):
         #TODO: Get device id and verify files are deployed and process is running on this device 
 
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/248")          
-    def test_011_Deploy_iOS_Device(self):
+    def test_002_Deploy_iOS_Device(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
         output = runAUT(tnsPath + " deploy ios --path TNS_App")
         assert ("Project successfully prepared" in output) 

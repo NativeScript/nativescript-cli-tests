@@ -21,7 +21,7 @@ class Device_OSX(unittest.TestCase):
     def tearDown(self):        
         pass
     
-    def test_010_Device_Log_ListApplications_And_Run_Android(self):
+    def test_001_Device_Log_ListApplications_And_Run_Android(self):
                 
         deviceId = GetPhysicalDeviceId(platform="android")
         if (deviceId is not None): 

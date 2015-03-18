@@ -163,7 +163,7 @@ NativeScript.framework
 NativeScript.framework/Headers
 NativeScript.framework/Headers/NativeScript.h
 NativeScript.framework/Headers/TNSRuntime.h
-NativeScript.framework/Headers/TNSRuntimeInspector.h
+NativeScript.framework/Headers/TNSRuntime+Inspector.h
 NativeScript.framework/NativeScript
 TNS_App
 TNS_App/build.xcconfig
