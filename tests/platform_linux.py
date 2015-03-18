@@ -41,7 +41,9 @@ class Platform_Linux(unittest.TestCase):
         assert("Updated project.properties" in output)
         assert("Updated local.properties" in output)
         assert("Project successfully created" in output)
-        assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_live.txt')
+        
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_live.txt')
         
     def test_003_Platform_Add_Android_FrameworkPath(self):
         CreateProject(projName="TNS_App")
@@ -50,7 +52,9 @@ class Platform_Linux(unittest.TestCase):
         assert("Updated project.properties" in output)
         assert("Updated local.properties" in output)
         assert("Project successfully created" in output)
-        assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_current.txt')
+        
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_current.txt')
     
     # Note: This test fails only on Windows.
     # TODO: Ignore tests at runtime (in tns_tests_runner.py). This will allow test to be ignored only on specific OS
@@ -62,9 +66,11 @@ class Platform_Linux(unittest.TestCase):
         assert("Updated project.properties" in output)
         assert("Updated local.properties" in output)
         assert("Project successfully created" in output)
-        assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_symlink.txt')
         assert IsEmpty('TNS_App/platforms/android/assets')
         assert IsEmpty('TNS_App/platforms/android/libs')
+        
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_symlink.txt')
 
     # Note: This test fails only on Windows.
     # TODO: Ignore tests at runtime (in tns_tests_runner.py). This will allow test to be ignored only on specific OS
@@ -76,10 +82,11 @@ class Platform_Linux(unittest.TestCase):
         assert("Updated project.properties" in output)
         assert("Updated local.properties" in output)
         assert("Project successfully created" in output)
-        assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_symlink.txt')
-    
         assert IsEmpty('TNS_App/platforms/android/assets')
         assert IsEmpty('TNS_App/platforms/android/libs')
+        
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_symlink.txt')
        
     def test_200_Platform_List_InsideEmptyProject(self):
         CreateProject(projName="TNS_App")
@@ -105,7 +112,9 @@ class Platform_Linux(unittest.TestCase):
         assert("Updated project.properties" in output)
         assert("Updated local.properties" in output)
         assert("Project successfully created" in output)
-        assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_live.txt')
+        
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_live.txt')
 
     def test_202_Platform_Remove_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)

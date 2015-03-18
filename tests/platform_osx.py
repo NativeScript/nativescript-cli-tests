@@ -1,9 +1,10 @@
+import os
 import unittest
 
 from helpers._os_lib import runAUT, CleanupFolder, CheckFilesExists, \
     IsEmpty, FileExists
 from helpers._tns_lib import tnsPath, CreateProject, PlatformAdd, \
-    iosRuntimePath, iosRuntimeSymlinkPath, CreateProjectAndAddPlatform, Prepare,\
+    iosRuntimePath, iosRuntimeSymlinkPath, CreateProjectAndAddPlatform, Prepare, \
     androidRuntimePath
 
 
@@ -48,14 +49,19 @@ class Platform_OSX(unittest.TestCase):
         output = PlatformAdd(platform="ios", path="TNS_App")
         assert("Copying template files..." in output)
         assert("Project successfully created" in output)
-        assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_live.txt')
+        
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_live.txt')
         
     def test_003_Platform_Add_iOS_Symlink(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="ios", path="TNS_App", symlink=True)
         assert("Copying template files..." in output)
         assert("Project successfully created" in output)
-        assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_symlink.txt')
+        
+        
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_symlink.txt')
         
         # Verify Runtime is symlink
         output = runAUT("ls -la TNS_App/platforms/ios/")
@@ -67,7 +73,9 @@ class Platform_OSX(unittest.TestCase):
         output = PlatformAdd(platform="ios", path="TNS_App", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         assert("Copying template files..." in output)
         assert("Project successfully created" in output)
-        assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_symlink.txt')
+        
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_symlink.txt')
         
         # Verify Runtime is symlink
         output = runAUT("ls -la TNS_App/platforms/ios/")
@@ -79,7 +87,9 @@ class Platform_OSX(unittest.TestCase):
         output = PlatformAdd(platform="ios", frameworkPath=iosRuntimePath, path="TNS_App")
         assert("Copying template files..." in output)
         assert("Project successfully created" in output)
-        assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_current.txt')
+        
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_current.txt')
         
         # If project.xcworkspace is there Xcode project name is wrong
         assert not FileExists("TNS_App/platforms/ios/TNS_App.xcodeproj/project.xcworkspace")
