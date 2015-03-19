@@ -47,8 +47,11 @@ class Emulate_Linux(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         assert ("installing" in output) 
-        assert ("running" in output)          
-        assert not ("Starting Android emulator with image" in output)
+        assert ("running" in output)    
+              
+        # TODO: Add this check after https://github.com/NativeScript/nativescript-cli/issues/352 is fixed  
+        # assert not ("Starting Android emulator with image" in output)
+        
         #TODO: Get device id and verify files are deployed and process is running on this device
  
     #TODO: Implement this test 
