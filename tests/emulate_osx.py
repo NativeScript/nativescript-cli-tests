@@ -21,13 +21,13 @@ class Emulate_OSX(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    def test_010_Emulate_ListDevices(self):
+    def test_001_Emulate_ListDevices(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
         output = runAUT(tnsPath + " emulate ios --availableDevices --path TNS_App")
         assert ("iPhone-6" in output) 
         # TODO: Update verification after https://github.com/NativeScript/nativescript-cli/issues/289 is fixed
         
-    def test_011_Emulate_iOS(self):
+    def test_002_Emulate_iOS(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
         output = runAUT(tnsPath + " emulate ios --device iPhone-6 --path TNS_App")
         assert ("Project successfully prepared" in output) 
@@ -39,7 +39,7 @@ class Emulate_OSX(unittest.TestCase):
             assert ("Session started without errors" in output) 
             assert IsRunningProcess("Simulator")
         
-    def test_012_Emulate_iOS_Release(self):
+    def test_003_Emulate_iOS_Release(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
         output = runAUT(tnsPath + " emulate ios --device iPhone-6 --path TNS_App --release")
         assert ("Project successfully prepared" in output) 

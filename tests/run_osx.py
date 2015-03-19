@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from helpers._os_lib import CleanupFolder, runAUT
+from helpers._os_lib import CleanupFolder, runAUT, IsRunningProcess
 from helpers._tns_lib import CreateProjectAndAddPlatform, iosRuntimeSymlinkPath, tnsPath
 from helpers.device import GivenRealDeviceRunning
 
@@ -49,7 +49,12 @@ class Run_OSX(unittest.TestCase):
         assert ("CONFIGURATION Debug" in output)
         assert ("Project successfully built" in output)   
         assert ("Starting iOS Simulator" in output)  
-        assert ("Session started without errors" in output)  
+        
+        # Simulator can not be started without active UI 
+        if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
+            assert ("Session started without errors" in output) 
+            assert IsRunningProcess("Simulator")
+            
         #TODO: Get device id and verify files are deployed and process is running on this device 
 
     def test_004_Run_iOS_ReleaseConfiguration_Simulator(self):
@@ -59,7 +64,12 @@ class Run_OSX(unittest.TestCase):
         assert ("CONFIGURATION Release" in output)
         assert ("Project successfully built" in output)   
         assert ("Starting iOS Simulator" in output)  
-        assert ("Session started without errors" in output)  
+        
+        # Simulator can not be started without active UI 
+        if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
+            assert ("Session started without errors" in output) 
+            assert IsRunningProcess("Simulator") 
+            
         #TODO: Get device id and verify files are deployed and process is running on this device 
         
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/248")     
