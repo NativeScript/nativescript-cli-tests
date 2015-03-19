@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, IsRunningProcess
@@ -32,8 +33,11 @@ class Emulate_OSX(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         assert ("Starting iOS Simulator" in output) 
-        assert ("Session started without errors" in output) 
-        assert IsRunningProcess("Simulator")
+        
+        # Simulator can not be started without active UI 
+        if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
+            assert ("Session started without errors" in output) 
+            assert IsRunningProcess("Simulator")
         
     def test_012_Emulate_iOS_Release(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
@@ -42,8 +46,11 @@ class Emulate_OSX(unittest.TestCase):
         assert ("CONFIGURATION Release" in output)
         assert ("Project successfully built" in output)   
         assert ("Starting iOS Simulator" in output) 
-        assert ("Session started without errors" in output) 
-        assert IsRunningProcess("Simulator")
+        
+        # Simulator can not be started without active UI 
+        if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
+            assert ("Session started without errors" in output) 
+            assert IsRunningProcess("Simulator")
         
     def test_400_Emulate_InvalidDevice(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
