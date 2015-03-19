@@ -50,8 +50,6 @@ if __name__ == '__main__':
     GetAndroidRuntime()
     if 'Darwin' in platform.platform():
         GetiOSRuntime()
-        runAUT("security lock-keychain " + keychain)
-        runAUT("security unlock-keychain -p '" + keychainPass + "' " + keychain)
         
     # Start emulator  
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):   
