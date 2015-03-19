@@ -114,7 +114,7 @@ class Platform_OSX(unittest.TestCase):
         pass
         
     def test_400_Platform_Add_AlreadyExistingPlatform(self):
-        self.test_020_Platform_Add_iOS()     
+        self.test_004_Platform_Add_iOS_Symlink_And_FrameworkPath()     
         
         output = runAUT(tnsPath + " platform add ios --path TNS_App")
         assert("Platform ios already added" in output)

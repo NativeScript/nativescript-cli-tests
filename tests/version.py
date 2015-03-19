@@ -19,5 +19,5 @@ class Version(unittest.TestCase):
 
     def test_001_Version(self):
         output = runAUT(tnsPath + " --version")
-        a = re.compile('^\d+\.\d+\.\d+(-\d+)?$')
-        assert (a.match(output))
+        isValidVersion = re.compile('^\d+\.\d+\.\d+(-\S+)?$').match(output);
+        assert (isValidVersion), "Not a valid version"

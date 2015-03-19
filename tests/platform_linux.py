@@ -157,7 +157,7 @@ class Platform_Linux(unittest.TestCase):
         assert("and neither was a --path specified." in output)  
         
     def test_420_Platform_Add_AlreadyExistingPlatform(self):
-        self.test_020_Platform_Add_Android()     
+        self.test_002_Platform_Add_Android()    
         
         output = runAUT(tnsPath + " platform add android --path TNS_App")
         assert("Platform android already added" in output)
