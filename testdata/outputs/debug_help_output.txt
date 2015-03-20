@@ -1,33 +1,10 @@
 Usage:
-    $ tns debug android [--device <Device ID> | --emulator <Emulator Options> | --geny <Geny Name> ] [--debug-brk | --start | --stop | --get-port] [--debug-port <port>]
-    $ tns debug ios [--device <Device ID>] [--debug-brk | --start ]
-    
-Platform-specific usage:
-    $ tns debug android --get-port
-    $ tns debug android --debug-brk [--debug-port <port>]
-    $ tns debug android --start [--debug-port <port>]
-    $ tns debug android --stop
-    $ tns debug ios --debug-brk
-    $ tns debug ios --start
+    $ tns debug <Command>
+
+You must run the debug command with a related command.
 
 Debugs your project on a connected device or in a native emulator.
 
-<Device ID> is the index or name of the target device as listed by $ tns list-devices
-<Port> is an accessible port on the device to which you want to attach the debugging tools.
-
-Before debugging on iOS device, verify that you have configured a valid pair of development certificate and provisioning profile on your OS X system.
-
-Options:
-    --device - Specifies a connected device on which to run the app.
-    --emulator - (Android-only) Specifies that you want to debug the app in the native Android emulator from the Android SDK.
-    --geny - (Android-only) Specifies a Genymotion emulator on which you want to debug your app.
-    --debug-brk - Shorthand for prepare, build and deploy. Prepares, builds and deploys the application package on a device or in an emulator,
-        launches the app and loads the debug tools in the browser.
-        For Android, launches the Chrome DevTools of your Chrome browser. You must have Chrome installed on your system.
-        For iOS, launches the developer tools of your Safari browser.
-    --start - Attaches the debug tools to a deployed and running app. Your app must be running on device.
-    --stop - (Android-only) Detaches the debug tools.
-    --get-port - (Android-only) Retrieves the port on which you are debugging your application.
-        On iOS devices, this option is not available because the debug tools always attach to port 8080.
-    --debug-port - (Android-only) Sets a new port on which to attach the debug tools.
-        On iOS devices, this option is not available because the debug tools always attach to port 8080.
+<Command> is a related command that extends the debug command. You can run the following related commands:
+android - Debugs your project on a connected Android device, native Android emulator or Genymotion emulator
+ios - Debugs your project on a connected iOS device or in a native iOS emulator

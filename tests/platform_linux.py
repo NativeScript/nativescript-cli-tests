@@ -1,4 +1,3 @@
-import fileinput
 import os
 import platform
 import unittest
@@ -43,7 +42,7 @@ class Platform_Linux(unittest.TestCase):
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_live.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.9.0.txt')
         
     def test_003_Platform_Add_Android_FrameworkPath(self):
         CreateProject(projName="TNS_App")
@@ -114,7 +113,7 @@ class Platform_Linux(unittest.TestCase):
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_live.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.9.0.txt')
 
     def test_202_Platform_Remove_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
@@ -123,29 +122,40 @@ class Platform_Linux(unittest.TestCase):
         assert IsEmpty('TNS_App/platforms')
         # TODO: Add more verifications after https://github.com/NativeScript/nativescript-cli/issues/281 is fixed
 
-    #TODO: Implement this test 
-    @unittest.skip("Not implemented.")      
-    def test_203_Platform_Update_Android(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android")
+    def test_203_Platform_Add_Android_CustomVersion(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android@0.9.0")               
+        output = runAUT("cat TNS_App/.tnsproject")
+        assert ("\"version\": \"0.9.0\"" in output)
         
-        # Replace current version to older        
-        for line in fileinput.input("TNS_App/.tnsproject", inplace = 1): 
-            print line.replace("\"version\": \"", "\"version\": \"0.1."),
-            
-        output = runAUT(tnsPath + " platform update android --path TNS_App")        
-        assert ("You are going to update to lower version. Are you sure?" in output)
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.9.0.txt')
 
-    def test_204_Platform_Update_ToSameVersion(self):
+    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/333") 
+    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/335")             
+    def test_204_Platform_Update_Android(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android@0.4.2")               
+        output = runAUT("cat TNS_App/.tnsproject")
+        assert ("\"version\": \"0.4.2\"" in output)
+        
+        output = runAUT(tnsPath + " platform update android@0.9.0 --path TNS_App")        
+        assert ("Successfully updated to version  0.9.0" in output)
+        
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.9.0.txt')
+
+    def test_205_Platform_Update_ToSameVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=None)
         output = runAUT(tnsPath + " platform update android --path TNS_App")        
         assert ("Current and new version are the same." in output)
         assert ("Usage" in output)
-
-    #TODO: Implement this test 
-    @unittest.skip("Not implemented.")        
-    def test_205_Platform_Update_ToOlderVersion(self):
-        pass
-                                      
+ 
+    def test_206_Platform_Update_ToOlderVersion(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android@0.9.0")               
+        output = runAUT("cat TNS_App/.tnsproject")
+        assert ("\"version\": \"0.9.0\"" in output)
+        output = runAUT(tnsPath + " platform update android@0.4.2 --path TNS_App")        
+        assert ("You are going to downgrade to android runtime v.0.4.2. Are you sure?" in output)
+                                              
     def test_400_Platform_List_WrongPath(self):
         output = runAUT(tnsPath + " platform list")
         assert("No project found at or above" in output)

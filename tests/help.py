@@ -144,8 +144,18 @@ class Help(unittest.TestCase):
         output = runAUT(tnsPath + " debug -h")
         assert CheckOutput(output, 'debug_help_output.txt')
         assert not ("error" in output)
-                                
-    def test_219_TNSHelp_FeatureUsageTracking(self):
+
+    def test_219_TNSHelp_DebugAndroid(self):
+        output = runAUT(tnsPath + " debug android -h")
+        assert CheckOutput(output, 'debug_android_help_output.txt')
+        assert not ("error" in output)
+        
+    def test_220_TNSHelp_DebugIOS(self):
+        output = runAUT(tnsPath + " debug ios -h")
+        assert CheckOutput(output, 'debug_ios_help_output.txt')
+        assert not ("error" in output)
+                                                
+    def test_221_TNSHelp_FeatureUsageTracking(self):
         output = runAUT(tnsPath + " feature-usage-tracking -h")
         assert CheckOutput(output, 'feature_help_output.txt')
         assert not ("error" in output)

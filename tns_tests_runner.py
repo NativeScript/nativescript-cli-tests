@@ -55,10 +55,10 @@ def RunTests():
     # 
     # TESTRUN Types:
     # SMOKE 
-    # - Runs basic tests with High priority. 
+    # - Runs tests with High priority. 
     # DEFAULT
-    # - Runs basic tests plus tests that require emulator or simulator (all priorities)  
-    # - Following Android Emulators should be available
+    # - All suites without dependencies on real devices  (all priorities)
+    # - Following AVDs should be available
     #    Api17 - Android emulator with API17
     #    Api19 - Android emulator with API19
     # FULL
