@@ -153,9 +153,12 @@ class Platform_Linux(unittest.TestCase):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android@0.9.0")               
         output = runAUT("cat TNS_App/.tnsproject")
         assert ("\"version\": \"0.9.0\"" in output)
-        output = runAUT(tnsPath + " platform update android@0.4.2 --path TNS_App")        
+        command = tnsPath + " platform update android@0.4.2 --path TNS_App"
+        output = runAUT(command + "< enter_key.txt")
         assert ("You are going to downgrade to android runtime v.0.4.2. Are you sure?" in output)
-                                              
+        output = runAUT("cat TNS_App/.tnsproject")
+        assert ("\"version\": \"0.9.0\"" in output)   
+                                                  
     def test_400_Platform_List_WrongPath(self):
         output = runAUT(tnsPath + " platform list")
         assert("No project found at or above" in output)
