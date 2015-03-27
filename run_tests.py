@@ -1,12 +1,13 @@
 import os
 import platform
 
-from helpers._os_lib import CleanupFolder
+from helpers._os_lib import CleanupFolder, runAUT
 from helpers._tns_lib import UninstallCLI, InstallCLI, GetAndroidRuntime, GetiOSRuntime, \
     androidRuntimeSymlinkPath, iosRuntimeSymlinkPath, androidRuntimePath, \
     iosRuntimePath
 from helpers.device import StopEmulators, StartEmulator
 import tns_tests_runner
+
 
 smokeTestResult = ""
 
@@ -47,7 +48,12 @@ if __name__ == '__main__':
     GetAndroidRuntime()
     if 'Darwin' in platform.platform():
         GetiOSRuntime()
-        
+ 
+    # Clone hello-world template
+    # TODO: Remove this code after v1 is released
+    CleanupFolder('./template-hello-world')
+    output = runAUT("git clone git@github.com:NativeScript/template-hello-world.git template-hello-world")
+           
     # Start emulator  
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):   
         StartEmulator(emulatorName="Api17", port="5554", waitFor=False)  

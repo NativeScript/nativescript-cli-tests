@@ -84,7 +84,7 @@ class Create(unittest.TestCase):
         
         output = runAUT(tnsPath + " create TNS_App -copy-from template")
         assert not ("successfully created" in output)
-        assert ("nativescript help" in output)
+        assert ("To see command's options, use '$ tns help create'" in output)
     
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/271")     
     def test_403_CreateProjectWithWrongCopyFromCommand(self):      

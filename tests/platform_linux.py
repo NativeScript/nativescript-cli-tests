@@ -2,7 +2,7 @@ import os
 import platform
 import unittest
 
-from helpers._os_lib import runAUT, CheckOutput, CleanupFolder, IsEmpty, \
+from helpers._os_lib import runAUT, CleanupFolder, IsEmpty, \
     CheckFilesExists
 from helpers._tns_lib import tnsPath, CreateProject, PlatformAdd, \
     androidRuntimePath, CreateProjectAndAddPlatform, androidRuntimeSymlinkPath
@@ -170,11 +170,10 @@ class Platform_Linux(unittest.TestCase):
         assert("and neither was a --path specified." in output)  
         
     def test_420_Platform_Add_AlreadyExistingPlatform(self):
-        self.test_002_Platform_Add_Android()    
+        self.test_002_Platform_Add_Android()   
         
         output = runAUT(tnsPath + " platform add android --path TNS_App")
         assert("Platform android already added" in output)
-        assert CheckOutput(output, 'platform_add_help_output.txt')
 
     def test_421_Platform_Add_Android_WrongFrameworkPath(self):
         CreateProject(projName="TNS_App")       
@@ -183,17 +182,11 @@ class Platform_Linux(unittest.TestCase):
         assert ("invalidFile.tgz" in output)
         assert ("Usage" in output)
 
-    # Note: This test fails only on OSX.
-    # TODO: Ignore tests at runtime (in tns_tests_runner.py). This will allow test to be ignored only on specific OS
-    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/251") 
     def test_423_Platform_Add_Android_WrongFrameworkPathOption(self):
         CreateProject(projName="TNS_App")       
         output = runAUT(tnsPath + " platform add android --frameworkpath tns-android.tgz --path TNS_App")
         assert ("The option 'frameworkpath' is not supported." in output)
 
-    # Note: This test fails only on OSX.
-    # TODO: Ignore tests at runtime (in tns_tests_runner.py). This will allow test to be ignored only on specific OS
-    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/251") 
     def test_424_Platform_Add_Android_WrongSymlinkOption(self):
         CreateProject(projName="TNS_App")       
         output = runAUT(tnsPath + " platform add android --frameworkPath tns-android.tgz --simlink --path TNS_App")

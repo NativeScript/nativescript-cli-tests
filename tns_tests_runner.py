@@ -16,7 +16,6 @@ from tests.device_osx import Device_OSX
 from tests.emulate_linux import Emulate_Linux
 from tests.emulate_osx import Emulate_OSX
 from tests.feature_usage_tracking import FeatureUsageTracking
-from tests.help import Help
 from tests.logtrace import LogTrace
 from tests.platform_linux import Platform_Linux
 from tests.platform_osx import Platform_OSX
@@ -68,7 +67,9 @@ def RunTests():
        
     suite = unittest.TestLoader().loadTestsFromTestCase(Version)   
 
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))    
+    # Temporary ignore Help tests because of expected breaking changes 
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))    
+    
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace)) 
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(FeatureUsageTracking))
                            

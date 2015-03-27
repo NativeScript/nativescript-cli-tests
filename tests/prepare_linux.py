@@ -27,9 +27,9 @@ class Prepare_Linux(unittest.TestCase):
         
         # Verify app and tns_modules from application folder are processed and avalable in platform folder
         assert FileExists('TNS_App/platforms/android/assets/app/bootstrap.js')
-        assert FileExists('TNS_App/platforms/android/assets/tns_modules/application/application.js')
-        assert not FileExists('TNS_App/platforms/android/assets/tns_modules/application/application.android.js')
-        assert not FileExists('TNS_App/platforms/android/assets/tns_modules/application/application.ios.js')
+        assert FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.js')
+        assert not FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.android.js')
+        assert not FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.ios.js')
         
     def test_200_Prepare_Android_InsideProject(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)    
@@ -41,9 +41,9 @@ class Prepare_Linux(unittest.TestCase):
 
         # Verify app and tns_modules from application folder are processed and avalable in platform folder
         assert FileExists('TNS_App/platforms/android/assets/app/bootstrap.js')
-        assert FileExists('TNS_App/platforms/android/assets/tns_modules/application/application.js')
-        assert not FileExists('TNS_App/platforms/android/assets/tns_modules/application/application.android.js')
-        assert not FileExists('TNS_App/platforms/android/assets/tns_modules/application/application.ios.js')
+        assert FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.js')
+        assert not FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.android.js')
+        assert not FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.ios.js')
                 
     def test_400_Prepare_MissingPlatform(self):
         CreateProject(projName="TNS_App")  

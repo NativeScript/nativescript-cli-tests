@@ -1,6 +1,6 @@
 import unittest
 
-from helpers._os_lib import runAUT, CheckOutput
+from helpers._os_lib import runAUT
 from helpers._tns_lib import tnsPath
 
 
@@ -38,5 +38,4 @@ class FeatureUsageTracking(unittest.TestCase):
     def test_400_FeatureUsageTracking_WithInvalidParameter(self):
         command = tnsPath + " feature-usage-tracking invalidParam"
         output = runAUT(command)   
-        assert ("The value 'invalidParam' is not valid. Valid values are 'enable', 'disable' and 'status'" in output)  
-        assert CheckOutput(output, 'feature_help_output.txt')
+        assert ("The value 'invalidParam' is not valid. Valid values are 'enable', 'disable' and 'status'" in output)

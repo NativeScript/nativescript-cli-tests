@@ -49,7 +49,7 @@ def runAUT(cmd, set_timeout=None, getOutput=True):
 
 def CleanupFolder(folder, ignoreFail=True):
     shutil.rmtree(folder, ignoreFail, None)
-
+    
 # Check if output of command contains string from file
 def CheckOutput(output, fileName):
     f = open('testdata/outputs/' + fileName)

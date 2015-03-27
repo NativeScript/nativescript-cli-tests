@@ -53,10 +53,10 @@ def UninstallCLI():
 
 def CreateProject(projName, path=None, appId=None, copyFrom=None):
     
-    # TODO: It looks we don't need this code. Delete if no problems found until next release
-    #shutil.rmtree(projName, True)  # make sure no old project exists
-    #time.sleep(1)  # to be sure that shutil has finished
-    
+    # TODO: Remove this code after v1 is released
+    if copyFrom == None:
+        copyFrom = "template-hello-world"
+
     command = tnsPath + " create {0}".format(projName)
     
     if path != None:
