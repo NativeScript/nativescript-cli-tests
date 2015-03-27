@@ -90,11 +90,7 @@ class Platform_OSX(unittest.TestCase):
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
             assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_current.txt')
-        
-        # Verify Xcode projet name is OK
-        output = runAUT("cat TNS_App/platforms/ios/TNS_App.xcodeproj/project.xcworkspace/contents.xcworkspacedata")
-        assert("self:TNS_App.xcodeproj" in output)
-        
+       
         # If project.xcworkspace is there Xcode project name is wrong
         assert not FileExists("TNS_App/platforms/ios/TNS_App.xcodeproj/project.xcworkspace")
  
