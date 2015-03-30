@@ -19,12 +19,15 @@ class Emulate_Linux(unittest.TestCase):
         print ""
         
         CleanupFolder('./TNS_App')
-        GivenRunningEmulator()
         
     def tearDown(self):        
-        pass
+        StopEmulators()
 
+    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/352") 
     def test_001_Emulate_Android_InRunningEmulator(self):
+        
+        GivenRunningEmulator()
+        
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " emulate android --path TNS_App --timeout 600", set_timeout=600)
         assert ("Project successfully prepared" in output) 
@@ -34,9 +37,7 @@ class Emulate_Linux(unittest.TestCase):
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
             assert ("installing" in output) 
             assert ("running" in output)
-        
-        # TODO: Add this check after https://github.com/NativeScript/nativescript-cli/issues/352 is fixed  
-        # assert not ("Starting Android emulator with image" in output)
+            assert not ("Starting Android emulator with image" in output)
         
         #TODO: Get device id and verify files are deployed and process is running on this device 
         
@@ -52,11 +53,9 @@ class Emulate_Linux(unittest.TestCase):
         
         # Emulator can not be started without active UI 
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
+            assert not ("Starting Android emulator with image" in output)
             assert ("installing" in output) 
             assert ("running" in output)   
-              
-        # TODO: Add this check after https://github.com/NativeScript/nativescript-cli/issues/352 is fixed  
-        # assert not ("Starting Android emulator with image" in output)
         
         #TODO: Get device id and verify files are deployed and process is running on this device
  
@@ -82,7 +81,6 @@ class Emulate_Linux(unittest.TestCase):
         #TODO: Get device id and verify files are deployed and process is running on this device
         
     def test_201_Emulate_Android_AvdName(self):
-        StopEmulators();
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " emulate android --avd Api19 --path TNS_App --timeout 600", set_timeout=600)
         assert ("Starting Android emulator with image Api19" in output)

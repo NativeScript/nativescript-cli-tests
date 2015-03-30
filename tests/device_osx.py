@@ -50,9 +50,11 @@ class Device_OSX(unittest.TestCase):
                         
             # Start it via device command and verify app is running
             output = runAUT(tnsPath + " device run org.nativescript.TNSApp --device " + deviceId)            
-            sleep(20)            
+            sleep(20)  
+            
+            # Verify app is runnign          
             output = runAUT("adb -s " + deviceId + " shell ps | grep org.nativescript.TNSApp")
-            assert ("org.nativescript.TNSApp" in output)
+            assert ("org.nativescript.TNSApp" in output), "org.nativescript.TNSApp failed to start or crashed at startup."
             
             # Stop logging and print it
             runAUT("ps -A | grep \"device " + deviceId + "\" | awk '{print $1}' | xargs kill -9")

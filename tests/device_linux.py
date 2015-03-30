@@ -51,9 +51,11 @@ class Device_Linux(unittest.TestCase):
             
             # Start via run command and verify it is running
             output = runAUT(tnsPath + " device run org.nativescript.TNSApp --device " + deviceId)            
-            sleep(20)            
+            sleep(20)    
+            
+            # Verify app is running        
             output = runAUT("adb -s " + deviceId + " shell ps | grep org.nativescript.TNSApp")
-            assert ("org.nativescript.TNSApp" in output)
+            assert ("org.nativescript.TNSApp" in output), "org.nativescript.TNSApp failed to start or crashed at startup."
             
         else:
             print "Prerequisites not met. This test requires at least one real android device."
