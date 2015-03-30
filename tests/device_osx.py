@@ -63,7 +63,6 @@ class Device_OSX(unittest.TestCase):
             print "Prerequisites not met. This test requires at least one real android device."
             assert (False)       
 
-    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/248")             
     def test_020_Device_Log_ListApplications_And_Run_iOS(self):          
         deviceId = GetPhysicalDeviceId(platform="ios")
         if (deviceId is not None): 
