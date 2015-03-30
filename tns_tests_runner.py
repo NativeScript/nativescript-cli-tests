@@ -70,13 +70,13 @@ def RunTests():
     # Temporary ignore Help tests because of expected breaking changes 
     #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))    
     
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace)) 
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(FeatureUsageTracking))
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace)) 
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(FeatureUsageTracking))
                            
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))    
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_Linux))    
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_Linux)) 
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_Linux))
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))    
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_Linux))    
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_Linux)) 
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_Linux))
         
     if 'Darwin' in platform.platform():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_OSX))

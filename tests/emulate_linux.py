@@ -19,6 +19,7 @@ class Emulate_Linux(unittest.TestCase):
         print ""
         
         CleanupFolder('./TNS_App')
+        StopEmulators()
         
     def tearDown(self):        
         StopEmulators()
@@ -68,7 +69,7 @@ class Emulate_Linux(unittest.TestCase):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
         currentDir = os.getcwd()   
         os.chdir(os.path.join(currentDir,"TNS_App"))    
-        output = runAUT(os.path.join("..", tnsPath) + " emulate android --path TNS_App --timeout 600", set_timeout=600)
+        output = runAUT(os.path.join("..", tnsPath) + " emulate android --timeout 600", set_timeout=600)
         os.chdir(currentDir);
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   

@@ -9,6 +9,7 @@ setup*
 tns-android
 tns-ios
 tns-core
+tns_modules
 template
 deviceLog.txt
 template-hello-world

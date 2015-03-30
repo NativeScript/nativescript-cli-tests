@@ -1,4 +1,7 @@
+import errno
 import os, threading, psutil, time, shutil
+import platform
+import stat
 import tarfile
 
 
@@ -47,8 +50,15 @@ def runAUT(cmd, set_timeout=None, getOutput=True):
     print "##### OUTPUT END #####"
     return out.strip('\n\r')
 
-def CleanupFolder(folder, ignoreFail=True):
-    shutil.rmtree(folder, ignoreFail, None)
+def CleanupFolder(folder):
+    try:
+        shutil.rmtree(folder, False) 
+    except:
+        if (os.path.exists(folder)):
+            if ('Windows' in platform.platform()):
+                runAUT('rmdir /S /Q \"{}\"'.format(folder))
+            else:
+                runAUT('rm -rf ' + folder)
     
 # Check if output of command contains string from file
 def CheckOutput(output, fileName):

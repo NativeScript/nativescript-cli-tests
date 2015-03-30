@@ -1,4 +1,3 @@
-from distutils.cmd import Command
 import os
 import platform
 
@@ -44,11 +43,12 @@ if __name__ == '__main__':
     CleanupFolder('TNS_TempApp')
     CleanupFolder('folder')
     CleanupFolder('template')
-                
+    
     # Uninstall previous CLI and install latest   
     UninstallCLI()
+    CleanupFolder('tns_modules')
     InstallCLI()
-    
+                
     # Get latest Android and iOS runtimes
     GetModules();
     GetAndroidRuntime()
@@ -58,11 +58,12 @@ if __name__ == '__main__':
     # Clone hello-world template and update modules
     # TODO: Remove this code after v1 is released
     CleanupFolder('template-hello-world')
-    runAUT("git clone git@github.com:NativeScript/template-hello-world.git template-hello-world")
+    output = runAUT("git clone git@github.com:NativeScript/template-hello-world.git template-hello-world")
+    assert not ("fatal" in output), "Failed to clone git@github.com:NativeScript/template-hello-world.git"
     CleanupFolder("./template-hello-world/tns_modules")
-    runAUT("mv " + os.path.join(os.path.splitext(modulesPath)[0],"package") + " tns_modules")
+    runAUT("mv " + os.path.splitext(modulesPath)[0] + "/package tns_modules")
     runAUT("cp -R tns_modules template-hello-world")
-           
+
     # Execute tests
     ExecuteTests()
     
