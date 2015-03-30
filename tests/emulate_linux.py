@@ -54,7 +54,7 @@ class Emulate_Linux(unittest.TestCase):
         
         # Emulator can not be started without active UI 
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
-            assert not ("Starting Android emulator with image" in output)
+            assert ("Starting Android emulator with image" in output)
             assert ("installing" in output) 
             assert ("running" in output)   
         
