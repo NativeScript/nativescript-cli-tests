@@ -28,7 +28,7 @@ class Run_OSX(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Debug" in output)
         assert ("Project successfully built" in output)   
-        assert ("Successfully deployed on device with identifier" in output)  
+        assert ("Successfully deployed on device" in output)  
         #TODO: Get device id and verify files are deployed and process is running on this device 
     
     def test_002_Run_iOS_ReleaseConfiguration(self):
@@ -37,7 +37,7 @@ class Run_OSX(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Release" in output)
         assert ("Project successfully built" in output)   
-        assert ("Successfully deployed on device with identifier" in output)         
+        assert ("Successfully deployed on device" in output)         
         #TODO: Get device id and verify files are deployed and process is running on this device
  
     def test_003_Run_iOS_Simulator(self):
@@ -79,4 +79,4 @@ class Run_OSX(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Debug" in output)
         assert ("Project successfully built" in output)   
-        assert ("Successfully deployed on device with identifier" in output)  
+        assert ("Successfully deployed on device" in output)  

@@ -34,7 +34,7 @@ class Device_OSX(unittest.TestCase):
             output = runAUT(tnsPath + " deploy android --path TNS_App")
             assert ("Project successfully prepared" in output) 
             assert ("Project successfully built" in output)   
-            assert ("Successfully deployed on device with identifier" in output)  
+            assert ("Successfully deployed on device" in output)  
             assert (deviceId in output)
             sleep(10)
                         
@@ -75,7 +75,7 @@ class Device_OSX(unittest.TestCase):
             output = runAUT(tnsPath + " deploy ios --path TNS_App")
             assert ("Project successfully prepared" in output) 
             assert ("Project successfully built" in output)   
-            assert ("Successfully deployed on device with identifier" in output)  
+            assert ("Successfully deployed on device" in output)  
             assert (deviceId in output)
             sleep(10)
                         

@@ -3,8 +3,7 @@ import platform
 
 from helpers._os_lib import CleanupFolder, runAUT
 from helpers._tns_lib import UninstallCLI, InstallCLI, GetAndroidRuntime, GetiOSRuntime, \
-    androidRuntimeSymlinkPath, iosRuntimeSymlinkPath, androidRuntimePath, \
-    iosRuntimePath, GetModules, modulesPath
+    androidRuntimeSymlinkPath, iosRuntimeSymlinkPath, androidRuntimePath, iosRuntimePath
 from helpers.device import StopEmulators
 import tns_tests_runner
 
@@ -29,13 +28,10 @@ if __name__ == '__main__':
     
     CleanupFolder(os.path.split(androidRuntimeSymlinkPath)[0])
     CleanupFolder(os.path.split(iosRuntimeSymlinkPath)[0])
-    CleanupFolder(modulesPath)
     if os.path.isfile(androidRuntimePath):
         os.remove(androidRuntimePath)
     if os.path.isfile(iosRuntimePath):
         os.remove(iosRuntimePath)
-    if os.path.isfile(modulesPath):
-        os.remove(modulesPath)
                
     # Cleanup folders created by test execution
     CleanupFolder('TNS App')
@@ -43,27 +39,23 @@ if __name__ == '__main__':
     CleanupFolder('TNS_TempApp')
     CleanupFolder('folder')
     CleanupFolder('template')
+    CleanupFolder('tns_modules')
+    CleanupFolder('tns_helloworld_app')
     
     # Uninstall previous CLI and install latest   
     UninstallCLI()
-    CleanupFolder('tns_modules')
     InstallCLI()
                 
     # Get latest Android and iOS runtimes
-    GetModules();
     GetAndroidRuntime()
     if 'Darwin' in platform.platform():
         GetiOSRuntime()
  
-    # Clone hello-world template and update modules
-    # TODO: Remove this code after v1 is released
+    # Clone hello-world template repo 
     CleanupFolder('template-hello-world')
     output = runAUT("git clone git@github.com:NativeScript/template-hello-world.git template-hello-world")
     assert not ("fatal" in output), "Failed to clone git@github.com:NativeScript/template-hello-world.git"
-    CleanupFolder("./template-hello-world/tns_modules")
-    runAUT("mv " + os.path.splitext(modulesPath)[0] + "/package tns_modules")
-    runAUT("cp -R tns_modules template-hello-world")
-
+    
     # Execute tests
     ExecuteTests()
     

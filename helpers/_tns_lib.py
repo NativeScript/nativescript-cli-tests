@@ -7,7 +7,6 @@ from helpers._os_lib import runAUT, FileExists, ExtractArchive
 
 tnsPath = os.path.join('node_modules', '.bin', 'tns');
 nativescriptPath = os.path.join('node_modules', '.bin', 'nativescript');
-modulesPath = "tns-core.tgz"
 androidRuntimePath = "tns-android.tgz"
 iosRuntimePath = "tns-ios.tgz"
 androidRuntimeSymlinkPath = os.path.join('tns-android', 'package')
@@ -46,14 +45,7 @@ def GetiOSRuntime():
         shutil.copy2(location.strip(), (os.path.join(os.getcwd(), iosRuntimePath)))
     if FileExists(os.path.join(os.getcwd(), iosRuntimePath)):
         ExtractArchive(iosRuntimePath, os.path.splitext(iosRuntimePath)[0])
-
-def GetModules():    
-    if 'MODULES_PATH' in os.environ:
-        location = os.path.join(os.environ['MODULES_PATH'], modulesPath)
-        shutil.copy2(location.strip(), (os.path.join(os.getcwd(), modulesPath)))
-    if FileExists(os.path.join(os.getcwd(), modulesPath)):
-        ExtractArchive(modulesPath, os.path.splitext(modulesPath)[0])
-                       
+                               
 def UninstallCLI():        
     uninstallCommand = "npm rm nativescript"
     output = runAUT(uninstallCommand)
@@ -61,7 +53,7 @@ def UninstallCLI():
 
 def CreateProject(projName, path=None, appId=None, copyFrom=None):
     
-    # TODO: Remove this code after v1 is released
+    # If --copy-from is not specified explicitly then project will copy template-hello-world
     if copyFrom == None:
         copyFrom = "template-hello-world"
 

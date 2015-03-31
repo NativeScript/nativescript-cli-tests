@@ -30,7 +30,7 @@ class Emulate_Linux(unittest.TestCase):
         GivenRunningEmulator()
         
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
-        output = runAUT(tnsPath + " emulate android --path TNS_App --timeout 600", set_timeout=600)
+        output = runAUT(tnsPath + " emulate android --path TNS_App --timeout 600", set_timeout=660)
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output) 
         
@@ -48,7 +48,7 @@ class Emulate_Linux(unittest.TestCase):
                         " --keyStorePassword " + androidKeyStorePassword + 
                         " --keyStoreAlias " + androidKeyStoreAlias + 
                         " --keyStoreAliasPassword " + androidKeyStoreAliasPassword + 
-                        " --release --path TNS_App --timeout 600", set_timeout=600)
+                        " --release --path TNS_App --timeout 600", set_timeout=660)
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         
@@ -69,13 +69,14 @@ class Emulate_Linux(unittest.TestCase):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
         currentDir = os.getcwd()   
         os.chdir(os.path.join(currentDir,"TNS_App"))    
-        output = runAUT(os.path.join("..", tnsPath) + " emulate android --timeout 600", set_timeout=600)
+        output = runAUT(os.path.join("..", tnsPath) + " emulate android --timeout 600", set_timeout=660)
         os.chdir(currentDir);
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
 
         # Emulator can not be started without active UI 
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
+            assert ("Starting Android emulator with image" in output)
             assert ("installing" in output) 
             assert ("running" in output)
             
@@ -83,8 +84,8 @@ class Emulate_Linux(unittest.TestCase):
         
     def test_201_Emulate_Android_AvdName(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
-        output = runAUT(tnsPath + " emulate android --avd Api19 --path TNS_App --timeout 600", set_timeout=600)
-        assert ("Starting Android emulator with image Api19" in output)
+        output = runAUT(tnsPath + " emulate android --avd Api18 --path TNS_App --timeout 600", set_timeout=660)
+        assert ("Starting Android emulator with image Api18" in output)
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         
@@ -102,14 +103,14 @@ class Emulate_Linux(unittest.TestCase):
         
     def test_401_Emulate_InvalidPlatform(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
-        output = runAUT(tnsPath + " emulate invalidPlatform --path TNS_App --timeout 600", set_timeout=600)
+        output = runAUT(tnsPath + " emulate invalidPlatform --path TNS_App --timeout 600", set_timeout=660)
         assert ("The input is not valid sub-command for 'emulate' command" in output) 
         assert ("Usage:" in output) 
  
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/289")    
     def test_402_Emulate_InvalidAvd(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
-        output = runAUT(tnsPath + " emulate android --avd invalidDeviceId --path TNS_App --timeout 600", set_timeout=600)
+        output = runAUT(tnsPath + " emulate android --avd invalidDeviceId --path TNS_App --timeout 600", set_timeout=660)
         # TODO: Modify assert when issue is fixed
         assert ("'invalidPlatform' is not valid sub-command for 'emulate' command" in output) 
         assert ("Usage:" in output) 
