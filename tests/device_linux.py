@@ -4,6 +4,7 @@ import unittest
 from helpers._os_lib import CleanupFolder, runAUT
 from helpers._tns_lib import tnsPath, CreateProjectAndAddPlatform, \
     androidRuntimePath
+from helpers.adb import StopApplication, WaitUntilAppIsRunning
 from helpers.device import GetDeviceCount, GetPhysicalDeviceId, \
     GivenRealDeviceRunning, GivenRunningEmulator
 
@@ -36,26 +37,25 @@ class Device_Linux(unittest.TestCase):
             assert ("Project successfully built" in output)   
             assert ("Successfully deployed on device with identifier" in output)  
             assert (deviceId in output)  
+            sleep(10)
             
-            # Verify app is installed
+            # Verify list-applications command list org.nativescript.TNSApp
             output = runAUT(tnsPath + " device list-applications --device " + deviceId)
             assert ("com.android." in output) 
             assert ("com.google." in output) 
-            assert ("" in output)
+            assert ("org.nativescript.TNSApp" in output)
+            
+            # Verify app is running    
+            WaitUntilAppIsRunning(appId="org.nativescript.TNSApp", deviceId=deviceId, timeout = 60)
             
             # Kill the app
-            runAUT("adb -s " + deviceId + " shell pm clear org.nativescript.TNSApp")
-            sleep(5)
-            output = runAUT("adb -s " + deviceId + " shell ps | grep org.nativescript.TNSApp")
-            assert not ("org.nativescript.TNSApp" in output)
+            StopApplication(appId="org.nativescript.TNSApp", deviceId=deviceId)
             
             # Start via run command and verify it is running
-            output = runAUT(tnsPath + " device run org.nativescript.TNSApp --device " + deviceId)            
-            sleep(20)    
+            runAUT(tnsPath + " device run org.nativescript.TNSApp --device " + deviceId)            
             
-            # Verify app is running        
-            output = runAUT("adb -s " + deviceId + " shell ps | grep org.nativescript.TNSApp")
-            assert ("org.nativescript.TNSApp" in output), "org.nativescript.TNSApp failed to start or crashed at startup."
+            # Verify app is running    
+            WaitUntilAppIsRunning(appId="org.nativescript.TNSApp", deviceId=deviceId, timeout = 60)
             
         else:
             print "Prerequisites not met. This test requires at least one real android device."

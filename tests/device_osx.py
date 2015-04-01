@@ -3,7 +3,9 @@ import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT
 from helpers._tns_lib import tnsPath, CreateProjectAndAddPlatform, androidRuntimePath, iosRuntimeSymlinkPath
+from helpers.adb import StopApplication, WaitUntilAppIsRunning
 from helpers.device import GivenRealDeviceRunning, GetPhysicalDeviceId
+
 
 class Device_OSX(unittest.TestCase):
     
@@ -38,23 +40,21 @@ class Device_OSX(unittest.TestCase):
             assert (deviceId in output)
             sleep(10)
                         
-            # Get list installed apps
+            # VErify "tns device list-applications" list org.nativescript.TNSApp
             output = runAUT(tnsPath + " device list-applications --device " + deviceId)
             assert ("org.nativescript.TNSApp" in output)
             
-            # Kill running app
-            runAUT("adb -s " + deviceId + " shell pm clear org.nativescript.TNSApp")
-            sleep(5)
-            output = runAUT("adb -s " + deviceId + " shell ps | grep org.nativescript.TNSApp")
-            assert not ("org.nativescript.TNSApp" in output)
+            # Verify app is running    
+            WaitUntilAppIsRunning(appId="org.nativescript.TNSApp", deviceId=deviceId, timeout = 60)
+            
+            # Kill the app
+            StopApplication(appId="org.nativescript.TNSApp", deviceId=deviceId)
                         
             # Start it via device command and verify app is running
-            output = runAUT(tnsPath + " device run org.nativescript.TNSApp --device " + deviceId)            
-            sleep(20)  
-            
-            # Verify app is runnign          
-            output = runAUT("adb -s " + deviceId + " shell ps | grep org.nativescript.TNSApp")
-            assert ("org.nativescript.TNSApp" in output), "org.nativescript.TNSApp failed to start or crashed at startup."
+            runAUT(tnsPath + " device run org.nativescript.TNSApp --device " + deviceId)            
+               
+            # Verify app is running    
+            WaitUntilAppIsRunning(appId="org.nativescript.TNSApp", deviceId=deviceId, timeout = 60)
             
             # Stop logging and print it
             runAUT("ps -A | grep \"device " + deviceId + "\" | awk '{print $1}' | xargs kill -9")
@@ -63,7 +63,7 @@ class Device_OSX(unittest.TestCase):
             print "Prerequisites not met. This test requires at least one real android device."
             assert (False)       
 
-    def test_020_Device_Log_ListApplications_And_Run_iOS(self):          
+    def test_002_Device_Log_ListApplications_And_Run_iOS(self):          
         deviceId = GetPhysicalDeviceId(platform="ios")
         if (deviceId is not None): 
             
