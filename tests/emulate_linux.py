@@ -65,7 +65,7 @@ class Emulate_Linux(unittest.TestCase):
     def test_014_Emulate_Android_Genymotion(self):
         pass
 
-    def test_200_Emulate_Android_InsideProject_InRunningEmulator(self):
+    def test_200_Emulate_Android_InsideProject(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
         currentDir = os.getcwd()   
         os.chdir(os.path.join(currentDir,"TNS_App"))    
