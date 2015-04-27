@@ -65,8 +65,8 @@ class Platform_OSX(unittest.TestCase):
         
         # Verify Runtime is symlink
         output = runAUT("ls -la TNS_App/platforms/ios/")
-        assert ("Metadata ->" in output)
-        assert ("package/framework/Metadata" in output)
+        assert ("NativeScript.framework ->" in output)
+        assert ("package/framework/NativeScript.framework" in output)
 
     def test_004_Platform_Add_iOS_Symlink_And_FrameworkPath(self):
         CreateProject(projName="TNS_App")
@@ -79,8 +79,8 @@ class Platform_OSX(unittest.TestCase):
         
         # Verify Runtime is symlink
         output = runAUT("ls -la TNS_App/platforms/ios/")
-        assert ("Metadata ->" in output)
-        assert ("package/framework/Metadata" in output)
+        assert ("NativeScript.framework ->" in output)
+        assert ("package/framework/NativeScript.framework" in output)
        
     def test_200_Platform_Add_iOS_FrameworkPath(self):
         CreateProject(projName="TNS_App")
