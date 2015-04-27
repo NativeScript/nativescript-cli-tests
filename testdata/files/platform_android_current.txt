@@ -5,9 +5,10 @@ assets/metadata/treeNodeStream.dat
 assets/metadata/treeStringsStream.dat
 assets/metadata/treeValueStream.dat
 build.xml
+custom_rules.xml
+libs/android-support-v4.jar
 libs/armeabi-v7a/libNativeScript.so
 libs/nativescript.jar
-libs/android-support-v4.jar
 libs/x86/libNativeScript.so
 local.properties
 proguard-project.txt

@@ -42,7 +42,7 @@ class Platform_Linux(unittest.TestCase):
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.9.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.10.0.txt')
         
     def test_003_Platform_Add_Android_FrameworkPath(self):
         CreateProject(projName="TNS_App")
@@ -113,7 +113,7 @@ class Platform_Linux(unittest.TestCase):
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.9.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.10.0.txt')
 
     def test_202_Platform_Remove_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
@@ -128,7 +128,7 @@ class Platform_Linux(unittest.TestCase):
         assert ("\"version\": \"0.9.0\"" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.9.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.10.0.txt')
 
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/333") 
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/335")             
@@ -141,7 +141,7 @@ class Platform_Linux(unittest.TestCase):
         assert ("Successfully updated to version  0.9.0" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.9.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.10.0.txt')
 
     def test_205_Platform_Update_ToSameVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=None)
