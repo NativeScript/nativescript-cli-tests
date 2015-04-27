@@ -105,7 +105,7 @@ class Emulate_Linux(unittest.TestCase):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " emulate invalidPlatform --path TNS_App --timeout 600", set_timeout=660)
         assert ("The input is not valid sub-command for 'emulate' command" in output) 
-        assert ("Usage:" in output) 
+        assert ("Usage" in output) 
  
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/289")    
     def test_402_Emulate_InvalidAvd(self):
@@ -113,4 +113,4 @@ class Emulate_Linux(unittest.TestCase):
         output = runAUT(tnsPath + " emulate android --avd invalidDeviceId --path TNS_App --timeout 600", set_timeout=660)
         # TODO: Modify assert when issue is fixed
         assert ("'invalidPlatform' is not valid sub-command for 'emulate' command" in output) 
-        assert ("Usage:" in output) 
+        assert ("Usage" in output) 
