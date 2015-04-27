@@ -23,7 +23,7 @@ class Deploy_OSX(unittest.TestCase):
 
     def test_001_Deploy_iOS_Simulator(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
-        output = runAUT(tnsPath + " deploy ios --path TNS_App")
+        output = runAUT(tnsPath + " deploy ios --path TNS_App  --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         assert ("Successfully deployed on device" in output)  
@@ -31,7 +31,7 @@ class Deploy_OSX(unittest.TestCase):
 
     def test_002_Deploy_iOS_Device(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
-        output = runAUT(tnsPath + " deploy ios --path TNS_App")
+        output = runAUT(tnsPath + " deploy ios --path TNS_App  --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         assert ("Successfully deployed on device" in output)  

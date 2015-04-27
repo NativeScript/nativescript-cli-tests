@@ -23,13 +23,13 @@ class Emulate_OSX(unittest.TestCase):
 
     def test_001_Emulate_ListDevices(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
-        output = runAUT(tnsPath + " emulate ios --availableDevices --path TNS_App")
+        output = runAUT(tnsPath + " emulate ios --availableDevices --path TNS_App --justlaunch")
         assert ("iPhone-6" in output) 
         # TODO: Update verification after https://github.com/NativeScript/nativescript-cli/issues/289 is fixed
         
     def test_002_Emulate_iOS(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
-        output = runAUT(tnsPath + " emulate ios --device iPhone-6 --path TNS_App")
+        output = runAUT(tnsPath + " emulate ios --device iPhone-6 --path TNS_App --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         assert ("Starting iOS Simulator" in output) 
@@ -41,7 +41,7 @@ class Emulate_OSX(unittest.TestCase):
         
     def test_003_Emulate_iOS_Release(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
-        output = runAUT(tnsPath + " emulate ios --device iPhone-6 --path TNS_App --release")
+        output = runAUT(tnsPath + " emulate ios --device iPhone-6 --path TNS_App --release --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Release" in output)
         assert ("Project successfully built" in output)   
@@ -54,7 +54,7 @@ class Emulate_OSX(unittest.TestCase):
         
     def test_400_Emulate_InvalidDevice(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
-        output = runAUT(tnsPath + " emulate ios --device invalidDevice --path TNS_App")
+        output = runAUT(tnsPath + " emulate ios --device invalidDevice --path TNS_App --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         assert ("Invalid device identifier invalidDevice. Valid device identifiers are" in output)  

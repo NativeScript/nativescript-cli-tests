@@ -24,7 +24,7 @@ class Run_OSX(unittest.TestCase):
     
     def test_001_Run_iOS(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
-        output = runAUT(tnsPath + " run ios --path TNS_App")
+        output = runAUT(tnsPath + " run ios --path TNS_App --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Debug" in output)
         assert ("Project successfully built" in output)   
@@ -33,7 +33,7 @@ class Run_OSX(unittest.TestCase):
     
     def test_002_Run_iOS_ReleaseConfiguration(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
-        output = runAUT(tnsPath + " run ios --release --path TNS_App")
+        output = runAUT(tnsPath + " run ios --release --path TNS_App --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Release" in output)
         assert ("Project successfully built" in output)   
@@ -42,7 +42,7 @@ class Run_OSX(unittest.TestCase):
  
     def test_003_Run_iOS_Simulator(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
-        output = runAUT(tnsPath + " run ios --emulator --path TNS_App")
+        output = runAUT(tnsPath + " run ios --emulator --path TNS_App --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Debug" in output)
         assert ("Project successfully built" in output)   
@@ -57,7 +57,7 @@ class Run_OSX(unittest.TestCase):
 
     def test_004_Run_iOS_ReleaseConfiguration_Simulator(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
-        output = runAUT(tnsPath + " run ios --emulator --release --path TNS_App")
+        output = runAUT(tnsPath + " run ios --emulator --release --path TNS_App --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Release" in output)
         assert ("Project successfully built" in output)   
@@ -74,7 +74,7 @@ class Run_OSX(unittest.TestCase):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)    
         currentDir = os.getcwd()   
         os.chdir(os.path.join(currentDir,"TNS_App"))    
-        output = runAUT(os.path.join("..", tnsPath) + " run ios --path TNS_App")
+        output = runAUT(os.path.join("..", tnsPath) + " run ios --path TNS_App --justlaunch")
         os.chdir(currentDir);
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Debug" in output)

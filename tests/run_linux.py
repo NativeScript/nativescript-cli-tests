@@ -27,7 +27,7 @@ class Run_Linux(unittest.TestCase):
 
     def test_001_Run_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
-        output = runAUT(tnsPath + " run android --path TNS_App")
+        output = runAUT(tnsPath + " run android --path TNS_App --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         assert ("Successfully deployed on device with identifier" in output)  
@@ -39,7 +39,7 @@ class Run_Linux(unittest.TestCase):
                         " --keyStorePassword " + androidKeyStorePassword + 
                         " --keyStoreAlias " + androidKeyStoreAlias + 
                         " --keyStoreAliasPassword " + androidKeyStoreAliasPassword + 
-                        " --release --path TNS_App")
+                        " --release --path TNS_App --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         assert ("Successfully deployed on device with identifier" in output)         
@@ -49,7 +49,7 @@ class Run_Linux(unittest.TestCase):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
         currentDir = os.getcwd()   
         os.chdir(os.path.join(currentDir,"TNS_App"))    
-        output = runAUT(os.path.join("..", tnsPath) + " run android --path TNS_App")
+        output = runAUT(os.path.join("..", tnsPath) + " run android --path TNS_App --justlaunch")
         os.chdir(currentDir);
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
@@ -57,7 +57,7 @@ class Run_Linux(unittest.TestCase):
          
     def test_201_Run_Android_DeviceId(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
-        output = runAUT(tnsPath + " run android --device emulator-5554 --path TNS_App")
+        output = runAUT(tnsPath + " run android --device emulator-5554 --path TNS_App --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         assert ("Successfully deployed on device with identifier 'emulator-5554'" in output)  

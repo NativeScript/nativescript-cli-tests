@@ -128,7 +128,7 @@ class Platform_Linux(unittest.TestCase):
         assert ("\"version\": \"0.9.0\"" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.10.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.9.0.txt')
 
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/333") 
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/335")             
