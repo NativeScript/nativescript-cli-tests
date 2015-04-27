@@ -49,20 +49,20 @@ class Create(unittest.TestCase):
         CreateProject(projName="template")
         
         # Modify some files in template project
-        for line in fileinput.input("template/app/README.md", inplace = 1): 
-            print line.replace("template-hello-world", "myTemplate"),
+        for line in fileinput.input("template/app/LICENSE", inplace = 1): 
+            print line.replace("Copyright (c) 2015, Telerik AD", "Copyright (c) 2015, Telerik A D"),
             
         # Create new project based on first one
         CreateProject(projName="TNS_App", copyFrom="template/app") 
-        # TODO: Discuss why I need to specify app folder instead of project root
         
         # Verify new project corresponds to name of the new project
         output = runAUT("cat TNS_App/.tnsproject")
         assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
         
         # Verify that content of the new project is based on first project 
-        output = runAUT("cat TNS_App/app/README.md")
-        assert ("myTemplate" in output)        
+        output = runAUT("cat TNS_App/app/LICENSE")
+        assert not ("Copyright (c) 2015, Telerik AD" in output)     
+        assert ("Copyright (c) 2015, Telerik A D" in output)        
  
     def test_005_CreateProjectWithSpaceInName(self):        
         CreateProject(projName="\"TNS App\"");        

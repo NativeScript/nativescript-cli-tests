@@ -26,7 +26,6 @@ class Prepare_Linux(unittest.TestCase):
         assert("Project successfully prepared" in output)
         
         # Verify app and tns_modules from application folder are processed and avalable in platform folder
-        assert FileExists('TNS_App/platforms/android/assets/app/bootstrap.js')
         assert FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.js')
         assert not FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.android.js')
         assert not FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.ios.js')
@@ -40,7 +39,6 @@ class Prepare_Linux(unittest.TestCase):
         assert("Project successfully prepared" in output)    
 
         # Verify app and tns_modules from application folder are processed and avalable in platform folder
-        assert FileExists('TNS_App/platforms/android/assets/app/bootstrap.js')
         assert FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.js')
         assert not FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.android.js')
         assert not FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.ios.js')
