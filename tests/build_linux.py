@@ -29,10 +29,10 @@ class Build_Linux(unittest.TestCase):
         
         # In 0.9.0 and above Build command automatically prepare project before build
         assert ("Project successfully prepared" in output) 
-        assert ("Creating TNS_App-debug-unaligned.apk and signing it with a debug key..." in output)  
+        assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)        
-        assert FileExists("TNS_App/platforms/android/bin/TNS_App-debug.apk")
+        assert FileExists("TNS_App/platforms/android/bin/TNSApp-debug.apk")
                     
     def test_002_Build_Android_Release(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
@@ -46,7 +46,7 @@ class Build_Linux(unittest.TestCase):
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Signing final apk..." in output)
         assert ("Project successfully built" in output)
-        assert FileExists("TNS_App/platforms/android/bin/TNS_App-release.apk")
+        assert FileExists("TNS_App/platforms/android/bin/TNSApp-release.apk")
         
     # Note: This test fails only on Windows.
     # TODO: Ignore tests at runtime (in tns_tests_runner.py). This will allow test to be ignored only on specific OS
@@ -69,7 +69,7 @@ class Build_Linux(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)   
-        assert FileExists("TNS_App/platforms/android/bin/TNS_App-debug.apk")
+        assert FileExists("TNS_App/platforms/android/bin/TNSApp-debug.apk")
 
     def test_201_Build_Android_WithPrepare(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
@@ -78,10 +78,10 @@ class Build_Linux(unittest.TestCase):
         
         # Even if project is already prepared build will prepare it again
         assert ("Project successfully prepared" in output) 
-        assert ("Creating TNS_App-debug-unaligned.apk and signing it with a debug key..." in output)  
+        assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)         
-        assert FileExists("TNS_App/platforms/android/bin/TNS_App-debug.apk")
+        assert FileExists("TNS_App/platforms/android/bin/TNSApp-debug.apk")
     
     @unittest.skip("TODO: Fix this test. Now build command opens a browser")                           
     def test_400_Build_MissingPlatform(self):

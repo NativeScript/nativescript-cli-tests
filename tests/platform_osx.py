@@ -92,7 +92,7 @@ class Platform_OSX(unittest.TestCase):
             assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_current.txt')
        
         # If project.xcworkspace is there Xcode project name is wrong
-        assert not FileExists("TNS_App/platforms/ios/TNS_App.xcodeproj/project.xcworkspace")
+        assert not FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj/project.xcworkspace")
  
     def test_201_Platform_Remove_iOS(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
@@ -161,7 +161,7 @@ class Platform_OSX(unittest.TestCase):
         assert("Project successfully created" in output)
   
         # Verify plist file 
-        output = runAUT("cat TNS_App/platforms/ios/TNS_App/TNS_App-Info.plist")
+        output = runAUT("cat TNS_App/platforms/ios/TNS_App/TNSApp-Info.plist")
         assert ("org.nativescript.MyApp" in output)
                                        
     def test_400_Platform_Add_AlreadyExistingPlatform(self):

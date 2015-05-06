@@ -16,7 +16,7 @@ class Build_OSX(unittest.TestCase):
         print "#####"
         print ""
         
-        runAUT("sudo find /var/folders/ -name '*TNS_App-*' -exec rm -rf {} \;") # Delete precompiled headers
+        runAUT("sudo find /var/folders/ -name '*TNSApp-*' -exec rm -rf {} \;") # Delete precompiled headers
         CleanupFolder('./TNS_App')
         
     def tearDown(self):        
@@ -26,20 +26,20 @@ class Build_OSX(unittest.TestCase):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)     
         output = runAUT(tnsPath + " build ios --path TNS_App")
         assert ("Project successfully prepared" in output) 
-        assert ("build/emulator/TNS_App.app" in output)  
+        assert ("build/emulator/TNSApp.app" in output)  
         assert ("** BUILD SUCCEEDED **" in output)
         assert ("Project successfully built" in output)         
-        assert FileExists("TNS_App/platforms/ios/build/emulator/TNS_App.app")
+        assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
             
     def test_002_Build_iOS_Release(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)     
         output = runAUT(tnsPath + " build ios --path TNS_App --release")
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Release" in output)
-        assert ("build/emulator/TNS_App.app" in output)  
+        assert ("build/emulator/TNSApp.app" in output)  
         assert ("** BUILD SUCCEEDED **" in output)
         assert ("Project successfully built" in output)         
-        assert FileExists("TNS_App/platforms/ios/build/emulator/TNS_App.app")
+        assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
 
     def test_003_Build_iOS_ForDevice(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)     
@@ -47,10 +47,10 @@ class Build_OSX(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Debug" in output)
         assert ("CodeSign" in output)
-        assert ("build/device/TNS_App.app" in output)  
+        assert ("build/device/TNSApp.app" in output)  
         assert ("** BUILD SUCCEEDED **" in output)
         assert ("Project successfully built" in output)         
-        assert FileExists("TNS_App/platforms/ios/build/device/TNS_App.ipa")
+        assert FileExists("TNS_App/platforms/ios/build/device/TNSApp.ipa")
         
     def test_004_Build_iOS_Release_ForDevice(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)     
@@ -58,15 +58,15 @@ class Build_OSX(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Release" in output)
         assert ("CodeSign" in output)
-        assert ("build/device/TNS_App.app" in output)  
+        assert ("build/device/TNSApp.app" in output)  
         assert ("** BUILD SUCCEEDED **" in output)
         assert ("Project successfully built" in output)         
-        assert FileExists("TNS_App/platforms/ios/build/device/TNS_App.ipa")
+        assert FileExists("TNS_App/platforms/ios/build/device/TNSApp.ipa")
         
         # Verify ipa has both armv7 and arm64 archs
-        output = runAUT("mv TNS_App/platforms/ios/build/device/TNS_App.ipa TNS_App-ipa.tgz")    
-        output = runAUT("tar -xvf TNS_App-ipa.tgz")     
-        output = runAUT("lipo -info Payload/TNS_App.app/TNS_App")
+        output = runAUT("mv TNS_App/platforms/ios/build/device/TNSApp.ipa TNSApp-ipa.tgz")    
+        output = runAUT("tar -xvf TNSApp-ipa.tgz")     
+        output = runAUT("lipo -info Payload/TNSApp.app/TNS_App")
         assert ("armv7" in output)
         assert ("arm64" in output)       
 
@@ -76,10 +76,10 @@ class Build_OSX(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Release" in output)
         assert ("CodeSign" in output)
-        assert ("build/device/TNS_App.app" in output)  
+        assert ("build/device/TNSApp.app" in output)  
         assert ("** BUILD SUCCEEDED **" in output)
         assert ("Project successfully built" in output)         
-        assert FileExists("TNS_App/platforms/ios/build/device/TNS_App.ipa")  
+        assert FileExists("TNS_App/platforms/ios/build/device/TNSApp.ipa")  
 
     def test_201_Build_iOS_InsideProject(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
@@ -90,10 +90,10 @@ class Build_OSX(unittest.TestCase):
         os.chdir(currentDir);
 
         assert ("Project successfully prepared" in output) 
-        assert ("build/emulator/TNS_App.app" in output)  
+        assert ("build/emulator/TNSApp.app" in output)  
         assert ("** BUILD SUCCEEDED **" in output)
         assert ("Project successfully built" in output)         
-        assert FileExists("TNS_App/platforms/ios/build/emulator/TNS_App.app")
+        assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
 
     def test_202_Build_iOS_WithPrepare(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)     
@@ -103,13 +103,13 @@ class Build_OSX(unittest.TestCase):
         
         # Even if project is already prepared build will prepare it again
         assert ("Project successfully prepared" in output) 
-        assert ("build/emulator/TNS_App.app" in output)  
+        assert ("build/emulator/TNSApp.app" in output)  
         assert ("** BUILD SUCCEEDED **" in output)
         assert ("Project successfully built" in output)         
-        assert FileExists("TNS_App/platforms/ios/build/emulator/TNS_App.app")
+        assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
         
         # Verify Xcode project name is not empty
-        command = "cat TNS_App/platforms/ios/TNS_App.xcodeproj/project.xcworkspace/contents.xcworkspacedata"
+        command = "cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.xcworkspace/contents.xcworkspacedata"
         output = runAUT(command)     
         assert not ("__PROJECT_NAME__.xcodeproj" in output)
                                
