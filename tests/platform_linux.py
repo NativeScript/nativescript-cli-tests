@@ -42,7 +42,7 @@ class Platform_Linux(unittest.TestCase):
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.10.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.0.0.txt')
         
     def test_003_Platform_Add_Android_FrameworkPath(self):
         CreateProject(projName="TNS_App")
@@ -113,7 +113,7 @@ class Platform_Linux(unittest.TestCase):
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.10.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.0.0.txt')
 
     def test_202_Platform_Remove_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
@@ -137,11 +137,11 @@ class Platform_Linux(unittest.TestCase):
         output = runAUT("cat TNS_App/.tnsproject")
         assert ("\"version\": \"0.4.2\"" in output)
         
-        output = runAUT(tnsPath + " platform update android@0.9.0 --path TNS_App")        
-        assert ("Successfully updated to version  0.9.0" in output)
+        output = runAUT(tnsPath + " platform update android@1.0.0 --path TNS_App")        
+        assert ("Successfully updated to version  1.0.0" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.10.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.0.0.txt')
 
     def test_205_Platform_Update_ToSameVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=None)
