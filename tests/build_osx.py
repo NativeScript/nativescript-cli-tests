@@ -66,7 +66,7 @@ class Build_OSX(unittest.TestCase):
         # Verify ipa has both armv7 and arm64 archs
         output = runAUT("mv TNS_App/platforms/ios/build/device/TNSApp.ipa TNSApp-ipa.tgz")    
         output = runAUT("tar -xvf TNSApp-ipa.tgz")     
-        output = runAUT("lipo -info Payload/TNSApp.app/TNS_App")
+        output = runAUT("lipo -info Payload/TNSApp.app/TNSApp")
         assert ("armv7" in output)
         assert ("arm64" in output)       
 
