@@ -131,15 +131,15 @@ class Platform_OSX(unittest.TestCase):
                     
     def test_204_Platform_Add_iOS_CustomVersion(self):
         CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios@0.9.0", path="TNS_App")
+        output = PlatformAdd(platform="ios@1.0.0", path="TNS_App")
         assert("Copying template files..." in output)
         assert("Project successfully created" in output)
         
         output = runAUT("cat TNS_App/.tnsproject")
-        assert ("\"version\": \"0.9.0\"" in output)
+        assert ("\"version\": \"1.0.0\"" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_0.9.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.0.0.txt')
  
     def test_205_Platform_Add_iOS_CustomExperimentalVersion(self):
         CreateProject(projName="TNS_App")
