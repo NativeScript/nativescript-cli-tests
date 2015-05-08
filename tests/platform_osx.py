@@ -110,24 +110,24 @@ class Platform_OSX(unittest.TestCase):
 
     def test_203_Platform_Update_iOS(self):
         CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios@0.9.0", path="TNS_App")
+        output = PlatformAdd(platform="ios@1.0.0", path="TNS_App")
         assert("Copying template files..." in output)
         assert("Project successfully created" in output)
         
         output = runAUT("cat TNS_App/.tnsproject")
-        assert ("\"version\": \"0.9.0\"" in output)
+        assert ("\"version\": \"1.0.0\"" in output)
 
-        output = runAUT(tnsPath + " platform update ios@1.0.0 --path TNS_App")  
+        output = runAUT(tnsPath + " platform update ios@1.0.1 --path TNS_App")  
         assert ("We need to override xcodeproj file. The old one will be saved at" in output)
         
-        output = runAUT("echo '' | " + tnsPath + " platform update ios@1.0.0 --path TNS_App")  
-        assert ("Successfully updated to version  1.0.0" in output)
+        output = runAUT("echo '' | " + tnsPath + " platform update ios@1.0.1 --path TNS_App")  
+        assert ("Successfully updated to version  1.0.1" in output)
 
         output = runAUT("cat TNS_App/.tnsproject")
-        assert ("\"version\": \"1.0.0\"" in output)
+        assert ("\"version\": \"1.0.1\"" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.0.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.0.1.txt')
                     
     def test_204_Platform_Add_iOS_CustomVersion(self):
         CreateProject(projName="TNS_App")
@@ -161,7 +161,7 @@ class Platform_OSX(unittest.TestCase):
         assert("Project successfully created" in output)
   
         # Verify plist file 
-        output = runAUT("cat TNS_App/platforms/ios/TNS_App/TNSApp-Info.plist")
+        output = runAUT("cat TNS_App/platforms/ios/TNSApp/TNSApp-Info.plist")
         assert ("org.nativescript.MyApp" in output)
                                        
     def test_400_Platform_Add_AlreadyExistingPlatform(self):
