@@ -31,7 +31,9 @@ class Build_Linux(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
         assert ("BUILD SUCCESSFUL" in output)
-        assert ("Project successfully built" in output)        
+        assert ("Project successfully built" in output)  
+        assert not ("ERROR" in output)   
+        assert not ("malformed" in output)            
         assert FileExists("TNS_App/platforms/android/bin/TNSApp-debug.apk")
                     
     def test_002_Build_Android_Release(self):

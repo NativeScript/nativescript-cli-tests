@@ -58,10 +58,10 @@ metadataGenerator/lib/clang/3.6.0/include/wmmintrin.h
 metadataGenerator/lib/clang/3.6.0/include/x86intrin.h
 metadataGenerator/lib/clang/3.6.0/include/xmmintrin.h
 metadataGenerator/lib/clang/3.6.0/include/xopintrin.h
-NativeScript.framework/Headers/NativeScript.h
-NativeScript.framework/Headers/TNSRuntime+Inspector.h
-NativeScript.framework/Headers/TNSRuntime.h
-NativeScript.framework/NativeScript
+NativeScript/include/NativeScript.h
+NativeScript/include/TNSRuntime+Inspector.h
+NativeScript/include/TNSRuntime.h
+NativeScript/lib/libNativeScript.a
 TNSApp/build.xcconfig
 TNSApp/en.lproj/InfoPlist.strings
 TNSApp/en.lproj/LaunchScreen.xib
@@ -70,6 +70,5 @@ TNSApp/Images.xcassets/LaunchImage.launchimage/Contents.json
 TNSApp/main.m
 TNSApp/TNSApp-Info.plist
 TNSApp/TNSApp-Prefix.pch
+TNSApp/TNSDebugging.h
 TNSApp.xcodeproj/project.pbxproj
-TNSDebugging.framework/Headers/TNSDebugging.h
-TNSDebugging.framework/TNSDebugging

@@ -84,8 +84,8 @@ class Emulate_Linux(unittest.TestCase):
         
     def test_201_Emulate_Android_AvdName(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
-        output = runAUT(tnsPath + " emulate android --avd Api18 --path TNS_App --timeout 600 --justlaunch", set_timeout=660)
-        assert ("Starting Android emulator with image Api18" in output)
+        output = runAUT(tnsPath + " emulate android --avd Api19 --path TNS_App --timeout 600 --justlaunch", set_timeout=660)
+        assert ("Starting Android emulator with image Api19" in output)
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         
