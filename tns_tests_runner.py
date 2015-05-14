@@ -24,6 +24,7 @@ from tests.prepare_osx import Prepare_OSX
 from tests.run_linux import Run_Linux
 from tests.run_osx import Run_OSX
 from tests.version import Version
+from tests.autocomplete import Autocomplete
 
 
 def RunTests():
@@ -71,6 +72,7 @@ def RunTests():
     # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))    
     
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace)) 
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(FeatureUsageTracking))
                            
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))    

@@ -19,6 +19,7 @@ class Build_Linux(unittest.TestCase):
         print ""
         
         CleanupFolder('./TNS_App');
+        CleanupFolder('./tns-app');
 
     def tearDown(self):        
         pass
@@ -84,7 +85,30 @@ class Build_Linux(unittest.TestCase):
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)         
         assert FileExists("TNS_App/platforms/android/bin/TNSApp-debug.apk")
-    
+ 
+    def test_300_Build_Android_WithDashInPath(self):
+        CreateProjectAndAddPlatform(projName="tns-app", platform="android", frameworkPath=androidRuntimePath)   
+        
+        # Verify project builds  
+        output = runAUT(tnsPath + " build android --path tns-app")        
+        assert ("Project successfully prepared" in output) 
+        assert ("Creating tnsapp-debug-unaligned.apk and signing it with a debug key..." in output)  
+        assert ("BUILD SUCCESSFUL" in output)
+        assert ("Project successfully built" in output)         
+        assert FileExists("tns-app/platforms/android/bin/tnsapp-debug.apk")
+        
+        # Verify project id
+        output = runAUT("cat tns-app/.tnsproject")     
+        assert ("org.nativescript.tnsapp" in output)
+        
+        # Verify AndroidManifest.xml        
+        output = runAUT("cat tns-app/platforms/android/AndroidManifest.xml")  
+        assert ("org.nativescript.tnsapp" in output)  
+ 
+        # Verify Build.xml        
+        output = runAUT("cat tns-app/platforms/android/build.xml")  
+        assert ("tnsapp" in output)  
+                           
     @unittest.skip("TODO: Fix this test. Now build command opens a browser")                           
     def test_400_Build_MissingPlatform(self):
         output = runAUT(tnsPath + " build")
