@@ -25,7 +25,7 @@ class Create(unittest.TestCase):
 
     def test_001_CreateProject(self):        
         CreateProject(projName="TNS_App")        
-        output = runAUT("cat TNS_App/.tnsproject")
+        output = runAUT("cat TNS_App/package.json")
         assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
         
         # TODO: Uncomment this after TNS template on Github is OK
@@ -33,7 +33,7 @@ class Create(unittest.TestCase):
         
     def test_002_CreateProjectWithPath(self):
         CreateProject(projName="TNS_App", path='folder/subfolder/')
-        output = runAUT("cat folder/subfolder/TNS_App/.tnsproject")
+        output = runAUT("cat folder/subfolder/TNS_App/package.json")
         assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
         
         # TODO: Uncomment this after TNS template on Github is OK
@@ -41,7 +41,7 @@ class Create(unittest.TestCase):
         
     def test_003_CreateProjectWithAppId(self):
         CreateProject(projName = "TNS_App", appId="org.nativescript.MyApp")
-        output = runAUT("cat TNS_App/.tnsproject")
+        output = runAUT("cat TNS_App/package.json")
         assert ("\"id\": \"org.nativescript.MyApp\"" in output)
         
     def test_004_CreateProjectWithCopyFrom(self):        
@@ -56,7 +56,7 @@ class Create(unittest.TestCase):
         CreateProject(projName="TNS_App", copyFrom="template/app") 
         
         # Verify new project corresponds to name of the new project
-        output = runAUT("cat TNS_App/.tnsproject")
+        output = runAUT("cat TNS_App/package.json")
         assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
         
         # Verify that content of the new project is based on first project 
@@ -66,7 +66,7 @@ class Create(unittest.TestCase):
  
     def test_005_CreateProjectWithSpaceInName(self):        
         CreateProject(projName="\"TNS App\"");        
-        output = runAUT("cat \"TNS App/.tnsproject\"");
+        output = runAUT("cat \"TNS App/package.json\"");
         assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
               
     def test_400_CreateProjectWithCopyFromWrongPath(self):
