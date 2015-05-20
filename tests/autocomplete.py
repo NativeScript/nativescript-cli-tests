@@ -20,12 +20,12 @@ class Autocomplete(unittest.TestCase):
         output = runAUT(tnsPath + " autocomplete status")
         
         if ("Autocompletion is disabled." in output):
-            output = runAUT(tnsPath + " autocomplete enable")
+            output = runAUT(tnsPath + " autocomplete enable --log trace")
             assert ("Restart your shell to enable command auto-completion." in output)
 
         #if ("Autocompletion is enabled." in output):
         else:
-            output = runAUT(tnsPath + " autocomplete enable")
+            output = runAUT(tnsPath + " autocomplete enable --log trace")
             assert ("Autocompletion is already enabled." in output)
         
         output = runAUT(tnsPath + " autocomplete status")
