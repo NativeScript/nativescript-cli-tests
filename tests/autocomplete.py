@@ -17,19 +17,31 @@ class Autocomplete(unittest.TestCase):
         pass
 
     def test_001_Autocomplete_Enable(self):
-        runAUT(tnsPath + " autocomplete status")
+        output = runAUT(tnsPath + " autocomplete status")
         
-        output = runAUT(tnsPath + " autocomplete enable")   
-        assert ("Autocompletion is already enabled." in output)    
+        if ("Autocompletion is disabled." in output):
+            output = runAUT(tnsPath + " autocomplete enable")
+            assert ("Restart your shell to enable command auto-completion." in output)
+
+        #if ("Autocompletion is enabled." in output):
+        else:
+            output = runAUT(tnsPath + " autocomplete enable")
+            assert ("Autocompletion is already enabled." in output)
         
-        output = runAUT(tnsPath + " autocomplete status")   
+        output = runAUT(tnsPath + " autocomplete status")
         assert ("Autocompletion is enabled." in output)    
  
     def test_002_Autocomplete_Disable(self):
-        runAUT(tnsPath + " autocomplete status")
+        output = runAUT(tnsPath + " autocomplete status")
         
-        output = runAUT(tnsPath + " autocomplete disable")   
-        assert ("Restart your shell to disable command auto-completion." in output)    
+        if ("Autocompletion is enabled." in output):
+            output = runAUT(tnsPath + " autocomplete disable")   
+            assert ("Restart your shell to disable command auto-completion." in output)    
+        
+        #if ("Autocompletion is disabled." in output):
+        else:
+            output = runAUT(tnsPath + " autocomplete disable")
+            assert ("Autocompletion is already disabled." in output)
         
         output = runAUT(tnsPath + " autocomplete status")   
         assert ("Autocompletion is disabled." in output)    
