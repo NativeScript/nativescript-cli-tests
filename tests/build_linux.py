@@ -98,7 +98,7 @@ class Build_Linux(unittest.TestCase):
         assert FileExists("tns-app/platforms/android/bin/tnsapp-debug.apk")
         
         # Verify project id
-        output = runAUT("cat tns-app/.tnsproject")     
+        output = runAUT("cat tns-app/package.json")     
         assert ("org.nativescript.tnsapp" in output)
         
         # Verify AndroidManifest.xml        

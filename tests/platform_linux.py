@@ -124,7 +124,7 @@ class Platform_Linux(unittest.TestCase):
 
     def test_203_Platform_Add_Android_CustomVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android@0.9.0")               
-        output = runAUT("cat TNS_App/.tnsproject")
+        output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"0.9.0\"" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
@@ -151,12 +151,12 @@ class Platform_Linux(unittest.TestCase):
  
     def test_206_Platform_Update_ToOlderVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android@0.9.0")               
-        output = runAUT("cat TNS_App/.tnsproject")
+        output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"0.9.0\"" in output)
         command = tnsPath + " platform update android@0.4.2 --path TNS_App"
         output = runAUT(command + "< enter_key.txt")
         assert ("You are going to downgrade to android runtime v.0.4.2. Are you sure?" in output)
-        output = runAUT("cat TNS_App/.tnsproject")
+        output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"0.9.0\"" in output)   
                                                   
     def test_400_Platform_List_WrongPath(self):
