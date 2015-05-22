@@ -114,7 +114,7 @@ class Platform_OSX(unittest.TestCase):
         assert("Copying template files..." in output)
         assert("Project successfully created" in output)
         
-        output = runAUT("cat TNS_App/.tnsproject")
+        output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.0.0\"" in output)
 
         output = runAUT(tnsPath + " platform update ios@1.0.1 --path TNS_App")  
@@ -123,7 +123,7 @@ class Platform_OSX(unittest.TestCase):
         output = runAUT("echo '' | " + tnsPath + " platform update ios@1.0.1 --path TNS_App")  
         assert ("Successfully updated to version  1.0.1" in output)
 
-        output = runAUT("cat TNS_App/.tnsproject")
+        output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.0.1\"" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
@@ -135,7 +135,7 @@ class Platform_OSX(unittest.TestCase):
         assert("Copying template files..." in output)
         assert("Project successfully created" in output)
         
-        output = runAUT("cat TNS_App/.tnsproject")
+        output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.0.0\"" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
@@ -147,13 +147,13 @@ class Platform_OSX(unittest.TestCase):
         assert("Copying template files..." in output)
         assert("Project successfully created" in output)
         
-        output = runAUT("cat TNS_App/.tnsproject")
+        output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"0.9.2-exp-ios-8.2\"" in output)
 
     def test_206_Platform_Add_iOS_CustomBundleId(self):
         # Create project with different appId
         CreateProject(projName = "TNS_App", appId="org.nativescript.MyApp")
-        output = runAUT("cat TNS_App/.tnsproject")
+        output = runAUT("cat TNS_App/package.json")
         assert ("\"id\": \"org.nativescript.MyApp\"" in output)
 
         # Add iOS platform

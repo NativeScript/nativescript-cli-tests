@@ -127,7 +127,7 @@ class Build_OSX(unittest.TestCase):
         assert FileExists("tns-app/platforms/ios/build/emulator/tnsapp.app")       
         
         # Verify project id
-        output = runAUT("cat tns-app/.tnsproject")     
+        output = runAUT("cat tns-app/package.json")     
         assert ("org.nativescript.tnsapp" in output)
                                        
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/277")             
