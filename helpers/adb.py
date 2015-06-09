@@ -4,6 +4,12 @@ from time import sleep
 from helpers._os_lib import runAUT
 
 
+def RestartAdb():
+    
+    runAUT("adb kill-server")
+    runAUT("adb start-server")
+    runAUT("adb devices")
+
 def StopApplication(appId, deviceId):
     
     output = runAUT("adb -s " + deviceId + " shell am force-stop " + appId)

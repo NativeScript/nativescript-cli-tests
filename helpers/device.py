@@ -4,6 +4,7 @@ import time
 
 from helpers._os_lib import runAUT, KillProcess
 from helpers._tns_lib import tnsPath
+from helpers.adb import RestartAdb
 
 
 def StartEmulator(emulatorName, port="5554", timeout=300, waitFor=True):
@@ -51,8 +52,11 @@ def GivenRunningEmulator():
     
     output = runAUT(tnsPath + " device")
     if not ('emulator' in output):
-        StopEmulators()
-        StartEmulator(emulatorName="Api17", port="5554", waitFor=True)
+        RestartAdb()
+        output = runAUT(tnsPath + " device")
+        if not ('emulator' in output):
+            StopEmulators()
+            StartEmulator(emulatorName="Api19", port="5554", waitFor=True)
 
 def GivenRealDeviceRunning(platform):
     
