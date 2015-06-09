@@ -33,12 +33,15 @@ def StartEmulator(emulatorName, port="5554", timeout=300, waitFor=True):
 def WaitForDevice(deviceName, timeout = 600):
     
     found = False
-    endTime = time.time() + timeout;
+    startTime = time.time()
+    endTime = startTime + timeout;
     while not found:
         time.sleep(5)
         output = runAUT(tnsPath + " device")
         if (deviceName in output):
             found = True 
+        if (time.time() > startTime + 60):
+            RestartAdb() 
         if (found is True) or (time.time() > endTime):
             break
     return found
@@ -52,7 +55,6 @@ def GivenRunningEmulator():
     
     output = runAUT(tnsPath + " device")
     if not ('emulator' in output):
-        RestartAdb()
         output = runAUT(tnsPath + " device")
         if not ('emulator' in output):
             StopEmulators()
