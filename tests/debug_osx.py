@@ -40,7 +40,7 @@ class Debug_OSX(unittest.TestCase):
         assert not ("disconnected" in output)
     
     def test_002_Debug_iOS_Simulator_Start(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)   
+
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath)   
         output = runAUT(tnsPath + " emulate ios --path TNS_App --justlaunch")  
         assert ("** BUILD SUCCEEDED **" in output)
