@@ -17,6 +17,8 @@ from tests.emulate_linux import Emulate_Linux
 from tests.emulate_osx import Emulate_OSX
 from tests.feature_usage_tracking import FeatureUsageTracking
 from tests.logtrace import LogTrace
+from tests.library_linux import Library_Linux
+from tests.library_osx import Library_OSX
 from tests.platform_linux import Platform_Linux
 from tests.platform_osx import Platform_OSX
 from tests.prepare_linux import Prepare_Linux
@@ -78,11 +80,13 @@ def RunTests():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))    
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_Linux))    
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_Linux)) 
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_Linux))
-        
+    
     if 'Darwin' in platform.platform():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_OSX))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX)) 
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_OSX)) 
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_OSX))      
         
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']): 

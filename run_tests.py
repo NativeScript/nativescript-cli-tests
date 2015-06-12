@@ -56,6 +56,11 @@ if __name__ == '__main__':
     output = runAUT("git clone git@github.com:NativeScript/template-hello-world.git template-hello-world")
     assert not ("fatal" in output), "Failed to clone git@github.com:NativeScript/template-hello-world.git"
     
+    # Clone QA-TestApps repo
+    CleanupFolder('QA-TestApps')
+    output = runAUT("git clone git@github.com:NativeScript/QA-TestApps.git QA-TestApps")
+    assert not ("fatal" in output), "Failed to clone git@github.com:NativeScript/QA-TestApps.git"
+
     # Execute tests
     ExecuteTests()
     

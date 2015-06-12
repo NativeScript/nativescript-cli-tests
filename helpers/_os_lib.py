@@ -82,7 +82,7 @@ def CheckFilesExists(rootFolder, listFile, ignoreFileCount=True):
         relPath = rootFolder + '/' + line.rstrip('\r\n')
         print "checking ", relPath
         if not os.path.exists(relPath):
-            print "File doesnt exist!"
+            print "File does not exist!"
             return False
     total = 0
     for root, dirs, files in os.walk(rootFolder):
@@ -108,7 +108,7 @@ def FileExists(path):
         return True
     else: 
         return False
-    
+
 def IsRunningProcess(processName):
     result = False
     for proc in psutil.process_iter():

@@ -66,8 +66,8 @@ def CreateProject(projName, path=None, appId=None, copyFrom=None):
     if copyFrom != None:
         command += " --copy-from " + copyFrom
 
-    outp = runAUT(command)
-    assert("{0} was successfully created".format(projName.replace("\"", "")) in outp)
+    output = runAUT(command)
+    assert ("Project {0} was successfully created".format(projName.replace("\"", "")) in output)
         
         
 def PlatformAdd(platform=None, frameworkPath=None, path=None, symlink=False):
@@ -86,7 +86,9 @@ def PlatformAdd(platform=None, frameworkPath=None, path=None, symlink=False):
     if symlink is True:
         command += " --symlink"
         
-    return runAUT(command)
+    output = runAUT(command)
+    assert ("Copying template files..." in output)
+    assert ("Project successfully created" in output)
 
 def Prepare(path=None, platform=None, assertSuccess=True):
  
@@ -105,11 +107,50 @@ def Prepare(path=None, platform=None, assertSuccess=True):
     
     return output
 
+def LibraryAdd(platform=None, libPath=None, path=None):
+
+    command = tnsPath + " library add"
+
+    if platform is not None:
+        command += " {0}".format(platform)
+
+    if libPath is not None:
+        command += " {0}".format(libPath)
+
+    if path is not None:
+        command += " --path {0}".format(path)
+
+    output = runAUT(command)
+    
+    if ("Warning:" not in output):
+        assert (libPath in output)
+        assert ("Copying" in output)
+        assert ("Generate build.xml" in output)
+        assert ("Added file" in output)
+        assert ("Updated file" in output)
+
+def Build(platform=None, mode=None, path=None):
+
+    command = tnsPath + " build"
+
+    if platform is not None:
+        command += " {0}".format(platform)
+
+    if mode is not None:
+        command += " --{0}".format(platform)
+
+    if path is not None:
+        command += " --path {0}".format(path)
+
+    output = runAUT(command)
+    assert ("Project successfully prepared" in output) 
+    assert ("BUILD SUCCESSFUL" in output)
+    assert ("Project successfully built" in output)  
+    assert not ("ERROR" in output)
+
 def CreateProjectAndAddPlatform(projName, platform=None, frameworkPath=None, symlink=False): 
     CreateProject(projName)
-    output = PlatformAdd(platform, frameworkPath, projName, symlink)
-    assert("Copying template files..." in output)
-    assert("Project successfully created" in output)
+    PlatformAdd(platform, frameworkPath, projName, symlink)
 
 def GetCLIBuildVersion():
     return runAUT(tnsPath + " --version")
