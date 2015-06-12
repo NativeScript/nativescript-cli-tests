@@ -1,4 +1,4 @@
-lib/Android/java-project.jar
+lib/Android/androidappproject.jar
 platforms/android/.project
 platforms/android/AndroidManifest.xml
 platforms/android/assets/internal/prepareExtend.js
@@ -8,8 +8,8 @@ platforms/android/assets/metadata/treeValueStream.dat
 platforms/android/build.xml
 platforms/android/custom_rules.xml
 platforms/android/libs/android-support-v4.jar
+platforms/android/libs/androidappproject.jar
 platforms/android/libs/armeabi-v7a/libNativeScript.so
-platforms/android/libs/java-project.jar
 platforms/android/libs/nativescript.jar
 platforms/android/libs/x86/libNativeScript.so
 platforms/android/local.properties
