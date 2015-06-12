@@ -51,7 +51,7 @@ class Platform_OSX(unittest.TestCase):
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.0.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.1.0.txt')
         
     def test_003_Platform_Add_iOS_Symlink(self):
         CreateProject(projName="TNS_App")

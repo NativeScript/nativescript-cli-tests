@@ -44,7 +44,7 @@ class Emulate_Linux(unittest.TestCase):
         
     def test_002_Emulate_Android_ReleaseConfiguration(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
-        output = runAUT(tnsPath + " emulate android --keyStorePath " + androidKeyStorePath + 
+        output = runAUT(tnsPath + " emulate android --avd Api19 --keyStorePath " + androidKeyStorePath + 
                         " --keyStorePassword " + androidKeyStorePassword + 
                         " --keyStoreAlias " + androidKeyStoreAlias + 
                         " --keyStoreAliasPassword " + androidKeyStoreAliasPassword + 
