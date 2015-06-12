@@ -50,7 +50,6 @@ class Debug_OSX(unittest.TestCase):
         output = runAUT(tnsPath + " debug ios --start --emulator --path TNS_App --frameworkPath " + iosRuntimeSymlinkPath, 3*60, True)
         assert ("Setting up debugger proxy..." in output)
         assert ("Frontend client connected" in output)
-        assert ("Session started without errors" in output)
         assert ("Backend socket created" in output)
         assert not ("Backend socket closed" in output)
         assert not ("Frontend socket closed" in output)

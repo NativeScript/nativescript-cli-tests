@@ -69,7 +69,7 @@ class Emulate_Linux(unittest.TestCase):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
         currentDir = os.getcwd()   
         os.chdir(os.path.join(currentDir,"TNS_App"))    
-        output = runAUT(os.path.join("..", tnsPath) + " emulate android --timeout 600 --justlaunch", set_timeout=660)
+        output = runAUT(os.path.join("..", tnsPath) + " emulate android --avd Api19 --timeout 600 --justlaunch", set_timeout=660)
         os.chdir(currentDir);
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
