@@ -1,7 +1,5 @@
-import errno
 import os, threading, psutil, time, shutil
 import platform
-import stat
 import tarfile
 
 

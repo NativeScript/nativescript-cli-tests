@@ -89,6 +89,7 @@ def PlatformAdd(platform=None, frameworkPath=None, path=None, symlink=False):
     output = runAUT(command)
     assert ("Copying template files..." in output)
     assert ("Project successfully created" in output)
+    return output
 
 def Prepare(path=None, platform=None, assertSuccess=True):
  
@@ -123,6 +124,8 @@ def LibraryAdd(platform=None, libPath=None, path=None):
     output = runAUT(command)
     
     if ("Warning:" not in output):
+        libPath = libPath.replace("/", os.sep)
+        print (libPath)
         assert (libPath in output)
         assert ("Copying" in output)
         assert ("Generate build.xml" in output)
