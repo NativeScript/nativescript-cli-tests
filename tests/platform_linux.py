@@ -42,7 +42,7 @@ class Platform_Linux(unittest.TestCase):
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.0.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.1.0.txt')
         
     def test_003_Platform_Add_Android_FrameworkPath(self):
         CreateProject(projName="TNS_App")
@@ -113,7 +113,7 @@ class Platform_Linux(unittest.TestCase):
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.0.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.1.0.txt')
 
     def test_202_Platform_Remove_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
@@ -247,5 +247,5 @@ class Platform_Linux(unittest.TestCase):
         
     def test_443_SetSDK_InvalidNewVersion(self):
         CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="android --sdk 29", frameworkPath=androidRuntimePath, path="TNS_App")
+        output = PlatformAdd(platform="android --sdk 29", frameworkPath=androidRuntimePath, path="TNS_App", assertSuccess=False)
         assert("You have selected to use android-29, but it is not currently installed." in output)

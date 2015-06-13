@@ -70,7 +70,7 @@ def CreateProject(projName, path=None, appId=None, copyFrom=None):
     assert ("Project {0} was successfully created".format(projName.replace("\"", "")) in output)
         
         
-def PlatformAdd(platform=None, frameworkPath=None, path=None, symlink=False):
+def PlatformAdd(platform=None, frameworkPath=None, path=None, symlink=False, assertSuccess=True):
  
     command = tnsPath + " platform add"
     
@@ -87,8 +87,9 @@ def PlatformAdd(platform=None, frameworkPath=None, path=None, symlink=False):
         command += " --symlink"
         
     output = runAUT(command)
-    assert ("Copying template files..." in output)
-    assert ("Project successfully created" in output)
+    if assertSuccess:
+        assert ("Copying template files..." in output)
+        assert ("Project successfully created" in output)
     return output
 
 def Prepare(path=None, platform=None, assertSuccess=True):
@@ -125,14 +126,13 @@ def LibraryAdd(platform=None, libPath=None, path=None):
     
     if ("Warning:" not in output):
         libPath = libPath.replace("/", os.sep)
-        print (libPath)
         assert (libPath in output)
         assert ("Copying" in output)
         assert ("Generate build.xml" in output)
         assert ("Added file" in output)
         assert ("Updated file" in output)
 
-def Build(platform=None, mode=None, path=None):
+def Build(platform=None, mode=None, path=None, assertSuccess=True):
 
     command = tnsPath + " build"
 
@@ -146,10 +146,11 @@ def Build(platform=None, mode=None, path=None):
         command += " --path {0}".format(path)
 
     output = runAUT(command)
-    assert ("Project successfully prepared" in output) 
-    assert ("BUILD SUCCESSFUL" in output)
-    assert ("Project successfully built" in output)  
-    assert not ("ERROR" in output)
+    if assertSuccess:
+        assert ("Project successfully prepared" in output) 
+        assert ("BUILD SUCCESSFUL" in output)
+        assert ("Project successfully built" in output)  
+        assert not ("ERROR" in output)
 
 def CreateProjectAndAddPlatform(projName, platform=None, frameworkPath=None, symlink=False): 
     CreateProject(projName)
