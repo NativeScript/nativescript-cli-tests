@@ -63,9 +63,7 @@ platforms/android/bin/classes/org/nativescript/TNSApp/R$style.class
 platforms/android/bin/classes/org/nativescript/TNSApp/R.class
 platforms/android/bin/classes.dex
 platforms/android/bin/classes.dex.d
-platforms/android/bin/dexedLibs/android-support-v4-5c2053338a240fe65bb59b7a122af8bd.jar
-platforms/android/bin/dexedLibs/classes-26c0438d382da74854327fd4a5ae9c44.jar
-platforms/android/bin/dexedLibs/nativescript-78dbbb26a231c494342545529f2f4f1c.jar
+platforms/android/bin/dexedLibs/
 platforms/android/bin/jarlist.cache
 platforms/android/bin/proguard.txt
 platforms/android/bin/R.txt

@@ -22,7 +22,7 @@ class Library_Linux(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    # Adding jar libraries log to be added
+    # Copying jar libraries log to be added
     def test_001_Library_Add_Android_JarLib(self):
         CreateProject(projName="TNS_App") 
         PlatformAdd(platform="android", path="TNS_App")
@@ -31,9 +31,7 @@ class Library_Linux(unittest.TestCase):
         assert (CheckFilesExists("TNS_App", "library_add_JarLib_1.1.0.txt"))
  
         Build(platform="android", path="TNS_App")
-        
-        # TODO: Fix this assert
-        #assert (CheckFilesExists("TNS_App", "library_build_JarLib_1.1.0.txt"))
+        assert (CheckFilesExists("TNS_App", "library_build_JarLib_1.1.0.txt"))
 
     def test_201_Library_Add_Android_ProjLib(self):
         CreateProject(projName="TNS_App", copyFrom="QA-TestApps/android-external-lib/external-lib") 
@@ -43,9 +41,7 @@ class Library_Linux(unittest.TestCase):
         assert (CheckFilesExists("TNS_App", "library_add_ProjLib_1.1.0.txt"))
  
         Build(platform="android", path="TNS_App")
-        
-        # TODO: Fix this assert
-        #assert (CheckFilesExists("TNS_App", "library_build_ProjLib_1.1.0.txt"))
+        assert (CheckFilesExists("TNS_App", "library_build_ProjLib_1.1.0.txt"))
 
     #TODO: Implement this test.
     @unittest.skip("Not implemented.")  
@@ -61,7 +57,7 @@ class Library_Linux(unittest.TestCase):
         output = runAUT(tnsPath + " library")
         assert CheckOutput(output, 'library_help_output.txt')
 
-    def test_401_Library_Add_Platform_None(self):
+    def test_402_Library_Add_Platform_None(self):
         CreateProject(projName="TNS_App") 
         output = runAUT(tnsPath + " library add android QA-TestApps/ --path TNS_App")
 
