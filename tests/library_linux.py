@@ -1,7 +1,7 @@
 import unittest
 
 from helpers._os_lib import CleanupFolder, CheckFilesExists, CheckOutput, runAUT,\
-    FileExists
+    FileExists, IsEmpty
 from helpers._tns_lib import tnsPath, Build, CreateProject, PlatformAdd, LibraryAdd
 
 class Library_Linux(unittest.TestCase):
@@ -57,7 +57,14 @@ class Library_Linux(unittest.TestCase):
         output = runAUT(tnsPath + " library")
         assert CheckOutput(output, 'library_help_output.txt')
 
-    def test_402_Library_Add_Platform_None(self):
+    def test_401_Library_Add_Android_NoLib(self):
+        CreateProject(projName="TNS_App", copyFrom="QA-TestApps/android-external-lib/external-lib") 
+        PlatformAdd(platform="android", path="TNS_App")
+        
+        LibraryAdd(platform="android", libPath="QA-TestApps/android-external-lib/external-lib", path="TNS_App")
+        assert IsEmpty("TNS_App/lib/Android")
+
+    def test_402_Library_Add_NoPlatform(self):
         CreateProject(projName="TNS_App") 
         output = runAUT(tnsPath + " library add android QA-TestApps/ --path TNS_App")
 
