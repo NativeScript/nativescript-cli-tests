@@ -52,13 +52,13 @@ def UninstallCLI():
     print output
 
 def CreateProject(projName, path=None, appId=None, copyFrom=None):
-    
+
     # If --copy-from is not specified explicitly then project will copy template-hello-world
     if copyFrom == None:
         copyFrom = "template-hello-world"
 
     command = tnsPath + " create {0}".format(projName)
-    
+
     if path != None:
         command += " --path " + path
     if appId != None:
@@ -68,24 +68,23 @@ def CreateProject(projName, path=None, appId=None, copyFrom=None):
 
     output = runAUT(command)
     assert ("Project {0} was successfully created".format(projName.replace("\"", "")) in output)
-        
-        
+
 def PlatformAdd(platform=None, frameworkPath=None, path=None, symlink=False, assertSuccess=True):
- 
+
     command = tnsPath + " platform add"
-    
+
     if platform is not None:
         command += " {0}".format(platform)
-        
+
     if frameworkPath is not None:
         command += " --frameworkPath {0}".format(frameworkPath)
-        
+
     if path is not None:
         command += " --path {0}".format(path)
-        
+
     if symlink is True:
         command += " --symlink"
-        
+
     output = runAUT(command)
     if assertSuccess:
         assert ("Copying template files..." in output)
@@ -93,23 +92,21 @@ def PlatformAdd(platform=None, frameworkPath=None, path=None, symlink=False, ass
     return output
 
 def Prepare(path=None, platform=None, assertSuccess=True):
- 
+
     command = tnsPath + " prepare"
-    
+
     if platform is not None:
         command += " {0}".format(platform)
-        
+
     if path is not None:
         command += " --path {0}".format(path)
 
     output = runAUT(command)
-    
-    if (assertSuccess):
+    if assertSuccess:
         assert ("Project successfully prepared" in output)
-    
     return output
 
-def LibraryAdd(platform=None, libPath=None, path=None):
+def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
 
     command = tnsPath + " library add"
 
@@ -123,14 +120,16 @@ def LibraryAdd(platform=None, libPath=None, path=None):
         command += " --path {0}".format(path)
 
     output = runAUT(command)
-    
-    if ("Warning:" not in output):
-        libPath = libPath.replace("/", os.sep)
-        assert (libPath in output)
-        assert ("Copying" in output)
-        assert ("Generate build.xml" in output)
-        assert ("Added file" in output)
-        assert ("Updated file" in output)
+    if assertSuccess:
+        if ("Warning: File" in output):
+            assert ("project.properties does not exist" in output)
+        else:
+            libPath = libPath.replace("/", os.sep)
+            assert (libPath in output)
+            assert ("Copying" in output)
+            assert ("Generate build.xml" in output)
+            assert ("Added file" in output)
+            assert ("Updated file" in output)
 
 def Build(platform=None, mode=None, path=None, assertSuccess=True):
 
@@ -147,9 +146,9 @@ def Build(platform=None, mode=None, path=None, assertSuccess=True):
 
     output = runAUT(command)
     if assertSuccess:
-        assert ("Project successfully prepared" in output) 
+        assert ("Project successfully prepared" in output)
         assert ("BUILD SUCCESSFUL" in output)
-        assert ("Project successfully built" in output)  
+        assert ("Project successfully built" in output)
         assert not ("ERROR" in output)
 
 def CreateProjectAndAddPlatform(projName, platform=None, frameworkPath=None, symlink=False): 
