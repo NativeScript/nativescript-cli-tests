@@ -20,6 +20,8 @@ class Build_OSX(unittest.TestCase):
         runAUT("sudo find /var/folders/ -name '*tnsapp-*' -exec rm -rf {} \;") # Delete precompiled headers
         CleanupFolder('./TNS_App')
         CleanupFolder('./tns-app')
+        CleanupFolder('./tns app')
+        CleanupFolder('./my-ios-app')
         
     def tearDown(self):        
         pass
@@ -129,7 +131,30 @@ class Build_OSX(unittest.TestCase):
         # Verify project id
         output = runAUT("cat tns-app/package.json")     
         assert ("org.nativescript.tnsapp" in output)
-                                       
+
+    def test_301_Build_iOS_WithSpaceInPath(self):
+        CreateProjectAndAddPlatform(projName="\"tns app\"", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
+        
+        # Verify project builds  
+        output = runAUT(tnsPath + " build ios --path \"tns app\"")        
+        assert ("Project successfully prepared" in output) 
+        assert ("build/emulator/tnsapp.app" in output)  
+        assert ("** BUILD SUCCEEDED **" in output)
+        assert ("Project successfully built" in output)         
+        assert FileExists("tns app/platforms/ios/build/emulator/tnsapp.app")       
+                                               
+    def test_302_Build_iOS_WithiOSinPath(self):
+        CreateProjectAndAddPlatform(projName="my-ios-app", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
+        
+        # Verify project builds  
+        output = runAUT(tnsPath + " build ios --path my-ios-app")        
+        assert ("Project successfully prepared" in output) 
+        assert ("build/emulator/myiosapp.app" in output)  
+        assert ("** BUILD SUCCEEDED **" in output)
+        assert ("Project successfully built" in output)         
+        assert FileExists("my-ios-app/platforms/ios/build/emulator/myiosapp.app")   
+        assert FileExists("my-ios-app/platforms/ios/myiosapp/myiosapp-Prefix.pch")   
+                                               
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/277")             
     def test_400_Build_iOS_WhenPlatformIsNotAdded(self):
         CreateProject(projName="TNS_App")
