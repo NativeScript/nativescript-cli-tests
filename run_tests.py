@@ -1,7 +1,7 @@
 import os
 import platform
 
-from helpers._os_lib import CleanupFolder, runAUT
+from helpers._os_lib import CleanupFolder, runAUT, KillProcess
 from helpers._tns_lib import UninstallCLI, InstallCLI, GetAndroidRuntime, GetiOSRuntime, \
     androidRuntimeSymlinkPath, iosRuntimeSymlinkPath, androidRuntimePath, iosRuntimePath
 from helpers.device import StopEmulators
@@ -67,6 +67,10 @@ if __name__ == '__main__':
     # Stop running emulators 
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):       
         StopEmulators()
-    
+        if 'Darwin' in platform.platform():
+            KillProcess("Safari")
+            KillProcess("iOS Simulator")
+        
     # Exit        
     AnalyzeResultAndExit()
+    
