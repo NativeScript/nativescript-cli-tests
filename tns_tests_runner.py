@@ -4,6 +4,7 @@ import unittest
 
 from helpers import HTMLTestRunner
 from helpers._tns_lib import GetCLIBuildVersion
+from tests.autocomplete import Autocomplete
 from tests.build_linux import Build_Linux
 from tests.build_osx import Build_OSX
 from tests.create import Create
@@ -16,17 +17,18 @@ from tests.device_osx import Device_OSX
 from tests.emulate_linux import Emulate_Linux
 from tests.emulate_osx import Emulate_OSX
 from tests.feature_usage_tracking import FeatureUsageTracking
-from tests.logtrace import LogTrace
 from tests.library_linux import Library_Linux
 from tests.library_osx import Library_OSX
+from tests.logtrace import LogTrace
 from tests.platform_linux import Platform_Linux
 from tests.platform_osx import Platform_OSX
+from tests.plugins_linux import Plugins_Linux
+from tests.plugins_osx import Plugins_OSX
 from tests.prepare_linux import Prepare_Linux
 from tests.prepare_osx import Prepare_OSX
 from tests.run_linux import Run_Linux
 from tests.run_osx import Run_OSX
 from tests.version import Version
-from tests.autocomplete import Autocomplete
 
 
 def RunTests():
@@ -82,12 +84,14 @@ def RunTests():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_Linux)) 
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_Linux))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_Linux))
     
     if 'Darwin' in platform.platform():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_OSX)) 
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_OSX))      
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_OSX))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))      
         
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']): 
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
