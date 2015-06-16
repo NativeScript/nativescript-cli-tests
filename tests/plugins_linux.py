@@ -1,4 +1,5 @@
 import os
+import platform
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, FileExists
@@ -24,7 +25,8 @@ class Plugins_Linux(unittest.TestCase):
     def test_001_PluginAdd_Before_PlatformAdd_Android(self):
         CreateProject(projName="TNS_App");        
         output = runAUT(tnsPath + " plugin add tns-plugin --path TNS_App")
-        assert ("TNS_App/node_modules/tns-plugin" in output)
+        if 'Windows' not in platform.platform():
+            assert ("TNS_App/node_modules/tns-plugin" in output)
         assert ("Successfully installed plugin tns-plugin" in output)
         assert FileExists("TNS_App/node_modules/tns-plugin/index.js")
         assert FileExists("TNS_App/node_modules/tns-plugin/package.json")
@@ -36,7 +38,8 @@ class Plugins_Linux(unittest.TestCase):
     def test_002_PluginAdd_After_PlatformAdd_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)    
         output = runAUT(tnsPath + " plugin add tns-plugin --path TNS_App");
-        assert ("TNS_App/node_modules/tns-plugin" in output)
+        if 'Windows' not in platform.platform():
+            assert ("TNS_App/node_modules/tns-plugin" in output)
         assert ("Successfully installed plugin tns-plugin" in output)
         assert FileExists("TNS_App/node_modules/tns-plugin/index.js")
         assert FileExists("TNS_App/node_modules/tns-plugin/package.json")
@@ -51,7 +54,8 @@ class Plugins_Linux(unittest.TestCase):
         os.chdir(os.path.join(currentDir,"TNS_App"))   
         output = runAUT(os.path.join("..", tnsPath) + " plugin add tns-plugin")
         os.chdir(currentDir);
-        assert ("node_modules/tns-plugin" in output)
+        if 'Windows' not in platform.platform():
+            assert ("node_modules/tns-plugin" in output)
         assert ("Successfully installed plugin tns-plugin" in output)
         assert FileExists("TNS_App/node_modules/tns-plugin/index.js")
         assert FileExists("TNS_App/node_modules/tns-plugin/package.json")
