@@ -72,7 +72,6 @@ class Plugins_OSX(unittest.TestCase):
         
         output = runAUT(tnsPath + " build ios --path TNS_App")
         assert ("Project successfully prepared" in output) 
-        assert ("Touch build/emulator/TNSApp.app" in output)  
         assert ("** BUILD SUCCEEDED **" in output)
         assert not ("ERROR" in output)   
         assert not ("malformed" in output)  
@@ -86,7 +85,6 @@ class Plugins_OSX(unittest.TestCase):
         
         output = runAUT(tnsPath + " build ios --path TNS_App")
         assert ("Project successfully prepared" in output) 
-        assert ("Touch build/emulator/TNSApp.app" in output)  
         assert ("** BUILD SUCCEEDED **" in output)
         assert not ("ERROR" in output)   
         assert not ("malformed" in output)            
