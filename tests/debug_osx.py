@@ -59,7 +59,7 @@ class Debug_OSX(unittest.TestCase):
 
     def test_003_Debug_iOS_Device_DebugBrk(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath)     
-        output = runAUT(tnsPath + " debug ios --debug-brk --path TNS_App --timeout 120 --frameworkPath " + iosRuntimeSymlinkPath, 2*60, True)
+        output = runAUT(tnsPath + " debug ios --debug-brk --path TNS_App --timeout 120 --frameworkPath " + iosRuntimeSymlinkPath, 3*60, True)
         assert ("Project successfully prepared" in output) 
         assert ("** BUILD SUCCEEDED **" in output)
         assert ("Successfully deployed on device " in output)
