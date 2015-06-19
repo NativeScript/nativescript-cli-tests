@@ -53,4 +53,3 @@ platforms/android/res/drawable-mdpi/icon.png
 platforms/android/res/drawable-nodpi/splashscreen.9.png
 platforms/android/res/values/strings.xml
 platforms/android/res/values/styles.xml
-platforms/android/res/values-v21/styles.xml

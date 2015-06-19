@@ -41,7 +41,7 @@ class Platform_Linux(unittest.TestCase):
         assert("Updated local.properties" in output)
         assert("Project successfully created" in output)
         
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.1.0.txt')
         
     def test_003_Platform_Add_Android_FrameworkPath(self):
@@ -52,7 +52,7 @@ class Platform_Linux(unittest.TestCase):
         assert("Updated local.properties" in output)
         assert("Project successfully created" in output)
         
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_current.txt')
     
     # Note: This test fails only on Windows.
@@ -68,7 +68,7 @@ class Platform_Linux(unittest.TestCase):
         assert IsEmpty('TNS_App/platforms/android/assets')
         assert IsEmpty('TNS_App/platforms/android/libs')
         
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_symlink.txt')
 
     # Note: This test fails only on Windows.
@@ -84,7 +84,7 @@ class Platform_Linux(unittest.TestCase):
         assert IsEmpty('TNS_App/platforms/android/assets')
         assert IsEmpty('TNS_App/platforms/android/libs')
         
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_symlink.txt')
        
     def test_200_Platform_List_InsideEmptyProject(self):
@@ -112,7 +112,7 @@ class Platform_Linux(unittest.TestCase):
         assert("Updated local.properties" in output)
         assert("Project successfully created" in output)
         
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.1.0.txt')
 
     def test_202_Platform_Remove_Android(self):
@@ -127,7 +127,7 @@ class Platform_Linux(unittest.TestCase):
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"0.9.0\"" in output)
         
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.9.0.txt')
 
     @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/333") 
@@ -140,7 +140,7 @@ class Platform_Linux(unittest.TestCase):
         output = runAUT(tnsPath + " platform update android@1.0.0 --path TNS_App")        
         assert ("Successfully updated to version  1.0.0" in output)
         
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.0.0.txt')
 
     def test_205_Platform_Update_ToSameVersion(self):

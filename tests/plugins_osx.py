@@ -3,7 +3,7 @@ import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, FileExists
 from helpers._tns_lib import CreateProjectAndAddPlatform, iosRuntimePath, \
-    tnsPath, CreateProject
+    tnsPath, CreateProject, androidRuntimePath, PlatformAdd
 
 
 class Plugins_OSX(unittest.TestCase):
@@ -76,7 +76,7 @@ class Plugins_OSX(unittest.TestCase):
         assert not ("ERROR" in output)   
         assert not ("malformed" in output)  
         
-    def test_101_BuildAppWithPluginOutside(self):
+    def test_300_BuildAppWithPluginOutside(self):
         
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
         
@@ -87,8 +87,31 @@ class Plugins_OSX(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("** BUILD SUCCEEDED **" in output)
         assert not ("ERROR" in output)   
-        assert not ("malformed" in output)            
+        assert not ("malformed" in output)    
                 
+    def test_301_BuildAppForBothPlatforms(self):        
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
+        PlatformAdd(platform="android", frameworkPath=androidRuntimePath, path="TNS_App")
+        
+        output = runAUT(tnsPath + " plugin add tns-plugin --path TNS_App")
+        assert ("Successfully installed plugin tns-plugin" in output)
+        
+        output = runAUT(tnsPath + " build ios --path TNS_App")
+        assert ("Project successfully prepared" in output) 
+        assert ("** BUILD SUCCEEDED **" in output)
+        assert not ("ERROR" in output)   
+        assert not ("malformed" in output) 
+        
+        output = runAUT(tnsPath + " build android --path TNS_App")
+        assert ("Project successfully prepared" in output) 
+        assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
+        assert ("BUILD SUCCESSFUL" in output)
+        assert ("Project successfully built" in output)  
+        assert not ("ERROR" in output)   
+        assert not ("malformed" in output)            
+        assert FileExists("TNS_App/platforms/android/bin/TNSApp-debug.apk")
+        assert FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/index.js")       
+                   
     def test_400_PluginAdd_NotExistingPlugin(self):
         CreateProject(projName="TNS_App");        
         output = runAUT(tnsPath + " plugin add fakePlugin --path TNS_App")
@@ -98,4 +121,13 @@ class Plugins_OSX(unittest.TestCase):
         CreateProject(projName="TNS_App");        
         output = runAUT(tnsPath + " plugin add wd --path TNS_App")
         assert ("wd is not a valid NativeScript plugin" in output)
-        assert ("Verify that the plugin package.json file contains a nativescript key and try again" in output)
+        assert ("Verify that the plugin package.json file contains a nativescript key and try again" in output)        
+        
+    def test_403_PluginAdd_PluginNotSupportedOnSpecificPlatform(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)   
+        PlatformAdd(platform="android", frameworkPath=androidRuntimePath, path="TNS_App")
+        
+        output = runAUT(tnsPath + " plugin add tns-plugin@1.0.2 --path TNS_App")
+        assert ("Successfully prepared plugin tns-plugin for ios" in output)
+        assert ("tns-plugin is not supported for android" in output)
+        assert ("Successfully installed plugin tns-plugin" in output)       

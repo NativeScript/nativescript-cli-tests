@@ -84,7 +84,7 @@ class Plugins_Linux(unittest.TestCase):
         assert FileExists("TNS_App/platforms/android/bin/TNSApp-debug.apk")
         assert FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/index.js")
  
-    def test_101_BuildAppWithPluginAddedOutsideProject(self):
+    def test_300_BuildAppWithPluginAddedOutsideProject(self):
         
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
 
@@ -111,3 +111,9 @@ class Plugins_Linux(unittest.TestCase):
         output = runAUT(tnsPath + " plugin add wd --path TNS_App")
         assert ("wd is not a valid NativeScript plugin" in output)
         assert ("Verify that the plugin package.json file contains a nativescript key and try again" in output)
+        
+    def test_403_PluginAdd_PluginNotSupportedOnSpecificPlatform(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)    
+        output = runAUT(tnsPath + " plugin add tns-plugin@1.0.2 --path TNS_App");
+        assert ("tns-plugin is not supported for android" in output)
+        assert ("Successfully installed plugin tns-plugin" in output)
