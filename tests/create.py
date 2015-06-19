@@ -86,11 +86,9 @@ class Create(unittest.TestCase):
         assert not ("successfully created" in output)
         assert ("To see command's options, use '$ tns help create'" in output)
     
-    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/271")     
     def test_403_CreateProjectWithWrongCopyFromCommand(self):      
         # Create initial template project
         CreateProject(projName="template")
                 
-        output = runAUT(tnsPath + " create TNS_App --copyFrom template")
-        assert ("To see command's options, use '$ nativescript help create'. To see all commands use '$ nativescript help'." in output)
-        # TODO: Update assert after https://github.com/NativeScript/nativescript-cli/issues/262 is fixed
+        output = runAUT(tnsPath + " create TNS_App --copyFRom template")
+        assert ("The option 'copyFRom' is not supported." in output)
