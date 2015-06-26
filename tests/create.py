@@ -71,7 +71,7 @@ class Create(unittest.TestCase):
               
     def test_400_CreateProjectWithCopyFromWrongPath(self):
         output = runAUT(tnsPath + " create TNS_App --copy-from invalidFolder")
-        assert ("Check that you specified the path correctly and try again" in output)
+        assert not ("successfully created" in output)
         
     def test_401_CreateProjectInAlreadyExistingFolder(self):        
         CreateProject(projName="TNS_App")

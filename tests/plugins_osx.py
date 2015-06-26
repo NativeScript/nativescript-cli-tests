@@ -96,6 +96,8 @@ class Plugins_OSX(unittest.TestCase):
         output = runAUT(tnsPath + " plugin add tns-plugin --path TNS_App")
         assert ("Successfully installed plugin tns-plugin" in output)
         
+        # Verify platform specific files
+        
         output = runAUT(tnsPath + " build ios --path TNS_App")
         assert ("Project successfully prepared" in output) 
         assert ("** BUILD SUCCEEDED **" in output)
@@ -110,8 +112,11 @@ class Plugins_OSX(unittest.TestCase):
         assert not ("ERROR" in output)   
         assert not ("malformed" in output)            
         assert FileExists("TNS_App/platforms/android/bin/TNSApp-debug.apk")
-        assert FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/index.js")       
-                   
+        assert FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/index.js")
+        
+        # Verify platform specific files
+        
+                          
     def test_400_PluginAdd_NotExistingPlugin(self):
         CreateProject(projName="TNS_App");        
         output = runAUT(tnsPath + " plugin add fakePlugin --path TNS_App")

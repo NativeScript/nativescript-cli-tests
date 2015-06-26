@@ -12,14 +12,14 @@ iosRuntimePath = "tns-ios.tgz"
 androidRuntimeSymlinkPath = os.path.join('tns-android', 'package')
 iosRuntimeSymlinkPath = os.path.join('tns-ios', 'package')
 
-androidKeyStorePath = os.environ['androidKeyStorePath']
-androidKeyStorePassword = os.environ['androidKeyStorePassword']
-androidKeyStoreAlias = os.environ['androidKeyStoreAlias']
-androidKeyStoreAliasPassword = os.environ['androidKeyStoreAliasPassword']
+androidKeyStorePath = os.environ.get('androidKeyStorePath')
+androidKeyStorePassword = os.environ.get('androidKeyStorePassword')
+androidKeyStoreAlias = os.environ.get('androidKeyStoreAlias')
+androidKeyStoreAliasPassword = os.environ.get('androidKeyStoreAliasPassword')
 
 if 'Darwin' in platform.platform():
-    keychain = os.environ['KEYCHAIN']
-    keychainPass = os.environ['KEYCHAIN_PASS']
+    keychain = os.environ.get('KEYCHAIN')
+    keychainPass = os.environ.get('KEYCHAIN_PASS', '')
 
 def InstallCLI(pathToPackage=None):
     if 'CLI_PATH' in os.environ:
