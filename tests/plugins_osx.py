@@ -19,7 +19,7 @@ class Plugins_OSX(unittest.TestCase):
         CleanupFolder('./TNS_App');
 
     def tearDown(self):        
-        pass
+        CleanupFolder('./TNS_App');
 
     def test_001_PluginAdd_Before_PlatformAdd_iOS(self):
         CreateProject(projName="TNS_App");        
@@ -96,8 +96,14 @@ class Plugins_OSX(unittest.TestCase):
         output = runAUT(tnsPath + " plugin add tns-plugin --path TNS_App")
         assert ("Successfully installed plugin tns-plugin" in output)
         
-        # Verify platform specific files
-        
+        # Verify files of the plugin
+        assert FileExists("TNS_App/node_modules/tns-plugin/index.js")
+        assert FileExists("TNS_App/node_modules/tns-plugin/package.json")
+        assert FileExists("TNS_App/node_modules/tns-plugin/test.android.js")
+        assert FileExists("TNS_App/node_modules/tns-plugin/test.ios.js")
+        assert FileExists("TNS_App/node_modules/tns-plugin/test2.android.xml")
+        assert FileExists("TNS_App/node_modules/tns-plugin/test2.ios.xml")
+                
         output = runAUT(tnsPath + " build ios --path TNS_App")
         assert ("Project successfully prepared" in output) 
         assert ("** BUILD SUCCEEDED **" in output)
@@ -115,8 +121,20 @@ class Plugins_OSX(unittest.TestCase):
         assert FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/index.js")
         
         # Verify platform specific files
+        assert FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test.js")
+        assert FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test2.xml")
+        assert not FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test.ios.js")
+        assert not FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test2.ios.xml")
+        assert not FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test.android.js")
+        assert not FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test2.android.xml")
         
-                          
+        assert FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/test.js")
+        assert FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/test2.xml")
+        assert not FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/test.ios.js")
+        assert not FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/test2.ios.xml")
+        assert not FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/test.android.js")
+        assert not FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/test2.android.xml")
+                                          
     def test_400_PluginAdd_NotExistingPlugin(self):
         CreateProject(projName="TNS_App");        
         output = runAUT(tnsPath + " plugin add fakePlugin --path TNS_App")

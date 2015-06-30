@@ -18,7 +18,7 @@ class Prepare_OSX(unittest.TestCase):
         CleanupFolder('./TNS_App');
 
     def tearDown(self):        
-        pass
+        CleanupFolder('./TNS_App');
 
     def test_001_Prepare_iOS(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
@@ -47,7 +47,7 @@ class Prepare_OSX(unittest.TestCase):
         
         # Verify XCode Project include files from App Resources folder
         runAUT("cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep newDefault.png")
-        assert ("newDefault.png in Resources" in output)
+        assert ("newDefault.png" in output)
                
     def test_300_Prepare_iOS_PreserveCase(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)

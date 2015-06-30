@@ -1,6 +1,7 @@
 import os, threading, psutil, time, shutil
 import platform
 import tarfile
+from time import sleep
 
 
 default_timeout = 180  # seconds
@@ -51,12 +52,14 @@ def runAUT(cmd, set_timeout=None, getOutput=True):
 def CleanupFolder(folder):
     try:
         shutil.rmtree(folder, False) 
+        sleep(1)
     except:
         if (os.path.exists(folder)):
             if ('Windows' in platform.platform()):
                 runAUT('rmdir /S /Q \"{}\"'.format(folder))
             else:
                 runAUT('rm -rf ' + folder)
+            sleep(1)
     
 # Check if output of command contains string from file
 def CheckOutput(output, fileName):
