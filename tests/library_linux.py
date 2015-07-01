@@ -23,7 +23,7 @@ class Library_Linux(unittest.TestCase):
         pass
 
     def test_201_Library_Add_Android_JarLib(self):
-        CreateProject(projName="TNS_App", copyFrom="QA-TestApps/external-lib/external-lib-android")
+        CreateProject(projName="TNS_App")
         PlatformAdd(platform="android", path="TNS_App")
  
         LibraryAdd(platform="android", libPath="QA-TestApps/external-lib", path="TNS_App")
