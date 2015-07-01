@@ -22,22 +22,21 @@ class Library_Linux(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    # Copying jar libraries log to be added
-    def test_001_Library_Add_Android_JarLib(self):
-        CreateProject(projName="TNS_App") 
+    def test_201_Library_Add_Android_JarLib(self):
+        CreateProject(projName="TNS_App", copyFrom="QA-TestApps/external-lib/external-lib-android")
         PlatformAdd(platform="android", path="TNS_App")
  
-        LibraryAdd(platform="android", libPath="QA-TestApps/android-external-lib", path="TNS_App")
+        LibraryAdd(platform="android", libPath="QA-TestApps/external-lib", path="TNS_App")
         assert (CheckFilesExists("TNS_App", "library_add_JarLib_1.1.0.txt"))
  
         Build(platform="android", path="TNS_App")
         assert (CheckFilesExists("TNS_App", "library_build_JarLib_1.1.0.txt"))
 
-    def test_201_Library_Add_Android_ProjLib(self):
-        CreateProject(projName="TNS_App", copyFrom="QA-TestApps/android-external-lib/external-lib") 
+    def test_202_Library_Add_Android_ProjLib(self):
+        CreateProject(projName="TNS_App", copyFrom="QA-TestApps/external-lib/external-lib-android")
         PlatformAdd(platform="android", path="TNS_App")
 
-        LibraryAdd(platform="android", libPath="QA-TestApps/android-external-lib/AndroidAppProject", path="TNS_App")
+        LibraryAdd(platform="android", libPath="QA-TestApps/external-lib/AndroidAppProject", path="TNS_App")
         assert (CheckFilesExists("TNS_App", "library_add_ProjLib_1.1.0.txt"))
  
         Build(platform="android", path="TNS_App")
@@ -45,12 +44,12 @@ class Library_Linux(unittest.TestCase):
 
     #TODO: Implement this test.
     @unittest.skip("Not implemented.")  
-    def test_202_Library_Add_Android_JarLibs(self):
+    def test_203_Library_Add_Android_JarLibs(self):
         pass
 
     #TODO: Implement this test.
     @unittest.skip("Not implemented.")  
-    def test_203_Library_Add_Android_SharedLibraries(self):
+    def test_204_Library_Add_Android_SharedLibraries(self):
         pass
 
     def test_301_Library(self):
@@ -58,10 +57,10 @@ class Library_Linux(unittest.TestCase):
         assert CheckOutput(output, 'library_help_output.txt')
 
     def test_401_Library_Add_Android_NoLib(self):
-        CreateProject(projName="TNS_App", copyFrom="QA-TestApps/android-external-lib/external-lib") 
+        CreateProject(projName="TNS_App", copyFrom="QA-TestApps/external-lib/external-lib-android") 
         PlatformAdd(platform="android", path="TNS_App")
         
-        LibraryAdd(platform="android", libPath="QA-TestApps/android-external-lib/external-lib", path="TNS_App")
+        LibraryAdd(platform="android", libPath="QA-TestApps/external-lib/external-lib-android", path="TNS_App")
         assert IsEmpty("TNS_App/lib/Android")
 
     def test_402_Library_Add_NoPlatform(self):
