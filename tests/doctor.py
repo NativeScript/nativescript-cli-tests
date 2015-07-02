@@ -23,6 +23,6 @@ class Doctor(unittest.TestCase):
         
         # Ignore this check on Windows and Linux because of https://github.com/NativeScript/nativescript-cli/issues/615
         if 'Darwin' in platform.platform():
-            pass
-        else:
             assert ("No issues were detected." in output)
+        else:
+            pass
