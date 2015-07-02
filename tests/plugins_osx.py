@@ -134,7 +134,7 @@ class Plugins_OSX(unittest.TestCase):
         assert not FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/test2.ios.xml")
         assert not FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/test.android.js")
         assert not FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/test2.android.xml")
-                                          
+                                        
     def test_400_PluginAdd_NotExistingPlugin(self):
         CreateProject(projName="TNS_App");        
         output = runAUT(tnsPath + " plugin add fakePlugin --path TNS_App")

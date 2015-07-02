@@ -17,10 +17,7 @@ from tests.device_osx import Device_OSX
 from tests.emulate_linux import Emulate_Linux
 from tests.emulate_osx import Emulate_OSX
 from tests.feature_usage_tracking import FeatureUsageTracking
-from tests.init_linux import Init_Linux
-from tests.init_osx import Init_OSX
-from tests.install_linux import Install_Linux
-from tests.install_osx import Install_OSX
+from tests.initinstall import InitAndInstall
 from tests.library_linux import Library_Linux
 from tests.library_osx import Library_OSX
 from tests.logtrace import LogTrace
@@ -89,16 +86,13 @@ def RunTests():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_Linux))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_Linux))
-    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Install_Linux))  
-    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Init_Linux))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(InitAndInstall))  
     if 'Darwin' in platform.platform():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_OSX)) 
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))   
-        #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Install_OSX))   
-        #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Init_OSX)) 
         
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']): 
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))

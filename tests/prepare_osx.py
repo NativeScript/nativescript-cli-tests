@@ -46,7 +46,7 @@ class Prepare_OSX(unittest.TestCase):
         assert not FileExists('TNS_App/platforms/ios/TNSApp/app/tns_modules/application/application.ios.js')
         
         # Verify XCode Project include files from App Resources folder
-        runAUT("cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep newDefault.png")
+        output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep newDefault.png")
         assert ("newDefault.png" in output)
                
     def test_300_Prepare_iOS_PreserveCase(self):
