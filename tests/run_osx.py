@@ -69,7 +69,17 @@ class Run_OSX(unittest.TestCase):
             assert IsRunningProcess("Simulator") 
             
         #TODO: Get device id and verify files are deployed and process is running on this device 
-        
+
+    def test_005_Run_iOS_Default(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
+        output = runAUT(tnsPath + " run ios --path TNS_App", 60)
+        assert ("Project successfully prepared" in output) 
+        assert ("CONFIGURATION Debug" in output)
+        assert ("Project successfully built" in output)   
+        assert ("Successfully deployed on device" in output)  
+        assert ("Mounting" in output)
+        assert ("Successfully run application" in output)
+                
     def test_200_Run_iOS_InsideProject(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)    
         currentDir = os.getcwd()   

@@ -117,10 +117,10 @@ class Platform_Linux(unittest.TestCase):
 
     def test_202_Platform_Remove_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
-        output = runAUT(tnsPath + " platform remove android --path TNS_App")        
+        output = runAUT(tnsPath + " platform remove android --path TNS_App")    
+        assert ("Platform android successfully removed" in output)    
         assert not ("error" in output)
         assert IsEmpty('TNS_App/platforms')
-        # TODO: Add more verifications after https://github.com/NativeScript/nativescript-cli/issues/281 is fixed
 
     def test_203_Platform_Add_Android_CustomVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android@0.9.0")               

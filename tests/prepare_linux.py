@@ -42,7 +42,47 @@ class Prepare_Linux(unittest.TestCase):
         assert FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.js')
         assert not FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.android.js')
         assert not FileExists('TNS_App/platforms/android/assets/app/tns_modules/application/application.ios.js')
-                
+
+    def test_300_Prepare_Android_RemoveOldFiles(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        output = runAUT(tnsPath + " prepare android --path TNS_App")
+        assert("Project successfully prepared" in output)
+        assert FileExists('TNS_App/platforms/android/assets/app/app.css')
+        
+        runAUT("mv TNS_App/app/app.css TNS_App/app/appNew.css")
+        output = runAUT(tnsPath + " prepare android --path TNS_App")
+        assert("Project successfully prepared" in output)
+        assert FileExists('TNS_App/platforms/android/assets/app/appNew.css')
+        assert not FileExists('TNS_App/platforms/android/assets/app/app.css')
+
+    def test_301_Prepare_Android_PlatformSpecificFiles(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        output = runAUT(tnsPath + " prepare android --path TNS_App")
+        assert("Project successfully prepared" in output)
+        assert FileExists('TNS_App/platforms/android/assets/app/app.css')
+        
+        runAUT("cp TNS_App/app/app.js TNS_App/app/app.ios.js")
+        runAUT("cp TNS_App/app/app.js TNS_App/app/app.android.js")
+        runAUT("cp TNS_App/app/app.js TNS_App/app/appios.js")
+        runAUT("cp TNS_App/app/app.js TNS_App/app/appandroid.js")
+        runAUT("cp TNS_App/app/app.js TNS_App/app/ios.js")
+        runAUT("cp TNS_App/app/app.js TNS_App/app/android.js")
+        runAUT("cp TNS_App/app/app.css TNS_App/app/app.ios.css")
+        runAUT("cp TNS_App/app/app.css TNS_App/app/app.android.css")
+        runAUT("mv TNS_App/app/app.js TNS_App/app/appNew.js")  
+        runAUT("mv TNS_App/app/app.css TNS_App/app/appNew.css") 
+             
+        output = runAUT(tnsPath + " prepare android --path TNS_App")
+        assert("Project successfully prepared" in output)
+        assert FileExists('TNS_App/platforms/android/assets/app/app.css')
+        assert FileExists('TNS_App/platforms/android/assets/app/app.js')
+        assert FileExists('TNS_App/platforms/android/assets/app/appandroid.js')   
+        assert FileExists('TNS_App/platforms/android/assets/app/appios.js') 
+        assert FileExists('TNS_App/platforms/android/assets/app/android.js')   
+        assert FileExists('TNS_App/platforms/android/assets/app/ios.js')          
+        assert not FileExists('TNS_App/platforms/android/assets/app/app.ios.css')
+        assert not FileExists('TNS_App/platforms/android/assets/app/app.android.css')    
+                            
     def test_400_Prepare_MissingPlatform(self):
         CreateProject(projName="TNS_App")  
         output = runAUT(tnsPath + " prepare --path TNS_App");

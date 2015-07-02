@@ -32,7 +32,7 @@ class Run_Linux(unittest.TestCase):
         assert ("Project successfully built" in output)   
         assert ("Successfully deployed on device with identifier" in output)  
         #TODO: Get device id and verify files are deployed and process is running on this device 
-        
+
     def test_002_Run_Android_ReleaseConfiguration(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " run android --keyStorePath " + androidKeyStorePath + 
@@ -44,7 +44,15 @@ class Run_Linux(unittest.TestCase):
         assert ("Project successfully built" in output)   
         assert ("Successfully deployed on device with identifier" in output)         
         #TODO: Get device id and verify files are deployed and process is running on this device
-
+        
+    def test_003_Run_Android_Default(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
+        output = runAUT(tnsPath + " run android --path TNS_App", 60)
+        assert ("Project successfully prepared" in output) 
+        assert ("Project successfully built" in output)   
+        assert ("Successfully deployed on device with identifier" in output)  
+        assert ("I/ActivityManager" in output)   
+            
     def test_200_Run_Android_InsideProject(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
         currentDir = os.getcwd()   
