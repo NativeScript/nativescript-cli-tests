@@ -1,4 +1,5 @@
 import os
+import platform
 import unittest
 
 from helpers._os_lib import CleanupFolder, CheckOutput, runAUT, FileExists
@@ -143,4 +144,7 @@ class Build_Linux(unittest.TestCase):
     def test_406_Build_IOSonNotOSXMachine(self):
         CreateProject(projName="\"TNS App\""); 
         output = runAUT(tnsPath + " build ios --path TNS_App")
-        assert ("Applications for platform ios can not be built on this OS" in output)
+        if 'Darwin' in platform.platform():
+            pass
+        else:
+            assert ("Applications for platform ios can not be built on this OS" in output)
