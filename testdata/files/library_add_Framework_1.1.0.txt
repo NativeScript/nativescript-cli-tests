@@ -1,0 +1,5 @@
+Headers/TelerikUI.h
+Headers/TKChart.h
+Info.plist
+Modules/module.modulemap
+TelerikUI

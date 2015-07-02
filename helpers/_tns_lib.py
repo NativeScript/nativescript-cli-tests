@@ -121,15 +121,21 @@ def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
 
     output = runAUT(command)
     if assertSuccess:
-        if ("Warning: File" in output):
-            assert ("project.properties does not exist" in output)
+        if platform is "android":
+            if ("Warning: File" in output):
+                assert ("project.properties does not exist" in output)
+            else:
+                libPath = libPath.replace("/", os.sep)
+                assert (libPath in output)
+                assert ("Copying" in output)
+                assert ("Generate build.xml" in output)
+                assert ("Added file" in output)
+                assert ("Updated file" in output)
         else:
-            libPath = libPath.replace("/", os.sep)
-            assert (libPath in output)
-            assert ("Copying" in output)
-            assert ("Generate build.xml" in output)
-            assert ("Added file" in output)
-            assert ("Updated file" in output)
+            if ("The path" in output):
+                assert (".framework does not exist" in output)
+            else:
+                assert ("The iOS Deployment Target is now 8.0 in order to support Cocoa Touch Frameworks." in output)
 
 def Build(platform=None, mode=None, path=None, assertSuccess=True):
 
@@ -147,7 +153,10 @@ def Build(platform=None, mode=None, path=None, assertSuccess=True):
     output = runAUT(command)
     if assertSuccess:
         assert ("Project successfully prepared" in output)
-        assert ("BUILD SUCCESSFUL" in output)
+        if platform is "android":
+            assert ("BUILD SUCCESSFUL" in output)
+        else:
+            assert ("BUILD SUCCEEDED" in output)
         assert ("Project successfully built" in output)
         assert not ("ERROR" in output)
 

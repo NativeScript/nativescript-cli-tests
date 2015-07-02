@@ -22,7 +22,7 @@ class Library_Linux(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    def test_201_Library_Add_Android_JarLib(self):
+    def test_001_Library_Add_Android_JarLib(self):
         CreateProject(projName="TNS_App")
         PlatformAdd(platform="android", path="TNS_App")
  
@@ -32,7 +32,7 @@ class Library_Linux(unittest.TestCase):
         Build(platform="android", path="TNS_App")
         assert (CheckFilesExists("TNS_App", "library_build_JarLib_1.1.0.txt"))
 
-    def test_202_Library_Add_Android_ProjLib(self):
+    def test_002_Library_Add_Android_ProjLib(self):
         CreateProject(projName="TNS_App", copyFrom="QA-TestApps/external-lib/external-lib-android")
         PlatformAdd(platform="android", path="TNS_App")
 
@@ -44,12 +44,12 @@ class Library_Linux(unittest.TestCase):
 
     #TODO: Implement this test.
     @unittest.skip("Not implemented.")  
-    def test_203_Library_Add_Android_JarLibs(self):
+    def test_201_Library_Add_Android_JarLibs(self):
         pass
 
     #TODO: Implement this test.
     @unittest.skip("Not implemented.")  
-    def test_204_Library_Add_Android_SharedLibraries(self):
+    def test_202_Library_Add_Android_SharedLibraries(self):
         pass
 
     def test_301_Library(self):
@@ -59,7 +59,7 @@ class Library_Linux(unittest.TestCase):
     def test_401_Library_Add_Android_NoLib(self):
         CreateProject(projName="TNS_App", copyFrom="QA-TestApps/external-lib/external-lib-android") 
         PlatformAdd(platform="android", path="TNS_App")
-        
+
         LibraryAdd(platform="android", libPath="QA-TestApps/external-lib/external-lib-android", path="TNS_App")
         assert IsEmpty("TNS_App/lib/Android")
 

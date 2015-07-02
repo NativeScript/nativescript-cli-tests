@@ -104,6 +104,12 @@ def IsEmpty(path):
     else: 
         return False
 
+def FolderExists(path):
+    if os.path.isdir(path):
+        return True
+    else:
+        return False
+
 def FileExists(path):
     if os.path.exists(path): 
         return True

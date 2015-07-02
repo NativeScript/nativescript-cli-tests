@@ -83,22 +83,22 @@ def RunTests():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))    
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_Linux))    
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_Linux)) 
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_Linux))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_Linux))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(InitAndInstall))  
     if 'Darwin' in platform.platform():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_OSX)) 
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))   
-        
+
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']): 
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
         if 'Darwin' in platform.platform():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_OSX))
-    
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_OSX))
+
     if ('TESTRUN' in os.environ) and ("FULL" in os.environ['TESTRUN']):  
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Deploy_Linux))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_Linux))
