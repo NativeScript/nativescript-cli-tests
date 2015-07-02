@@ -15,6 +15,6 @@ class Doctor(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    def test_001_Version(self):
+    def test_001_Doctor(self):
         output = runAUT(tnsPath + " doctor")
         assert ("No issues were detected." in output)
