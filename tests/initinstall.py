@@ -72,8 +72,9 @@ class InitAndInstall(unittest.TestCase):
         
         output = runAUT(tnsPath + " install --path TNS_App")
         assert ("Project successfully created" in output)
-        assert FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj")
         assert FileExists("TNS_App/platforms/android/build.xml")
+        if 'Darwin' in platform.platform():
+            assert FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj")
 
     def test_004_InstallNodeModules(self):
         self.test_002_Init_Path();
@@ -95,8 +96,9 @@ class InitAndInstall(unittest.TestCase):
         assert ("Project successfully created" in output)
         assert FileExists("TNS_App/node_modules/lodash")
         assert FileExists("TNS_App/node_modules/gulp")
-        assert FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj")
         assert FileExists("TNS_App/platforms/android/build.xml")
+        if 'Darwin' in platform.platform():
+            assert FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj")
 
     def test_300_InstallNodeModulesIfNodeModulesFodlerExists(self):
         self.test_002_Init_Path();
@@ -116,8 +118,9 @@ class InitAndInstall(unittest.TestCase):
         assert ("Project successfully created" in output)
         assert FileExists("TNS_App/node_modules/lodash")
         assert FileExists("TNS_App/node_modules/gulp")
-        assert FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj")
         assert FileExists("TNS_App/platforms/android/build.xml")
+        if 'Darwin' in platform.platform():
+            assert FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj")
         
     def test_301_InstallAndPrepare(self):
         self.test_002_Init_Path();
@@ -138,21 +141,20 @@ class InitAndInstall(unittest.TestCase):
         assert ("Project successfully created" in output)
         assert FileExists("TNS_App/node_modules/lodash")
         assert FileExists("TNS_App/node_modules/gulp")
-        assert FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj")
         assert FileExists("TNS_App/platforms/android/build.xml")
-        
-        output = runAUT(tnsPath + " prepare ios --path TNS_App")
-        assert ("Project successfully prepared" in output)
         
         output = runAUT(tnsPath + " prepare android --path TNS_App")
         assert ("Project successfully prepared" in output)        
         
         assert FileExists("TNS_App/platforms/android/assets/app/tns_modules/lodash")
         assert not FileExists("TNS_App/platforms/android/assets/app/tns_modules/gulp")
-        
-        assert FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/lodash")
-        assert not FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/gulp")        
-                
+
+        if 'Darwin' in platform.platform():
+            assert FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj")                    
+            output = runAUT(tnsPath + " prepare ios --path TNS_App")
+            assert ("Project successfully prepared" in output)
+            assert FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/lodash")
+            assert not FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/gulp")                 
                                     
     def test_400_Install_InNotExistingFolder(self):
         output = runAUT(tnsPath + " install --path TNS_App")
