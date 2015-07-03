@@ -142,7 +142,7 @@ class Build_Linux(unittest.TestCase):
         assert ("The option 'invalidOption' is not supported" in output)
         
     def test_406_Build_IOSonNotOSXMachine(self):
-        CreateProject(projName="\"TNS App\""); 
+        CreateProject(projName="TNS_App"); 
         output = runAUT(tnsPath + " build ios --path TNS_App")
         if 'Darwin' in platform.platform():
             pass
