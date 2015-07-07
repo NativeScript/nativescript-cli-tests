@@ -17,7 +17,6 @@ from tests.device_osx import Device_OSX
 from tests.doctor import Doctor
 from tests.emulate_linux import Emulate_Linux
 from tests.emulate_osx import Emulate_OSX
-from tests.feature_usage_tracking import FeatureUsageTracking
 from tests.initinstall import InitAndInstall
 from tests.library_linux import Library_Linux
 from tests.library_osx import Library_OSX
@@ -30,6 +29,7 @@ from tests.prepare_linux import Prepare_Linux
 from tests.prepare_osx import Prepare_OSX
 from tests.run_linux import Run_Linux
 from tests.run_osx import Run_OSX
+from tests.usage import UsageAndErrorTracking
 from tests.version import Version
 
 
@@ -79,7 +79,7 @@ def RunTests():
     
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace)) 
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(FeatureUsageTracking))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor)) 
                            
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))    
