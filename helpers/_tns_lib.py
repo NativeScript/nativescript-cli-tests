@@ -45,6 +45,12 @@ def GetiOSRuntime():
         shutil.copy2(location.strip(), (os.path.join(os.getcwd(), iosRuntimePath)))
     if FileExists(os.path.join(os.getcwd(), iosRuntimePath)):
         ExtractArchive(iosRuntimePath, os.path.splitext(iosRuntimePath)[0])
+        
+        currentDir = os.getcwd()   
+        os.chdir(os.path.join(currentDir, iosRuntimeSymlinkPath))    
+        runAUT("npm install")
+        os.chdir(currentDir);
+        
                                
 def UninstallCLI():        
     uninstallCommand = "npm rm nativescript"
