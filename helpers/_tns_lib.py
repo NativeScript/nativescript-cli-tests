@@ -126,11 +126,15 @@ def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
         command += " --path {0}".format(path)
 
     output = runAUT(command)
+    
     if assertSuccess:
         if platform is "android":
+            
             if ("Warning: File" in output):
+                assert ("was successfully added for android platform" in output)
                 assert ("project.properties does not exist" in output)
             else:
+                assert ("was successfully added for ios platform" in output)
                 libPath = libPath.replace("/", os.sep)
                 assert (libPath in output)
                 assert ("Copying" in output)

@@ -117,11 +117,15 @@ class Platform_Linux(unittest.TestCase):
 
     def test_202_Platform_Remove_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        
         output = runAUT(tnsPath + " platform remove android --path TNS_App")    
         assert ("Platform android successfully removed" in output)    
         assert not ("error" in output)
         assert IsEmpty('TNS_App/platforms')
-
+        
+        output = runAUT("cat TNS_App/package.json")
+        assert not ("tns-android" in output)  
+        
     def test_203_Platform_Add_Android_CustomVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android@0.9.0")               
         output = runAUT("cat TNS_App/package.json")
