@@ -129,18 +129,7 @@ def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
     
     if assertSuccess:
         if platform is "android":
-            
-            if ("Warning: File" in output):
-                assert ("was successfully added for android platform" in output)
-                assert ("project.properties does not exist" in output)
-            else:
-                assert ("was successfully added for ios platform" in output)
-                libPath = libPath.replace("/", os.sep)
-                assert (libPath in output)
-                assert ("Copying" in output)
-                assert ("Generate build.xml" in output)
-                assert ("Added file" in output)
-                assert ("Updated file" in output)
+            assert ("was successfully added for android platform" in output)
         else:
             if ("The path" in output):
                 assert (".framework does not exist" in output)
