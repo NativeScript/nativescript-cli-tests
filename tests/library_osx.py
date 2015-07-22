@@ -35,5 +35,6 @@ class Library_OSX(unittest.TestCase):
         CreateProject(projName="TNS_App") 
         PlatformAdd(platform="ios", path="TNS_App")
         
-        LibraryAdd(platform="ios", libPath="TelerikUI.framework", path="TNS_App")
+        output = LibraryAdd(platform="ios", libPath="TelerikUI.framework", path="TNS_App", assertSuccess=False)
+        assert (".framework does not exist" in output)
         assert not FolderExists("TNS_App/lib")

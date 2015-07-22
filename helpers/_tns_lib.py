@@ -131,10 +131,9 @@ def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
         if platform is "android":
             assert ("was successfully added for android platform" in output)
         else:
-            if ("The path" in output):
-                assert (".framework does not exist" in output)
-            else:
-                assert ("The iOS Deployment Target is now 8.0 in order to support Cocoa Touch Frameworks." in output)
+            assert ("The iOS Deployment Target is now 8.0 in order to support Cocoa Touch Frameworks." in output)
+            
+    return output
 
 def Build(platform=None, mode=None, path=None, assertSuccess=True):
 
@@ -158,6 +157,8 @@ def Build(platform=None, mode=None, path=None, assertSuccess=True):
             assert ("BUILD SUCCEEDED" in output)
         assert ("Project successfully built" in output)
         assert not ("ERROR" in output)
+
+        return output
 
 def CreateProjectAndAddPlatform(projName, platform=None, frameworkPath=None, symlink=False): 
     CreateProject(projName)
