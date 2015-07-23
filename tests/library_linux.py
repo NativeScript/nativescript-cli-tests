@@ -1,7 +1,7 @@
 import unittest
 
 from helpers._os_lib import CleanupFolder, CheckFilesExists, CheckOutput, runAUT, \
-    FileExists, IsEmpty
+    FileExists, FolderExists
 from helpers._tns_lib import tnsPath, Build, CreateProject, PlatformAdd, LibraryAdd
 
 
@@ -62,7 +62,7 @@ class Library_Linux(unittest.TestCase):
         PlatformAdd(platform="android", path="TNS_App")
         output = LibraryAdd(platform="android", libPath="QA-TestApps/external-lib/external-lib-android", path="TNS_App", assertSuccess=False)
         assert ("Invalid library path" in output)
-        assert IsEmpty("TNS_App/lib/Android")
+        assert not FolderExists("TNS_App/lib/Android")
 
     def test_402_Library_Add_NoPlatform(self):
         CreateProject(projName="TNS_App") 
