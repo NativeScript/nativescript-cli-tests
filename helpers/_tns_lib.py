@@ -158,7 +158,50 @@ def Build(platform=None, mode=None, path=None, assertSuccess=True):
         assert ("Project successfully built" in output)
         assert not ("ERROR" in output)
 
-        return output
+    return output
+
+def Run(platform=None, path=None, justLaunch=True, assertSuccess=True):
+
+    command = tnsPath + " run"
+
+    if platform is not None:
+        command += " {0}".format(platform)
+
+    if path is not None:
+        command += " --path {0}".format(path)
+
+    if justLaunch:
+        command += " --justlaunch"
+
+    output = runAUT(command)
+    if assertSuccess:
+        assert ("Project successfully prepared" in output)
+        assert ("Project successfully built" in output)
+        assert ("Successfully deployed on device with identifier" in output)
+
+def LiveSync(platform=None, device=None, watch=False, path=None, assertSuccess=True):
+
+    command = tnsPath + " livesync"
+
+    if platform is not None:
+        command += " {0}".format(platform)
+
+    if device is not None:
+        command += " --device {0}".format(device)
+
+    if watch:
+        command += " --watch"
+
+    if path is not None:
+        command += " --path {0}".format(path)
+
+    output = runAUT(command)
+    if assertSuccess:
+        assert ("Project successfully prepared" in output)
+        assert ("Transfering project files..." in output)
+        assert ("Successfully transfered all project files." in output)
+        assert ("Applying changes..." in output)
+        assert ("Successfully synced application org.nativescript." in output)
 
 def CreateProjectAndAddPlatform(projName, platform=None, frameworkPath=None, symlink=False): 
     CreateProject(projName)

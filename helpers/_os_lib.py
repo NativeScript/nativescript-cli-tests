@@ -1,6 +1,7 @@
 import os, threading, psutil, time, shutil
 import platform
 import tarfile
+import fileinput
 from time import sleep
 
 
@@ -148,3 +149,11 @@ def ExtractArchive(fileName, folder):
         print "{0} extracted in {1}".format(fileName, folder)
     else:
         print "Failed to extract {0}".format(fileName)
+
+def replace(filePath, str1, str2):
+    for line in fileinput.input(filePath, inplace = 1):
+        print line.replace(str1, str2)
+
+def catAppFile(appName, filePath):
+    output = runAUT("adb shell run-as org.nativescript." + appName + " cat files/" + filePath)
+    return output
