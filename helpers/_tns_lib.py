@@ -92,9 +92,11 @@ def PlatformAdd(platform=None, frameworkPath=None, path=None, symlink=False, ass
         command += " --symlink"
 
     output = runAUT(command)
+
     if assertSuccess:
         assert ("Copying template files..." in output)
         assert ("Project successfully created" in output)
+
     return output
 
 def Prepare(path=None, platform=None, assertSuccess=True):
@@ -108,8 +110,10 @@ def Prepare(path=None, platform=None, assertSuccess=True):
         command += " --path {0}".format(path)
 
     output = runAUT(command)
+
     if assertSuccess:
         assert ("Project successfully prepared" in output)
+
     return output
 
 def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
@@ -126,7 +130,7 @@ def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
         command += " --path {0}".format(path)
 
     output = runAUT(command)
-    
+
     if assertSuccess:
         if platform is "android":
             assert ("was successfully added for android platform" in output)
@@ -149,6 +153,7 @@ def Build(platform=None, mode=None, path=None, assertSuccess=True):
         command += " --path {0}".format(path)
 
     output = runAUT(command)
+
     if assertSuccess:
         assert ("Project successfully prepared" in output)
         if platform is "android":
@@ -174,10 +179,13 @@ def Run(platform=None, path=None, justLaunch=True, assertSuccess=True):
         command += " --justlaunch"
 
     output = runAUT(command)
+
     if assertSuccess:
         assert ("Project successfully prepared" in output)
         assert ("Project successfully built" in output)
         assert ("Successfully deployed on device with identifier" in output)
+
+    return output
 
 def LiveSync(platform=None, device=None, watch=False, path=None, assertSuccess=True):
 
@@ -196,12 +204,15 @@ def LiveSync(platform=None, device=None, watch=False, path=None, assertSuccess=T
         command += " --path {0}".format(path)
 
     output = runAUT(command)
+
     if assertSuccess:
         assert ("Project successfully prepared" in output)
         assert ("Transfering project files..." in output)
         assert ("Successfully transfered all project files." in output)
         assert ("Applying changes..." in output)
         assert ("Successfully synced application org.nativescript." in output)
+
+    return output
 
 def CreateProjectAndAddPlatform(projName, platform=None, frameworkPath=None, symlink=False): 
     CreateProject(projName)
