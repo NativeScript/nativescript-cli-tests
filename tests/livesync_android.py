@@ -6,7 +6,7 @@ from helpers._tns_lib import androidRuntimePath, \
     CreateProjectAndAddPlatform, LiveSync, Run
 from helpers.device import GivenRunningEmulator, GivenRealDeviceRunning
 
-class LiveSync_Linux(unittest.TestCase):
+class LiveSync_Android(unittest.TestCase):
 
     def setUp(self):
 
