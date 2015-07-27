@@ -4,7 +4,7 @@ import logging, time, threading
 from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, \
     CreateProjectAndAddPlatform, LiveSync, Run
-from helpers.device import GivenRunningEmulator, GivenRealDeviceRunning
+from helpers.device import GivenRunningEmulator
 
 class LiveSync_Linux(unittest.TestCase):
 
@@ -18,7 +18,6 @@ class LiveSync_Linux(unittest.TestCase):
 
         CleanupFolder('./TNS_App')
         GivenRunningEmulator()
-        GivenRealDeviceRunning(platform="android")
 
     logging.basicConfig(level=logging.DEBUG,
         format='(%(threadName)-10s) %(message)s',)

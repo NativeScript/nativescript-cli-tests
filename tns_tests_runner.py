@@ -20,6 +20,9 @@ from tests.emulate_osx import Emulate_OSX
 from tests.initinstall import InitAndInstall
 from tests.library_linux import Library_Linux
 from tests.library_osx import Library_OSX
+from tests.livesync_android import LiveSync_Android
+from tests.livesync_linux import LiveSync_Linux
+from tests.livesync_osx import LiveSync_OSX
 from tests.logtrace import LogTrace
 from tests.platform_linux import Platform_Linux
 from tests.platform_osx import Platform_OSX
@@ -94,6 +97,9 @@ def RunTests():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))   
 
+    if ('TESTRUN' in os.environ) and ("DEFAULT" in os.environ['TESTRUN']): 
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Linux))
+
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']): 
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
@@ -109,6 +115,8 @@ def RunTests():
             if 'Darwin' in platform.platform():
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Deploy_OSX))
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_OSX))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_OSX))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Android))
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Device_OSX))  
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Debug_OSX))  
     

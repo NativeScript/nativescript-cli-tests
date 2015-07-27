@@ -26,7 +26,9 @@ class LiveSync_Linux(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_LiveSync_Android_MultipleDevice(self):
+    # TODO: Implement it.
+    @unittest.skip("Fix LiveSync for Android device.")
+    def test_101_LiveSync_Android_MultipleDevice(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
  
@@ -36,7 +38,6 @@ class LiveSync_Linux(unittest.TestCase):
         # TODO: Assert both emulator and device
         output = catAppFile("android", "TNSApp", "app/main-view-model.js")
         assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
-
 
     # TODO:
     # - test to detect a new/deleted file
