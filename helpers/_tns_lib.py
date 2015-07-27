@@ -183,7 +183,10 @@ def Run(platform=None, path=None, justLaunch=True, assertSuccess=True):
     if assertSuccess:
         assert ("Project successfully prepared" in output)
         assert ("Project successfully built" in output)
-        assert ("Successfully deployed on device with identifier" in output)
+        if platform is "android":
+            assert ("Successfully deployed on device with identifier" in output)
+        else:
+            assert ("Successfully run application org.nativescript." in output)
 
     return output
 
@@ -197,13 +200,14 @@ def LiveSync(platform=None, device=None, watch=False, path=None, assertSuccess=T
     if device is not None:
         command += " --device {0}".format(device)
 
-    if watch:
-        command += " --watch"
-
     if path is not None:
         command += " --path {0}".format(path)
 
-    output = runAUT(command)
+    if watch:
+        command += " --watch"
+        output = runAUT(command, 61)
+    else:
+        output = runAUT(command)
 
     if assertSuccess:
         assert ("Project successfully prepared" in output)

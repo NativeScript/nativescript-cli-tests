@@ -154,6 +154,9 @@ def replace(filePath, str1, str2):
     for line in fileinput.input(filePath, inplace = 1):
         print line.replace(str1, str2)
 
-def catAppFile(appName, filePath):
-    output = runAUT("adb shell run-as org.nativescript." + appName + " cat files/" + filePath)
+def catAppFile(platform, appName, filePath):
+    if platform is "android":
+        output = runAUT("adb shell run-as org.nativescript." + appName + " cat files/" + filePath)
+    if platform is "ios":
+        output = runAUT("ddb device get-file \"Library/Application Support/LiveSync/" + filePath +"\" --app org.nativescript." + appName)
     return output
