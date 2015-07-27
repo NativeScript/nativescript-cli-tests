@@ -205,9 +205,8 @@ def LiveSync(platform=None, device=None, watch=False, path=None, assertSuccess=T
 
     if watch:
         command += " --watch"
-        output = runAUT(command, 61)
-    else:
-        output = runAUT(command)
+
+    output = runAUT(command)
 
     if assertSuccess:
         assert ("Project successfully prepared" in output)
