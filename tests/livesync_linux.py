@@ -1,7 +1,7 @@
 import unittest
 import logging, time, threading
 
-from helpers._os_lib import CleanupFolder, replace, catAppFile
+from helpers._os_lib import CleanupFolder, KillProcess, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, \
     CreateProjectAndAddPlatform, LiveSync, Run
 from helpers.device import GivenRunningEmulator
@@ -79,6 +79,9 @@ class LiveSync_Linux(unittest.TestCase):
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
         LiveSync(platform="android", watch=True, path="TNS_App")
+
+        if thread.is_alive():
+            KillProcess("node")
 
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST3\" tap=\"{{ tapAction }}\" />" in output)
