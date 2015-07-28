@@ -158,12 +158,22 @@ class Platform_Linux(unittest.TestCase):
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"0.9.0\"" in output)
         command = tnsPath + " platform update android@0.4.2 --path TNS_App"
-        output = runAUT(command + "< enter_key.txt")
+        output = runAUT(command + " < enter_key.txt")
         assert ("You are going to downgrade to android runtime v.0.4.2. Are you sure?" in output)
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"0.9.0\"" in output)   
-                                                  
-    def test_207_SetSDK(self):
+
+    def test_207_Platform_Update_ToNewerVersion(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android@1.0.0")
+        output = runAUT("cat TNS_App/package.json")
+        assert ("\"version\": \"1.0.0\"" in output)
+        command = tnsPath + " platform update android@1.2.0 --path TNS_App"
+        output = runAUT(command)
+        assert ("Successfully updated to version  1.2.0" in output)
+        output = runAUT("cat TNS_App/package.json")
+        assert ("\"version\": \"1.2.0\"" in output)
+
+    def test_208_SetSDK(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="android --sdk 19", frameworkPath=androidRuntimePath, path="TNS_App")
         assert("Copying template files..." in output)
