@@ -1,7 +1,7 @@
 import unittest
-import logging, time, threading
+import logging, psutil, subprocess, time
 
-from helpers._os_lib import CleanupFolder, KillProcess, replace, catAppFile
+from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, \
     CreateProjectAndAddPlatform, LiveSync, Run
 from helpers.device import GivenRunningEmulator
@@ -48,43 +48,39 @@ class LiveSync_Linux(unittest.TestCase):
     def test_003_LiveSync_Android_Watch(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
-
-        def watch():
-            time.sleep(90)
-            logging.debug("assert")
-#             output = os.system("adb shell run-as org.nativescript.TNSApp cat files/app/main-page.xml")
-#             assert ("<Button text=\"TEST1\" tap=\"{{ tapAction }}\" />" in output)
-
-            time.sleep(5)
-            logging.debug("replace")
-            replace("TNS_App/app/main-page.xml", "TEST1", "TEST2")
-
-            time.sleep(25)
-            logging.debug("assert")
-#             output = os.system("adb shell run-as org.nativescript.TNSApp cat files/app/main-page.xml")
-#             assert ("<Button text=\"TEST2\" tap=\"{{ tapAction }}\" />" in output)
-
-            time.sleep(5)
-            logging.debug("replace")
-            replace("TNS_App/app/main-page.xml", "TEST2", "TEST3")
-
-            time.sleep(25)
-            logging.debug("assert")
-#             output = os.system("adb shell run-as org.nativescript.TNSApp cat files/app/main-page.xml")
-#             assert ("<Button text=\"TEST3\" tap=\"{{ tapAction }}\" />" in output)
-
-        thread = threading.Thread(target=watch)
-        thread.daemon = True
-        thread.start()
-
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
-        LiveSync(platform="android", watch=True, path="TNS_App")
 
-        if thread.is_alive():
-            KillProcess("node")
+        pr = subprocess.Popen("tns livesync android --watch --path TNS_App", shell=True)
+        pr_pid = pr.pid
 
+        time.sleep(38)
+        print "assert"
+        output = catAppFile("android", "TNSApp", "app/main-page.xml")
+        assert ("<Button text=\"TEST1\" tap=\"{{ tapAction }}\" />" in output)
+
+        time.sleep(1)
+        replace("TNS_App/app/main-page.xml", "TEST1", "TEST2")
+
+        time.sleep(10)
+        print "assert"
+        output = catAppFile("android", "TNSApp", "app/main-page.xml")
+        assert ("<Button text=\"TEST2\" tap=\"{{ tapAction }}\" />" in output)
+
+        time.sleep(1)
+        replace("TNS_App/app/main-page.xml", "TEST2", "TEST3")
+
+        time.sleep(10)
+        print "assert"
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST3\" tap=\"{{ tapAction }}\" />" in output)
+
+        print "killing child ..."
+        pr.terminate()
+
+        time.sleep(5)
+        if psutil.pid_exists(pr_pid):
+            print "force killing child ..."
+            pr.kill()
 
     def test_301_LiveSync(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
