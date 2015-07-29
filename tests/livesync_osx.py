@@ -1,5 +1,5 @@
 import unittest
-import logging, time, threading
+import psutil, subprocess, time
 
 from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, iosRuntimePath, \
@@ -46,34 +46,39 @@ class LiveSync_OSX(unittest.TestCase):
     def test_003_LiveSync_iOS_Watch(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
-
-        def watch():
-            time.sleep(38)
-            logging.debug("assert")
-
-            time.sleep(1)
-            logging.debug("replace")
-            replace("TNS_App/app/main-page.xml", "TEST1", "TEST2")
-
-            time.sleep(10)
-            logging.debug("assert")
-
-            time.sleep(1)
-            logging.debug("replace")
-            replace("TNS_App/app/main-page.xml", "TEST2", "TEST3")
-
-            time.sleep(10)
-            logging.debug("assert")
-
-        thread = threading.Thread(target=watch)
-        thread.daemon = True
-        thread.start()
-
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
-        LiveSync(platform="ios", watch=True, path="TNS_App")
 
+        pr = subprocess.Popen("tns livesync ios --watch --path TNS_App", shell=True)
+        pr_pid = pr.pid
+
+        time.sleep(60)
+        print "assert"
+        output = catAppFile("ios", "TNSApp", "app/main-page.xml")
+        assert ("<Button text=\"TEST1\" tap=\"{{ tapAction }}\" />" in output)
+
+        time.sleep(5)
+        replace("TNS_App/app/main-page.xml", "TEST1", "TEST2")
+
+        time.sleep(15)
+        print "assert"
+        output = catAppFile("ios", "TNSApp", "app/main-page.xml")
+        assert ("<Button text=\"TEST2\" tap=\"{{ tapAction }}\" />" in output)
+
+        time.sleep(5)
+        replace("TNS_App/app/main-page.xml", "TEST2", "TEST3")
+
+        time.sleep(15)
+        print "assert"
         output = catAppFile("ios", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST3\" tap=\"{{ tapAction }}\" />" in output)
+
+        print "killing child ..."
+        pr.terminate()
+
+        time.sleep(5)
+        if psutil.pid_exists(pr_pid):
+            print "force killing child ..."
+            pr.kill()
 
     @unittest.skip("Fix LiveSync for Android device.")  
     def test_101_LiveSync_Android(self):
@@ -101,34 +106,40 @@ class LiveSync_OSX(unittest.TestCase):
     def test_103_LiveSync_Android_Watch(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
-
-        def watch():
-            time.sleep(38)
-            logging.debug("assert")
-
-            time.sleep(1)
-            logging.debug("replace")
-            replace("TNS_App/app/main-page.xml", "TEST1", "TEST2")
-
-            time.sleep(10)
-            logging.debug("assert")
-
-            time.sleep(1)
-            logging.debug("replace")
-            replace("TNS_App/app/main-page.xml", "TEST2", "TEST3")
-
-            time.sleep(10)
-            logging.debug("assert")
-
-        thread = threading.Thread(target=watch)
-        thread.daemon = True
-        thread.start()
-
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
-        LiveSync(platform="android", watch=True, path="TNS_App")
 
+        print "tns livesync android --watch --path TNS_App"
+        pr = subprocess.Popen("tns livesync android --watch --path TNS_App", shell=True)
+        pr_pid = pr.pid
+
+        time.sleep(60)
+        print "assert"
+        output = catAppFile("android", "TNSApp", "app/main-page.xml")
+        assert ("<Button text=\"TEST1\" tap=\"{{ tapAction }}\" />" in output)
+
+        time.sleep(5)
+        replace("TNS_App/app/main-page.xml", "TEST1", "TEST2")
+
+        time.sleep(15)
+        print "assert"
+        output = catAppFile("android", "TNSApp", "app/main-page.xml")
+        assert ("<Button text=\"TEST2\" tap=\"{{ tapAction }}\" />" in output)
+
+        time.sleep(5)
+        replace("TNS_App/app/main-page.xml", "TEST2", "TEST3")
+
+        time.sleep(15)
+        print "assert"
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST3\" tap=\"{{ tapAction }}\" />" in output)
+
+        print "killing child ..."
+        pr.terminate()
+
+        time.sleep(5)
+        if psutil.pid_exists(pr_pid):
+            print "force killing child ..."
+            pr.kill()
 
     def test_301_LiveSync_MultiplePlatforms(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)

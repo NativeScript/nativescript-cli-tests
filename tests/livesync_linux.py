@@ -1,5 +1,5 @@
 import unittest
-import logging, psutil, subprocess, time
+import psutil, subprocess, time
 
 from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, \
@@ -18,9 +18,6 @@ class LiveSync_Linux(unittest.TestCase):
 
         CleanupFolder('./TNS_App')
         GivenRunningEmulator()
-
-    logging.basicConfig(level=logging.DEBUG,
-        format='(%(threadName)-10s) %(message)s',)
 
     def tearDown(self):
         pass
@@ -50,26 +47,27 @@ class LiveSync_Linux(unittest.TestCase):
         Run(platform="android", path="TNS_App")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
 
+        print "tns livesync android --watch --path TNS_App"
         pr = subprocess.Popen("tns livesync android --watch --path TNS_App", shell=True)
         pr_pid = pr.pid
 
-        time.sleep(38)
+        time.sleep(60)
         print "assert"
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST1\" tap=\"{{ tapAction }}\" />" in output)
 
-        time.sleep(1)
+        time.sleep(5)
         replace("TNS_App/app/main-page.xml", "TEST1", "TEST2")
 
-        time.sleep(10)
+        time.sleep(15)
         print "assert"
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST2\" tap=\"{{ tapAction }}\" />" in output)
 
-        time.sleep(1)
+        time.sleep(5)
         replace("TNS_App/app/main-page.xml", "TEST2", "TEST3")
 
-        time.sleep(10)
+        time.sleep(15)
         print "assert"
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST3\" tap=\"{{ tapAction }}\" />" in output)

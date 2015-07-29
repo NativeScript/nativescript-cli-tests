@@ -1,5 +1,4 @@
 import unittest
-import logging
 
 from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, \
@@ -19,9 +18,6 @@ class LiveSync_Android(unittest.TestCase):
         CleanupFolder('./TNS_App')
         GivenRunningEmulator()
         GivenRealDeviceRunning(platform="android")
-
-    logging.basicConfig(level=logging.DEBUG,
-        format='(%(threadName)-10s) %(message)s',)
 
     def tearDown(self):
         pass
