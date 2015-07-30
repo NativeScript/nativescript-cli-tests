@@ -163,11 +163,6 @@ class Plugins_OSX(unittest.TestCase):
         assert not FileExists("TNS_App/platforms/android/assets/app/tns_modules/nativescript-appversion/appversion.android.js")
         assert not FileExists("TNS_App/platforms/android/assets/app/tns_modules/nativescript-appversion/appversion.ios.js")
     
-    def test_400_PluginAdd_NotExistingPlugin(self):
-        CreateProject(projName="TNS_App");        
-        output = runAUT(tnsPath + " plugin add fakePlugin --path TNS_App")
-        assert ("Not Found: fakePlugin" in output)
-
     def test_401_PluginAdd_InvalidPlugin(self):
         CreateProject(projName="TNS_App");        
         output = runAUT(tnsPath + " plugin add wd --path TNS_App")

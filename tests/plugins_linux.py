@@ -104,7 +104,7 @@ class Plugins_Linux(unittest.TestCase):
     def test_400_PluginAdd_NotExistingPlugin(self):
         CreateProject(projName="TNS_App");        
         output = runAUT(tnsPath + " plugin add fakePlugin --path TNS_App")
-        assert ("Not Found: fakePlugin" in output)
+        assert ("no such package available" in output)
 
     def test_401_PluginAdd_InvalidPlugin(self):
         CreateProject(projName="TNS_App");        
