@@ -117,17 +117,17 @@ class Platform_OSX(unittest.TestCase):
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.0.0\"" in output)
 
-        output = runAUT(tnsPath + " platform update ios@1.0.1 --path TNS_App")  
+        output = runAUT(tnsPath + " platform update ios@1.2.0 --path TNS_App")  
         assert ("We need to override xcodeproj file. The old one will be saved at" in output)
         
-        output = runAUT("echo '' | " + tnsPath + " platform update ios@1.0.1 --path TNS_App")  
-        assert ("Successfully updated to version  1.0.1" in output)
+        output = runAUT("echo '' | " + tnsPath + " platform update ios@1.2.0 --path TNS_App")  
+        assert ("Successfully updated to version  1.2.0" in output)
 
         output = runAUT("cat TNS_App/package.json")
-        assert ("\"version\": \"1.0.1\"" in output)
+        assert ("\"version\": \"1.2.0\"" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.0.1.txt')
+            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.2.0.txt')
                     
     def test_204_Platform_Add_iOS_CustomVersion(self):
         CreateProject(projName="TNS_App")

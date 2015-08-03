@@ -134,18 +134,16 @@ class Platform_Linux(unittest.TestCase):
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.9.0.txt')
 
-    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/333") 
-    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/335")             
     def test_204_Platform_Update_Android(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android@0.4.2")               
-        output = runAUT("cat TNS_App/.tnsproject")
-        assert ("\"version\": \"0.4.2\"" in output)
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android@1.0.0")               
+        output = runAUT("cat TNS_App/package.json")
+        assert ("\"version\": \"1.0.0\"" in output)
         
-        output = runAUT(tnsPath + " platform update android@1.0.0 --path TNS_App")        
-        assert ("Successfully updated to version  1.0.0" in output)
+        output = runAUT(tnsPath + " platform update android@1.1.0 --path TNS_App")        
+        assert ("Successfully updated to version  1.1.0" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.0.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.1.0.txt')
 
     def test_205_Platform_Update_ToSameVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=None)
@@ -158,10 +156,10 @@ class Platform_Linux(unittest.TestCase):
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"0.9.0\"" in output)
         command = tnsPath + " platform update android@0.4.2 --path TNS_App"
-        output = runAUT(command + " < enter_key.txt")
+        output = runAUT(command + " < y_key.txt")
         assert ("You are going to downgrade to android runtime v.0.4.2. Are you sure?" in output)
         output = runAUT("cat TNS_App/package.json")
-        assert ("\"version\": \"0.9.0\"" in output)   
+        assert ("\"version\": \"0.4.2\"" in output)   
 
     def test_207_Platform_Update_ToNewerVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android@1.0.0")
