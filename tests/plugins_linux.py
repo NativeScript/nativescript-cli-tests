@@ -100,7 +100,8 @@ class Plugins_Linux(unittest.TestCase):
         assert not ("malformed" in output)            
         assert FileExists("TNS_App/platforms/android/bin/TNSApp-debug.apk")
         assert FileExists("TNS_App/platforms/android/assets/app/tns_modules/tns-plugin/index.js")
-                
+
+    @unittest.skip("This test breaks the xml parser.")
     def test_400_PluginAdd_NotExistingPlugin(self):
         CreateProject(projName="TNS_App");        
         output = runAUT(tnsPath + " plugin add fakePlugin --path TNS_App")
