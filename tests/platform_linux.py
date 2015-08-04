@@ -4,9 +4,8 @@ import unittest
 
 from helpers._os_lib import runAUT, CleanupFolder, IsEmpty, \
     CheckFilesExists
-from helpers._tns_lib import tnsPath, CreateProject, PlatformAdd, \
-    androidRuntimePath, CreateProjectAndAddPlatform, androidRuntimeSymlinkPath
-
+from helpers._tns_lib import androidRuntimePath, androidRuntimeSymlinkPath, Build, \
+    tnsPath, CreateProject, CreateProjectAndAddPlatform, PlatformAdd
 
 class Platform_Linux(unittest.TestCase):
     
@@ -42,7 +41,7 @@ class Platform_Linux(unittest.TestCase):
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.1.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.2.0.txt')
         
     def test_003_Platform_Add_Android_FrameworkPath(self):
         CreateProject(projName="TNS_App")
@@ -90,42 +89,43 @@ class Platform_Linux(unittest.TestCase):
     def test_200_Platform_List_InsideEmptyProject(self):
         CreateProject(projName="TNS_App")
         currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir,"TNS_App"))   
+        os.chdir(os.path.join(currentDir,"TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " platform list")
         os.chdir(currentDir);
-        
+
         assert("No installed platforms found. Use $ tns platform add" in output)
         if 'Darwin' in platform.platform():
             assert("Available platforms for this OS:  ios and android" in output)
         else:
-            assert("Available platforms for this OS:  android" in output)  
+            assert("Available platforms for this OS:  android" in output)
 
     def test_201_Platform_Add_Android_InsideProject(self):
-        CreateProject(projName="TNS_App")        
+        CreateProject(projName="TNS_App")
         currentDir = os.getcwd()
         os.chdir(os.path.join(currentDir,"TNS_App"))        
         output = runAUT(os.path.join("..", tnsPath) + " platform add android")
         os.chdir(currentDir);
-        
+
         assert("Copying template files..." in output)
         assert("Updated project.properties" in output)
         assert("Updated local.properties" in output)
         assert("Project successfully created" in output)
-        
+
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.1.0.txt')
 
     def test_202_Platform_Remove_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
-        
-        output = runAUT(tnsPath + " platform remove android --path TNS_App")    
-        assert ("Platform android successfully removed" in output)    
+
+        output = runAUT(tnsPath + " platform remove android --path TNS_App")
+        assert ("Platform android successfully removed." in output)
+
         assert not ("error" in output)
         assert IsEmpty('TNS_App/platforms')
-        
+
         output = runAUT("cat TNS_App/package.json")
-        assert not ("tns-android" in output)  
-        
+        assert not ("tns-android" in output)
+
     def test_203_Platform_Add_Android_CustomVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android@0.9.0")               
         output = runAUT("cat TNS_App/package.json")
@@ -135,43 +135,65 @@ class Platform_Linux(unittest.TestCase):
             assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.9.0.txt')
 
     def test_204_Platform_Update_Android(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android@1.0.0")               
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android@1.1.0")
         output = runAUT("cat TNS_App/package.json")
-        assert ("\"version\": \"1.0.0\"" in output)
-        
-        output = runAUT(tnsPath + " platform update android@1.1.0 --path TNS_App")        
-        assert ("Successfully updated to version  1.1.0" in output)
-        
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.1.0.txt')
+        assert ("\"version\": \"1.1.0\"" in output)
 
-    def test_205_Platform_Update_ToSameVersion(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=None)
-        output = runAUT(tnsPath + " platform update android --path TNS_App")        
-        assert ("Current and new version are the same." in output)
-        assert ("Usage" in output)
- 
-    def test_206_Platform_Update_ToOlderVersion(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android@0.9.0")               
-        output = runAUT("cat TNS_App/package.json")
-        assert ("\"version\": \"0.9.0\"" in output)
-        command = tnsPath + " platform update android@0.4.2 --path TNS_App"
-        output = runAUT(command + " < y_key.txt")
-        assert ("You are going to downgrade to android runtime v.0.4.2. Are you sure?" in output)
-        output = runAUT("cat TNS_App/package.json")
-        assert ("\"version\": \"0.4.2\"" in output)   
-
-    def test_207_Platform_Update_ToNewerVersion(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android@1.0.0")
-        output = runAUT("cat TNS_App/package.json")
-        assert ("\"version\": \"1.0.0\"" in output)
         command = tnsPath + " platform update android@1.2.0 --path TNS_App"
         output = runAUT(command)
         assert ("Successfully updated to version  1.2.0" in output)
+
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.2.0\"" in output)
 
-    def test_208_SetSDK(self):
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.2.0.txt')
+        Build(platform="android", path="TNS_App")
+
+    def test_205_Platform_Update_Android_ToSameVersion(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=None)
+        output = runAUT(tnsPath + " platform update android --path TNS_App")
+        assert ("Current and new version are the same." in output)
+        assert ("Usage" in output)
+        Build(platform="android", path="TNS_App")
+
+    def test_206_Platform_Update_Android_ToOlderVersion(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android@1.2.0")
+        output = runAUT("cat TNS_App/package.json")
+        assert ("\"version\": \"1.2.0\"" in output)
+
+        command = tnsPath + " platform update android@1.1.0 --path TNS_App"
+        output = runAUT(command + " < y_key.txt")
+        assert ("You are going to downgrade to android runtime v.1.1.0. Are you sure?" in output)
+
+        output = runAUT("cat TNS_App/package.json")
+        assert ("\"version\": \"1.1.0\"" in output)
+        Build(platform="android", path="TNS_App")
+
+    @unittest.skip("Execute when platform update command starts respecting --frameworkPath.")
+    def test_207_Platform_Update_Android_ToLatestVersion(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android@1.0.0")
+        output = runAUT("cat TNS_App/package.json")
+        assert ("\"version\": \"1.0.0\"" in output)
+
+        command = tnsPath + " platform update android --frameworkPath {0} --path TNS_App".format(androidRuntimePath)
+        output = runAUT(command)
+        assert ("Successfully updated to version" in output)
+        Build(platform="android", path="TNS_App")
+
+    @unittest.skip("Execute when platform update command starts respecting --frameworkPath.")
+    def test_208_Platform_Update_Android_FromLatestVersion(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        
+        command = tnsPath + " platform update android@1.0.0 --path TNS_App"
+        output = runAUT(command)
+        assert ("Successfully updated to version  1.0.0" in output)
+
+        output = runAUT("cat TNS_App/package.json")
+        assert ("\"version\": \"1.0.0\"" in output)
+        Build(platform="android", path="TNS_App")
+
+    def test_210_SetSDK(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="android --sdk 19", frameworkPath=androidRuntimePath, path="TNS_App")
         assert("Copying template files..." in output)

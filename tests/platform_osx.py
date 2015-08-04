@@ -3,10 +3,9 @@ import unittest
 
 from helpers._os_lib import runAUT, CleanupFolder, CheckFilesExists, \
     IsEmpty, FileExists
-from helpers._tns_lib import tnsPath, CreateProject, PlatformAdd, \
-    iosRuntimePath, iosRuntimeSymlinkPath, CreateProjectAndAddPlatform, Prepare, \
-    androidRuntimePath
-
+from helpers._tns_lib import tnsPath, androidRuntimePath, Build, \
+    CreateProject, CreateProjectAndAddPlatform, iosRuntimePath, iosRuntimeSymlinkPath, \
+    PlatformAdd, Prepare
 
 class Platform_OSX(unittest.TestCase):
     
@@ -96,40 +95,29 @@ class Platform_OSX(unittest.TestCase):
  
     def test_201_Platform_Remove_iOS(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
-        output = runAUT(tnsPath + " platform remove ios --path TNS_App")        
+
+        output = runAUT(tnsPath + " platform remove ios --path TNS_App")
+        assert ("Platform ios successfully removed." in output)
+
         assert not ("error" in output)
         assert IsEmpty('TNS_App/platforms')
-        # TODO: Add more verifications after https://github.com/NativeScript/nativescript-cli/issues/281 is fixed
+
+        output = runAUT("cat TNS_App/package.json")
+        assert not ("tns-ios" in output)
 
     def test_202_Platform_Remove_iOS_Symlink(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
-        output = runAUT(tnsPath + " platform remove ios --path TNS_App")        
+
+        output = runAUT(tnsPath + " platform remove ios --path TNS_App")
+        assert ("Platform ios successfully removed." in output)
+
         assert not ("error" in output)
         assert IsEmpty('TNS_App/platforms')
-        # TODO: Add more verifications after https://github.com/NativeScript/nativescript-cli/issues/281 is fixed
-
-    def test_203_Platform_Update_iOS(self):
-        CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios@1.0.0", path="TNS_App")
-        assert("Copying template files..." in output)
-        assert("Project successfully created" in output)
-        
-        output = runAUT("cat TNS_App/package.json")
-        assert ("\"version\": \"1.0.0\"" in output)
-
-        output = runAUT(tnsPath + " platform update ios@1.2.0 --path TNS_App")  
-        assert ("We need to override xcodeproj file. The old one will be saved at" in output)
-        
-        output = runAUT("echo '' | " + tnsPath + " platform update ios@1.2.0 --path TNS_App")  
-        assert ("Successfully updated to version  1.2.0" in output)
 
         output = runAUT("cat TNS_App/package.json")
-        assert ("\"version\": \"1.2.0\"" in output)
-        
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.2.0.txt')
-                    
-    def test_204_Platform_Add_iOS_CustomVersion(self):
+        assert not ("tns-ios" in output)
+
+    def test_203_Platform_Add_iOS_CustomVersion(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="ios@1.0.0", path="TNS_App")
         assert("Copying template files..." in output)
@@ -140,8 +128,76 @@ class Platform_OSX(unittest.TestCase):
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
             assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.0.0.txt')
- 
-    def test_205_Platform_Add_iOS_CustomExperimentalVersion(self):
+
+    def test_204_Platform_Update_iOS(self):
+        CreateProject(projName="TNS_App")
+        output = PlatformAdd(platform="ios@1.1.0", path="TNS_App")
+        assert("Copying template files..." in output)
+        assert("Project successfully created" in output)
+
+        output = runAUT("cat TNS_App/package.json")
+        assert ("\"version\": \"1.1.0\"" in output)
+
+        command = tnsPath + " platform update ios@1.2.0 --path TNS_App"
+        output = runAUT(command, set_timeout=10) 
+        assert ("We need to override xcodeproj file. The old one will be saved at" in output)
+        
+        output = runAUT("echo '' | " + tnsPath + " platform update ios@1.2.0 --path TNS_App")  
+        assert ("Successfully updated to version  1.2.0" in output)
+
+        output = runAUT("cat TNS_App/package.json")
+        assert ("\"version\": \"1.2.0\"" in output)
+        
+        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.2.0.txt')
+        Build(platform="ios", path="TNS_App")
+
+    def test_206_Platform_Update_iOS_ToOlderVersion(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios@1.2.0")
+        output = runAUT("cat TNS_App/package.json")
+        assert ("\"version\": \"1.2.0\"" in output)
+
+        command = tnsPath + " platform update ios@1.1.0 --path TNS_App"
+        output = runAUT(command, set_timeout=10)
+        assert ("We need to override xcodeproj file. The old one will be saved at" in output)
+
+        output = runAUT("echo '' | " + tnsPath + " platform update ios@1.1.0 --path TNS_App")  
+        assert ("Successfully updated to version  1.1.0" in output)
+
+        output = runAUT("cat TNS_App/package.json")
+        assert ("\"version\": \"1.1.0\"" in output)
+        Build(platform="ios", path="TNS_App")
+
+    @unittest.skip("Execute when platform update command starts respecting --frameworkPath.")
+    def test_207_Platform_Update_iOS_ToLatestVersion(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios@1.0.0")
+        output = runAUT("cat TNS_App/package.json")
+        assert ("\"version\": \"1.0.0\"" in output)
+
+        command = tnsPath + " platform update ios --frameworkPath {0} --path TNS_App".format(iosRuntimePath)
+        output = runAUT(command)
+        assert ("We need to override xcodeproj file. The old one will be saved at" in output)
+
+        #output = runAUT("echo '' | " + tnsPath + " platform update")  
+        assert ("Successfully updated to version  1.2.0" in output)
+        Build(platform="ios", path="TNS_App")
+
+    @unittest.skip("Execute when platform update command starts respecting --frameworkPath.")
+    def test_208_Platform_Update_iOS_FromLatestVersion(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
+        
+        command = tnsPath + " platform update ios@1.0.0 --path TNS_App"
+        output = runAUT(command)
+        assert ("We need to override xcodeproj file. The old one will be saved at" in output)
+
+        output = runAUT("echo '' | " + tnsPath + " platform update ios@1.01.0 --path TNS_App")  
+        assert ("Successfully updated to version  1.0.0" in output)
+
+        output = runAUT("cat TNS_App/package.json")
+        assert ("\"version\": \"1.0.0\"" in output)
+        Build(platform="ios", path="TNS_App")
+
+    def test_211_Platform_Add_iOS_CustomExperimentalVersion(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="ios@0.9.2-exp-ios-8.2", path="TNS_App")
         assert("Copying template files..." in output)
@@ -150,7 +206,7 @@ class Platform_OSX(unittest.TestCase):
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"0.9.2-exp-ios-8.2\"" in output)
 
-    def test_206_Platform_Add_iOS_CustomBundleId(self):
+    def test_212_Platform_Add_iOS_CustomBundleId(self):
         # Create project with different appId
         CreateProject(projName = "TNS_App", appId="org.nativescript.MyApp")
         output = runAUT("cat TNS_App/package.json")
