@@ -22,7 +22,7 @@ class LiveSync_Linux(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_LiveSync_Android(self):
+    def test_001_LiveSync_Android_XmlFile(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
  
@@ -31,16 +31,16 @@ class LiveSync_Linux(unittest.TestCase):
  
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
- 
-    def test_002_LiveSync_Android_Device(self):
+
+    def test_002_LiveSync_Android_Device_XmlFile(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
  
-        replace("TNS_App/app/main-view-model.js", "taps", "clicks")
+        replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         LiveSync(platform="android", device="emulator-5554", path="TNS_App")
  
-        output = catAppFile("android", "TNSApp", "app/main-view-model.js")
-        assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
+        output = catAppFile("android", "TNSApp", "app/main-page.xml")
+        assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
 
     @unittest.skip("TODO: Fix.")
     def test_003_LiveSync_Android_Watch(self):
@@ -80,6 +80,26 @@ class LiveSync_Linux(unittest.TestCase):
         if psutil.pid_exists(pr_pid):
             print "force killing child ..."
             pr.kill()
+
+    def test_004_LiveSync_Android_JsFile(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        Run(platform="android", path="TNS_App")
+ 
+        replace("TNS_App/app/main-view-model.js", "taps", "clicks")
+        LiveSync(platform="android", path="TNS_App")
+ 
+        output = catAppFile("android", "TNSApp", "app/main-view-model.js")
+        assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
+
+    def test_005_LiveSync_Android_CssFile(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        Run(platform="android", path="TNS_App")
+ 
+        replace("TNS_App/app/app.css", "30", "50")
+        LiveSync(platform="android", path="TNS_App")
+ 
+        output = catAppFile("android", "TNSApp", "app/app.css")
+        assert ("font-size: 50;" in output)
 
     def test_301_LiveSync(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
