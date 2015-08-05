@@ -81,7 +81,7 @@ class LiveSync_Linux(unittest.TestCase):
             print "force killing child ..."
             pr.kill()
 
-    def test_004_LiveSync_Android_JsFile(self):
+    def test_005_LiveSync_Android_JsFile(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
  
@@ -91,7 +91,7 @@ class LiveSync_Linux(unittest.TestCase):
         output = catAppFile("android", "TNSApp", "app/main-view-model.js")
         assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
 
-    def test_005_LiveSync_Android_CssFile(self):
+    def test_006_LiveSync_Android_CssFile(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
  
@@ -100,6 +100,26 @@ class LiveSync_Linux(unittest.TestCase):
  
         output = catAppFile("android", "TNSApp", "app/app.css")
         assert ("font-size: 50;" in output)
+
+    def test_007_LiveSync_Android_TnsModuleFile(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        Run(platform="android", path="TNS_App")
+
+        replace("TNS_App/app/tns_modules/application/application-common.js", "(\"globals\");", "(\"globals\") // test;")
+        LiveSync(platform="android", path="TNS_App")
+
+        output = catAppFile("android", "TNSApp", "app/tns_modules/application/application-common.js")
+        assert ("require(\"globals\"); // test" in output)
+
+    def test_008_LiveSync_Android_TnsModule_LICENSE(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        Run(platform="android", path="TNS_App")
+
+        replace("TNS_App/app/tns_modules/LICENSE", "2015", "9999")
+        LiveSync(platform="android", path="TNS_App")
+
+        output = catAppFile("android", "TNSApp", "app/tns_modules/LICENSE")
+        assert ("Copyright (c) 9999 Telerik AD" in output)
 
     def test_301_LiveSync(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
