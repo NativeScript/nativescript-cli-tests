@@ -101,11 +101,11 @@ class LiveSync_Linux(unittest.TestCase):
         output = catAppFile("android", "TNSApp", "app/app.css")
         assert ("font-size: 50;" in output)
 
-    def test_007_LiveSync_Android_TnsModuleFile(self):
+    def test_007_LiveSync_Android_TnsModule_File(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
-        replace("TNS_App/app/tns_modules/application/application-common.js", "(\"globals\");", "(\"globals\") // test;")
+        replace("TNS_App/app/tns_modules/application/application-common.js", "(\"globals\");", "(\"globals\"); // test")
         LiveSync(platform="android", path="TNS_App")
 
         output = catAppFile("android", "TNSApp", "app/tns_modules/application/application-common.js")
