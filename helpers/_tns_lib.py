@@ -190,23 +190,26 @@ def Run(platform=None, path=None, justLaunch=True, assertSuccess=True):
 
     return output
 
-def LiveSync(platform=None, device=None, watch=False, path=None, assertSuccess=True):
+def LiveSync(platform=None, emulator=False, device=None, watch=False, path=None, assertSuccess=True):
 
     command = tnsPath + " livesync"
 
     if platform is not None:
         command += " {0}".format(platform)
 
+    if emulator:
+        command += " --emulator"
+
     if device is not None:
         command += " --device {0}".format(device)
-
-    if path is not None:
-        command += " --path {0}".format(path)
 
     if watch:
         command += " --watch"
 
-    output = runAUT(command)
+    if path is not None:
+        command += " --path {0}".format(path)
+
+    output = runAUT(command + " --log trace")
 
     if assertSuccess:
         assert ("Project successfully prepared" in output)
