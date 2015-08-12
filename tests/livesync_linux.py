@@ -142,6 +142,7 @@ class LiveSync_Linux(unittest.TestCase):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test.css")
         LiveSync(platform="android", path="TNS_App")
 
+        time.sleep(1)
         output = catAppFile("android", "TNSApp", "app/test.xml")
         assert ("<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output)
         output = catAppFile("android", "TNSApp", "app/test.js")
@@ -190,5 +191,6 @@ class LiveSync_Linux(unittest.TestCase):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         LiveSync(path="TNS_App")
 
+        time.sleep(3)
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output)
