@@ -8,6 +8,8 @@ from helpers.device import GivenRealDeviceRunning
 
 class LiveSync_iOS(unittest.TestCase):
 
+    # LiveSync Tests on Android Emulator
+
     def setUp(self):
 
         print ""
