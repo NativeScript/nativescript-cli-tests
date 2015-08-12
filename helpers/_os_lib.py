@@ -160,3 +160,10 @@ def catAppFile(platform, appName, filePath):
     if platform is "ios":
         output = runAUT("ddb device get-file \"Library/Application Support/LiveSync/" + filePath +"\" --app org.nativescript." + appName)
     return output
+
+def uninstall_app(appName):
+    output = runAUT("ddb device uninstall org.nativescript." + appName)
+    if ("[Uninstalling] Status: RemovingApplication" in output):
+        print "{0} application successfully uninstalled.".format(appName)
+    else:
+        raise NameError("{0} application failed to uninstall.".format(appName))

@@ -165,12 +165,18 @@ def Build(platform=None, mode=None, path=None, assertSuccess=True):
 
     return output
 
-def Run(platform=None, path=None, justLaunch=True, assertSuccess=True):
+def Run(platform=None, emulator=False, device=None, path=None, justLaunch=True, assertSuccess=True):
 
     command = tnsPath + " run"
 
     if platform is not None:
         command += " {0}".format(platform)
+
+    if emulator:
+        command += " --emulator"
+
+    if device is not None:
+        command += " --device {0}".format(device)
 
     if path is not None:
         command += " --path {0}".format(path)
@@ -186,7 +192,11 @@ def Run(platform=None, path=None, justLaunch=True, assertSuccess=True):
         if platform is "android":
             assert ("Successfully deployed on device with identifier" in output)
         else:
-            assert ("Successfully run application org.nativescript." in output)
+            if emulator:
+                assert ("Session started without errors." in output)
+            else:
+                assert ("Successfully deployed on device" in output)
+                assert ("Successfully run application org.nativescript." in output)
 
     return output
 
@@ -213,10 +223,11 @@ def LiveSync(platform=None, emulator=False, device=None, watch=False, path=None,
 
     if assertSuccess:
         assert ("Project successfully prepared" in output)
-        assert ("Transfering project files..." in output)
-        assert ("Successfully transfered all project files." in output)
-        assert ("Applying changes..." in output)
-        assert ("Successfully synced application org.nativescript." in output)
+        if platform is "android":
+            assert ("Transfering project files..." in output)
+            assert ("Successfully transfered all project files." in output)
+            assert ("Applying changes..." in output)
+            assert ("Successfully synced application org.nativescript." in output)
 
     return output
 
