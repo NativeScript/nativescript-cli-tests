@@ -21,8 +21,9 @@ from tests.initinstall import InitAndInstall
 from tests.library_linux import Library_Linux
 from tests.library_osx import Library_OSX
 from tests.livesync_android import LiveSync_Android
+from tests.livesync_ios import LiveSync_iOS
 from tests.livesync_linux import LiveSync_Linux
-from tests.livesync_osx import LiveSync_OSX
+# from tests.livesync_osx import LiveSync_OSX
 from tests.logtrace import LogTrace
 from tests.platform_linux import Platform_Linux
 from tests.platform_osx import Platform_OSX
@@ -74,8 +75,8 @@ def RunTests():
     # - Runs all tests
     # - At least one real Android device must be attached to Linux hosts
     # - At least one real iOS device must be attached to OSX hosts        
-       
-    suite = unittest.TestLoader().loadTestsFromTestCase(Version)   
+
+    suite = unittest.TestLoader().loadTestsFromTestCase(Version)
 
     # Temporary ignore Help tests because of expected breaking changes 
     # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))    
@@ -116,6 +117,7 @@ def RunTests():
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Deploy_OSX))
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_OSX))
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Android))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_iOS))
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Device_OSX))  
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Debug_OSX))  
     
