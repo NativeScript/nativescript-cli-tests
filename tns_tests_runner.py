@@ -81,17 +81,17 @@ def RunTests():
     # Temporary ignore Help tests because of expected breaking changes 
     # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))    
     
-    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace)) 
-    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
-    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
-    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor)) 
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace)) 
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor)) 
 
-    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))    
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))    
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_Linux))    
-    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_Linux)) 
-    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_Linux))
-    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_Linux))
-    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(InitAndInstall))  
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_Linux)) 
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_Linux))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_Linux))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(InitAndInstall))  
     if 'Darwin' in platform.platform():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX))
@@ -102,8 +102,8 @@ def RunTests():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Linux))
 
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']): 
-        #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
-        #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
         if 'Darwin' in platform.platform():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_OSX))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_OSX))
