@@ -225,7 +225,7 @@ def LiveSync(platform=None, emulator=False, device=None, watch=False, path=None,
         assert ("Project successfully prepared" in output)
         if platform is "android":
             assert ("Transfering project files..." in output)
-            assert ("Successfully transfered all project files." in output)
+            assert ("Successfully transferred all project files." in output)
             assert ("Applying changes..." in output)
             assert ("Successfully synced application org.nativescript." in output)
 

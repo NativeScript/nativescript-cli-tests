@@ -6,6 +6,7 @@ from helpers._os_lib import runAUT, CleanupFolder, IsEmpty, \
     CheckFilesExists
 from helpers._tns_lib import androidRuntimePath, androidRuntimeSymlinkPath, Build, \
     tnsPath, CreateProject, CreateProjectAndAddPlatform, PlatformAdd
+from time import sleep
 
 class Platform_Linux(unittest.TestCase):
     
@@ -157,7 +158,7 @@ class Platform_Linux(unittest.TestCase):
         assert ("Usage" in output)
         Build(platform="android", path="TNS_App")
 
-    def test_206_Platform_Update_Android_ToOlderVersion(self):
+    def test_206_Platform_Downgrage_Android_ToOlderVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android@1.2.0")
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.2.0\"" in output)
@@ -173,7 +174,8 @@ class Platform_Linux(unittest.TestCase):
 #         assert ("Successfully updated to version  1.1.0" in output)
 
         os.system(tnsPath + " platform update android@1.1.0 --path TNS_App < y_key.txt")
-
+        sleep(10)
+        
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.1.0\"" in output)
         Build(platform="android", path="TNS_App")
@@ -189,7 +191,8 @@ class Platform_Linux(unittest.TestCase):
         assert ("Successfully updated to version" in output)
         Build(platform="android", path="TNS_App")
 
-    def test_208_Platform_Update_Android_FromLatestVersion(self):
+    @unittest.skip("Skiped because of https://github.com/NativeScript/nativescript-cli/issues/784")
+    def test_208_Platform_Downgrage_Android_FromLatestVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
 
         output = runAUT("cat TNS_App/package.json")
@@ -206,7 +209,8 @@ class Platform_Linux(unittest.TestCase):
 #         assert ("Successfully updated to version  1.0.0" in output)
 
         os.system(tnsPath + " platform update android@1.1.0 --path TNS_App < y_key.txt")
-
+        sleep(10)
+        
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.1.0\"" in output)
         Build(platform="android", path="TNS_App")
