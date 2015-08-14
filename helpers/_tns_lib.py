@@ -3,6 +3,7 @@ import platform
 import shutil
 
 from helpers._os_lib import runAUT, FileExists, ExtractArchive
+from time import sleep
 
 
 tnsPath = os.path.join('node_modules', '.bin', 'tns');
@@ -228,7 +229,8 @@ def LiveSync(platform=None, emulator=False, device=None, watch=False, path=None,
             assert ("Successfully transferred all project files." in output)
             assert ("Applying changes..." in output)
             assert ("Successfully synced application org.nativescript." in output)
-
+            sleep(10)
+            
     return output
 
 def CreateProjectAndAddPlatform(projName, platform=None, frameworkPath=None, symlink=False): 

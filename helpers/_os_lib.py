@@ -1,7 +1,7 @@
+import fileinput
 import os, threading, psutil, time, shutil
 import platform
 import tarfile
-import fileinput
 from time import sleep
 
 
@@ -153,6 +153,9 @@ def ExtractArchive(fileName, folder):
 def replace(filePath, str1, str2):
     for line in fileinput.input(filePath, inplace = 1):
         print line.replace(str1, str2)
+    sleep(1)
+    output = runAUT("cat " + filePath);
+    assert (str2 in output)
 
 def catAppFile(platform, appName, filePath):
     if platform is "android":
