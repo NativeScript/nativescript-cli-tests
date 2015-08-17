@@ -192,6 +192,7 @@ class LiveSync_Linux(unittest.TestCase):
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         LiveSync(path="TNS_App")
+        time.sleep(5)
 
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
