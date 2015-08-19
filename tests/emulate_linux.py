@@ -95,7 +95,27 @@ class Emulate_Linux(unittest.TestCase):
             assert ("running" in output) 
             
         #TODO: Get device id and verify files are deployed and process is running on this device 
-                                       
+
+    def test_210_Emulate_MissingPlatform(self):
+        CreateProject(projName="TNS_App")  
+        output = runAUT(tnsPath + " emulate android --path TNS_App", set_timeout=660)
+        assert ("Copying template files..." in output)
+        assert ("Updated project.properties" in output)
+        assert ("Updated local.properties" in output)
+        assert ("Project successfully created." in output)
+
+        assert ("Project successfully prepared" in output)
+        assert ("Project successfully built" in output)
+
+        # Emulator can not be started without active UI
+        if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
+            assert ("Starting Android emulator with image Api" in output)
+            assert ("installing" in output)
+            assert ("running" in output)
+
+        #TODO: Get device id and verify files are deployed and process is running on this device
+
+    @unittest.skip("Moved to test_210_Emulate_MissingPlatform - this is no more a negative case due to https://github.com/NativeScript/nativescript-cli/issues/785")
     def test_400_Emulate_MissingPlatform(self):
         CreateProject(projName="TNS_App")  
         output = runAUT(tnsPath + " emulate android --path TNS_App")
