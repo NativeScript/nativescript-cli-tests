@@ -90,7 +90,7 @@ class Platform_Linux(unittest.TestCase):
     def test_200_Platform_List_InsideEmptyProject(self):
         CreateProject(projName="TNS_App")
         currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir,"TNS_App"))
+        os.chdir(os.path.join(currentDir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " platform list")
         os.chdir(currentDir);
 
@@ -103,7 +103,7 @@ class Platform_Linux(unittest.TestCase):
     def test_201_Platform_Add_Android_InsideProject(self):
         CreateProject(projName="TNS_App")
         currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir,"TNS_App"))        
+        os.chdir(os.path.join(currentDir, "TNS_App"))        
         output = runAUT(os.path.join("..", tnsPath) + " platform add android")
         os.chdir(currentDir);
 
@@ -215,7 +215,15 @@ class Platform_Linux(unittest.TestCase):
         assert ("\"version\": \"1.1.0\"" in output)
         Build(platform="android", path="TNS_App")
 
-    def test_210_SetSDK(self):
+    def test_210_Platform_Update_MissingPlatform(self):
+        CreateProject(projName="TNS_App")
+        output = runAUT(tnsPath + " platform update android --path TNS_App")
+        assert("Copying template files..." in output)
+        assert("Updated project.properties" in output)
+        assert("Updated local.properties" in output)
+        assert("Project successfully created." in output)
+
+    def test_220_SetSDK(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="android --sdk 19", frameworkPath=androidRuntimePath, path="TNS_App")
         assert("Copying template files..." in output)
@@ -282,7 +290,8 @@ class Platform_Linux(unittest.TestCase):
         output = runAUT(tnsPath + " platform remove --path TNS_App")
         assert ("No platform specified. Please specify a platform to remove" in output)
         assert ("Usage" in output)
-        
+
+    @unittest.skip("Moved to test_210_Platform_Update_MissingPlatform - this is no more a negative case due to https://github.com/NativeScript/nativescript-cli/issues/785")
     def test_440_Platform_Update_MissingPlatform(self):
         CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " platform update android --path TNS_App")

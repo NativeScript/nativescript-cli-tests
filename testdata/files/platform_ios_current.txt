@@ -65,9 +65,8 @@ NativeScript/lib/libNativeScript.a
 TNSApp/build.xcconfig
 TNSApp/en.lproj/InfoPlist.strings
 TNSApp/en.lproj/LaunchScreen.xib
-TNSApp/Images.xcassets/AppIcon.appiconset/Contents.json
-TNSApp/Images.xcassets/LaunchImage.launchimage/Contents.json
 TNSApp/main.m
+TNSApp/strip-dynamic-framework-architectures.sh
 TNSApp/TNSApp-Info.plist
 TNSApp/TNSApp-Prefix.pch
 TNSApp/TNSDebugging.h
