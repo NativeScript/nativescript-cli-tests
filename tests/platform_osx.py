@@ -129,6 +129,7 @@ class Platform_OSX(unittest.TestCase):
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
             assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.0.0.txt')
 
+    @unittest.skip("Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
     def test_204_Platform_Update_iOS(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="ios@1.1.0", path="TNS_App")
@@ -157,7 +158,8 @@ class Platform_OSX(unittest.TestCase):
             assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.2.0.txt')
         Build(platform="ios", path="TNS_App")
 
-    def test_206_Platform_Update_iOS_ToOlderVersion(self):
+    @unittest.skip("Skip due to build failure. Probably related: https://github.com/NativeScript/nativescript-cli/issues/785")
+    def test_206_Platform_Downgrade_iOS_ToOlderVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios@1.2.0")
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.2.0\"" in output)
@@ -178,7 +180,7 @@ class Platform_OSX(unittest.TestCase):
         assert ("\"version\": \"1.1.0\"" in output)
         Build(platform="ios", path="TNS_App")
 
-    @unittest.skip("Execute when platform update command starts respecting --frameworkPath.")
+    @unittest.skip("Execute when platform update command starts respecting --frameworkPath: https://github.com/NativeScript/nativescript-cli/issues/743")
     def test_207_Platform_Update_iOS_ToLatestVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios@1.0.0")
         output = runAUT("cat TNS_App/package.json")
@@ -192,7 +194,8 @@ class Platform_OSX(unittest.TestCase):
         assert ("Successfully updated to version  1.2.0" in output)
         Build(platform="ios", path="TNS_App")
 
-    def test_208_Platform_Update_iOS_FromLatestVersion(self):
+    @unittest.skip("Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
+    def test_208_Platform_Downgrade_iOS_FromLatestVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
 
         output = runAUT("cat TNS_App/package.json")

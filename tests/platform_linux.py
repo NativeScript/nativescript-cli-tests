@@ -158,7 +158,7 @@ class Platform_Linux(unittest.TestCase):
         assert ("Usage" in output)
         Build(platform="android", path="TNS_App")
 
-    def test_206_Platform_Downgrage_Android_ToOlderVersion(self):
+    def test_206_Platform_Downgrade_Android_ToOlderVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android@1.2.0")
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.2.0\"" in output)
@@ -192,7 +192,7 @@ class Platform_Linux(unittest.TestCase):
         Build(platform="android", path="TNS_App")
 
     @unittest.skip("Skiped because of https://github.com/NativeScript/nativescript-cli/issues/784")
-    def test_208_Platform_Downgrage_Android_FromLatestVersion(self):
+    def test_208_Platform_Downgrade_Android_FromLatestVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
 
         output = runAUT("cat TNS_App/package.json")
