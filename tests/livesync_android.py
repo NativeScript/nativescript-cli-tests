@@ -4,11 +4,16 @@ import os, psutil, shutil, subprocess, time
 from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, \
     CreateProjectAndAddPlatform, LiveSync, Run
-from helpers.device import GivenRealDeviceRunning
+from helpers.device import GivenRealDeviceRunning, StopEmulators
 
 class LiveSync_Android(unittest.TestCase):
 
     # LiveSync Tests on Android Device
+
+    @classmethod
+    def setUpClass(cls):
+        super(LiveSync_Android, cls).setUpClass()
+        StopEmulators()
 
     def setUp(self):
 
@@ -23,6 +28,10 @@ class LiveSync_Android(unittest.TestCase):
 
     def tearDown(self):
         pass
+
+    @classmethod
+    def tearDownClass(cls):
+        super(LiveSync_Android, cls).tearDownClass()
 
     def test_001_LiveSync_Android_XmlFile(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
