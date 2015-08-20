@@ -98,7 +98,7 @@ class Emulate_Linux(unittest.TestCase):
 
     def test_210_Emulate_MissingPlatform(self):
         CreateProject(projName="TNS_App")  
-        output = runAUT(tnsPath + " emulate android --path TNS_App", set_timeout=660)
+        output = runAUT(tnsPath + " emulate android  --timeout 180 --path TNS_App", set_timeout=660)
         assert ("Copying template files..." in output)
         assert ("Updated project.properties" in output)
         assert ("Updated local.properties" in output)
