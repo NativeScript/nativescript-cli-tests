@@ -2,30 +2,27 @@ import unittest
 
 from helpers._os_lib import CleanupFolder, CheckFilesExists, CheckOutput, runAUT, \
     FileExists, FolderExists
-from helpers._tns_lib import tnsPath, Build, CreateProject, PlatformAdd, LibraryAdd
-
+from helpers._tns_lib import androidRuntimePath, tnsPath, \
+    Build, CreateProject, PlatformAdd, LibraryAdd
 
 class Library_Linux(unittest.TestCase):
-    
+
     def setUp(self):
-        
+
         print ""
         print "#####"
         print self.id()
         print "#####"
         print ""
-        
-        CleanupFolder('./TNS App');
-        CleanupFolder('./TNS_App');
-        CleanupFolder('./folder');
-        CleanupFolder('./template');
 
-    def tearDown(self):        
+        CleanupFolder('./TNS_App');
+
+    def tearDown(self):
         pass
 
     def test_001_Library_Add_Android_JarLib(self):
         CreateProject(projName="TNS_App")
-        PlatformAdd(platform="android", path="TNS_App")
+        PlatformAdd(platform="android", frameworkPath=androidRuntimePath, path="TNS_App")
  
         LibraryAdd(platform="android", libPath="QA-TestApps/external-lib", path="TNS_App")
         assert (CheckFilesExists("TNS_App", "library_add_JarLib_1.1.0.txt"))
@@ -35,7 +32,7 @@ class Library_Linux(unittest.TestCase):
 
     def test_002_Library_Add_Android_ProjLib(self):
         CreateProject(projName="TNS_App", copyFrom="QA-TestApps/external-lib/external-lib-android")
-        PlatformAdd(platform="android", path="TNS_App")
+        PlatformAdd(platform="android", frameworkPath=androidRuntimePath, path="TNS_App")
 
         LibraryAdd(platform="android", libPath="QA-TestApps/external-lib/AndroidAppProject", path="TNS_App")
         assert (CheckFilesExists("TNS_App", "library_add_ProjLib_1.1.0.txt"))
@@ -59,7 +56,7 @@ class Library_Linux(unittest.TestCase):
 
     def test_401_Library_Add_Android_NoLib(self):
         CreateProject(projName="TNS_App", copyFrom="QA-TestApps/external-lib/external-lib-android")
-        PlatformAdd(platform="android", path="TNS_App")
+        PlatformAdd(platform="android", frameworkPath=androidRuntimePath, path="TNS_App")
         output = LibraryAdd(platform="android", libPath="QA-TestApps/external-lib/external-lib-android", path="TNS_App", assertSuccess=False)
         assert ("Invalid library path" in output)
         assert not FolderExists("TNS_App/lib/Android")
