@@ -41,7 +41,7 @@ class LiveSync_iOS(unittest.TestCase):
 
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
         # a0036be7bace11a09a86fd5a31fca9c8c105011f
-        LiveSync(platform="ios", device="e3b6171ff676e093d0c8dcb0aefea1e63ca5c825", path="TNS_App")
+        LiveSync(platform="ios", device="54dec253cfb494a373ca281e12b2b0fc4912aec1", path="TNS_App")
 
         output = catAppFile("ios", "TNSApp", "app/main-view-model.js")
         assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
