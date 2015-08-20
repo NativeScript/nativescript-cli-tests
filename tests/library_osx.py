@@ -23,14 +23,14 @@ class Library_OSX(unittest.TestCase):
         PlatformAdd(platform="ios", path="TNS_App")
 
         LibraryAdd(platform="ios", libPath="QA-TestApps/external-lib/TelerikUI.framework", path="TNS_App")
-        assert (CheckFilesExists("TNS_App/lib/iOS/TelerikUI/TelerikUI.framework", "library_add_Framework_1.1.0.txt"))
+        assert (CheckFilesExists("TNS_App/lib/iOS/TelerikUI.framework", "library_add_Framework_1.1.0.txt"))
 
         Build(platform="ios", path="TNS_App")
         output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep TelerikUI")
         assert ("TelerikUI.framework in Frameworks" in output)
         assert ("TelerikUI.framework in Embed Frameworks" in output)
         assert ("/TelerikUI.framework" in output)
-        assert not ("TNS_App/lib/iOS/TelerikUI/TelerikUI.framework" in output)
+        assert not ("TNS_App/lib/iOS/TelerikUI.framework" in output)
 
     def test_401_Library_Add_iOS_NoLib(self):
         CreateProject(projName="TNS_App") 
