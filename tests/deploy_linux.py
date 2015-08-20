@@ -62,12 +62,20 @@ class Deploy_Linux(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         assert ("Successfully deployed on device with identifier" in output)  
-                               
-    def test_400_Deploy_MissingPlatform(self):
-        CreateProject(projName="TNS_App")  
+
+    def test_210_Deploy_MissingPlatform(self):
+        CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " deploy android --path TNS_App --justlaunch")
-        assert ("The platform android is not added to this project" in output) 
-        
+        assert ("Copying template files..." in output)
+        assert ("Updated project.properties" in output)
+        assert ("Updated local.properties" in output)
+        assert ("Project successfully created." in output)
+
+        assert ("Project successfully prepared" in output)
+        assert ("Project successfully built" in output)
+        assert ("Successfully deployed on device with identifier" in output)
+        #TODO: Get device id and verify files are deployed and process is running on this device
+
     def test_401_Deploy_InvalidPlatform(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " deploy invalidPlatform --path TNS_App --justlaunch")
