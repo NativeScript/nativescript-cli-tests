@@ -36,7 +36,11 @@ class Library_Linux(unittest.TestCase):
 
         LibraryAdd(platform="android", libPath="QA-TestApps/external-lib/AndroidAppProject", path="TNS_App")
         assert (CheckFilesExists("TNS_App", "library_add_ProjLib_1.1.0.txt"))
- 
+
+        output = runAUT("cat TNS_App/lib/Android/AndroidAppProject/project.properties")
+        assert ("target=android-22" in output)
+        assert ("android.library=true" in output)
+
         Build(platform="android", path="TNS_App")
         assert (CheckFilesExists("TNS_App", "library_build_ProjLib_1.1.0.txt"))
 
