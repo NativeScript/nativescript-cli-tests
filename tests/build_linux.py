@@ -41,7 +41,7 @@ class Build_Linux(unittest.TestCase):
         assert not ("ERROR" in output)   
         assert not ("FAILURE" in output)       
              
-        assert FileExists("TNS_App/platforms/android/bin/TNSApp-debug.apk")
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
                     
     def test_002_Build_Android_Release(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
@@ -58,9 +58,11 @@ class Build_Linux(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("BUILD SUCCESSFUL" in output)
         
-        assert ("Signing final apk..." in output)
+        # Not valid for 1.3.0+, but may be we should log that we sign apk
+        # assert ("Signing final apk..." in output)
+        
         assert ("Project successfully built" in output)
-        assert FileExists("TNS_App/platforms/android/bin/TNSApp-release.apk")
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-release.apk")
         
     # Note: This test fails only on Windows.
     # TODO: Ignore tests at runtime (in tns_tests_runner.py). This will allow test to be ignored only on specific OS
@@ -83,7 +85,7 @@ class Build_Linux(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)   
-        assert FileExists("TNS_App/platforms/android/bin/TNSApp-debug.apk")
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
     def test_201_Build_Android_WithPrepare(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
@@ -95,7 +97,7 @@ class Build_Linux(unittest.TestCase):
         assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)         
-        assert FileExists("TNS_App/platforms/android/bin/TNSApp-debug.apk")
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
     def test_300_Build_Android_WithAdditionalStylesXML(self):
         
@@ -111,7 +113,7 @@ class Build_Linux(unittest.TestCase):
         assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)         
-        assert FileExists("TNS_App/platforms/android/bin/TNSApp-debug.apk")
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
          
     def test_300_Build_Android_WithDashInPath(self):
         CreateProjectAndAddPlatform(projName="tns-app", platform="android", frameworkPath=androidRuntimePath)   
