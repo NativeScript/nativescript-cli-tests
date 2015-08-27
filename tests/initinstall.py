@@ -72,11 +72,15 @@ class InitAndInstall(unittest.TestCase):
         
         output = runAUT(tnsPath + " install --path TNS_App")
         assert ("Project successfully created" in output)
-        assert FileExists("TNS_App/platforms/android/build.xml")
+        
+        # Not valid for 1.3.0+
+        # assert FileExists("TNS_App/platforms/android/build.xml")
+        assert FileExists("TNS_App/platforms/android/build.gradle")
+        
         if 'Darwin' in platform.platform():
             assert FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj")
 
-    def test_004_InstallNodeModules(self):
+    def test_005_InstallNodeModules(self):
         self.test_002_Init_Path();
         
         currentDir = os.getcwd()   
@@ -96,7 +100,11 @@ class InitAndInstall(unittest.TestCase):
         assert ("Project successfully created" in output)
         assert FileExists("TNS_App/node_modules/lodash")
         assert FileExists("TNS_App/node_modules/gulp")
-        assert FileExists("TNS_App/platforms/android/build.xml")
+        
+        # Not valid for 1.3.0+
+        # assert FileExists("TNS_App/platforms/android/build.xml")
+        assert FileExists("TNS_App/platforms/android/build.gradle")
+        
         if 'Darwin' in platform.platform():
             assert FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj")
 

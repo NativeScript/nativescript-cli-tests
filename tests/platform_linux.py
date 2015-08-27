@@ -37,8 +37,11 @@ class Platform_Linux(unittest.TestCase):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="android", path="TNS_App")
         assert("Copying template files..." in output)
-        assert("Updated project.properties" in output)
-        assert("Updated local.properties" in output)
+        
+        # Not valid for 1.3.0+
+        # assert("Updated project.properties" in output)
+        # assert("Updated local.properties" in output)
+        
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
@@ -48,8 +51,11 @@ class Platform_Linux(unittest.TestCase):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="android", frameworkPath=androidRuntimePath, path="TNS_App")
         assert("Copying template files..." in output)
-        assert("Updated project.properties" in output)
-        assert("Updated local.properties" in output)
+        
+        # Not valid for 1.3.0+
+        # assert("Updated project.properties" in output)
+        # assert("Updated local.properties" in output)
+        
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):

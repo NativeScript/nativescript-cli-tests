@@ -31,11 +31,16 @@ class Build_Linux(unittest.TestCase):
         
         # In 0.9.0 and above Build command automatically prepare project before build
         assert ("Project successfully prepared" in output) 
-        assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
+        
+        # Not valid for 1.3.0+        
+        # assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
+        
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)  
+        
         assert not ("ERROR" in output)   
-        assert not ("malformed" in output)            
+        assert not ("FAILURE" in output)       
+             
         assert FileExists("TNS_App/platforms/android/bin/TNSApp-debug.apk")
                     
     def test_002_Build_Android_Release(self):
@@ -45,9 +50,14 @@ class Build_Linux(unittest.TestCase):
                         " --keyStoreAlias " + androidKeyStoreAlias + 
                         " --keyStoreAliasPassword " + androidKeyStoreAliasPassword + 
                         " --release --path TNS_App")
-        assert ("Building Libraries with 'release'..." in output)
+        
+        
+        # Not valid for 1.3.0+        
+        # assert ("Building Libraries with 'release'..." in output)
+        
         assert ("Project successfully prepared" in output) 
         assert ("BUILD SUCCESSFUL" in output)
+        
         assert ("Signing final apk..." in output)
         assert ("Project successfully built" in output)
         assert FileExists("TNS_App/platforms/android/bin/TNSApp-release.apk")
