@@ -1,7 +1,7 @@
 import fileinput
 import unittest
 
-from helpers._os_lib import CleanupFolder, runAUT
+from helpers._os_lib import CleanupFolder, CheckFilesExists, runAUT
 from helpers._tns_lib import CreateProject, tnsPath
 
 
@@ -15,6 +15,7 @@ class Create(unittest.TestCase):
         print "#####"
         print ""
         
+        CleanupFolder('./app');
         CleanupFolder('./TNS App');
         CleanupFolder('./TNS_App');
         CleanupFolder('./folder');
@@ -23,14 +24,13 @@ class Create(unittest.TestCase):
     def tearDown(self):        
         pass
 
-    def test_001_CreateProject(self):        
-        CreateProject(projName="TNS_App")        
+    def test_001_CreateProject(self):
+        CreateProject(projName="TNS_App")
+
         output = runAUT("cat TNS_App/package.json")
         assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
-        
-        # TODO: Uncomment this after TNS template on Github is OK
-        #assert(CheckFilesExists(projName, 'template_javascript_files.txt'))
-        
+        assert(CheckFilesExists("TNS_App", "template_javascript_files_1.2.0.txt"))
+
     def test_002_CreateProjectWithPath(self):
         CreateProject(projName="TNS_App", path='folder/subfolder/')
         output = runAUT("cat folder/subfolder/TNS_App/package.json")
@@ -68,7 +68,14 @@ class Create(unittest.TestCase):
         CreateProject(projName="\"TNS App\"");        
         output = runAUT("cat \"TNS App/package.json\"");
         assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
-              
+
+    def test_006_CreateProjectWithNameAppWarning(self):
+        output = CreateProject(projName="app");
+        assert ("You cannot build aplications named 'app' in Xcode. Consider creating a project with different name." in output)
+
+        output = runAUT("cat app/package.json");
+        assert ("\"id\": \"org.nativescript.app\"" in output)
+
     def test_400_CreateProjectWithCopyFromWrongPath(self):
         output = runAUT(tnsPath + " create TNS_App --copy-from invalidFolder")
         assert not ("successfully created" in output)

@@ -75,6 +75,7 @@ def CreateProject(projName, path=None, appId=None, copyFrom=None):
 
     output = runAUT(command)
     assert ("Project {0} was successfully created".format(projName.replace("\"", "")) in output)
+    return output
 
 def PlatformAdd(platform=None, frameworkPath=None, path=None, symlink=False, assertSuccess=True):
 
