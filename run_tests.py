@@ -1,7 +1,6 @@
-import os
-import platform
+import platform, os
 
-from helpers._os_lib import CleanupFolder, runAUT, KillProcess
+from helpers._os_lib import CleanupFolder, KillProcess, remove, runAUT
 from helpers._tns_lib import UninstallCLI, InstallCLI, GetAndroidRuntime, GetiOSRuntime, \
     androidRuntimeSymlinkPath, iosRuntimeSymlinkPath, androidRuntimePath, iosRuntimePath
 from helpers.device import StopEmulators
@@ -34,7 +33,9 @@ if __name__ == '__main__':
         os.remove(iosRuntimePath)
                
     # Cleanup folders created by test execution
-    CleanupFolder('TNS App')
+    remove('stderr.txt')
+	CleanupFolder('app')
+	CleanupFolder('TNS App')
     CleanupFolder('TNS App')
     CleanupFolder('TNS_TempApp')
     CleanupFolder('folder')

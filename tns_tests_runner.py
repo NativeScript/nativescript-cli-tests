@@ -84,7 +84,8 @@ def RunTests():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace)) 
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor)) 
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Output_STRERR))
+	suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor))
 
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))    
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_Linux))    
