@@ -1,5 +1,4 @@
-import fileinput
-import os, threading, psutil, time, shutil
+import os, errno, fileinput, time, threading, psutil, shutil
 import platform
 import tarfile
 from time import sleep
@@ -163,6 +162,13 @@ def catAppFile(platform, appName, filePath):
     if platform is "ios":
         output = runAUT("ddb device get-file \"Library/Application Support/LiveSync/" + filePath +"\" --app org.nativescript." + appName)
     return output
+
+def remove(file_path):
+    try:
+        os.remove(file_path)
+    except OSError as e:
+        if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
+            raise
 
 def uninstall_app(appName):
     output = runAUT("ddb device uninstall org.nativescript." + appName)
