@@ -47,8 +47,9 @@ class Prepare_Linux(unittest.TestCase):
         CreateProject(projName="TNS_App")  
         output = runAUT(tnsPath + " prepare android --path TNS_App");
         assert("Copying template files..." in output)
-        assert("Updated project.properties" in output)
-        assert("Updated local.properties" in output)
+        # Not valid for 1.3.0+
+        # assert("Updated project.properties" in output)
+        # assert("Updated local.properties" in output)
         assert("Project successfully created." in output)
         assert("Project successfully prepared" in output)
 

@@ -24,6 +24,7 @@ from tests.livesync_android import LiveSync_Android
 from tests.livesync_ios import LiveSync_iOS
 from tests.livesync_linux import LiveSync_Linux
 from tests.logtrace import LogTrace
+from tests.output_stderr import Output_STRERR
 from tests.platform_linux import Platform_Linux
 from tests.platform_osx import Platform_OSX
 from tests.plugins_linux import Plugins_Linux
@@ -85,7 +86,7 @@ def RunTests():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Output_STRERR))
-	suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor))
 
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))    
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_Linux))    

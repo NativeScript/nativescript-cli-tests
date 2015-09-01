@@ -84,8 +84,11 @@ class Platform_Linux(unittest.TestCase):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="android", path="TNS_App", frameworkPath=androidRuntimeSymlinkPath, symlink=True)
         assert("Copying template files..." in output)
-        assert("Updated project.properties" in output)
-        assert("Updated local.properties" in output)
+        
+        # Not valid for 1.3.0+
+        # assert("Updated project.properties" in output)
+        # assert("Updated local.properties" in output)
+        
         assert("Project successfully created" in output)
         assert IsEmpty('TNS_App/platforms/android/assets')
         assert IsEmpty('TNS_App/platforms/android/libs')
@@ -114,8 +117,11 @@ class Platform_Linux(unittest.TestCase):
         os.chdir(currentDir);
 
         assert("Copying template files..." in output)
-        assert("Updated project.properties" in output)
-        assert("Updated local.properties" in output)
+        
+        # Not valid for 1.3.0+
+        # assert("Updated project.properties" in output)
+        # assert("Updated local.properties" in output)
+        
         assert("Project successfully created" in output)
 
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
@@ -233,8 +239,11 @@ class Platform_Linux(unittest.TestCase):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="android --sdk 19", frameworkPath=androidRuntimePath, path="TNS_App")
         assert("Copying template files..." in output)
-        assert("Updated project.properties" in output)
-        assert("Updated local.properties" in output)
+        
+        # Not valid for 1.3.0+
+        # assert("Updated project.properties" in output)
+        # assert("Updated local.properties" in output)
+        
         assert("Project successfully created" in output)
         output = runAUT("cat cat TNS_App/platforms/android/AndroidManifest.xml ")
         assert ("android:minSdkVersion=\"17\"" in output)      
