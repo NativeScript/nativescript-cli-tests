@@ -117,6 +117,15 @@ class Build_OSX(unittest.TestCase):
         output = runAUT(command)     
         assert not ("__PROJECT_NAME__.xcodeproj" in output)
 
+    def test_210_Build_iOS_PlatformNotAdded(self):
+        CreateProject(projName="TNS_App")
+        output = runAUT(tnsPath + " build ios --path TNS_App")
+        assert ("Project successfully prepared" in output)
+        assert ("build/emulator/TNSApp.app" in output)
+        assert ("** BUILD SUCCEEDED **" in output)
+        assert ("Project successfully built" in output)
+        assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
+
     def test_300_Build_iOS_WithDashInPath(self):
         CreateProjectAndAddPlatform(projName="tns-app", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
         
@@ -155,13 +164,6 @@ class Build_OSX(unittest.TestCase):
         assert FileExists("my-ios-app/platforms/ios/build/emulator/myiosapp.app")   
         assert FileExists("my-ios-app/platforms/ios/myiosapp/myiosapp-Prefix.pch")   
                                                
-    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/277")             
-    def test_400_Build_iOS_WhenPlatformIsNotAdded(self):
-        CreateProject(projName="TNS_App")
-        output = runAUT(tnsPath + " build ios --path TNS_App")
-        # TODO: Verify after issue is fixed
-        assert not ("error" in output)
-        
     def test_401_Build_iOS_WithWrongParam(self):
         CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " build iOS --debug --path TNS_App")

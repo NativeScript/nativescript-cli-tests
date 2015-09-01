@@ -102,6 +102,18 @@ class Build_Linux(unittest.TestCase):
         assert ("Project successfully built" in output)         
         assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
+    def test_210_Build_Android_PlatformNotAdded(self):
+        CreateProject(projName="TNS_App")
+        output = runAUT(tnsPath + " build android --path TNS_App")
+
+        assert ("Project successfully prepared" in output)
+        assert ("BUILD SUCCESSFUL" in output)
+        assert ("Project successfully built" in output)
+
+        assert not ("ERROR" in output)
+        assert not ("FAILURE" in output)
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+
     def test_300_Build_Android_WithAdditionalStylesXML(self):
         
         # This is test for issue 644
@@ -142,40 +154,34 @@ class Build_Linux(unittest.TestCase):
         # Verify AndroidManifest.xml        
         output = runAUT("cat tns-app/platforms/android/src/main/AndroidManifest.xml")  
         assert ("org.nativescript.tnsapp" in output)  
-                           
-    @unittest.skip("TODO: Fix this test. Now build command opens a browser")                           
+
     def test_400_Build_MissingPlatform(self):
         output = runAUT(tnsPath + " build")
-        assert CheckOutput(output, 'build_help_output.txt')
-    
+        assert ("The input is not valid sub-command for 'build' command" in output)
+        assert ("# build" in output)
+        assert ("$ tns build <Platform>" in output)
+
     def test_401_Build_InvalidPlatform(self):
         output = runAUT(tnsPath + " build invalidCommand")
         assert ("The input is not valid sub-command for 'build' command" in output)
-        
+
     def test_402_Build_Android_WithOutPath(self):
         output = runAUT(tnsPath + " build android")
         assert ("No project found at or above" in output)
         assert ("and neither was a --path specified." in output)
-        
-    def test_403_Build_Android_WithOutPath(self):
+
+    def test_403_Build_Android_WithInvalidPath(self):
         output = runAUT(tnsPath + " build android --path invalidPath")
         assert ("No project found at or above" in output)
         assert ("and neither was a --path specified." in output)
 
-    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/277")             
-    def test_404_Build_Android_WhenPlatformIsNotAdded(self):
-        CreateProject(projName="TNS_App")
-        output = runAUT(tnsPath + " build android --path TNS_App")
-        # TODO: Verify after issue is fixed
-        assert not ("error" in output)
-
-    def test_405_Build_Android_WithWrongParam(self):
+    def test_404_Build_Android_WithWrongParam(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         output = runAUT(tnsPath + " build android --invalidOption --path TNS_App")
         assert ("The option 'invalidOption' is not supported" in output)
-        
-    def test_406_Build_IOSonNotOSXMachine(self):
-        CreateProject(projName="TNS_App"); 
+
+    def test_405_Build_IOSonNotOSXMachine(self):
+        CreateProject(projName="TNS_App");
         output = runAUT(tnsPath + " build ios --path TNS_App")
         if 'Darwin' in platform.platform():
             pass
