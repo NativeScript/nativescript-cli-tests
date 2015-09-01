@@ -97,7 +97,10 @@ class Plugins_Linux(unittest.TestCase):
         
         output = runAUT(tnsPath + " build android --path TNS_App")
         assert ("Project successfully prepared" in output) 
-        assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
+
+        # Not valid for 1.3.0+
+        # assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
+        
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)  
         assert not ("ERROR" in output)   

@@ -45,7 +45,7 @@ class Platform_Linux(unittest.TestCase):
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.2.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.3.0.txt')
         
     def test_003_Platform_Add_Android_FrameworkPath(self):
         CreateProject(projName="TNS_App")
@@ -140,13 +140,14 @@ class Platform_Linux(unittest.TestCase):
         assert not ("tns-android" in output)
 
     def test_203_Platform_Add_Android_CustomVersion(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android@0.9.0")               
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android@1.3.0")               
         output = runAUT("cat TNS_App/package.json")
-        assert ("\"version\": \"0.9.0\"" in output)
+        assert ("\"version\": \"1.3.0\"" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_0.9.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.3.0.txt')
 
+    @unittest.skip("Ignonre because 1.3.0 do not support older versions, please enable after 1.3.1 is released")
     def test_204_Platform_Update_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android@1.1.0")
         output = runAUT("cat TNS_App/package.json")
@@ -170,6 +171,7 @@ class Platform_Linux(unittest.TestCase):
         assert ("Usage" in output)
         Build(platform="android", path="TNS_App")
 
+    @unittest.skip("Ignonre because 1.3.0 do not support older versions, please enable after 1.3.1 is released")
     def test_206_Platform_Downgrade_Android_ToOlderVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android@1.2.0")
         output = runAUT("cat TNS_App/package.json")
@@ -227,14 +229,14 @@ class Platform_Linux(unittest.TestCase):
         assert ("\"version\": \"1.1.0\"" in output)
         Build(platform="android", path="TNS_App")
 
+
     def test_210_Platform_Update_MissingPlatform(self):
         CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " platform update android --path TNS_App")
         assert("Copying template files..." in output)
-        assert("Updated project.properties" in output)
-        assert("Updated local.properties" in output)
         assert("Project successfully created." in output)
 
+    @unittest.skip("Ignore because of issue https://github.com/NativeScript/nativescript-cli/issues/840")
     def test_220_SetSDK(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="android --sdk 19", frameworkPath=androidRuntimePath, path="TNS_App")
@@ -245,7 +247,7 @@ class Platform_Linux(unittest.TestCase):
         # assert("Updated local.properties" in output)
         
         assert("Project successfully created" in output)
-        output = runAUT("cat cat TNS_App/platforms/android/AndroidManifest.xml ")
+        output = runAUT("cat TNS_App/platforms/android/src/main/AndroidManifest.xml ")
         assert ("android:minSdkVersion=\"17\"" in output)      
         assert ("android:targetSdkVersion=\"19\"" in output)
                

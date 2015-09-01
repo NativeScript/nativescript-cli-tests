@@ -51,9 +51,9 @@ class Prepare_OSX(unittest.TestCase):
                
     def test_300_Prepare_iOS_PreserveCase(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
-        runAUT("cp TNS_App/app/tns_modules/application/application-common.js TNS_App/app/tns_modules/application/New-application-common.js")
-        runAUT("cp TNS_App/app/tns_modules/application/application.android.js TNS_App/app/tns_modules/application/New-application.android.js")
-        runAUT("cp TNS_App/app/tns_modules/application/application.ios.js TNS_App/app/tns_modules/application/New-application.ios.js")
+        runAUT("cp TNS_App/node_modules/tns-core-modules/application/application-common.js TNS_App/node_modules/tns-core-modules/application/New-application-common.js")
+        runAUT("cp TNS_App/node_modules/tns-core-modules/application/application.android.js TNS_App/node_modules/tns-core-modules/application/New-application.android.js")
+        runAUT("cp TNS_App/node_modules/tns-core-modules/application/application.ios.js TNS_App/node_modules/tns-core-modules/application/New-application.ios.js")
         
         output = runAUT(tnsPath + " prepare ios --path TNS_App")
         assert("Project successfully prepared" in output)

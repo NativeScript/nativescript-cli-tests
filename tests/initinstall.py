@@ -74,7 +74,7 @@ class InitAndInstall(unittest.TestCase):
         assert ("Project successfully created" in output)
         
         # Not valid for 1.3.0+
-        # assert FileExists("TNS_App/platforms/android/build.xml")
+        # assert FileExists("TNS_App/platforms/android/build.gradle")
         assert FileExists("TNS_App/platforms/android/build.gradle")
         
         if 'Darwin' in platform.platform():
@@ -102,7 +102,7 @@ class InitAndInstall(unittest.TestCase):
         assert FileExists("TNS_App/node_modules/gulp")
         
         # Not valid for 1.3.0+
-        # assert FileExists("TNS_App/platforms/android/build.xml")
+        # assert FileExists("TNS_App/platforms/android/build.gradle")
         assert FileExists("TNS_App/platforms/android/build.gradle")
         
         if 'Darwin' in platform.platform():
@@ -126,7 +126,7 @@ class InitAndInstall(unittest.TestCase):
         assert ("Project successfully created" in output)
         assert FileExists("TNS_App/node_modules/lodash")
         assert FileExists("TNS_App/node_modules/gulp")
-        assert FileExists("TNS_App/platforms/android/build.xml")
+        assert FileExists("TNS_App/platforms/android/build.gradle")
         if 'Darwin' in platform.platform():
             assert FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj")
         
@@ -137,9 +137,9 @@ class InitAndInstall(unittest.TestCase):
         os.chdir(os.path.join(currentDir,"TNS_App"))   
         runAUT("npm i gulp --save-dev")
         runAUT("npm i lodash --save")
-        runAUT("cp -R template-hello-world TNS_App/app")
 
         os.chdir(currentDir);
+        runAUT("cp -R template-hello-world TNS_App/app")
         output = runAUT("cat TNS_App/package.json")
         assert ("devDependencies" in output)
         assert ("gulp" in output)
@@ -149,13 +149,13 @@ class InitAndInstall(unittest.TestCase):
         assert ("Project successfully created" in output)
         assert FileExists("TNS_App/node_modules/lodash")
         assert FileExists("TNS_App/node_modules/gulp")
-        assert FileExists("TNS_App/platforms/android/build.xml")
+        assert FileExists("TNS_App/platforms/android/build.gradle")
         
         output = runAUT(tnsPath + " prepare android --path TNS_App")
         assert ("Project successfully prepared" in output)        
         
-        assert FileExists("TNS_App/platforms/android/assets/app/tns_modules/lodash")
-        assert not FileExists("TNS_App/platforms/android/assets/app/tns_modules/gulp")
+        assert FileExists("TNS_App/platforms/android/src/main/assets/app/tns_modules/lodash")
+        assert not FileExists("TNS_App/platforms/android/src/main/assets/app/tns_modules/gulp")
 
         if 'Darwin' in platform.platform():
             assert FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj")                    

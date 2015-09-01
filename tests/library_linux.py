@@ -25,24 +25,25 @@ class Library_Linux(unittest.TestCase):
         PlatformAdd(platform="android", frameworkPath=androidRuntimePath, path="TNS_App")
  
         LibraryAdd(platform="android", libPath="QA-TestApps/external-lib", path="TNS_App")
-        assert (CheckFilesExists("TNS_App", "library_add_JarLib_1.1.0.txt"))
+        assert (CheckFilesExists("TNS_App", "library_add_JarLib_1.3.0.txt"))
  
         Build(platform="android", path="TNS_App")
-        assert (CheckFilesExists("TNS_App", "library_build_JarLib_1.1.0.txt"))
+        assert (CheckFilesExists("TNS_App", "library_build_JarLib_1.3.0.txt"))
 
+    @unittest.skip("Skipped because of issue https://github.com/NativeScript/nativescript-cli/issues/838")  
     def test_002_Library_Add_Android_ProjLib(self):
         CreateProject(projName="TNS_App", copyFrom="QA-TestApps/external-lib/external-lib-android")
         PlatformAdd(platform="android", frameworkPath=androidRuntimePath, path="TNS_App")
 
         LibraryAdd(platform="android", libPath="QA-TestApps/external-lib/AndroidAppProject", path="TNS_App")
-        assert (CheckFilesExists("TNS_App", "library_add_ProjLib_1.1.0.txt"))
+        assert (CheckFilesExists("TNS_App", "library_add_ProjLib_1.3.0.txt"))
 
         output = runAUT("cat TNS_App/lib/Android/AndroidAppProject/project.properties")
         assert ("target=android-22" in output)
         assert ("android.library=true" in output)
 
         Build(platform="android", path="TNS_App")
-        assert (CheckFilesExists("TNS_App", "library_build_ProjLib_1.1.0.txt"))
+        assert (CheckFilesExists("TNS_App", "library_build_ProjLib_1.3.0.txt"))
 
     #TODO: Implement this test.
     @unittest.skip("Not implemented.")  

@@ -116,7 +116,7 @@ class LiveSync_Android(unittest.TestCase):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
-        replace("TNS_App/app/tns_modules/application/application-common.js", "(\"globals\");", "(\"globals\"); // test")
+        replace("TNS_App/node_modules/tns-core-modules/application/application-common.js", "(\"globals\");", "(\"globals\"); // test")
         LiveSync(platform="android", path="TNS_App")
 
         output = catAppFile("android", "TNSApp", "app/tns_modules/application/application-common.js")
@@ -126,7 +126,7 @@ class LiveSync_Android(unittest.TestCase):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
-        replace("TNS_App/app/tns_modules/LICENSE", "2015", "9999")
+        replace("TNS_App/node_modules/tns-core-modules/LICENSE", "2015", "9999")
         LiveSync(platform="android", path="TNS_App")
 
         output = catAppFile("android", "TNSApp", "app/tns_modules/LICENSE")

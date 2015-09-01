@@ -94,7 +94,10 @@ class Build_Linux(unittest.TestCase):
         
         # Even if project is already prepared build will prepare it again
         assert ("Project successfully prepared" in output) 
-        assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
+        
+        # Not valid for 1.3.0+
+        # assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
+        
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)         
         assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
@@ -110,33 +113,35 @@ class Build_Linux(unittest.TestCase):
         
         # Even if project is already prepared build will prepare it again
         assert ("Project successfully prepared" in output) 
-        assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
+
+        # Not valid for 1.3.0+
+        # assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
+        
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)         
         assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
          
-    def test_300_Build_Android_WithDashInPath(self):
+    def test_301_Build_Android_WithDashInPath(self):
         CreateProjectAndAddPlatform(projName="tns-app", platform="android", frameworkPath=androidRuntimePath)   
         
         # Verify project builds  
         output = runAUT(tnsPath + " build android --path tns-app")        
         assert ("Project successfully prepared" in output) 
-        assert ("Creating tnsapp-debug-unaligned.apk and signing it with a debug key..." in output)  
+
+        # Not valid for 1.3.0+
+        # assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
+        
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)         
-        assert FileExists("tns-app/platforms/android/bin/tnsapp-debug.apk")
+        assert FileExists("tns-app/platforms/android/build/outputs/apk/tnsapp-debug.apk")
         
         # Verify project id
         output = runAUT("cat tns-app/package.json")     
         assert ("org.nativescript.tnsapp" in output)
         
         # Verify AndroidManifest.xml        
-        output = runAUT("cat tns-app/platforms/android/AndroidManifest.xml")  
+        output = runAUT("cat tns-app/platforms/android/src/main/AndroidManifest.xml")  
         assert ("org.nativescript.tnsapp" in output)  
- 
-        # Verify Build.xml        
-        output = runAUT("cat tns-app/platforms/android/build.xml")  
-        assert ("tnsapp" in output)  
                            
     @unittest.skip("TODO: Fix this test. Now build command opens a browser")                           
     def test_400_Build_MissingPlatform(self):

@@ -1,5 +1,5 @@
 import unittest
-import os, psutil, shutil, subprocess, time
+import shutil
 
 from helpers._os_lib import CleanupFolder, replace, catAppFile, uninstall_app
 from helpers._tns_lib import iosRuntimePath, \
