@@ -43,8 +43,8 @@ class Prepare_Linux(unittest.TestCase):
         assert not FileExists('TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.android.js')
         assert not FileExists('TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.ios.js')
 
-    def test_201_Prepare_PlatformThatIsNotAdded(self):
-        CreateProject(projName="TNS_App")  
+    def test_201_Prepare_Android_PlatformNotAdded(self):
+        CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " prepare android --path TNS_App");
         assert("Copying template files..." in output)
         # Not valid for 1.3.0+
@@ -52,6 +52,7 @@ class Prepare_Linux(unittest.TestCase):
         # assert("Updated local.properties" in output)
         assert("Project successfully created." in output)
         assert("Project successfully prepared" in output)
+        assert FileExists('TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.js')
 
     def test_300_Prepare_Android_RemoveOldFiles(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
@@ -102,9 +103,3 @@ class Prepare_Linux(unittest.TestCase):
         CreateProject(projName="TNS_App")  
         output = runAUT(tnsPath + " prepare windows --path TNS_App");
         assert("Invalid platform windows. Valid platforms are ios or android." in output)    
-
-    @unittest.skip("Moved to test_201_Prepare_PlatformThatIsNotAdded - this is no more a negative case due to https://github.com/NativeScript/nativescript-cli/issues/785")
-    def test_402_Prepare_PlatformThatIsNotAdded(self):
-        CreateProject(projName="TNS_App")  
-        output = runAUT(tnsPath + " prepare android --path TNS_App");
-        assert("The platform android is not added to this project. Please use 'tns platform add <platform>'" in output)    

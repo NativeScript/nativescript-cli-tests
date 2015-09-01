@@ -1,8 +1,8 @@
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, FileExists
-from helpers._tns_lib import CreateProjectAndAddPlatform, iosRuntimeSymlinkPath, \
-    tnsPath
+from helpers._tns_lib import CreateProject, CreateProjectAndAddPlatform, \
+    iosRuntimeSymlinkPath, tnsPath
 
 
 class Prepare_OSX(unittest.TestCase):
@@ -48,7 +48,15 @@ class Prepare_OSX(unittest.TestCase):
         # Verify XCode Project include files from App Resources folder
         output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep newDefault.png")
         assert ("newDefault.png" in output)
-               
+
+    def test_201_Prepare_iOS_PlatformNotAdded(self):
+        CreateProject(projName="TNS_App")
+        output = runAUT(tnsPath + " prepare ios --path TNS_App");
+        assert("Copying template files..." in output)
+        assert("Project successfully created." in output)
+        assert("Project successfully prepared" in output)
+        assert FileExists('TNS_App/platforms/ios/TNSApp/app/tns_modules/application/application.js')
+
     def test_300_Prepare_iOS_PreserveCase(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         runAUT("cp TNS_App/node_modules/tns-core-modules/application/application-common.js TNS_App/node_modules/tns-core-modules/application/New-application-common.js")
