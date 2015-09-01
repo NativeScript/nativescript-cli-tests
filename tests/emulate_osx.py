@@ -2,8 +2,8 @@ import os
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, IsRunningProcess
-from helpers._tns_lib import CreateProjectAndAddPlatform, iosRuntimeSymlinkPath, \
-    tnsPath
+from helpers._tns_lib import CreateProject, CreateProjectAndAddPlatform, \
+    iosRuntimeSymlinkPath, tnsPath
 
 
 class Emulate_OSX(unittest.TestCase):
@@ -51,7 +51,21 @@ class Emulate_OSX(unittest.TestCase):
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
             assert ("Session started without errors" in output) 
             assert IsRunningProcess("Simulator")
-        
+
+    def test_210_Emulate_iOS_PlatformNotAdded(self):
+        CreateProject(projName="TNS_App")  
+        output = runAUT(tnsPath + " eemulate ios --device iPhone-6 --path TNS_App --justlaunch")
+        assert ("Copying template files..." in output)
+        assert ("Project successfully created." in output)
+        assert ("Project successfully prepared" in output)
+        assert ("Project successfully built" in output)
+        assert ("Starting iOS Simulator" in output)
+
+        # Simulator can not be started without active UI
+        if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
+            assert ("Session started without errors" in output)
+            assert IsRunningProcess("Simulator")
+
     def test_400_Emulate_InvalidDevice(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
         output = runAUT(tnsPath + " emulate ios --device invalidDevice --path TNS_App --justlaunch")

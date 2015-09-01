@@ -96,9 +96,9 @@ class Emulate_Linux(unittest.TestCase):
             
         #TODO: Get device id and verify files are deployed and process is running on this device 
 
-    def test_210_Emulate_MissingPlatform(self):
+    def test_210_Emulate_Android_PlatformNotAdded(self):
         CreateProject(projName="TNS_App")  
-        output = runAUT(tnsPath + " emulate android  --timeout 180 --path TNS_App", set_timeout=660)
+        output = runAUT(tnsPath + " emulate android --timeout 180 --path TNS_App", set_timeout=660)
         assert ("Copying template files..." in output)
         assert ("Project successfully created." in output)
         assert ("Project successfully prepared" in output)
@@ -112,12 +112,6 @@ class Emulate_Linux(unittest.TestCase):
 
         #TODO: Get device id and verify files are deployed and process is running on this device
 
-    @unittest.skip("Moved to test_210_Emulate_MissingPlatform - this is no more a negative case due to https://github.com/NativeScript/nativescript-cli/issues/785")
-    def test_400_Emulate_MissingPlatform(self):
-        CreateProject(projName="TNS_App")  
-        output = runAUT(tnsPath + " emulate android --path TNS_App")
-        assert ("The platform android is not added to this project" in output) 
-        
     def test_401_Emulate_InvalidPlatform(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " emulate invalidPlatform --path TNS_App --timeout 600 --justlaunch", set_timeout=660)
