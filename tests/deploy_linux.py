@@ -63,12 +63,10 @@ class Deploy_Linux(unittest.TestCase):
         assert ("Project successfully built" in output)   
         assert ("Successfully deployed on device with identifier" in output)  
 
-    def test_210_Deploy_MissingPlatform(self):
+    def test_210_Deploy_Android_PlatformNotAdded(self):
         CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " deploy android --path TNS_App --justlaunch")
         assert ("Copying template files..." in output)
-        assert ("Updated project.properties" in output)
-        assert ("Updated local.properties" in output)
         assert ("Project successfully created." in output)
 
         assert ("Project successfully prepared" in output)
