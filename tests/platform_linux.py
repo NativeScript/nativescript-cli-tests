@@ -229,12 +229,12 @@ class Platform_Linux(unittest.TestCase):
         assert ("\"version\": \"1.1.0\"" in output)
         Build(platform="android", path="TNS_App")
 
-
-    def test_210_Platform_Update_MissingPlatform(self):
+    def test_210_Platform_Update_Android_PlatformNotAdded(self):
         CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " platform update android --path TNS_App")
         assert("Copying template files..." in output)
         assert("Project successfully created." in output)
+        assert not IsEmpty("TNS_App/platforms/android/build-tools/android-static-binding-generator")
 
     @unittest.skip("Ignore because of issue https://github.com/NativeScript/nativescript-cli/issues/840")
     def test_220_SetSDK(self):
@@ -306,13 +306,6 @@ class Platform_Linux(unittest.TestCase):
         CreateProject(projName="TNS_App")       
         output = runAUT(tnsPath + " platform remove --path TNS_App")
         assert ("No platform specified. Please specify a platform to remove" in output)
-        assert ("Usage" in output)
-
-    @unittest.skip("Moved to test_210_Platform_Update_MissingPlatform - this is no more a negative case due to https://github.com/NativeScript/nativescript-cli/issues/785")
-    def test_440_Platform_Update_MissingPlatform(self):
-        CreateProject(projName="TNS_App")
-        output = runAUT(tnsPath + " platform update android --path TNS_App")
-        assert ("The platform android is not added to this project. Please use 'tns platform add <platform>'" in output)
         assert ("Usage" in output)
 
     def test_441_Platform_Update_InvalidPlatform(self):

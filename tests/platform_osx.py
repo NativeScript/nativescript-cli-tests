@@ -239,7 +239,14 @@ class Platform_OSX(unittest.TestCase):
         # Verify plist file 
         output = runAUT("cat TNS_App/platforms/ios/TNSApp/TNSApp-Info.plist")
         assert ("org.nativescript.MyApp" in output)
-                                       
+
+    def test_210_Platform_Update_iOS_PlatformNotAdded(self):
+        CreateProject(projName="TNS_App")
+        output = runAUT(tnsPath + " platform update ios --path TNS_App")
+        assert("Copying template files..." in output)
+        assert("Project successfully created." in output)
+        assert not IsEmpty("TNS_App/platforms/ios/metadataGenerator")
+
     def test_400_Platform_Add_AlreadyExistingPlatform(self):
         self.test_004_Platform_Add_iOS_Symlink_And_FrameworkPath()     
         
