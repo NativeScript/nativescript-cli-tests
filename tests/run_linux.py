@@ -2,7 +2,7 @@ import os
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT
-from helpers._tns_lib import CreateProjectAndAddPlatform, \
+from helpers._tns_lib import CreateProject, CreateProjectAndAddPlatform, \
     tnsPath, androidKeyStorePath, androidKeyStorePassword, \
     androidKeyStoreAlias, androidKeyStoreAliasPassword, androidRuntimePath
 from helpers.device import GivenRunningEmulator, GivenRealDeviceRunning
@@ -70,3 +70,12 @@ class Run_Linux(unittest.TestCase):
         assert ("Project successfully built" in output)   
         assert ("Successfully deployed on device with identifier 'emulator-5554'" in output)  
         #TODO: Get device id and verify files are deployed and process is running on this device
+
+    def test_210_Run_Android_PlatformNotAdded(self):
+        CreateProject(projName="TNS_App")
+        output = runAUT(tnsPath + " run android --path TNS_App --justlaunch")
+        
+        assert ("Project successfully created." in output)
+        assert ("Project successfully prepared" in output)
+        assert ("Project successfully built" in output)
+        assert ("Successfully deployed on device with identifier" in output)

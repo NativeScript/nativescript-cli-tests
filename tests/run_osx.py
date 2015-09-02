@@ -2,7 +2,8 @@ import os
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, IsRunningProcess
-from helpers._tns_lib import CreateProjectAndAddPlatform, iosRuntimeSymlinkPath, tnsPath
+from helpers._tns_lib import CreateProject, CreateProjectAndAddPlatform, \
+    iosRuntimeSymlinkPath, tnsPath
 from helpers.device import GivenRealDeviceRunning
 
 
@@ -89,4 +90,13 @@ class Run_OSX(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Debug" in output)
         assert ("Project successfully built" in output)   
-        assert ("Successfully deployed on device" in output)  
+        assert ("Successfully deployed on device" in output)
+
+    def test_210_Run_Android_PlatformNotAdded(self):
+        CreateProject(projName="TNS_App")
+        output = runAUT(tnsPath + " run ios --path TNS_App --justlaunch")
+
+        assert ("Project successfully created." in output)
+        assert ("Project successfully prepared" in output)
+        assert ("Project successfully built" in output)
+        assert ("Successfully deployed on device" in output)
