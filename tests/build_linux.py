@@ -114,6 +114,19 @@ class Build_Linux(unittest.TestCase):
         assert not ("FAILURE" in output)
         assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
+    def test_211_Build_Android_NoPlatformsFolder(self):
+        CreateProject(projName="TNS_App")
+        CleanupFolder('./TNS_App/platforms')
+        output = runAUT(tnsPath + " build android --path TNS_App")
+
+        assert ("Project successfully prepared" in output)
+        assert ("BUILD SUCCESSFUL" in output)
+        assert ("Project successfully built" in output)
+
+        assert not ("ERROR" in output)
+        assert not ("FAILURE" in output)
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+
     def test_300_Build_Android_WithAdditionalStylesXML(self):
         
         # This is test for issue 644

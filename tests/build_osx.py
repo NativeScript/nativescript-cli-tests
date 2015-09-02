@@ -126,6 +126,16 @@ class Build_OSX(unittest.TestCase):
         assert ("Project successfully built" in output)
         assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
 
+    def test_211_Build_iOS_NoPlatformsFolder(self):
+        CreateProject(projName="TNS_App")
+        CleanupFolder('./TNS_App/platforms')
+        output = runAUT(tnsPath + " build ios --path TNS_App")
+        assert ("Project successfully prepared" in output)
+        assert ("build/emulator/TNSApp.app" in output)
+        assert ("** BUILD SUCCEEDED **" in output)
+        assert ("Project successfully built" in output)
+        assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
+
     def test_300_Build_iOS_WithDashInPath(self):
         CreateProjectAndAddPlatform(projName="tns-app", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)  
         
