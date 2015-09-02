@@ -54,7 +54,7 @@ class Emulate_OSX(unittest.TestCase):
 
     def test_210_Emulate_iOS_PlatformNotAdded(self):
         CreateProject(projName="TNS_App")  
-        output = runAUT(tnsPath + " eemulate ios --device iPhone-6 --path TNS_App --justlaunch")
+        output = runAUT(tnsPath + " emulate ios --device iPhone-6 --path TNS_App --justlaunch")
         assert ("Copying template files..." in output)
         assert ("Project successfully created." in output)
         assert ("Project successfully prepared" in output)
