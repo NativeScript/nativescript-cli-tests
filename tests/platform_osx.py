@@ -134,49 +134,32 @@ class Platform_OSX(unittest.TestCase):
     @unittest.skip("Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
     def test_204_Platform_Update_iOS(self):
         CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios@1.1.0", path="TNS_App")
+        output = PlatformAdd(platform="ios@1.2.2", path="TNS_App")
         assert("Copying template files..." in output)
         assert("Project successfully created" in output)
 
         output = runAUT("cat TNS_App/package.json")
-        assert ("\"version\": \"1.1.0\"" in output)
+        assert ("\"version\": \"1.2.2\"" in output)
 
-#         [31;1mCannot read property 'substring' of undefined[0m
-#         TypeError: Cannot read property 'substring' of undefined
-
-#         command = tnsPath + " platform update ios@1.2.0 --path TNS_App"
-#         output = runAUT(command, set_timeout=10) 
-#         assert ("We need to override xcodeproj file. The old one will be saved at" in output)
-
-#         output = runAUT("echo '' | " + tnsPath + " platform update ios@1.2.0 --path TNS_App")  
-#         assert ("Successfully updated to version  1.2.0" in output)
-
-        os.system(tnsPath + " platform update ios@1.2.0 --path TNS_App < enter_key.txt")
+        command = tnsPath + " platform update ios@1.3.0 --path TNS_App < enter_key.txt"
+        runAUT("echo " + command)
+        os.system(command)
 
         output = runAUT("cat TNS_App/package.json")
-        assert ("\"version\": \"1.2.0\"" in output)
-        
+        assert ("\"version\": \"1.3.0\"" in output)
+
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.2.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.3.0.txt')
         Build(platform="ios", path="TNS_App")
 
-    @unittest.skip("Skip due to build failure. Probably related: https://github.com/NativeScript/nativescript-cli/issues/785")
     def test_206_Platform_Downgrade_iOS_ToOlderVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios@1.2.0")
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.2.0\"" in output)
 
-#         [31;1mCannot read property 'substring' of undefined[0m
-#         TypeError: Cannot read property 'substring' of undefined
-
-#         command = tnsPath + " platform update ios@1.1.0 --path TNS_App"
-#         output = runAUT(command, set_timeout=10)
-#         assert ("We need to override xcodeproj file. The old one will be saved at" in output)
-
-#         output = runAUT("echo '' | " + tnsPath + " platform update ios@1.1.0 --path TNS_App")  
-#         assert ("Successfully updated to version  1.1.0" in output)
-
-        os.system(tnsPath + " platform update ios@1.1.0 --path TNS_App < enter_key.txt")
+        command = tnsPath + " platform update ios@1.1.0 --path TNS_App < enter_key.txt"
+        runAUT("echo " + command)
+        os.system(command)
 
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.1.0\"" in output)
@@ -203,17 +186,9 @@ class Platform_OSX(unittest.TestCase):
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1." in output)
 
-#         [31;1mCannot read property 'substring' of undefined[0m
-#         TypeError: Cannot read property 'substring' of undefined
-
-#         command = tnsPath + " platform update ios@1.1.0 --path TNS_App"
-#         output = runAUT(command)
-#         assert ("We need to override xcodeproj file. The old one will be saved at" in output)
-
-#         output = runAUT("echo '' | " + tnsPath + " platform update ios@1.01.0 --path TNS_App")  
-#         assert ("Successfully updated to version  1.1.0" in output)
-
-        os.system(tnsPath + " platform update ios@1.1.0 --path TNS_App < enter_key.txt")
+        command = tnsPath + " platform update ios@1.1.0 --path TNS_App < enter_key.txt"
+        runAUT("echo " + command)
+        os.system(command)
 
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.1.0\"" in output)
