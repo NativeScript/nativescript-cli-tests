@@ -14,7 +14,8 @@ class Create(unittest.TestCase):
         print self.id()
         print "#####"
         print ""
-        
+
+        CleanupFolder('./123');
         CleanupFolder('./app');
         CleanupFolder('./TNS App');
         CleanupFolder('./TNS_App');
@@ -22,7 +23,8 @@ class Create(unittest.TestCase):
         CleanupFolder('./template');
 
     def tearDown(self):        
-        pass
+        CleanupFolder('./123');
+        CleanupFolder('./app');
 
     def test_001_CreateProject(self):
         CreateProject(projName="TNS_App")
@@ -69,7 +71,12 @@ class Create(unittest.TestCase):
         output = runAUT("cat \"TNS App/package.json\"");
         assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
 
-    def test_006_CreateProjectWithNameAppWarning(self):
+    def test_006_CreateProjectWithName123(self):
+        CreateProject(projName="123");
+        output = runAUT("cat 123/package.json");
+        assert ("\"id\": \"org.nativescript.the123\"" in output)
+
+    def test_007_CreateProjectWithNameAppWarning(self):
         output = CreateProject(projName="app");
         assert ("You cannot build aplications named 'app' in Xcode. Consider creating a project with different name." in output)
 
@@ -99,3 +106,8 @@ class Create(unittest.TestCase):
                 
         output = runAUT(tnsPath + " create TNS_App --copyFRom template")
         assert ("The option 'copyFRom' is not supported." in output)
+
+    def test_500_CreateProjectWithNoName(self):
+        output = runAUT(tnsPath + " create")
+        assert ("You need to provide all the required parameters." in output)
+        assert ("# create" in output)
