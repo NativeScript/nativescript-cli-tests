@@ -204,3 +204,11 @@ class Build_Linux(unittest.TestCase):
             pass
         else:
             assert ("Applications for platform ios can not be built on this OS" in output)
+
+    def test_410_Build_Android_Release_NoKeyWarn(self):
+        CreateProject(projName="TNS_App")
+        output = runAUT(tnsPath + " build android --release --path TNS_App")
+
+        assert ("When producing a release build, you need to specify all --key-store-* options." in output)
+        assert ("# build android" in output)
+        assert not FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-release.apk")
