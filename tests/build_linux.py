@@ -159,7 +159,11 @@ class Build_Linux(unittest.TestCase):
         output = runAUT(tnsPath + " build")
         assert ("The input is not valid sub-command for 'build' command" in output)
         assert ("# build" in output)
-        assert ("$ tns build <Platform>" in output)
+
+        if 'Darwin' in platform.platform():
+            assert ("$ tns build <Platform>" in output)
+        else:
+            assert ("$ tns build android" in output)
 
     def test_401_Build_InvalidPlatform(self):
         output = runAUT(tnsPath + " build invalidCommand")
