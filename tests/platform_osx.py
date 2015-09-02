@@ -50,8 +50,9 @@ class Platform_OSX(unittest.TestCase):
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.1.0.txt')
-        
+            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.3.0.txt')
+        Build(platform="ios", path="TNS_App")
+
     def test_003_Platform_Add_iOS_Symlink(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="ios", path="TNS_App", symlink=True)
@@ -119,15 +120,16 @@ class Platform_OSX(unittest.TestCase):
 
     def test_203_Platform_Add_iOS_CustomVersion(self):
         CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios@1.0.0", path="TNS_App")
+        output = PlatformAdd(platform="ios@1.2.2", path="TNS_App")
         assert("Copying template files..." in output)
         assert("Project successfully created" in output)
         
         output = runAUT("cat TNS_App/package.json")
-        assert ("\"version\": \"1.0.0\"" in output)
+        assert ("\"version\": \"1.2.2\"" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.0.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.2.0.txt')
+        Build(platform="ios", path="TNS_App")
 
     @unittest.skip("Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
     def test_204_Platform_Update_iOS(self):
