@@ -1,57 +1,86 @@
-import fileinput
-import unittest
+import unittest, fileinput
 
-from helpers._os_lib import CleanupFolder, CheckFilesExists, runAUT
+from helpers._os_lib import CleanupFolder, CheckFilesExists, FileExists, FolderExists,\
+    IsEmpty, runAUT 
 from helpers._tns_lib import CreateProject, tnsPath
 
 
 class Create(unittest.TestCase):
-    
+
+    @classmethod
+    def setUpClass(cls):
+        CleanupFolder('./app');
+        CleanupFolder('./123');
+        CleanupFolder('./folder');
+        CleanupFolder('./tns-app');
+        CleanupFolder('./TNS App');
+
     def setUp(self):
-        
+
         print ""
         print "#####"
         print self.id()
         print "#####"
         print ""
 
-        CleanupFolder('./123');
-        CleanupFolder('./app');
-        CleanupFolder('./TNS App');
         CleanupFolder('./TNS_App');
-        CleanupFolder('./folder');
         CleanupFolder('./template');
 
-    def tearDown(self):        
-        CleanupFolder('./123');
+    def tearDown(self):
+        CleanupFolder('./TNS_App');
+        CleanupFolder('./template');
+
+    @classmethod
+    def tearDownClass(cls):
         CleanupFolder('./app');
+        CleanupFolder('./123');
+        CleanupFolder('./folder');
+        CleanupFolder('./tns-app');
+        CleanupFolder('./TNS App');
 
     def test_001_CreateProject(self):
         CreateProject(projName="TNS_App")
 
+        assert IsEmpty("TNS_App/platforms")
+        assert not FolderExists ("TNS_App/app/tns_modules")
+
         output = runAUT("cat TNS_App/package.json")
         assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
-        assert(CheckFilesExists("TNS_App", "template_javascript_files_1.2.0.txt"))
+        assert ("\"tns-core-modules\": \"1." in output)
+
+        assert FileExists("TNS_App/node_modules/tns-core-modules/package.json")
+        assert FileExists("TNS_App/node_modules/tns-core-modules/LICENSE")
+        assert FileExists("TNS_App/node_modules/tns-core-modules/xml/xml.js")
+
+        assert (CheckFilesExists("TNS_App", "template_javascript_files_1.2.0.txt"))
 
     def test_002_CreateProjectWithPath(self):
         CreateProject(projName="TNS_App", path='folder/subfolder/')
+
+        assert IsEmpty("folder/subfolder/TNS_App/platforms")
+        assert not FolderExists ("folder/subfolder/TNS_App/app/tns_modules")
+
         output = runAUT("cat folder/subfolder/TNS_App/package.json")
         assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
-        
-        # TODO: Uncomment this after TNS template on Github is OK
-        # assert(CheckFilesExists('folder/subfolder/' + projName, 'template_javascript_files.txt'))
-        
+        assert ("\"tns-core-modules\": \"1." in output)
+
+        assert FileExists("folder/subfolder/TNS_App/node_modules/tns-core-modules/package.json")
+        assert FileExists("folder/subfolder/TNS_App/node_modules/tns-core-modules/LICENSE")
+        assert FileExists("folder/subfolder/TNS_App/node_modules/tns-core-modules/xml/xml.js")
+
+        assert (CheckFilesExists('folder/subfolder/TNS_App', 'template_javascript_files_1.2.0.txt'))
+
     def test_003_CreateProjectWithAppId(self):
-        CreateProject(projName = "TNS_App", appId="org.nativescript.MyApp")
+        CreateProject(projName="TNS_App", appId="org.nativescript.MyApp")
         output = runAUT("cat TNS_App/package.json")
         assert ("\"id\": \"org.nativescript.MyApp\"" in output)
-        
+
     def test_004_CreateProjectWithCopyFrom(self):        
         # Create initial template project
         CreateProject(projName="template")
         
         # Modify some files in template project
-        for line in fileinput.input("template/app/LICENSE", inplace = 1): 
+        for line in fileinput.input("template/app/LICENSE", inplace=1): 
             print line.replace("Copyright (c) 2015, Telerik AD", "Copyright (c) 2015, Telerik A D"),
             
         # Create new project based on first one
@@ -65,18 +94,23 @@ class Create(unittest.TestCase):
         output = runAUT("cat TNS_App/app/LICENSE")
         assert not ("Copyright (c) 2015, Telerik AD" in output)     
         assert ("Copyright (c) 2015, Telerik A D" in output)        
- 
+
     def test_005_CreateProjectWithSpaceInName(self):        
-        CreateProject(projName="\"TNS App\"");        
+        CreateProject(projName="\"TNS App\"");
         output = runAUT("cat \"TNS App/package.json\"");
         assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
 
-    def test_006_CreateProjectWithName123(self):
+    def test_006_CreateProjectWithDashInName(self):        
+        CreateProject(projName="\"tns-app\"");
+        output = runAUT("cat \"tns-app/package.json\"");
+        assert ("\"id\": \"org.nativescript.tnsapp\"" in output)
+
+    def test_007_CreateProjectWithName123(self):
         CreateProject(projName="123");
         output = runAUT("cat 123/package.json");
         assert ("\"id\": \"org.nativescript.the123\"" in output)
 
-    def test_007_CreateProjectWithNameAppWarning(self):
+    def test_008_CreateProjectWithNameAppWarning(self):
         output = CreateProject(projName="app");
         assert ("You cannot build aplications named 'app' in Xcode. Consider creating a project with different name." in output)
 
@@ -86,12 +120,16 @@ class Create(unittest.TestCase):
     def test_400_CreateProjectWithCopyFromWrongPath(self):
         output = runAUT(tnsPath + " create TNS_App --copy-from invalidFolder")
         assert not ("successfully created" in output)
-        
+
+        assert ("The specified path" in output)
+        assert ("doesn't exist. Check that you specified the path correctly and try again." in output)
+
     def test_401_CreateProjectInAlreadyExistingFolder(self):        
         CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " create TNS_App")
+        assert not ("successfully created" in output)
         assert ("Path already exists and is not empty" in output)
-        
+
     def test_402_CreateProjectWithWrongCopyFromCommand(self):      
         # Create initial template project
         CreateProject(projName="template")
