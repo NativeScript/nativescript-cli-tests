@@ -98,7 +98,7 @@ class Emulate_Linux(unittest.TestCase):
 
     def test_210_Emulate_Android_PlatformNotAdded(self):
         CreateProject(projName="TNS_App")  
-        output = runAUT(tnsPath + " emulate android --timeout 180 --path TNS_App", set_timeout=660)
+        output = runAUT(tnsPath + " emulate android --timeout 600 --path TNS_App", set_timeout=660)
         assert ("Copying template files..." in output)
         assert ("Project successfully created." in output)
         assert ("Project successfully prepared" in output)
