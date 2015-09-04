@@ -138,13 +138,6 @@ class Create(unittest.TestCase):
         assert not ("successfully created" in output)
         assert ("To see command's options, use '$ tns help create'" in output)
     
-    def test_403_CreateProjectWithWrongCopyFromCommand(self):      
-        # Create initial template project
-        CreateProject(projName="template")
-                
-        output = runAUT(tnsPath + " create TNS_App --copyFRom template")
-        assert ("The option 'copyFRom' is not supported." in output)
-
     def test_500_CreateProjectWithNoName(self):
         output = runAUT(tnsPath + " create")
         assert ("You need to provide all the required parameters." in output)
