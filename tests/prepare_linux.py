@@ -53,7 +53,7 @@ class Prepare_Linux(unittest.TestCase):
         replace("TNS_App/node_modules/tns-core-modules/application/application-common.js", "(\"globals\");", "(\"globals\"); // test")
 
         # Verify tns-core-modules are copied to the native project, not app's tns_modules.
-        for i in range(1, 4):
+        for i in range(1, 3):
             print "Prepare number: " + str(i)
             
             output = runAUT(tnsPath + " prepare android --path TNS_App")
@@ -62,12 +62,15 @@ class Prepare_Linux(unittest.TestCase):
 
             output = runAUT("cat TNS_App/app/tns_modules/package.json")
             assert ("\"version\": \"1.2.1\"," in output)
+
             output = runAUT("cat TNS_App/node_modules/tns-core-modules/package.json")
             assert ("\"version\": \"1.2.1\"," not in output)
+            output = runAUT("cat TNS_App/node_modules/tns-core-modules/application/application-common.js")
+            assert ("require(\"globals\"); // test" in output)
 
             output = runAUT("cat TNS_App/platforms/android/src/main/assets/app/tns_modules/package.json")
             assert ("\"version\": \"1.2.1\"," not in output)
-            output = runAUT("cat TNS_App/node_modules/tns-core-modules/application/application-common.js")
+            output = runAUT("cat TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application-common.js")
             assert ("require(\"globals\"); // test" in output)
 
     def test_210_Prepare_Android_PlatformNotAdded(self):
