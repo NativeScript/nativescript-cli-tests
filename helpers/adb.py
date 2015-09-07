@@ -18,7 +18,7 @@ def StopApplication(appId, deviceId):
 
 def IsRunning(appId, deviceId):
     
-    output = runAUT("adb -s " + deviceId + " shell ps | " + appId)
+    output = runAUT("adb -s " + deviceId + " shell ps | grep " + appId)
     if ("org.nativescript.TNSApp" in output):
         return True
     else:

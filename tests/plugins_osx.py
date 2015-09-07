@@ -168,12 +168,11 @@ class Plugins_OSX(unittest.TestCase):
         output = runAUT(tnsPath + " plugin add wd --path TNS_App")
         assert ("wd is not a valid NativeScript plugin" in output)
         assert ("Verify that the plugin package.json file contains a nativescript key and try again" in output)  
-              
+
     def test_403_PluginAdd_PluginNotSupportedOnSpecificPlatform(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)   
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
         PlatformAdd(platform="android", frameworkPath=androidRuntimePath, path="TNS_App")
-        
+
         output = runAUT(tnsPath + " plugin add tns-plugin@1.0.2 --path TNS_App")
-        assert ("Successfully prepared plugin tns-plugin for ios" in output)
         assert ("tns-plugin is not supported for android" in output)
-        assert ("Successfully installed plugin tns-plugin" in output)       
+        assert ("Successfully installed plugin tns-plugin" in output)

@@ -112,16 +112,11 @@ class Platform_Linux(unittest.TestCase):
     def test_201_Platform_Add_Android_InsideProject(self):
         CreateProject(projName="TNS_App")
         currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))        
+        os.chdir(os.path.join(currentDir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " platform add android")
         os.chdir(currentDir);
 
         assert("Copying template files..." in output)
-        
-        # Not valid for 1.3.0+
-        # assert("Updated project.properties" in output)
-        # assert("Updated local.properties" in output)
-        
         assert("Project successfully created" in output)
 
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):

@@ -25,10 +25,10 @@ class Device_Linux(unittest.TestCase):
         
     def tearDown(self):        
         pass
-    
-    def test_001_Device_ListApplications_And_Run_Android(self):          
+
+    def test_001_Device_ListApplications_And_Run_Android(self):
         deviceId = GetPhysicalDeviceId(platform="android");
-        if (deviceId is not None): 
+        if (deviceId is not None):
             
             # Deploy TNS_App on device
             CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
@@ -36,7 +36,8 @@ class Device_Linux(unittest.TestCase):
             assert ("Project successfully prepared" in output) 
             assert ("Project successfully built" in output)   
             assert ("Successfully deployed on device with identifier" in output)  
-            assert (deviceId in output)  
+            runAUT("echo " + deviceId)
+            assert (deviceId in output)
             sleep(10)
             
             # Verify list-applications command list org.nativescript.TNSApp
@@ -60,7 +61,7 @@ class Device_Linux(unittest.TestCase):
         else:
             print "Prerequisites not met. This test requires at least one real android device."
             assert (False)             
- 
+
     def test_002_Device_Log_Android(self): 
         if (GetDeviceCount(platform="android") > 1): 
             output = runAUT(tnsPath + " device log")
