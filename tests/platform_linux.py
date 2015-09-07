@@ -125,7 +125,7 @@ class Platform_Linux(unittest.TestCase):
         assert("Project successfully created" in output)
 
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.1.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_1.3.0.txt')
 
     def test_202_Platform_Remove_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
