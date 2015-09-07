@@ -4,11 +4,17 @@ import shutil
 from helpers._os_lib import CleanupFolder, replace, catAppFile, uninstall_app
 from helpers._tns_lib import iosRuntimePath, \
     CreateProjectAndAddPlatform, LiveSync, Run
-from helpers.device import GivenRealDeviceRunning
+from helpers.device import GivenRealDeviceRunning, \
+    StopEmulators, StopSimulators
 
 class LiveSync_iOS(unittest.TestCase):
 
-    # LiveSync Tests on Android Emulator
+    # LiveSync Tests on iOS Device
+
+    @classmethod
+    def setUpClass(cls):
+        StopEmulators()
+        StopSimulators()
 
     def setUp(self):
 
@@ -25,22 +31,31 @@ class LiveSync_iOS(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_LiveSync_iOS_XmlFile(self):
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
+    def test_001_LiveSync_iOS_XmlJsCss_Files(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
+        replace("TNS_App/app/main-view-model.js", "taps", "clicks")
+        replace("TNS_App/app/app.css", "30", "20")
         LiveSync(platform="ios", path="TNS_App")
 
         output = catAppFile("ios", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
+        output = catAppFile("ios", "TNSApp", "app/main-view-model.js")
+        assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
+        output = catAppFile("ios", "TNSApp", "app/app.css")
+        assert ("font-size: 20;" in output)
 
     def test_002_LiveSync_iOS_Device_XmlFile(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
-        # a0036be7bace11a09a86fd5a31fca9c8c105011f
         LiveSync(platform="ios", device="54dec253cfb494a373ca281e12b2b0fc4912aec1", path="TNS_App")
 
         output = catAppFile("ios", "TNSApp", "app/main-view-model.js")
@@ -49,47 +64,20 @@ class LiveSync_iOS(unittest.TestCase):
     @unittest.skip("TODO: Fix this test.")
     def test_004_LiveSync_iOS_Watch(self):
         pass
- 
-    def test_011_LiveSync_iOS_JsFile(self):
+
+    def test_011_LiveSync_iOS_TnsModules_Files(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
- 
-        replace("TNS_App/app/main-view-model.js", "taps", "clicks")
+
+        replace("TNS_App/node_modules/tns-core-modules/LICENSE", "2015", "9999")
+        replace("TNS_App/node_modules/tns-core-modules/application/application-common.js", "(\"globals\");", "(\"globals\"); // test")
         LiveSync(platform="ios", path="TNS_App")
- 
-        output = catAppFile("ios", "TNSApp", "app/main-view-model.js")
-        assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
- 
-    def test_012_LiveSync_iOS_CssFile(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
-        Run(platform="ios", path="TNS_App")
- 
-        replace("TNS_App/app/app.css", "30", "20")
-        LiveSync(platform="ios", path="TNS_App")
- 
-        output = catAppFile("ios", "TNSApp", "app/app.css")
-        assert ("font-size: 20;" in output)
- 
-    def test_013_LiveSync_iOS_TnsModules_File(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
-        Run(platform="ios", path="TNS_App")
- 
-        replace("TNS_App/app/tns_modules/application/application-common.js", "(\"globals\");", "(\"globals\"); // test")
-        LiveSync(platform="ios", path="TNS_App")
- 
-        output = catAppFile("ios", "TNSApp", "app/tns_modules/application/application-common.js")
-        assert ("require(\"globals\"); // test" in output)
- 
-    def test_014_LiveSync_iOS_TnsModules_LICENSE(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
-        Run(platform="ios", path="TNS_App")
- 
-        replace("TNS_App/app/tns_modules/LICENSE", "2015", "9999")
-        LiveSync(platform="ios", path="TNS_App")
- 
+
         output = catAppFile("ios", "TNSApp", "app/tns_modules/LICENSE")
         assert ("Copyright (c) 9999 Telerik AD" in output)
- 
+        output = catAppFile("ios", "TNSApp", "app/tns_modules/application/application-common.js")
+        assert ("require(\"globals\"); // test" in output)
+
     def test_021_LiveSync_iOS_AddNewFiles(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
