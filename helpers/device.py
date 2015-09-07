@@ -45,12 +45,15 @@ def WaitForDevice(deviceName, timeout = 600):
         if (found is True) or (time.time() > endTime):
             break
     return found
-                   
+
 def StopEmulators():
     KillProcess("emulator")
     KillProcess("emulator64-arm")
     KillProcess("emulator64-x86")
-    
+
+def StopSimulators():
+    KillProcess("launchd_sim")
+
 def GivenRunningEmulator():
     
     output = runAUT(tnsPath + " device")
