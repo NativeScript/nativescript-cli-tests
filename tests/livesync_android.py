@@ -34,15 +34,22 @@ class LiveSync_Android(unittest.TestCase):
     def tearDownClass(cls):
         pass
 
-    def test_001_LiveSync_Android_XmlFile(self):
+    def test_001_LiveSync_Android_XmlJsCss_Files(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
+        replace("TNS_App/app/main-view-model.js", "taps", "clicks")
+        replace("TNS_App/app/app.css", "30", "20")
+
         LiveSync(platform="android", path="TNS_App")
 
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
+        output = catAppFile("android", "TNSApp", "app/main-view-model.js")
+        assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
+        output = catAppFile("android", "TNSApp", "app/app.css")
+        assert ("font-size: 20;" in output)
 
     def test_002_LiveSync_Android_Device_XmlFile(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
@@ -93,21 +100,7 @@ class LiveSync_Android(unittest.TestCase):
             print "force killing child ..."
             pr.kill()
 
-    def test_011_LiveSync_Android_CssJs_Files(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
-
-        replace("TNS_App/app/app.css", "30", "20")
-        replace("TNS_App/app/main-view-model.js", "taps", "clicks")
-        LiveSync(platform="android", path="TNS_App")
-
-        output = catAppFile("android", "TNSApp", "app/app.css")
-        assert ("font-size: 20;" in output)
-
-        output = catAppFile("android", "TNSApp", "app/main-view-model.js")
-        assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
-
-    def test_012_LiveSync_Android_TnsModules_Files(self):
+    def test_011_LiveSync_Android_TnsModules_Files(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
@@ -162,7 +155,6 @@ class LiveSync_Android(unittest.TestCase):
         output = LiveSync(path="TNS_App", assertSuccess=False)
 
         assert ("Multiple device platforms detected (iOS and Android). Specify platform or device on command line." in output)
-        assert ("# livesync" in output)
 
 #     # TODO: Implement it.
 #     @unittest.skip("Fix LiveSync for Android device.")
