@@ -4,7 +4,8 @@ import os, psutil, shutil, subprocess, time
 from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, \
     CreateProjectAndAddPlatform, LiveSync, Run
-from helpers.device import GivenRunningEmulator, StopEmulators
+from helpers.device import GivenRunningEmulator, \
+    StopEmulators, StopSimulators
 
 class LiveSync_Linux(unittest.TestCase):
 
@@ -12,7 +13,8 @@ class LiveSync_Linux(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(LiveSync_Linux, cls).setUpClass()
+        StopEmulators()
+        StopSimulators()
 
     def setUp(self):
 
@@ -30,18 +32,24 @@ class LiveSync_Linux(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        super(LiveSync_Linux, cls).tearDownClass()
         StopEmulators()
 
-    def test_001_LiveSync_Android_XmlFile(self):
+    def test_001_LiveSync_Android_XmlJsCss_Files(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
+        replace("TNS_App/app/main-view-model.js", "taps", "clicks")
+        replace("TNS_App/app/app.css", "30", "20")
+
         LiveSync(platform="android", path="TNS_App")
 
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
+        output = catAppFile("android", "TNSApp", "app/main-view-model.js")
+        assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
+        output = catAppFile("android", "TNSApp", "app/app.css")
+        assert ("font-size: 20;" in output)
 
     def test_002_LiveSync_Android_Device_XmlFile(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
@@ -102,45 +110,19 @@ class LiveSync_Linux(unittest.TestCase):
             print "force killing child ..."
             pr.kill()
 
-    def test_011_LiveSync_Android_JsFile(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
-
-        replace("TNS_App/app/main-view-model.js", "taps", "clicks")
-        LiveSync(platform="android", path="TNS_App")
-
-        output = catAppFile("android", "TNSApp", "app/main-view-model.js")
-        assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
-
-    def test_012_LiveSync_Android_CssFile(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
-
-        replace("TNS_App/app/app.css", "30", "20")
-        LiveSync(platform="android", path="TNS_App")
-
-        output = catAppFile("android", "TNSApp", "app/app.css")
-        assert ("font-size: 20;" in output)
-
-    def test_013_LiveSync_Android_TnsModules_File(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
-
-        replace("TNS_App/node_modules/tns-core-modules/application/application-common.js", "(\"globals\");", "(\"globals\"); // test")
-        LiveSync(platform="android", path="TNS_App")
-
-        output = catAppFile("android", "TNSApp", "app/tns_modules/application/application-common.js")
-        assert ("require(\"globals\"); // test" in output)
-
-    def test_014_LiveSync_Android_TnsModules_LICENSE(self):
+    def test_011_LiveSync_Android_TnsModules_Files(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         replace("TNS_App/node_modules/tns-core-modules/LICENSE", "2015", "9999")
+        replace("TNS_App/node_modules/tns-core-modules/application/application-common.js", "(\"globals\");", "(\"globals\"); // test")
         LiveSync(platform="android", path="TNS_App")
 
         output = catAppFile("android", "TNSApp", "app/tns_modules/LICENSE")
         assert ("Copyright (c) 9999 Telerik AD" in output)
+
+        output = catAppFile("android", "TNSApp", "app/tns_modules/application/application-common.js")
+        assert ("require(\"globals\"); // test" in output)
 
     def test_021_LiveSync_Android_AddNewFiles(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
