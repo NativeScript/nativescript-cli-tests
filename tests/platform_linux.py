@@ -231,21 +231,23 @@ class Platform_Linux(unittest.TestCase):
         assert("Project successfully created." in output)
         assert not IsEmpty("TNS_App/platforms/android/build-tools/android-static-binding-generator")
 
-    @unittest.skip("Ignore because of issue https://github.com/NativeScript/nativescript-cli/issues/840")
     def test_220_SetSDK(self):
         CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="android --sdk 19", frameworkPath=androidRuntimePath, path="TNS_App")
-        assert("Copying template files..." in output)
-        
-        # Not valid for 1.3.0+
-        # assert("Updated project.properties" in output)
-        # assert("Updated local.properties" in output)
-        
-        assert("Project successfully created" in output)
+        PlatformAdd(platform="android --sdk 19", frameworkPath=androidRuntimePath, path="TNS_App")
+
         output = runAUT("cat TNS_App/platforms/android/src/main/AndroidManifest.xml ")
         assert ("android:minSdkVersion=\"17\"" in output)      
         assert ("android:targetSdkVersion=\"19\"" in output)
-               
+
+    def test_221_SetSDK_NotInstalled(self):
+        CreateProject(projName="TNS_App")
+        output = PlatformAdd(platform="android --sdk 29", frameworkPath=androidRuntimePath, path="TNS_App")
+        assert ("Support for the selected Android target SDK android-29 is not verified. Your Android app might not work as expected." in output)
+
+        output = runAUT("cat TNS_App/platforms/android/src/main/AndroidManifest.xml")
+        assert ("android:minSdkVersion=\"17\"" in output)
+        assert ("android:targetSdkVersion=\"29\"/>" in output)
+
     def test_400_Platform_List_WrongPath(self):
         output = runAUT(tnsPath + " platform list")
         assert("No project found at or above" in output)
@@ -314,8 +316,3 @@ class Platform_Linux(unittest.TestCase):
         output = runAUT(tnsPath + " platform update --path TNS_App")
         assert ("1mNo platform specified. Please specify platforms to update" in output)
         assert ("Usage" in output)
-        
-    def test_443_SetSDK_InvalidNewVersion(self):
-        CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="android --sdk 29", frameworkPath=androidRuntimePath, path="TNS_App", assertSuccess=False)
-        assert("You have selected to use android-29, but it is not currently installed." in output)
