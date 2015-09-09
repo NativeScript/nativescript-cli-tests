@@ -45,7 +45,7 @@ class Platform_OSX(unittest.TestCase):
                         
     def test_002_Platform_Add_iOS(self):
         CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios", path="TNS_App")
+        output = PlatformAdd(platform="ios", path="TNS_App", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         assert("Copying template files..." in output)
         assert("Project successfully created" in output)
         
@@ -55,7 +55,7 @@ class Platform_OSX(unittest.TestCase):
 
     def test_003_Platform_Add_iOS_Symlink(self):
         CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios", path="TNS_App", symlink=True)
+        output = PlatformAdd(platform="ios", path="TNS_App", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         assert("Copying template files..." in output)
         assert("Project successfully created" in output)
         
