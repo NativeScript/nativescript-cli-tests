@@ -1,5 +1,5 @@
 import unittest
-import os, time
+import os
 
 from helpers._os_lib import runAUT, CleanupFolder, CheckFilesExists, \
     IsEmpty, FileExists

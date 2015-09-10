@@ -2,7 +2,7 @@ import os
 import platform
 import unittest
 
-from helpers._os_lib import CleanupFolder, CheckOutput, runAUT, FileExists
+from helpers._os_lib import CleanupFolder, runAUT, FileExists
 from helpers._tns_lib import tnsPath, CreateProject, CreateProjectAndAddPlatform, \
     androidRuntimePath, Prepare, androidKeyStorePath, androidKeyStorePassword, \
     androidKeyStoreAlias, androidKeyStoreAliasPassword, PlatformAdd, \

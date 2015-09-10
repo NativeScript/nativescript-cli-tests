@@ -39,6 +39,7 @@ class InitAndInstall(unittest.TestCase):
         output = runAUT("cat TNS_App/package.json")
         assert ("org.nativescript.TNSApp" in output)
         assert ("tns-android" in output)
+        assert ("tns-core-modules" in output)
         if 'Darwin' in platform.platform():
             assert ("tns-ios" in output)
         

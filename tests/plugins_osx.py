@@ -1,9 +1,10 @@
 import os
+import platform
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, FileExists
 from helpers._tns_lib import CreateProjectAndAddPlatform, iosRuntimePath, \
-    tnsPath, CreateProject, androidRuntimePath, PlatformAdd
+    tnsPath, CreateProject, androidRuntimePath, PlatformAdd, Build
 
 
 class Plugins_OSX(unittest.TestCase):
@@ -75,7 +76,38 @@ class Plugins_OSX(unittest.TestCase):
         assert ("** BUILD SUCCEEDED **" in output)
         assert not ("ERROR" in output)   
         assert not ("malformed" in output)  
-    
+
+    def test_200_PluginAdd_Before_PlatformAdd_iOS(self):
+        CreateProject(projName="TNS_App");        
+        output = runAUT(tnsPath + " plugin add nativescript-telerik-ui --path TNS_App")
+        if 'Windows' not in platform.platform():
+            assert ("TNS_App/node_modules/nativescript-telerik-ui" in output)
+        assert ("Successfully installed plugin nativescript-telerik-ui" in output)
+        assert FileExists("TNS_App/node_modules/nativescript-telerik-ui/package.json")
+        assert FileExists("TNS_App/node_modules/nativescript-telerik-ui/platforms/Android")
+        assert FileExists("TNS_App/node_modules/nativescript-telerik-ui/platforms/iOS")
+        output = runAUT("cat TNS_App/package.json")
+        assert ("org.nativescript.TNSApp" in output)
+        assert ("dependencies" in output)
+        assert ("nativescript-telerik-ui" in output)
+        PlatformAdd(platform="ios", frameworkPath=iosRuntimePath, path="TNS_App")
+        Build(platform="ios", path="TNS_App")
+        
+    def test_201_PluginAdd_After_PlatformAdd_iOS(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)    
+        output = runAUT(tnsPath + " plugin add nativescript-telerik-ui --path TNS_App");
+        if 'Windows' not in platform.platform():
+            assert ("TNS_App/node_modules/nativescript-telerik-ui" in output)
+        assert ("Successfully installed plugin nativescript-telerik-ui" in output)
+        assert FileExists("TNS_App/node_modules/nativescript-telerik-ui/package.json")
+        assert FileExists("TNS_App/node_modules/nativescript-telerik-ui/platforms/Android")
+        assert FileExists("TNS_App/node_modules/nativescript-telerik-ui/platforms/iOS")
+        output = runAUT("cat TNS_App/package.json")
+        assert ("org.nativescript.TNSApp" in output)
+        assert ("dependencies" in output)
+        assert ("nativescript-telerik-ui" in output)
+        Build(platform="ios", path="TNS_App")
+            
     def test_300_BuildAppWithPluginOutside(self):
         
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
@@ -134,7 +166,6 @@ class Plugins_OSX(unittest.TestCase):
         assert not FileExists("TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test.android.js")
         assert not FileExists("TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test2.android.xml")
 
-    @unittest.skip("Skipped because of issue https://github.com/NativeScript/nativescript-cli/issues/842") 
     def test_302_PlugingAndNPMModulesInSameProject(self):        
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         
