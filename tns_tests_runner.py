@@ -29,6 +29,7 @@ from tests.platform_linux import Platform_Linux
 from tests.platform_osx import Platform_OSX
 from tests.plugins_linux import Plugins_Linux
 from tests.plugins_osx import Plugins_OSX
+from tests.plugins_osx_pods import Plugins_OSX_Pods
 from tests.prepare_linux import Prepare_Linux
 from tests.prepare_osx import Prepare_OSX
 from tests.run_linux import Run_Linux
@@ -116,6 +117,7 @@ def RunTests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Device_Linux))       
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Debug_Linux)) 
             if 'Darwin' in platform.platform():
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Pods))
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Deploy_OSX))
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_OSX))
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Android))
