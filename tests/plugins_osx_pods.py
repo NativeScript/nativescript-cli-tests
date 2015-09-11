@@ -42,6 +42,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert ("source 'https://github.com/CocoaPods/Specs.git'" in output)
         assert ("platform :ios, '8.1'" in output)
         assert ("pod 'GoogleMaps'" in output)
+        assert ("use_frameworks!" in output)
 
         output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
         assert ("location = \"group:TNSApp.xcodeproj\">" in output)
@@ -73,6 +74,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert ("source 'https://github.com/CocoaPods/Specs.git'" in output)
         assert ("platform :ios, '8.1'" in output)
         assert ("pod 'GoogleMaps'" in output)
+        assert ("use_frameworks!" in output)
 
         output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
         assert ("location = \"group:TNSApp.xcodeproj\">" in output)
@@ -107,6 +109,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert ("Successfully prepared plugin keychain for ios." in output)
 
         output = runAUT("cat TNS_App/platforms/ios/Podfile")
+        assert ("use_frameworks!" in output)
         assert ("pod 'iCarousel'" in output)
         assert ("pod 'AFNetworking'" in output)
         assert ("pod 'UICKeyChainStore'" in output)
