@@ -38,7 +38,12 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert ("Installing pods..." in output)
         assert ("Successfully prepared plugin googlesdk for ios." in output)
 
-        output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedatas")
+        output = runAUT("cat TNS_App/platforms/ios/Podfile")
+        assert ("source 'https://github.com/CocoaPods/Specs.git'" in output)
+        assert ("platform :ios, '8.1'" in output)
+        assert ("pod 'GoogleMaps'" in output)
+
+        output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
         assert ("location = \"group:TNSApp.xcodeproj\">" in output)
         assert ("location = \"group:Pods/Pods.xcodeproj\">" in output)
 
@@ -60,16 +65,16 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert ("dependencies" in output)
         assert ("googlesdk" in output)
 
+        output = Build(platform="ios", path="TNS_App")
+        assert ("Installing pods..." in output)
+        assert ("Successfully prepared plugin googlesdk for ios." in output)
+
         output = runAUT("cat TNS_App/platforms/ios/Podfile")
         assert ("source 'https://github.com/CocoaPods/Specs.git'" in output)
         assert ("platform :ios, '8.1'" in output)
         assert ("pod 'GoogleMaps'" in output)
 
-        output = Build(platform="ios", path="TNS_App")
-        assert ("Installing pods..." in output)
-        assert ("Successfully prepared plugin googlesdk for ios." in output)
-
-        output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedatas")
+        output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
         assert ("location = \"group:TNSApp.xcodeproj\">" in output)
         assert ("location = \"group:Pods/Pods.xcodeproj\">" in output)
 
