@@ -37,11 +37,6 @@ class Platform_Linux(unittest.TestCase):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="android", path="TNS_App")
         assert("Copying template files..." in output)
-        
-        # Not valid for 1.3.0+
-        # assert("Updated project.properties" in output)
-        # assert("Updated local.properties" in output)
-        
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
@@ -51,50 +46,34 @@ class Platform_Linux(unittest.TestCase):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="android", frameworkPath=androidRuntimePath, path="TNS_App")
         assert("Copying template files..." in output)
-        
-        # Not valid for 1.3.0+
-        # assert("Updated project.properties" in output)
-        # assert("Updated local.properties" in output)
-        
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_current.txt')
     
-    # Note: This test fails only on Windows.
-    # TODO: Ignore tests at runtime (in tns_tests_runner.py). This will allow test to be ignored only on specific OS
-    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/282")    
     def test_004_Platform_Add_Android_Symlink(self):
-        CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="android", path="TNS_App", symlink=True)
-        assert("Copying template files..." in output)
-        assert("Updated project.properties" in output)
-        assert("Updated local.properties" in output)
-        assert("Project successfully created" in output)
-        assert IsEmpty('TNS_App/platforms/android/assets')
-        assert IsEmpty('TNS_App/platforms/android/libs')
+        if ('Windows' in platform.platform()):
+            print "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282"
+        else:
+            CreateProject(projName="TNS_App")
+            output = PlatformAdd(platform="android", path="TNS_App", symlink=True)
+            assert("Copying template files..." in output)
+            assert("Project successfully created" in output)
         
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_symlink.txt')
+            if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
+                assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_symlink.txt')
 
-    # Note: This test fails only on Windows.
-    # TODO: Ignore tests at runtime (in tns_tests_runner.py). This will allow test to be ignored only on specific OS
-    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/282")       
     def test_005_Platform_Add_Android_Symlink_And_FrameworkPath(self):
-        CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="android", path="TNS_App", frameworkPath=androidRuntimeSymlinkPath, symlink=True)
-        assert("Copying template files..." in output)
+        if ('Windows' in platform.platform()):
+            print "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282"
+        else:
+            CreateProject(projName="TNS_App")
+            output = PlatformAdd(platform="android", path="TNS_App", frameworkPath=androidRuntimeSymlinkPath, symlink=True)
+            assert("Copying template files..." in output)
+            assert("Project successfully created" in output)
         
-        # Not valid for 1.3.0+
-        # assert("Updated project.properties" in output)
-        # assert("Updated local.properties" in output)
-        
-        assert("Project successfully created" in output)
-        assert IsEmpty('TNS_App/platforms/android/assets')
-        assert IsEmpty('TNS_App/platforms/android/libs')
-        
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
-            assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_symlink.txt')
+            if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
+                assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_symlink.txt')
        
     def test_200_Platform_List_InsideEmptyProject(self):
         CreateProject(projName="TNS_App")
@@ -160,7 +139,7 @@ class Platform_Linux(unittest.TestCase):
         Build(platform="android", path="TNS_App")
 
     def test_205_Platform_Update_Android_ToSameVersion(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=None)
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android")
         output = runAUT(tnsPath + " platform update android --path TNS_App")
         assert ("Current and new version are the same." in output)
         assert ("Usage" in output)

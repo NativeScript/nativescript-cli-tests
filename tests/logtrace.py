@@ -33,11 +33,6 @@ class LogTrace(unittest.TestCase):
         assert ("Project directory is" in output)
         assert ("Package: org.nativescript.TNSApp" in output)
         assert ("Available Android targets" in output)
-
-        # Not valid for 1.3.0+
-        # assert ("android update project --path" in output)        
-        # assert ("Updated project.properties" in output)
-        # assert ("Updated local.properties" in output)
         assert ("using Android SDK 'android-")
         
         assert ("Project successfully created" in output)

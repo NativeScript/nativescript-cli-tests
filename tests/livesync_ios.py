@@ -15,7 +15,11 @@ class LiveSync_iOS(unittest.TestCase):
     def setUpClass(cls):
         StopEmulators()
         StopSimulators()
-
+        uninstall_app("TNSApp")
+        CleanupFolder('./TNS_App');
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath) 
+        Run(platform="ios", path="TNS_App")
+        
     def setUp(self):
 
         print ""
@@ -24,20 +28,17 @@ class LiveSync_iOS(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_App');
         GivenRealDeviceRunning(platform="ios")
-        uninstall_app("TNSApp")
+        # uninstall_app("TNSApp")
 
     def tearDown(self):
         pass
 
     @classmethod
     def tearDownClass(cls):
-        pass
+        uninstall_app("TNSApp")
 
     def test_001_LiveSync_iOS_XmlJsCss_Files(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
-        Run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
@@ -52,8 +53,6 @@ class LiveSync_iOS(unittest.TestCase):
         assert ("font-size: 20;" in output)
 
     def test_002_LiveSync_iOS_Device_XmlFile(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
-        Run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
         LiveSync(platform="ios", device="54dec253cfb494a373ca281e12b2b0fc4912aec1", path="TNS_App")
@@ -66,8 +65,6 @@ class LiveSync_iOS(unittest.TestCase):
         pass
 
     def test_011_LiveSync_iOS_TnsModules_Files(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
-        Run(platform="ios", path="TNS_App")
 
         replace("TNS_App/node_modules/tns-core-modules/LICENSE", "2015", "9999")
         replace("TNS_App/node_modules/tns-core-modules/application/application-common.js", "(\"globals\");", "(\"globals\"); // test")
@@ -79,16 +76,14 @@ class LiveSync_iOS(unittest.TestCase):
         assert ("require(\"globals\"); // test" in output)
 
     def test_021_LiveSync_iOS_AddNewFiles(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
-        Run(platform="ios", path="TNS_App")
- 
+
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
         shutil.copyfile("TNS_App/app/main-page.js", "TNS_App/app/test.js")
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test.css")
         LiveSync(platform="ios", path="TNS_App")
  
         output = catAppFile("ios", "TNSApp", "app/test.xml")
-        assert ("<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output)
+        assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
         output = catAppFile("ios", "TNSApp", "app/test.js")
         assert ("page.bindingContext = vmModule.mainViewModel;" in output)
         output = catAppFile("ios", "TNSApp", "app/test.css")
@@ -99,6 +94,6 @@ class LiveSync_iOS(unittest.TestCase):
         pass
  
     def test_301_LiveSync_MultiplePlatforms(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
+
         output = LiveSync(path="TNS_App", assertSuccess=False)
         assert ("Multiple device platforms detected (iOS and Android). Specify platform or device on command line." in output)

@@ -9,25 +9,34 @@ from helpers.device import GivenRealDeviceRunning
 
 class Debug_OSX(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
+        CleanupFolder('./TNS_App');
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath) 
         
+    def setUp(self):
+
         print ""
         
-        CleanupFolder('./TNS_App');
         GivenRealDeviceRunning(platform="ios")
         
         KillProcess("Safari")
         KillProcess("iOS Simulator")
+        KillProcess("Inspector")
         runAUT("ideviceinstaller -U org.nativescript.TNSApp")
-
-    def tearDown(self):        
+                
+    def tearDown(self):
         KillProcess("Safari")
         KillProcess("iOS Simulator")
-
+        KillProcess("Inspector")
         runAUT("ideviceinstaller -U org.nativescript.TNSApp")
+
+    @classmethod
+    def tearDownClass(cls):
+        CleanupFolder('./TNS_App');
     
     def test_001_Debug_iOS_Simulator_DebugBrk(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath)     
+ 
         output = runAUT(tnsPath + " debug ios --debug-brk --emulator --path TNS_App --frameworkPath " + iosRuntimeSymlinkPath, 2*60, True)
         assert ("Project successfully prepared" in output) 
         assert ("** BUILD SUCCEEDED **" in output)
@@ -41,7 +50,6 @@ class Debug_OSX(unittest.TestCase):
     
     def test_002_Debug_iOS_Simulator_Start(self):
 
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath)   
         output = runAUT(tnsPath + " emulate ios --path TNS_App --justlaunch")  
         assert ("** BUILD SUCCEEDED **" in output)
         assert ("Starting iOS Simulator" in output)
@@ -58,7 +66,7 @@ class Debug_OSX(unittest.TestCase):
         assert not ("disconnected" in output)
 
     def test_003_Debug_iOS_Device_DebugBrk(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath)     
+
         output = runAUT(tnsPath + " debug ios --debug-brk --path TNS_App --timeout 120 --frameworkPath " + iosRuntimeSymlinkPath, 3*60, True)
         assert ("Project successfully prepared" in output) 
         assert ("** BUILD SUCCEEDED **" in output)
@@ -75,7 +83,7 @@ class Debug_OSX(unittest.TestCase):
         assert not ("disconnected" in output)
     
     def test_004_Debug_iOS_Device_Start(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath)   
+ 
         output = runAUT(tnsPath + " run ios --path TNS_App --justlaunch")  
         assert ("** BUILD SUCCEEDED **" in output)
         assert ("Successfully deployed on device " in output)

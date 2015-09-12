@@ -15,7 +15,11 @@ class LiveSync_Android(unittest.TestCase):
     def setUpClass(cls):
         StopEmulators()
         StopSimulators()
-
+        
+        CleanupFolder('./TNS_App')
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        Run(platform="android", path="TNS_App")
+        
     def setUp(self):
 
         print ""
@@ -24,7 +28,6 @@ class LiveSync_Android(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_App')
         GivenRealDeviceRunning(platform="android")
 
     def tearDown(self):
@@ -35,8 +38,6 @@ class LiveSync_Android(unittest.TestCase):
         pass
 
     def test_001_LiveSync_Android_XmlJsCss_Files(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
@@ -52,8 +53,6 @@ class LiveSync_Android(unittest.TestCase):
         assert ("font-size: 20;" in output)
 
     def test_002_LiveSync_Android_Device_XmlFile(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         LiveSync(platform="android", device="030b206908e6c3c5", path="TNS_App")
@@ -63,8 +62,7 @@ class LiveSync_Android(unittest.TestCase):
 
     @unittest.skip("TODO: Fix this test.")
     def test_004_LiveSync_Android_Watch(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
+
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
 
         print "tns livesync android --watch --path TNS_App"
@@ -94,20 +92,20 @@ class LiveSync_Android(unittest.TestCase):
 
         print "killing child ..."
         pr.terminate()
-
+        
+        # TODO: Add test for synch css and platform specific files (.android and .ios)
         time.sleep(5)
         if psutil.pid_exists(pr_pid):
             print "force killing child ..."
             pr.kill()
 
     def test_011_LiveSync_Android_TnsModules_Files(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
 
         replace("TNS_App/node_modules/tns-core-modules/LICENSE", "2015", "9999")
         replace("TNS_App/node_modules/tns-core-modules/application/application-common.js", "(\"globals\");", "(\"globals\"); // test")
         LiveSync(platform="android", path="TNS_App")
-
+        time.sleep(5)
+        
         output = catAppFile("android", "TNSApp", "app/tns_modules/LICENSE")
         assert ("Copyright (c) 9999 Telerik AD" in output)
 
@@ -115,16 +113,15 @@ class LiveSync_Android(unittest.TestCase):
         assert ("require(\"globals\"); // test" in output)
 
     def test_021_LiveSync_Android_AddNewFiles(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
 
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
         shutil.copyfile("TNS_App/app/main-page.js", "TNS_App/app/test.js")
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test.css")
         LiveSync(platform="android", path="TNS_App")
-
+        time.sleep(5)
+                
         output = catAppFile("android", "TNSApp", "app/test.xml")
-        assert ("<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output)
+        assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
         output = catAppFile("android", "TNSApp", "app/test.js")
         assert ("page.bindingContext = vmModule.mainViewModel;" in output)
         output = catAppFile("android", "TNSApp", "app/test.css")
@@ -132,8 +129,6 @@ class LiveSync_Android(unittest.TestCase):
 
     @unittest.skip("Not implemented.")
     def test_031_LiveSync_Android_DeleteFiles(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
 
         # .xml
         # .js
@@ -148,8 +143,6 @@ class LiveSync_Android(unittest.TestCase):
         assert ("cat: files/app/LICENSE: No such file or directory" in output)
 
     def test_302_LiveSync(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         output = LiveSync(path="TNS_App", assertSuccess=False)

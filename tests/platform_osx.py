@@ -118,7 +118,7 @@ class Platform_OSX(unittest.TestCase):
         output = runAUT("cat TNS_App/package.json")
         assert not ("tns-ios" in output)
 
-    def test_203_Platform_Add_iOS_CustomVersion(self):
+    def test_300_Platform_Add_iOS_CustomVersion(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="ios@1.2.2", path="TNS_App")
         assert("Copying template files..." in output)
@@ -132,7 +132,7 @@ class Platform_OSX(unittest.TestCase):
         Build(platform="ios", path="TNS_App")
 
     @unittest.skip("Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
-    def test_204_Platform_Update_iOS(self):
+    def test_301_Platform_Update_iOS(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="ios@1.2.2", path="TNS_App")
         assert("Copying template files..." in output)
@@ -153,7 +153,7 @@ class Platform_OSX(unittest.TestCase):
         Build(platform="ios", path="TNS_App")
 
     @unittest.skip("This test fails on the build machine because it needs more time to update ios@1.1.0. Try to execute update command again with runAUT or add time.sleep(x).")
-    def test_206_Platform_Downgrade_iOS_ToOlderVersion(self):
+    def test_302_Platform_Downgrade_iOS_ToOlderVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios@1.2.0")
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.2.0\"" in output)
@@ -167,7 +167,7 @@ class Platform_OSX(unittest.TestCase):
         Build(platform="ios", path="TNS_App")
 
     @unittest.skip("Execute when platform update command starts respecting --frameworkPath: https://github.com/NativeScript/nativescript-cli/issues/743")
-    def test_207_Platform_Update_iOS_ToLatestVersion(self):
+    def test_303_Platform_Update_iOS_ToLatestVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios@1.0.0")
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"1.0.0\"" in output)
@@ -181,7 +181,7 @@ class Platform_OSX(unittest.TestCase):
         Build(platform="ios", path="TNS_App")
 
     @unittest.skip("Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
-    def test_208_Platform_Downgrade_iOS_FromLatestVersion(self):
+    def test_304_Platform_Downgrade_iOS_FromLatestVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
 
         output = runAUT("cat TNS_App/package.json")
@@ -195,7 +195,7 @@ class Platform_OSX(unittest.TestCase):
         assert ("\"version\": \"1.1.0\"" in output)
         Build(platform="ios", path="TNS_App")
 
-    def test_211_Platform_Add_iOS_CustomExperimentalVersion(self):
+    def test_310_Platform_Add_iOS_CustomExperimentalVersion(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="ios@0.9.2-exp-ios-8.2", path="TNS_App")
         assert("Copying template files..." in output)
@@ -204,7 +204,7 @@ class Platform_OSX(unittest.TestCase):
         output = runAUT("cat TNS_App/package.json")
         assert ("\"version\": \"0.9.2-exp-ios-8.2\"" in output)
 
-    def test_212_Platform_Add_iOS_CustomBundleId(self):
+    def test_320_Platform_Add_iOS_CustomBundleId(self):
         # Create project with different appId
         CreateProject(projName = "TNS_App", appId="org.nativescript.MyApp")
         output = runAUT("cat TNS_App/package.json")
@@ -218,7 +218,7 @@ class Platform_OSX(unittest.TestCase):
         output = runAUT("cat TNS_App/platforms/ios/TNSApp/TNSApp-Info.plist")
         assert ("org.nativescript.MyApp" in output)
 
-    def test_210_Platform_Update_iOS_PlatformNotAdded(self):
+    def test_330_Platform_Update_iOS_PlatformNotAdded(self):
         CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " platform update ios --path TNS_App")
         assert("Copying template files..." in output)

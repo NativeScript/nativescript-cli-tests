@@ -9,24 +9,33 @@ from helpers.device import GivenRunningEmulator, GivenRealDeviceRunning
 
 
 class Deploy_Linux(unittest.TestCase):
-    
-    def setUp(self):
+
+    @classmethod
+    def setUpClass(cls):
+        CleanupFolder('./TNS_App')        
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath) 
         
+    def setUp(self):
+
         print ""
         print "#####"
         print self.id()
         print "#####"
         print ""
-        
-        CleanupFolder('./TNS_App')
+
+        CleanupFolder('./TNS_AppNoPlatform')
         GivenRunningEmulator()
         GivenRealDeviceRunning(platform="android") 
-        
-    def tearDown(self):        
+        CleanupFolder('./TNS_App/platforms/android/build/outputs')
+                        
+    def tearDown(self):
         pass
 
+    @classmethod
+    def tearDownClass(cls):
+        CleanupFolder('./TNS_App')
+
     def test_001_Deploy_Android(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " deploy android --path TNS_App  --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
@@ -34,7 +43,6 @@ class Deploy_Linux(unittest.TestCase):
         #TODO: Get device id and verify files are deployed and process is running on this device 
        
     def test_002_Deploy_Android_ReleaseConfiguration(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " deploy android --keyStorePath " + androidKeyStorePath + 
                         " --keyStorePassword " + androidKeyStorePassword + 
                         " --keyStoreAlias " + androidKeyStoreAlias + 
@@ -46,7 +54,6 @@ class Deploy_Linux(unittest.TestCase):
         #TODO: Get device id and verify files are deployed and process is running on this device
  
     def test_200_Deploy_Android_DeviceId(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " deploy android --device emulator-5554 --path TNS_App --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
@@ -54,7 +61,6 @@ class Deploy_Linux(unittest.TestCase):
         #TODO: Get device id and verify files are deployed and process is running on this device 
 
     def test_201_Deploy_Android_InsideProject(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)     
         currentDir = os.getcwd()   
         os.chdir(os.path.join(currentDir,"TNS_App"))    
         output = runAUT(os.path.join("..", tnsPath) + " deploy android --path TNS_App --justlaunch")
@@ -64,23 +70,20 @@ class Deploy_Linux(unittest.TestCase):
         assert ("Successfully deployed on device with identifier" in output)  
 
     def test_210_Deploy_Android_PlatformNotAdded(self):
-        CreateProject(projName="TNS_App")
-        output = runAUT(tnsPath + " deploy android --path TNS_App --justlaunch")
+        CreateProject(projName="TNS_AppNoPlatform")
+        output = runAUT(tnsPath + " deploy android --path TNS_AppNoPlatform --justlaunch")
         assert ("Copying template files..." in output)
         assert ("Project successfully created." in output)
-
         assert ("Project successfully prepared" in output)
         assert ("Project successfully built" in output)
         assert ("Successfully deployed on device with identifier" in output)
         #TODO: Get device id and verify files are deployed and process is running on this device
 
     def test_401_Deploy_InvalidPlatform(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " deploy invalidPlatform --path TNS_App --justlaunch")
         assert ("Invalid platform invalidplatform. Valid platforms are ios or android." in output) 
         
     def test_402_Deploy_InvalidDevice(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)  
         output = runAUT(tnsPath + " deploy android --device invalidDeviceId --path TNS_App --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
