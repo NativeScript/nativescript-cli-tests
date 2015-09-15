@@ -2,7 +2,8 @@ import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, FileExists
 from helpers._tns_lib import Build, iosRuntimeSymlinkPath, \
-    tnsPath, CreateProject, PlatformAdd, Prepare
+    tnsPath, CreateProject, PlatformAdd, Prepare, CreateProjectAndAddPlatform
+
 
 class Plugins_OSX_Pods(unittest.TestCase):
 
@@ -33,7 +34,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert ("dependencies" in output)
         assert ("googlesdk" in output)
 
-        PlatformAdd(platform="ios", frameworkPath=iosRuntimeSymlinkPath, path="TNS_App")
+        PlatformAdd(platform="ios", frameworkPath=iosRuntimeSymlinkPath, path="TNS_App", symlink=True)
         output = Prepare(platform="ios", path="TNS_App")
         assert ("Installing pods..." in output)
         assert ("Successfully prepared plugin googlesdk for ios." in output)
@@ -52,8 +53,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         Build(platform="ios", path="TNS_App")
 
     def test_002_PluginAdd_Pod_GoogleMaps_After_PlatformAdd_iOS(self):
-        CreateProject(projName="TNS_App");
-        PlatformAdd(platform="ios", frameworkPath=iosRuntimeSymlinkPath, path="TNS_App")
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)    
 
         output = runAUT(tnsPath + " plugin add QA-TestApps/CocoaPods/googlesdk --path TNS_App")
         assert ("TNS_App/node_modules/googlesdk" in output)
@@ -82,8 +82,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/Pods/Pods.xcodeproj")
 
     def test_003_PluginAdd_MultiplePods(self):
-        CreateProject(projName="TNS_App");
-        PlatformAdd(platform="ios", frameworkPath=iosRuntimeSymlinkPath, path="TNS_App")
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
 
         output = runAUT(tnsPath + " plugin add QA-TestApps/CocoaPods/carousel --path TNS_App")
         assert ("TNS_App/node_modules/carousel" in output)
@@ -120,8 +119,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/Pods/Pods.xcodeproj")
 
     def test_004_Prepare_Install_Pods(self):
-        CreateProject(projName="TNS_App");
-        PlatformAdd(platform="ios", frameworkPath=iosRuntimeSymlinkPath, path="TNS_App")
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
 
         runAUT("cp QA-TestApps/CocoaPods/carousel/platforms/ios/Podfile TNS_App/platforms/ios")
         output = Build(platform="ios", path="TNS_App")
@@ -138,8 +136,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/Pods/Pods.xcodeproj")
 
     def test_401_PluginAdd_InvalidPod(self):
-        CreateProject(projName="TNS_App");
-        PlatformAdd(platform="ios", frameworkPath=iosRuntimeSymlinkPath, path="TNS_App")
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
 
         output = runAUT(tnsPath + " plugin add QA-TestApps/CocoaPods/invalidpod --path TNS_App")
         assert ("TNS_App/node_modules/invalidpod" in output)
@@ -156,29 +153,6 @@ class Plugins_OSX_Pods(unittest.TestCase):
 
         output = runAUT("cat TNS_App/platforms/ios/Podfile")
         assert ("pod 'InvalidPod'" in output)
-
-        assert not FileExists("TNS_App/platforms/ios/TNSApp.xcworkspace")
-        assert not FileExists("TNS_App/platforms/ios/Pods/Pods.xcodeproj")
-
-    def test_402_PluginAdd_InvalidPodFile(self):
-        CreateProject(projName="TNS_App");
-        PlatformAdd(platform="ios", frameworkPath=iosRuntimeSymlinkPath, path="TNS_App")
-
-        output = runAUT(tnsPath + " plugin add QA-TestApps/CocoaPods/invalidpodfile --path TNS_App")
-        assert ("TNS_App/node_modules/invalidpodfile" in output)
-        assert ("Successfully installed plugin invalidpodfile." in output)
-        assert FileExists("TNS_App/node_modules/invalidpodfile/package.json")
-        assert FileExists("TNS_App/node_modules/invalidpodfile/platforms/ios/Podfile")
-
-        output = runAUT("cat TNS_App/package.json")
-        assert ("invalidpodfile" in output)
-
-        output = Prepare(platform="ios", path="TNS_App", assertSuccess=False)
-        assert ("Installing pods..." in output)
-        assert ("Processing node_modules failed. Error:Error: Command failed: /bin/sh -c pod install" in output)
-
-        output = runAUT("cat TNS_App/platforms/ios/Podfile")
-        assert ("pod UICKeyChainStore" in output)
 
         assert not FileExists("TNS_App/platforms/ios/TNSApp.xcworkspace")
         assert not FileExists("TNS_App/platforms/ios/Pods/Pods.xcodeproj")
