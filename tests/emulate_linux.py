@@ -64,10 +64,10 @@ class Emulate_Linux(unittest.TestCase):
                         " --release --path TNS_App --timeout 600 --justlaunch", set_timeout=660)
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
+        assert ("Starting Android emulator with image" in output)
         
         # Emulator can not be started without active UI 
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
-            assert ("Starting Android emulator with image" in output)
             assert ("installing" in output) 
             assert ("running" in output)   
         

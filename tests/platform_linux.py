@@ -50,7 +50,8 @@ class Platform_Linux(unittest.TestCase):
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert CheckFilesExists('TNS_App/platforms/android', 'platform_android_current.txt')
-    
+
+    @unittest.skip("This test is not valid, adding symlink platform from npm cache cause issues")    
     def test_004_Platform_Add_Android_Symlink(self):
         if ('Windows' in platform.platform()):
             print "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282"
