@@ -35,7 +35,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert ("googlesdk" in output)
 
         PlatformAdd(platform="ios", frameworkPath=iosRuntimeSymlinkPath, path="TNS_App", symlink=True)
-        output = Prepare(platform="ios", path="TNS_App")
+        output = Prepare(platform="ios", path="TNS_App", logTrace=True)
         assert ("Installing pods..." in output)
         assert ("Successfully prepared plugin googlesdk for ios." in output)
 

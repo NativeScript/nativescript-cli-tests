@@ -101,7 +101,7 @@ def PlatformAdd(platform=None, frameworkPath=None, path=None, symlink=False, ass
 
     return output
 
-def Prepare(path=None, platform=None, assertSuccess=True):
+def Prepare(path=None, platform=None, logTrace=False, assertSuccess=True):
 
     command = tnsPath + " prepare"
 
@@ -110,6 +110,9 @@ def Prepare(path=None, platform=None, assertSuccess=True):
 
     if path is not None:
         command += " --path {0}".format(path)
+
+    if logTrace:
+        command += " --log trace"
 
     output = runAUT(command)
 
@@ -141,7 +144,7 @@ def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
             
     return output
 
-def Build(platform=None, mode=None, path=None, assertSuccess=True):
+def Build(platform=None, mode=None, path=None, logTrace=False, assertSuccess=True):
 
     command = tnsPath + " build"
 
@@ -153,6 +156,9 @@ def Build(platform=None, mode=None, path=None, assertSuccess=True):
 
     if path is not None:
         command += " --path {0}".format(path)
+
+    if logTrace:
+        command += " --log trace"
 
     output = runAUT(command)
 
