@@ -1,0 +1,16 @@
+lib/Android/AndroidAppProject/.classpath
+lib/Android/AndroidAppProject/.project
+lib/Android/AndroidAppProject/.settings/org.eclipse.jdt.core.prefs
+lib/Android/AndroidAppProject/AndroidManifest.xml
+lib/Android/AndroidAppProject/build.xml
+lib/Android/AndroidAppProject/local.properties
+lib/Android/AndroidAppProject/proguard-project.txt
+lib/Android/AndroidAppProject/project.properties
+lib/Android/AndroidAppProject/res/drawable-hdpi/ic_launcher.png
+lib/Android/AndroidAppProject/res/drawable-mdpi/ic_launcher.png
+lib/Android/AndroidAppProject/res/drawable-xhdpi/ic_launcher.png
+lib/Android/AndroidAppProject/res/values/strings.xml
+lib/Android/AndroidAppProject/res/values/styles.xml
+lib/Android/AndroidAppProject/res/values-v11/styles.xml
+lib/Android/AndroidAppProject/res/values-v14/styles.xml
+lib/Android/AndroidAppProject/src/com/example/MyClass.java

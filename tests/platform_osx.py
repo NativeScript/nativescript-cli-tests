@@ -45,7 +45,7 @@ class Platform_OSX(unittest.TestCase):
                         
     def test_002_Platform_Add_iOS(self):
         CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios", path="TNS_App", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
+        output = PlatformAdd(platform="ios", path="TNS_App", symlink=False)
         assert("Copying template files..." in output)
         assert("Project successfully created" in output)
         
@@ -53,6 +53,7 @@ class Platform_OSX(unittest.TestCase):
             assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.3.0.txt')
         Build(platform="ios", path="TNS_App")
 
+    @unittest.skip("This test is not valid, adding symlink platform from npm cache cause issues")    
     def test_003_Platform_Add_iOS_Symlink(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="ios", path="TNS_App", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
@@ -79,8 +80,8 @@ class Platform_OSX(unittest.TestCase):
         
         # Verify Runtime is symlink
         output = runAUT("ls -la TNS_App/platforms/ios/")
-        assert ("NativeScript ->" in output)
-        assert ("package/framework/NativeScript" in output)
+        assert ("internal ->" in output)
+        assert ("package/framework/internal" in output)
        
     def test_200_Platform_Add_iOS_FrameworkPath(self):
         CreateProject(projName="TNS_App")

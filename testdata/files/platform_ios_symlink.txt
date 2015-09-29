@@ -1,9 +1,8 @@
+TNSApp/build-debug.xcconfig
+TNSApp/build-release.xcconfig
 TNSApp/build.xcconfig
 TNSApp/en.lproj/InfoPlist.strings
 TNSApp/en.lproj/LaunchScreen.xib
-TNSApp/main.m
-TNSApp/strip-dynamic-framework-architectures.sh
 TNSApp/TNSApp-Info.plist
 TNSApp/TNSApp-Prefix.pch
-TNSApp/TNSDebugging.h
 TNSApp.xcodeproj/project.pbxproj
