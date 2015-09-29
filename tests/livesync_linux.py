@@ -1,5 +1,4 @@
 import os, psutil, shutil, subprocess, time
-from platform import platform
 import unittest
 
 from helpers._os_lib import CleanupFolder, replace, catAppFile
@@ -201,4 +200,4 @@ class LiveSync_Linux(unittest.TestCase):
             time.sleep(5)
 
             output = catAppFile("android", "TNSApp", "app/main-page.xml")
-        assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
+            assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
