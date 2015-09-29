@@ -1,11 +1,13 @@
-import unittest
 import os, psutil, shutil, subprocess, time
+from platform import platform
+import unittest
 
 from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, \
     CreateProjectAndAddPlatform, LiveSync, Run
 from helpers.device import GivenRunningEmulator, \
-    StopEmulators, StopSimulators
+    StopEmulators, StopSimulators, GetDeviceCount
+
 
 class LiveSync_Linux(unittest.TestCase):
 
@@ -158,7 +160,7 @@ class LiveSync_Linux(unittest.TestCase):
         output = catAppFile("android", "TNSApp", "app/LICENSE")
         assert ("cat: files/app/LICENSE: No such file or directory" in output)
 
-    def test_301_LiveSync_Android_Emulator_Device_XmlFile(self):
+    def test_301_LiveSync_Android_Emulator_SpecifyDevice_XmlFile(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
@@ -173,7 +175,7 @@ class LiveSync_Linux(unittest.TestCase):
         Run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        LiveSync(path="TNS_App")
+        LiveSync(path="TNS_App", platform="android")
         time.sleep(5)
 
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
@@ -181,8 +183,22 @@ class LiveSync_Linux(unittest.TestCase):
 
     def test_303_LiveSync_BeforeRun(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
-        LiveSync(path="TNS_App")
+        LiveSync(path="TNS_App", platform="android")
 
         time.sleep(3)
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output)
+        
+    def test_304_LiveSync_PlatformNotSpecified_XmlFile(self):
+        
+        # This test is not valid if simulator or real iOS device is avalable
+        if GetDeviceCount(platform="ios") == 0:
+            CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+            Run(platform="android", path="TNS_App")
+
+            replace("TNS_App/app/main-page.xml", "TAP", "TEST")
+            LiveSync(path="TNS_App")
+            time.sleep(5)
+
+            output = catAppFile("android", "TNSApp", "app/main-page.xml")
+        assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
