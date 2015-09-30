@@ -15,11 +15,11 @@ class LiveSync_Android(unittest.TestCase):
     def setUpClass(cls):
         StopEmulators()
         StopSimulators()
-        
+
         CleanupFolder('./TNS_App')
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
-        
+
     def setUp(self):
 
         print ""
@@ -52,6 +52,7 @@ class LiveSync_Android(unittest.TestCase):
         output = catAppFile("android", "TNSApp", "app/app.css")
         assert ("font-size: 20;" in output)
 
+    # This tests the Run -> LiveSync -> Run workflow on an android device with API level 21. 
     def test_002_LiveSync_Android_Device_XmlFile(self):
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -59,6 +60,12 @@ class LiveSync_Android(unittest.TestCase):
 
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
+
+        replace("TNS_App/app/main-page.xml", "TEST", "RUN")
+        Run(platform="android", path="TNS_App")
+
+        output = catAppFile("android", "TNSApp", "app/main-page.xml")
+        assert ("<Button text=\"RUN\" tap=\"{{ tapAction }}\" />" in output)
 
     @unittest.skip("TODO: Fix this test.")
     def test_004_LiveSync_Android_Watch(self):
