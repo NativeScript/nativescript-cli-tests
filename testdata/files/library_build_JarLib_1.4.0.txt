@@ -83,7 +83,6 @@ platforms/android/metadata/libs/ambiguous_jar_1.jar
 platforms/android/metadata/libs/ambiguous_jar_2.jar
 platforms/android/metadata/libs/android.jar
 platforms/android/metadata/libs/nativescript.jar
-platforms/android/metadata/libs/support-annotations-23.0.0.jar
 platforms/android/metadata/libs/widgets.jar
 platforms/android/metadata/output
 platforms/android/metadata/output/treeNodeStream.dat
