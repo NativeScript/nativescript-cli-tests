@@ -36,7 +36,7 @@ if __name__ == '__main__':
     remove('stderr.txt')
     CleanupFolder('app')
     CleanupFolder('TNS App')
-    CleanupFolder('TNS App')
+    CleanupFolder('TNS_App')
     CleanupFolder('TNS_TempApp')
     CleanupFolder('folder')
     CleanupFolder('template')
