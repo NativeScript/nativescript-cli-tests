@@ -52,8 +52,8 @@ class LiveSync_Android(unittest.TestCase):
         output = catAppFile("android", "TNSApp", "app/app.css")
         assert ("font-size: 20;" in output)
 
-    # This tests the Run -> LiveSync -> Run workflow on an android device with API level 21. 
-    def test_002_LiveSync_Android_Device_XmlFile(self):
+    # This test executes the Run -> LiveSync -> Run workflow on an android device with API level 21. 
+    def test_002_LiveSync_Android_Device_XmlFile_Run(self):
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         LiveSync(platform="android", device="030b206908e6c3c5", path="TNS_App")
