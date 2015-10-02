@@ -57,7 +57,7 @@ class Prepare_Linux(unittest.TestCase):
             print "Prepare number: " + str(i)
             
             output = runAUT(tnsPath + " prepare android --path TNS_App")
-            assert("You have tns_modules dir in your app folder. It will not be used and you can safely remove it." in output)
+            assert("You have tns_modules dir in your app folder and tns-core-modules in your package.json file. Tns_modules dir in your app folder will not be used and you can safely remove it." in output)
             assert("Project successfully prepared" in output)
 
             output = runAUT("cat TNS_App/app/tns_modules/package.json")
