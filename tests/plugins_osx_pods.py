@@ -49,7 +49,12 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert ("location = \"group:TNSApp.xcodeproj\">" in output)
         assert ("location = \"group:Pods/Pods.xcodeproj\">" in output)
 
-        assert FileExists("TNS_App/platforms/ios/Pods/Pods.xcodeproj")
+        # This deployment target comes from the CLI
+        output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
+        assert ("IPHONEOS_DEPLOYMENT_TARGET = 8.0;" in output)
+        # This deployment target comes from the Podfile - platform :ios, '8.1'
+        output = runAUT("cat TNS_App/platforms/ios/Pods/Pods.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
+        assert ("IPHONEOS_DEPLOYMENT_TARGET = 8.1;" in output)
         Build(platform="ios", path="TNS_App")
 
     def test_002_PluginAdd_Pod_GoogleMaps_After_PlatformAdd_iOS(self):
@@ -80,6 +85,13 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert ("location = \"group:TNSApp.xcodeproj\">" in output)
         assert ("location = \"group:Pods/Pods.xcodeproj\">" in output)
         assert FileExists("TNS_App/platforms/ios/Pods/Pods.xcodeproj")
+
+        # This deployment target comes from the CLI
+        output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
+        assert ("IPHONEOS_DEPLOYMENT_TARGET = 8.0;" in output)
+        # This deployment target comes from the Podfile - platform :ios, '8.1'
+        output = runAUT("cat TNS_App/platforms/ios/Pods/Pods.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
+        assert ("IPHONEOS_DEPLOYMENT_TARGET = 8.1;" in output)
 
     def test_003_PluginAdd_MultiplePods(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
@@ -149,7 +161,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
 
         output = Prepare(platform="ios", path="TNS_App", assertSuccess=False)
         assert ("Installing pods..." in output)
-        assert ("Processing node_modules failed. Error:Error: Command failed: /bin/sh -c pod install" in output)
+        assert ("Processing node_modules failed. Error:Error: Command pod failed with exit code 1" in output)
 
         output = runAUT("cat TNS_App/platforms/ios/Podfile")
         assert ("pod 'InvalidPod'" in output)
