@@ -157,6 +157,19 @@ class Build_Linux(unittest.TestCase):
         output = runAUT("cat tns-app/platforms/android/src/main/AndroidManifest.xml")  
         assert ("org.nativescript.tnsapp" in output)  
 
+    def test_302_Build_Android_WithGZFiles(self):
+        
+        # Skip on Windows, because tar is not available 
+        if ('Windows' not in platform.platform()):
+            runAUT("tar -czf TNS_App/app/app.tar.gz TNS_App/app/app.js")
+            assert(FileExists("TNS_App/app/app.tar.gz"))
+        
+        output = runAUT(tnsPath + " build android --path TNS_App")
+
+        assert ("Project successfully prepared" in output) 
+        assert ("BUILD SUCCESSFUL" in output)
+        assert ("Project successfully built" in output)  
+        
     def test_400_Build_MissingPlatform(self):
         output = runAUT(tnsPath + " build")
         assert ("The input is not valid sub-command for 'build' command" in output)

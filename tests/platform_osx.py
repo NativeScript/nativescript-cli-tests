@@ -50,7 +50,7 @@ class Platform_OSX(unittest.TestCase):
         assert("Project successfully created" in output)
         
         if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.3.0.txt')
+            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_current.txt')
         Build(platform="ios", path="TNS_App")
 
     @unittest.skip("This test is not valid, adding symlink platform from npm cache cause issues")    
@@ -224,7 +224,7 @@ class Platform_OSX(unittest.TestCase):
         output = runAUT(tnsPath + " platform update ios --path TNS_App")
         assert("Copying template files..." in output)
         assert("Project successfully created." in output)
-        assert not IsEmpty("TNS_App/platforms/ios/metadataGenerator")
+        assert not IsEmpty("TNS_App/platforms/ios/internal/metadata-generator")
 
     def test_400_Platform_Add_AlreadyExistingPlatform(self):
         self.test_004_Platform_Add_iOS_Symlink_And_FrameworkPath()     
