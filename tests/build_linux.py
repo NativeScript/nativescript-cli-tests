@@ -169,7 +169,41 @@ class Build_Linux(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)  
-        
+
+    def test_303_Build_Android_Sdk22(self):
+
+        output = runAUT(tnsPath + " build android --compileSdk 22 --path TNS_App")
+        assert ("Project successfully prepared" in output)        
+        assert ("BUILD SUCCESSFUL" in output)
+        assert ("Project successfully built" in output)  
+        assert not ("ERROR" in output)   
+        assert not ("FAILURE" in output)       
+             
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+
+    def test_304_Build_Android_Sdk23(self):
+
+        output = runAUT(tnsPath + " build android --compileSdk 23 --path TNS_App")
+        assert ("Project successfully prepared" in output)        
+        assert ("BUILD SUCCESSFUL" in output)
+        assert ("Project successfully built" in output)  
+        assert not ("ERROR" in output)   
+        assert not ("FAILURE" in output)       
+             
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+
+    def test_305_Build_Android_Sdk17(self):
+
+        output = runAUT(tnsPath + " build android --compileSdk 17 --path TNS_App")
+        assert ("Project successfully prepared" in output)        
+        assert ("BUILD FAILED" in output)
+
+    def test_306_Build_Android_Sdk99(self):
+
+        output = runAUT(tnsPath + " build android --compileSdk 99 --path TNS_App")
+        assert ("Project successfully prepared" in output)        
+        assert ("You have specified '99' for compile sdk, but it is not installed on your system." in output)
+                                        
     def test_400_Build_MissingPlatform(self):
         output = runAUT(tnsPath + " build")
         assert ("The input is not valid sub-command for 'build' command" in output)
