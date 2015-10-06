@@ -69,7 +69,7 @@ class Plugins_OSX_Libs(unittest.TestCase):
         output = runAUT(tnsPath + " plugin add QA-TestApps/static-lib/bye-plugin --path TNS_App")
         assert ("TNS_App/node_modules/bye" in output)
 
-        output = Build(platform="ios", path="TNS_App", assertSuccess=False)
+        output = Prepare(platform="ios", path="TNS_App", assertSuccess=False)
         assert ("The static library at" in output)
         assert ("ByeLib.a is not built for one or more of the following required architectures:" in output)
         assert ("armv7, arm64, i386." in output)
