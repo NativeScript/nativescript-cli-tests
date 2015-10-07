@@ -11,6 +11,7 @@ from helpers.device import GivenRunningEmulator, \
 class LiveSync_Linux(unittest.TestCase):
 
     # LiveSync Tests on Android Emulator
+    # TODO: Add tests for #942
 
     @classmethod
     def setUpClass(cls):

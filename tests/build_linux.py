@@ -192,9 +192,9 @@ class Build_Linux(unittest.TestCase):
              
         assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
-    def test_305_Build_Android_Sdk17(self):
+    def test_305_Build_Android_Sdk19(self):
 
-        output = runAUT(tnsPath + " build android --compileSdk 17 --path TNS_App")
+        output = runAUT(tnsPath + " build android --compileSdk 19 --path TNS_App --log trace")
         assert ("Project successfully prepared" in output)        
         assert ("BUILD FAILED" in output)
 
