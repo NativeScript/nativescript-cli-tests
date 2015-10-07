@@ -36,7 +36,8 @@ class Plugins_OSX_Libs(unittest.TestCase):
         assert ("static-lib/hello-plugin" in output)
 
         PlatformAdd(platform="ios", frameworkPath=iosRuntimeSymlinkPath, path="TNS_App", symlink=True)
-        Build(platform="ios", path="TNS_App")
+        output = Build(platform="ios", path="TNS_App")
+        assert ("The iOS Deployment Target is now 8.0" not in output)
         assert FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
         assert FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/hello-plugin.js")
         output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
@@ -57,7 +58,8 @@ class Plugins_OSX_Libs(unittest.TestCase):
         output = runAUT("cat TNS_App/package.json")
         assert ("static-lib/hello-plugin" in output)
 
-        Build(platform="ios", path="TNS_App")
+        output = Build(platform="ios", path="TNS_App")
+        assert ("The iOS Deployment Target is now 8.0" not in output)
         assert FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
         assert FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/hello-plugin.js")
         output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")

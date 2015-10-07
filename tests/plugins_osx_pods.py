@@ -36,8 +36,10 @@ class Plugins_OSX_Pods(unittest.TestCase):
 
         PlatformAdd(platform="ios", frameworkPath=iosRuntimeSymlinkPath, path="TNS_App", symlink=True)
         output = Prepare(platform="ios", path="TNS_App", logTrace=True)
-        assert ("Installing pods..." in output)
+        assert ("The iOS Deployment Target is now 8.0" in output)
         assert ("Successfully prepared plugin googlesdk for ios." in output)
+        assert ("Creating project scheme..." in output)
+        assert ("Installing pods..." in output)
 
         output = runAUT("cat TNS_App/platforms/ios/Podfile")
         assert ("source 'https://github.com/CocoaPods/Specs.git'" in output)
@@ -72,8 +74,10 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert ("googlesdk" in output)
 
         output = Build(platform="ios", path="TNS_App")
-        assert ("Installing pods..." in output)
+        assert ("The iOS Deployment Target is now 8.0" in output)
         assert ("Successfully prepared plugin googlesdk for ios." in output)
+        assert ("Creating project scheme..." in output)
+        assert ("Installing pods..." in output)
 
         output = runAUT("cat TNS_App/platforms/ios/Podfile")
         assert ("source 'https://github.com/CocoaPods/Specs.git'" in output)
