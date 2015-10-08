@@ -15,6 +15,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         print "#####"
         print ""
 
+        runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*") # Delete derived data
         CleanupFolder('./TNS_App')
 
     def tearDown(self):
@@ -58,6 +59,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         output = runAUT("cat TNS_App/platforms/ios/Pods/Pods.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
         assert ("IPHONEOS_DEPLOYMENT_TARGET = 8.1;" in output)
         Build(platform="ios", path="TNS_App")
+        Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
 
     def test_002_PluginAdd_Pod_GoogleMaps_After_PlatformAdd_iOS(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)    
@@ -96,6 +98,8 @@ class Plugins_OSX_Pods(unittest.TestCase):
         # This deployment target comes from the Podfile - platform :ios, '8.1'
         output = runAUT("cat TNS_App/platforms/ios/Pods/Pods.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
         assert ("IPHONEOS_DEPLOYMENT_TARGET = 8.1;" in output)
+        
+        Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
 
     def test_003_PluginAdd_MultiplePods(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
@@ -133,6 +137,8 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert ("location = \"group:TNSApp.xcodeproj\">" in output)
         assert ("location = \"group:Pods/Pods.xcodeproj\">" in output)
         assert FileExists("TNS_App/platforms/ios/Pods/Pods.xcodeproj")
+        
+        Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
 
     def test_004_Prepare_Install_Pods(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
