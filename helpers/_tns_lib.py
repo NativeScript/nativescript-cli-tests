@@ -144,7 +144,7 @@ def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
             
     return output
 
-def Build(platform=None, mode=None, forDevice=False, path=None, logTrace=False, assertSuccess=True):
+def Build(platform=None, mode=None, path=None, forDevice=False, logTrace=False, assertSuccess=True):
 
     command = tnsPath + " build"
 
@@ -152,7 +152,7 @@ def Build(platform=None, mode=None, forDevice=False, path=None, logTrace=False, 
         command += " {0}".format(platform)
 
     if mode is not None:
-        command += " --{0}".format(platform)
+        command += " --{0}".format(mode)
         
     if forDevice:
         command += " --forDevice"
