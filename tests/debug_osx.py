@@ -73,8 +73,8 @@ class Debug_OSX(unittest.TestCase):
         assert ("Successfully deployed on device " in output)
         assert ("Successfully run application org.nativescript.TNSApp on device with ID" in output)
         assert ("NativeScript waiting for debugger" in output)
+
         assert ("Setting up debugger proxy..." in output)
-        assert ("Opened localhost 8080" in output)
         assert ("Frontend client connected" in output)
         assert ("Backend socket created" in output)
         assert ("NativeScript debugger attached" in output)
@@ -89,6 +89,7 @@ class Debug_OSX(unittest.TestCase):
         assert ("Successfully deployed on device " in output)
         sleep(10)
         output = runAUT(tnsPath + " debug ios --start --path TNS_App --timeout 120 --frameworkPath " + iosRuntimeSymlinkPath, 2*60, True)
+
         assert ("Setting up debugger proxy..." in output)
         assert ("Frontend client connected" in output)
         assert ("Backend socket created" in output)
