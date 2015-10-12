@@ -112,7 +112,7 @@ class Create(unittest.TestCase):
 
     def test_008_CreateProjectWithNameAppWarning(self):
         output = CreateProject(projName="app");
-        assert ("You cannot build aplications named 'app' in Xcode. Consider creating a project with different name." in output)
+        assert ("You cannot build applications named 'app' in Xcode. Consider creating a project with different name." in output)
 
         output = runAUT("cat app/package.json");
         assert ("\"id\": \"org.nativescript.app\"" in output)
