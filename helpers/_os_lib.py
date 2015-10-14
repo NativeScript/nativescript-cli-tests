@@ -163,6 +163,10 @@ def catAppFile(platform, appName, filePath):
         output = runAUT("ddb device get-file \"Library/Application Support/LiveSync/" + filePath +"\" --app org.nativescript." + appName)
     return output
 
+def catAppFileOnEmulator(platform, appName, filePath):
+    output = runAUT("adb -s emulator-5554 shell run-as org.nativescript." + appName + " cat files/" + filePath)
+    return output
+
 def remove(file_path):
     try:
         os.remove(file_path)
