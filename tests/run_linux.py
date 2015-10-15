@@ -26,12 +26,14 @@ class Run_Linux(unittest.TestCase):
         GivenRunningEmulator()
         GivenRealDeviceRunning(platform="android") 
         CleanupFolder('./TNS_App/platforms/android/build/outputs')
+        CleanupFolder('./appTest')
         
     def tearDown(self):
         pass
 
     @classmethod
     def tearDownClass(cls):
+        CleanupFolder('./appTest')
         CleanupFolder('./TNS_App')
         CleanupFolder('./TNS_App_NoPlatform')
 
@@ -69,11 +71,13 @@ class Run_Linux(unittest.TestCase):
         assert ("Project successfully built" in output)   
         assert ("Successfully deployed on device with identifier" in output) 
          
-    def test_201_Run_Android_DeviceId(self):
-        output = runAUT(tnsPath + " run android --device emulator-5554 --path TNS_App --justlaunch")
-        assert ("Project successfully prepared" in output) 
-        assert ("Project successfully built" in output)   
-        assert ("Successfully deployed on device with identifier 'emulator-5554'" in output)  
+    def test_201_Run_Android_DeviceId_RenamedProjDir(self):
+        runAUT("mv TNS_App appTest")
+        output = runAUT(tnsPath + " run android --device emulator-5554 --path appTest --justlaunch")
+        assert ("Project successfully prepared" in output)
+        assert ("Project successfully built" in output)
+        assert ("appTest/platforms/android/build/outputs/apk/TNSApp-debug.apk" in output)
+        assert ("Successfully deployed on device with identifier 'emulator-5554'" in output)
         #TODO: Get device id and verify files are deployed and process is running on this device
 
     def test_300_Run_Android_PlatformNotAdded(self):

@@ -35,6 +35,7 @@ if __name__ == '__main__':
     # Cleanup folders created by test execution
     remove('stderr.txt')
     CleanupFolder('app')
+    CleanupFolder('appTest')
     CleanupFolder('TNS App')
     CleanupFolder('TNS_App')
     CleanupFolder('TNS_TempApp')
