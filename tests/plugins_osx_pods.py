@@ -140,6 +140,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         
         Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
 
+    @unittest.skip("This is not a valid scenario anymore. It fails because DEPLOYMENT_TARGET=7.0 which is updated during plugin add command.")
     def test_004_Prepare_Install_Pods(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
 
