@@ -28,7 +28,7 @@ class Library_Linux(unittest.TestCase):
         assert (CheckFilesExists("TNS_App", "library_add_JarLib_1.4.0.txt"))
  
         Build(platform="android", path="TNS_App")
-        assert (CheckFilesExists("TNS_App", "library_build_JarLib_1.4.0.txt"))
+        assert (CheckFilesExists("TNS_App", "library_build_JarLib_master.txt"))
 
     #TODO: Implement this test.
     @unittest.skip("Not implemented.")  
