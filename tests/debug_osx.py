@@ -1,10 +1,10 @@
 from time import sleep
 import unittest
 
-from helpers._os_lib import CleanupFolder, runAUT, KillProcess
+from helpers._os_lib import CleanupFolder, runAUT, KillProcess, uninstall_app
 from helpers._tns_lib import CreateProjectAndAddPlatform, iosRuntimeSymlinkPath, \
     tnsPath
-from helpers.device import GivenRealDeviceRunning
+from helpers.device import GivenRealDeviceRunning, StopSimulators
 
 
 class Debug_OSX(unittest.TestCase):
@@ -20,16 +20,15 @@ class Debug_OSX(unittest.TestCase):
         
         GivenRealDeviceRunning(platform="ios")
         
+        StopSimulators()
         KillProcess("Safari")
-        KillProcess("iOS Simulator")
         KillProcess("Inspector")
-        runAUT("ideviceinstaller -U org.nativescript.TNSApp")
+        uninstall_app("TNSApp", fail=False)
                 
     def tearDown(self):
+        StopSimulators()
         KillProcess("Safari")
-        KillProcess("iOS Simulator")
         KillProcess("Inspector")
-        runAUT("ideviceinstaller -U org.nativescript.TNSApp")
 
     @classmethod
     def tearDownClass(cls):
@@ -67,7 +66,7 @@ class Debug_OSX(unittest.TestCase):
 
     def test_003_Debug_iOS_Device_DebugBrk(self):
 
-        output = runAUT(tnsPath + " debug ios --debug-brk --path TNS_App --timeout 120 --frameworkPath " + iosRuntimeSymlinkPath, 3*60, True)
+        output = runAUT(tnsPath + " debug ios --debug-brk --path TNS_App --timeout 120 --frameworkPath " + iosRuntimeSymlinkPath, 2*60 + 30, True)
         assert ("Project successfully prepared" in output) 
         assert ("** BUILD SUCCEEDED **" in output)
         assert ("Successfully deployed on device " in output)

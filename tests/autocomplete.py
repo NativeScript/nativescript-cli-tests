@@ -22,8 +22,6 @@ class Autocomplete(unittest.TestCase):
         if ("Autocompletion is disabled." in output):
             output = runAUT(tnsPath + " autocomplete enable --log trace")
             assert ("Restart your shell to enable command auto-completion." in output)
-
-        #if ("Autocompletion is enabled." in output):
         else:
             output = runAUT(tnsPath + " autocomplete enable --log trace")
             assert ("Autocompletion is already enabled." in output)
@@ -37,8 +35,6 @@ class Autocomplete(unittest.TestCase):
         if ("Autocompletion is enabled." in output):
             output = runAUT(tnsPath + " autocomplete disable")   
             assert ("Restart your shell to disable command auto-completion." in output)    
-        
-        #if ("Autocompletion is disabled." in output):
         else:
             output = runAUT(tnsPath + " autocomplete disable")
             assert ("Autocompletion is already disabled." in output)

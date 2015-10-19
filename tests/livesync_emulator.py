@@ -1,4 +1,4 @@
-import os, psutil, shutil, subprocess, time
+import os, shutil, time
 import unittest
 
 from helpers._os_lib import CleanupFolder, replace, catAppFileOnEmulator
@@ -8,7 +8,7 @@ from helpers.device import GivenRunningEmulator, \
     StopEmulators, StopSimulators
 
 
-class LiveSync_Linux(unittest.TestCase):
+class LiveSync_Emulator(unittest.TestCase):
 
     # LiveSync Tests on Android Emulator
     # TODO: Add tests for #942

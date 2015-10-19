@@ -1,9 +1,9 @@
 import platform, os
 
-from helpers._os_lib import CleanupFolder, KillProcess, remove, runAUT
+from helpers._os_lib import CleanupFolder, remove, runAUT, uninstall_app
 from helpers._tns_lib import UninstallCLI, InstallCLI, GetAndroidRuntime, GetiOSRuntime, \
     androidRuntimeSymlinkPath, iosRuntimeSymlinkPath, androidRuntimePath, iosRuntimePath
-from helpers.device import StopEmulators
+from helpers.device import StopEmulators, StopSimulators
 import tns_tests_runner
 
 
@@ -23,8 +23,19 @@ def AnalyzeResultAndExit():
 
 if __name__ == '__main__':
    
-    # Cleanup old runtimes
+    # Clean NPM cache, Derived Data and compilation symbols 
+    if ('Windows' in platform.platform()):
+        runAUT("npm cache clean", 600)    
+    else:
+        runAUT("rm --rf ~/.npm/tns/*", 600)
+        runAUT("rm --rf ~/Library/Developer/Xcode/DerivedData/", 600)
+        runAUT("sudo rm --rf /var/folders/*", 600)
     
+    # Uninstall test apps
+    uninstall_app("TNSApp", platform="android", fail=False)
+    uninstall_app("TNSApp", platform="ios", fail=False)
+    
+    # Cleanup old runtimes
     CleanupFolder(os.path.split(androidRuntimeSymlinkPath)[0])
     CleanupFolder(os.path.split(iosRuntimeSymlinkPath)[0])
     if os.path.isfile(androidRuntimePath):
@@ -70,8 +81,7 @@ if __name__ == '__main__':
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):       
         StopEmulators()
         if 'Darwin' in platform.platform():
-            KillProcess("Safari")
-            KillProcess("iOS Simulator")
+            StopSimulators()
         
     # Exit        
     AnalyzeResultAndExit()

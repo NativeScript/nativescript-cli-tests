@@ -34,18 +34,13 @@ class Build_Linux(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         CleanupFolder('./TNS_App')
+        CleanupFolder('./TNSAppNoPlatform')
         CleanupFolder('./TNS_AppSymlink')
 
     def test_001_Build_Android(self):
-
         output = runAUT(tnsPath + " build android --path TNS_App")
-        
-        # In 0.9.0 and above Build command automatically prepare project before build
         assert ("Project successfully prepared" in output) 
-        
-        # Not valid for 1.3.0+        
-        # assert ("Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output)  
-        
+       
         assert ("BUILD SUCCESSFUL" in output)
         assert ("Project successfully built" in output)  
         
@@ -55,7 +50,6 @@ class Build_Linux(unittest.TestCase):
         assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
                     
     def test_002_Build_Android_Release(self):
-
         output = runAUT(tnsPath + " build android --keyStorePath " + androidKeyStorePath + 
                         " --keyStorePassword " + androidKeyStorePassword + 
                         " --keyStoreAlias " + androidKeyStoreAlias + 
@@ -68,7 +62,7 @@ class Build_Linux(unittest.TestCase):
         assert ("Project successfully built" in output)
         assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-release.apk")
         
-    def test_003_Build_SymlinkProject(self):
+    def test_003_Build_SymlinkProject(self):        
         if ('Windows' in platform.platform()):
             print "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282"
         else:
@@ -79,6 +73,10 @@ class Build_Linux(unittest.TestCase):
             assert ("Project successfully prepared" in output) 
             assert ("BUILD SUCCESSFUL" in output)
             assert ("Project successfully built" in output)  
+            
+            # Verify build does not modify original manifest
+            runAUT("cat " + androidRuntimeSymlinkPath + "/framework/src/main/AndroidManifest.xml")
+            assert not ("org.nativescript.TNSAppSymlink" in output, "Build modify original AndroidManifest.xml, this is a problem!")
 
     def test_200_Build_Android_InsideProject(self):
         currentDir = os.getcwd()   

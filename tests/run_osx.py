@@ -11,6 +11,9 @@ class Run_OSX(unittest.TestCase):
  
     @classmethod
     def setUpClass(cls):
+        
+        GivenRealDeviceRunning(platform="ios") 
+                
         CleanupFolder('./TNS_App')
         CleanupFolder('./TNSAppNoPlatform')
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
@@ -23,8 +26,6 @@ class Run_OSX(unittest.TestCase):
         print "#####"
         print ""
         
-        GivenRealDeviceRunning(platform="ios") 
-
     def tearDown(self):
         pass
 

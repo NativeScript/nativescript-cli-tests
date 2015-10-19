@@ -13,9 +13,10 @@ class LiveSync_iOS(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        GivenRealDeviceRunning(platform="ios")
         StopEmulators()
         StopSimulators()
-        uninstall_app("TNSApp")
+        uninstall_app("TNSApp", fail=False)
         CleanupFolder('./TNS_App');
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath) 
         Run(platform="ios", path="TNS_App")
@@ -27,9 +28,6 @@ class LiveSync_iOS(unittest.TestCase):
         print self.id()
         print "#####"
         print ""
-
-        GivenRealDeviceRunning(platform="ios")
-        # uninstall_app("TNSApp")
 
     def tearDown(self):
         pass
@@ -96,4 +94,4 @@ class LiveSync_iOS(unittest.TestCase):
     def test_301_LiveSync_MultiplePlatforms(self):
 
         output = LiveSync(path="TNS_App", assertSuccess=False)
-        assert ("Multiple device platforms detected (iOS and Android). Specify platform or device on command line." in output)
+        assert ("Multiple device platforms detected (iOS and Android). Specify platform or device on command line" in output)

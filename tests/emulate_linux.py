@@ -65,12 +65,8 @@ class Emulate_Linux(unittest.TestCase):
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
         assert ("Starting Android emulator with image" in output)
-        
-        # Emulator can not be started without active UI 
-        if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
-            assert ("installing" in output) 
-            assert ("running" in output)   
-        
+        assert ("installing" in output) 
+        assert ("running" in output)           
         #TODO: Get device id and verify files are deployed and process is running on this device
  
     #TODO: Implement this test 
@@ -86,12 +82,9 @@ class Emulate_Linux(unittest.TestCase):
         os.chdir(currentDir);
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
-
-        # Emulator can not be started without active UI 
-        if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
-            assert ("Starting Android emulator with image Api19" in output)
-            assert ("installing" in output) 
-            assert ("running" in output)
+        assert ("Starting Android emulator with image Api19" in output)
+        assert ("installing" in output) 
+        assert ("running" in output)
             
         #TODO: Get device id and verify files are deployed and process is running on this device
         
@@ -102,12 +95,9 @@ class Emulate_Linux(unittest.TestCase):
         assert ("Project successfully created." in output)
         assert ("Project successfully prepared" in output)
         assert ("Project successfully built" in output)
-
-        # Emulator can not be started without active UI
-        if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
-            assert ("Starting Android emulator with image Api" in output)
-            assert ("installing" in output)
-            assert ("running" in output)
+        assert ("Starting Android emulator with image Api" in output)
+        assert ("installing" in output)
+        assert ("running" in output)
 
         #TODO: Get device id and verify files are deployed and process is running on this device
 

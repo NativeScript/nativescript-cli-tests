@@ -4,9 +4,9 @@ import psutil, subprocess, time
 from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, iosRuntimePath, \
     CreateProjectAndAddPlatform, LiveSync, Run
-from helpers.device import GivenRealDeviceRunning
+from helpers.device import GivenRealDeviceRunning, GetPhysicalDeviceId
 
-class LiveSync_OSX(unittest.TestCase):
+class LiveSync_Simulator(unittest.TestCase):
 
     def setUp(self):
 
@@ -34,11 +34,12 @@ class LiveSync_OSX(unittest.TestCase):
         assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
 
     def test_002_LiveSync_iOS_Device(self):
+        deviceId = GetPhysicalDeviceId(platform="ios")
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
-        LiveSync(platform="ios", device="a0036be7bace11a09a86fd5a31fca9c8c105011f", path="TNS_App")
+        LiveSync(platform="ios", device=deviceId, path="TNS_App")
 
         output = catAppFile("ios", "TNSApp", "app/main-view-model.js")
         assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
@@ -145,4 +146,4 @@ class LiveSync_OSX(unittest.TestCase):
     def test_301_LiveSync_MultiplePlatforms(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
         output = LiveSync(path="TNS_App", assertSuccess=False)
-        assert ("Multiple device platforms detected (iOS and Android). Specify platform or device on command line." in output)
+        assert ("Multiple device platforms detected (iOS and Android). Specify platform or device on command line" in output)

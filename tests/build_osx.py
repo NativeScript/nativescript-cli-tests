@@ -38,6 +38,9 @@ class Build_OSX(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         CleanupFolder('./TNS_App')
+        CleanupFolder('./TNS_AppNoPlatform')
+        CleanupFolder('./tns-app')
+        CleanupFolder('./tns app')
 
     def test_001_Build_iOS(self):
         output = runAUT(tnsPath + " build ios --path TNS_App")

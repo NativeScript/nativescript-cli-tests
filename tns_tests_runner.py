@@ -21,8 +21,8 @@ from tests.initinstall import InitAndInstall
 from tests.library_linux import Library_Linux
 from tests.library_osx import Library_OSX
 from tests.livesync_android import LiveSync_Android
+from tests.livesync_emulator import LiveSync_Emulator
 from tests.livesync_ios import LiveSync_iOS
-from tests.livesync_linux import LiveSync_Linux
 from tests.logtrace import LogTrace
 from tests.output_stderr import Output_STRERR
 from tests.platform_linux import Platform_Linux
@@ -39,7 +39,7 @@ from tests.usage import UsageAndErrorTracking
 from tests.version import Version
 
 
-# from tests.livesync_osx import LiveSync_OSX
+# from tests.livesync_simulator import LiveSync_OSX
 def RunTests():
     
     print "Platform : ", platform.platform()        
@@ -104,7 +104,7 @@ def RunTests():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))   
 
     if ('TESTRUN' in os.environ) and ("DEFAULT" in os.environ['TESTRUN']):
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Linux))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Emulator))
 
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']): 
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))

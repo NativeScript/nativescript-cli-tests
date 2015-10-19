@@ -5,7 +5,7 @@ from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, \
     CreateProjectAndAddPlatform, LiveSync, Run
 from helpers.device import GivenRealDeviceRunning, StopEmulators, \
-    StopSimulators
+    StopSimulators, GetPhysicalDeviceId
 
 class LiveSync_Android(unittest.TestCase):
 
@@ -13,6 +13,8 @@ class LiveSync_Android(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        
+        GivenRealDeviceRunning(platform="android")
         StopEmulators()
         StopSimulators()
 
@@ -27,8 +29,6 @@ class LiveSync_Android(unittest.TestCase):
         print self.id()
         print "#####"
         print ""
-
-        GivenRealDeviceRunning(platform="android")
 
     def tearDown(self):
         pass
@@ -55,8 +55,9 @@ class LiveSync_Android(unittest.TestCase):
     # This test executes the Run -> LiveSync -> Run workflow on an android device with API level 21. 
     def test_002_LiveSync_Android_Device_XmlFile_Run(self):
 
+        deviceId = GetPhysicalDeviceId(platform="android")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        LiveSync(platform="android", device="030b206908e6c3c5", path="TNS_App")
+        LiveSync(platform="android", device=deviceId, path="TNS_App")
 
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
@@ -154,7 +155,7 @@ class LiveSync_Android(unittest.TestCase):
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         output = LiveSync(path="TNS_App", assertSuccess=False)
 
-        assert ("Multiple device platforms detected (iOS and Android). Specify platform or device on command line." in output)
+        assert ("Multiple device platforms detected (iOS and Android). Specify platform or device on command line" in output)
 
 #     # TODO: Implement it.
 #     @unittest.skip("Fix LiveSync for Android device.")

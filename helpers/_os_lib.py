@@ -174,9 +174,18 @@ def remove(file_path):
         if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
             raise
 
-def uninstall_app(appName):
-    output = runAUT("ddb device uninstall org.nativescript." + appName)
-    if ("[Uninstalling] Status: RemovingApplication" in output):
-        print "{0} application successfully uninstalled.".format(appName)
+def uninstall_app(appName, platform, fail=True):
+    if (platform == "android"):
+        output = runAUT("ddb device uninstall org.nativescript." + appName)
+        if ("[Uninstalling] Status: RemovingApplication" in output):
+            print "{0} application successfully uninstalled.".format(appName)
+        else:
+            if fail:
+                raise NameError("{0} application failed to uninstall.".format(appName))
     else:
-        raise NameError("{0} application failed to uninstall.".format(appName))
+        output = runAUT("ideviceinstaller -U " + appName)
+        if ("Uninstall: Complete" in output):
+            print "{0} application successfully uninstalled.".format(appName)
+        else:
+            if fail:
+                raise NameError("{0} application failed to uninstall.".format(appName))

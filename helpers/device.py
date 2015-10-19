@@ -53,6 +53,7 @@ def StopEmulators():
 
 def StopSimulators():
     KillProcess("iOS Simulator")
+    KillProcess("Simulator")
 
 def GivenRunningEmulator():
     
