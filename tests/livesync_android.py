@@ -4,8 +4,8 @@ import unittest
 from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, \
     CreateProjectAndAddPlatform, LiveSync, Run
-from helpers.device import GivenRealDeviceRunning, StopEmulators, \
-    StopSimulators, GetPhysicalDeviceId
+from helpers.device import GivenRealDeviceRunning, \
+    StopEmulators, StopSimulators, GetPhysicalDeviceId
 
 class LiveSync_Android(unittest.TestCase):
 
@@ -101,8 +101,12 @@ class LiveSync_Android(unittest.TestCase):
         output = catAppFile("android", "TNSApp", "app/test/main-view-model.js")
         assert ("HelloWorldModel.prototype.tapAction" in output)
 
+    @unittest.skip("TODO: Not implemented.")
+    def test_202_LiveSync_Android_DeleteFiles(self):
+        pass
+
     @unittest.skip("TODO: Implement this test.")
-    def test_202_LiveSync_Android_Watch(self):
+    def test_203_LiveSync_Android_Watch(self):
         pass
 
     def test_301_LiveSync_BeforeRun(self):
