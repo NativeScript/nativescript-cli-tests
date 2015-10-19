@@ -23,7 +23,7 @@ class Debug_OSX(unittest.TestCase):
         StopSimulators()
         KillProcess("Safari")
         KillProcess("Inspector")
-        uninstall_app("TNSApp", fail=False)
+        uninstall_app("TNSApp", platform="ios", fail=False)
                 
     def tearDown(self):
         StopSimulators()

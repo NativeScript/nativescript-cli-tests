@@ -19,7 +19,6 @@ class Emulate_OSX(unittest.TestCase):
         print "#####"
         print ""
         
-        CleanupFolder('./TNS_App');
         CleanupFolder('./TNS_AppNoPlatform');
     
     def tearDown(self):

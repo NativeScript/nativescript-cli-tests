@@ -16,7 +16,7 @@ class LiveSync_iOS(unittest.TestCase):
         GivenRealDeviceRunning(platform="ios")
         StopEmulators()
         StopSimulators()
-        uninstall_app("TNSApp", fail=False)
+        uninstall_app("TNSApp", platform="ios", fail=False)
         CleanupFolder('./TNS_App');
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath) 
         Run(platform="ios", path="TNS_App")
@@ -34,7 +34,7 @@ class LiveSync_iOS(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        uninstall_app("TNSApp")
+        uninstall_app("TNSApp", platform="ios", fail=False)
 
     def test_001_LiveSync_iOS_XmlJsCss_Files(self):
 
