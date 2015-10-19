@@ -101,7 +101,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         
         Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
 
-    def test_003_PluginAdd_MultiplePods(self):
+    def test_201_PluginAdd_MultiplePods(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
 
         output = runAUT(tnsPath + " plugin add QA-TestApps/CocoaPods/carousel --path TNS_App")
@@ -141,7 +141,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
 
     @unittest.skip("This is not a valid scenario anymore. It fails because DEPLOYMENT_TARGET=7.0 which is updated during plugin add command.")
-    def test_004_Prepare_Install_Pods(self):
+    def test_400_Prepare_Install_Pods(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
 
         runAUT("cp QA-TestApps/CocoaPods/carousel/platforms/ios/Podfile TNS_App/platforms/ios")
