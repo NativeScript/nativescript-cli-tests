@@ -76,7 +76,8 @@ class Build_Linux(unittest.TestCase):
             
             # Verify build does not modify original manifest
             runAUT("cat " + androidRuntimeSymlinkPath + "/framework/src/main/AndroidManifest.xml")
-            assert not ("org.nativescript.TNSAppSymlink" in output, "Build modify original AndroidManifest.xml, this is a problem!")
+            assert ("__PACKAGE__" in output, "Build modify original AndroidManifest.xml, this is a problem!")
+            assert ("__APILEVEL__" in output, "Build modify original AndroidManifest.xml, this is a problem!")
 
     def test_200_Build_Android_InsideProject(self):
         currentDir = os.getcwd()   

@@ -172,7 +172,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
 
         output = Prepare(platform="ios", path="TNS_App", assertSuccess=False)
         assert ("Installing pods..." in output)
-        assert ("Processing node_modules failed. Error:Error: Command pod failed with exit code 1" in output)
+        assert ("Processing node_modules failed. Error:" in output)
 
         output = runAUT("cat TNS_App/platforms/ios/Podfile")
         assert ("pod 'InvalidPod'" in output)

@@ -77,7 +77,6 @@ class Debug_OSX(unittest.TestCase):
         assert ("Frontend client connected" in output)
         assert ("Backend socket created" in output)
         assert ("NativeScript debugger attached" in output)
-        assert not ("closed" in output)
         assert not ("detached" in output)
         assert not ("disconnected" in output)
     
