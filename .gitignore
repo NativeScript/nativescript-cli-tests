@@ -4,7 +4,8 @@ output.txt
 Report.*
 node_modules
 *.tgz
-TNS_*
+TNS*
+QA*
 setup*
 tns-android
 tns-ios

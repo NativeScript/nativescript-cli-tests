@@ -104,7 +104,8 @@ def RunTests():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))   
 
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']): 
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
+        if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Emulator))
         if 'Darwin' in platform.platform():
