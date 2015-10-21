@@ -10,6 +10,7 @@ class Emulate_OSX(unittest.TestCase):
     
     @classmethod
     def setUpClass(cls):
+        CleanupFolder('./TNS_App');
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         
     def setUp(self):
