@@ -247,9 +247,8 @@ class Platform_Linux(unittest.TestCase):
     def test_421_Platform_Add_Android_WrongFrameworkPath(self):
         CreateProject(projName="TNS_App")       
         output = runAUT(tnsPath + " platform add android --frameworkPath invalidFile.tgz --path TNS_App")
-        assert ("Error: ENOENT, stat '" in output)
+        assert ("Error: no such package available" in output)
         assert ("invalidFile.tgz" in output)
-        assert ("Usage" in output)
 
     def test_423_Platform_Add_Android_WrongFrameworkPathOption(self):
         CreateProject(projName="TNS_App")       
