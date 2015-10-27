@@ -16,7 +16,6 @@ class Build_OSX(unittest.TestCase):
         CreateProjectAndAddPlatform(projName="TNSAppNoSym", platform="ios", frameworkPath=iosRuntimeSymlinkPath)
         runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*") # Delete derived data
         runAUT("sudo find /var/folders/ -name '*tnsapp-*' -exec rm -rf {} \;") # Delete precompiled headers
-        runAUT("sudo find /var/folders/ -name '*tnsapp-*' -exec rm -rf {} \;") # Delete precompiled headers
         
     def setUp(self):
 
