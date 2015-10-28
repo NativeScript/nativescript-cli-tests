@@ -44,10 +44,17 @@ def runAUT(cmd, set_timeout=None, getOutput=True):
         print out
         print 'Thread finished. Returning ', out
 
-    print "##### OUTPUT BEGIN #####"
-    print out
-    print "##### OUTPUT END #####"
-    return out.strip('\n\r')
+    try:
+        print "##### OUTPUT BEGIN #####"
+        print out
+        print "##### OUTPUT END #####"
+        return out.strip('\n\r')
+    except:
+        sleep(10)
+        print "##### OUTPUT BEGIN #####"
+        print out
+        print "##### OUTPUT END #####"
+        return out.strip('\n\r')
 
 def CleanupFolder(folder):
     try:
