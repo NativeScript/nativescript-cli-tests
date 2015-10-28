@@ -182,7 +182,28 @@ class Build_OSX(unittest.TestCase):
         assert ("Project successfully built" in output)         
         assert FileExists("my-ios-app/platforms/ios/build/emulator/myiosapp.app")   
         assert FileExists("my-ios-app/platforms/ios/myiosapp/myiosapp-Prefix.pch")   
-                                               
+
+
+    def test_310_Build_iOS(self):
+        output = runAUT(tnsPath + " build ios --path TNS_App --copy-to ./")
+        assert ("Project successfully prepared" in output) 
+        assert ("build/emulator/TNSApp.app" in output)  
+        assert ("** BUILD SUCCEEDED **" in output)
+        assert ("Project successfully built" in output)         
+        assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
+        assert FileExists("TNSApp.app")
+            
+    def test_311_Build_iOS_Release(self):
+        output = runAUT(tnsPath + " build ios --path TNS_App --forDevice --release --copy-to ./")
+        assert ("Project successfully prepared" in output) 
+        assert ("CONFIGURATION Release" in output)
+        assert ("CodeSign" in output)
+        assert ("build/device/TNSApp.app" in output)  
+        assert ("** BUILD SUCCEEDED **" in output)
+        assert ("Project successfully built" in output)         
+        assert FileExists("TNS_App/platforms/ios/build/device/TNSApp.ipa")
+        assert FileExists("TNSApp.ipa")
+                                                       
     def test_401_Build_iOS_WithWrongParam(self):
         CreateProject(projName="TNS_AppNoPlatform")
         output = runAUT(tnsPath + " build iOS --debug --path TNS_AppNoPlatform")

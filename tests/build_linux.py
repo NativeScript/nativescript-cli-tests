@@ -202,7 +202,34 @@ class Build_Linux(unittest.TestCase):
         output = runAUT(tnsPath + " build android --compileSdk 99 --path TNS_App")
         assert ("Project successfully prepared" in output)        
         assert ("You have specified '99' for compile sdk, but it is not installed on your system." in output)
-                                        
+
+    def test_310_Build_Android_Release_With_CopyTo(self):
+        output = runAUT(tnsPath + " build android --keyStorePath " + androidKeyStorePath + 
+                        " --keyStorePassword " + androidKeyStorePassword + 
+                        " --keyStoreAlias " + androidKeyStoreAlias + 
+                        " --keyStoreAliasPassword " + androidKeyStoreAliasPassword + 
+                        " --release --path TNS_App --copy-to ./")
+        
+        assert ("Project successfully prepared" in output) 
+        assert ("BUILD SUCCESSFUL" in output)
+       
+        assert ("Project successfully built" in output)
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-release.apk")
+        assert FileExists("TNSApp-release.apk")
+
+    def test_311_Build_Android_With_CopyTo(self):
+        output = runAUT(tnsPath + " build android --path TNS_App --copy-to ./")
+        assert ("Project successfully prepared" in output) 
+       
+        assert ("BUILD SUCCESSFUL" in output)
+        assert ("Project successfully built" in output)  
+        
+        assert not ("ERROR" in output)   
+        assert not ("FAILURE" in output)       
+             
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+        assert FileExists("TNSApp-debug.apk")
+                                                        
     def test_400_Build_MissingPlatform(self):
         output = runAUT(tnsPath + " build")
         assert ("The input is not valid sub-command for 'build' command" in output)
