@@ -12,8 +12,8 @@ class Build_OSX(unittest.TestCase):
     def setUpClass(cls):
         CleanupFolder('./TNS_App')
         CleanupFolder('./TNSAppNoSym')
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
-        CreateProjectAndAddPlatform(projName="TNSAppNoSym", platform="ios", frameworkPath=iosRuntimeSymlinkPath)
+        #CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
+        #CreateProjectAndAddPlatform(projName="TNSAppNoSym", platform="ios", frameworkPath=iosRuntimeSymlinkPath)
         runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*") # Delete derived data
         runAUT("sudo find /var/folders/ -name '*tnsapp-*' -exec rm -rf {} \;") # Delete precompiled headers
         
@@ -29,7 +29,10 @@ class Build_OSX(unittest.TestCase):
         CleanupFolder('./tns app')
         CleanupFolder('./my-ios-app')
         CleanupFolder('./TNS_AppNoPlatform')
-        CleanupFolder('TNS_AppNoPlatform/platforms/ios/build')       
+        CleanupFolder('TNS_AppNoPlatform/platforms/ios/build')     
+        
+        CleanupFolder('./TNS_App')
+        CleanupFolder('./TNSAppNoSym')  
         
     def tearDown(self):
         pass
@@ -42,6 +45,7 @@ class Build_OSX(unittest.TestCase):
         CleanupFolder('./tns app')
 
     def test_001_Build_iOS(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         output = runAUT(tnsPath + " build ios --path TNS_App")
         assert ("Project successfully prepared" in output) 
         assert ("build/emulator/TNSApp.app" in output)  
@@ -50,6 +54,7 @@ class Build_OSX(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
             
     def test_002_Build_iOS_Release(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         output = runAUT(tnsPath + " build ios --path TNS_App --release")
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Release" in output)
@@ -59,6 +64,7 @@ class Build_OSX(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
 
     def test_003_Build_iOS_ForDevice(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         output = runAUT(tnsPath + " build ios --path TNS_App --forDevice")
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Debug" in output)
@@ -69,6 +75,7 @@ class Build_OSX(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/build/device/TNSApp.ipa")
         
     def test_004_Build_iOS_Release_ForDevice(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         output = runAUT(tnsPath + " build ios --path TNS_App --forDevice --release")
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Release" in output)
@@ -86,6 +93,7 @@ class Build_OSX(unittest.TestCase):
         assert ("arm64" in output)       
 
     def test_200_Build_iOS_None_SymlinkProject(self):
+        CreateProjectAndAddPlatform(projName="TNSAppNoSym", platform="ios", frameworkPath=iosRuntimeSymlinkPath)
         output = runAUT(tnsPath + " build ios --path TNSAppNoSym --forDevice --release")
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Release" in output)
@@ -95,8 +103,8 @@ class Build_OSX(unittest.TestCase):
         assert ("Project successfully built" in output)         
         assert FileExists("TNSAppNoSym/platforms/ios/build/device/TNSAppNoSym.ipa")  
 
-    def test_201_Build_iOS_InsideProject(self):
-       
+    def test_201_Build_iOS_InsideProject(self):       
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         currentDir = os.getcwd()   
         os.chdir(os.path.join(currentDir,"TNS_App"))    
         output = runAUT(os.path.join("..", tnsPath) + " build ios --path TNS_App")
@@ -109,7 +117,7 @@ class Build_OSX(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
 
     def test_202_Build_iOS_WithPrepare(self):
-  
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         Prepare(path="TNS_App", platform="ios") 
         
         output = runAUT(tnsPath + " build ios --path TNS_App")
@@ -185,6 +193,7 @@ class Build_OSX(unittest.TestCase):
 
 
     def test_310_Build_iOS(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         output = runAUT(tnsPath + " build ios --path TNS_App --copy-to ./")
         assert ("Project successfully prepared" in output) 
         assert ("build/emulator/TNSApp.app" in output)  
@@ -194,6 +203,7 @@ class Build_OSX(unittest.TestCase):
         assert FileExists("TNSApp.app")
             
     def test_311_Build_iOS_Release(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         output = runAUT(tnsPath + " build ios --path TNS_App --forDevice --release --copy-to ./")
         assert ("Project successfully prepared" in output) 
         assert ("CONFIGURATION Release" in output)
@@ -204,7 +214,7 @@ class Build_OSX(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/build/device/TNSApp.ipa")
         assert FileExists("TNSApp.ipa")
                                                        
-    def test_401_Build_iOS_WithWrongParam(self):
+    def test_401_Build_iOS_WithWrongParam(self):        
         CreateProject(projName="TNS_AppNoPlatform")
         output = runAUT(tnsPath + " build iOS --debug --path TNS_AppNoPlatform")
         assert ("The option 'debug' is not supported." in output)
