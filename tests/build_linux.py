@@ -2,7 +2,7 @@ import os
 import platform
 import unittest
 
-from helpers._os_lib import CleanupFolder, runAUT, FileExists
+from helpers._os_lib import CleanupFolder, remove, runAUT, FileExists
 from helpers._tns_lib import tnsPath, CreateProject, CreateProjectAndAddPlatform, \
     androidRuntimePath, Prepare, androidKeyStorePath, androidKeyStorePassword, \
     androidKeyStoreAlias, androidKeyStoreAliasPassword, PlatformAdd, \
@@ -13,9 +13,12 @@ class Build_Linux(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        remove("TNSApp-debug.apk")
+        remove("TNSApp-release.apk")
+
         CleanupFolder('./TNS_App')
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath) 
-        
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+
     def setUp(self):
 
         print ""
@@ -27,12 +30,15 @@ class Build_Linux(unittest.TestCase):
         CleanupFolder('./tns-app');
         CleanupFolder('./TNSAppNoPlatform')
         CleanupFolder('./TNS_App/platforms/android/build/outputs')
-                
+
     def tearDown(self):
         pass
 
     @classmethod
     def tearDownClass(cls):
+        remove("TNSApp-debug.apk")
+        remove("TNSApp-release.apk")
+
         CleanupFolder('./TNS_App')
         CleanupFolder('./TNSAppNoPlatform')
         CleanupFolder('./TNS_AppSymlink')

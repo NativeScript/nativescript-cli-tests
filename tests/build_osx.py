@@ -1,22 +1,25 @@
 import os
 import unittest
 
-from helpers._os_lib import CleanupFolder, runAUT, FileExists
+from helpers._os_lib import CleanupFolder, remove, runAUT, FileExists
 from helpers._tns_lib import tnsPath, CreateProject, Prepare, \
     CreateProjectAndAddPlatform, iosRuntimeSymlinkPath
 
 
 class Build_OSX(unittest.TestCase):
- 
+
     @classmethod
     def setUpClass(cls):
+        remove("TNSApp.app")
+        remove("TNSApp.ipa")
+
         CleanupFolder('./TNS_App')
         CleanupFolder('./TNSAppNoSym')
         #CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         #CreateProjectAndAddPlatform(projName="TNSAppNoSym", platform="ios", frameworkPath=iosRuntimeSymlinkPath)
         runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*") # Delete derived data
         runAUT("sudo find /var/folders/ -name '*tnsapp-*' -exec rm -rf {} \;") # Delete precompiled headers
-        
+
     def setUp(self):
 
         print ""
@@ -29,16 +32,19 @@ class Build_OSX(unittest.TestCase):
         CleanupFolder('./tns app')
         CleanupFolder('./my-ios-app')
         CleanupFolder('./TNS_AppNoPlatform')
-        CleanupFolder('TNS_AppNoPlatform/platforms/ios/build')     
-        
+        CleanupFolder('TNS_AppNoPlatform/platforms/ios/build')
+
         CleanupFolder('./TNS_App')
-        CleanupFolder('./TNSAppNoSym')  
-        
+        CleanupFolder('./TNSAppNoSym')
+
     def tearDown(self):
         pass
 
     @classmethod
     def tearDownClass(cls):
+        remove("TNSApp.app")
+        remove("TNSApp.ipa")
+
         CleanupFolder('./TNS_App')
         CleanupFolder('./TNS_AppNoPlatform')
         CleanupFolder('./tns-app')
@@ -192,7 +198,7 @@ class Build_OSX(unittest.TestCase):
         assert FileExists("my-ios-app/platforms/ios/myiosapp/myiosapp-Prefix.pch")   
 
 
-    def test_310_Build_iOS(self):
+    def test_310_Build_iOS_With_CopyTo(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         output = runAUT(tnsPath + " build ios --path TNS_App --copy-to ./")
         assert ("Project successfully prepared" in output) 
@@ -202,7 +208,7 @@ class Build_OSX(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
         assert FileExists("TNSApp.app")
             
-    def test_311_Build_iOS_Release(self):
+    def test_311_Build_iOS_Release_With_CopyTo(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         output = runAUT(tnsPath + " build ios --path TNS_App --forDevice --release --copy-to ./")
         assert ("Project successfully prepared" in output) 
