@@ -31,6 +31,8 @@ def InstallCLI(pathToPackage=None):
 
     installCommand = "npm i nativescript.tgz"
     output = runAUT(installCommand)
+    assert "dev-post-install" not in output, "{N} CLI installation FAILED."
+    assert "FiberFuture" not in output, "{N} CLI installation FAILED."
     print output
 
 def GetAndroidRuntime():    
