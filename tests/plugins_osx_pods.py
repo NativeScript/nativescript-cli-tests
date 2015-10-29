@@ -21,7 +21,46 @@ class Plugins_OSX_Pods(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_PluginAdd_Pod_GoogleMaps_Before_PlatformAdd_iOS(self):
+    def test_001_PluginAdd_MultiplePods(self):
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
+
+        output = runAUT(tnsPath + " plugin add QA-TestApps/CocoaPods/carousel --path TNS_App")
+        assert ("TNS_App/node_modules/carousel" in output)
+        assert ("Successfully installed plugin carousel." in output)
+        assert FileExists("TNS_App/node_modules/carousel/package.json")
+        assert FileExists("TNS_App/node_modules/carousel/platforms/ios/Podfile")
+
+        output = runAUT("cat TNS_App/package.json")
+        assert ("carousel" in output)
+
+        output = runAUT(tnsPath + " plugin add QA-TestApps/CocoaPods/keychain --path TNS_App")
+        assert ("TNS_App/node_modules/keychain" in output)
+        assert ("Successfully installed plugin keychain." in output)
+        assert FileExists("TNS_App/node_modules/keychain/package.json")
+        assert FileExists("TNS_App/node_modules/keychain/platforms/ios/Podfile")
+
+        output = runAUT("cat TNS_App/package.json")
+        assert ("keychain" in output)
+
+        output = Build(platform="ios", path="TNS_App")
+        assert ("Installing pods..." in output)
+        assert ("Successfully prepared plugin carousel for ios." in output)
+        assert ("Successfully prepared plugin keychain for ios." in output)
+
+        output = runAUT("cat TNS_App/platforms/ios/Podfile")
+        assert ("use_frameworks!" in output)
+        assert ("pod 'iCarousel'" in output)
+        assert ("pod 'AFNetworking'" in output)
+        assert ("pod 'UICKeyChainStore'" in output)
+
+        output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
+        assert ("location = \"group:TNSApp.xcodeproj\">" in output)
+        assert ("location = \"group:Pods/Pods.xcodeproj\">" in output)
+        assert FileExists("TNS_App/platforms/ios/Pods/Pods.xcodeproj")
+        
+        Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
+
+    def test_201_PluginAdd_Pod_GoogleMaps_Before_PlatformAdd_iOS(self):
         CreateProject(projName="TNS_App");
 
         output = runAUT(tnsPath + " plugin add QA-TestApps/CocoaPods/googlesdk --path TNS_App")
@@ -61,7 +100,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         Build(platform="ios", path="TNS_App")
         Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
 
-    def test_002_PluginAdd_Pod_GoogleMaps_After_PlatformAdd_iOS(self):
+    def test_202_PluginAdd_Pod_GoogleMaps_After_PlatformAdd_iOS(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)    
 
         output = runAUT(tnsPath + " plugin add QA-TestApps/CocoaPods/googlesdk --path TNS_App")
@@ -98,45 +137,6 @@ class Plugins_OSX_Pods(unittest.TestCase):
         # This deployment target comes from the Podfile - platform :ios, '8.1'
         output = runAUT("cat TNS_App/platforms/ios/Pods/Pods.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
         assert ("IPHONEOS_DEPLOYMENT_TARGET = 8.1;" in output)
-        
-        Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
-
-    def test_201_PluginAdd_MultiplePods(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
-
-        output = runAUT(tnsPath + " plugin add QA-TestApps/CocoaPods/carousel --path TNS_App")
-        assert ("TNS_App/node_modules/carousel" in output)
-        assert ("Successfully installed plugin carousel." in output)
-        assert FileExists("TNS_App/node_modules/carousel/package.json")
-        assert FileExists("TNS_App/node_modules/carousel/platforms/ios/Podfile")
-
-        output = runAUT("cat TNS_App/package.json")
-        assert ("carousel" in output)
-
-        output = runAUT(tnsPath + " plugin add QA-TestApps/CocoaPods/keychain --path TNS_App")
-        assert ("TNS_App/node_modules/keychain" in output)
-        assert ("Successfully installed plugin keychain." in output)
-        assert FileExists("TNS_App/node_modules/keychain/package.json")
-        assert FileExists("TNS_App/node_modules/keychain/platforms/ios/Podfile")
-
-        output = runAUT("cat TNS_App/package.json")
-        assert ("keychain" in output)
-
-        output = Build(platform="ios", path="TNS_App")
-        assert ("Installing pods..." in output)
-        assert ("Successfully prepared plugin carousel for ios." in output)
-        assert ("Successfully prepared plugin keychain for ios." in output)
-
-        output = runAUT("cat TNS_App/platforms/ios/Podfile")
-        assert ("use_frameworks!" in output)
-        assert ("pod 'iCarousel'" in output)
-        assert ("pod 'AFNetworking'" in output)
-        assert ("pod 'UICKeyChainStore'" in output)
-
-        output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
-        assert ("location = \"group:TNSApp.xcodeproj\">" in output)
-        assert ("location = \"group:Pods/Pods.xcodeproj\">" in output)
-        assert FileExists("TNS_App/platforms/ios/Pods/Pods.xcodeproj")
         
         Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
 

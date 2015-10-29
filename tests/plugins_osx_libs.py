@@ -20,7 +20,7 @@ class Plugins_OSX_Libs(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_PluginAdd_StaticLib_Universal_Before_PlatformAdd_iOS(self):
+    def test_201_PluginAdd_StaticLib_Universal_Before_PlatformAdd_iOS(self):
         CreateProject(projName="TNS_App");
  
         output = runAUT(tnsPath + " plugin add QA-TestApps/static-lib/hello-plugin --path TNS_App")
@@ -43,7 +43,7 @@ class Plugins_OSX_Libs(unittest.TestCase):
         output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
         assert ("HelloLib.a in Frameworks" in output)
 
-    def test_002_PluginAdd_StaticLib_Universal_After_PlatformAdd_iOS(self):
+    def test_202_PluginAdd_StaticLib_Universal_After_PlatformAdd_iOS(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)    
 
         output = runAUT(tnsPath + " plugin add QA-TestApps/static-lib/hello-plugin --path TNS_App")

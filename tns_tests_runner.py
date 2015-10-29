@@ -103,6 +103,7 @@ def RunTests():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))   
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Sandbox_Pods))
 
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']): 
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
@@ -112,9 +113,8 @@ def RunTests():
         if 'Darwin' in platform.platform():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_OSX))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_OSX))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Libs))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Pods))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Sandbox_Pods))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Libs))
 
     if ('TESTRUN' in os.environ) and ("FULL" in os.environ['TESTRUN']):  
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Deploy_Linux))
