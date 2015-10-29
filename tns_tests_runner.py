@@ -32,6 +32,7 @@ from tests.plugins_osx import Plugins_OSX
 from tests.plugins_osx_libs import Plugins_OSX_Libs
 from tests.plugins_osx_pods import Plugins_OSX_Pods
 from tests.plugins_osx_sandbox_pods import Plugins_OSX_Sandbox_Pods
+from tests.plugins_osx_xcconfig import Plugins_OSX_Xcconfig
 from tests.prepare_linux import Prepare_Linux
 from tests.prepare_osx import Prepare_OSX
 from tests.run_linux import Run_Linux
@@ -115,6 +116,7 @@ def RunTests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_OSX))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Pods))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Libs))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Xcconfig))
 
     if ('TESTRUN' in os.environ) and ("FULL" in os.environ['TESTRUN']):  
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Deploy_Linux))

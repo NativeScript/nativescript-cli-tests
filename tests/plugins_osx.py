@@ -17,7 +17,8 @@ class Plugins_OSX(unittest.TestCase):
         print self.id()
         print "#####"
         print ""
-        
+
+        runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*") # Delete derived data
         CleanupFolder('./TNS_App');
 
     def tearDown(self):        
