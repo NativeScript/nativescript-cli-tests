@@ -41,7 +41,6 @@ class Emulate_OSX(unittest.TestCase):
         
         # Simulator can not be started without active UI 
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
-            assert ("Session started without errors" in output) 
             assert IsRunningProcess("Simulator")
         
     def test_003_Emulate_iOS_Release(self):
@@ -53,7 +52,6 @@ class Emulate_OSX(unittest.TestCase):
         
         # Simulator can not be started without active UI 
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
-            assert ("Session started without errors" in output) 
             assert IsRunningProcess("Simulator")
 
     def test_210_Emulate_iOS_PlatformNotAdded(self):
@@ -67,11 +65,10 @@ class Emulate_OSX(unittest.TestCase):
 
         # Simulator can not be started without active UI
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']): 
-            assert ("Session started without errors" in output)
             assert IsRunningProcess("Simulator")
 
     def test_400_Emulate_InvalidDevice(self):
         output = runAUT(tnsPath + " emulate ios --device invalidDevice --path TNS_App --justlaunch")
         assert ("Project successfully prepared" in output) 
         assert ("Project successfully built" in output)   
-        assert ("Invalid device identifier invalidDevice. Valid device identifiers are" in output)  
+        assert ("Unable to find device invalidDevice" in output)  
