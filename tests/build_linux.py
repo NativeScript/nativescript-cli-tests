@@ -1,3 +1,6 @@
+'''
+Test for building projects with Android platform
+'''
 import os
 import platform
 import unittest
@@ -8,7 +11,7 @@ from helpers._tns_lib import tnsPath, CreateProject, CreateProjectAndAddPlatform
     androidKeyStoreAlias, androidKeyStoreAliasPassword, PlatformAdd, \
     androidRuntimeSymlinkPath
 
-
+# pylint: disable=R0201, C0111
 class Build_Linux(unittest.TestCase):
 
     @classmethod

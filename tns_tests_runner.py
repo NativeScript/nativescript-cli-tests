@@ -1,3 +1,6 @@
+"""
+Define test suites
+"""
 import os
 import platform
 import unittest
@@ -40,7 +43,7 @@ from tests.run_osx import Run_OSX
 from tests.usage import UsageAndErrorTracking
 from tests.version import Version
 
-def RunTests():
+def run_tests():
     print "Platform : ", platform.platform()
     # Android Requirements:
     # - Valid pair of keyStore and password
@@ -48,8 +51,8 @@ def RunTests():
     # - Valid pair of certificate and provisioning profile on your OS X system
     # Following environment variables should be set:
     # - CLI_PATH - Path to CLI package under test (package file should be named nativescript.tgz)
-    # - ANDROID_PATH - Path to Android runtime package under test (package file should be named tns-android.tgz)
-    # - androidKeyStorePath - Specifies the file path to the keystore file which you want to use to code sign your APK
+    # - ANDROID_PATH - Path to Android runtime package (should be named tns-android.tgz)
+    # - androidKeyStorePath - Path to the keystore file
     # - androidKeyStorePassword - Password for the keystore file
     # - androidKeyStoreAlias
     # - androidKeyStoreAliasPassword
@@ -119,15 +122,19 @@ def RunTests():
     if ('TESTRUN' in os.environ) and ("SMOKE" in os.environ['TESTRUN']):
         for test in suite:
             if test._testMethodName.find('test_4') >= 0:
-                setattr(test, test._testMethodName, lambda: test.skipTest('Skip negative tests in SMOKE TEST run.'))
+                setattr(test, test._testMethodName, lambda: \
+					test.skipTest('Skip negative tests in SMOKE TEST run.'))
             if test._testMethodName.find('test_3') >= 0:
-                setattr(test, test._testMethodName, lambda: test.skipTest('Skip low priority tests in SMOKE TEST run.'))
+                setattr(test, test._testMethodName, lambda: \
+					test.skipTest('Skip low priority tests in SMOKE TEST run.'))
             if test._testMethodName.find('test_2') >= 0:
-                setattr(test, test._testMethodName, lambda: test.skipTest('Skip medium priority tests in SMOKE TEST run.'))
-    with open("Report.html", "w") as f:
-        descr = "Platform : {0};  nativescript-cli build version : {1}".format(platform.platform(), GetCLIBuildVersion())
-        runner = HTMLTestRunner.HTMLTestRunner(stream=f, title='TNS_CLI_tests', description=descr)
+                setattr(test, test._testMethodName, lambda: \
+					test.skipTest('Skip medium priority tests in SMOKE TEST run.'))
+    with open("Report.html", "w") as report_file:
+        descr = "Platform : {0};  nativescript-cli build version : {1}" \
+        	.format(platform.platform(), GetCLIBuildVersion())
+        runner = HTMLTestRunner.HTMLTestRunner(report_file, title='TNS_CLI_tests', description=descr)
         result = runner.run(suite)
     return result
 if __name__ == '__main__':
-    RunTests()
+    run_tests()
