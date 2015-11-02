@@ -15,7 +15,7 @@ SMOKETESTRESULT = ""
 def ExecuteTests():
     print "####RUNNING TESTS####"
     global SMOKETESTRESULT
-    SMOKETESTRESULT = str(tns_tests_runner.RunTests())
+    SMOKETESTRESULT = str(tns_tests_runner.run_tests())
 
 def AnalyzeResultAndExit():
     global SMOKETESTRESULT

@@ -8,6 +8,7 @@ from helpers._tns_lib import tnsPath
 
 # pylint: disable=R0201, C0111, C0103
 class Autocomplete(unittest.TestCase):
+
     '''
     Autocomplete tests
     '''
@@ -17,8 +18,10 @@ class Autocomplete(unittest.TestCase):
         print self.id()
         print "#####"
         print ""
+
     def teardown(self):
         pass
+
     def test_001_autocomplete_enable(self):
         output = runAUT(tnsPath + " autocomplete status")
         if "Autocompletion is disabled." in output:
@@ -29,6 +32,7 @@ class Autocomplete(unittest.TestCase):
             assert "Autocompletion is already enabled." in output
         output = runAUT(tnsPath + " autocomplete status")
         assert "Autocompletion is enabled." in output
+
     def test_002_autocomplete_disable(self):
         output = runAUT(tnsPath + " autocomplete status")
         if "Autocompletion is enabled." in output:
@@ -39,6 +43,7 @@ class Autocomplete(unittest.TestCase):
             assert "Autocompletion is already disabled." in output
         output = runAUT(tnsPath + " autocomplete status")
         assert "Autocompletion is disabled." in output
+
     def test_400_autocomplete_invalid_parameter(self):
         '''
         Call autocomplate command with invalid parameter

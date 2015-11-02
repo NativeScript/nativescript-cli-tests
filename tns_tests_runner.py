@@ -8,7 +8,7 @@ import unittest
 from helpers import HTMLTestRunner
 from helpers._tns_lib import GetCLIBuildVersion
 from tests.autocomplete import Autocomplete
-from tests.build_linux import Build_Linux
+from tests.build_linux import BuildAndroid
 from tests.build_osx import Build_OSX
 from tests.create import Create
 from tests.debug_linux import Debug_Linux
@@ -42,6 +42,7 @@ from tests.run_linux import Run_Linux
 from tests.run_osx import Run_OSX
 from tests.usage import UsageAndErrorTracking
 from tests.version import Version
+
 
 def run_tests():
     print "Platform : ", platform.platform()
@@ -86,7 +87,7 @@ def run_tests():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_Linux))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_Linux))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_Linux))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildAndroid))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_Linux))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(InitAndInstall))
     if 'Darwin' in platform.platform():
