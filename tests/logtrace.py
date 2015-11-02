@@ -5,9 +5,9 @@ from helpers._tns_lib import tnsPath, CreateProject
 
 
 class LogTrace(unittest.TestCase):
-    
+
     def setUp(self):
-        
+
         print ""
         print "#####"
         print self.id()
@@ -15,8 +15,8 @@ class LogTrace(unittest.TestCase):
         print ""
 
         CleanupFolder('./TNS_App')
-                
-    def tearDown(self):        
+
+    def tearDown(self):
         pass
 
     def test_001_Create_Project_LogTrace(self):
@@ -25,7 +25,7 @@ class LogTrace(unittest.TestCase):
         assert ("Using NativeScript hello world application" in output)
         assert ("Copying NativeScript hello world application into" in output)
         assert ("Project TNS_App was successfully created" in output)
-        
+
     def test_002_Platform_Add_LogTrace(self):
         CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " platform add android --path TNS_App --log trace")
@@ -34,5 +34,5 @@ class LogTrace(unittest.TestCase):
         assert ("Package: org.nativescript.TNSApp" in output)
         assert ("Available Android targets" in output)
         assert ("using Android SDK 'android-")
-        
+
         assert ("Project successfully created" in output)

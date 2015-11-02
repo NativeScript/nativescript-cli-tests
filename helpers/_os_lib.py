@@ -49,14 +49,14 @@ def runAUT(cmd, set_timeout=None, getOutput=True):
         print out
         print "##### OUTPUT END #####"
         return out.strip('\n\r')
-    except:        
+    except:
         print "##### OUTPUT BEGIN #####"
         print "Failed to print output"
         print "##### OUTPUT END #####"
 
 def CleanupFolder(folder):
     try:
-        shutil.rmtree(folder, False) 
+        shutil.rmtree(folder, False)
         sleep(1)
     except:
         if (os.path.exists(folder)):
@@ -65,7 +65,7 @@ def CleanupFolder(folder):
             else:
                 runAUT('rm -rf ' + folder)
             sleep(1)
-    
+
 # Check if output of command contains string from file
 def CheckOutput(output, fileName):
     f = open('testdata/outputs/' + fileName)
@@ -96,7 +96,7 @@ def CheckFilesExists(rootFolder, listFile, ignoreFileCount=True):
         print files
     print "Total files : ", total
     print "Expected lines : ", expected_lines
-    
+
     if ignoreFileCount:
         return True
     else:
@@ -104,9 +104,9 @@ def CheckFilesExists(rootFolder, listFile, ignoreFileCount=True):
 
 # Check if folder is empty
 def IsEmpty(path):
-    if os.listdir(path) == []: 
+    if os.listdir(path) == []:
         return True
-    else: 
+    else:
         return False
 
 def FolderExists(path):
@@ -116,17 +116,17 @@ def FolderExists(path):
         return False
 
 def FileExists(path):
-    if os.path.exists(path): 
+    if os.path.exists(path):
         return True
-    else: 
+    else:
         return False
 
 def IsRunningProcess(processName):
     result = False
     for proc in psutil.process_iter():
         if processName in str(proc):
-            result = True  
-    return result 
+            result = True
+    return result
 
 def KillProcess(processName, commandLine=None):
     result = False
@@ -155,7 +155,7 @@ def ExtractArchive(fileName, folder):
         print "Failed to extract {0}".format(fileName)
 
 def replace(filePath, str1, str2):
-    for line in fileinput.input(filePath, inplace = 1):
+    for line in fileinput.input(filePath, inplace=1):
         print line.replace(str1, str2)
     sleep(1)
     output = runAUT("cat " + filePath);
@@ -165,7 +165,7 @@ def catAppFile(platform, appName, filePath):
     if platform is "android":
         output = runAUT("adb shell run-as org.nativescript." + appName + " cat files/" + filePath)
     if platform is "ios":
-        output = runAUT("ddb device get-file \"Library/Application Support/LiveSync/" + filePath +"\" --app org.nativescript." + appName)
+        output = runAUT("ddb device get-file \"Library/Application Support/LiveSync/" + filePath + "\" --app org.nativescript." + appName)
     return output
 
 def catAppFileOnEmulator(platform, appName, filePath):
@@ -176,7 +176,7 @@ def remove(file_path):
     try:
         os.remove(file_path)
     except OSError as e:
-        if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
+        if e.errno != errno.ENOENT:  # errno.ENOENT = no such file or directory
             raise
 
 def uninstall_app(appName, platform, fail=True):

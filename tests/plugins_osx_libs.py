@@ -15,7 +15,7 @@ class Plugins_OSX_Libs(unittest.TestCase):
         print "#####"
         print ""
 
-        runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*") # Delete derived data
+        runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*")  # Delete derived data
         CleanupFolder('./TNS_App')
 
     def tearDown(self):
@@ -23,7 +23,7 @@ class Plugins_OSX_Libs(unittest.TestCase):
 
     def test_201_PluginAdd_StaticLib_Universal_Before_PlatformAdd_iOS(self):
         CreateProject(projName="TNS_App");
- 
+
         output = runAUT(tnsPath + " plugin add QA-TestApps/static-lib/hello-plugin --path TNS_App")
         assert ("TNS_App/node_modules/hello" in output)
         assert ("Successfully installed plugin hello." in output)
@@ -45,7 +45,7 @@ class Plugins_OSX_Libs(unittest.TestCase):
         assert ("HelloLib.a in Frameworks" in output)
 
     def test_202_PluginAdd_StaticLib_Universal_After_PlatformAdd_iOS(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)    
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
 
         output = runAUT(tnsPath + " plugin add QA-TestApps/static-lib/hello-plugin --path TNS_App")
         assert ("TNS_App/node_modules/hello" in output)
@@ -67,7 +67,7 @@ class Plugins_OSX_Libs(unittest.TestCase):
         assert ("HelloLib.a in Frameworks" in output)
 
     def test_401_PluginAdd_StaticLib_NonUniversal(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
 
         output = runAUT(tnsPath + " plugin add QA-TestApps/static-lib/bye-plugin --path TNS_App")
         assert ("TNS_App/node_modules/bye" in output)

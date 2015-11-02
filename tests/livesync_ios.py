@@ -13,7 +13,7 @@ class LiveSync_iOS(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        
+
         StopEmulators()
         StopSimulators()
 
@@ -37,7 +37,7 @@ class LiveSync_iOS(unittest.TestCase):
         uninstall_app("TNSApp", platform="ios", fail=False)
 
     def test_001_LiveSync_iOS_XmlJsCss_TnsModules_Files(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath) 
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -62,7 +62,7 @@ class LiveSync_iOS(unittest.TestCase):
         assert ("require(\"globals\"); // test" in output)
 
     def test_002_LiveSync_iOS_Device_XmlFile(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath) 
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         deviceId = GetPhysicalDeviceId(platform="ios")
@@ -79,18 +79,18 @@ class LiveSync_iOS(unittest.TestCase):
 #         assert ("this.set(\"message\", this.counter + \" runs left\");" in output)
 
     def test_201_LiveSync_iOS_AddNewFiles(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath) 
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
         shutil.copyfile("TNS_App/app/main-page.js", "TNS_App/app/test.js")
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test.css")
-        
+
         os.makedirs("TNS_App/app/test")
         shutil.copyfile("TNS_App/app/main-view-model.js", "TNS_App/app/test/main-view-model.js")
 
         LiveSync(platform="ios", path="TNS_App")
- 
+
         output = catAppFile("ios", "TNSApp", "app/test.xml")
         assert ("<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output)
         output = catAppFile("ios", "TNSApp", "app/test.js")

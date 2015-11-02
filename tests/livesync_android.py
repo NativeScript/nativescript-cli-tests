@@ -60,7 +60,7 @@ class LiveSync_Android(unittest.TestCase):
         output = catAppFile("android", "TNSApp", "app/tns_modules/application/application-common.js")
         assert ("require(\"globals\"); // test" in output)
 
-    # This test executes the Run -> LiveSync -> Run work flow on an android device with API level 21. 
+    # This test executes the Run -> LiveSync -> Run work flow on an android device with API level 21.
     def test_002_LiveSync_Android_Device_XmlFile_Run(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
@@ -91,7 +91,7 @@ class LiveSync_Android(unittest.TestCase):
 
         LiveSync(platform="android", path="TNS_App")
         time.sleep(5)
-                
+
         output = catAppFile("android", "TNSApp", "app/test.xml")
         assert ("<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output)
         output = catAppFile("android", "TNSApp", "app/test.js")

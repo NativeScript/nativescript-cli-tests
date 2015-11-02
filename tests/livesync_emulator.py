@@ -92,31 +92,31 @@ class LiveSync_Emulator(unittest.TestCase):
 #         print "tns livesync android --watch --path TNS_App"
 #         pr = subprocess.Popen("tns livesync android --watch --path TNS_App", shell=True)
 #         pr_pid = pr.pid
-#  
+#
 #         time.sleep(60)
 #         print "assert"
 #         output = catAppFile("android", "TNSApp", "app/main-page.xml")
 #         assert ("<Button text=\"TEST1\" tap=\"{{ tapAction }}\" />" in output)
-#  
+#
 #         time.sleep(5)
 #         replace("TNS_App/app/main-page.xml", "TEST1", "TEST2")
-#  
+#
 #         time.sleep(15)
 #         print "assert"
 #         output = catAppFile("android", "TNSApp", "app/main-page.xml")
 #         assert ("<Button text=\"TEST2\" tap=\"{{ tapAction }}\" />" in output)
-#  
+#
 #         time.sleep(5)
 #         replace("TNS_App/app/main-page.xml", "TEST2", "TEST3")
-#  
+#
 #         time.sleep(15)
 #         print "assert"
 #         output = catAppFile("android", "TNSApp", "app/main-page.xml")
 #         assert ("<Button text=\"TEST3\" tap=\"{{ tapAction }}\" />" in output)
-#  
+#
 #         print "killing child ..."
 #         pr.terminate()
-#  
+#
 #         time.sleep(5)
 #         if psutil.pid_exists(pr_pid):
 #             print "force killing child ..."

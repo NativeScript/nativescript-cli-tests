@@ -82,14 +82,14 @@ class LiveSync_Simulator(unittest.TestCase):
             print "force killing child ..."
             pr.kill()
 
-    @unittest.skip("Fix LiveSync for Android device.")  
+    @unittest.skip("Fix LiveSync for Android device.")
     def test_101_LiveSync_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
- 
+
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         LiveSync(platform="android", path="TNS_App")
- 
+
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
 
@@ -97,10 +97,10 @@ class LiveSync_Simulator(unittest.TestCase):
     def test_102_LiveSync_Android_Device(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
-   
+
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
         LiveSync(platform="android", device="030b206908e6c3c5", path="TNS_App")
-   
+
         output = catAppFile("android", "TNSApp", "app/main-view-model.js")
         assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
 

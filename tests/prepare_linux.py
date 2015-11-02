@@ -32,12 +32,12 @@ class Prepare_Linux(unittest.TestCase):
         assert not FileExists('TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.ios.js')
 
     def test_002_Prepare_Android_InsideProject(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)    
-        currentDir = os.getcwd()   
-        os.chdir(os.path.join(currentDir, "TNS_App"))    
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        currentDir = os.getcwd()
+        os.chdir(os.path.join(currentDir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " prepare android")
         os.chdir(currentDir);
-        assert("Project successfully prepared" in output)    
+        assert("Project successfully prepared" in output)
 
         # Verify app and modules are processed and available in platform folder
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/main-view-model.js')
@@ -55,7 +55,7 @@ class Prepare_Linux(unittest.TestCase):
         # Verify tns-core-modules are copied to the native project, not app's tns_modules.
         for i in range(1, 3):
             print "Prepare number: " + str(i)
-            
+
             output = runAUT(tnsPath + " prepare android --path TNS_App")
             assert("You have tns_modules dir in your app folder" in output)
             assert("Project successfully prepared" in output)
@@ -109,7 +109,7 @@ class Prepare_Linux(unittest.TestCase):
         output = runAUT(tnsPath + " prepare android --path TNS_App")
         assert("Project successfully prepared" in output)
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/app.css')
-        
+
         runAUT("cp TNS_App/app/app.js TNS_App/app/app.ios.js")
         runAUT("cp TNS_App/app/app.js TNS_App/app/app.android.js")
         runAUT("cp TNS_App/app/app.js TNS_App/app/appios.js")
@@ -118,19 +118,19 @@ class Prepare_Linux(unittest.TestCase):
         runAUT("cp TNS_App/app/app.js TNS_App/app/android.js")
         runAUT("cp TNS_App/app/app.css TNS_App/app/app.ios.css")
         runAUT("cp TNS_App/app/app.css TNS_App/app/app.android.css")
-        runAUT("mv TNS_App/app/app.js TNS_App/app/appNew.js")  
-        runAUT("mv TNS_App/app/app.css TNS_App/app/appNew.css") 
-             
+        runAUT("mv TNS_App/app/app.js TNS_App/app/appNew.js")
+        runAUT("mv TNS_App/app/app.css TNS_App/app/appNew.css")
+
         output = runAUT(tnsPath + " prepare android --path TNS_App")
         assert("Project successfully prepared" in output)
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/app.css')
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/app.js')
-        assert FileExists('TNS_App/platforms/android/src/main/assets/app/appandroid.js')   
-        assert FileExists('TNS_App/platforms/android/src/main/assets/app/appios.js') 
-        assert FileExists('TNS_App/platforms/android/src/main/assets/app/android.js')   
-        assert FileExists('TNS_App/platforms/android/src/main/assets/app/ios.js')          
+        assert FileExists('TNS_App/platforms/android/src/main/assets/app/appandroid.js')
+        assert FileExists('TNS_App/platforms/android/src/main/assets/app/appios.js')
+        assert FileExists('TNS_App/platforms/android/src/main/assets/app/android.js')
+        assert FileExists('TNS_App/platforms/android/src/main/assets/app/ios.js')
         assert not FileExists('TNS_App/platforms/android/src/main/assets/app/app.ios.css')
-        assert not FileExists('TNS_App/platforms/android/src/main/assets/app/app.android.css')    
+        assert not FileExists('TNS_App/platforms/android/src/main/assets/app/app.android.css')
 
     def test_400_Prepare_MissingPlatform(self):
         CreateProject(projName="TNS_App")

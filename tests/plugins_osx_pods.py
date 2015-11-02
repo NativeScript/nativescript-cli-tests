@@ -15,14 +15,14 @@ class Plugins_OSX_Pods(unittest.TestCase):
         print "#####"
         print ""
 
-        runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*") # Delete derived data
+        runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*")  # Delete derived data
         CleanupFolder('./TNS_App')
 
     def tearDown(self):
         pass
 
     def test_001_PluginAdd_MultiplePods(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
 
         output = runAUT(tnsPath + " plugin add QA-TestApps/CocoaPods/carousel --path TNS_App")
         assert ("TNS_App/node_modules/carousel" in output)
@@ -57,7 +57,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert ("location = \"group:TNSApp.xcodeproj\">" in output)
         assert ("location = \"group:Pods/Pods.xcodeproj\">" in output)
         assert FileExists("TNS_App/platforms/ios/Pods/Pods.xcodeproj")
-        
+
         Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
 
     def test_201_PluginAdd_Pod_GoogleMaps_Before_PlatformAdd_iOS(self):
@@ -101,7 +101,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
 
     def test_202_PluginAdd_Pod_GoogleMaps_After_PlatformAdd_iOS(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)    
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
 
         output = runAUT(tnsPath + " plugin add QA-TestApps/CocoaPods/googlesdk --path TNS_App")
         assert ("TNS_App/node_modules/googlesdk" in output)
@@ -137,12 +137,12 @@ class Plugins_OSX_Pods(unittest.TestCase):
         # This deployment target comes from the Podfile - platform :ios, '8.1'
         output = runAUT("cat TNS_App/platforms/ios/Pods/Pods.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
         assert ("IPHONEOS_DEPLOYMENT_TARGET = 8.1;" in output)
-        
+
         Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
 
     @unittest.skip("This is not a valid scenario anymore. It fails because DEPLOYMENT_TARGET=7.0 which is updated during plugin add command.")
     def test_400_Prepare_Install_Pods(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
 
         runAUT("cp QA-TestApps/CocoaPods/carousel/platforms/ios/Podfile TNS_App/platforms/ios")
         output = Build(platform="ios", path="TNS_App")
@@ -159,7 +159,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/Pods/Pods.xcodeproj")
 
     def test_401_PluginAdd_InvalidPod(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True) 
+        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
 
         output = runAUT(tnsPath + " plugin add QA-TestApps/CocoaPods/invalidpod --path TNS_App")
         assert ("TNS_App/node_modules/invalidpod" in output)

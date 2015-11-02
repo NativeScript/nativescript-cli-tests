@@ -4,21 +4,21 @@ from helpers._os_lib import CleanupFolder
 
 
 class Debug_Linux(unittest.TestCase):
-    
+
     def setUp(self):
-        
+
         print ""
         print "#####"
         print self.id()
         print "#####"
         print ""
-        
+
         CleanupFolder('./TNS_App');
 
-    def tearDown(self):        
+    def tearDown(self):
         pass
 
-    #TODO: Implement this test 
-    @unittest.skip("Not implemented.")  
+    # TODO: Implement this test
+    @unittest.skip("Not implemented.")
     def test_001_Debug_Android(self):
         pass

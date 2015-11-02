@@ -35,27 +35,27 @@ def InstallCLI(pathToPackage=None):
     assert "dev-post-install" not in output, "{N} CLI installation failed: dev-post-install."
     print output
 
-def GetAndroidRuntime():    
+def GetAndroidRuntime():
     if 'ANDROID_PATH' in os.environ:
         location = os.path.join(os.environ['ANDROID_PATH'], androidRuntimePath)
         shutil.copy2(location.strip(), (os.path.join(os.getcwd(), androidRuntimePath)))
     if FileExists(os.path.join(os.getcwd(), androidRuntimePath)):
         ExtractArchive(androidRuntimePath, os.path.splitext(androidRuntimePath)[0])
-    
-def GetiOSRuntime():    
+
+def GetiOSRuntime():
     if 'IOS_PATH' in os.environ:
         location = os.path.join(os.environ['IOS_PATH'], iosRuntimePath)
         shutil.copy2(location.strip(), (os.path.join(os.getcwd(), iosRuntimePath)))
     if FileExists(os.path.join(os.getcwd(), iosRuntimePath)):
         ExtractArchive(iosRuntimePath, os.path.splitext(iosRuntimePath)[0])
-        
-        currentDir = os.getcwd()   
-        os.chdir(os.path.join(currentDir, iosRuntimeSymlinkPath))    
+
+        currentDir = os.getcwd()
+        os.chdir(os.path.join(currentDir, iosRuntimeSymlinkPath))
         runAUT("npm install")
         os.chdir(currentDir);
-        
-                               
-def UninstallCLI():        
+
+
+def UninstallCLI():
     uninstallCommand = "npm rm nativescript"
     output = runAUT(uninstallCommand)
     print output
@@ -143,7 +143,7 @@ def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
             assert ("was successfully added for android platform" in output)
         else:
             assert ("The iOS Deployment Target is now 8.0 in order to support Cocoa Touch Frameworks." in output)
-            
+
     return output
 
 def Build(platform=None, mode=None, path=None, forDevice=False, logTrace=False, assertSuccess=True):
@@ -155,7 +155,7 @@ def Build(platform=None, mode=None, path=None, forDevice=False, logTrace=False, 
 
     if mode is not None:
         command += " --{0}".format(mode)
-        
+
     if forDevice:
         command += " --forDevice"
 
@@ -242,10 +242,10 @@ def LiveSync(platform=None, emulator=False, device=None, watch=False, path=None,
             assert ("Applying changes..." in output)
             assert ("Successfully synced application org.nativescript." in output)
             sleep(10)
-            
+
     return output
 
-def CreateProjectAndAddPlatform(projName, platform=None, frameworkPath=None, symlink=False): 
+def CreateProjectAndAddPlatform(projName, platform=None, frameworkPath=None, symlink=False):
     CreateProject(projName)
     PlatformAdd(platform, frameworkPath, projName, symlink)
 

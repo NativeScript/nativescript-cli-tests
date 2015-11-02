@@ -15,7 +15,7 @@ class Plugins_OSX_Sandbox_Pods(unittest.TestCase):
         print "#####"
         print ""
 
-        runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*") # Delete derived data
+        runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*")  # Delete derived data
         CleanupFolder('./TNS_App')
 
     def tearDown(self):
