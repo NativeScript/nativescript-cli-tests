@@ -7,6 +7,7 @@ from helpers._tns_lib import iosRuntimePath, \
 from helpers.device import GivenRealDeviceRunning, \
     StopEmulators, StopSimulators, GetPhysicalDeviceId
 
+# pylint: disable=R0201, C0111
 class LiveSync_iOS(unittest.TestCase):
 
     # LiveSync Tests on iOS Device
@@ -50,16 +51,16 @@ class LiveSync_iOS(unittest.TestCase):
         LiveSync(platform="ios", path="TNS_App")
 
         output = catAppFile("ios", "TNSApp", "app/main-page.xml")
-        assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
+        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
         output = catAppFile("ios", "TNSApp", "app/main-view-model.js")
-        assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
+        assert "this.set(\"message\", this.counter + \" clicks left\");" in output
         output = catAppFile("ios", "TNSApp", "app/app.css")
-        assert ("font-size: 20;" in output)
+        assert "font-size: 20;" in output
 
         output = catAppFile("ios", "TNSApp", "app/tns_modules/LICENSE")
-        assert ("Copyright (c) 9999 Telerik AD" in output)
+        assert "Copyright (c) 9999 Telerik AD" in output
         output = catAppFile("ios", "TNSApp", "app/tns_modules/application/application-common.js")
-        assert ("require(\"globals\"); // test" in output)
+        assert "require(\"globals\"); // test" in output
 
     def test_002_LiveSync_iOS_Device_XmlFile(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
@@ -70,13 +71,13 @@ class LiveSync_iOS(unittest.TestCase):
         LiveSync(platform="ios", device=deviceId, path="TNS_App")
 
         output = catAppFile("ios", "TNSApp", "app/main-view-model.js")
-        assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
+        assert "this.set(\"message\", this.counter + \" clicks left\");" in output
 
 #         replace("TNS_App/app/main-view-model.js", "clicks", "runs")
 #         Run(platform="ios", path="TNS_App")
 
 #         output = catAppFile("ios", "TNSApp", "app/main-view-model.js")
-#         assert ("this.set(\"message\", this.counter + \" runs left\");" in output)
+#         assert "this.set(\"message\", this.counter + \" runs left\");" in output
 
     def test_201_LiveSync_iOS_AddNewFiles(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
@@ -92,13 +93,13 @@ class LiveSync_iOS(unittest.TestCase):
         LiveSync(platform="ios", path="TNS_App")
 
         output = catAppFile("ios", "TNSApp", "app/test.xml")
-        assert ("<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output)
+        assert "<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output
         output = catAppFile("ios", "TNSApp", "app/test.js")
-        assert ("page.bindingContext = vmModule.mainViewModel;" in output)
+        assert "page.bindingContext = vmModule.mainViewModel;" in output
         output = catAppFile("ios", "TNSApp", "app/test.css")
-        assert ("color: #284848;" in output)
+        assert "color: #284848;" in output
         output = catAppFile("ios", "TNSApp", "app/test/main-view-model.js")
-        assert ("HelloWorldModel.prototype.tapAction" in output)
+        assert "HelloWorldModel.prototype.tapAction" in output
 
     @unittest.skip("TODO: Not implemented.")
     def test_202_LiveSync_iOS_DeleteFiles(self):

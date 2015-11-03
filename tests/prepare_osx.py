@@ -4,7 +4,7 @@ from helpers._os_lib import CleanupFolder, FileExists, runAUT, replace
 from helpers._tns_lib import CreateProject, CreateProjectAndAddPlatform, \
     iosRuntimeSymlinkPath, PlatformAdd, tnsPath
 
-
+# pylint: disable=R0201, C0111
 class Prepare_OSX(unittest.TestCase):
 
     def setUp(self):
@@ -23,7 +23,7 @@ class Prepare_OSX(unittest.TestCase):
     def test_001_Prepare_iOS(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
         output = runAUT(tnsPath + " prepare ios --path TNS_App")
-        assert("Project successfully prepared" in output)
+        assert "Project successfully prepared" in output
 
         # Verify app and modules are processed and available in platform folder
         assert FileExists('TNS_App/platforms/ios/TNSApp/app/main-view-model.js')
@@ -43,21 +43,21 @@ class Prepare_OSX(unittest.TestCase):
             print "Prepare number: " + str(i)
 
             output = runAUT(tnsPath + " prepare ios --path TNS_App")
-            assert("You have tns_modules dir in your app folder" in output)
-            assert("Project successfully prepared" in output)
+            assert "You have tns_modules dir in your app folder" in output
+            assert "Project successfully prepared" in output
 
             output = runAUT("cat TNS_App/app/tns_modules/package.json")
-            assert ("\"version\": \"1.2.1\"," in output)
+            assert "\"version\": \"1.2.1\"," in output
 
             output = runAUT("cat TNS_App/node_modules/tns-core-modules/package.json")
-            assert ("\"version\": \"1.2.1\"," not in output)
+            assert "\"version\": \"1.2.1\"," not in output
             output = runAUT("cat TNS_App/node_modules/tns-core-modules/application/application-common.js")
-            assert ("require(\"globals\"); // test" in output)
+            assert "require(\"globals\"); // test" in output
 
             output = runAUT("cat TNS_App/platforms/ios/TNSApp/app/tns_modules/package.json")
-            assert ("\"version\": \"1.2.1\"," not in output)
+            assert "\"version\": \"1.2.1\"," not in output
             output = runAUT("cat TNS_App/platforms/ios/TNSApp/app/tns_modules/application/application-common.js")
-            assert ("require(\"globals\"); // test" in output)
+            assert "require(\"globals\"); // test" in output
 
     def test_200_Prepare_Additional_AppResources_iOS(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
@@ -67,7 +67,7 @@ class Prepare_OSX(unittest.TestCase):
 
         # Prepare project
         output = runAUT(tnsPath + " prepare ios --path TNS_App")
-        assert("Project successfully prepared" in output)
+        assert "Project successfully prepared" in output
 
         # Verify app and modules are processed and available in platform folder
         assert FileExists('TNS_App/platforms/ios/TNSApp/app/main-view-model.js')
@@ -77,14 +77,14 @@ class Prepare_OSX(unittest.TestCase):
 
         # Verify XCode Project include files from App Resources folder
         output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep newDefault.png")
-        assert ("newDefault.png" in output)
+        assert "newDefault.png" in output
 
     def test_201_Prepare_iOS_PlatformNotAdded(self):
         CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " prepare ios --path TNS_App");
-        assert("Copying template files..." in output)
-        assert("Project successfully created." in output)
-        assert("Project successfully prepared" in output)
+        assert "Copying template files..." in output
+        assert "Project successfully created." in output
+        assert "Project successfully prepared" in output
 
         assert FileExists('TNS_App/platforms/ios/TNSApp/app/main-view-model.js')
         assert FileExists('TNS_App/platforms/ios/TNSApp/app/tns_modules/application/application.js')
@@ -96,7 +96,7 @@ class Prepare_OSX(unittest.TestCase):
         runAUT("cp TNS_App/node_modules/tns-core-modules/application/application.ios.js TNS_App/node_modules/tns-core-modules/application/New-application.ios.js")
 
         output = runAUT(tnsPath + " prepare ios --path TNS_App")
-        assert("Project successfully prepared" in output)
+        assert "Project successfully prepared" in output
 
         # Verify app and modules are processed and available in platform folder
         assert FileExists('TNS_App/platforms/ios/TNSApp/app/tns_modules/application/application.js')

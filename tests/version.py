@@ -4,6 +4,7 @@ import unittest
 from helpers._os_lib import runAUT
 from helpers._tns_lib import tnsPath
 
+# pylint: disable=R0201, C0111
 class Version(unittest.TestCase):
 
     def setUp(self):

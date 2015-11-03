@@ -4,7 +4,7 @@ from helpers._os_lib import CleanupFolder, CheckFilesExists, FileExists, FolderE
     IsEmpty, runAUT
 from helpers._tns_lib import CreateProject, tnsPath
 
-
+# pylint: disable=R0201, C0111
 class Create(unittest.TestCase):
 
     @classmethod
@@ -45,8 +45,8 @@ class Create(unittest.TestCase):
         assert not FolderExists ("TNS_App/app/tns_modules")
 
         output = runAUT("cat TNS_App/package.json")
-        assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
-        assert ("\"tns-core-modules\": \"1." in output)
+        assert "\"id\": \"org.nativescript.TNSApp\"" in output
+        assert "\"tns-core-modules\": \"1." in output
 
         assert FileExists("TNS_App/node_modules/tns-core-modules/package.json")
         assert FileExists("TNS_App/node_modules/tns-core-modules/LICENSE")
@@ -61,8 +61,8 @@ class Create(unittest.TestCase):
         assert not FolderExists ("folder/subfolder/TNS_App/app/tns_modules")
 
         output = runAUT("cat folder/subfolder/TNS_App/package.json")
-        assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
-        assert ("\"tns-core-modules\": \"1." in output)
+        assert "\"id\": \"org.nativescript.TNSApp\"" in output
+        assert "\"tns-core-modules\": \"1." in output
 
         assert FileExists("folder/subfolder/TNS_App/node_modules/tns-core-modules/package.json")
         assert FileExists("folder/subfolder/TNS_App/node_modules/tns-core-modules/LICENSE")
@@ -73,7 +73,7 @@ class Create(unittest.TestCase):
     def test_003_CreateProjectWithAppId(self):
         CreateProject(projName="TNS_App", appId="org.nativescript.MyApp")
         output = runAUT("cat TNS_App/package.json")
-        assert ("\"id\": \"org.nativescript.MyApp\"" in output)
+        assert "\"id\": \"org.nativescript.MyApp\"" in output
 
     def test_004_CreateProjectWithCopyFrom(self):
         # Create initial template project
@@ -88,57 +88,57 @@ class Create(unittest.TestCase):
 
         # Verify new project corresponds to name of the new project
         output = runAUT("cat TNS_App/package.json")
-        assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
+        assert "\"id\": \"org.nativescript.TNSApp\"" in output
 
         # Verify that content of the new project is based on first project
         output = runAUT("cat TNS_App/app/LICENSE")
-        assert not ("Copyright (c) 2015, Telerik AD" in output)
-        assert ("Copyright (c) 2015, Telerik A D" in output)
+        assert not "Copyright (c) 2015, Telerik AD" in output
+        assert "Copyright (c) 2015, Telerik A D" in output
 
     def test_005_CreateProjectWithSpaceInName(self):
         CreateProject(projName="\"TNS App\"");
         output = runAUT("cat \"TNS App/package.json\"");
-        assert ("\"id\": \"org.nativescript.TNSApp\"" in output)
+        assert "\"id\": \"org.nativescript.TNSApp\"" in output
 
     def test_006_CreateProjectWithDashInName(self):
         CreateProject(projName="\"tns-app\"");
         output = runAUT("cat \"tns-app/package.json\"");
-        assert ("\"id\": \"org.nativescript.tnsapp\"" in output)
+        assert "\"id\": \"org.nativescript.tnsapp\"" in output
 
     def test_007_CreateProjectWithName123(self):
         CreateProject(projName="123");
         output = runAUT("cat 123/package.json");
-        assert ("\"id\": \"org.nativescript.the123\"" in output)
+        assert "\"id\": \"org.nativescript.the123\"" in output
 
     def test_008_CreateProjectWithNameAppWarning(self):
         output = CreateProject(projName="app");
-        assert ("You cannot build applications named 'app' in Xcode. Consider creating a project with different name." in output)
+        assert "You cannot build applications named 'app' in Xcode. Consider creating a project with different name." in output
 
         output = runAUT("cat app/package.json");
-        assert ("\"id\": \"org.nativescript.app\"" in output)
+        assert "\"id\": \"org.nativescript.app\"" in output
 
     def test_400_CreateProjectWithCopyFromWrongPath(self):
         output = runAUT(tnsPath + " create TNS_App --copy-from invalidFolder")
-        assert not ("successfully created" in output)
+        assert not "successfully created" in output
 
-        assert ("The specified path" in output)
-        assert ("doesn't exist. Check that you specified the path correctly and try again." in output)
+        assert "The specified path" in output
+        assert "doesn't exist. Check that you specified the path correctly and try again." in output
 
     def test_401_CreateProjectInAlreadyExistingFolder(self):
         CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " create TNS_App")
-        assert not ("successfully created" in output)
-        assert ("Path already exists and is not empty" in output)
+        assert not "successfully created" in output
+        assert "Path already exists and is not empty" in output
 
     def test_402_CreateProjectWithWrongCopyFromCommand(self):
         # Create initial template project
         CreateProject(projName="template")
 
         output = runAUT(tnsPath + " create TNS_App -copy-from template")
-        assert not ("successfully created" in output)
-        assert ("To see command's options, use '$ tns help create'" in output)
+        assert not "successfully created" in output
+        assert "To see command's options, use '$ tns help create'" in output
 
     def test_500_CreateProjectWithNoName(self):
         output = runAUT(tnsPath + " create")
-        assert ("You need to provide all the required parameters." in output)
-        assert ("# create" in output)
+        assert "You need to provide all the required parameters." in output
+        assert "# create" in output

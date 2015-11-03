@@ -5,6 +5,7 @@ Report.*
 node_modules
 *.tgz
 TNS*
+TestApp*
 QA*
 setup*
 tns-android

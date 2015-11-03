@@ -6,7 +6,7 @@ import unittest
 from helpers._os_lib import CleanupFolder, runAUT, FileExists
 from helpers._tns_lib import tnsPath
 
-
+# pylint: disable=R0201, C0111
 class InitAndInstall(unittest.TestCase):
 
     def setUp(self):
@@ -31,30 +31,30 @@ class InitAndInstall(unittest.TestCase):
         output = runAUT(os.path.join("..", tnsPath) + " init --force")
         os.chdir(currentDir);
 
-        assert ("Project successfully initialized" in output)
+        assert "Project successfully initialized" in output
         assert FileExists("TNS_App/package.json")
         assert not FileExists("TNS_App/app")
         assert not FileExists("TNS_App/platform")
 
         output = runAUT("cat TNS_App/package.json")
-        assert ("org.nativescript.TNSApp" in output)
-        assert ("tns-android" in output)
-        assert ("tns-core-modules" in output)
+        assert "org.nativescript.TNSApp" in output
+        assert "tns-android" in output
+        assert "tns-core-modules" in output
         if 'Darwin' in platform.platform():
-            assert ("tns-ios" in output)
+            assert "tns-ios" in output
 
     def test_002_Init_Path(self):
         output = runAUT(tnsPath + " init --path TNS_App --force")
-        assert ("Project successfully initialized" in output)
+        assert "Project successfully initialized" in output
         assert FileExists("TNS_App/package.json")
         assert not FileExists("TNS_App/app")
         assert not FileExists("TNS_App/platform")
 
         output = runAUT("cat TNS_App/package.json")
-        assert ("org.nativescript.TNSApp" in output)
-        assert ("tns-android" in output)
+        assert "org.nativescript.TNSApp" in output
+        assert "tns-android" in output
         if 'Darwin' in platform.platform():
-            assert ("tns-ios" in output)
+            assert "tns-ios" in output
 
     def test_003_Init_UpdateExistingFile(self):
         self.test_002_Init_Path();
@@ -63,7 +63,7 @@ class InitAndInstall(unittest.TestCase):
         for line in fileinput.input("TNS_App/package.json", inplace=1):
             print line.replace("org.nativescript.TNSApp", "org.nativescript.TestApp"),
         output = runAUT("cat TNS_App/package.json")
-        assert ("org.nativescript.TestApp" in output)
+        assert "org.nativescript.TestApp" in output
 
         # Overwrite changes
         self.test_002_Init_Path();
@@ -72,7 +72,7 @@ class InitAndInstall(unittest.TestCase):
         self.test_002_Init_Path();
 
         output = runAUT(tnsPath + " install --path TNS_App")
-        assert ("Project successfully created" in output)
+        assert "Project successfully created" in output
 
         # Not valid for 1.3.0+
         # assert FileExists("TNS_App/platforms/android/build.gradle")
@@ -90,15 +90,15 @@ class InitAndInstall(unittest.TestCase):
         runAUT("npm i lodash --save")
         os.chdir(currentDir);
         output = runAUT("cat TNS_App/package.json")
-        assert ("devDependencies" in output)
-        assert ("gulp" in output)
-        assert ("lodash" in output)
+        assert "devDependencies" in output
+        assert "gulp" in output
+        assert "lodash" in output
 
         CleanupFolder('./TNS_App/node_modules');
         assert not FileExists("TNS_App/node_modules")
 
         output = runAUT(tnsPath + " install --path TNS_App")
-        assert ("Project successfully created" in output)
+        assert "Project successfully created" in output
         assert FileExists("TNS_App/node_modules/lodash")
         assert FileExists("TNS_App/node_modules/gulp")
 
@@ -119,12 +119,12 @@ class InitAndInstall(unittest.TestCase):
 
         os.chdir(currentDir);
         output = runAUT("cat TNS_App/package.json")
-        assert ("devDependencies" in output)
-        assert ("gulp" in output)
-        assert ("lodash" in output)
+        assert "devDependencies" in output
+        assert "gulp" in output
+        assert "lodash" in output
 
         output = runAUT(tnsPath + " install --path TNS_App")
-        assert ("Project successfully created" in output)
+        assert "Project successfully created" in output
         assert FileExists("TNS_App/node_modules/lodash")
         assert FileExists("TNS_App/node_modules/gulp")
         assert FileExists("TNS_App/platforms/android/build.gradle")
@@ -142,18 +142,18 @@ class InitAndInstall(unittest.TestCase):
         os.chdir(currentDir);
         runAUT("cp -R template-hello-world TNS_App/app")
         output = runAUT("cat TNS_App/package.json")
-        assert ("devDependencies" in output)
-        assert ("gulp" in output)
-        assert ("lodash" in output)
+        assert "devDependencies" in output
+        assert "gulp" in output
+        assert "lodash" in output
 
         output = runAUT(tnsPath + " install --path TNS_App")
-        assert ("Project successfully created" in output)
+        assert "Project successfully created" in output
         assert FileExists("TNS_App/node_modules/lodash")
         assert FileExists("TNS_App/node_modules/gulp")
         assert FileExists("TNS_App/platforms/android/build.gradle")
 
         output = runAUT(tnsPath + " prepare android --path TNS_App")
-        assert ("Project successfully prepared" in output)
+        assert "Project successfully prepared" in output
 
         assert FileExists("TNS_App/platforms/android/src/main/assets/app/tns_modules/lodash")
         assert not FileExists("TNS_App/platforms/android/src/main/assets/app/tns_modules/gulp")
@@ -161,10 +161,10 @@ class InitAndInstall(unittest.TestCase):
         if 'Darwin' in platform.platform():
             assert FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj")
             output = runAUT(tnsPath + " prepare ios --path TNS_App")
-            assert ("Project successfully prepared" in output)
+            assert "Project successfully prepared" in output
             assert FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/lodash")
             assert not FileExists("TNS_App/platforms/ios/TNSApp/app/tns_modules/gulp")
 
     def test_400_Install_InNotExistingFolder(self):
         output = runAUT(tnsPath + " install --path TNS_App")
-        assert ("No project found" in output)
+        assert "No project found" in output

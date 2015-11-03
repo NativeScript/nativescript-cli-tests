@@ -4,6 +4,7 @@ from helpers._os_lib import CleanupFolder, CheckFilesExists, FolderExists, runAU
 from helpers._tns_lib import iosRuntimePath, \
     Build, CreateProject, PlatformAdd, LibraryAdd
 
+# pylint: disable=R0201, C0111
 class Library_OSX(unittest.TestCase):
 
     def setUp(self):
@@ -28,15 +29,15 @@ class Library_OSX(unittest.TestCase):
 
         Build(platform="ios", path="TNS_App")
         output = runAUT("cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep TelerikUI")
-        assert ("TelerikUI.framework in Frameworks" in output)
-        assert ("TelerikUI.framework in Embed Frameworks" in output)
-        assert ("/TelerikUI.framework" in output)
-        assert not ("TNS_App/lib/iOS/TelerikUI.framework" in output)
+        assert "TelerikUI.framework in Frameworks" in output
+        assert "TelerikUI.framework in Embed Frameworks" in output
+        assert "/TelerikUI.framework" in output
+        assert not "TNS_App/lib/iOS/TelerikUI.framework" in output
 
     def test_401_Library_Add_iOS_NoLib(self):
         CreateProject(projName="TNS_App")
         PlatformAdd(platform="ios", frameworkPath=iosRuntimePath, path="TNS_App")
 
         output = LibraryAdd(platform="ios", libPath="TelerikUI.framework", path="TNS_App", assertSuccess=False)
-        assert (".framework does not exist" in output)
+        assert ".framework does not exist" in output
         assert not FolderExists("TNS_App/lib")

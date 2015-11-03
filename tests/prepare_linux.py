@@ -4,7 +4,7 @@ from helpers._os_lib import CleanupFolder, FileExists, runAUT, replace
 from helpers._tns_lib import androidRuntimePath, CreateProject, CreateProjectAndAddPlatform, \
     PlatformAdd, tnsPath
 
-
+# pylint: disable=R0201, C0111
 class Prepare_Linux(unittest.TestCase):
 
     def setUp(self):
@@ -23,7 +23,7 @@ class Prepare_Linux(unittest.TestCase):
     def test_001_Prepare_Android(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         output = runAUT(tnsPath + " prepare android --path TNS_App")
-        assert("Project successfully prepared" in output)
+        assert "Project successfully prepared" in output
 
         # Verify app and modules are processed and available in platform folder
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/main-view-model.js')
@@ -37,7 +37,7 @@ class Prepare_Linux(unittest.TestCase):
         os.chdir(os.path.join(currentDir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " prepare android")
         os.chdir(currentDir);
-        assert("Project successfully prepared" in output)
+        assert "Project successfully prepared" in output
 
         # Verify app and modules are processed and available in platform folder
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/main-view-model.js')
@@ -57,34 +57,34 @@ class Prepare_Linux(unittest.TestCase):
             print "Prepare number: " + str(i)
 
             output = runAUT(tnsPath + " prepare android --path TNS_App")
-            assert("You have tns_modules dir in your app folder" in output)
-            assert("Project successfully prepared" in output)
+            assert "You have tns_modules dir in your app folder" in output
+            assert "Project successfully prepared" in output
 
             output = runAUT("cat TNS_App/app/tns_modules/package.json")
-            assert ("\"version\": \"1.2.1\"," in output)
+            assert "\"version\": \"1.2.1\"," in output
 
             output = runAUT("cat TNS_App/node_modules/tns-core-modules/package.json")
-            assert ("\"version\": \"1.2.1\"," not in output)
+            assert "\"version\": \"1.2.1\"," not in output
             output = runAUT("cat TNS_App/node_modules/tns-core-modules/application/application-common.js")
-            assert ("require(\"globals\"); // test" in output)
+            assert "require(\"globals\"); // test" in output
 
             output = runAUT("cat TNS_App/platforms/android/src/main/assets/app/tns_modules/package.json")
-            assert ("\"version\": \"1.2.1\"," not in output)
+            assert "\"version\": \"1.2.1\"," not in output
             output = runAUT("cat TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application-common.js")
-            assert ("require(\"globals\"); // test" in output)
+            assert "require(\"globals\"); // test" in output
 
     def test_210_Prepare_Android_PlatformNotAdded(self):
         CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " prepare android --path TNS_App");
-        assert("Copying template files..." in output)
-        assert("Project successfully created." in output)
-        assert("Project successfully prepared" in output)
+        assert "Copying template files..." in output
+        assert "Project successfully created." in output
+        assert "Project successfully prepared" in output
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/tns_modules/xml/xml.js')
 
     def test_300_Prepare_Android_RemoveOldFiles(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         output = runAUT(tnsPath + " prepare android --path TNS_App")
-        assert("Project successfully prepared" in output)
+        assert "Project successfully prepared" in output
 
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/app.js')
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/app.css')
@@ -95,7 +95,7 @@ class Prepare_Linux(unittest.TestCase):
         runAUT("mv TNS_App/app/main-page.xml TNS_App/app/main-page-new.xml")
 
         output = runAUT(tnsPath + " prepare android --path TNS_App")
-        assert("Project successfully prepared" in output)
+        assert "Project successfully prepared" in output
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/app-new.js')
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/app-new.css')
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/main-page-new.xml')
@@ -107,7 +107,7 @@ class Prepare_Linux(unittest.TestCase):
     def test_301_Prepare_Android_PlatformSpecificFiles(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
         output = runAUT(tnsPath + " prepare android --path TNS_App")
-        assert("Project successfully prepared" in output)
+        assert "Project successfully prepared" in output
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/app.css')
 
         runAUT("cp TNS_App/app/app.js TNS_App/app/app.ios.js")
@@ -122,7 +122,7 @@ class Prepare_Linux(unittest.TestCase):
         runAUT("mv TNS_App/app/app.css TNS_App/app/appNew.css")
 
         output = runAUT(tnsPath + " prepare android --path TNS_App")
-        assert("Project successfully prepared" in output)
+        assert "Project successfully prepared" in output
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/app.css')
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/app.js')
         assert FileExists('TNS_App/platforms/android/src/main/assets/app/appandroid.js')
@@ -135,9 +135,9 @@ class Prepare_Linux(unittest.TestCase):
     def test_400_Prepare_MissingPlatform(self):
         CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " prepare --path TNS_App");
-        assert("You need to provide all the required parameters." in output)
+        assert "You need to provide all the required parameters." in output
 
     def test_401_Prepare_InvalidPlatform(self):
         CreateProject(projName="TNS_App")
         output = runAUT(tnsPath + " prepare windows --path TNS_App");
-        assert("Invalid platform windows. Valid platforms are ios or android." in output)
+        assert "Invalid platform windows. Valid platforms are ios or android." in output

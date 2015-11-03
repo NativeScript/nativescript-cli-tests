@@ -12,14 +12,14 @@ class Autocomplete(unittest.TestCase):
     '''
     Autocomplete tests
     '''
-    def setup(self):
+    def setUp(self):
         print ""
         print "#####"
         print self.id()
         print "#####"
         print ""
 
-    def teardown(self):
+    def tearDown(self):
         pass
 
     def test_001_autocomplete_enable(self):
@@ -45,10 +45,6 @@ class Autocomplete(unittest.TestCase):
         assert "Autocompletion is disabled." in output
 
     def test_400_autocomplete_invalid_parameter(self):
-        '''
-        Call autocomplate command with invalid parameter
-        should return appropriate error message
-        '''
         command = tnsPath + " autocomplete invalidParam"
         output = runAUT(command)
         assert "The input is not valid sub-command for 'autocomplete' command" in output

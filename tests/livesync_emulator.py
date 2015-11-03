@@ -7,7 +7,7 @@ from helpers._tns_lib import androidRuntimePath, \
 from helpers.device import GivenRunningEmulator, \
     StopEmulators, StopSimulators
 
-
+# pylint: disable=R0201, C0111
 class LiveSync_Emulator(unittest.TestCase):
 
     # LiveSync Tests on Android Emulator
@@ -50,16 +50,16 @@ class LiveSync_Emulator(unittest.TestCase):
         LiveSync(platform="android", emulator=True, device="emulator-5554", path="TNS_App")
 
         output = catAppFileOnEmulator("android", "TNSApp", "app/main-page.xml")
-        assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
+        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
         output = catAppFileOnEmulator("android", "TNSApp", "app/main-view-model.js")
-        assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
+        assert "this.set(\"message\", this.counter + \" clicks left\");" in output
         output = catAppFileOnEmulator("android", "TNSApp", "app/app.css")
-        assert ("font-size: 20;" in output)
+        assert "font-size: 20;" in output
 
         output = catAppFileOnEmulator("android", "TNSApp", "app/tns_modules/LICENSE")
-        assert ("Copyright (c) 9999 Telerik AD" in output)
+        assert "Copyright (c) 9999 Telerik AD" in output
         output = catAppFileOnEmulator("android", "TNSApp", "app/tns_modules/application/application-common.js")
-        assert ("require(\"globals\"); // test" in output)
+        assert "require(\"globals\"); // test" in output
 
     def test_201_LiveSync_Android_AddNewFiles(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
@@ -75,13 +75,13 @@ class LiveSync_Emulator(unittest.TestCase):
 
         time.sleep(1)
         output = catAppFileOnEmulator("android", "TNSApp", "app/test.xml")
-        assert ("<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output)
+        assert "<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output
         output = catAppFileOnEmulator("android", "TNSApp", "app/test.js")
-        assert ("page.bindingContext = vmModule.mainViewModel;" in output)
+        assert "page.bindingContext = vmModule.mainViewModel;" in output
         output = catAppFileOnEmulator("android", "TNSApp", "app/test.css")
-        assert ("color: #284848;" in output)
+        assert "color: #284848;" in output
         output = catAppFileOnEmulator("android", "TNSApp", "app/test/main-view-model.js")
-        assert ("HelloWorldModel.prototype.tapAction" in output)
+        assert "HelloWorldModel.prototype.tapAction" in output
 
     @unittest.skip("TODO: Fix this test.")
     def test_202_LiveSync_Android_Watch(self):
@@ -96,7 +96,7 @@ class LiveSync_Emulator(unittest.TestCase):
 #         time.sleep(60)
 #         print "assert"
 #         output = catAppFile("android", "TNSApp", "app/main-page.xml")
-#         assert ("<Button text=\"TEST1\" tap=\"{{ tapAction }}\" />" in output)
+#         assert "<Button text=\"TEST1\" tap=\"{{ tapAction }}\" />" in output
 #
 #         time.sleep(5)
 #         replace("TNS_App/app/main-page.xml", "TEST1", "TEST2")
@@ -104,7 +104,7 @@ class LiveSync_Emulator(unittest.TestCase):
 #         time.sleep(15)
 #         print "assert"
 #         output = catAppFile("android", "TNSApp", "app/main-page.xml")
-#         assert ("<Button text=\"TEST2\" tap=\"{{ tapAction }}\" />" in output)
+#         assert "<Button text=\"TEST2\" tap=\"{{ tapAction }}\" />" in output
 #
 #         time.sleep(5)
 #         replace("TNS_App/app/main-page.xml", "TEST2", "TEST3")
@@ -112,7 +112,7 @@ class LiveSync_Emulator(unittest.TestCase):
 #         time.sleep(15)
 #         print "assert"
 #         output = catAppFile("android", "TNSApp", "app/main-page.xml")
-#         assert ("<Button text=\"TEST3\" tap=\"{{ tapAction }}\" />" in output)
+#         assert "<Button text=\"TEST3\" tap=\"{{ tapAction }}\" />" in output
 #
 #         print "killing child ..."
 #         pr.terminate()
@@ -129,4 +129,4 @@ class LiveSync_Emulator(unittest.TestCase):
 
         time.sleep(3)
         output = catAppFileOnEmulator("android", "TNSApp", "app/main-page.xml")
-        assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
+        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output

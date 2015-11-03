@@ -6,7 +6,7 @@ from helpers._tns_lib import tnsPath, CreateProjectAndAddPlatform, androidRuntim
 from helpers.adb import StopApplication, WaitUntilAppIsRunning
 from helpers.device import GivenRealDeviceRunning, GetPhysicalDeviceId
 
-
+# pylint: disable=R0201, C0111
 class Device_OSX(unittest.TestCase):
 
     def setUp(self):
@@ -34,15 +34,15 @@ class Device_OSX(unittest.TestCase):
             # Deploy TNS_App on device
             CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
             output = runAUT(tnsPath + " deploy android --path TNS_App")
-            assert ("Project successfully prepared" in output)
-            assert ("Project successfully built" in output)
-            assert ("Successfully deployed on device" in output)
+            assert "Project successfully prepared" in output
+            assert "Project successfully built" in output
+            assert "Successfully deployed on device" in output
             assert (deviceId in output)
             sleep(10)
 
             # VErify "tns device list-applications" list org.nativescript.TNSApp
             output = runAUT(tnsPath + " device list-applications --device " + deviceId)
-            assert ("org.nativescript.TNSApp" in output)
+            assert "org.nativescript.TNSApp" in output
 
             # Verify app is running
             WaitUntilAppIsRunning(appId="org.nativescript.TNSApp", deviceId=deviceId, timeout=60)
@@ -73,15 +73,15 @@ class Device_OSX(unittest.TestCase):
             # Deploy TNS_App on device
             CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
             output = runAUT(tnsPath + " deploy ios --path TNS_App")
-            assert ("Project successfully prepared" in output)
-            assert ("Project successfully built" in output)
-            assert ("Successfully deployed on device" in output)
+            assert "Project successfully prepared" in output
+            assert "Project successfully built" in output
+            assert "Successfully deployed on device" in output
             assert (deviceId in output)
             sleep(10)
 
             # Get list installed apps
             output = runAUT(tnsPath + " device list-applications --device " + deviceId)
-            assert ("org.nativescript.TNSApp" in output)
+            assert "org.nativescript.TNSApp" in output
 
             # Start it via device command and verify app is running
             output = runAUT(tnsPath + " device run org.nativescript.TNSApp --device " + deviceId)

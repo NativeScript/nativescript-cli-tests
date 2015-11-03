@@ -7,6 +7,7 @@ from helpers._tns_lib import androidRuntimePath, \
 from helpers.device import GivenRealDeviceRunning, \
     StopEmulators, StopSimulators, GetPhysicalDeviceId
 
+# pylint: disable=R0201, C0111
 class LiveSync_Android(unittest.TestCase):
 
     # LiveSync Tests on Android Device
@@ -49,16 +50,16 @@ class LiveSync_Android(unittest.TestCase):
         LiveSync(platform="android", path="TNS_App")
 
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
-        assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
+        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
         output = catAppFile("android", "TNSApp", "app/main-view-model.js")
-        assert ("this.set(\"message\", this.counter + \" clicks left\");" in output)
+        assert "this.set(\"message\", this.counter + \" clicks left\");" in output
         output = catAppFile("android", "TNSApp", "app/app.css")
-        assert ("font-size: 20;" in output)
+        assert "font-size: 20;" in output
 
         output = catAppFile("android", "TNSApp", "app/tns_modules/LICENSE")
-        assert ("Copyright (c) 9999 Telerik AD" in output)
+        assert "Copyright (c) 9999 Telerik AD" in output
         output = catAppFile("android", "TNSApp", "app/tns_modules/application/application-common.js")
-        assert ("require(\"globals\"); // test" in output)
+        assert "require(\"globals\"); // test" in output
 
     # This test executes the Run -> LiveSync -> Run work flow on an android device with API level 21.
     def test_002_LiveSync_Android_Device_XmlFile_Run(self):
@@ -70,13 +71,13 @@ class LiveSync_Android(unittest.TestCase):
         LiveSync(platform="android", device=deviceId, path="TNS_App")
 
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
-        assert ("<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output)
+        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
 
         replace("TNS_App/app/main-page.xml", "TEST", "RUN")
         Run(platform="android", path="TNS_App")
 
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
-        assert ("<Button text=\"RUN\" tap=\"{{ tapAction }}\" />" in output)
+        assert "<Button text=\"RUN\" tap=\"{{ tapAction }}\" />" in output
 
     def test_201_LiveSync_Android_AddNewFiles(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
@@ -93,13 +94,13 @@ class LiveSync_Android(unittest.TestCase):
         time.sleep(5)
 
         output = catAppFile("android", "TNSApp", "app/test.xml")
-        assert ("<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output)
+        assert "<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output
         output = catAppFile("android", "TNSApp", "app/test.js")
-        assert ("page.bindingContext = vmModule.mainViewModel;" in output)
+        assert "page.bindingContext = vmModule.mainViewModel;" in output
         output = catAppFile("android", "TNSApp", "app/test.css")
-        assert ("color: #284848;" in output)
+        assert "color: #284848;" in output
         output = catAppFile("android", "TNSApp", "app/test/main-view-model.js")
-        assert ("HelloWorldModel.prototype.tapAction" in output)
+        assert "HelloWorldModel.prototype.tapAction" in output
 
     @unittest.skip("TODO: Not implemented.")
     def test_202_LiveSync_Android_DeleteFiles(self):
@@ -116,7 +117,7 @@ class LiveSync_Android(unittest.TestCase):
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         output = LiveSync(path="TNS_App", assertSuccess=False)
 
-        assert ("Multiple device platforms detected (iOS and Android). Specify platform or device on command line" in output)
+        assert "Multiple device platforms detected (iOS and Android). Specify platform or device on command line" in output
 
     @unittest.skip("TODO: Implement this test..")
     def test_302_LiveSync_Android_MultipleDevice(self):

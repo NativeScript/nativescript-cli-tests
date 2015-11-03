@@ -2,7 +2,7 @@ import unittest
 
 from helpers._os_lib import CleanupFolder
 
-
+# pylint: disable=R0201, C0111
 class Debug_Linux(unittest.TestCase):
 
     def setUp(self):

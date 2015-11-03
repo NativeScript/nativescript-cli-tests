@@ -11,7 +11,7 @@ from helpers._tns_lib import tnsPath, CreateProject, CreateProjectAndAddPlatform
     androidKeyStoreAlias, androidKeyStoreAliasPassword, PlatformAdd, \
     androidRuntimeSymlinkPath
 
-# pylint: disable=R0201, C0111, R0904
+# pylint: disable=R0201, C0111, C0103, R0904
 class BuildAndroid(unittest.TestCase):
 
     @classmethod
@@ -77,7 +77,7 @@ class BuildAndroid(unittest.TestCase):
             print "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282"
         else:
             CreateProject(projName="TNS_AppSymlink")
-            output = PlatformAdd(platform="android", path="TNS_AppSymlink",\
+            output = PlatformAdd(platform="android", path="TNS_AppSymlink", \
                                  frameworkPath=androidRuntimeSymlinkPath, symlink=True)
             assert "Project successfully created" in output
             output = runAUT(tnsPath + " build android --path TNS_AppSymlink")
@@ -125,7 +125,7 @@ class BuildAndroid(unittest.TestCase):
         assert FileExists("TNSAppNoPlatform/platforms/android"
                           "/build/outputs/apk/TNSAppNoPlatform-debug.apk")
 
-    def test_211_Build_Android_NoPlatformsFolder(self):
+    def test_203_build_android_platform_when_platform_folder_is_empty(self):
         CreateProject(projName="TNSAppNoPlatform")
         CleanupFolder('./TNSAppNoPlatform/platforms')
         output = runAUT(tnsPath + " build android --path TNSAppNoPlatform  --log trace")
@@ -136,9 +136,10 @@ class BuildAndroid(unittest.TestCase):
 
         assert not "ERROR" in output
         assert not "FAILURE" in output
-        assert FileExists("TNSAppNoPlatform/platforms/android/build/outputs/apk/TNSAppNoPlatform-debug.apk")
+        assert FileExists("TNSAppNoPlatform/platforms/android"
+                          "/build/outputs/apk/TNSAppNoPlatform-debug.apk")
 
-    def test_300_Build_Android_WithAdditionalStylesXML(self):
+    def test_300_build_android_with_additional_styles_xml(self):
 
         # This is test for issue 644
 
@@ -151,8 +152,9 @@ class BuildAndroid(unittest.TestCase):
         assert "Project successfully built" in output
         assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
-    def test_301_Build_Android_WithDashInPath(self):
-        CreateProjectAndAddPlatform(projName="tns-app", platform="android", frameworkPath=androidRuntimePath)
+    def test_301_build_project_with_dash(self):
+        CreateProjectAndAddPlatform(projName="tns-app", \
+                                    platform="android", frameworkPath=androidRuntimePath)
 
         # Verify project builds
         output = runAUT(tnsPath + " build android --path tns-app")
@@ -169,12 +171,12 @@ class BuildAndroid(unittest.TestCase):
         output = runAUT("cat tns-app/platforms/android/src/main/AndroidManifest.xml")
         assert "org.nativescript.tnsapp" in output
 
-    def test_302_Build_Android_WithGZFiles(self):
-
+    def test_302_build_project_with_gz_file(self):
+        # TODO: Find better way to skip tests on different OS
         # Skip on Windows, because tar is not available
-        if ('Windows' not in platform.platform()):
+        if 'Windows' not in platform.platform():
             runAUT("tar -czf TNS_App/app/app.tar.gz TNS_App/app/app.js")
-            assert(FileExists("TNS_App/app/app.tar.gz"))
+            assert FileExists("TNS_App/app/app.tar.gz")
 
         output = runAUT(tnsPath + " build android --path TNS_App")
 
@@ -182,7 +184,7 @@ class BuildAndroid(unittest.TestCase):
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
 
-    def test_303_Build_Android_Sdk22(self):
+    def test_310_build_android_with_sdk22(self):
 
         output = runAUT(tnsPath + " build android --compileSdk 22 --path TNS_App")
         assert "Project successfully prepared" in output
@@ -193,7 +195,7 @@ class BuildAndroid(unittest.TestCase):
 
         assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
-    def test_304_Build_Android_Sdk23(self):
+    def test_311_build_android_with_sdk23(self):
 
         output = runAUT(tnsPath + " build android --compileSdk 23 --path TNS_App")
         assert "Project successfully prepared" in output
@@ -204,19 +206,20 @@ class BuildAndroid(unittest.TestCase):
 
         assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
-    def test_305_Build_Android_Sdk19(self):
+    def test_312_build_android_with_sdk19(self):
 
         output = runAUT(tnsPath + " build android --compileSdk 19 --path TNS_App --log trace")
         assert "Project successfully prepared" in output
         assert "BUILD FAILED" in output
 
-    def test_306_Build_Android_Sdk99(self):
+    def test_313_build_android_with_sdk99(self):
 
         output = runAUT(tnsPath + " build android --compileSdk 99 --path TNS_App")
         assert "Project successfully prepared" in output
-        assert "You have specified '99' for compile sdk, but it is not installed on your system." in output
+        assert "You have specified '99' for compile sdk," \
+        " but it is not installed on your system." in output
 
-    def test_310_Build_Android_Release_With_CopyTo(self):
+    def test_320_build_release_with_copyto_option(self):
         output = runAUT(tnsPath + " build android --keyStorePath " + androidKeyStorePath +
                         " --keyStorePassword " + androidKeyStorePassword +
                         " --keyStoreAlias " + androidKeyStoreAlias +
@@ -230,7 +233,7 @@ class BuildAndroid(unittest.TestCase):
         assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-release.apk")
         assert FileExists("TNSApp-release.apk")
 
-    def test_311_Build_Android_With_CopyTo(self):
+    def test_321_build_with_copyto_option(self):
         output = runAUT(tnsPath + " build android --path TNS_App --copy-to ./")
         assert "Project successfully prepared" in output
 
@@ -243,7 +246,7 @@ class BuildAndroid(unittest.TestCase):
         assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
         assert FileExists("TNSApp-debug.apk")
 
-    def test_400_Build_MissingPlatform(self):
+    def test_400_build_with_no_platform(self):
         output = runAUT(tnsPath + " build")
         assert "The input is not valid sub-command for 'build' command" in output
         assert "# build" in output
@@ -253,34 +256,35 @@ class BuildAndroid(unittest.TestCase):
         else:
             assert "$ tns build android" in output
 
-    def test_401_Build_InvalidPlatform(self):
+    def test_401_build_invalid_platform(self):
         output = runAUT(tnsPath + " build invalidCommand")
         assert "The input is not valid sub-command for 'build' command" in output
 
-    def test_402_Build_Android_WithOutPath(self):
+    def test_402_build_no_path(self):
         output = runAUT(tnsPath + " build android")
         assert "No project found at or above" in output
         assert "and neither was a --path specified." in output
 
-    def test_403_Build_Android_WithInvalidPath(self):
+    def test_403_build_invalid_path(self):
         output = runAUT(tnsPath + " build android --path invalidPath")
         assert "No project found at or above" in output
         assert "and neither was a --path specified." in output
 
-    def test_404_Build_Android_WithWrongParam(self):
+    def test_404_build_invalid_option(self):
         output = runAUT(tnsPath + " build android --invalidOption --path TNS_App")
         assert "The option 'invalidOption' is not supported" in output
 
-    def test_405_Build_IOSonNotOSXMachine(self):
+    def test_405_build_ios_on_linux_machine(self):
         output = runAUT(tnsPath + " build ios --path TNS_App")
         if 'Darwin' in platform.platform():
             pass
         else:
             assert "Applications for platform ios can not be built on this OS" in output
 
-    def test_410_Build_Android_Release_NoKeyWarn(self):
+    def test_406_build_release_without_key_options(self):
         output = runAUT(tnsPath + " build android --release --path TNS_App")
 
-        assert "When producing a release build, you need to specify all --key-store-* options." in output
+        assert "When producing a release build, "\
+        "you need to specify all --key-store-* options." in output
         assert "# build android" in output
         assert not FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-release.apk")
