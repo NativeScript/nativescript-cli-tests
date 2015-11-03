@@ -11,8 +11,8 @@ from tests.autocomplete import Autocomplete
 from tests.build_linux import BuildAndroid
 from tests.build_osx import BuildiOS
 from tests.create import Create
-from tests.debug_linux import Debug_Linux
-from tests.debug_osx import Debug_OSX
+from tests.debug_linux import DebugAndroid
+from tests.debug_osx import DebugiOS
 from tests.deploy_linux import Deploy_Linux
 from tests.deploy_osx import Deploy_OSX
 from tests.device_linux import Device_Linux
@@ -141,7 +141,7 @@ def run_tests():
         suite.addTests(
             unittest.TestLoader().loadTestsFromTestCase(Device_Linux))
         suite.addTests(
-            unittest.TestLoader().loadTestsFromTestCase(Debug_Linux))
+            unittest.TestLoader().loadTestsFromTestCase(DebugAndroid))
         if 'Darwin' in platform.platform():
             suite.addTests(
                 unittest.TestLoader().loadTestsFromTestCase(Deploy_OSX))
@@ -154,7 +154,7 @@ def run_tests():
             suite.addTests(
                 unittest.TestLoader().loadTestsFromTestCase(Device_OSX))
             suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(Debug_OSX))
+                unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
 
     # Smoke test runs only high priority tests
     if ('TESTRUN' in os.environ) and ("SMOKE" in os.environ['TESTRUN']):

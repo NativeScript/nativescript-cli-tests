@@ -1,11 +1,14 @@
+'''
+Test for Android debugger
+'''
 import unittest
-
 from helpers._os_lib import CleanupFolder
 
-# pylint: disable=R0201, C0111
-
-
-class Debug_Linux(unittest.TestCase):
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=R0201, C0103, C0111, R0904
+class DebugAndroid(unittest.TestCase):
 
     def setUp(self):
 
@@ -20,7 +23,7 @@ class Debug_Linux(unittest.TestCase):
     def tearDown(self):
         pass
 
-    # TODO: Implement this test
     @unittest.skip("Not implemented.")
-    def test_001_Debug_Android(self):
+    def test_001_debug_android(self):
+        # TODO: Implement this test
         pass

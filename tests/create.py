@@ -1,3 +1,6 @@
+'''
+Test for create command
+'''
 import unittest
 import fileinput
 
@@ -9,9 +12,7 @@ from helpers._tns_lib import CreateProject, tnsPath
 # C0111 - Missing docstring
 # R0201 - Method could be a function
 # R0904 - Too many public methods
-# pylint: disable=R0201, C0111, R0904
-
-
+# pylint: disable=R0201, C0103, C0111, R0904
 class Create(unittest.TestCase):
 
     @classmethod
@@ -125,7 +126,7 @@ class Create(unittest.TestCase):
 
     def test_008_create_project_named_app(self):
         output = CreateProject(projName="app")
-        assert "You cannot build applications named 'app' in Xcode. Consider creating a project with different name." in output
+        assert "You cannot build applications named 'app' in Xcode." in output
 
         output = runAUT("cat app/package.json")
         assert "\"id\": \"org.nativescript.app\"" in output
@@ -135,7 +136,7 @@ class Create(unittest.TestCase):
         assert not "successfully created" in output
 
         assert "The specified path" in output
-        assert "doesn't exist. Check that you specified the path correctly and try again." in output
+        assert "doesn't exist. Check that you specified the path correctly and try again" in output
 
     def test_401_create_project_in_folder_with_existing_project(self):
         CreateProject(projName="TNS_App")

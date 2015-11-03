@@ -6,10 +6,11 @@ from helpers._tns_lib import CreateProjectAndAddPlatform, iosRuntimeSymlinkPath,
     tnsPath
 from helpers.device import GivenRealDeviceRunning, StopSimulators
 
-# pylint: disable=R0201, C0111
-
-
-class Debug_OSX(unittest.TestCase):
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=R0201, C0103, C0111, R0904
+class DebugiOS(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -39,7 +40,7 @@ class Debug_OSX(unittest.TestCase):
     def tearDownClass(cls):
         CleanupFolder('./TNS_App')
 
-    def test_001_Debug_iOS_Simulator_DebugBrk(self):
+    def test_001_debug_ios_simulator_debugbrk(self):
 
         output = runAUT(
             tnsPath +
