@@ -5,6 +5,8 @@ from helpers._os_lib import runAUT, CheckOutput
 from helpers._tns_lib import tnsPath, nativescriptPath
 
 # pylint: disable=R0201, C0111
+
+
 class Help(unittest.TestCase):
 
     def setUp(self):
@@ -28,7 +30,8 @@ class Help(unittest.TestCase):
         assert CheckOutput(output, 'help_output.txt')
         assert not "error" in output
 
-    @unittest.skip("Skipped because of https://github.com/NativeScript/nativescript-cli/issues/249")
+    @unittest.skip(
+        "Skipped because of https://github.com/NativeScript/nativescript-cli/issues/249")
     def test_003_TNSHelp(self):
         output = runAUT(tnsPath + " -help")
         assert CheckOutput(output, 'help_output.txt')

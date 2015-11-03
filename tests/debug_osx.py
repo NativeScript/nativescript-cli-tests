@@ -7,12 +7,17 @@ from helpers._tns_lib import CreateProjectAndAddPlatform, iosRuntimeSymlinkPath,
 from helpers.device import GivenRealDeviceRunning, StopSimulators
 
 # pylint: disable=R0201, C0111
+
+
 class Debug_OSX(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        CleanupFolder('./TNS_App');
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath)
+        CleanupFolder('./TNS_App')
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="ios",
+            frameworkPath=iosRuntimeSymlinkPath)
 
     def setUp(self):
 
@@ -32,11 +37,17 @@ class Debug_OSX(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        CleanupFolder('./TNS_App');
+        CleanupFolder('./TNS_App')
 
     def test_001_Debug_iOS_Simulator_DebugBrk(self):
 
-        output = runAUT(tnsPath + " debug ios --debug-brk --emulator --path TNS_App --frameworkPath " + iosRuntimeSymlinkPath, 2 * 60, True)
+        output = runAUT(
+            tnsPath +
+            " debug ios --debug-brk --emulator --path TNS_App --frameworkPath " +
+            iosRuntimeSymlinkPath,
+            2 *
+            60,
+            True)
         assert "Project successfully prepared" in output
         assert "** BUILD SUCCEEDED **" in output
         assert "Starting iOS Simulator" in output
@@ -54,7 +65,13 @@ class Debug_OSX(unittest.TestCase):
         assert "Starting iOS Simulator" in output
         assert "Session started without errors" in output
         sleep(10)
-        output = runAUT(tnsPath + " debug ios --start --emulator --path TNS_App --frameworkPath " + iosRuntimeSymlinkPath, 2 * 60, True)
+        output = runAUT(
+            tnsPath +
+            " debug ios --start --emulator --path TNS_App --frameworkPath " +
+            iosRuntimeSymlinkPath,
+            2 *
+            60,
+            True)
         assert "Setting up debugger proxy..." in output
         assert "Frontend client connected" in output
         assert "Backend socket created" in output
@@ -66,7 +83,14 @@ class Debug_OSX(unittest.TestCase):
 
     def test_003_Debug_iOS_Device_DebugBrk(self):
 
-        output = runAUT(tnsPath + " debug ios --debug-brk --path TNS_App --timeout 120 --frameworkPath " + iosRuntimeSymlinkPath, 2 * 60 + 30, True)
+        output = runAUT(
+            tnsPath +
+            " debug ios --debug-brk --path TNS_App --timeout 120 --frameworkPath " +
+            iosRuntimeSymlinkPath,
+            2 *
+            60 +
+            30,
+            True)
         assert "Project successfully prepared" in output
         assert "** BUILD SUCCEEDED **" in output
         assert "Successfully deployed on device " in output
@@ -86,7 +110,13 @@ class Debug_OSX(unittest.TestCase):
         assert "** BUILD SUCCEEDED **" in output
         assert "Successfully deployed on device " in output
         sleep(10)
-        output = runAUT(tnsPath + " debug ios --start --path TNS_App --timeout 120 --frameworkPath " + iosRuntimeSymlinkPath, 2 * 60, True)
+        output = runAUT(
+            tnsPath +
+            " debug ios --start --path TNS_App --timeout 120 --frameworkPath " +
+            iosRuntimeSymlinkPath,
+            2 *
+            60,
+            True)
 
         assert "Setting up debugger proxy..." in output
         assert "Frontend client connected" in output

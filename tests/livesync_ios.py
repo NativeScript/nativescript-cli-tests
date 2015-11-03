@@ -1,4 +1,5 @@
-import os, shutil
+import os
+import shutil
 import unittest
 
 from helpers._os_lib import CleanupFolder, replace, catAppFile, uninstall_app
@@ -8,6 +9,8 @@ from helpers.device import GivenRealDeviceRunning, \
     StopEmulators, StopSimulators, GetPhysicalDeviceId
 
 # pylint: disable=R0201, C0111
+
+
 class LiveSync_iOS(unittest.TestCase):
 
     # LiveSync Tests on iOS Device
@@ -26,7 +29,7 @@ class LiveSync_iOS(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_App');
+        CleanupFolder('./TNS_App')
         GivenRealDeviceRunning(platform="ios")
         uninstall_app("TNSApp", platform="ios", fail=False)
 
@@ -38,7 +41,10 @@ class LiveSync_iOS(unittest.TestCase):
         uninstall_app("TNSApp", platform="ios", fail=False)
 
     def test_001_LiveSync_iOS_XmlJsCss_TnsModules_Files(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="ios",
+            frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -46,7 +52,10 @@ class LiveSync_iOS(unittest.TestCase):
         replace("TNS_App/app/app.css", "30", "20")
 
         replace("TNS_App/node_modules/tns-core-modules/LICENSE", "2015", "9999")
-        replace("TNS_App/node_modules/tns-core-modules/application/application-common.js", "(\"globals\");", "(\"globals\"); // test")
+        replace(
+            "TNS_App/node_modules/tns-core-modules/application/application-common.js",
+            "(\"globals\");",
+            "(\"globals\"); // test")
 
         LiveSync(platform="ios", path="TNS_App")
 
@@ -59,11 +68,17 @@ class LiveSync_iOS(unittest.TestCase):
 
         output = catAppFile("ios", "TNSApp", "app/tns_modules/LICENSE")
         assert "Copyright (c) 9999 Telerik AD" in output
-        output = catAppFile("ios", "TNSApp", "app/tns_modules/application/application-common.js")
+        output = catAppFile(
+            "ios",
+            "TNSApp",
+            "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output
 
     def test_002_LiveSync_iOS_Device_XmlFile(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="ios",
+            frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         deviceId = GetPhysicalDeviceId(platform="ios")
@@ -80,7 +95,10 @@ class LiveSync_iOS(unittest.TestCase):
 #         assert "this.set(\"message\", this.counter + \" runs left\");" in output
 
     def test_201_LiveSync_iOS_AddNewFiles(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="ios",
+            frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
@@ -88,7 +106,9 @@ class LiveSync_iOS(unittest.TestCase):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test.css")
 
         os.makedirs("TNS_App/app/test")
-        shutil.copyfile("TNS_App/app/main-view-model.js", "TNS_App/app/test/main-view-model.js")
+        shutil.copyfile(
+            "TNS_App/app/main-view-model.js",
+            "TNS_App/app/test/main-view-model.js")
 
         LiveSync(platform="ios", path="TNS_App")
 

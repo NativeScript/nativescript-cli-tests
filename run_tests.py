@@ -1,7 +1,8 @@
 """
 Entry point of functional tests
 """
-import platform, os
+import platform
+import os
 
 from helpers._os_lib import CleanupFolder, remove, runAUT, uninstall_app
 from helpers._tns_lib import UninstallCLI, InstallCLI, GetAndroidRuntime, GetiOSRuntime, \
@@ -14,6 +15,8 @@ SMOKETESTRESULT = ""
 
 # C0111 - Missing docstring
 # pylint: disable=C0111
+
+
 def execute_tests():
     print "####RUNNING TESTS####"
     global SMOKETESTRESULT
@@ -21,6 +24,8 @@ def execute_tests():
 
 # C0111 - Missing docstring
 # pylint: disable=C0111
+
+
 def analyze_result_and_exit():
     global SMOKETESTRESULT
     if not "errors=0" in SMOKETESTRESULT or not "failures=0" in SMOKETESTRESULT:
@@ -81,8 +86,10 @@ if __name__ == '__main__':
 
     # Clone QA-TestApps repo
     CleanupFolder('QA-TestApps')
-    OUTPUT = runAUT("git clone git@github.com:NativeScript/QA-TestApps.git QA-TestApps")
-    assert not ("fatal" in OUTPUT), "Failed to clone git@github.com:NativeScript/QA-TestApps.git"
+    OUTPUT = runAUT(
+        "git clone git@github.com:NativeScript/QA-TestApps.git QA-TestApps")
+    assert not (
+        "fatal" in OUTPUT), "Failed to clone git@github.com:NativeScript/QA-TestApps.git"
 
     # Execute tests
     execute_tests()

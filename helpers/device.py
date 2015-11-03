@@ -13,7 +13,8 @@ def StartEmulator(emulatorName, port="5554", timeout=300, waitFor=True):
 
     if ('ACTIVE_UI' in os.environ):
         if ("NO" in os.environ['ACTIVE_UI']):
-            startCommand = "emulator -avd " + emulatorName + " -port " + port + " -no-skin -no-audio -no-window"
+            startCommand = "emulator -avd " + emulatorName + \
+                " -port " + port + " -no-skin -no-audio -no-window"
         else:
             startCommand = "emulator -avd " + emulatorName + " -port " + port
 
@@ -30,11 +31,12 @@ def StartEmulator(emulatorName, port="5554", timeout=300, waitFor=True):
         else:
             raise NameError("Wait for emulator failed!")
 
+
 def WaitForDevice(deviceName, timeout=600):
 
     found = False
     startTime = time.time()
-    endTime = startTime + timeout;
+    endTime = startTime + timeout
     while not found:
         time.sleep(5)
         output = runAUT(tnsPath + " device")
@@ -46,14 +48,17 @@ def WaitForDevice(deviceName, timeout=600):
             break
     return found
 
+
 def StopEmulators():
     KillProcess("emulator")
     KillProcess("emulator64-arm")
     KillProcess("emulator64-x86")
 
+
 def StopSimulators():
     KillProcess("iOS Simulator")
     KillProcess("Simulator")
+
 
 def GivenRunningEmulator():
 
@@ -64,6 +69,7 @@ def GivenRunningEmulator():
             StopEmulators()
             StartEmulator(emulatorName="Api19", port="5554", waitFor=True)
 
+
 def GivenRealDeviceRunning(platform):
 
     count = GetDeviceCount(platform, excludeEmulators=True)
@@ -73,6 +79,8 @@ def GivenRealDeviceRunning(platform):
         raise NameError("No real android devices attached to this host.")
 
 # Get Id of first connected physical device
+
+
 def GetPhysicalDeviceId(platform):
 
     deviceId = None
@@ -81,12 +89,16 @@ def GetPhysicalDeviceId(platform):
     for line in lines:
         lline = line.lower()
         if (platform in lline) and (not ("emulator" in lline)):
-            deviceId = lline.split((platform), 1)[1].replace(" ", "")  # deviceId = @030b206908e6c3c5@
+            deviceId = lline.split(
+                (platform), 1)[1].replace(
+                " ", "")  # deviceId = @030b206908e6c3c5@
             deviceId = deviceId[3:-3]  # devideId = 030b206908e6c3c5
             print deviceId
     return deviceId
 
 # Get device count
+
+
 def GetDeviceCount(platform="", excludeEmulators=False):
 
     output = runAUT(tnsPath + " device " + platform)
@@ -97,4 +109,4 @@ def GetDeviceCount(platform="", excludeEmulators=False):
             lline = line.lower()
             if ("emulator" in lline):
                 count = count - 1
-    return count;
+    return count

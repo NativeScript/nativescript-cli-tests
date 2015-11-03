@@ -6,8 +6,8 @@ from helpers._os_lib import runAUT, FileExists, ExtractArchive
 from time import sleep
 
 
-tnsPath = os.path.join('node_modules', '.bin', 'tns');
-nativescriptPath = os.path.join('node_modules', '.bin', 'nativescript');
+tnsPath = os.path.join('node_modules', '.bin', 'tns')
+nativescriptPath = os.path.join('node_modules', '.bin', 'nativescript')
 androidRuntimePath = "tns-android.tgz"
 iosRuntimePath = "tns-ios.tgz"
 androidRuntimeSymlinkPath = os.path.join('tns-android', 'package')
@@ -22,12 +22,21 @@ if 'Darwin' in platform.platform():
     keychain = os.environ.get('KEYCHAIN')
     keychainPass = os.environ.get('KEYCHAIN_PASS', '')
 
+
 def InstallCLI(pathToPackage=None):
     if 'CLI_PATH' in os.environ:
         location = os.path.join(os.environ['CLI_PATH'], "nativescript.tgz")
-        shutil.copy2(location.strip(), (os.path.join(os.getcwd(), "nativescript.tgz")))
-    if pathToPackage != None:
-        shutil.copy2(pathToPackage, (os.path.join(os.getcwd(), "nativescript.tgz")))
+        shutil.copy2(
+            location.strip(),
+            (os.path.join(
+                os.getcwd(),
+                "nativescript.tgz")))
+    if pathToPackage is not None:
+        shutil.copy2(
+            pathToPackage,
+            (os.path.join(
+                os.getcwd(),
+                "nativescript.tgz")))
 
     installCommand = "npm i nativescript.tgz"
     output = runAUT(installCommand)
@@ -35,24 +44,36 @@ def InstallCLI(pathToPackage=None):
     assert "dev-post-install" not in output, "{N} CLI installation failed: dev-post-install."
     print output
 
+
 def GetAndroidRuntime():
     if 'ANDROID_PATH' in os.environ:
         location = os.path.join(os.environ['ANDROID_PATH'], androidRuntimePath)
-        shutil.copy2(location.strip(), (os.path.join(os.getcwd(), androidRuntimePath)))
+        shutil.copy2(
+            location.strip(),
+            (os.path.join(
+                os.getcwd(),
+                androidRuntimePath)))
     if FileExists(os.path.join(os.getcwd(), androidRuntimePath)):
-        ExtractArchive(androidRuntimePath, os.path.splitext(androidRuntimePath)[0])
+        ExtractArchive(
+            androidRuntimePath,
+            os.path.splitext(androidRuntimePath)[0])
+
 
 def GetiOSRuntime():
     if 'IOS_PATH' in os.environ:
         location = os.path.join(os.environ['IOS_PATH'], iosRuntimePath)
-        shutil.copy2(location.strip(), (os.path.join(os.getcwd(), iosRuntimePath)))
+        shutil.copy2(
+            location.strip(),
+            (os.path.join(
+                os.getcwd(),
+                iosRuntimePath)))
     if FileExists(os.path.join(os.getcwd(), iosRuntimePath)):
         ExtractArchive(iosRuntimePath, os.path.splitext(iosRuntimePath)[0])
 
         currentDir = os.getcwd()
         os.chdir(os.path.join(currentDir, iosRuntimeSymlinkPath))
         runAUT("npm install")
-        os.chdir(currentDir);
+        os.chdir(currentDir)
 
 
 def UninstallCLI():
@@ -60,26 +81,38 @@ def UninstallCLI():
     output = runAUT(uninstallCommand)
     print output
 
+
 def CreateProject(projName, path=None, appId=None, copyFrom=None):
 
-    # If --copy-from is not specified explicitly then project will copy template-hello-world
-    if copyFrom == None:
+    # If --copy-from is not specified explicitly then project will copy
+    # template-hello-world
+    if copyFrom is None:
         copyFrom = "template-hello-world"
 
     command = tnsPath + " create {0}".format(projName)
 
-    if path != None:
+    if path is not None:
         command += " --path " + path
-    if appId != None:
+    if appId is not None:
         command += " --appid " + appId
-    if copyFrom != None:
+    if copyFrom is not None:
         command += " --copy-from " + copyFrom
 
     output = runAUT(command)
-    assert ("Project {0} was successfully created".format(projName.replace("\"", "")) in output)
+    assert (
+        "Project {0} was successfully created".format(
+            projName.replace(
+                "\"",
+                "")) in output)
     return output
 
-def PlatformAdd(platform=None, frameworkPath=None, path=None, symlink=False, assertSuccess=True):
+
+def PlatformAdd(
+        platform=None,
+        frameworkPath=None,
+        path=None,
+        symlink=False,
+        assertSuccess=True):
 
     command = tnsPath + " platform add"
 
@@ -103,6 +136,7 @@ def PlatformAdd(platform=None, frameworkPath=None, path=None, symlink=False, ass
 
     return output
 
+
 def Prepare(path=None, platform=None, logTrace=False, assertSuccess=True):
 
     command = tnsPath + " prepare"
@@ -123,6 +157,7 @@ def Prepare(path=None, platform=None, logTrace=False, assertSuccess=True):
 
     return output
 
+
 def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
 
     command = tnsPath + " library add"
@@ -142,11 +177,19 @@ def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
         if platform is "android":
             assert ("was successfully added for android platform" in output)
         else:
-            assert ("The iOS Deployment Target is now 8.0 in order to support Cocoa Touch Frameworks." in output)
+            assert (
+                "The iOS Deployment Target is now 8.0 in order to support Cocoa Touch Frameworks." in output)
 
     return output
 
-def Build(platform=None, mode=None, path=None, forDevice=False, logTrace=False, assertSuccess=True):
+
+def Build(
+        platform=None,
+        mode=None,
+        path=None,
+        forDevice=False,
+        logTrace=False,
+        assertSuccess=True):
 
     command = tnsPath + " build"
 
@@ -178,7 +221,14 @@ def Build(platform=None, mode=None, path=None, forDevice=False, logTrace=False, 
 
     return output
 
-def Run(platform=None, emulator=False, device=None, path=None, justLaunch=True, assertSuccess=True):
+
+def Run(
+        platform=None,
+        emulator=False,
+        device=None,
+        path=None,
+        justLaunch=True,
+        assertSuccess=True):
 
     command = tnsPath + " run"
 
@@ -209,11 +259,19 @@ def Run(platform=None, emulator=False, device=None, path=None, justLaunch=True, 
                 assert ("Session started without errors." in output)
             else:
                 assert ("Successfully deployed on device" in output)
-                assert ("Successfully run application org.nativescript." in output)
+                assert (
+                    "Successfully run application org.nativescript." in output)
 
     return output
 
-def LiveSync(platform=None, emulator=False, device=None, watch=False, path=None, assertSuccess=True):
+
+def LiveSync(
+        platform=None,
+        emulator=False,
+        device=None,
+        watch=False,
+        path=None,
+        assertSuccess=True):
 
     command = tnsPath + " livesync"
 
@@ -245,9 +303,15 @@ def LiveSync(platform=None, emulator=False, device=None, watch=False, path=None,
 
     return output
 
-def CreateProjectAndAddPlatform(projName, platform=None, frameworkPath=None, symlink=False):
+
+def CreateProjectAndAddPlatform(
+        projName,
+        platform=None,
+        frameworkPath=None,
+        symlink=False):
     CreateProject(projName)
     PlatformAdd(platform, frameworkPath, projName, symlink)
+
 
 def GetCLIBuildVersion():
     return runAUT(tnsPath + " --version")

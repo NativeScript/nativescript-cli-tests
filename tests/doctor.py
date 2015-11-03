@@ -5,6 +5,8 @@ from helpers._os_lib import runAUT
 from helpers._tns_lib import tnsPath
 
 # pylint: disable=R0201, C0111
+
+
 class Doctor(unittest.TestCase):
 
     def setUp(self):
@@ -21,7 +23,8 @@ class Doctor(unittest.TestCase):
     def test_001_Doctor(self):
         output = runAUT(tnsPath + " doctor")
 
-        # Ignore this check on Windows and Linux because of https://github.com/NativeScript/nativescript-cli/issues/615
+        # Ignore this check on Windows and Linux because of
+        # https://github.com/NativeScript/nativescript-cli/issues/615
         if 'Darwin' in platform.platform():
             assert "No issues were detected." in output
         else:

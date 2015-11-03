@@ -1,9 +1,12 @@
-import os, unittest
+import os
+import unittest
 
 from helpers._os_lib import remove, runAUT
 from helpers._tns_lib import tnsPath
 
 # pylint: disable=R0201, C0111
+
+
 class Output_STRERR(unittest.TestCase):
 
     def setUp(self):
@@ -14,10 +17,10 @@ class Output_STRERR(unittest.TestCase):
         print "#####"
         print ""
 
-        remove('stderr.txt');
+        remove('stderr.txt')
 
     def tearDown(self):
-        remove('stderr.txt');
+        remove('stderr.txt')
 
     def test_001_Output_STRERR(self):
         os.system(tnsPath + " emulate asdf 2>stderr.txt")

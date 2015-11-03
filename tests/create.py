@@ -1,4 +1,5 @@
-import unittest, fileinput
+import unittest
+import fileinput
 
 from helpers._os_lib import CleanupFolder, CheckFilesExists, FileExists, FolderExists, \
     IsEmpty, runAUT
@@ -9,6 +10,8 @@ from helpers._tns_lib import CreateProject, tnsPath
 # R0201 - Method could be a function
 # R0904 - Too many public methods
 # pylint: disable=R0201, C0111, R0904
+
+
 class Create(unittest.TestCase):
 
     @classmethod
@@ -46,7 +49,7 @@ class Create(unittest.TestCase):
         CreateProject(projName="TNS_App")
 
         assert IsEmpty("TNS_App/platforms")
-        assert not FolderExists ("TNS_App/app/tns_modules")
+        assert not FolderExists("TNS_App/app/tns_modules")
 
         output = runAUT("cat TNS_App/package.json")
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
@@ -56,23 +59,29 @@ class Create(unittest.TestCase):
         assert FileExists("TNS_App/node_modules/tns-core-modules/LICENSE")
         assert FileExists("TNS_App/node_modules/tns-core-modules/xml/xml.js")
 
-        assert CheckFilesExists("TNS_App", "template_javascript_files_1.2.0.txt")
+        assert CheckFilesExists(
+            "TNS_App", "template_javascript_files_1.2.0.txt")
 
     def test_002_create_project_with_path(self):
         CreateProject(projName="TNS_App", path='folder/subfolder/')
 
         assert IsEmpty("folder/subfolder/TNS_App/platforms")
-        assert not FolderExists ("folder/subfolder/TNS_App/app/tns_modules")
+        assert not FolderExists("folder/subfolder/TNS_App/app/tns_modules")
 
         output = runAUT("cat folder/subfolder/TNS_App/package.json")
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
         assert "\"tns-core-modules\": \"1." in output
 
-        assert FileExists("folder/subfolder/TNS_App/node_modules/tns-core-modules/package.json")
-        assert FileExists("folder/subfolder/TNS_App/node_modules/tns-core-modules/LICENSE")
-        assert FileExists("folder/subfolder/TNS_App/node_modules/tns-core-modules/xml/xml.js")
+        assert FileExists(
+            "folder/subfolder/TNS_App/node_modules/tns-core-modules/package.json")
+        assert FileExists(
+            "folder/subfolder/TNS_App/node_modules/tns-core-modules/LICENSE")
+        assert FileExists(
+            "folder/subfolder/TNS_App/node_modules/tns-core-modules/xml/xml.js")
 
-        assert CheckFilesExists('folder/subfolder/TNS_App', 'template_javascript_files_1.2.0.txt')
+        assert CheckFilesExists(
+            'folder/subfolder/TNS_App',
+            'template_javascript_files_1.2.0.txt')
 
     def test_003_create_project_with_appid(self):
         CreateProject(projName="TNS_App", appId="org.nativescript.MyApp")

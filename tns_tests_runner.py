@@ -48,6 +48,8 @@ from tests.version import Version
 # W0212 - Access to a protected member
 # W0640 - Cell variable test defined in loop
 # pylint: disable=C0111, R0915, W0212, W0640
+
+
 def run_tests():
 
     print "Platform : ", platform.platform()
@@ -91,7 +93,8 @@ def run_tests():
 
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
+    suite.addTests(
+        unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Output_STRERR))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))
@@ -101,54 +104,76 @@ def run_tests():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_Linux))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(InitAndInstall))
     if 'Darwin' in platform.platform():
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_OSX))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX))
+        suite.addTests(
+            unittest.TestLoader().loadTestsFromTestCase(Platform_OSX))
+        suite.addTests(
+            unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildiOS))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Sandbox_Pods))
+        suite.addTests(
+            unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(
+            Plugins_OSX_Sandbox_Pods))
 
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Emulator))
+            suite.addTests(
+                unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
+        suite.addTests(
+            unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
+        suite.addTests(
+            unittest.TestLoader().loadTestsFromTestCase(LiveSync_Emulator))
         if 'Darwin' in platform.platform():
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_OSX))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_OSX))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Pods))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Libs))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Xcconfig))
+            suite.addTests(
+                unittest.TestLoader().loadTestsFromTestCase(Emulate_OSX))
+            suite.addTests(
+                unittest.TestLoader().loadTestsFromTestCase(Library_OSX))
+            suite.addTests(
+                unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Pods))
+            suite.addTests(
+                unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Libs))
+            suite.addTests(
+                unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Xcconfig))
 
     if ('TESTRUN' in os.environ) and ("FULL" in os.environ['TESTRUN']):
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Deploy_Linux))
+        suite.addTests(
+            unittest.TestLoader().loadTestsFromTestCase(Deploy_Linux))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_Linux))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Device_Linux))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Debug_Linux))
+        suite.addTests(
+            unittest.TestLoader().loadTestsFromTestCase(Device_Linux))
+        suite.addTests(
+            unittest.TestLoader().loadTestsFromTestCase(Debug_Linux))
         if 'Darwin' in platform.platform():
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Deploy_OSX))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_OSX))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Android))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_iOS))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Device_OSX))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Debug_OSX))
+            suite.addTests(
+                unittest.TestLoader().loadTestsFromTestCase(Deploy_OSX))
+            suite.addTests(
+                unittest.TestLoader().loadTestsFromTestCase(Run_OSX))
+            suite.addTests(
+                unittest.TestLoader().loadTestsFromTestCase(LiveSync_Android))
+            suite.addTests(
+                unittest.TestLoader().loadTestsFromTestCase(LiveSync_iOS))
+            suite.addTests(
+                unittest.TestLoader().loadTestsFromTestCase(Device_OSX))
+            suite.addTests(
+                unittest.TestLoader().loadTestsFromTestCase(Debug_OSX))
 
     # Smoke test runs only high priority tests
     if ('TESTRUN' in os.environ) and ("SMOKE" in os.environ['TESTRUN']):
         for test in suite:
             if test._testMethodName.find('test_4') >= 0:
-                setattr(test, test._testMethodName, lambda: \
-					test.skipTest('Skip negative tests in SMOKE TEST run.'))
+                setattr(test, test._testMethodName, lambda: test.skipTest(
+                    'Skip negative tests in SMOKE TEST run.'))
             if test._testMethodName.find('test_3') >= 0:
-                setattr(test, test._testMethodName, lambda: \
-					test.skipTest('Skip low priority tests in SMOKE TEST run.'))
+                setattr(test, test._testMethodName, lambda: test.skipTest(
+                    'Skip low priority tests in SMOKE TEST run.'))
             if test._testMethodName.find('test_2') >= 0:
-                setattr(test, test._testMethodName, lambda: \
-					test.skipTest('Skip medium priority tests in SMOKE TEST run.'))
+                setattr(test, test._testMethodName, lambda: test.skipTest(
+                    'Skip medium priority tests in SMOKE TEST run.'))
 
     with open("Report.html", "w") as report:
         descr = "Platform : {0};  nativescript-cli build version : {1}" \
-        	.format(platform.platform(), GetCLIBuildVersion())
-        runner = HTMLTestRunner.HTMLTestRunner(report, title='TNS_CLI_tests', description=descr)
+                .format(platform.platform(), GetCLIBuildVersion())
+        runner = HTMLTestRunner.HTMLTestRunner(
+            report, title='TNS_CLI_tests', description=descr)
         result = runner.run(suite)
     return result
 

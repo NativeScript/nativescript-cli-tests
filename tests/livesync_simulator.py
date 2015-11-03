@@ -1,5 +1,7 @@
 import unittest
-import psutil, subprocess, time
+import psutil
+import subprocess
+import time
 
 from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, iosRuntimePath, \
@@ -7,6 +9,8 @@ from helpers._tns_lib import androidRuntimePath, iosRuntimePath, \
 from helpers.device import GivenRealDeviceRunning, GetPhysicalDeviceId
 
 # pylint: disable=R0201, C0111
+
+
 class LiveSync_Simulator(unittest.TestCase):
 
     def setUp(self):
@@ -17,7 +21,7 @@ class LiveSync_Simulator(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_App');
+        CleanupFolder('./TNS_App')
         GivenRealDeviceRunning(platform="ios")
         GivenRealDeviceRunning(platform="android")
 
@@ -25,7 +29,10 @@ class LiveSync_Simulator(unittest.TestCase):
         pass
 
     def test_001_LiveSync_iOS(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="ios",
+            frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -36,7 +43,10 @@ class LiveSync_Simulator(unittest.TestCase):
 
     def test_002_LiveSync_iOS_Device(self):
         deviceId = GetPhysicalDeviceId(platform="ios")
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="ios",
+            frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
@@ -47,11 +57,16 @@ class LiveSync_Simulator(unittest.TestCase):
 
     @unittest.skip("TODO: Fix.")
     def test_003_LiveSync_iOS_Watch(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="ios",
+            frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
 
-        pr = subprocess.Popen("tns livesync ios --watch --path TNS_App", shell=True)
+        pr = subprocess.Popen(
+            "tns livesync ios --watch --path TNS_App",
+            shell=True)
         pr_pid = pr.pid
 
         time.sleep(60)
@@ -85,7 +100,10 @@ class LiveSync_Simulator(unittest.TestCase):
 
     @unittest.skip("Fix LiveSync for Android device.")
     def test_101_LiveSync_Android(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="android",
+            frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -96,7 +114,10 @@ class LiveSync_Simulator(unittest.TestCase):
 
     @unittest.skip("Fix LiveSync for Android device.")
     def test_102_LiveSync_Android_Device(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="android",
+            frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
@@ -107,12 +128,17 @@ class LiveSync_Simulator(unittest.TestCase):
 
     @unittest.skip("Fix LiveSync for Android device.")
     def test_103_LiveSync_Android_Watch(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="android",
+            frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
 
         print "tns livesync android --watch --path TNS_App"
-        pr = subprocess.Popen("tns livesync android --watch --path TNS_App", shell=True)
+        pr = subprocess.Popen(
+            "tns livesync android --watch --path TNS_App",
+            shell=True)
         pr_pid = pr.pid
 
         time.sleep(60)
@@ -145,6 +171,9 @@ class LiveSync_Simulator(unittest.TestCase):
             pr.kill()
 
     def test_301_LiveSync_MultiplePlatforms(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="ios",
+            frameworkPath=iosRuntimePath)
         output = LiveSync(path="TNS_App", assertSuccess=False)
         assert "Multiple device platforms detected (iOS and Android). Specify platform or device on command line" in output

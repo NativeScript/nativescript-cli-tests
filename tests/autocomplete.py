@@ -11,11 +11,14 @@ from helpers._tns_lib import tnsPath
 # R0201 - Method could be a function
 # R0915 - Too many statements
 # pylint: disable=R0201, R0915, C0111, C0103
+
+
 class Autocomplete(unittest.TestCase):
 
     '''
     Autocomplete tests
     '''
+
     def setUp(self):
         print ""
         print "#####"

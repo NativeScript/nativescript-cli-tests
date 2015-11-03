@@ -1,4 +1,6 @@
-import os, shutil, time
+import os
+import shutil
+import time
 import unittest
 
 from helpers._os_lib import CleanupFolder, replace, catAppFile
@@ -8,6 +10,8 @@ from helpers.device import GivenRealDeviceRunning, \
     StopEmulators, StopSimulators, GetPhysicalDeviceId
 
 # pylint: disable=R0201, C0111
+
+
 class LiveSync_Android(unittest.TestCase):
 
     # LiveSync Tests on Android Device
@@ -37,7 +41,10 @@ class LiveSync_Android(unittest.TestCase):
         pass
 
     def test_001_LiveSync_Android_XmlJsCss_TnsModules_Files(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="android",
+            frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -45,7 +52,10 @@ class LiveSync_Android(unittest.TestCase):
         replace("TNS_App/app/app.css", "30", "20")
 
         replace("TNS_App/node_modules/tns-core-modules/LICENSE", "2015", "9999")
-        replace("TNS_App/node_modules/tns-core-modules/application/application-common.js", "(\"globals\");", "(\"globals\"); // test")
+        replace(
+            "TNS_App/node_modules/tns-core-modules/application/application-common.js",
+            "(\"globals\");",
+            "(\"globals\"); // test")
 
         LiveSync(platform="android", path="TNS_App")
 
@@ -58,12 +68,19 @@ class LiveSync_Android(unittest.TestCase):
 
         output = catAppFile("android", "TNSApp", "app/tns_modules/LICENSE")
         assert "Copyright (c) 9999 Telerik AD" in output
-        output = catAppFile("android", "TNSApp", "app/tns_modules/application/application-common.js")
+        output = catAppFile(
+            "android",
+            "TNSApp",
+            "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output
 
-    # This test executes the Run -> LiveSync -> Run work flow on an android device with API level 21.
+    # This test executes the Run -> LiveSync -> Run work flow on an android
+    # device with API level 21.
     def test_002_LiveSync_Android_Device_XmlFile_Run(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="android",
+            frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         deviceId = GetPhysicalDeviceId(platform="android")
@@ -80,7 +97,10 @@ class LiveSync_Android(unittest.TestCase):
         assert "<Button text=\"RUN\" tap=\"{{ tapAction }}\" />" in output
 
     def test_201_LiveSync_Android_AddNewFiles(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="android",
+            frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
@@ -88,7 +108,9 @@ class LiveSync_Android(unittest.TestCase):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test.css")
 
         os.makedirs("TNS_App/app/test")
-        shutil.copyfile("TNS_App/app/main-view-model.js", "TNS_App/app/test/main-view-model.js")
+        shutil.copyfile(
+            "TNS_App/app/main-view-model.js",
+            "TNS_App/app/test/main-view-model.js")
 
         LiveSync(platform="android", path="TNS_App")
         time.sleep(5)
@@ -111,7 +133,10 @@ class LiveSync_Android(unittest.TestCase):
         pass
 
     def test_301_LiveSync_BeforeRun(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="android",
+            frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")

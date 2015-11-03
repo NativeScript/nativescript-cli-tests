@@ -8,12 +8,17 @@ from helpers._tns_lib import CreateProject, CreateProjectAndAddPlatform, \
 from helpers.device import GivenRunningEmulator, GivenRealDeviceRunning
 
 # pylint: disable=R0201, C0111
+
+
 class Run_Linux(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
         CleanupFolder('./TNS_App')
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="android",
+            frameworkPath=androidRuntimePath)
 
     def setUp(self):
 
@@ -42,7 +47,8 @@ class Run_Linux(unittest.TestCase):
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
-        # TODO: Get device id and verify files are deployed and process is running on this device
+        # TODO: Get device id and verify files are deployed and process is
+        # running on this device
 
     def test_002_Run_Android_ReleaseConfiguration(self):
         output = runAUT(tnsPath + " run android --keyStorePath " + androidKeyStorePath +
@@ -53,7 +59,8 @@ class Run_Linux(unittest.TestCase):
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
-        # TODO: Get device id and verify files are deployed and process is running on this device
+        # TODO: Get device id and verify files are deployed and process is
+        # running on this device
 
     def test_003_Run_Android_Default(self):
         output = runAUT(tnsPath + " run android --path TNS_App", 60)
@@ -65,24 +72,30 @@ class Run_Linux(unittest.TestCase):
     def test_200_Run_Android_InsideProject(self):
         currentDir = os.getcwd()
         os.chdir(os.path.join(currentDir, "TNS_App"))
-        output = runAUT(os.path.join("..", tnsPath) + " run android --path TNS_App --justlaunch")
-        os.chdir(currentDir);
+        output = runAUT(os.path.join("..", tnsPath) +
+                        " run android --path TNS_App --justlaunch")
+        os.chdir(currentDir)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
 
     def test_201_Run_Android_DeviceId_RenamedProjDir(self):
         runAUT("mv TNS_App appTest")
-        output = runAUT(tnsPath + " run android --device emulator-5554 --path appTest --justlaunch")
+        output = runAUT(
+            tnsPath +
+            " run android --device emulator-5554 --path appTest --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "appTest/platforms/android/build/outputs/apk/TNSApp-debug.apk" in output
         assert "Successfully deployed on device with identifier 'emulator-5554'" in output
-        # TODO: Get device id and verify files are deployed and process is running on this device
+        # TODO: Get device id and verify files are deployed and process is
+        # running on this device
 
     def test_300_Run_Android_PlatformNotAdded(self):
         CreateProject(projName="TNS_App_NoPlatform")
-        output = runAUT(tnsPath + " run android --path TNS_App_NoPlatform --justlaunch")
+        output = runAUT(
+            tnsPath +
+            " run android --path TNS_App_NoPlatform --justlaunch")
 
         assert "Project successfully created." in output
         assert "Project successfully prepared" in output

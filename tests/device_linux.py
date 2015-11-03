@@ -9,6 +9,8 @@ from helpers.device import GetDeviceCount, GetPhysicalDeviceId, \
     GivenRealDeviceRunning, GivenRunningEmulator
 
 # pylint: disable=R0201, C0111
+
+
 class Device_Linux(unittest.TestCase):
 
     def setUp(self):
@@ -27,11 +29,14 @@ class Device_Linux(unittest.TestCase):
         pass
 
     def test_001_Device_ListApplications_And_Run_Android(self):
-        deviceId = GetPhysicalDeviceId(platform="android");
+        deviceId = GetPhysicalDeviceId(platform="android")
         if (deviceId is not None):
 
             # Deploy TNS_App on device
-            CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+            CreateProjectAndAddPlatform(
+                projName="TNS_App",
+                platform="android",
+                frameworkPath=androidRuntimePath)
             output = runAUT(tnsPath + " deploy android --path TNS_App")
             assert "Project successfully prepared" in output
             assert "Project successfully built" in output
@@ -41,22 +46,34 @@ class Device_Linux(unittest.TestCase):
             sleep(10)
 
             # Verify list-applications command list org.nativescript.TNSApp
-            output = runAUT(tnsPath + " device list-applications --device " + deviceId)
+            output = runAUT(
+                tnsPath +
+                " device list-applications --device " +
+                deviceId)
             assert "com.android." in output
             assert "com.google." in output
             assert "org.nativescript.TNSApp" in output
 
             # Verify app is running
-            WaitUntilAppIsRunning(appId="org.nativescript.TNSApp", deviceId=deviceId, timeout=60)
+            WaitUntilAppIsRunning(
+                appId="org.nativescript.TNSApp",
+                deviceId=deviceId,
+                timeout=60)
 
             # Kill the app
             StopApplication(appId="org.nativescript.TNSApp", deviceId=deviceId)
 
             # Start via run command and verify it is running
-            runAUT(tnsPath + " device run org.nativescript.TNSApp --device " + deviceId)
+            runAUT(
+                tnsPath +
+                " device run org.nativescript.TNSApp --device " +
+                deviceId)
 
             # Verify app is running
-            WaitUntilAppIsRunning(appId="org.nativescript.TNSApp", deviceId=deviceId, timeout=60)
+            WaitUntilAppIsRunning(
+                appId="org.nativescript.TNSApp",
+                deviceId=deviceId,
+                timeout=60)
 
         else:
             print "Prerequisites not met. This test requires at least one real android device."
@@ -88,7 +105,9 @@ class Device_Linux(unittest.TestCase):
         assert "Usage" in output
 
     def test_403_Device_ListApplications_InvalidDeviceId(self):
-        output = runAUT(tnsPath + " device list-applications --device invalidDeviceId")
+        output = runAUT(
+            tnsPath +
+            " device list-applications --device invalidDeviceId")
         assert "Cannot resolve the specified connected device by the provided index or identifier." in output
         assert "To list currently connected devices and verify that the specified index or identifier exists, run 'tns device'." in output
         assert "Usage" in output

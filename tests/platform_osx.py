@@ -8,6 +8,8 @@ from helpers._tns_lib import tnsPath, androidRuntimePath, Build, \
     PlatformAdd, Prepare
 
 # pylint: disable=R0201, C0111
+
+
 class Platform_OSX(unittest.TestCase):
 
     def setUp(self):
@@ -18,13 +20,17 @@ class Platform_OSX(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_App');
+        CleanupFolder('./TNS_App')
 
     def tearDown(self):
         pass
 
     def test_001_Platform_List_IOS_Project(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="ios",
+            frameworkPath=iosRuntimeSymlinkPath,
+            symlink=True)
         output = runAUT(tnsPath + " platform list --path TNS_App")
         assert "The project is not prepared for any platform" in output
         assert "Installed platforms:  ios" in output
@@ -34,7 +40,11 @@ class Platform_OSX(unittest.TestCase):
         assert "The project is prepared for:  ios" in output
         assert "Installed platforms:  ios" in output
 
-        PlatformAdd(platform="android", frameworkPath=androidRuntimePath, path="TNS_App", symlink=True)
+        PlatformAdd(
+            platform="android",
+            frameworkPath=androidRuntimePath,
+            path="TNS_App",
+            symlink=True)
         output = runAUT(tnsPath + " platform list --path TNS_App")
         assert "The project is prepared for:  ios" in output
         assert "Installed platforms:  android and ios" in output
@@ -50,20 +60,30 @@ class Platform_OSX(unittest.TestCase):
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_current.txt')
+        if ('TESTRUN' in os.environ) and (
+                not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists(
+                'TNS_App/platforms/ios',
+                'platform_ios_current.txt')
         Build(platform="ios", path="TNS_App")
 
-    @unittest.skip("This test is not valid, adding symlink platform from npm cache cause issues")
+    @unittest.skip(
+        "This test is not valid, adding symlink platform from npm cache cause issues")
     def test_003_Platform_Add_iOS_Symlink(self):
         CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios", path="TNS_App", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
+        output = PlatformAdd(
+            platform="ios",
+            path="TNS_App",
+            frameworkPath=iosRuntimeSymlinkPath,
+            symlink=True)
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
-
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_symlink.txt')
+        if ('TESTRUN' in os.environ) and (
+                not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists(
+                'TNS_App/platforms/ios',
+                'platform_ios_symlink.txt')
 
         # Verify Runtime is symlink
         output = runAUT("ls -la TNS_App/platforms/ios/")
@@ -72,12 +92,19 @@ class Platform_OSX(unittest.TestCase):
 
     def test_004_Platform_Add_iOS_Symlink_And_FrameworkPath(self):
         CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios", path="TNS_App", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
+        output = PlatformAdd(
+            platform="ios",
+            path="TNS_App",
+            frameworkPath=iosRuntimeSymlinkPath,
+            symlink=True)
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_symlink.txt')
+        if ('TESTRUN' in os.environ) and (
+                not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists(
+                'TNS_App/platforms/ios',
+                'platform_ios_symlink.txt')
 
         # Verify Runtime is symlink
         output = runAUT("ls -la TNS_App/platforms/ios/")
@@ -86,18 +113,28 @@ class Platform_OSX(unittest.TestCase):
 
     def test_200_Platform_Add_iOS_FrameworkPath(self):
         CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios", frameworkPath=iosRuntimePath, path="TNS_App")
+        output = PlatformAdd(
+            platform="ios",
+            frameworkPath=iosRuntimePath,
+            path="TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_current.txt')
+        if ('TESTRUN' in os.environ) and (
+                not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists(
+                'TNS_App/platforms/ios',
+                'platform_ios_current.txt')
 
         # If project.xcworkspace is there Xcode project name is wrong
-        assert not FileExists("TNS_App/platforms/ios/TNSApp.xcodeproj/project.xcworkspace")
+        assert not FileExists(
+            "TNS_App/platforms/ios/TNSApp.xcodeproj/project.xcworkspace")
 
     def test_201_Platform_Remove_iOS(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="ios",
+            frameworkPath=iosRuntimePath)
 
         output = runAUT(tnsPath + " platform remove ios --path TNS_App")
         assert "Platform ios successfully removed." in output
@@ -109,7 +146,11 @@ class Platform_OSX(unittest.TestCase):
         assert not "tns-ios" in output
 
     def test_202_Platform_Remove_iOS_Symlink(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="ios",
+            frameworkPath=iosRuntimeSymlinkPath,
+            symlink=True)
 
         output = runAUT(tnsPath + " platform remove ios --path TNS_App")
         assert "Platform ios successfully removed." in output
@@ -129,11 +170,15 @@ class Platform_OSX(unittest.TestCase):
         output = runAUT("cat TNS_App/package.json")
         assert "\"version\": \"1.2.2\"" in output
 
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.2.0.txt')
+        if ('TESTRUN' in os.environ) and (
+                not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists(
+                'TNS_App/platforms/ios',
+                'platform_ios_1.2.0.txt')
         Build(platform="ios", path="TNS_App")
 
-    @unittest.skip("Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
+    @unittest.skip(
+        "Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
     def test_301_Platform_Update_iOS(self):
         CreateProject(projName="TNS_App")
         output = PlatformAdd(platform="ios@1.2.2", path="TNS_App")
@@ -150,8 +195,11 @@ class Platform_OSX(unittest.TestCase):
         output = runAUT("cat TNS_App/package.json")
         assert "\"version\": \"1.3.0\"" in output
 
-        if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-            assert CheckFilesExists('TNS_App/platforms/ios', 'platform_ios_1.3.0.txt')
+        if ('TESTRUN' in os.environ) and (
+                not "SMOKE" in os.environ['TESTRUN']):
+            assert CheckFilesExists(
+                'TNS_App/platforms/ios',
+                'platform_ios_1.3.0.txt')
         Build(platform="ios", path="TNS_App")
 
     @unittest.skip("This test fails on the build machine because it needs more time to update ios@1.1.0. Try to execute update command again with runAUT or add time.sleep(x).")
@@ -168,13 +216,16 @@ class Platform_OSX(unittest.TestCase):
         assert "\"version\": \"1.1.0\"" in output
         Build(platform="ios", path="TNS_App")
 
-    @unittest.skip("Execute when platform update command starts respecting --frameworkPath: https://github.com/NativeScript/nativescript-cli/issues/743")
+    @unittest.skip(
+        "Execute when platform update command starts respecting --frameworkPath: https://github.com/NativeScript/nativescript-cli/issues/743")
     def test_303_Platform_Update_iOS_ToLatestVersion(self):
         CreateProjectAndAddPlatform(projName="TNS_App", platform="ios@1.0.0")
         output = runAUT("cat TNS_App/package.json")
         assert "\"version\": \"1.0.0\"" in output
 
-        command = tnsPath + " platform update ios --frameworkPath {0} --path TNS_App".format(iosRuntimePath)
+        command = tnsPath + \
+            " platform update ios --frameworkPath {0} --path TNS_App".format(
+                iosRuntimePath)
         output = runAUT(command)
         assert "We need to override xcodeproj file. The old one will be saved at" in output
 
@@ -182,9 +233,13 @@ class Platform_OSX(unittest.TestCase):
         assert "Successfully updated to version  1.2.0" in output
         Build(platform="ios", path="TNS_App")
 
-    @unittest.skip("Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
+    @unittest.skip(
+        "Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
     def test_304_Platform_Downgrade_iOS_FromLatestVersion(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="ios",
+            frameworkPath=iosRuntimePath)
 
         output = runAUT("cat TNS_App/package.json")
         assert "\"version\": \"1." in output
@@ -213,7 +268,11 @@ class Platform_OSX(unittest.TestCase):
         assert "\"id\": \"org.nativescript.MyApp\"" in output
 
         # Add iOS platform
-        output = PlatformAdd(platform="ios", path="TNS_App", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
+        output = PlatformAdd(
+            platform="ios",
+            path="TNS_App",
+            frameworkPath=iosRuntimeSymlinkPath,
+            symlink=True)
         assert "Project successfully created" in output
 
         # Verify plist file

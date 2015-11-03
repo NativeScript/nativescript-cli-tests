@@ -1,4 +1,10 @@
-import os, errno, fileinput, time, threading, psutil, shutil
+import os
+import errno
+import fileinput
+import time
+import threading
+import psutil
+import shutil
 import platform
 import tarfile
 from time import sleep
@@ -8,13 +14,14 @@ default_timeout = 180  # seconds
 default_output_file = "output.txt"
 DEBUG = 0
 
+
 def runAUT(cmd, set_timeout=None, getOutput=True):
     def forkIt():
-    # this function will be run in parallel thread
-# #    You can redirect the output to one place, and the errors to another.
-# #    dir file.xxx > output.msg 2> output.err
-# #    You can print the errors and standard output to a single file by using the "&1" command to redirect the output for STDERR to STDOUT and then sending the output from STDOUT to a file:
-# #    dir file.xxx 1> output.msg 2>&1
+        # this function will be run in parallel thread
+        # #    You can redirect the output to one place, and the errors to another.
+        # #    dir file.xxx > output.msg 2> output.err
+        # #    You can print the errors and standard output to a single file by using the "&1" command to redirect the output for STDERR to STDOUT and then sending the output from STDOUT to a file:
+        # #    dir file.xxx 1> output.msg 2>&1
 
         print 'Thread started'
         if getOutput:
@@ -24,22 +31,26 @@ def runAUT(cmd, set_timeout=None, getOutput=True):
 
     # prepare command line
     print "##### {0} Executing command : {1}".format(time.strftime("%X"), cmd)
-    if os.path.exists(default_output_file): os.remove(default_output_file)
+    if os.path.exists(default_output_file):
+        os.remove(default_output_file)
     thread = threading.Thread(target=forkIt)
     thread.start()
     # waiting for thread to finish or timeout
-    if set_timeout == None:
+    if set_timeout is None:
         thread.join(default_timeout)
     else:
         thread.join(set_timeout)
     if thread.is_alive():
         print '#### Process has timeouted at ', time.strftime("%X")
-        KillProcess("node", "tns")  # kill node.js instance if tns has started it
+        # kill node.js instance if tns has started it
+        KillProcess("node", "tns")
         thread.join()
     # do get whenever exist in the pipe
     out = "NOT_COLLECTED"
     if getOutput:
-        f = open(default_output_file, 'r'); out = f.read(); f.close()
+        f = open(default_output_file, 'r')
+        out = f.read()
+        f.close()
     if DEBUG == 1:
         print out
         print 'Thread finished. Returning ', out
@@ -54,6 +65,7 @@ def runAUT(cmd, set_timeout=None, getOutput=True):
         print "Failed to print output"
         print "##### OUTPUT END #####"
 
+
 def CleanupFolder(folder):
     try:
         shutil.rmtree(folder, False)
@@ -67,6 +79,8 @@ def CleanupFolder(folder):
             sleep(1)
 
 # Check if output of command contains string from file
+
+
 def CheckOutput(output, fileName):
     f = open('testdata/outputs/' + fileName)
     expected_lines = 0
@@ -74,12 +88,14 @@ def CheckOutput(output, fileName):
         expected_lines += 1
         line = line.rstrip('\r\n')
         print "checking ", line
-        if not line in output:
+        if line not in output:
             print "Output does not contain: ", line
             return False
     return True
 
 # Check if folder contains list of files
+
+
 def CheckFilesExists(rootFolder, listFile, ignoreFileCount=True):
     f = open('testdata/files/' + listFile)
     expected_lines = 0
@@ -103,11 +119,14 @@ def CheckFilesExists(rootFolder, listFile, ignoreFileCount=True):
         assert(expected_lines == total)
 
 # Check if folder is empty
+
+
 def IsEmpty(path):
     if os.listdir(path) == []:
         return True
     else:
         return False
+
 
 def FolderExists(path):
     if os.path.isdir(path):
@@ -115,11 +134,13 @@ def FolderExists(path):
     else:
         return False
 
+
 def FileExists(path):
     if os.path.exists(path):
         return True
     else:
         return False
+
 
 def IsRunningProcess(processName):
     result = False
@@ -128,11 +149,12 @@ def IsRunningProcess(processName):
             result = True
     return result
 
+
 def KillProcess(processName, commandLine=None):
     result = False
     for proc in psutil.process_iter():
         if processName in str(proc):
-            if commandLine == None:
+            if commandLine is None:
                 proc.kill()
                 print "Process : {0} has been killed".format(processName)
                 result = True
@@ -145,6 +167,7 @@ def KillProcess(processName, commandLine=None):
                         break
     return result
 
+
 def ExtractArchive(fileName, folder):
     if (fileName.endswith(".tgz")):
         tar = tarfile.open(fileName)
@@ -154,23 +177,39 @@ def ExtractArchive(fileName, folder):
     else:
         print "Failed to extract {0}".format(fileName)
 
+
 def replace(filePath, str1, str2):
     for line in fileinput.input(filePath, inplace=1):
         print line.replace(str1, str2)
     sleep(1)
-    output = runAUT("cat " + filePath);
+    output = runAUT("cat " + filePath)
     assert (str2 in output)
+
 
 def catAppFile(platform, appName, filePath):
     if platform is "android":
-        output = runAUT("adb shell run-as org.nativescript." + appName + " cat files/" + filePath)
+        output = runAUT(
+            "adb shell run-as org.nativescript." +
+            appName +
+            " cat files/" +
+            filePath)
     if platform is "ios":
-        output = runAUT("ddb device get-file \"Library/Application Support/LiveSync/" + filePath + "\" --app org.nativescript." + appName)
+        output = runAUT(
+            "ddb device get-file \"Library/Application Support/LiveSync/" +
+            filePath +
+            "\" --app org.nativescript." +
+            appName)
     return output
 
+
 def catAppFileOnEmulator(platform, appName, filePath):
-    output = runAUT("adb -s emulator-5554 shell run-as org.nativescript." + appName + " cat files/" + filePath)
+    output = runAUT(
+        "adb -s emulator-5554 shell run-as org.nativescript." +
+        appName +
+        " cat files/" +
+        filePath)
     return output
+
 
 def remove(file_path):
     try:
@@ -179,6 +218,7 @@ def remove(file_path):
         if e.errno != errno.ENOENT:  # errno.ENOENT = no such file or directory
             raise
 
+
 def uninstall_app(appName, platform, fail=True):
     if (platform == "android"):
         output = runAUT("ddb device uninstall org.nativescript." + appName)
@@ -186,11 +226,13 @@ def uninstall_app(appName, platform, fail=True):
             print "{0} application successfully uninstalled.".format(appName)
         else:
             if fail:
-                raise NameError("{0} application failed to uninstall.".format(appName))
+                raise NameError(
+                    "{0} application failed to uninstall.".format(appName))
     else:
         output = runAUT("ideviceinstaller -U " + appName)
         if ("Uninstall: Complete" in output):
             print "{0} application successfully uninstalled.".format(appName)
         else:
             if fail:
-                raise NameError("{0} application failed to uninstall.".format(appName))
+                raise NameError(
+                    "{0} application failed to uninstall.".format(appName))

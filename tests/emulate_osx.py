@@ -6,12 +6,18 @@ from helpers._tns_lib import CreateProject, CreateProjectAndAddPlatform, \
     iosRuntimeSymlinkPath, tnsPath
 
 # pylint: disable=R0201, C0111
+
+
 class Emulate_OSX(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        CleanupFolder('./TNS_App');
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
+        CleanupFolder('./TNS_App')
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="ios",
+            frameworkPath=iosRuntimeSymlinkPath,
+            symlink=True)
 
     def setUp(self):
         print ""
@@ -20,21 +26,25 @@ class Emulate_OSX(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_AppNoPlatform');
+        CleanupFolder('./TNS_AppNoPlatform')
 
     def tearDown(self):
         pass
 
     @classmethod
     def tearDownClass(cls):
-        CleanupFolder('./TNS_App');
+        CleanupFolder('./TNS_App')
 
     def test_001_Emulate_ListDevices(self):
-        output = runAUT(tnsPath + " emulate ios --availableDevices --path TNS_App --justlaunch")
+        output = runAUT(
+            tnsPath +
+            " emulate ios --availableDevices --path TNS_App --justlaunch")
         assert "iPhone 6 81" in output
 
     def test_002_Emulate_iOS(self):
-        output = runAUT(tnsPath + " emulate ios --device 'iPhone 6 81' --path TNS_App --justlaunch")
+        output = runAUT(
+            tnsPath +
+            " emulate ios --device 'iPhone 6 81' --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Starting iOS Simulator" in output
@@ -44,7 +54,9 @@ class Emulate_OSX(unittest.TestCase):
             assert IsRunningProcess("Simulator")
 
     def test_003_Emulate_iOS_Release(self):
-        output = runAUT(tnsPath + " emulate ios --device 'iPhone 6 81' --path TNS_App --release --justlaunch")
+        output = runAUT(
+            tnsPath +
+            " emulate ios --device 'iPhone 6 81' --path TNS_App --release --justlaunch")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
         assert "Project successfully built" in output
@@ -56,7 +68,9 @@ class Emulate_OSX(unittest.TestCase):
 
     def test_210_Emulate_iOS_PlatformNotAdded(self):
         CreateProject(projName="TNS_AppNoPlatform")
-        output = runAUT(tnsPath + " emulate ios --device 'iPhone 6 81' --path TNS_AppNoPlatform --justlaunch")
+        output = runAUT(
+            tnsPath +
+            " emulate ios --device 'iPhone 6 81' --path TNS_AppNoPlatform --justlaunch")
         assert "Copying template files..." in output
         assert "Project successfully created." in output
         assert "Project successfully prepared" in output
@@ -68,7 +82,9 @@ class Emulate_OSX(unittest.TestCase):
             assert IsRunningProcess("Simulator")
 
     def test_400_Emulate_InvalidDevice(self):
-        output = runAUT(tnsPath + " emulate ios --device invalidDevice --path TNS_App --justlaunch")
+        output = runAUT(
+            tnsPath +
+            " emulate ios --device invalidDevice --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Unable to find device invalidDevice" in output

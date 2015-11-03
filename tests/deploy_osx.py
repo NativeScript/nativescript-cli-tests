@@ -6,6 +6,8 @@ from helpers._tns_lib import CreateProject, CreateProjectAndAddPlatform, \
 from helpers.device import GivenRealDeviceRunning
 
 # pylint: disable=R0201, C0111
+
+
 class Deploy_OSX(unittest.TestCase):
 
     @classmethod
@@ -19,22 +21,27 @@ class Deploy_OSX(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_App');
+        CleanupFolder('./TNS_App')
 
     def tearDown(self):
-        CleanupFolder('./TNS_App');
+        CleanupFolder('./TNS_App')
 
     @classmethod
     def tearDownClass(cls):
         pass
 
     def test_001_Deploy_iOS_Device(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="ios",
+            frameworkPath=iosRuntimeSymlinkPath,
+            symlink=True)
         output = runAUT(tnsPath + " deploy ios --path TNS_App  --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device" in output
-        # TODO: Get device id and verify files are deployed and process is running on this device
+        # TODO: Get device id and verify files are deployed and process is
+        # running on this device
 
     def test_200_Deploy_iOS_PlatformNotAdded(self):
         CreateProject(projName="TNS_App")
@@ -45,4 +52,5 @@ class Deploy_OSX(unittest.TestCase):
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device" in output
-        # TODO: Get device id and verify files are deployed and process is running on this device
+        # TODO: Get device id and verify files are deployed and process is
+        # running on this device

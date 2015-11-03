@@ -1,4 +1,6 @@
-import os, shutil, time
+import os
+import shutil
+import time
 import unittest
 
 from helpers._os_lib import CleanupFolder, replace, catAppFileOnEmulator
@@ -8,6 +10,8 @@ from helpers.device import GivenRunningEmulator, \
     StopEmulators, StopSimulators
 
 # pylint: disable=R0201, C0111
+
+
 class LiveSync_Emulator(unittest.TestCase):
 
     # LiveSync Tests on Android Emulator
@@ -37,7 +41,10 @@ class LiveSync_Emulator(unittest.TestCase):
         StopEmulators()
 
     def test_001_LiveSync_Android_XmlJsCss_TnsModules_Files(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="android",
+            frameworkPath=androidRuntimePath)
         Run(platform="android", device="emulator-5554", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -45,24 +52,39 @@ class LiveSync_Emulator(unittest.TestCase):
         replace("TNS_App/app/app.css", "30", "20")
 
         replace("TNS_App/node_modules/tns-core-modules/LICENSE", "2015", "9999")
-        replace("TNS_App/node_modules/tns-core-modules/application/application-common.js", "(\"globals\");", "(\"globals\"); // test")
+        replace(
+            "TNS_App/node_modules/tns-core-modules/application/application-common.js",
+            "(\"globals\");",
+            "(\"globals\"); // test")
 
-        LiveSync(platform="android", emulator=True, device="emulator-5554", path="TNS_App")
+        LiveSync(
+            platform="android",
+            emulator=True,
+            device="emulator-5554",
+            path="TNS_App")
 
         output = catAppFileOnEmulator("android", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
-        output = catAppFileOnEmulator("android", "TNSApp", "app/main-view-model.js")
+        output = catAppFileOnEmulator(
+            "android", "TNSApp", "app/main-view-model.js")
         assert "this.set(\"message\", this.counter + \" clicks left\");" in output
         output = catAppFileOnEmulator("android", "TNSApp", "app/app.css")
         assert "font-size: 20;" in output
 
-        output = catAppFileOnEmulator("android", "TNSApp", "app/tns_modules/LICENSE")
+        output = catAppFileOnEmulator(
+            "android", "TNSApp", "app/tns_modules/LICENSE")
         assert "Copyright (c) 9999 Telerik AD" in output
-        output = catAppFileOnEmulator("android", "TNSApp", "app/tns_modules/application/application-common.js")
+        output = catAppFileOnEmulator(
+            "android",
+            "TNSApp",
+            "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output
 
     def test_201_LiveSync_Android_AddNewFiles(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="android",
+            frameworkPath=androidRuntimePath)
         Run(platform="android", device="emulator-5554", path="TNS_App")
 
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
@@ -70,7 +92,9 @@ class LiveSync_Emulator(unittest.TestCase):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test.css")
 
         os.makedirs("TNS_App/app/test")
-        shutil.copyfile("TNS_App/app/main-view-model.js", "TNS_App/app/test/main-view-model.js")
+        shutil.copyfile(
+            "TNS_App/app/main-view-model.js",
+            "TNS_App/app/test/main-view-model.js")
         LiveSync(platform="android", device="emulator-5554", path="TNS_App")
 
         time.sleep(1)
@@ -80,12 +104,16 @@ class LiveSync_Emulator(unittest.TestCase):
         assert "page.bindingContext = vmModule.mainViewModel;" in output
         output = catAppFileOnEmulator("android", "TNSApp", "app/test.css")
         assert "color: #284848;" in output
-        output = catAppFileOnEmulator("android", "TNSApp", "app/test/main-view-model.js")
+        output = catAppFileOnEmulator(
+            "android", "TNSApp", "app/test/main-view-model.js")
         assert "HelloWorldModel.prototype.tapAction" in output
 
     @unittest.skip("TODO: Fix this test.")
     def test_202_LiveSync_Android_Watch(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="android",
+            frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
 
@@ -123,7 +151,10 @@ class LiveSync_Emulator(unittest.TestCase):
 #             pr.kill()
 
     def test_301_LiveSync_BeforeRun(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="android", frameworkPath=androidRuntimePath)
+        CreateProjectAndAddPlatform(
+            projName="TNS_App",
+            platform="android",
+            frameworkPath=androidRuntimePath)
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         LiveSync(platform="android", device="emulator-5554", path="TNS_App")
 
