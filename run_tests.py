@@ -12,12 +12,16 @@ import tns_tests_runner
 
 SMOKETESTRESULT = ""
 
-def ExecuteTests():
+# C0111 - Missing docstring
+# pylint: disable=C0111
+def execute_tests():
     print "####RUNNING TESTS####"
     global SMOKETESTRESULT
     SMOKETESTRESULT = str(tns_tests_runner.run_tests())
 
-def AnalyzeResultAndExit():
+# C0111 - Missing docstring
+# pylint: disable=C0111
+def analyze_result_and_exit():
     global SMOKETESTRESULT
     if not "errors=0" in SMOKETESTRESULT or not "failures=0" in SMOKETESTRESULT:
         exit(1)
@@ -25,6 +29,7 @@ def AnalyzeResultAndExit():
         exit(0)
 
 if __name__ == '__main__':
+
     # Clean NPM cache, Derived Data and compilation symbols
     if 'Windows' in platform.platform():
         runAUT("npm cache clean", 600)
@@ -32,9 +37,11 @@ if __name__ == '__main__':
         runAUT("rm --rf ~/.npm/tns/*", 600)
         runAUT("rm --rf ~/Library/Developer/Xcode/DerivedData/", 600)
         runAUT("sudo rm --rf /var/folders/*", 600)
+
     # Uninstall test apps
     uninstall_app("TNSApp", platform="android", fail=False)
     uninstall_app("TNSApp", platform="ios", fail=False)
+
     # Cleanup old runtimes
     CleanupFolder(os.path.split(androidRuntimeSymlinkPath)[0])
     CleanupFolder(os.path.split(iosRuntimeSymlinkPath)[0])
@@ -42,6 +49,7 @@ if __name__ == '__main__':
         os.remove(androidRuntimePath)
     if os.path.isfile(iosRuntimePath):
         os.remove(iosRuntimePath)
+
     # Cleanup folders created by test execution
     remove('stderr.txt')
     CleanupFolder('app')
@@ -53,13 +61,16 @@ if __name__ == '__main__':
     CleanupFolder('template')
     CleanupFolder('tns_modules')
     CleanupFolder('tns_helloworld_app')
+
     # Uninstall previous CLI and install latest
     UninstallCLI()
     InstallCLI()
+
     # Get latest Android and iOS runtimes
     GetAndroidRuntime()
     if 'Darwin' in platform.platform():
         GetiOSRuntime()
+
     # Clone hello-world template repo
     CleanupFolder('template-hello-world')
     OUTPUT = runAUT('git clone '
@@ -67,16 +78,20 @@ if __name__ == '__main__':
                     'template-hello-world')
     assert not ("fatal" in OUTPUT), \
         'Failed to clone git@github.com:NativeScript/template-hello-world.git'
+
     # Clone QA-TestApps repo
     CleanupFolder('QA-TestApps')
     OUTPUT = runAUT("git clone git@github.com:NativeScript/QA-TestApps.git QA-TestApps")
     assert not ("fatal" in OUTPUT), "Failed to clone git@github.com:NativeScript/QA-TestApps.git"
+
     # Execute tests
-    ExecuteTests()
+    execute_tests()
+
     # Stop running emulators
     if 'TESTRUN' in os.environ and not "SMOKE" in os.environ['TESTRUN']:
         StopEmulators()
         if 'Darwin' in platform.platform():
             StopSimulators()
+
     # Exit
-    AnalyzeResultAndExit()
+    analyze_result_and_exit()

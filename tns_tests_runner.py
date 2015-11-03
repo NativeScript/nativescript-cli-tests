@@ -9,7 +9,7 @@ from helpers import HTMLTestRunner
 from helpers._tns_lib import GetCLIBuildVersion
 from tests.autocomplete import Autocomplete
 from tests.build_linux import BuildAndroid
-from tests.build_osx import Build_OSX
+from tests.build_osx import BuildiOS
 from tests.create import Create
 from tests.debug_linux import Debug_Linux
 from tests.debug_osx import Debug_OSX
@@ -43,11 +43,18 @@ from tests.run_osx import Run_OSX
 from tests.usage import UsageAndErrorTracking
 from tests.version import Version
 
-
+# C0111 - Missing docstring
+# R0915 - Too many statements
+# W0212 - Access to a protected member
+# W0640 - Cell variable test defined in loop
+# pylint: disable=C0111, R0915, W0212, W0640
 def run_tests():
+
     print "Platform : ", platform.platform()
+
     # Android Requirements:
     # - Valid pair of keyStore and password
+    #
     # iOS Requirements:
     # - Valid pair of certificate and provisioning profile on your OS X system
     # Following environment variables should be set:
@@ -59,26 +66,29 @@ def run_tests():
     # - androidKeyStoreAliasPassword
     # - KEYCHAIN - Keychain for signing iOS Apps
     # - KEYCHAIN_PASS - Keychain password
+    #
     # Test name convention:
     # 001 - 199 - High priority
     # 200 - 299 - Medium priority
     # 300 - 399 - Low priority
     # 400 - 499 - Negative tests
+    #
     # TESTRUN Types:
     # SMOKE
     # - Runs tests with High priority.
     # DEFAULT
     # - All suites without dependencies on real devices  (all priorities)
     # - Following AVDs should be available
-    #    Api17 - Android emulator with API17
     #    Api19 - Android emulator with API19
     # FULL
     # - Runs all tests
     # - At least one real Android device must be attached to Linux hosts
     # - At least one real iOS device must be attached to OSX hosts
+
     suite = unittest.TestLoader().loadTestsFromTestCase(Version)
     # Temporary ignore Help tests because of expected breaking changes
     # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))
+
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
@@ -93,9 +103,10 @@ def run_tests():
     if 'Darwin' in platform.platform():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Build_OSX))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildiOS))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Sandbox_Pods))
+
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
@@ -107,6 +118,7 @@ def run_tests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Pods))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Libs))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Xcconfig))
+
     if ('TESTRUN' in os.environ) and ("FULL" in os.environ['TESTRUN']):
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Deploy_Linux))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_Linux))
@@ -119,6 +131,7 @@ def run_tests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_iOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Device_OSX))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Debug_OSX))
+
     # Smoke test runs only high priority tests
     if ('TESTRUN' in os.environ) and ("SMOKE" in os.environ['TESTRUN']):
         for test in suite:
@@ -131,11 +144,13 @@ def run_tests():
             if test._testMethodName.find('test_2') >= 0:
                 setattr(test, test._testMethodName, lambda: \
 					test.skipTest('Skip medium priority tests in SMOKE TEST run.'))
-    with open("Report.html", "w") as report_file:
+
+    with open("Report.html", "w") as report:
         descr = "Platform : {0};  nativescript-cli build version : {1}" \
         	.format(platform.platform(), GetCLIBuildVersion())
-        runner = HTMLTestRunner.HTMLTestRunner(report_file, title='TNS_CLI_tests', description=descr)
+        runner = HTMLTestRunner.HTMLTestRunner(report, title='TNS_CLI_tests', description=descr)
         result = runner.run(suite)
     return result
+
 if __name__ == '__main__':
     run_tests()

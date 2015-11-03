@@ -11,6 +11,10 @@ from helpers._tns_lib import tnsPath, CreateProject, CreateProjectAndAddPlatform
     androidKeyStoreAlias, androidKeyStoreAliasPassword, PlatformAdd, \
     androidRuntimeSymlinkPath
 
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
 # pylint: disable=R0201, C0111, C0103, R0904
 class BuildAndroid(unittest.TestCase):
 
