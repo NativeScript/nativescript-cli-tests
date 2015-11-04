@@ -1,5 +1,5 @@
 '''
-Test for building projects with Android platform
+Tests for building projects with the Android platform
 '''
 import os
 import platform
@@ -15,7 +15,7 @@ from helpers._tns_lib import tnsPath, CreateProject, CreateProjectAndAddPlatform
 # C0111 - Missing docstring
 # R0201 - Method could be a function
 # R0904 - Too many public methods
-# pylint: disable=R0201, C0111, C0103, R0904
+# pylint: disable=C0103, C0111, R0201, R0904
 
 
 class BuildAndroid(unittest.TestCase):
@@ -25,7 +25,9 @@ class BuildAndroid(unittest.TestCase):
         remove("TNSApp-debug.apk")
         remove("TNSApp-release.apk")
 
+        CleanupFolder('./tns-app')
         CleanupFolder('./TNS_App')
+        CleanupFolder('./TNS_AppSymlink')
         CreateProjectAndAddPlatform(projName="TNS_App",
                                     platform="android", frameworkPath=androidRuntimePath)
 
@@ -37,20 +39,20 @@ class BuildAndroid(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./tns-app')
         CleanupFolder('./TNSAppNoPlatform')
         CleanupFolder('./TNS_App/platforms/android/build/outputs')
 
     def tearDown(self):
-        pass
+        CleanupFolder('./TNSAppNoPlatform')
+        CleanupFolder('./TNS_App/platforms/android/build/outputs')
 
     @classmethod
     def tearDownClass(cls):
         remove("TNSApp-debug.apk")
         remove("TNSApp-release.apk")
 
+        CleanupFolder('./tns-app')
         CleanupFolder('./TNS_App')
-        CleanupFolder('./TNSAppNoPlatform')
         CleanupFolder('./TNS_AppSymlink')
 
     def test_001_build_android(self):
@@ -94,7 +96,7 @@ class BuildAndroid(unittest.TestCase):
             assert "Project successfully built" in output
 
             # Verify build does not modify original manifest
-            runAUT("cat " + androidRuntimeSymlinkPath +
+            output = runAUT("cat " + androidRuntimeSymlinkPath +
                    "/framework/src/main/AndroidManifest.xml")
             assert "__PACKAGE__" in output, \
                 "Build modify original AndroidManifest.xml, this is a problem!"
