@@ -1,10 +1,11 @@
-import re
-import unittest
+import re, unittest
 
 from helpers._os_lib import runAUT
 from helpers._tns_lib import tnsPath
 
-# pylint: disable=R0201, C0111
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# pylint: disable=C0111, R0201
 
 
 class Version(unittest.TestCase):
@@ -20,7 +21,7 @@ class Version(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_Version(self):
+    def test_001_version(self):
         output = runAUT(tnsPath + " --version")
-        isValidVersion = re.compile('^\d+\.\d+\.\d+(-\S+)?$').match(output)
-        assert (isValidVersion), "Not a valid version"
+        is_valid_version = re.compile("^\d+\.\d+\.\d+(-\S+)?$").match(output)
+        assert (is_valid_version), "Not a valid version."
