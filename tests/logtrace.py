@@ -1,5 +1,5 @@
 '''
-Logtrace tests
+LogTrace tests
 '''
 import unittest
 
@@ -9,8 +9,7 @@ from helpers._tns_lib import CreateProject, tnsPath
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function
-# R0915 - Too many statements
-# pylint: disable=C0103, C0111, R0201, R0915
+# pylint: disable=C0103, C0111, R0201
 
 
 class LogTrace(unittest.TestCase):
@@ -30,7 +29,8 @@ class LogTrace(unittest.TestCase):
 
     def test_001_create_project_logtrace(self):
         output = runAUT(tnsPath + " create TNS_App --log trace")
-        assert "Creating a new NativeScript project with name TNS_App and id org.nativescript.TNSApp at location" in output
+        assert "Creating a new NativeScript project with name TNS_App" in output
+        assert "id org.nativescript.TNSApp at location" in output
         assert "Using NativeScript hello world application" in output
         assert "Copying NativeScript hello world application into" in output
         assert "Project TNS_App was successfully created" in output
