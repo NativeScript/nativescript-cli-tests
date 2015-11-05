@@ -26,7 +26,7 @@ class BuildAndroid(unittest.TestCase):
         CleanupFolder('./tns-app')
         CleanupFolder('./TNS_App')
         CleanupFolder('./TNS_AppSymlink')
-        create_project_add_platform(proj_name="TNS_App",
+        create_project_add_platform(proj_name="TNS_App", \
                                     platform="android", framework_path=androidRuntimePath)
 
     def setUp(self):
@@ -63,8 +63,7 @@ class BuildAndroid(unittest.TestCase):
         assert not "ERROR" in output
         assert not "FAILURE" in output
 
-        assert FileExists(
-            "TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
     def test_002_build_android_release(self):
         output = runAUT(tnsPath + " build android --keyStorePath " + androidKeyStorePath +
@@ -77,8 +76,7 @@ class BuildAndroid(unittest.TestCase):
         assert "BUILD SUCCESSFUL" in output
 
         assert "Project successfully built" in output
-        assert FileExists(
-            "TNS_App/platforms/android/build/outputs/apk/TNSApp-release.apk")
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-release.apk")
 
     def test_100_build_android_symlink(self):
         if 'Windows' in platform.platform():
@@ -102,15 +100,15 @@ class BuildAndroid(unittest.TestCase):
                 "Build modify original AndroidManifest.xml, this is a problem!"
 
     def test_200_build_android_inside_project_folder(self):
-        os.chdir(os.path.join(os.getcwd(), "TNS_App"))
+        current_dir = os.getcwd();
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) +
                         " build android --path TNS_App")
-        os.chdir(os.getcwd())
+        os.chdir(current_dir)
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
-        assert FileExists(
-            "TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
     def test_201_build_android_with_additional_prepare(self):
 
@@ -121,14 +119,11 @@ class BuildAndroid(unittest.TestCase):
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
-        assert FileExists(
-            "TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+        assert FileExists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
     def test_202_build_android_platform_not_added(self):
         create_project(proj_name="TNSAppNoPlatform")
-        output = runAUT(
-            tnsPath +
-            " build android --path TNSAppNoPlatform --log trace")
+        output = runAUT(tnsPath + " build android --path TNSAppNoPlatform --log trace")
 
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
@@ -136,15 +131,13 @@ class BuildAndroid(unittest.TestCase):
 
         assert not "ERROR" in output
         assert not "FAILURE" in output
-        assert FileExists("TNSAppNoPlatform/platforms/android"
+        assert FileExists("TNSAppNoPlatform/platforms/android" \
                           "/build/outputs/apk/TNSAppNoPlatform-debug.apk")
 
     def test_203_build_android_platform_when_platform_folder_is_empty(self):
         create_project(proj_name="TNSAppNoPlatform")
         CleanupFolder('./TNSAppNoPlatform/platforms')
-        output = runAUT(
-            tnsPath +
-            " build android --path TNSAppNoPlatform  --log trace")
+        output = runAUT(tnsPath + " build android --path TNSAppNoPlatform  --log trace")
 
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
@@ -152,7 +145,7 @@ class BuildAndroid(unittest.TestCase):
 
         assert not "ERROR" in output
         assert not "FAILURE" in output
-        assert FileExists("TNSAppNoPlatform/platforms/android"
+        assert FileExists("TNSAppNoPlatform/platforms/android" \
                           "/build/outputs/apk/TNSAppNoPlatform-debug.apk")
 
     def test_300_build_android_with_additional_styles_xml(self):

@@ -104,20 +104,11 @@ def create_project(proj_name, path=None, app_id=None, copy_from=None):
         command += " --copy-from " + copy_from
 
     output = runAUT(command)
-    assert (
-        "Project {0} was successfully created".format(
-            proj_name.replace(
-                "\"",
-                "")) in output)
+    assert "Project {0} was successfully created".format(proj_name.replace("\"", "")) in output
     return output
 
 
-def platform_add(
-        platform=None,
-        framework_path=None,
-        path=None,
-        symlink=False,
-        assertSuccess=True):
+def platform_add(platform=None, framework_path=None, path=None, symlink=False, assertSuccess=True):
 
     command = tnsPath + " platform add"
 
@@ -136,8 +127,8 @@ def platform_add(
     output = runAUT(command)
 
     if assertSuccess:
-        assert ("Copying template files..." in output)
-        assert ("Project successfully created" in output)
+        assert "Copying template files..." in output
+        assert "Project successfully created" in output
 
     return output
 

@@ -38,10 +38,7 @@ class Plugins_Linux(unittest.TestCase):
         assert "tns-plugin" in output
 
     def test_002_PluginAdd_After_platform_add_Android(self):
-        create_project_add_platform(
-            proj_name="TNS_App",
-            platform="android",
-            framework_path=androidRuntimePath)
+        create_project_add_platform(proj_name="TNS_App", platform="android", framework_path=androidRuntimePath)
         output = runAUT(tnsPath + " plugin add tns-plugin --path TNS_App")
         if 'Windows' not in platform.platform():
             assert "TNS_App/node_modules/tns-plugin" in output

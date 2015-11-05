@@ -93,8 +93,7 @@ def run_tests():
 
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
-    suite.addTests(
-        unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
+    suite.addTests( unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Output_STRERR))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))
@@ -104,35 +103,23 @@ def run_tests():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_Linux))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(InitAndInstall))
     if 'Darwin' in platform.platform():
-        suite.addTests(
-            unittest.TestLoader().loadTestsFromTestCase(PlatformiOS))
-        suite.addTests(
-            unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PlatformiOS))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildiOS))
-        suite.addTests(
-            unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(
-            Plugins_OSX_Sandbox_Pods))
+        suite.addTests( unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Sandbox_Pods))
 
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
-            suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
-        suite.addTests(
-            unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
-        suite.addTests(
-            unittest.TestLoader().loadTestsFromTestCase(LiveSync_Emulator))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Emulator))
         if 'Darwin' in platform.platform():
-            suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(Emulate_OSX))
-            suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(Library_OSX))
-            suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Pods))
-            suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Libs))
-            suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Xcconfig))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_OSX))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_OSX))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Pods))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Libs))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Xcconfig))
 
     if ('TESTRUN' in os.environ) and ("FULL" in os.environ['TESTRUN']):
         suite.addTests(
