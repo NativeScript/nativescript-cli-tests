@@ -6,7 +6,7 @@ import fileinput
 
 from helpers._os_lib import CleanupFolder, CheckFilesExists, FileExists, FolderExists, \
     IsEmpty, runAUT
-from helpers._tns_lib import CreateProject, tnsPath
+from helpers._tns_lib import create_project, tnsPath
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
@@ -47,7 +47,7 @@ class Create(unittest.TestCase):
         CleanupFolder('./TNS App')
 
     def test_001_create_project(self):
-        CreateProject(projName="TNS_App")
+        create_project(proj_name="TNS_App")
 
         assert IsEmpty("TNS_App/platforms")
         assert not FolderExists("TNS_App/app/tns_modules")
@@ -64,7 +64,7 @@ class Create(unittest.TestCase):
             "TNS_App", "template_javascript_files_1.2.0.txt")
 
     def test_002_create_project_with_path(self):
-        CreateProject(projName="TNS_App", path='folder/subfolder/')
+        create_project(proj_name="TNS_App", path='folder/subfolder/')
 
         assert IsEmpty("folder/subfolder/TNS_App/platforms")
         assert not FolderExists("folder/subfolder/TNS_App/app/tns_modules")
@@ -85,20 +85,20 @@ class Create(unittest.TestCase):
             'template_javascript_files_1.2.0.txt')
 
     def test_003_create_project_with_appid(self):
-        CreateProject(projName="TNS_App", appId="org.nativescript.MyApp")
+        create_project(proj_name="TNS_App", app_id="org.nativescript.MyApp")
         output = runAUT("cat TNS_App/package.json")
         assert "\"id\": \"org.nativescript.MyApp\"" in output
 
     def test_004_create_project_with_copyfrom(self):
         # Create initial template project
-        CreateProject(projName="template")
+        create_project(proj_name="template")
 
         # Modify some files in template project
         for line in fileinput.input("template/app/LICENSE", inplace=1):
             print line.replace("Copyright (c) 2015, Telerik AD", "Copyright (c) 2015, Telerik A D"),
 
         # Create new project based on first one
-        CreateProject(projName="TNS_App", copyFrom="template/app")
+        create_project(proj_name="TNS_App", copy_from="template/app")
 
         # Verify new project corresponds to name of the new project
         output = runAUT("cat TNS_App/package.json")
@@ -110,22 +110,22 @@ class Create(unittest.TestCase):
         assert "Copyright (c) 2015, Telerik A D" in output
 
     def test_005_create_project_with_space(self):
-        CreateProject(projName="\"TNS App\"")
+        create_project(proj_name="\"TNS App\"")
         output = runAUT("cat \"TNS App/package.json\"")
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
 
     def test_006_create_project_with_dash(self):
-        CreateProject(projName="\"tns-app\"")
+        create_project(proj_name="\"tns-app\"")
         output = runAUT("cat \"tns-app/package.json\"")
         assert "\"id\": \"org.nativescript.tnsapp\"" in output
 
     def test_007_create_project_named_123(self):
-        CreateProject(projName="123")
+        create_project(proj_name="123")
         output = runAUT("cat 123/package.json")
         assert "\"id\": \"org.nativescript.the123\"" in output
 
     def test_008_create_project_named_app(self):
-        output = CreateProject(projName="app")
+        output = create_project(proj_name="app")
         assert "You cannot build applications named 'app' in Xcode." in output
 
         output = runAUT("cat app/package.json")
@@ -139,14 +139,14 @@ class Create(unittest.TestCase):
         assert "doesn't exist. Check that you specified the path correctly and try again" in output
 
     def test_401_create_project_in_folder_with_existing_project(self):
-        CreateProject(projName="TNS_App")
+        create_project(proj_name="TNS_App")
         output = runAUT(tnsPath + " create TNS_App")
         assert not "successfully created" in output
         assert "Path already exists and is not empty" in output
 
     def test_402_create_project_with_wrong_copyfrom_command(self):
         # Create initial template project
-        CreateProject(projName="template")
+        create_project(proj_name="template")
 
         output = runAUT(tnsPath + " create TNS_App -copy-from template")
         assert not "successfully created" in output

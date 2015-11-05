@@ -4,7 +4,7 @@ LogTrace tests
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT
-from helpers._tns_lib import CreateProject, tnsPath
+from helpers._tns_lib import create_project, tnsPath
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
@@ -36,7 +36,7 @@ class LogTrace(unittest.TestCase):
         assert "Project TNS_App was successfully created" in output
 
     def test_002_platform_add_logtrace(self):
-        CreateProject(projName="TNS_App")
+        create_project(proj_name="TNS_App")
         output = runAUT(tnsPath + " platform add android --path TNS_App --log trace")
         assert "Looking for project in" in output
         assert "Project directory is" in output

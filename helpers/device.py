@@ -6,7 +6,6 @@ from helpers._os_lib import runAUT, KillProcess
 from helpers._tns_lib import tnsPath
 from helpers.adb import RestartAdb
 
-
 def StartEmulator(emulatorName, port="5554", timeout=300, waitFor=True):
 
     print "Starting emulator on {0}".format(platform.platform())

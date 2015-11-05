@@ -1,16 +1,19 @@
+'''
+Test platform add (ios)
+'''
 import unittest
 import os
 
 from helpers._os_lib import runAUT, CleanupFolder, CheckFilesExists, \
     IsEmpty, FileExists
 from helpers._tns_lib import tnsPath, androidRuntimePath, Build, \
-    CreateProject, CreateProjectAndAddPlatform, iosRuntimePath, iosRuntimeSymlinkPath, \
-    PlatformAdd, Prepare
+    create_project, create_project_add_platform, iosRuntimePath, iosRuntimeSymlinkPath, \
+    platform_add, Prepare
 
 # pylint: disable=R0201, C0111
 
 
-class Platform_OSX(unittest.TestCase):
+class PlatformiOS(unittest.TestCase):
 
     def setUp(self):
 
@@ -26,11 +29,7 @@ class Platform_OSX(unittest.TestCase):
         pass
 
     def test_001_Platform_List_IOS_Project(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
-            platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
-            symlink=True)
+        create_project_add_platform(proj_name="TNS_App", platform="ios", framework_path=iosRuntimeSymlinkPath, symlink=True)
         output = runAUT(tnsPath + " platform list --path TNS_App")
         assert "The project is not prepared for any platform" in output
         assert "Installed platforms:  ios" in output
@@ -40,9 +39,9 @@ class Platform_OSX(unittest.TestCase):
         assert "The project is prepared for:  ios" in output
         assert "Installed platforms:  ios" in output
 
-        PlatformAdd(
+        platform_add(
             platform="android",
-            frameworkPath=androidRuntimePath,
+            framework_path=androidRuntimePath,
             path="TNS_App",
             symlink=True)
         output = runAUT(tnsPath + " platform list --path TNS_App")
@@ -55,8 +54,8 @@ class Platform_OSX(unittest.TestCase):
         assert "Installed platforms:  android and ios" in output
 
     def test_002_Platform_Add_iOS(self):
-        CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios", path="TNS_App", symlink=False)
+        create_project(proj_name="TNS_App")
+        output = platform_add(platform="ios", path="TNS_App", symlink=False)
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
@@ -70,11 +69,11 @@ class Platform_OSX(unittest.TestCase):
     @unittest.skip(
         "This test is not valid, adding symlink platform from npm cache cause issues")
     def test_003_Platform_Add_iOS_Symlink(self):
-        CreateProject(projName="TNS_App")
-        output = PlatformAdd(
+        create_project(proj_name="TNS_App")
+        output = platform_add(
             platform="ios",
             path="TNS_App",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         assert "Copying template files..." in output
         assert "Project successfully created" in output
@@ -91,11 +90,11 @@ class Platform_OSX(unittest.TestCase):
         assert "package/framework/NativeScript.framework" in output
 
     def test_004_Platform_Add_iOS_Symlink_And_FrameworkPath(self):
-        CreateProject(projName="TNS_App")
-        output = PlatformAdd(
+        create_project(proj_name="TNS_App")
+        output = platform_add(
             platform="ios",
             path="TNS_App",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         assert "Copying template files..." in output
         assert "Project successfully created" in output
@@ -112,10 +111,10 @@ class Platform_OSX(unittest.TestCase):
         assert "package/framework/internal" in output
 
     def test_200_Platform_Add_iOS_FrameworkPath(self):
-        CreateProject(projName="TNS_App")
-        output = PlatformAdd(
+        create_project(proj_name="TNS_App")
+        output = platform_add(
             platform="ios",
-            frameworkPath=iosRuntimePath,
+            framework_path=iosRuntimePath,
             path="TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created" in output
@@ -131,10 +130,10 @@ class Platform_OSX(unittest.TestCase):
             "TNS_App/platforms/ios/TNSApp.xcodeproj/project.xcworkspace")
 
     def test_201_Platform_Remove_iOS(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimePath)
+            framework_path=iosRuntimePath)
 
         output = runAUT(tnsPath + " platform remove ios --path TNS_App")
         assert "Platform ios successfully removed." in output
@@ -146,10 +145,10 @@ class Platform_OSX(unittest.TestCase):
         assert not "tns-ios" in output
 
     def test_202_Platform_Remove_iOS_Symlink(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         output = runAUT(tnsPath + " platform remove ios --path TNS_App")
@@ -162,8 +161,8 @@ class Platform_OSX(unittest.TestCase):
         assert not "tns-ios" in output
 
     def test_300_Platform_Add_iOS_CustomVersion(self):
-        CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios@1.2.2", path="TNS_App")
+        create_project(proj_name="TNS_App")
+        output = platform_add(platform="ios@1.2.2", path="TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
@@ -180,8 +179,8 @@ class Platform_OSX(unittest.TestCase):
     @unittest.skip(
         "Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
     def test_301_Platform_Update_iOS(self):
-        CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios@1.2.2", path="TNS_App")
+        create_project(proj_name="TNS_App")
+        output = platform_add(platform="ios@1.2.2", path="TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
@@ -204,7 +203,7 @@ class Platform_OSX(unittest.TestCase):
 
     @unittest.skip("This test fails on the build machine because it needs more time to update ios@1.1.0. Try to execute update command again with runAUT or add time.sleep(x).")
     def test_302_Platform_Downgrade_iOS_ToOlderVersion(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios@1.2.0")
+        create_project_add_platform(proj_name="TNS_App", platform="ios@1.2.0")
         output = runAUT("cat TNS_App/package.json")
         assert "\"version\": \"1.2.0\"" in output
 
@@ -219,7 +218,7 @@ class Platform_OSX(unittest.TestCase):
     @unittest.skip(
         "Execute when platform update command starts respecting --frameworkPath: https://github.com/NativeScript/nativescript-cli/issues/743")
     def test_303_Platform_Update_iOS_ToLatestVersion(self):
-        CreateProjectAndAddPlatform(projName="TNS_App", platform="ios@1.0.0")
+        create_project_add_platform(proj_name="TNS_App", platform="ios@1.0.0")
         output = runAUT("cat TNS_App/package.json")
         assert "\"version\": \"1.0.0\"" in output
 
@@ -236,10 +235,10 @@ class Platform_OSX(unittest.TestCase):
     @unittest.skip(
         "Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
     def test_304_Platform_Downgrade_iOS_FromLatestVersion(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimePath)
+            framework_path=iosRuntimePath)
 
         output = runAUT("cat TNS_App/package.json")
         assert "\"version\": \"1." in output
@@ -253,8 +252,8 @@ class Platform_OSX(unittest.TestCase):
         Build(platform="ios", path="TNS_App")
 
     def test_310_Platform_Add_iOS_CustomExperimentalVersion(self):
-        CreateProject(projName="TNS_App")
-        output = PlatformAdd(platform="ios@0.9.2-exp-ios-8.2", path="TNS_App")
+        create_project(proj_name="TNS_App")
+        output = platform_add(platform="ios@0.9.2-exp-ios-8.2", path="TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
@@ -263,15 +262,15 @@ class Platform_OSX(unittest.TestCase):
 
     def test_320_Platform_Add_iOS_CustomBundleId(self):
         # Create project with different appId
-        CreateProject(projName="TNS_App", appId="org.nativescript.MyApp")
+        create_project(proj_name="TNS_App", app_id="org.nativescript.MyApp")
         output = runAUT("cat TNS_App/package.json")
         assert "\"id\": \"org.nativescript.MyApp\"" in output
 
         # Add iOS platform
-        output = PlatformAdd(
+        output = platform_add(
             platform="ios",
             path="TNS_App",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         assert "Project successfully created" in output
 
@@ -280,7 +279,7 @@ class Platform_OSX(unittest.TestCase):
         assert "org.nativescript.MyApp" in output
 
     def test_330_Platform_Update_iOS_PlatformNotAdded(self):
-        CreateProject(projName="TNS_App")
+        create_project(proj_name="TNS_App")
         output = runAUT(tnsPath + " platform update ios --path TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created." in output

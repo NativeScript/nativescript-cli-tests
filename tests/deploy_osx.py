@@ -4,7 +4,7 @@ Test for deploy command
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT
-from helpers._tns_lib import CreateProject, CreateProjectAndAddPlatform, \
+from helpers._tns_lib import create_project, create_project_add_platform, \
     iosRuntimeSymlinkPath, tnsPath
 from helpers.device import GivenRealDeviceRunning
 
@@ -12,7 +12,7 @@ from helpers.device import GivenRealDeviceRunning
 # C0111 - Missing docstring
 # R0201 - Method could be a function
 # R0904 - Too many public methods
-# pylint: disable=R0201, C0111, R0904
+# pylint: disable=C0103, C0111, R0201, R0904
 class DeployiOS(unittest.TestCase):
 
     @classmethod
@@ -35,11 +35,11 @@ class DeployiOS(unittest.TestCase):
     def tearDownClass(cls):
         pass
 
-    def test_001_Deploy_iOS_Device(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+    def test_001_deploy_ios_device(self):
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         output = runAUT(tnsPath + " deploy ios --path TNS_App  --justlaunch")
         assert "Project successfully prepared" in output
@@ -48,8 +48,8 @@ class DeployiOS(unittest.TestCase):
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
 
-    def test_200_Deploy_iOS_PlatformNotAdded(self):
-        CreateProject(projName="TNS_App")
+    def test_300_deploy_ios_platform_not_added(self):
+        create_project(proj_name="TNS_App")
         output = runAUT(tnsPath + " deploy ios --path TNS_App --justlaunch")
         assert "Copying template files..." in output
         assert "Project successfully created." in output

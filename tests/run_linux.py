@@ -2,7 +2,7 @@ import os
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT
-from helpers._tns_lib import CreateProject, CreateProjectAndAddPlatform, \
+from helpers._tns_lib import create_project, create_project_add_platform, \
     tnsPath, androidKeyStorePath, androidKeyStorePassword, \
     androidKeyStoreAlias, androidKeyStoreAliasPassword, androidRuntimePath
 from helpers.device import GivenRunningEmulator, GivenRealDeviceRunning
@@ -15,10 +15,10 @@ class Run_Linux(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         CleanupFolder('./TNS_App')
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
 
     def setUp(self):
 
@@ -92,7 +92,7 @@ class Run_Linux(unittest.TestCase):
         # running on this device
 
     def test_300_Run_Android_PlatformNotAdded(self):
-        CreateProject(projName="TNS_App_NoPlatform")
+        create_project(proj_name="TNS_App_NoPlatform")
         output = runAUT(
             tnsPath +
             " run android --path TNS_App_NoPlatform --justlaunch")

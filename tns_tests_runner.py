@@ -6,7 +6,7 @@ import platform
 import unittest
 
 from helpers import HTMLTestRunner
-from helpers._tns_lib import GetCLIBuildVersion
+from helpers._tns_lib import get_cli_version
 from tests.autocomplete import Autocomplete
 from tests.build_linux import BuildAndroid
 from tests.build_osx import BuildiOS
@@ -15,8 +15,8 @@ from tests.debug_linux import DebugAndroid
 from tests.debug_osx import DebugiOS
 from tests.deploy_linux import DeployAndroid
 from tests.deploy_osx import DeployiOS
-from tests.device_linux import Device_Linux
-from tests.device_osx import Device_OSX
+from tests.device_linux import DeviceAndroid
+from tests.device_osx import DeviceiOS
 from tests.doctor import Doctor
 from tests.emulate_linux import Emulate_Linux
 from tests.emulate_osx import Emulate_OSX
@@ -28,8 +28,8 @@ from tests.livesync_emulator import LiveSync_Emulator
 from tests.livesync_ios import LiveSync_iOS
 from tests.logtrace import LogTrace
 from tests.output_stderr import Output_STRERR
-from tests.platform_linux import Platform_Linux
-from tests.platform_osx import Platform_OSX
+from tests.platform_linux import PlatformAndroid
+from tests.platform_osx import PlatformiOS
 from tests.plugins_linux import Plugins_Linux
 from tests.plugins_osx import Plugins_OSX
 from tests.plugins_osx_libs import Plugins_OSX_Libs
@@ -98,14 +98,14 @@ def run_tests():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Output_STRERR))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Platform_Linux))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PlatformAndroid))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_Linux))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildAndroid))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_Linux))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(InitAndInstall))
     if 'Darwin' in platform.platform():
         suite.addTests(
-            unittest.TestLoader().loadTestsFromTestCase(Platform_OSX))
+            unittest.TestLoader().loadTestsFromTestCase(PlatformiOS))
         suite.addTests(
             unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildiOS))
@@ -139,7 +139,7 @@ def run_tests():
             unittest.TestLoader().loadTestsFromTestCase(DeployAndroid))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_Linux))
         suite.addTests(
-            unittest.TestLoader().loadTestsFromTestCase(Device_Linux))
+            unittest.TestLoader().loadTestsFromTestCase(DeviceAndroid))
         suite.addTests(
             unittest.TestLoader().loadTestsFromTestCase(DebugAndroid))
         if 'Darwin' in platform.platform():
@@ -152,7 +152,7 @@ def run_tests():
             suite.addTests(
                 unittest.TestLoader().loadTestsFromTestCase(LiveSync_iOS))
             suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(Device_OSX))
+                unittest.TestLoader().loadTestsFromTestCase(DeviceiOS))
             suite.addTests(
                 unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
 
@@ -171,7 +171,7 @@ def run_tests():
 
     with open("Report.html", "w") as report:
         descr = "Platform : {0};  nativescript-cli build version : {1}" \
-                .format(platform.platform(), GetCLIBuildVersion())
+                .format(platform.platform(), get_cli_version())
         runner = HTMLTestRunner.HTMLTestRunner(
             report, title='TNS_CLI_tests', description=descr)
         result = runner.run(suite)

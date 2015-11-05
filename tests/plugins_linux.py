@@ -3,8 +3,8 @@ import platform
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, FileExists
-from helpers._tns_lib import CreateProjectAndAddPlatform, androidRuntimePath, \
-    tnsPath, CreateProject, PlatformAdd, Build
+from helpers._tns_lib import create_project_add_platform, androidRuntimePath, \
+    tnsPath, create_project, platform_add, Build
 
 # pylint: disable=R0201, C0111
 
@@ -24,8 +24,8 @@ class Plugins_Linux(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_PluginAdd_Before_PlatformAdd_Android(self):
-        CreateProject(projName="TNS_App")
+    def test_001_PluginAdd_Before_platform_add_Android(self):
+        create_project(proj_name="TNS_App")
         output = runAUT(tnsPath + " plugin add tns-plugin --path TNS_App")
         if 'Windows' not in platform.platform():
             assert "TNS_App/node_modules/tns-plugin" in output
@@ -37,11 +37,11 @@ class Plugins_Linux(unittest.TestCase):
         assert "dependencies" in output
         assert "tns-plugin" in output
 
-    def test_002_PluginAdd_After_PlatformAdd_Android(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+    def test_002_PluginAdd_After_platform_add_Android(self):
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
         output = runAUT(tnsPath + " plugin add tns-plugin --path TNS_App")
         if 'Windows' not in platform.platform():
             assert "TNS_App/node_modules/tns-plugin" in output
@@ -54,10 +54,10 @@ class Plugins_Linux(unittest.TestCase):
         assert "tns-plugin" in output
 
     def test_003_PluginAdd_InsideProject(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " plugin add tns-plugin")
@@ -74,10 +74,10 @@ class Plugins_Linux(unittest.TestCase):
 
     def test_100_BuildAppWithPluginAddedInsideProject(self):
 
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
 
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
@@ -101,8 +101,8 @@ class Plugins_Linux(unittest.TestCase):
         assert FileExists(
             "TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
 
-    def test_200_PluginAdd_Before_PlatformAdd_Android(self):
-        CreateProject(projName="TNS_App")
+    def test_200_PluginAdd_Before_platform_add_Android(self):
+        create_project(proj_name="TNS_App")
         output = runAUT(
             tnsPath +
             " plugin add nativescript-telerik-ui --path TNS_App")
@@ -119,17 +119,17 @@ class Plugins_Linux(unittest.TestCase):
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
         assert "nativescript-telerik-ui" in output
-        PlatformAdd(
+        platform_add(
             platform="android",
-            frameworkPath=androidRuntimePath,
+            framework_path=androidRuntimePath,
             path="TNS_App")
         Build(platform="android", path="TNS_App")
 
-    def test_201_PluginAdd_After_PlatformAdd_Android(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+    def test_201_PluginAdd_After_platform_add_Android(self):
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
         output = runAUT(
             tnsPath +
             " plugin add nativescript-telerik-ui --path TNS_App")
@@ -150,10 +150,10 @@ class Plugins_Linux(unittest.TestCase):
 
     def test_300_BuildAppWithPluginAddedOutsideProject(self):
 
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
 
         output = runAUT(tnsPath + " plugin add tns-plugin --path TNS_App")
         assert "Successfully installed plugin tns-plugin" in output
@@ -175,21 +175,21 @@ class Plugins_Linux(unittest.TestCase):
 
     @unittest.skip("This test breaks the xml parser.")
     def test_400_PluginAdd_NotExistingPlugin(self):
-        CreateProject(projName="TNS_App")
+        create_project(proj_name="TNS_App")
         output = runAUT(tnsPath + " plugin add fakePlugin --path TNS_App")
         assert "no such package available" in output
 
     def test_401_PluginAdd_InvalidPlugin(self):
-        CreateProject(projName="TNS_App")
+        create_project(proj_name="TNS_App")
         output = runAUT(tnsPath + " plugin add wd --path TNS_App")
         assert "wd is not a valid NativeScript plugin" in output
         assert "Verify that the plugin package.json file contains a nativescript key and try again" in output
 
     def test_403_PluginAdd_PluginNotSupportedOnSpecificPlatform(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
         output = runAUT(
             tnsPath +
             " plugin add tns-plugin@1.0.2 --path TNS_App")

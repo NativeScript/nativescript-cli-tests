@@ -1,7 +1,7 @@
 import os, unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, IsRunningProcess
-from helpers._tns_lib import CreateProject, CreateProjectAndAddPlatform, \
+from helpers._tns_lib import create_project, create_project_add_platform, \
     iosRuntimeSymlinkPath, tnsPath
 from helpers.device import GivenRealDeviceRunning, StopSimulators
 
@@ -18,15 +18,15 @@ class Run_OSX(unittest.TestCase):
         CleanupFolder('./TNS App')
         CleanupFolder('./TNS_App')
         CleanupFolder('./TNSAppNoPlatform')
-        CreateProjectAndAddPlatform(
-            projName="\"TNS App\"",
+        create_project_add_platform(
+            proj_name="\"TNS App\"",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
     def setUp(self):
@@ -121,7 +121,7 @@ class Run_OSX(unittest.TestCase):
         assert "Successfully deployed on device" in output
 
     def test_300_run_ios_platform_not_added(self):
-        CreateProject(projName="TNSAppNoPlatform")
+        create_project(proj_name="TNSAppNoPlatform")
         output = runAUT(
             tnsPath +
             " run ios --path TNSAppNoPlatform --justlaunch")

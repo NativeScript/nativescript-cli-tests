@@ -2,7 +2,7 @@ import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, FileExists
 from helpers._tns_lib import Build, iosRuntimeSymlinkPath, \
-    tnsPath, CreateProject, PlatformAdd, Prepare, CreateProjectAndAddPlatform
+    tnsPath, create_project, platform_add, Prepare, create_project_add_platform
 
 # pylint: disable=R0201, C0111
 
@@ -24,8 +24,8 @@ class Plugins_OSX_Xcconfig(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_PluginAdd_Xcconfig_Before_PlatformAdd_iOS(self):
-        CreateProject(projName="TNS_App")
+    def test_001_PluginAdd_Xcconfig_Before_platform_add_iOS(self):
+        create_project(proj_name="TNS_App")
 
         output = runAUT(
             tnsPath +
@@ -42,9 +42,9 @@ class Plugins_OSX_Xcconfig(unittest.TestCase):
         output = runAUT("cat TNS_App/package.json")
         assert "xcconfig-plugin" in output
 
-        PlatformAdd(
+        platform_add(
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             path="TNS_App",
             symlink=True)
         output = Prepare(platform="ios", path="TNS_App")
@@ -64,11 +64,11 @@ class Plugins_OSX_Xcconfig(unittest.TestCase):
 
         Build(platform="ios", path="TNS_App")
 
-    def test_202_PluginAdd_Xcconfig_After_PlatformAdd_iOS(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+    def test_202_PluginAdd_Xcconfig_After_platform_add_iOS(self):
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         output = runAUT(

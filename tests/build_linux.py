@@ -6,9 +6,9 @@ import platform
 import unittest
 
 from helpers._os_lib import CleanupFolder, remove, runAUT, FileExists
-from helpers._tns_lib import tnsPath, CreateProject, CreateProjectAndAddPlatform, \
+from helpers._tns_lib import tnsPath, create_project, create_project_add_platform, \
     androidRuntimePath, Prepare, androidKeyStorePath, androidKeyStorePassword, \
-    androidKeyStoreAlias, androidKeyStoreAliasPassword, PlatformAdd, \
+    androidKeyStoreAlias, androidKeyStoreAliasPassword, platform_add, \
     androidRuntimeSymlinkPath
 
 # C0103 - Invalid %s name "%s"
@@ -26,8 +26,8 @@ class BuildAndroid(unittest.TestCase):
         CleanupFolder('./tns-app')
         CleanupFolder('./TNS_App')
         CleanupFolder('./TNS_AppSymlink')
-        CreateProjectAndAddPlatform(projName="TNS_App",
-                                    platform="android", frameworkPath=androidRuntimePath)
+        create_project_add_platform(proj_name="TNS_App",
+                                    platform="android", framework_path=androidRuntimePath)
 
     def setUp(self):
 
@@ -84,9 +84,9 @@ class BuildAndroid(unittest.TestCase):
         if 'Windows' in platform.platform():
             print "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282"
         else:
-            CreateProject(projName="TNS_AppSymlink")
-            output = PlatformAdd(platform="android", path="TNS_AppSymlink",
-                                 frameworkPath=androidRuntimeSymlinkPath, symlink=True)
+            create_project(proj_name="TNS_AppSymlink")
+            output = platform_add(platform="android", path="TNS_AppSymlink",
+                                 framework_path=androidRuntimeSymlinkPath, symlink=True)
             assert "Project successfully created" in output
             output = runAUT(tnsPath + " build android --path TNS_AppSymlink")
             assert "Project successfully prepared" in output
@@ -125,7 +125,7 @@ class BuildAndroid(unittest.TestCase):
             "TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
     def test_202_build_android_platform_not_added(self):
-        CreateProject(projName="TNSAppNoPlatform")
+        create_project(proj_name="TNSAppNoPlatform")
         output = runAUT(
             tnsPath +
             " build android --path TNSAppNoPlatform --log trace")
@@ -140,7 +140,7 @@ class BuildAndroid(unittest.TestCase):
                           "/build/outputs/apk/TNSAppNoPlatform-debug.apk")
 
     def test_203_build_android_platform_when_platform_folder_is_empty(self):
-        CreateProject(projName="TNSAppNoPlatform")
+        create_project(proj_name="TNSAppNoPlatform")
         CleanupFolder('./TNSAppNoPlatform/platforms')
         output = runAUT(
             tnsPath +
@@ -170,8 +170,8 @@ class BuildAndroid(unittest.TestCase):
             "TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
     def test_301_build_project_with_dash(self):
-        CreateProjectAndAddPlatform(projName="tns-app",
-                                    platform="android", frameworkPath=androidRuntimePath)
+        create_project_add_platform(proj_name="tns-app",
+                                    platform="android", framework_path=androidRuntimePath)
 
         # Verify project builds
         output = runAUT(tnsPath + " build android --path tns-app")

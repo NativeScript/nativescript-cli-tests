@@ -1,15 +1,21 @@
+'''
+Test for device command in context of iOS
+'''
 from time import sleep
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT
-from helpers._tns_lib import tnsPath, CreateProjectAndAddPlatform, androidRuntimePath, iosRuntimeSymlinkPath
+from helpers._tns_lib import tnsPath, create_project_add_platform, \
+    androidRuntimePath, iosRuntimeSymlinkPath
 from helpers.adb import StopApplication, WaitUntilAppIsRunning
 from helpers.device import GivenRealDeviceRunning, GetPhysicalDeviceId
 
-# pylint: disable=R0201, C0111
-
-
-class Device_OSX(unittest.TestCase):
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=C0111, R0201, R0904
+class DeviceiOS(unittest.TestCase):
 
     def setUp(self):
 
@@ -40,10 +46,10 @@ class Device_OSX(unittest.TestCase):
                 False)
 
             # Deploy TNS_App on device
-            CreateProjectAndAddPlatform(
-                projName="TNS_App",
+            create_project_add_platform(
+                proj_name="TNS_App",
                 platform="android",
-                frameworkPath=androidRuntimePath)
+                framework_path=androidRuntimePath)
             output = runAUT(tnsPath + " deploy android --path TNS_App")
             assert "Project successfully prepared" in output
             assert "Project successfully built" in output
@@ -61,12 +67,12 @@ class Device_OSX(unittest.TestCase):
 
             # Verify app is running
             WaitUntilAppIsRunning(
-                appId="org.nativescript.TNSApp",
+                app_id="org.nativescript.TNSApp",
                 device_id=device_id,
                 timeout=60)
 
             # Kill the app
-            StopApplication(appId="org.nativescript.TNSApp", device_id=device_id)
+            StopApplication(app_id="org.nativescript.TNSApp", device_id=device_id)
 
             # Start it via device command and verify app is running
             runAUT(
@@ -76,7 +82,7 @@ class Device_OSX(unittest.TestCase):
 
             # Verify app is running
             WaitUntilAppIsRunning(
-                appId="org.nativescript.TNSApp",
+                app_id="org.nativescript.TNSApp",
                 device_id=device_id,
                 timeout=60)
 
@@ -102,10 +108,10 @@ class Device_OSX(unittest.TestCase):
                 False)
 
             # Deploy TNS_App on device
-            CreateProjectAndAddPlatform(
-                projName="TNS_App",
+            create_project_add_platform(
+                proj_name="TNS_App",
                 platform="ios",
-                frameworkPath=iosRuntimeSymlinkPath,
+                framework_path=iosRuntimeSymlinkPath,
                 symlink=True)
             output = runAUT(tnsPath + " deploy ios --path TNS_App")
             assert "Project successfully prepared" in output

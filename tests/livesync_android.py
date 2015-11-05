@@ -5,7 +5,7 @@ import unittest
 
 from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, \
-    CreateProjectAndAddPlatform, LiveSync, Run
+    create_project_add_platform, LiveSync, Run
 from helpers.device import GivenRealDeviceRunning, \
     StopEmulators, StopSimulators, GetPhysicalDeviceId
 
@@ -41,10 +41,10 @@ class LiveSync_Android(unittest.TestCase):
         pass
 
     def test_001_LiveSync_Android_XmlJsCss_TnsModules_Files(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -77,10 +77,10 @@ class LiveSync_Android(unittest.TestCase):
     # This test executes the Run -> LiveSync -> Run work flow on an android
     # device with API level 21.
     def test_002_LiveSync_Android_Device_XmlFile_Run(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         device_id = GetPhysicalDeviceId(platform="android")
@@ -97,10 +97,10 @@ class LiveSync_Android(unittest.TestCase):
         assert "<Button text=\"RUN\" tap=\"{{ tapAction }}\" />" in output
 
     def test_201_LiveSync_Android_AddNewFiles(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
@@ -133,10 +133,10 @@ class LiveSync_Android(unittest.TestCase):
         pass
 
     def test_301_LiveSync_BeforeRun(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")

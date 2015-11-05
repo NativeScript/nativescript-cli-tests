@@ -2,7 +2,7 @@ import unittest
 
 from helpers._os_lib import CleanupFolder, CheckFilesExists, FolderExists, runAUT
 from helpers._tns_lib import iosRuntimePath, \
-    Build, CreateProject, PlatformAdd, LibraryAdd
+    Build, create_project, platform_add, LibraryAdd
 
 # pylint: disable=R0201, C0111
 
@@ -23,10 +23,10 @@ class Library_OSX(unittest.TestCase):
         pass
 
     def test_001_Library_Add_iOS_Framework(self):
-        CreateProject(projName="TNS_App")
-        PlatformAdd(
+        create_project(proj_name="TNS_App")
+        platform_add(
             platform="ios",
-            frameworkPath=iosRuntimePath,
+            framework_path=iosRuntimePath,
             path="TNS_App")
 
         LibraryAdd(
@@ -47,10 +47,10 @@ class Library_OSX(unittest.TestCase):
         assert not "TNS_App/lib/iOS/TelerikUI.framework" in output
 
     def test_401_Library_Add_iOS_NoLib(self):
-        CreateProject(projName="TNS_App")
-        PlatformAdd(
+        create_project(proj_name="TNS_App")
+        platform_add(
             platform="ios",
-            frameworkPath=iosRuntimePath,
+            framework_path=iosRuntimePath,
             path="TNS_App")
 
         output = LibraryAdd(

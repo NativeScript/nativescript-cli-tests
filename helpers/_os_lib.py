@@ -9,11 +9,9 @@ import platform
 import tarfile
 from time import sleep
 
-
 default_timeout = 180  # seconds
 default_output_file = "output.txt"
 DEBUG = 0
-
 
 def runAUT(cmd, set_timeout=None, getOutput=True):
     def forkIt():

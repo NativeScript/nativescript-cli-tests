@@ -4,7 +4,7 @@ import unittest
 
 from helpers._os_lib import CleanupFolder, replace, catAppFile, uninstall_app
 from helpers._tns_lib import iosRuntimePath, \
-    CreateProjectAndAddPlatform, LiveSync, Run
+    create_project_add_platform, LiveSync, Run
 from helpers.device import GivenRealDeviceRunning, \
     StopEmulators, StopSimulators, GetPhysicalDeviceId
 
@@ -41,10 +41,10 @@ class LiveSync_iOS(unittest.TestCase):
         uninstall_app("TNSApp", platform="ios", fail=False)
 
     def test_001_LiveSync_iOS_XmlJsCss_TnsModules_Files(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimePath)
+            framework_path=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -75,10 +75,10 @@ class LiveSync_iOS(unittest.TestCase):
         assert "require(\"globals\"); // test" in output
 
     def test_002_LiveSync_iOS_Device_XmlFile(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimePath)
+            framework_path=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         device_id = GetPhysicalDeviceId(platform="ios")
@@ -95,10 +95,10 @@ class LiveSync_iOS(unittest.TestCase):
 #         assert "this.set(\"message\", this.counter + \" runs left\");" in output
 
     def test_201_LiveSync_iOS_AddNewFiles(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimePath)
+            framework_path=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")

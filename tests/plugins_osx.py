@@ -3,8 +3,8 @@ import platform
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, FileExists
-from helpers._tns_lib import CreateProjectAndAddPlatform, iosRuntimePath, \
-    tnsPath, CreateProject, androidRuntimePath, PlatformAdd, Build, \
+from helpers._tns_lib import create_project_add_platform, iosRuntimePath, \
+    tnsPath, create_project, androidRuntimePath, platform_add, Build, \
     iosRuntimeSymlinkPath, androidRuntimeSymlinkPath
 
 # pylint: disable=R0201, C0111
@@ -27,8 +27,8 @@ class Plugins_OSX(unittest.TestCase):
     def tearDown(self):
         CleanupFolder('./TNS_App')
 
-    def test_001_PluginAdd_Before_PlatformAdd_iOS(self):
-        CreateProject(projName="TNS_App")
+    def test_001_PluginAdd_Before_platform_add_iOS(self):
+        create_project(proj_name="TNS_App")
         output = runAUT(tnsPath + " plugin add tns-plugin --path TNS_App")
         assert "TNS_App/node_modules/tns-plugin" in output
         assert "Successfully installed plugin tns-plugin" in output
@@ -39,11 +39,11 @@ class Plugins_OSX(unittest.TestCase):
         assert "dependencies" in output
         assert "tns-plugin" in output
 
-    def test_002_PluginAdd_After_PlatformAdd_iOS(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+    def test_002_PluginAdd_After_platform_add_iOS(self):
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         output = runAUT(tnsPath + " plugin add tns-plugin --path TNS_App")
         assert "TNS_App/node_modules/tns-plugin" in output
@@ -55,8 +55,8 @@ class Plugins_OSX(unittest.TestCase):
         assert "dependencies" in output
         assert "tns-plugin" in output
 
-    def test_201_PluginAdd_Before_PlatformAdd_iOS(self):
-        CreateProject(projName="TNS_App")
+    def test_201_PluginAdd_Before_platform_add_iOS(self):
+        create_project(proj_name="TNS_App")
         output = runAUT(
             tnsPath +
             " plugin add nativescript-telerik-ui --path TNS_App")
@@ -73,18 +73,18 @@ class Plugins_OSX(unittest.TestCase):
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
         assert "nativescript-telerik-ui" in output
-        PlatformAdd(
+        platform_add(
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True,
             path="TNS_App")
         Build(platform="ios", path="TNS_App")
 
-    def test_202_PluginAdd_After_PlatformAdd_iOS(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+    def test_202_PluginAdd_After_platform_add_iOS(self):
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         output = runAUT(
             tnsPath +
@@ -105,10 +105,10 @@ class Plugins_OSX(unittest.TestCase):
         Build(platform="ios", path="TNS_App")
 
     def test_203_PluginAdd_InsideProject(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimePath)
+            framework_path=iosRuntimePath)
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " plugin add tns-plugin")
@@ -124,10 +124,10 @@ class Plugins_OSX(unittest.TestCase):
 
     def test_204_BuildAppWithPluginInsideProject(self):
 
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         current_dir = os.getcwd()
@@ -144,10 +144,10 @@ class Plugins_OSX(unittest.TestCase):
 
     def test_300_BuildAppWithPluginOutside(self):
 
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         output = runAUT(tnsPath + " plugin add tns-plugin --path TNS_App")
@@ -160,14 +160,14 @@ class Plugins_OSX(unittest.TestCase):
         assert not "malformed" in output
 
     def test_301_BuildAppForBothPlatforms(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
-        PlatformAdd(
+        platform_add(
             platform="android",
-            frameworkPath=androidRuntimeSymlinkPath,
+            framework_path=androidRuntimeSymlinkPath,
             path="TNS_App",
             symlink=True)
 
@@ -227,10 +227,10 @@ class Plugins_OSX(unittest.TestCase):
             "TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test2.android.xml")
 
     def test_302_PlugingAndNPMModulesInSameProject(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
 
         output = runAUT(
             tnsPath +
@@ -268,20 +268,20 @@ class Plugins_OSX(unittest.TestCase):
             "TNS_App/platforms/android/src/main/assets/app/tns_modules/nativescript-appversion/appversion.ios.js")
 
     def test_401_PluginAdd_InvalidPlugin(self):
-        CreateProject(projName="TNS_App")
+        create_project(proj_name="TNS_App")
         output = runAUT(tnsPath + " plugin add wd --path TNS_App")
         assert "wd is not a valid NativeScript plugin" in output
         assert "Verify that the plugin package.json file contains a nativescript key and try again" in output
 
     def test_403_PluginAdd_PluginNotSupportedOnSpecificPlatform(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
-        PlatformAdd(
+        platform_add(
             platform="android",
-            frameworkPath=androidRuntimeSymlinkPath,
+            framework_path=androidRuntimeSymlinkPath,
             path="TNS_App",
             symlink=True)
 

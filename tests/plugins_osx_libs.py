@@ -2,7 +2,7 @@ import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, FileExists
 from helpers._tns_lib import Build, iosRuntimeSymlinkPath, \
-    tnsPath, CreateProject, PlatformAdd, Prepare, CreateProjectAndAddPlatform
+    tnsPath, create_project, platform_add, Prepare, create_project_add_platform
 
 # pylint: disable=R0201, C0111
 
@@ -24,8 +24,8 @@ class Plugins_OSX_Libs(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_201_PluginAdd_StaticLib_Universal_Before_PlatformAdd_iOS(self):
-        CreateProject(projName="TNS_App")
+    def test_201_PluginAdd_StaticLib_Universal_Before_platform_add_iOS(self):
+        create_project(proj_name="TNS_App")
 
         output = runAUT(
             tnsPath +
@@ -44,9 +44,9 @@ class Plugins_OSX_Libs(unittest.TestCase):
         output = runAUT("cat TNS_App/package.json")
         assert "static-lib/hello-plugin" in output
 
-        PlatformAdd(
+        platform_add(
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             path="TNS_App",
             symlink=True)
         output = Build(platform="ios", path="TNS_App")
@@ -59,11 +59,11 @@ class Plugins_OSX_Libs(unittest.TestCase):
             "cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
         assert "HelloLib.a in Frameworks" in output
 
-    def test_202_PluginAdd_StaticLib_Universal_After_PlatformAdd_iOS(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+    def test_202_PluginAdd_StaticLib_Universal_After_platform_add_iOS(self):
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         output = runAUT(
@@ -94,10 +94,10 @@ class Plugins_OSX_Libs(unittest.TestCase):
         assert "HelloLib.a in Frameworks" in output
 
     def test_401_PluginAdd_StaticLib_NonUniversal(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         output = runAUT(

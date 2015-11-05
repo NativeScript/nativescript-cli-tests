@@ -3,7 +3,7 @@ import unittest
 from helpers._os_lib import CleanupFolder, CheckFilesExists, CheckOutput, runAUT, \
     FileExists, FolderExists
 from helpers._tns_lib import androidRuntimePath, tnsPath, \
-    Build, CreateProject, PlatformAdd, LibraryAdd
+    Build, create_project, platform_add, LibraryAdd
 
 # pylint: disable=R0201, C0111
 
@@ -24,10 +24,10 @@ class Library_Linux(unittest.TestCase):
         pass
 
     def test_001_Library_Add_Android_JarLib(self):
-        CreateProject(projName="TNS_App")
-        PlatformAdd(
+        create_project(proj_name="TNS_App")
+        platform_add(
             platform="android",
-            frameworkPath=androidRuntimePath,
+            framework_path=androidRuntimePath,
             path="TNS_App")
 
         LibraryAdd(
@@ -49,12 +49,12 @@ class Library_Linux(unittest.TestCase):
         assert CheckOutput(output, 'library_help_output.txt')
 
     def test_400_Library_Add_Android_EclipseProjLib(self):
-        CreateProject(
-            projName="TNS_App",
-            copyFrom="QA-TestApps/external-lib/external-lib-android")
-        PlatformAdd(
+        create_project(
+            proj_name="TNS_App",
+            copy_from="QA-TestApps/external-lib/external-lib-android")
+        platform_add(
             platform="android",
-            frameworkPath=androidRuntimePath,
+            framework_path=androidRuntimePath,
             path="TNS_App")
 
         output = LibraryAdd(
@@ -66,12 +66,12 @@ class Library_Linux(unittest.TestCase):
         assert "You can use `library add` command only with path to folder containing one or more .jar files." in output
 
     def test_401_Library_Add_Android_NoLib(self):
-        CreateProject(
-            projName="TNS_App",
-            copyFrom="QA-TestApps/external-lib/external-lib-android")
-        PlatformAdd(
+        create_project(
+            proj_name="TNS_App",
+            copy_from="QA-TestApps/external-lib/external-lib-android")
+        platform_add(
             platform="android",
-            frameworkPath=androidRuntimePath,
+            framework_path=androidRuntimePath,
             path="TNS_App")
         output = LibraryAdd(
             platform="android",
@@ -82,7 +82,7 @@ class Library_Linux(unittest.TestCase):
         assert not FolderExists("TNS_App/lib/Android")
 
     def test_402_Library_Add_NoPlatform(self):
-        CreateProject(projName="TNS_App")
+        create_project(proj_name="TNS_App")
         output = runAUT(
             tnsPath +
             " library add android QA-TestApps/ --path TNS_App")

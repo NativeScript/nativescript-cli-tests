@@ -5,7 +5,7 @@ import platform
 import os
 
 from helpers._os_lib import CleanupFolder, remove, runAUT, uninstall_app
-from helpers._tns_lib import UninstallCLI, InstallCLI, GetAndroidRuntime, GetiOSRuntime, \
+from helpers._tns_lib import uninstall_cli, install_cli, get_android_runtime, get_ios_runtime, \
     androidRuntimeSymlinkPath, iosRuntimeSymlinkPath, androidRuntimePath, iosRuntimePath
 from helpers.device import StopEmulators, StopSimulators
 import tns_tests_runner
@@ -71,13 +71,13 @@ if __name__ == '__main__':
     CleanupFolder('tns_helloworld_app')
 
     # Uninstall previous CLI and install latest
-    UninstallCLI()
-    InstallCLI()
+    uninstall_cli()
+    install_cli()
 
     # Get latest Android and iOS runtimes
-    GetAndroidRuntime()
+    get_android_runtime()
     if 'Darwin' in platform.platform():
-        GetiOSRuntime()
+        get_ios_runtime()
 
     # Clone hello-world template repo
     CleanupFolder('template-hello-world')

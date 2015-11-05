@@ -6,7 +6,7 @@ import psutil
 
 from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, iosRuntimePath, \
-    CreateProjectAndAddPlatform, LiveSync, Run
+    create_project_add_platform, LiveSync, Run
 from helpers.device import GivenRealDeviceRunning, GetPhysicalDeviceId
 
 
@@ -29,10 +29,10 @@ class LiveSync_Simulator(unittest.TestCase):
         pass
 
     def test_001_LiveSync_iOS(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimePath)
+            framework_path=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -43,10 +43,10 @@ class LiveSync_Simulator(unittest.TestCase):
 
     def test_002_LiveSync_iOS_Device(self):
         device_id = GetPhysicalDeviceId(platform="ios")
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimePath)
+            framework_path=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
@@ -57,10 +57,10 @@ class LiveSync_Simulator(unittest.TestCase):
 
     @unittest.skip("TODO: Fix.")
     def test_003_LiveSync_iOS_Watch(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimePath)
+            framework_path=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
 
@@ -100,10 +100,10 @@ class LiveSync_Simulator(unittest.TestCase):
 
     @unittest.skip("Fix LiveSync for Android device.")
     def test_101_LiveSync_Android(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -114,10 +114,10 @@ class LiveSync_Simulator(unittest.TestCase):
 
     @unittest.skip("Fix LiveSync for Android device.")
     def test_102_LiveSync_Android_Device(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
@@ -128,10 +128,10 @@ class LiveSync_Simulator(unittest.TestCase):
 
     @unittest.skip("Fix LiveSync for Android device.")
     def test_103_LiveSync_Android_Watch(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
         Run(platform="android", path="TNS_App")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
 
@@ -171,9 +171,9 @@ class LiveSync_Simulator(unittest.TestCase):
             pr.kill()
 
     def test_301_LiveSync_MultiplePlatforms(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimePath)
+            framework_path=iosRuntimePath)
         output = LiveSync(path="TNS_App", assertSuccess=False)
         assert "Multiple device platforms detected (iOS and Android). Specify platform or device on command line" in output

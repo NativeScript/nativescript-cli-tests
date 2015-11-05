@@ -2,7 +2,7 @@ import os
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, IsRunningProcess
-from helpers._tns_lib import CreateProject, CreateProjectAndAddPlatform, \
+from helpers._tns_lib import create_project, create_project_add_platform, \
     iosRuntimeSymlinkPath, tnsPath
 
 # pylint: disable=R0201, C0111
@@ -13,10 +13,10 @@ class Emulate_OSX(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         CleanupFolder('./TNS_App')
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
     def setUp(self):
@@ -67,7 +67,7 @@ class Emulate_OSX(unittest.TestCase):
             assert IsRunningProcess("Simulator")
 
     def test_210_Emulate_iOS_PlatformNotAdded(self):
-        CreateProject(projName="TNS_AppNoPlatform")
+        create_project(proj_name="TNS_AppNoPlatform")
         output = runAUT(
             tnsPath +
             " emulate ios --device 'iPhone 6 81' --path TNS_AppNoPlatform --justlaunch")

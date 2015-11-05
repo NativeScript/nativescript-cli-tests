@@ -5,8 +5,8 @@ import os
 import unittest
 
 from helpers._os_lib import CleanupFolder, remove, runAUT, FileExists
-from helpers._tns_lib import tnsPath, CreateProject, Prepare, \
-    CreateProjectAndAddPlatform, iosRuntimeSymlinkPath
+from helpers._tns_lib import tnsPath, create_project, Prepare, \
+    create_project_add_platform, iosRuntimeSymlinkPath
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
@@ -24,11 +24,11 @@ class BuildiOS(unittest.TestCase):
         CleanupFolder('./TNS_App')
         CleanupFolder('./TNSAppNoSym')
 
-        #CreateProjectAndAddPlatform(projName="TNS_App", \
-        #                            platform="ios", frameworkPath=iosRuntimeSymlinkPath, \
+        # create_project_add_platform(proj_name="TNS_App", \
+        #                            platform="ios", framework_path=iosRuntimeSymlinkPath, \
         #                            symlink=True)
-        #CreateProjectAndAddPlatform(projName="TNSAppNoSym", \
-        #                            platform="ios", frameworkPath=iosRuntimeSymlinkPath)
+        # create_project_add_platform(proj_name="TNSAppNoSym", \
+        #                            platform="ios", framework_path=iosRuntimeSymlinkPath)
 
         # Delete derived data
         runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
@@ -66,10 +66,10 @@ class BuildiOS(unittest.TestCase):
         CleanupFolder('./tns app')
 
     def test_001_build_ios(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         output = runAUT(tnsPath + " build ios --path TNS_App")
         assert "Project successfully prepared" in output
@@ -79,10 +79,10 @@ class BuildiOS(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
 
     def test_002_build_ios_release_fordevice(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         output = runAUT(
             tnsPath +
@@ -104,10 +104,9 @@ class BuildiOS(unittest.TestCase):
         assert "arm64" in output
 
     def test_200_build_ios_release(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         output = runAUT(tnsPath + " build ios --path TNS_App --release")
         assert "Project successfully prepared" in output
@@ -118,10 +117,9 @@ class BuildiOS(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
 
     def test_201_build_ios_fordevice(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         output = runAUT(tnsPath + " build ios --path TNS_App --forDevice")
         assert "Project successfully prepared" in output
@@ -133,10 +131,10 @@ class BuildiOS(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/build/device/TNSApp.ipa")
 
     def test_210_build_ios_non_symlink(self):
-        CreateProjectAndAddPlatform(
-            projName="TNSAppNoSym",
+        create_project_add_platform(
+            proj_name="TNSAppNoSym",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath)
+            framework_path=iosRuntimeSymlinkPath)
         output = runAUT(
             tnsPath +
             " build ios --path TNSAppNoSym --forDevice --release")
@@ -150,10 +148,10 @@ class BuildiOS(unittest.TestCase):
             "TNSAppNoSym/platforms/ios/build/device/TNSAppNoSym.ipa")
 
     def test_211_build_ios_inside_project(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
@@ -171,10 +169,10 @@ class BuildiOS(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
 
     def test_212_build_ios_wiht_prepare(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         Prepare(path="TNS_App", platform="ios")
 
@@ -194,7 +192,7 @@ class BuildiOS(unittest.TestCase):
         assert not "__PROJECT_NAME__.xcodeproj" in output
 
     def test_213_build_ios_platform_not_added(self):
-        CreateProject(projName="TNS_AppNoPlatform")
+        create_project(proj_name="TNS_AppNoPlatform")
         output = runAUT(tnsPath + " build ios --path TNS_AppNoPlatform")
         assert "Project successfully prepared" in output
         assert "build/emulator/TNSAppNoPlatform.app" in output
@@ -204,7 +202,7 @@ class BuildiOS(unittest.TestCase):
             "TNS_AppNoPlatform/platforms/ios/build/emulator/TNSAppNoPlatform.app")
 
     def test_214_build_ios_no_platform_folder(self):
-        CreateProject(projName="TNS_AppNoPlatform")
+        create_project(proj_name="TNS_AppNoPlatform")
         CleanupFolder('./TNS_AppNoPlatform/platforms')
         output = runAUT(tnsPath + " build ios --path TNS_AppNoPlatform")
         assert "Project successfully prepared" in output
@@ -215,10 +213,10 @@ class BuildiOS(unittest.TestCase):
             "TNS_AppNoPlatform/platforms/ios/build/emulator/TNSAppNoPlatform.app")
 
     def test_300_build_ios_with_dash(self):
-        CreateProjectAndAddPlatform(
-            projName="tns-app",
+        create_project_add_platform(
+            proj_name="tns-app",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         # Verify project builds
@@ -234,10 +232,10 @@ class BuildiOS(unittest.TestCase):
         assert "org.nativescript.tnsapp" in output
 
     def test_301_build_ios_with_space(self):
-        CreateProjectAndAddPlatform(
-            projName="\"tns app\"",
+        create_project_add_platform(
+            proj_name="\"tns app\"",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         # Verify project builds
@@ -249,10 +247,10 @@ class BuildiOS(unittest.TestCase):
         assert FileExists("tns app/platforms/ios/build/emulator/tnsapp.app")
 
     def test_302_build_ios_with_ios_in_path(self):
-        CreateProjectAndAddPlatform(
-            projName="my-ios-app",
+        create_project_add_platform(
+            proj_name="my-ios-app",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         # Verify project builds
@@ -267,10 +265,10 @@ class BuildiOS(unittest.TestCase):
             "my-ios-app/platforms/ios/myiosapp/myiosapp-Prefix.pch")
 
     def test_310_build_ios_with_copy_to(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         output = runAUT(tnsPath + " build ios --path TNS_App --copy-to ./")
         assert "Project successfully prepared" in output
@@ -281,10 +279,10 @@ class BuildiOS(unittest.TestCase):
         assert FileExists("TNSApp.app")
 
     def test_311_build_ios_release_with_copy_to(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         output = runAUT(
             tnsPath +
@@ -299,7 +297,7 @@ class BuildiOS(unittest.TestCase):
         assert FileExists("TNSApp.ipa")
 
     def test_400_build_ios_with_wrong_param(self):
-        CreateProject(projName="TNS_AppNoPlatform")
+        create_project(proj_name="TNS_AppNoPlatform")
         output = runAUT(
             tnsPath +
             " build iOS --debug --path TNS_AppNoPlatform")

@@ -2,7 +2,7 @@ import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, FileExists
 from helpers._tns_lib import iosRuntimeSymlinkPath, \
-    tnsPath, Prepare, CreateProjectAndAddPlatform
+    tnsPath, Prepare, create_project_add_platform
 
 # pylint: disable=R0201, C0111
 
@@ -25,10 +25,10 @@ class Plugins_OSX_Sandbox_Pods(unittest.TestCase):
         pass
 
     def test_001_PluginAdd_Sandbox_Pod_CanWriteInAppFolder(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         output = runAUT(
@@ -47,10 +47,10 @@ class Plugins_OSX_Sandbox_Pods(unittest.TestCase):
         assert "content" in output
 
     def test_401_PluginAdd_Sandbox_Pod_CanNotWriteOutsideAppFolder(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         output = runAUT(

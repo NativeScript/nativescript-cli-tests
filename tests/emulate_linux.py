@@ -2,9 +2,9 @@ import os
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT
-from helpers._tns_lib import CreateProjectAndAddPlatform, androidRuntimePath, \
+from helpers._tns_lib import create_project_add_platform, androidRuntimePath, \
     tnsPath, androidKeyStorePath, androidKeyStorePassword, androidKeyStoreAlias, \
-    androidKeyStoreAliasPassword, CreateProject
+    androidKeyStoreAliasPassword, create_project
 from helpers.device import StopEmulators, GivenRunningEmulator
 
 # pylint: disable=R0201, C0111
@@ -16,10 +16,10 @@ class Emulate_Linux(unittest.TestCase):
     def setUpClass(cls):
         CleanupFolder('./TNSAppNoPlatform')
         CleanupFolder('./TNS_App')
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
 
     def setUp(self):
 
@@ -47,10 +47,10 @@ class Emulate_Linux(unittest.TestCase):
 
         GivenRunningEmulator()
 
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="android",
-            frameworkPath=androidRuntimePath)
+            framework_path=androidRuntimePath)
         output = runAUT(
             tnsPath +
             " emulate android --path TNS_App --timeout 600 --justlaunch",
@@ -108,7 +108,7 @@ class Emulate_Linux(unittest.TestCase):
         # running on this device
 
     def test_210_Emulate_Android_PlatformNotAdded(self):
-        CreateProject(projName="TNSAppNoPlatform")
+        create_project(proj_name="TNSAppNoPlatform")
         output = runAUT(
             tnsPath +
             " emulate android --avd Api19 --timeout 600  --justlaunch --path TNSAppNoPlatform",

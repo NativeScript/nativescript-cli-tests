@@ -1,8 +1,8 @@
 import unittest
 
 from helpers._os_lib import CleanupFolder, FileExists, runAUT, replace
-from helpers._tns_lib import CreateProject, CreateProjectAndAddPlatform, \
-    iosRuntimeSymlinkPath, PlatformAdd, tnsPath
+from helpers._tns_lib import create_project, create_project_add_platform, \
+    iosRuntimeSymlinkPath, platform_add, tnsPath
 
 # pylint: disable=R0201, C0111
 
@@ -23,10 +23,10 @@ class Prepare_OSX(unittest.TestCase):
         CleanupFolder('./TNS_App')
 
     def test_001_Prepare_iOS(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         output = runAUT(tnsPath + " prepare ios --path TNS_App")
         assert "Project successfully prepared" in output
@@ -42,13 +42,13 @@ class Prepare_OSX(unittest.TestCase):
             'TNS_App/platforms/ios/TNSApp/app/tns_modules/application/application.ios.js')
 
     def test_010_Prepare_iOS_TnsCoreModules(self):
-        CreateProject(
-            projName="TNS_App",
-            copyFrom="QA-TestApps/tns-modules-app/app")
-        PlatformAdd(
+        create_project(
+            proj_name="TNS_App",
+            copy_from="QA-TestApps/tns-modules-app/app")
+        platform_add(
             platform="ios",
             path="TNS_App",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         # Make a change in tns-core-modules to verify they are not overwritten.
@@ -84,10 +84,10 @@ class Prepare_OSX(unittest.TestCase):
             assert "require(\"globals\"); // test" in output
 
     def test_200_Prepare_Additional_AppResources_iOS(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         # Create new files in AppResources
@@ -113,7 +113,7 @@ class Prepare_OSX(unittest.TestCase):
         assert "newDefault.png" in output
 
     def test_201_Prepare_iOS_PlatformNotAdded(self):
-        CreateProject(projName="TNS_App")
+        create_project(proj_name="TNS_App")
         output = runAUT(tnsPath + " prepare ios --path TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created." in output
@@ -125,10 +125,10 @@ class Prepare_OSX(unittest.TestCase):
             'TNS_App/platforms/ios/TNSApp/app/tns_modules/application/application.js')
 
     def test_300_Prepare_iOS_PreserveCase(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
         runAUT("cp TNS_App/node_modules/tns-core-modules/application/application-common.js TNS_App/node_modules/tns-core-modules/application/New-application-common.js")
         runAUT("cp TNS_App/node_modules/tns-core-modules/application/application.android.js TNS_App/node_modules/tns-core-modules/application/New-application.android.js")

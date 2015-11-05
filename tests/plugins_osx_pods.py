@@ -2,7 +2,7 @@ import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT, FileExists
 from helpers._tns_lib import Build, iosRuntimeSymlinkPath, \
-    tnsPath, CreateProject, PlatformAdd, Prepare, CreateProjectAndAddPlatform
+    tnsPath, create_project, platform_add, Prepare, create_project_add_platform
 
 # pylint: disable=R0201, C0111
 
@@ -25,10 +25,10 @@ class Plugins_OSX_Pods(unittest.TestCase):
         pass
 
     def test_001_PluginAdd_MultiplePods(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         output = runAUT(
@@ -74,8 +74,8 @@ class Plugins_OSX_Pods(unittest.TestCase):
 
         Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
 
-    def test_201_PluginAdd_Pod_GoogleMaps_Before_PlatformAdd_iOS(self):
-        CreateProject(projName="TNS_App")
+    def test_201_PluginAdd_Pod_GoogleMaps_Before_platform_add_iOS(self):
+        create_project(proj_name="TNS_App")
 
         output = runAUT(
             tnsPath +
@@ -91,9 +91,9 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert "dependencies" in output
         assert "googlesdk" in output
 
-        PlatformAdd(
+        platform_add(
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             path="TNS_App",
             symlink=True)
         output = Prepare(platform="ios", path="TNS_App", logTrace=True)
@@ -124,11 +124,11 @@ class Plugins_OSX_Pods(unittest.TestCase):
         Build(platform="ios", path="TNS_App")
         Build(platform="ios", mode="release", forDevice=True, path="TNS_App")
 
-    def test_202_PluginAdd_Pod_GoogleMaps_After_PlatformAdd_iOS(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+    def test_202_PluginAdd_Pod_GoogleMaps_After_platform_add_iOS(self):
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         output = runAUT(
@@ -177,10 +177,10 @@ class Plugins_OSX_Pods(unittest.TestCase):
     @unittest.skip(
         "This is not a valid scenario anymore. It fails because DEPLOYMENT_TARGET=7.0 which is updated during plugin add command.")
     def test_400_Prepare_Install_Pods(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         runAUT(
@@ -200,10 +200,10 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/Pods/Pods.xcodeproj")
 
     def test_401_PluginAdd_InvalidPod(self):
-        CreateProjectAndAddPlatform(
-            projName="TNS_App",
+        create_project_add_platform(
+            proj_name="TNS_App",
             platform="ios",
-            frameworkPath=iosRuntimeSymlinkPath,
+            framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
         output = runAUT(
