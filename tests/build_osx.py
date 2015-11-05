@@ -12,7 +12,8 @@ from helpers._tns_lib import tnsPath, CreateProject, Prepare, \
 # C0111 - Missing docstring
 # R0201 - Method could be a function
 # R0904 - Too many public methods
-# pylint: disable=R0201, C0111, R0904
+# W1401 - Anomalous backslash in string: "%s"
+# pylint: disable=C0103, C0111, R0201, R0904, W1401
 class BuildiOS(unittest.TestCase):
 
     @classmethod
@@ -22,12 +23,17 @@ class BuildiOS(unittest.TestCase):
 
         CleanupFolder('./TNS_App')
         CleanupFolder('./TNSAppNoSym')
-        # CreateProjectAndAddPlatform(projName="TNS_App", platform="ios", frameworkPath=iosRuntimeSymlinkPath, symlink=True)
-        # CreateProjectAndAddPlatform(projName="TNSAppNoSym", platform="ios", frameworkPath=iosRuntimeSymlinkPath)
+
+        #CreateProjectAndAddPlatform(projName="TNS_App", \
+        #                            platform="ios", frameworkPath=iosRuntimeSymlinkPath, \
+        #                            symlink=True)
+        #CreateProjectAndAddPlatform(projName="TNSAppNoSym", \
+        #                            platform="ios", frameworkPath=iosRuntimeSymlinkPath)
+
         # Delete derived data
         runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
         # Delete precompiled headers
-        runAUT("sudo find /var/folders/ -name '*tnsapp-*' -exec rm -rf {} \;")
+        runAUT('sudo find /var/folders/ -name \'*tnsapp-*\' -exec rm -rf {} \;')
 
     def setUp(self):
 
@@ -164,7 +170,7 @@ class BuildiOS(unittest.TestCase):
         assert "Project successfully built" in output
         assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
 
-    def test_212_Build_iOS_WithPrepare(self):
+    def test_212_build_ios_wiht_prepare(self):
         CreateProjectAndAddPlatform(
             projName="TNS_App",
             platform="ios",
@@ -182,11 +188,12 @@ class BuildiOS(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
 
         # Verify Xcode project name is not empty
-        command = "cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.xcworkspace/contents.xcworkspacedata"
+        command = "cat TNS_App/platforms/ios/", \
+                "TNSApp.xcodeproj/project.xcworkspace/contents.xcworkspacedata"
         output = runAUT(command)
         assert not "__PROJECT_NAME__.xcodeproj" in output
 
-    def test_213_Build_iOS_PlatformNotAdded(self):
+    def test_213_build_ios_platform_not_added(self):
         CreateProject(projName="TNS_AppNoPlatform")
         output = runAUT(tnsPath + " build ios --path TNS_AppNoPlatform")
         assert "Project successfully prepared" in output
@@ -196,7 +203,7 @@ class BuildiOS(unittest.TestCase):
         assert FileExists(
             "TNS_AppNoPlatform/platforms/ios/build/emulator/TNSAppNoPlatform.app")
 
-    def test_214_Build_iOS_NoPlatformsFolder(self):
+    def test_214_build_ios_no_platform_folder(self):
         CreateProject(projName="TNS_AppNoPlatform")
         CleanupFolder('./TNS_AppNoPlatform/platforms')
         output = runAUT(tnsPath + " build ios --path TNS_AppNoPlatform")
@@ -207,7 +214,7 @@ class BuildiOS(unittest.TestCase):
         assert FileExists(
             "TNS_AppNoPlatform/platforms/ios/build/emulator/TNSAppNoPlatform.app")
 
-    def test_300_Build_iOS_WithDashInPath(self):
+    def test_300_build_ios_with_dash(self):
         CreateProjectAndAddPlatform(
             projName="tns-app",
             platform="ios",
@@ -226,7 +233,7 @@ class BuildiOS(unittest.TestCase):
         output = runAUT("cat tns-app/package.json")
         assert "org.nativescript.tnsapp" in output
 
-    def test_301_Build_iOS_WithSpaceInPath(self):
+    def test_301_build_ios_with_space(self):
         CreateProjectAndAddPlatform(
             projName="\"tns app\"",
             platform="ios",
@@ -241,7 +248,7 @@ class BuildiOS(unittest.TestCase):
         assert "Project successfully built" in output
         assert FileExists("tns app/platforms/ios/build/emulator/tnsapp.app")
 
-    def test_302_Build_iOS_WithiOSinPath(self):
+    def test_302_build_ios_with_ios_in_path(self):
         CreateProjectAndAddPlatform(
             projName="my-ios-app",
             platform="ios",
@@ -259,7 +266,7 @@ class BuildiOS(unittest.TestCase):
         assert FileExists(
             "my-ios-app/platforms/ios/myiosapp/myiosapp-Prefix.pch")
 
-    def test_310_Build_iOS_With_CopyTo(self):
+    def test_310_build_ios_with_copy_to(self):
         CreateProjectAndAddPlatform(
             projName="TNS_App",
             platform="ios",
@@ -273,7 +280,7 @@ class BuildiOS(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
         assert FileExists("TNSApp.app")
 
-    def test_311_Build_iOS_Release_With_CopyTo(self):
+    def test_311_build_ios_release_with_copy_to(self):
         CreateProjectAndAddPlatform(
             projName="TNS_App",
             platform="ios",
@@ -291,7 +298,7 @@ class BuildiOS(unittest.TestCase):
         assert FileExists("TNS_App/platforms/ios/build/device/TNSApp.ipa")
         assert FileExists("TNSApp.ipa")
 
-    def test_401_Build_iOS_WithWrongParam(self):
+    def test_400_build_ios_with_wrong_param(self):
         CreateProject(projName="TNS_AppNoPlatform")
         output = runAUT(
             tnsPath +
