@@ -16,8 +16,6 @@ from helpers._tns_lib import tnsPath, CreateProject, CreateProjectAndAddPlatform
 # R0201 - Method could be a function
 # R0904 - Too many public methods
 # pylint: disable=C0103, C0111, R0201, R0904
-
-
 class BuildAndroid(unittest.TestCase):
 
     @classmethod

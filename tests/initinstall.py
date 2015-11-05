@@ -28,10 +28,10 @@ class InitAndInstall(unittest.TestCase):
 
         runAUT("mkdir TNS_App")
 
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " init --force")
-        os.chdir(currentDir)
+        os.chdir(current_dir)
 
         assert "Project successfully initialized" in output
         assert FileExists("TNS_App/package.json")
@@ -86,11 +86,11 @@ class InitAndInstall(unittest.TestCase):
     def test_005_InstallNodeModules(self):
         self.test_002_Init_Path()
 
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         runAUT("npm i gulp --save-dev")
         runAUT("npm i lodash --save")
-        os.chdir(currentDir)
+        os.chdir(current_dir)
         output = runAUT("cat TNS_App/package.json")
         assert "devDependencies" in output
         assert "gulp" in output
@@ -114,12 +114,12 @@ class InitAndInstall(unittest.TestCase):
     def test_300_InstallNodeModulesIfNodeModulesFodlerExists(self):
         self.test_002_Init_Path()
 
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         runAUT("npm i gulp --save-dev")
         runAUT("npm i lodash --save")
 
-        os.chdir(currentDir)
+        os.chdir(current_dir)
         output = runAUT("cat TNS_App/package.json")
         assert "devDependencies" in output
         assert "gulp" in output
@@ -136,12 +136,12 @@ class InitAndInstall(unittest.TestCase):
     def test_301_InstallAndPrepare(self):
         self.test_002_Init_Path()
 
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         runAUT("npm i gulp --save-dev")
         runAUT("npm i lodash --save")
 
-        os.chdir(currentDir)
+        os.chdir(current_dir)
         runAUT("cp -R template-hello-world TNS_App/app")
         output = runAUT("cat TNS_App/package.json")
         assert "devDependencies" in output

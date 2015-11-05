@@ -89,15 +89,15 @@ class Emulate_Linux(unittest.TestCase):
 
     def test_200_Emulate_Android_InsideProjectAndSpecifyEmulatorName(self):
 
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT(
             os.path.join(
                 "..",
                 tnsPath) +
             " emulate android --avd Api19 --timeout 600 --justlaunch",
             set_timeout=660)
-        os.chdir(currentDir)
+        os.chdir(current_dir)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Starting Android emulator with image Api19" in output
@@ -137,7 +137,7 @@ class Emulate_Linux(unittest.TestCase):
     def test_402_Emulate_InvalidAvd(self):
         output = runAUT(
             tnsPath +
-            " emulate android --avd invalidDeviceId --path TNS_App --timeout 600 --justlaunch",
+            " emulate android --avd invaliddevice_id --path TNS_App --timeout 600 --justlaunch",
             set_timeout=660)
         # TODO: Modify assert when issue is fixed
         assert "'invalidPlatform' is not valid sub-command for 'emulate' command" in output

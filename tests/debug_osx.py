@@ -1,3 +1,6 @@
+'''
+Test for iOS debugger
+'''
 from time import sleep
 import unittest
 
@@ -59,7 +62,7 @@ class DebugiOS(unittest.TestCase):
         assert not "detached" in output
         assert not "disconnected" in output
 
-    def test_002_Debug_iOS_Simulator_Start(self):
+    def test_002_debug_ios_simulator_start(self):
 
         output = runAUT(tnsPath + " emulate ios --path TNS_App --justlaunch")
         assert "** BUILD SUCCEEDED **" in output
@@ -82,7 +85,7 @@ class DebugiOS(unittest.TestCase):
         assert not "detached" in output
         assert not "disconnected" in output
 
-    def test_003_Debug_iOS_Device_DebugBrk(self):
+    def test_003_debug_ios_device_debugbrk(self):
 
         output = runAUT(
             tnsPath +
@@ -105,7 +108,7 @@ class DebugiOS(unittest.TestCase):
         assert not "detached" in output
         assert not "disconnected" in output
 
-    def test_004_Debug_iOS_Device_Start(self):
+    def test_004_debug_ios_device_start(self):
 
         output = runAUT(tnsPath + " run ios --path TNS_App --justlaunch")
         assert "** BUILD SUCCEEDED **" in output

@@ -1,16 +1,16 @@
-import unittest
-import psutil
 import subprocess
 import time
+import unittest
+
+import psutil
 
 from helpers._os_lib import CleanupFolder, replace, catAppFile
 from helpers._tns_lib import androidRuntimePath, iosRuntimePath, \
     CreateProjectAndAddPlatform, LiveSync, Run
 from helpers.device import GivenRealDeviceRunning, GetPhysicalDeviceId
 
+
 # pylint: disable=R0201, C0111
-
-
 class LiveSync_Simulator(unittest.TestCase):
 
     def setUp(self):
@@ -42,7 +42,7 @@ class LiveSync_Simulator(unittest.TestCase):
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
 
     def test_002_LiveSync_iOS_Device(self):
-        deviceId = GetPhysicalDeviceId(platform="ios")
+        device_id = GetPhysicalDeviceId(platform="ios")
         CreateProjectAndAddPlatform(
             projName="TNS_App",
             platform="ios",
@@ -50,7 +50,7 @@ class LiveSync_Simulator(unittest.TestCase):
         Run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
-        LiveSync(platform="ios", device=deviceId, path="TNS_App")
+        LiveSync(platform="ios", device=device_id, path="TNS_App")
 
         output = catAppFile("ios", "TNSApp", "app/main-view-model.js")
         assert "this.set(\"message\", this.counter + \" clicks left\");" in output

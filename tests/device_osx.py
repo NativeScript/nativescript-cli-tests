@@ -27,14 +27,14 @@ class Device_OSX(unittest.TestCase):
 
     def test_001_Device_Log_ListApplications_And_Run_Android(self):
 
-        deviceId = GetPhysicalDeviceId(platform="android")
-        if (deviceId is not None):
+        device_id = GetPhysicalDeviceId(platform="android")
+        if device_id is not None:
 
             # Start DeviceLog
             runAUT(
                 tnsPath +
                 " device log --device " +
-                deviceId +
+                device_id +
                 " > deviceLog.txt &",
                 None,
                 False)
@@ -48,7 +48,7 @@ class Device_OSX(unittest.TestCase):
             assert "Project successfully prepared" in output
             assert "Project successfully built" in output
             assert "Successfully deployed on device" in output
-            assert (deviceId in output)
+            assert device_id in output
             sleep(10)
 
             # VErify "tns device list-applications" list
@@ -56,47 +56,47 @@ class Device_OSX(unittest.TestCase):
             output = runAUT(
                 tnsPath +
                 " device list-applications --device " +
-                deviceId)
+                device_id)
             assert "org.nativescript.TNSApp" in output
 
             # Verify app is running
             WaitUntilAppIsRunning(
                 appId="org.nativescript.TNSApp",
-                deviceId=deviceId,
+                device_id=device_id,
                 timeout=60)
 
             # Kill the app
-            StopApplication(appId="org.nativescript.TNSApp", deviceId=deviceId)
+            StopApplication(appId="org.nativescript.TNSApp", device_id=device_id)
 
             # Start it via device command and verify app is running
             runAUT(
                 tnsPath +
                 " device run org.nativescript.TNSApp --device " +
-                deviceId)
+                device_id)
 
             # Verify app is running
             WaitUntilAppIsRunning(
                 appId="org.nativescript.TNSApp",
-                deviceId=deviceId,
+                device_id=device_id,
                 timeout=60)
 
             # Stop logging and print it
-            runAUT("ps -A | grep \"device " + deviceId +
+            runAUT("ps -A | grep \"device " + device_id +
                    "\" | awk '{print $1}' | xargs kill -9")
             runAUT("cat deviceLog.txt")
         else:
             print "Prerequisites not met. This test requires at least one real android device."
-            assert (False)
+            assert False
 
     def test_002_Device_Log_ListApplications_And_Run_iOS(self):
-        deviceId = GetPhysicalDeviceId(platform="ios")
-        if (deviceId is not None):
+        device_id = GetPhysicalDeviceId(platform="ios")
+        if device_id is not None:
 
             # Start DeviceLog
             runAUT(
                 tnsPath +
                 " device log --device " +
-                deviceId +
+                device_id +
                 " > deviceLog.txt &",
                 None,
                 False)
@@ -111,27 +111,27 @@ class Device_OSX(unittest.TestCase):
             assert "Project successfully prepared" in output
             assert "Project successfully built" in output
             assert "Successfully deployed on device" in output
-            assert (deviceId in output)
+            assert device_id in output
             sleep(10)
 
             # Get list installed apps
             output = runAUT(
                 tnsPath +
                 " device list-applications --device " +
-                deviceId)
+                device_id)
             assert "org.nativescript.TNSApp" in output
 
             # Start it via device command and verify app is running
             output = runAUT(
                 tnsPath +
                 " device run org.nativescript.TNSApp --device " +
-                deviceId)
+                device_id)
             sleep(10)
 
             # Stop logging and print it
-            runAUT("ps -A | grep \"device " + deviceId +
+            runAUT("ps -A | grep \"device " + device_id +
                    "\" | awk '{print $1}' | xargs kill -9")
             runAUT("cat deviceLog.txt")
         else:
             print "Prerequisites not met. This test requires at least one real ios device."
-            assert (False)
+            assert False

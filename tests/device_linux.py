@@ -29,8 +29,8 @@ class Device_Linux(unittest.TestCase):
         pass
 
     def test_001_Device_ListApplications_And_Run_Android(self):
-        deviceId = GetPhysicalDeviceId(platform="android")
-        if (deviceId is not None):
+        device_id = GetPhysicalDeviceId(platform="android")
+        if device_id is not None:
 
             # Deploy TNS_App on device
             CreateProjectAndAddPlatform(
@@ -41,15 +41,15 @@ class Device_Linux(unittest.TestCase):
             assert "Project successfully prepared" in output
             assert "Project successfully built" in output
             assert "Successfully deployed on device with identifier" in output
-            runAUT("echo " + deviceId)
-            assert (deviceId in output)
+            runAUT("echo " + device_id)
+            assert device_id in output
             sleep(10)
 
             # Verify list-applications command list org.nativescript.TNSApp
             output = runAUT(
                 tnsPath +
                 " device list-applications --device " +
-                deviceId)
+                device_id)
             assert "com.android." in output
             assert "com.google." in output
             assert "org.nativescript.TNSApp" in output
@@ -57,57 +57,57 @@ class Device_Linux(unittest.TestCase):
             # Verify app is running
             WaitUntilAppIsRunning(
                 appId="org.nativescript.TNSApp",
-                deviceId=deviceId,
+                device_id=device_id,
                 timeout=60)
 
             # Kill the app
-            StopApplication(appId="org.nativescript.TNSApp", deviceId=deviceId)
+            StopApplication(appId="org.nativescript.TNSApp", device_id=device_id)
 
             # Start via run command and verify it is running
             runAUT(
                 tnsPath +
                 " device run org.nativescript.TNSApp --device " +
-                deviceId)
+                device_id)
 
             # Verify app is running
             WaitUntilAppIsRunning(
                 appId="org.nativescript.TNSApp",
-                deviceId=deviceId,
+                device_id=device_id,
                 timeout=60)
 
         else:
             print "Prerequisites not met. This test requires at least one real android device."
-            assert (False)
+            assert False
 
     def test_002_Device_Log_Android(self):
-        if (GetDeviceCount(platform="android") > 1):
+        if GetDeviceCount(platform="android") > 1:
             output = runAUT(tnsPath + " device log")
             assert "More than one device found. Specify device explicitly." in output
         else:
             print "Prerequisites not met. This test requires at least two attached devices."
-            assert (False)
+            assert False
 
     def test_400_Device_InvalidPlatform(self):
         output = runAUT(tnsPath + " device windows")
         assert "'windows' is not a valid device platform." in output
         assert "Usage" in output
 
-    def test_401_Device_Log_InvalidDeviceId(self):
-        output = runAUT(tnsPath + " device log --device invalidDeviceId")
+    def test_401_Device_Log_Invaliddevice_id(self):
+        output = runAUT(tnsPath + " device log --device invaliddevice_id")
         assert "Cannot resolve the specified connected device by the provided index or identifier." in output
         assert "To list currently connected devices and verify that the specified index or identifier exists, run 'tns device'." in output
         assert "Usage" in output
 
-    def test_402_Device_Run_InvalidDeviceId(self):
-        output = runAUT(tnsPath + " device run  --device invalidDeviceId")
+    def test_402_Device_Run_Invaliddevice_id(self):
+        output = runAUT(tnsPath + " device run  --device invaliddevice_id")
         assert "Cannot resolve the specified connected device by the provided index or identifier." in output
         assert "To list currently connected devices and verify that the specified index or identifier exists, run 'tns device'." in output
         assert "Usage" in output
 
-    def test_403_Device_ListApplications_InvalidDeviceId(self):
+    def test_403_Device_ListApplications_Invaliddevice_id(self):
         output = runAUT(
             tnsPath +
-            " device list-applications --device invalidDeviceId")
+            " device list-applications --device invaliddevice_id")
         assert "Cannot resolve the specified connected device by the provided index or identifier." in output
         assert "To list currently connected devices and verify that the specified index or identifier exists, run 'tns device'." in output
         assert "Usage" in output

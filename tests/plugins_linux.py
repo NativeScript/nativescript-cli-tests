@@ -58,10 +58,10 @@ class Plugins_Linux(unittest.TestCase):
             projName="TNS_App",
             platform="android",
             frameworkPath=androidRuntimePath)
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " plugin add tns-plugin")
-        os.chdir(currentDir)
+        os.chdir(current_dir)
         if 'Windows' not in platform.platform():
             assert "node_modules/tns-plugin" in output
         assert "Successfully installed plugin tns-plugin" in output
@@ -79,10 +79,10 @@ class Plugins_Linux(unittest.TestCase):
             platform="android",
             frameworkPath=androidRuntimePath)
 
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " plugin add tns-plugin")
-        os.chdir(currentDir)
+        os.chdir(current_dir)
         assert "Successfully installed plugin tns-plugin" in output
 
         output = runAUT(tnsPath + " build android --path TNS_App")

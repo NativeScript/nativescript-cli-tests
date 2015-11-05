@@ -81,9 +81,9 @@ class LiveSync_iOS(unittest.TestCase):
             frameworkPath=iosRuntimePath)
         Run(platform="ios", path="TNS_App")
 
-        deviceId = GetPhysicalDeviceId(platform="ios")
+        device_id = GetPhysicalDeviceId(platform="ios")
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
-        LiveSync(platform="ios", device=deviceId, path="TNS_App")
+        LiveSync(platform="ios", device=device_id, path="TNS_App")
 
         output = catAppFile("ios", "TNSApp", "app/main-view-model.js")
         assert "this.set(\"message\", this.counter + \" clicks left\");" in output

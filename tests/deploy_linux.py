@@ -1,3 +1,6 @@
+'''
+Test for deploy command
+'''
 import os
 import unittest
 
@@ -7,10 +10,12 @@ from helpers._tns_lib import CreateProjectAndAddPlatform, androidRuntimePath, \
     androidKeyStoreAliasPassword, CreateProject
 from helpers.device import GivenRunningEmulator, GivenRealDeviceRunning
 
-# pylint: disable=R0201, C0111
-
-
-class Deploy_Linux(unittest.TestCase):
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=R0201, C0111, R0904
+class DeployAndroid(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -62,7 +67,7 @@ class Deploy_Linux(unittest.TestCase):
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
 
-    def test_200_Deploy_Android_DeviceId(self):
+    def test_200_Deploy_Android_device_id(self):
         output = runAUT(
             tnsPath +
             " deploy android --device emulator-5554 --path TNS_App --justlaunch")
@@ -73,11 +78,11 @@ class Deploy_Linux(unittest.TestCase):
         # running on this device
 
     def test_201_Deploy_Android_InsideProject(self):
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) +
                         " deploy android --path TNS_App --justlaunch")
-        os.chdir(currentDir)
+        os.chdir(current_dir)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
@@ -104,7 +109,7 @@ class Deploy_Linux(unittest.TestCase):
     def test_402_Deploy_InvalidDevice(self):
         output = runAUT(
             tnsPath +
-            " deploy android --device invalidDeviceId --path TNS_App --justlaunch")
+            " deploy android --device invaliddevice_id --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Cannot resolve the specified connected device by the provided index or identifier" in output

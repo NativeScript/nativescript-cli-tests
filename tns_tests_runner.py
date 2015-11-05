@@ -13,8 +13,8 @@ from tests.build_osx import BuildiOS
 from tests.create import Create
 from tests.debug_linux import DebugAndroid
 from tests.debug_osx import DebugiOS
-from tests.deploy_linux import Deploy_Linux
-from tests.deploy_osx import Deploy_OSX
+from tests.deploy_linux import DeployAndroid
+from tests.deploy_osx import DeployiOS
 from tests.device_linux import Device_Linux
 from tests.device_osx import Device_OSX
 from tests.doctor import Doctor
@@ -136,7 +136,7 @@ def run_tests():
 
     if ('TESTRUN' in os.environ) and ("FULL" in os.environ['TESTRUN']):
         suite.addTests(
-            unittest.TestLoader().loadTestsFromTestCase(Deploy_Linux))
+            unittest.TestLoader().loadTestsFromTestCase(DeployAndroid))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_Linux))
         suite.addTests(
             unittest.TestLoader().loadTestsFromTestCase(Device_Linux))
@@ -144,7 +144,7 @@ def run_tests():
             unittest.TestLoader().loadTestsFromTestCase(DebugAndroid))
         if 'Darwin' in platform.platform():
             suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(Deploy_OSX))
+                unittest.TestLoader().loadTestsFromTestCase(DeployiOS))
             suite.addTests(
                 unittest.TestLoader().loadTestsFromTestCase(Run_OSX))
             suite.addTests(

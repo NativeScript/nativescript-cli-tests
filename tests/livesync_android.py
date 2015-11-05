@@ -83,9 +83,9 @@ class LiveSync_Android(unittest.TestCase):
             frameworkPath=androidRuntimePath)
         Run(platform="android", path="TNS_App")
 
-        deviceId = GetPhysicalDeviceId(platform="android")
+        device_id = GetPhysicalDeviceId(platform="android")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        LiveSync(platform="android", device=deviceId, path="TNS_App")
+        LiveSync(platform="android", device=device_id, path="TNS_App")
 
         output = catAppFile("android", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output

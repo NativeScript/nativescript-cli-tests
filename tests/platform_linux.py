@@ -104,10 +104,10 @@ class Platform_Linux(unittest.TestCase):
 
     def test_200_Platform_List_InsideEmptyProject(self):
         CreateProject(projName="TNS_App")
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " platform list")
-        os.chdir(currentDir)
+        os.chdir(current_dir)
 
         assert "No installed platforms found. Use $ tns platform add" in output
         if 'Darwin' in platform.platform():
@@ -117,10 +117,10 @@ class Platform_Linux(unittest.TestCase):
 
     def test_201_Platform_Add_Android_InsideProject(self):
         CreateProject(projName="TNS_App")
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " platform add android")
-        os.chdir(currentDir)
+        os.chdir(current_dir)
 
         assert "Copying template files..." in output
         assert "Project successfully created" in output

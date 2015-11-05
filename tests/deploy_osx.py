@@ -1,3 +1,6 @@
+'''
+Test for deploy command
+'''
 import unittest
 
 from helpers._os_lib import CleanupFolder, runAUT
@@ -5,10 +8,12 @@ from helpers._tns_lib import CreateProject, CreateProjectAndAddPlatform, \
     iosRuntimeSymlinkPath, tnsPath
 from helpers.device import GivenRealDeviceRunning
 
-# pylint: disable=R0201, C0111
-
-
-class Deploy_OSX(unittest.TestCase):
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=R0201, C0111, R0904
+class DeployiOS(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):

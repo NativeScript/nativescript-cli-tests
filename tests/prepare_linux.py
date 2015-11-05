@@ -46,10 +46,10 @@ class Prepare_Linux(unittest.TestCase):
             projName="TNS_App",
             platform="android",
             frameworkPath=androidRuntimePath)
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " prepare android")
-        os.chdir(currentDir)
+        os.chdir(current_dir)
         assert "Project successfully prepared" in output
 
         # Verify app and modules are processed and available in platform folder

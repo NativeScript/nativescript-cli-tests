@@ -109,10 +109,10 @@ class Plugins_OSX(unittest.TestCase):
             projName="TNS_App",
             platform="ios",
             frameworkPath=iosRuntimePath)
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " plugin add tns-plugin")
-        os.chdir(currentDir)
+        os.chdir(current_dir)
         assert "node_modules/tns-plugin" in output
         assert "Successfully installed plugin tns-plugin" in output
         assert FileExists("TNS_App/node_modules/tns-plugin/index.js")
@@ -130,10 +130,10 @@ class Plugins_OSX(unittest.TestCase):
             frameworkPath=iosRuntimeSymlinkPath,
             symlink=True)
 
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) + " plugin add tns-plugin")
-        os.chdir(currentDir)
+        os.chdir(current_dir)
         assert "Successfully installed plugin tns-plugin" in output
 
         output = runAUT(tnsPath + " build ios --path TNS_App")
@@ -237,10 +237,10 @@ class Plugins_OSX(unittest.TestCase):
             " plugin add nativescript-social-share --path TNS_App")
         assert "Successfully installed plugin nativescript-social-share" in output
 
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT("npm install nativescript-appversion --save")
-        os.chdir(currentDir)
+        os.chdir(current_dir)
         assert not "ERR!" in output
         assert "nativescript-appversion@" in output
 

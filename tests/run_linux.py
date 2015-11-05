@@ -70,16 +70,16 @@ class Run_Linux(unittest.TestCase):
         assert "I/ActivityManager" in output
 
     def test_200_Run_Android_InsideProject(self):
-        currentDir = os.getcwd()
-        os.chdir(os.path.join(currentDir, "TNS_App"))
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, "TNS_App"))
         output = runAUT(os.path.join("..", tnsPath) +
                         " run android --path TNS_App --justlaunch")
-        os.chdir(currentDir)
+        os.chdir(current_dir)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
 
-    def test_201_Run_Android_DeviceId_RenamedProjDir(self):
+    def test_201_Run_Android_device_id_RenamedProjDir(self):
         runAUT("mv TNS_App appTest")
         output = runAUT(
             tnsPath +
