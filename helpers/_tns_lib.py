@@ -41,6 +41,7 @@ def InstallCLI(pathToPackage=None):
     installCommand = "npm i nativescript.tgz"
     output = runAUT(installCommand)
     assert "ERR" "error" "FiberFuture" "dev-post-install" not in output, "{N} CLI installation failed."
+    assert FileExists("node_modules/.bin/tns"), "{N} CLI installation failed."
     print output
 
 

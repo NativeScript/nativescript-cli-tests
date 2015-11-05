@@ -221,7 +221,7 @@ def remove(file_path):
 
 def uninstall_app(appName, platform, fail=True):
     if (platform == "android"):
-        output = runAUT("ddb device uninstall org.nativescript." + appName)
+        output = runAUT("ddb device uninstall org.nativescript." + appName, set_timeout=120)
         if ("[Uninstalling] Status: RemovingApplication" in output):
             print "{0} application successfully uninstalled.".format(appName)
         else:
@@ -229,7 +229,7 @@ def uninstall_app(appName, platform, fail=True):
                 raise NameError(
                     "{0} application failed to uninstall.".format(appName))
     else:
-        output = runAUT("ideviceinstaller -U " + appName)
+        output = runAUT("ideviceinstaller -U " + appName, set_timeout=120)
         if ("Uninstall: Complete" in output):
             print "{0} application successfully uninstalled.".format(appName)
         else:

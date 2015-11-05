@@ -14,18 +14,16 @@ import tns_tests_runner
 SMOKETESTRESULT = ""
 
 # C0111 - Missing docstring
-# pylint: disable=C0111
-
-
+# W0603 - Using the global statement
+# pylint: disable=C0111, W0603
 def execute_tests():
     print "####RUNNING TESTS####"
     global SMOKETESTRESULT
     SMOKETESTRESULT = str(tns_tests_runner.run_tests())
 
 # C0111 - Missing docstring
-# pylint: disable=C0111
-
-
+# W0602 - Using global for %r but no assignment is done
+# pylint: disable=C0111, W0602
 def analyze_result_and_exit():
     global SMOKETESTRESULT
     if not "errors=0" in SMOKETESTRESULT or not "failures=0" in SMOKETESTRESULT:
@@ -39,13 +37,18 @@ if __name__ == '__main__':
     if 'Windows' in platform.platform():
         runAUT("npm cache clean", 600)
     else:
-        runAUT("rm --rf ~/.npm/tns/*", 600)
-        runAUT("rm --rf ~/Library/Developer/Xcode/DerivedData/", 600)
-        runAUT("sudo rm --rf /var/folders/*", 600)
+        runAUT("rm -rf ~/.npm/tns/*", 600)
+        runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/", 600)
+        runAUT("sudo rm -rf /var/folders/*", 600)
 
-    # Uninstall test apps
-    uninstall_app("TNSApp", platform="android", fail=False)
-    uninstall_app("TNSApp", platform="ios", fail=False)
+    # Stop emulators and simulators
+    StopEmulators()
+    StopSimulators()
+
+    # Uninstall test apps on real devices (if FULL RUN)
+    if 'TESTRUN' in os.environ and "FULL" in os.environ['TESTRUN']:
+        uninstall_app("TNSApp", platform="android", fail=False)
+        uninstall_app("TNSApp", platform="ios", fail=False)
 
     # Cleanup old runtimes
     CleanupFolder(os.path.split(androidRuntimeSymlinkPath)[0])
