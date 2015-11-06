@@ -1,3 +1,11 @@
+# W0612 - Unused variable %r
+# W0621 - Redefining name from outer scope
+# W0702: No exception type(s) specified
+# E1305 - Too many arguments for format string
+# pylint: disable=W0612, W0621, W0702, E1305
+'''
+Wraper around OS commands
+'''
 import os
 import errno
 import fileinput
@@ -14,12 +22,16 @@ DEFAULT_OUTPUT_FILE = "output.txt"
 DEBUG = 0
 
 def run_aut(cmd, set_timeout=None, get_output=True):
-    def forkIt():
-        # this function will be run in parallel thread
-        # #    You can redirect the output to one place, and the errors to another.
-        # #    dir file.xxx > output.msg 2> output.err
-        # #    You can print the errors and standard output to a single file by using the "&1" command to redirect the output for STDERR to STDOUT and then sending the output from STDOUT to a file:
-        # #    dir file.xxx 1> output.msg 2>&1
+    '''Run system command'''
+    def fork_it():
+        '''
+        This function will be run in parallel thread.
+        You can redirect the output to one place, and the errors to another.
+        # dir file.xxx > output.msg 2> output.err
+        You can print the errors and standard output to a single file by using the "&1" command to
+        redirect the output for STDERR to STDOUT and then sending the output from STDOUT to a file:
+        # dir file.xxx 1> output.msg 2>&1
+        '''
 
         print 'Thread started'
         if get_output:
@@ -31,7 +43,7 @@ def run_aut(cmd, set_timeout=None, get_output=True):
     print "##### {0} Executing command : {1}".format(time.strftime("%X"), cmd)
     if os.path.exists(DEFAULT_OUTPUT_FILE):
         os.remove(DEFAULT_OUTPUT_FILE)
-    thread = threading.Thread(target=forkIt)
+    thread = threading.Thread(target=fork_it)
     thread.start()
     # waiting for thread to finish or timeout
     if set_timeout is None:
@@ -46,9 +58,9 @@ def run_aut(cmd, set_timeout=None, get_output=True):
     # do get whenever exist in the pipe
     out = "NOT_COLLECTED"
     if get_output:
-        f = open(DEFAULT_OUTPUT_FILE, 'r')
-        out = f.read()
-        f.close()
+        out_file = open(DEFAULT_OUTPUT_FILE, 'r')
+        out = out_file.read()
+        out_file.close()
     if DEBUG == 1:
         print out
         print 'Thread finished. Returning ', out
@@ -65,12 +77,13 @@ def run_aut(cmd, set_timeout=None, get_output=True):
 
 
 def cleanup_folder(folder):
+    '''Cleanup folder'''
     try:
         shutil.rmtree(folder, False)
         sleep(1)
     except:
-        if (os.path.exists(folder)):
-            if ('Windows' in platform.platform()):
+        if os.path.exists(folder):
+            if 'Windows' in platform.platform():
                 run_aut('rmdir /S /Q \"{}\"'.format(folder))
             else:
                 run_aut('rm -rf ' + folder)
@@ -79,11 +92,11 @@ def cleanup_folder(folder):
 # Check if output of command contains string from file
 
 
-def check_output(output, fileName):
-    f = open('testdata/outputs/' + fileName)
-    expected_lines = 0
-    for line in f:
-        expected_lines += 1
+def check_output(output, file_name):
+    '''Check if output string contains content of the file'''
+
+    out_file = open('testdata/outputs/' + file_name)
+    for line in out_file:
         line = line.rstrip('\r\n')
         print "checking ", line
         if line not in output:
@@ -91,42 +104,40 @@ def check_output(output, fileName):
             return False
     return True
 
-# Check if folder contains list of files
 
+def check_file_exists(root_folder, files_list, ignore_file_count=True):
+    '''Check if files in list exists on file system'''
 
-def check_file_exists(rootFolder, listFile, ignoreFileCount=True):
-    f = open('testdata/files/' + listFile)
+    list_of_file = open('testdata/files/' + files_list)
     expected_lines = 0
-    for line in f:
+    for line in list_of_file:
         expected_lines += 1
-        relPath = rootFolder + '/' + line.rstrip('\r\n')
-        print "checking ", relPath
-        if not os.path.exists(relPath):
-            print "File " + relPath + " does not exist!"
+        rel_path = root_folder + '/' + line.rstrip('\r\n')
+        print "checking ", rel_path
+        if not os.path.exists(rel_path):
+            print "File " + rel_path + " does not exist!"
             return False
     total = 0
-    for root, dirs, files in os.walk(rootFolder):
+    for root, dirs, files in os.walk(root_folder):
         total += len(files)
         print files
     print "Total files : ", total
     print "Expected lines : ", expected_lines
 
-    if ignoreFileCount:
+    if ignore_file_count:
         return True
     else:
-        assert(expected_lines == total)
-
-# Check if folder is empty
-
+        assert expected_lines == total
 
 def is_empty(path):
+    '''Check if folder is empty'''
     if os.listdir(path) == []:
         return True
     else:
         return False
 
-
 def folder_exists(path):
+    '''Check if folder exists'''
     if os.path.isdir(path):
         return True
     else:
@@ -134,6 +145,7 @@ def folder_exists(path):
 
 
 def file_exists(path):
+    '''Check if file exists'''
     if os.path.exists(path):
         return True
     else:
@@ -141,6 +153,7 @@ def file_exists(path):
 
 
 def is_running_process(process_name):
+    '''Check process is running'''
     result = False
     for proc in psutil.process_iter():
         if process_name in str(proc):
@@ -148,89 +161,93 @@ def is_running_process(process_name):
     return result
 
 
-def kill_process(process_name, commandLine=None):
+def kill_process(process_name, command_line=None):
+    '''Kill process'''
     result = False
     for proc in psutil.process_iter():
         if process_name in str(proc):
-            if commandLine is None:
+            if command_line is None:
                 proc.kill()
                 print "Process : {0} has been killed".format(process_name)
                 result = True
             else:
                 for command_line_options in proc.cmdline():
-                    if commandLine in command_line_options:
+                    if command_line in command_line_options:
                         proc.kill()
-                        print "Process : {0} with {1} command line options, has been killed".format(process_name, command_line_options)
+                        print "Process : {0} with {1} command line options, " + \
+                            "has been killed".format(process_name, command_line_options)
                         result = True
                         break
     return result
 
 
-def extract_archive(fileName, folder):
-    if (fileName.endswith(".tgz")):
-        tar = tarfile.open(fileName)
+def extract_archive(file_name, folder):
+    '''Extract archive'''
+    if file_name.endswith(".tgz"):
+        tar = tarfile.open(file_name)
         tar.extractall(path=os.path.join(os.getcwd(), folder))
         tar.close()
-        print "{0} extracted in {1}".format(fileName, folder)
+        print "{0} extracted in {1}".format(file_name, folder)
     else:
-        print "Failed to extract {0}".format(fileName)
+        print "Failed to extract {0}".format(file_name)
 
 
-def replace(filePath, str1, str2):
-    for line in fileinput.input(filePath, inplace=1):
+def replace(file_path, str1, str2):
+    '''Replace strings in file'''
+    for line in fileinput.input(file_path, inplace=1):
         print line.replace(str1, str2)
     sleep(1)
-    output = run_aut("cat " + filePath)
-    assert (str2 in output)
+    output = run_aut("cat " + file_path)
+    assert str2 in output
 
 
-def cat_app_file(platform, appName, filePath):
+def cat_app_file(platform, app_name, file_path):
+    '''Return content of file on device'''
     if platform is "android":
         output = run_aut(
             "adb shell run-as org.nativescript." +
-            appName +
+            app_name +
             " cat files/" +
-            filePath)
+            file_path)
     if platform is "ios":
         output = run_aut(
             "ddb device get-file \"Library/Application Support/LiveSync/" +
-            filePath +
+            file_path +
             "\" --app org.nativescript." +
-            appName)
+            app_name)
     return output
 
-
-def cat_app_file_on_emulator(platform, appName, filePath):
-    output = run_aut(
-        "adb -s emulator-5554 shell run-as org.nativescript." +
-        appName +
-        " cat files/" +
-        filePath)
+def cat_app_file_on_emulator(app_name, file_path):
+    '''Return content of file on emulator'''
+    output = run_aut("adb -s emulator-5554 shell run-as org.nativescript." + \
+        app_name + " cat files/" + file_path)
     return output
-
 
 def remove(file_path):
+    '''Clean path on file system'''
     try:
         os.remove(file_path)
-    except OSError as e:
-        if e.errno != errno.ENOENT:  # errno.ENOENT = no such file or directory
+    except OSError as err:
+        if err.errno != errno.ENOENT:  # errno.ENOENT = no such file or directory
             raise
 
 
-def uninstall_app(appName, platform, fail=True):
-    if (platform == "android"):
-        output = run_aut("ddb device uninstall org.nativescript." + appName, set_timeout=120)
-        if ("[Uninstalling] Status: RemovingApplication" in output):
-            print "{0} application successfully uninstalled.".format(appName)
+def uninstall_app(app_name, platform, fail=True):
+    '''Uninstall mobile app'''
+
+    if platform == "android":
+        output = run_aut("ddb device uninstall org.nativescript." + app_name, set_timeout=120)
+        if "[Uninstalling] Status: RemovingApplication" in output:
+            print "{0} application successfully uninstalled.".format(app_name)
         else:
             if fail:
                 raise NameError(
-                    "{0} application failed to uninstall.".format(appName))
+                    "{0} application failed to uninstall.".format(app_name))
     else:
-        output = run_aut("ideviceinstaller -U " + appName, set_timeout=120)
-        if ("Uninstall: Complete" in output):
-            print "{0} application successfully uninstalled.".format(appName)
+        output = run_aut("ideviceinstaller -U " + app_name, set_timeout=120)
+        if "Uninstall: Complete" in output:
+            print "{0} application successfully uninstalled.".format(app_name)
         else:
             if fail:
                 raise NameError(
-                    "{0} application failed to uninstall.".format(appName))
+                    "{0} application failed to uninstall.".format(app_name))

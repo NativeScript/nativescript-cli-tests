@@ -1,3 +1,4 @@
+# pylint: disable=C0103, C0111, C0112, C0325, E1121, R0201, R0902, R0903, R0913, R0914, W0105, W0201, W0603, W0613
 """
 A TestRunner for use with the Python unit testing framework. It
 generates a HTML report to show the result at a glance.
@@ -96,12 +97,12 @@ import sys
 import time
 import unittest
 from xml.sax import saxutils
-# bdlib_path2=os.path.abspath(sys.argv[0]+"..")
-# print("bdlib_path="+bdlib_path)
-#bdlib_path=os.path.abspath(os.path.join(sys.argv[0], "nosexunit"))
-# print("bdlib_path="+bdlib_path)
-#if not bdlib_path2 in sys.path: sys.path.append(bdlib_path2)
-#if not bdlib_path in sys.path: sys.path.append(bdlib_path)
+# bdLibPath2=os.path.abspath(sys.argv[0]+"..")
+# print("bdlibpath="+bdLibPath)
+#bdLibPath=os.path.abspath(os.path.join(sys.argv[0], "nosexunit"))
+# print("bdlibpath="+bdLibPath)
+#if not bdLibPath2 in sys.path: sys.path.append(bdLibPath2)
+#if not bdLibPath in sys.path: sys.path.append(bdLibPath)
 print sys.path
 from nosexunit import core as ncore
 from nosexunit import const as nconst

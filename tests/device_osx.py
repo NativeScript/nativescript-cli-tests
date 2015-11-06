@@ -5,16 +5,17 @@ from time import sleep
 import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut
-from helpers._tns_lib import TNSPATH, create_project_add_platform, \
-    ANDROID_RUNTIME_PATH, IOS_RUNTIME_SYMLINK_PATH
+from helpers._tns_lib import TNSPATH, create_project_add_platform, IOS_RUNTIME_SYMLINK_PATH, \
+    ANDROID_RUNTIME_PATH
 from helpers.adb import stop_application, wait_until_app_is_running
 from helpers.device import given_real_device, get_physical_device_id
+
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function
 # R0904 - Too many public methods
-# pylint: disable=C0111, R0201, R0904
+# pylint: disable=C0103, C0111, R0201, R0904
 class DeviceiOS(unittest.TestCase):
 
     def setUp(self):
@@ -25,13 +26,13 @@ class DeviceiOS(unittest.TestCase):
         print "#####"
         print ""
 
-        cleanup_folder('./TNS_App')
+        cleanup_folder('./TNS_app')
         given_real_device(platform="ios")
 
     def tearDown(self):
         pass
 
-    def test_001_Device_Log_ListApplications_And_Run_Android(self):
+    def test_001_device_log_list_applications_and_run_android(self):
 
         device_id = get_physical_device_id(platform="android")
         if device_id is not None:
@@ -45,12 +46,12 @@ class DeviceiOS(unittest.TestCase):
                 None,
                 False)
 
-            # Deploy TNS_App on device
+            # Deploy TNS_app on device
             create_project_add_platform(
-                proj_name="TNS_App",
+                proj_name="TNS_app",
                 platform="android",
                 framework_path=ANDROID_RUNTIME_PATH)
-            output = run_aut(TNSPATH + " deploy android --path TNS_App")
+            output = run_aut(TNSPATH + " deploy android --path TNS_app")
             assert "Project successfully prepared" in output
             assert "Project successfully built" in output
             assert "Successfully deployed on device" in output
@@ -94,7 +95,7 @@ class DeviceiOS(unittest.TestCase):
             print "Prerequisites not met. This test requires at least one real android device."
             assert False
 
-    def test_002_Device_Log_ListApplications_And_Run_iOS(self):
+    def test_002_device_log_list_applications_and_run_ios(self):
         device_id = get_physical_device_id(platform="ios")
         if device_id is not None:
 
@@ -107,13 +108,13 @@ class DeviceiOS(unittest.TestCase):
                 None,
                 False)
 
-            # Deploy TNS_App on device
+            # Deploy TNS_app on device
             create_project_add_platform(
-                proj_name="TNS_App",
+                proj_name="TNS_app",
                 platform="ios",
                 framework_path=IOS_RUNTIME_SYMLINK_PATH,
                 symlink=True)
-            output = run_aut(TNSPATH + " deploy ios --path TNS_App")
+            output = run_aut(TNSPATH + " deploy ios --path TNS_app")
             assert "Project successfully prepared" in output
             assert "Project successfully built" in output
             assert "Successfully deployed on device" in output

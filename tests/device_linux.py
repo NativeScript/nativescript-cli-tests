@@ -15,7 +15,7 @@ from helpers.device import get_device_count, get_physical_device_id, \
 # C0111 - Missing docstring
 # R0201 - Method could be a function
 # R0904 - Too many public methods
-# pylint: disable=C0111, R0201, R0904
+# pylint: disable=C0103, C0111, R0201, R0904
 class DeviceAndroid(unittest.TestCase):
 
     def setUp(self):
@@ -26,23 +26,23 @@ class DeviceAndroid(unittest.TestCase):
         print "#####"
         print ""
 
-        cleanup_folder('./TNS_App')
+        cleanup_folder('./TNS_app')
         given_real_device(platform="android")
         given_running_emulator()
 
     def tearDown(self):
         pass
 
-    def test_001_Device_ListApplications_And_Run_Android(self):
+    def test_001_device_list_applications_and_run_android(self):
         device_id = get_physical_device_id(platform="android")
         if device_id is not None:
 
-            # Deploy TNS_App on device
+            # Deploy TNS_app on device
             create_project_add_platform(
-                proj_name="TNS_App",
+                proj_name="TNS_app",
                 platform="android",
                 framework_path=ANDROID_RUNTIME_PATH)
-            output = run_aut(TNSPATH + " deploy android --path TNS_App")
+            output = run_aut(TNSPATH + " deploy android --path TNS_app")
             assert "Project successfully prepared" in output
             assert "Project successfully built" in output
             assert "Successfully deployed on device with identifier" in output
@@ -60,7 +60,8 @@ class DeviceAndroid(unittest.TestCase):
             assert "org.nativescript.TNSApp" in output
 
             # Verify app is running
-            wait_until_app_is_running(app_id="org.nativescript.TNSApp", device_id=device_id, timeout=60)
+            wait_until_app_is_running(app_id="org.nativescript.TNSApp", \
+                                      device_id=device_id, timeout=60)
 
             # Kill the app
             stop_application(app_id="org.nativescript.TNSApp", device_id=device_id)
@@ -69,13 +70,14 @@ class DeviceAndroid(unittest.TestCase):
             run_aut(TNSPATH + " device run org.nativescript.TNSApp --device " + device_id)
 
             # Verify app is running
-            wait_until_app_is_running(app_id="org.nativescript.TNSApp", device_id=device_id, timeout=60)
+            wait_until_app_is_running(app_id="org.nativescript.TNSApp", \
+                                      device_id=device_id, timeout=60)
 
         else:
             print "Prerequisites not met. This test requires at least one real android device."
             assert False
 
-    def test_002_Device_Log_Android(self):
+    def test_002_device_log_android(self):
         if get_device_count(platform="android") > 1:
             output = run_aut(TNSPATH + " device log")
             assert "More than one device found. Specify device explicitly." in output
@@ -83,27 +85,31 @@ class DeviceAndroid(unittest.TestCase):
             print "Prerequisites not met. This test requires at least two attached devices."
             assert False
 
-    def test_400_Device_InvalidPlatform(self):
+    def test_400_device_invalid_platform(self):
         output = run_aut(TNSPATH + " device windows")
         assert "'windows' is not a valid device platform." in output
         assert "Usage" in output
 
-    def test_401_Device_Log_Invaliddevice_id(self):
+    def test_401_device_log_invalid_device_id(self):
         output = run_aut(TNSPATH + " device log --device invaliddevice_id")
-        assert "Cannot resolve the specified connected device by the provided index or identifier." in output
-        assert "To list currently connected devices and verify that the specified index or identifier exists, run 'tns device'." in output
+        assert "Cannot resolve the specified connected device " + \
+                    "by the provided index or identifier." in output
+        assert "To list currently connected devices and verify that " + \
+                    "the specified index or identifier exists, run 'tns device'." in output
         assert "Usage" in output
 
-    def test_402_Device_Run_Invaliddevice_id(self):
+    def test_402_device_run_invalid_device_id(self):
         output = run_aut(TNSPATH + " device run  --device invaliddevice_id")
-        assert "Cannot resolve the specified connected device by the provided index or identifier." in output
-        assert "To list currently connected devices and verify that the specified index or identifier exists, run 'tns device'." in output
+        assert "Cannot resolve the specified connected device " + \
+                    "by the provided index or identifier." in output
+        assert "To list currently connected devices and verify that " + \
+                    "the specified index or identifier exists, run 'tns device'." in output
         assert "Usage" in output
 
-    def test_403_Device_ListApplications_Invaliddevice_id(self):
-        output = run_aut(
-            TNSPATH +
-            " device list-applications --device invaliddevice_id")
-        assert "Cannot resolve the specified connected device by the provided index or identifier." in output
-        assert "To list currently connected devices and verify that the specified index or identifier exists, run 'tns device'." in output
+    def test_403_device_list_applications_invalid_device_id(self):
+        output = run_aut(TNSPATH + " device list-applications --device invaliddevice_id")
+        assert "Cannot resolve the specified connected device " + \
+                    "by the provided index or identifier." in output
+        assert "To list currently connected devices and verify that " + \
+                    "the specified index or identifier exists, run 'tns device'." in output
         assert "Usage" in output

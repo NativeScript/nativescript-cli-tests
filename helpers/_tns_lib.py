@@ -37,10 +37,9 @@ def install_cli(path_to_package=None):
                 os.getcwd(),
                 "nativescript.tgz")))
 
-    installCommand = "npm i nativescript.tgz"
-    output = run_aut(installCommand)
-    assert "ERR" "error" "FiberFuture" "dev-post-install" not in output, "{N} CLI installation failed."
-    assert file_exists("node_modules/.bin/tns"), "{N} CLI installation failed."
+    output = run_aut("npm i nativescript.tgz")
+    assert "ERR" "error" "FiberFuture" "dev-post-install" not in output, "{N} installation failed."
+    assert file_exists("node_modules/.bin/tns"), "{N} installation failed."
     print output
 
 def get_android_runtime():
@@ -83,6 +82,7 @@ def uninstall_cli():
     print output
 
 def create_project(proj_name, path=None, app_id=None, copy_from=None):
+    '''Create {N} project'''
 
     # If --copy-from is not specified explicitly then project will copy
     # template-hello-world
@@ -104,6 +104,7 @@ def create_project(proj_name, path=None, app_id=None, copy_from=None):
 
 
 def platform_add(platform=None, framework_path=None, path=None, symlink=False, assert_success=True):
+    '''Add platform to {N} project'''
 
     command = TNSPATH + " platform add"
 
@@ -129,6 +130,7 @@ def platform_add(platform=None, framework_path=None, path=None, symlink=False, a
 
 
 def prepare(path=None, platform=None, log_trace=False, assert_success=True):
+    '''Prepare platform'''
 
     command = TNSPATH + " prepare"
 
@@ -150,6 +152,7 @@ def prepare(path=None, platform=None, log_trace=False, assert_success=True):
 
 
 def library_add(platform=None, lib_path=None, path=None, assert_success=True):
+    '''Add library'''
 
     command = TNSPATH + " library add"
 
@@ -168,12 +171,13 @@ def library_add(platform=None, lib_path=None, path=None, assert_success=True):
         if platform is "android":
             assert "was successfully added for android platform" in output
         else:
-            assert (
-                "The iOS Deployment Target is now 8.0 in order to support Cocoa Touch Frameworks." in output)
+            assert "The iOS Deployment Target is now 8.0 " + \
+                "in order to support Cocoa Touch Frameworks." in output
 
     return output
 
 def plugin_add(plugin=None, path=None, assert_success=True):
+    '''Install {N} plugin'''
 
     command = TNSPATH + " plugin add"
 
@@ -190,13 +194,11 @@ def plugin_add(plugin=None, path=None, assert_success=True):
 
     return output
 
-def build(
-        platform=None,
-        mode=None,
-        path=None,
-        forDevice=False,
-        log_trace=False,
-        assert_success=True):
+# C0301 - Line too long (%s/%s)
+# R0913 - Too many arguments
+# pylint: disable=C0301, R0913
+def build(platform=None, mode=None, path=None, for_device=False, log_trace=False, assert_success=True):
+    '''Build {N} project'''
 
     command = TNSPATH + " build"
 
@@ -206,7 +208,7 @@ def build(
     if mode is not None:
         command += " --{0}".format(mode)
 
-    if forDevice:
+    if for_device:
         command += " --forDevice"
 
     if path is not None:
@@ -229,13 +231,8 @@ def build(
     return output
 
 
-def run(
-        platform=None,
-        emulator=False,
-        device=None,
-        path=None,
-        justLaunch=True,
-        assert_success=True):
+def run(platform=None, emulator=False, device=None, path=None, just_launch=True, assert_success=True):
+    '''Run {N} project'''
 
     command = TNSPATH + " run"
 
@@ -251,7 +248,7 @@ def run(
     if path is not None:
         command += " --path {0}".format(path)
 
-    if justLaunch:
+    if just_launch:
         command += " --justlaunch"
 
     output = run_aut(command)
@@ -271,13 +268,8 @@ def run(
     return output
 
 
-def live_sync(
-        platform=None,
-        emulator=False,
-        device=None,
-        watch=False,
-        path=None,
-        assert_success=True):
+def live_sync(platform=None, emulator=False, device=None, watch=False, path=None, assert_success=True):
+    '''LiveSync {N} project'''
 
     command = TNSPATH + " livesync"
 
@@ -311,9 +303,11 @@ def live_sync(
 
 
 def create_project_add_platform(proj_name, platform=None, framework_path=None, symlink=False):
+    '''Create {N} project and platform'''
     create_project(proj_name)
     platform_add(platform, framework_path, proj_name, symlink)
 
 
 def get_cli_version():
+    '''Return {N} CLI version'''
     return run_aut(TNSPATH + " --version")
