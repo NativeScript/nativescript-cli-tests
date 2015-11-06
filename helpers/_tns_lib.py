@@ -178,6 +178,22 @@ def library_add(platform=None, libPath=None, path=None, assertSuccess=True):
 
     return output
 
+def plugin_add(plugin=None, path=None, assert_success=True):
+
+    command = tnsPath + " plugin add"
+
+    if plugin is not None:
+        command += " {0}".format(plugin)
+
+    if path is not None:
+        command += " --path {0}".format(path)
+
+    output = run_aut(command)
+
+    if assert_success:
+        assert "Successfully installed plugin {0}".format(plugin) in output
+
+    return output
 
 def build(
         platform=None,

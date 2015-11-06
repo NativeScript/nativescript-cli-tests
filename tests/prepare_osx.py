@@ -5,13 +5,14 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, file_exists, run_aut, replace
 from helpers._tns_lib import create_project, create_project_add_platform, \
-    iosRuntimeSymlinkPath, platform_add, tnsPath
+    iosRuntimeSymlinkPath, platform_add, tnsPath, plugin_add, prepare
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function
 # R0904 - Too many public methods
-# pylint: disable=C0103, C0111, R0201, R0904
+# W1401 - Anomalous backslash in string: "%s"
+# pylint: disable=C0103, C0111, R0201, R0904, W1401
 class PrepareiOS(unittest.TestCase):
 
     def setUp(self):
@@ -25,14 +26,12 @@ class PrepareiOS(unittest.TestCase):
         cleanup_folder('./TNS_App')
 
     def tearDown(self):
-        cleanup_folder('./TNS_App')
+        pass
 
     def test_001_prepare_ios(self):
-        create_project_add_platform(
-            proj_name="TNS_App",
-            platform="ios",
-            framework_path=iosRuntimeSymlinkPath,
-            symlink=True)
+        create_project_add_platform(proj_name="TNS_App", platform="ios", \
+                        framework_path=iosRuntimeSymlinkPath, symlink=True)
+
         output = run_aut(tnsPath + " prepare ios --path TNS_App")
         assert "Project successfully prepared" in output
 
@@ -47,20 +46,16 @@ class PrepareiOS(unittest.TestCase):
             'TNS_App/platforms/ios/TNSApp/app/tns_modules/application/application.ios.js')
 
     def test_010_prepare_ios_tns_core_modules(self):
-        create_project(proj_name="TNS_App", copy_from="QA-TestApps/tns-modules-app/app")
-        platform_add(
-            platform="ios",
-            path="TNS_App",
-            framework_path=iosRuntimeSymlinkPath,
-            symlink=True)
+        create_project(proj_name="TNS_App", copy_from="testdata/projects/helloworld-1.2.1/app")
+        platform_add(platform="ios", path="TNS_App", \
+                     framework_path=iosRuntimeSymlinkPath, symlink=True)
 
         # Make a change in tns-core-modules to verify they are not overwritten.
         replace("TNS_App/node_modules/tns-core-modules/application/application-common.js",
             "(\"globals\");",
             "(\"globals\"); // test")
 
-        # Verify tns-core-modules are copied to the native project, not app's
-        # tns_modules.
+        # Verify tns-core-modules are copied to the native project, not app's tns_modules.
         for i in range(1, 3):
             print "prepare number: " + str(i)
 
@@ -79,7 +74,7 @@ class PrepareiOS(unittest.TestCase):
 
             output = run_aut("cat TNS_App/platforms/ios/TNSApp/app/tns_modules/package.json")
             assert "\"version\": \"1.2.1\"," not in output
-            output = run_aut("cat TNS_App/platforms/ios/" + \
+            output = run_aut("cat TNSApp121/platforms/ios/" + \
                              "TNSApp/app/tns_modules/application/application-common.js")
             assert "require(\"globals\"); // test" in output
 
@@ -150,3 +145,14 @@ class PrepareiOS(unittest.TestCase):
             'TNS_App/platforms/ios/TNSApp/app/tns_modules/application/New-application.js')
         assert not file_exists(
             'TNS_App/platforms/ios/TNSApp/app/tns_modules/application/New-application.ios.js')
+
+    @unittest.skip("Ignore because of https://github.com/NativeScript/nativescript-cli/issues/1027")
+    def test_301_prepare_android_does_not_prepare_ios(self):
+        create_project_add_platform(proj_name="TNS_App", platform="ios", \
+                                    framework_path=iosRuntimeSymlinkPath, symlink=True)
+
+        plugin_add(plugin="nativescript-social-share", path="TNS_App", assert_success=True)
+        plugin_add(plugin="nativescript-iqkeyboardmanager", path="TNS_App", assert_success=True)
+
+        output = prepare(path="TNS_App", platform="android")
+        assert " " in output  # TODO: Add assert string
