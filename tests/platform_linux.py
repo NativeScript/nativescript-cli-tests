@@ -7,8 +7,8 @@ import unittest
 
 from helpers._os_lib import run_aut, cleanup_folder, is_empty, \
     check_file_exists
-from helpers._tns_lib import androidRuntimePath, androidRuntimeSymlinkPath, build, \
-    tnsPath, create_project, create_project_add_platform, platform_add
+from helpers._tns_lib import ANDROID_RUNTIME_PATH, ANDROID_RUNTIME_SYMLINK_PATH, build, \
+    TNSPATH, create_project, create_project_add_platform, platform_add
 from time import sleep
 
 # C0103 - Invalid %s name "%s"
@@ -33,7 +33,7 @@ class PlatformAndroid(unittest.TestCase):
 
     def test_001_Platform_List_EmptyProject(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(tnsPath + " platform list --path TNS_App")
+        output = run_aut(TNSPATH + " platform list --path TNS_App")
 
         assert "No installed platforms found. Use $ tns platform add" in output
         if 'Darwin' in platform.platform():
@@ -57,7 +57,7 @@ class PlatformAndroid(unittest.TestCase):
         create_project(proj_name="TNS_App")
         output = platform_add(
             platform="android",
-            framework_path=androidRuntimePath,
+            framework_path=ANDROID_RUNTIME_PATH,
             path="TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created" in output
@@ -96,7 +96,7 @@ class PlatformAndroid(unittest.TestCase):
             output = platform_add(
                 platform="android",
                 path="TNS_App",
-                framework_path=androidRuntimeSymlinkPath,
+                framework_path=ANDROID_RUNTIME_SYMLINK_PATH,
                 symlink=True)
             assert "Copying template files..." in output
             assert "Project successfully created" in output
@@ -111,7 +111,7 @@ class PlatformAndroid(unittest.TestCase):
         create_project(proj_name="TNS_App")
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
-        output = run_aut(os.path.join("..", tnsPath) + " platform list")
+        output = run_aut(os.path.join("..", TNSPATH) + " platform list")
         os.chdir(current_dir)
 
         assert "No installed platforms found. Use $ tns platform add" in output
@@ -124,7 +124,7 @@ class PlatformAndroid(unittest.TestCase):
         create_project(proj_name="TNS_App")
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
-        output = run_aut(os.path.join("..", tnsPath) + " platform add android")
+        output = run_aut(os.path.join("..", TNSPATH) + " platform add android")
         os.chdir(current_dir)
 
         assert "Copying template files..." in output
@@ -140,9 +140,9 @@ class PlatformAndroid(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
 
-        output = run_aut(tnsPath + " platform remove android --path TNS_App")
+        output = run_aut(TNSPATH + " platform remove android --path TNS_App")
         assert "Platform android successfully removed." in output
 
         assert not "error" in output
@@ -173,7 +173,7 @@ class PlatformAndroid(unittest.TestCase):
         output = run_aut("cat TNS_App/package.json")
         assert "\"version\": \"1.1.0\"" in output
 
-        command = tnsPath + " platform update android@1.2.0 --path TNS_App"
+        command = TNSPATH + " platform update android@1.2.0 --path TNS_App"
         output = run_aut(command)
         assert "Successfully updated to version  1.2.0" in output
 
@@ -189,7 +189,7 @@ class PlatformAndroid(unittest.TestCase):
 
     def test_205_Platform_Update_Android_ToSameVersion(self):
         create_project_add_platform(proj_name="TNS_App", platform="android")
-        output = run_aut(tnsPath + " platform update android --path TNS_App")
+        output = run_aut(TNSPATH + " platform update android --path TNS_App")
         assert "Current and new version are the same." in output
         assert "Usage" in output
         build(platform="android", path="TNS_App")
@@ -208,13 +208,13 @@ class PlatformAndroid(unittest.TestCase):
 #         [31;1mCannot read property 'substring' of undefined[0m
 #         TypeError: Cannot read property 'substring' of undefined
 
-#         command = tnsPath + " platform update android@1.1.0 --path TNS_App"
+#         command = TNSPATH + " platform update android@1.1.0 --path TNS_App"
 #         output = run_aut(command + " < y_key.txt")
 #         assert "You are going to downgrade to android runtime v.1.1.0. Are you sure?" in output
 #         assert "Successfully updated to version  1.1.0" in output
 
         os.system(
-            tnsPath +
+            TNSPATH +
             " platform update android@1.1.0 --path TNS_App < y_key.txt")
         sleep(10)
 
@@ -231,9 +231,9 @@ class PlatformAndroid(unittest.TestCase):
         output = run_aut("cat TNS_App/package.json")
         assert "\"version\": \"1.0.0\"" in output
 
-        command = tnsPath + \
+        command = TNSPATH + \
             " platform update android --frameworkPath {0} --path TNS_App".format(
-                androidRuntimePath)
+                ANDROID_RUNTIME_PATH)
         output = run_aut(command)
         assert "Successfully updated to version" in output
         build(platform="android", path="TNS_App")
@@ -244,7 +244,7 @@ class PlatformAndroid(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
 
         output = run_aut("cat TNS_App/package.json")
         assert "\"version\": \"1." in output
@@ -254,13 +254,13 @@ class PlatformAndroid(unittest.TestCase):
 #         [31;1mCannot read property 'substring' of undefined[0m
 #         TypeError: Cannot read property 'substring' of undefined
 
-#         command = tnsPath + " platform update android@1.0.0 --path TNS_App"
+#         command = TNSPATH + " platform update android@1.0.0 --path TNS_App"
 #         output = run_aut(command + " < y_key.txt")
 #         assert "You are going to downgrade to android runtime v.1.0.0. Are you sure?" in output
 #         assert "Successfully updated to version  1.0.0" in output
 
         os.system(
-            tnsPath +
+            TNSPATH +
             " platform update android@1.1.0 --path TNS_App < y_key.txt")
         sleep(10)
 
@@ -270,7 +270,7 @@ class PlatformAndroid(unittest.TestCase):
 
     def test_210_Platform_Update_Android_PlatformNotAdded(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(tnsPath + " platform update android --path TNS_App")
+        output = run_aut(TNSPATH + " platform update android --path TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created." in output
         assert not is_empty(
@@ -280,7 +280,7 @@ class PlatformAndroid(unittest.TestCase):
         create_project(proj_name="TNS_App")
         platform_add(
             platform="android --sdk 19",
-            framework_path=androidRuntimePath,
+            framework_path=ANDROID_RUNTIME_PATH,
             path="TNS_App")
 
         output = run_aut(
@@ -292,7 +292,7 @@ class PlatformAndroid(unittest.TestCase):
         create_project(proj_name="TNS_App")
         output = platform_add(
             platform="android --sdk 29",
-            framework_path=androidRuntimePath,
+            framework_path=ANDROID_RUNTIME_PATH,
             path="TNS_App")
         assert "Support for the selected Android target SDK android-29 is not verified. Your Android app might not work as expected." in output
 
@@ -302,25 +302,25 @@ class PlatformAndroid(unittest.TestCase):
         assert "android:targetSdkVersion=\"29\"/>" in output
 
     def test_400_Platform_List_WrongPath(self):
-        output = run_aut(tnsPath + " platform list")
+        output = run_aut(TNSPATH + " platform list")
         assert "No project found at or above" in output
         assert "and neither was a --path specified." in output
 
     def test_401_Platform_List_WrongPath(self):
-        output = run_aut(tnsPath + " platform list --path invalidPath")
+        output = run_aut(TNSPATH + " platform list --path invalidPath")
         assert "No project found at or above" in output
         assert "and neither was a --path specified." in output
 
     def test_420_Platform_Add_AlreadyExistingPlatform(self):
         self.test_002_Platform_Add_Android()
 
-        output = run_aut(tnsPath + " platform add android --path TNS_App")
+        output = run_aut(TNSPATH + " platform add android --path TNS_App")
         assert "Platform android already added" in output
 
     def test_421_Platform_Add_Android_WrongFrameworkPath(self):
         create_project(proj_name="TNS_App")
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " platform add android --frameworkPath invalidFile.tgz --path TNS_App")
         assert "Error: no such package available" in output
         assert "invalidFile.tgz" in output
@@ -328,53 +328,53 @@ class PlatformAndroid(unittest.TestCase):
     def test_423_Platform_Add_Android_WrongFrameworkPathOption(self):
         create_project(proj_name="TNS_App")
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " platform add android --frameworkpath tns-android.tgz --path TNS_App")
         assert "The option 'frameworkpath' is not supported." in output
 
     def test_424_Platform_Add_Android_WrongSymlinkOption(self):
         create_project(proj_name="TNS_App")
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " platform add android --frameworkPath tns-android.tgz --simlink --path TNS_App")
         assert "The option 'simlink' is not supported." in output
 
     def test_425_Platform_Add_EmptyPlatform(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(tnsPath + " platform add --path TNS_App")
+        output = run_aut(TNSPATH + " platform add --path TNS_App")
         assert "No platform specified. Please specify a platform to add" in output
         assert "Usage" in output
 
     def test_430_Platform_Remove_MissingPlatform(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(tnsPath + " platform remove android --path TNS_App")
+        output = run_aut(TNSPATH + " platform remove android --path TNS_App")
         assert "The platform android is not added to this project. Please use 'tns platform add <platform>'" in output
         assert "Usage" in output
 
     def test_431_Platform_Remove_InvalidPlatform(self):
         create_project(proj_name="TNS_App")
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " platform remove invalidPlatform --path TNS_App")
         assert "Invalid platform invalidplatform. Valid platforms are ios or android." in output
         assert "Usage" in output
 
     def test_432_Platform_Remove_EmptyPlatform(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(tnsPath + " platform remove --path TNS_App")
+        output = run_aut(TNSPATH + " platform remove --path TNS_App")
         assert "No platform specified. Please specify a platform to remove" in output
         assert "Usage" in output
 
     def test_441_Platform_Update_InvalidPlatform(self):
         create_project(proj_name="TNS_App")
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " platform update invalidPlatform --path TNS_App")
         assert "Invalid platform invalidplatform. Valid platforms are ios or android." in output
         assert "Usage" in output
 
     def test_442_Platform_Update_EmptyPlatform(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(tnsPath + " platform update --path TNS_App")
+        output = run_aut(TNSPATH + " platform update --path TNS_App")
         assert "1mNo platform specified. Please specify platforms to update" in output
         assert "Usage" in output

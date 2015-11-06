@@ -4,7 +4,7 @@ import time
 import unittest
 
 from helpers._os_lib import cleanup_folder, replace, cat_app_file
-from helpers._tns_lib import androidRuntimePath, \
+from helpers._tns_lib import ANDROID_RUNTIME_PATH, \
     create_project_add_platform, live_sync, run
 from helpers.device import given_real_device, \
     stop_emulators, stop_simulators, get_physical_device_id
@@ -44,7 +44,7 @@ class LiveSync_Android(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
         run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -80,7 +80,7 @@ class LiveSync_Android(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
         run(platform="android", path="TNS_App")
 
         device_id = get_physical_device_id(platform="android")
@@ -100,7 +100,7 @@ class LiveSync_Android(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
         run(platform="android", path="TNS_App")
 
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
@@ -136,11 +136,11 @@ class LiveSync_Android(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
         run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        output = live_sync(path="TNS_App", assertSuccess=False)
+        output = live_sync(path="TNS_App", assert_success=False)
 
         assert "Multiple device platforms detected (iOS and Android). Specify platform or device on command line" in output
 

@@ -3,7 +3,7 @@ import shutil
 import unittest
 
 from helpers._os_lib import cleanup_folder, replace, cat_app_file, uninstall_app
-from helpers._tns_lib import iosRuntimePath, \
+from helpers._tns_lib import IOS_RUNTIME_PATH, \
     create_project_add_platform, live_sync, run
 from helpers.device import given_real_device, \
     stop_emulators, stop_simulators, get_physical_device_id
@@ -44,7 +44,7 @@ class LiveSync_iOS(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimePath)
+            framework_path=IOS_RUNTIME_PATH)
         run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -78,7 +78,7 @@ class LiveSync_iOS(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimePath)
+            framework_path=IOS_RUNTIME_PATH)
         run(platform="ios", path="TNS_App")
 
         device_id = get_physical_device_id(platform="ios")
@@ -98,7 +98,7 @@ class LiveSync_iOS(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimePath)
+            framework_path=IOS_RUNTIME_PATH)
         run(platform="ios", path="TNS_App")
 
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")

@@ -2,7 +2,7 @@ import os, unittest
 
 from helpers._os_lib import cleanup_folder, run_aut, is_running_process
 from helpers._tns_lib import create_project, create_project_add_platform, \
-    iosRuntimeSymlinkPath, tnsPath
+    IOS_RUNTIME_SYMLINK_PATH, TNSPATH
 from helpers.device import given_real_device, stop_simulators
 
 # pylint: disable=R0201, C0111
@@ -21,12 +21,12 @@ class Run_OSX(unittest.TestCase):
         create_project_add_platform(
             proj_name="\"TNS App\"",
             platform="ios",
-            framework_path=iosRuntimeSymlinkPath,
+            framework_path=IOS_RUNTIME_SYMLINK_PATH,
             symlink=True)
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimeSymlinkPath,
+            framework_path=IOS_RUNTIME_SYMLINK_PATH,
             symlink=True)
 
     def setUp(self):
@@ -48,7 +48,7 @@ class Run_OSX(unittest.TestCase):
         stop_simulators()
 
     def test_001_run_ios(self):
-        output = run_aut(tnsPath + " run ios --path TNS_App --justlaunch")
+        output = run_aut(TNSPATH + " run ios --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output
         assert "Project successfully built" in output
@@ -58,7 +58,7 @@ class Run_OSX(unittest.TestCase):
 
     def test_002_run_ios_release_configuration(self):
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " run ios --release --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
@@ -68,7 +68,7 @@ class Run_OSX(unittest.TestCase):
         # running on this device
 
     def test_003_run_ios_simulator(self):
-        output = run_aut(tnsPath + " run ios --emulator --path \"TNS App\" --justlaunch")
+        output = run_aut(TNSPATH + " run ios --emulator --path \"TNS App\" --justlaunch")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output
         assert "Project successfully built" in output
@@ -83,7 +83,7 @@ class Run_OSX(unittest.TestCase):
         # running on this device
 
     def test_004_run_ios_release_configuration_simulator(self):
-        output = run_aut(tnsPath + " run ios --emulator --release --path \"TNS App\" --justlaunch")
+        output = run_aut(TNSPATH + " run ios --emulator --release --path \"TNS App\" --justlaunch")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
         assert "Project successfully built" in output
@@ -98,7 +98,7 @@ class Run_OSX(unittest.TestCase):
         # running on this device
 
     def test_005_run_ios_default(self):
-        output = run_aut(tnsPath + " run ios --path TNS_App", 60)
+        output = run_aut(TNSPATH + " run ios --path TNS_App", 60)
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output
         assert "Project successfully built" in output
@@ -112,7 +112,7 @@ class Run_OSX(unittest.TestCase):
         output = run_aut(
             os.path.join(
                 "..",
-                tnsPath) +
+                TNSPATH) +
             " run ios --path TNS_App --justlaunch")
         os.chdir(current_dir)
         assert "Project successfully prepared" in output
@@ -123,7 +123,7 @@ class Run_OSX(unittest.TestCase):
     def test_300_run_ios_platform_not_added(self):
         create_project(proj_name="TNSAppNoPlatform")
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " run ios --path TNSAppNoPlatform --justlaunch")
 
         assert "Project successfully created." in output

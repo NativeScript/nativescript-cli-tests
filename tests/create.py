@@ -6,7 +6,7 @@ import fileinput
 
 from helpers._os_lib import cleanup_folder, check_file_exists, file_exists, folder_exists, \
     is_empty, run_aut
-from helpers._tns_lib import create_project, tnsPath
+from helpers._tns_lib import create_project, TNSPATH
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
@@ -132,7 +132,7 @@ class Create(unittest.TestCase):
         assert "\"id\": \"org.nativescript.app\"" in output
 
     def test_400_create_project_with_copyfrom_wrong_path(self):
-        output = run_aut(tnsPath + " create TNS_App --copy-from invalidFolder")
+        output = run_aut(TNSPATH + " create TNS_App --copy-from invalidFolder")
         assert not "successfully created" in output
 
         assert "The specified path" in output
@@ -140,7 +140,7 @@ class Create(unittest.TestCase):
 
     def test_401_create_project_in_folder_with_existing_project(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(tnsPath + " create TNS_App")
+        output = run_aut(TNSPATH + " create TNS_App")
         assert not "successfully created" in output
         assert "Path already exists and is not empty" in output
 
@@ -148,11 +148,11 @@ class Create(unittest.TestCase):
         # Create initial template project
         create_project(proj_name="template")
 
-        output = run_aut(tnsPath + " create TNS_App -copy-from template")
+        output = run_aut(TNSPATH + " create TNS_App -copy-from template")
         assert not "successfully created" in output
         assert "To see command's options, use '$ tns help create'" in output
 
     def test_403_create_project_with_no_name(self):
-        output = run_aut(tnsPath + " create")
+        output = run_aut(TNSPATH + " create")
         assert "You need to provide all the required parameters." in output
         assert "# create" in output

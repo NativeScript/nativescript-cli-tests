@@ -4,7 +4,7 @@ import time
 import unittest
 
 from helpers._os_lib import cleanup_folder, replace, cat_app_file_on_emulator
-from helpers._tns_lib import androidRuntimePath, \
+from helpers._tns_lib import ANDROID_RUNTIME_PATH, \
     create_project_add_platform, live_sync, run
 from helpers.device import given_running_emulator, \
     stop_emulators, stop_simulators
@@ -44,7 +44,7 @@ class LiveSync_Emulator(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
         run(platform="android", device="emulator-5554", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -84,7 +84,7 @@ class LiveSync_Emulator(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
         run(platform="android", device="emulator-5554", path="TNS_App")
 
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
@@ -113,7 +113,7 @@ class LiveSync_Emulator(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
         run(platform="android", path="TNS_App")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
 
@@ -154,7 +154,7 @@ class LiveSync_Emulator(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         live_sync(platform="android", device="emulator-5554", path="TNS_App")
 

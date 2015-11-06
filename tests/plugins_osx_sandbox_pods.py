@@ -1,8 +1,8 @@
 import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut, file_exists
-from helpers._tns_lib import iosRuntimeSymlinkPath, \
-    tnsPath, prepare, create_project_add_platform
+from helpers._tns_lib import IOS_RUNTIME_SYMLINK_PATH, \
+    TNSPATH, prepare, create_project_add_platform
 
 # pylint: disable=R0201, C0111
 
@@ -28,11 +28,11 @@ class Plugins_OSX_Sandbox_Pods(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimeSymlinkPath,
+            framework_path=IOS_RUNTIME_SYMLINK_PATH,
             symlink=True)
 
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " plugin add QA-TestApps/CocoaPods/nativescript-ios-working-with-sandbox-plugin --path TNS_App")
         assert "Successfully installed plugin nativescript-ios-working-with-sandbox-plugin." in output
 
@@ -50,11 +50,11 @@ class Plugins_OSX_Sandbox_Pods(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimeSymlinkPath,
+            framework_path=IOS_RUNTIME_SYMLINK_PATH,
             symlink=True)
 
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " plugin add QA-TestApps/CocoaPods/nativescript-ios-fail-with-sandbox-plugin --path TNS_App")
         assert "Successfully installed plugin nativescript-ios-fail-with-sandbox-plugin." in output
 

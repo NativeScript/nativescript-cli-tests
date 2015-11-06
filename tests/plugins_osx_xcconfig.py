@@ -1,8 +1,8 @@
 import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut, file_exists
-from helpers._tns_lib import build, iosRuntimeSymlinkPath, \
-    tnsPath, create_project, platform_add, prepare, create_project_add_platform
+from helpers._tns_lib import build, IOS_RUNTIME_SYMLINK_PATH, \
+    TNSPATH, create_project, platform_add, prepare, create_project_add_platform
 
 # pylint: disable=R0201, C0111
 
@@ -28,7 +28,7 @@ class Plugins_OSX_Xcconfig(unittest.TestCase):
         create_project(proj_name="TNS_App")
 
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " plugin add QA-TestApps/CocoaPods/xcconfig-plugin --path TNS_App")
         assert "Successfully installed plugin xcconfig-plugin." in output
         assert file_exists("TNS_App/node_modules/xcconfig-plugin/package.json")
@@ -44,7 +44,7 @@ class Plugins_OSX_Xcconfig(unittest.TestCase):
 
         platform_add(
             platform="ios",
-            framework_path=iosRuntimeSymlinkPath,
+            framework_path=IOS_RUNTIME_SYMLINK_PATH,
             path="TNS_App",
             symlink=True)
         output = prepare(platform="ios", path="TNS_App")
@@ -68,11 +68,11 @@ class Plugins_OSX_Xcconfig(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimeSymlinkPath,
+            framework_path=IOS_RUNTIME_SYMLINK_PATH,
             symlink=True)
 
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " plugin add QA-TestApps/CocoaPods/xcconfig-plugin --path TNS_App")
         assert "Successfully installed plugin xcconfig-plugin." in output
         assert file_exists("TNS_App/node_modules/xcconfig-plugin/package.json")

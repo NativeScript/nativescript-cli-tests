@@ -6,7 +6,7 @@ import os
 
 from helpers._os_lib import cleanup_folder, remove, run_aut, uninstall_app
 from helpers._tns_lib import uninstall_cli, install_cli, get_android_runtime, get_ios_runtime, \
-    androidRuntimeSymlinkPath, iosRuntimeSymlinkPath, androidRuntimePath, iosRuntimePath
+    ANDROID_RUNTIME_SYMLINK_PATH, IOS_RUNTIME_SYMLINK_PATH, ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH
 from helpers.device import stop_emulators, stop_simulators
 import tns_tests_runner
 
@@ -51,12 +51,12 @@ if __name__ == '__main__':
         uninstall_app("TNSApp", platform="ios", fail=False)
 
     # Cleanup old runtimes
-    cleanup_folder(os.path.split(androidRuntimeSymlinkPath)[0])
-    cleanup_folder(os.path.split(iosRuntimeSymlinkPath)[0])
-    if os.path.isfile(androidRuntimePath):
-        os.remove(androidRuntimePath)
-    if os.path.isfile(iosRuntimePath):
-        os.remove(iosRuntimePath)
+    cleanup_folder(os.path.split(ANDROID_RUNTIME_SYMLINK_PATH)[0])
+    cleanup_folder(os.path.split(IOS_RUNTIME_SYMLINK_PATH)[0])
+    if os.path.isfile(ANDROID_RUNTIME_PATH):
+        os.remove(ANDROID_RUNTIME_PATH)
+    if os.path.isfile(IOS_RUNTIME_PATH):
+        os.remove(IOS_RUNTIME_PATH)
 
     # Cleanup folders created by test execution
     remove('stderr.txt')

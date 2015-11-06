@@ -9,11 +9,11 @@ import platform
 import tarfile
 from time import sleep
 
-default_timeout = 180  # seconds
-default_output_file = "output.txt"
+DEFAULT_TIMEOUT = 180  # seconds
+DEFAULT_OUTPUT_FILE = "output.txt"
 DEBUG = 0
 
-def run_aut(cmd, set_timeout=None, getOutput=True):
+def run_aut(cmd, set_timeout=None, get_output=True):
     def forkIt():
         # this function will be run in parallel thread
         # #    You can redirect the output to one place, and the errors to another.
@@ -22,20 +22,20 @@ def run_aut(cmd, set_timeout=None, getOutput=True):
         # #    dir file.xxx 1> output.msg 2>&1
 
         print 'Thread started'
-        if getOutput:
+        if get_output:
             os.system(cmd + ' 1> output.txt 2>&1')
         else:
             os.system(cmd)
 
     # prepare command line
     print "##### {0} Executing command : {1}".format(time.strftime("%X"), cmd)
-    if os.path.exists(default_output_file):
-        os.remove(default_output_file)
+    if os.path.exists(DEFAULT_OUTPUT_FILE):
+        os.remove(DEFAULT_OUTPUT_FILE)
     thread = threading.Thread(target=forkIt)
     thread.start()
     # waiting for thread to finish or timeout
     if set_timeout is None:
-        thread.join(default_timeout)
+        thread.join(DEFAULT_TIMEOUT)
     else:
         thread.join(set_timeout)
     if thread.is_alive():
@@ -45,8 +45,8 @@ def run_aut(cmd, set_timeout=None, getOutput=True):
         thread.join()
     # do get whenever exist in the pipe
     out = "NOT_COLLECTED"
-    if getOutput:
-        f = open(default_output_file, 'r')
+    if get_output:
+        f = open(DEFAULT_OUTPUT_FILE, 'r')
         out = f.read()
         f.close()
     if DEBUG == 1:

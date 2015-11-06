@@ -2,27 +2,22 @@
 Wraper around tns commands
 '''
 import os
-import platform
 import shutil
 
 from helpers._os_lib import run_aut, file_exists, extract_archive
 from time import sleep
 
-tnsPath = os.path.join('node_modules', '.bin', 'tns')
-nativescriptPath = os.path.join('node_modules', '.bin', 'nativescript')
-androidRuntimePath = "tns-android.tgz"
-iosRuntimePath = "tns-ios.tgz"
-androidRuntimeSymlinkPath = os.path.join('tns-android', 'package')
-iosRuntimeSymlinkPath = os.path.join('tns-ios', 'package')
+TNSPATH = os.path.join('node_modules', '.bin', 'tns')
+NPATH = os.path.join('node_modules', '.bin', 'nativescript')
+ANDROID_RUNTIME_PATH = "tns-android.tgz"
+IOS_RUNTIME_PATH = "tns-ios.tgz"
+ANDROID_RUNTIME_SYMLINK_PATH = os.path.join('tns-android', 'package')
+IOS_RUNTIME_SYMLINK_PATH = os.path.join('tns-ios', 'package')
 
-androidKeyStorePath = os.environ.get('androidKeyStorePath')
-androidKeyStorePassword = os.environ.get('androidKeyStorePassword')
-androidKeyStoreAlias = os.environ.get('androidKeyStoreAlias')
-androidKeyStoreAliasPassword = os.environ.get('androidKeyStoreAliasPassword')
-
-if 'Darwin' in platform.platform():
-    keychain = os.environ.get('KEYCHAIN')
-    keychainPass = os.environ.get('KEYCHAIN_PASS', '')
+ANDROID_KEYSTORE_PATH = os.environ.get('ANDROID_KEYSTORE_PATH')
+ANDROID_KEYSTORE_PASS = os.environ.get('ANDROID_KEYSTORE_PASS')
+ANDROID_KEYSTORE_ALIAS = os.environ.get('ANDROID_KEYSTORE_ALIAS')
+ANDROID_KEYSTORE_ALIAS_PASS = os.environ.get('ANDROID_KEYSTORE_ALIAS_PASS')
 
 
 def install_cli(path_to_package=None):
@@ -52,32 +47,32 @@ def get_android_runtime():
     '''Copy android runtime form ANDROID_PATH to local folder'''
 
     if 'ANDROID_PATH' in os.environ:
-        location = os.path.join(os.environ['ANDROID_PATH'], androidRuntimePath)
+        location = os.path.join(os.environ['ANDROID_PATH'], ANDROID_RUNTIME_PATH)
         shutil.copy2(
             location.strip(),
             (os.path.join(
                 os.getcwd(),
-                androidRuntimePath)))
-    if file_exists(os.path.join(os.getcwd(), androidRuntimePath)):
+                ANDROID_RUNTIME_PATH)))
+    if file_exists(os.path.join(os.getcwd(), ANDROID_RUNTIME_PATH)):
         extract_archive(
-            androidRuntimePath,
-            os.path.splitext(androidRuntimePath)[0])
+            ANDROID_RUNTIME_PATH,
+            os.path.splitext(ANDROID_RUNTIME_PATH)[0])
 
 def get_ios_runtime():
     '''Copy android runtime form IOS_PATH to local folder'''
 
     if 'IOS_PATH' in os.environ:
-        location = os.path.join(os.environ['IOS_PATH'], iosRuntimePath)
+        location = os.path.join(os.environ['IOS_PATH'], IOS_RUNTIME_PATH)
         shutil.copy2(
             location.strip(),
             (os.path.join(
                 os.getcwd(),
-                iosRuntimePath)))
-    if file_exists(os.path.join(os.getcwd(), iosRuntimePath)):
-        extract_archive(iosRuntimePath, os.path.splitext(iosRuntimePath)[0])
+                IOS_RUNTIME_PATH)))
+    if file_exists(os.path.join(os.getcwd(), IOS_RUNTIME_PATH)):
+        extract_archive(IOS_RUNTIME_PATH, os.path.splitext(IOS_RUNTIME_PATH)[0])
 
         current_dir = os.getcwd()
-        os.chdir(os.path.join(current_dir, iosRuntimeSymlinkPath))
+        os.chdir(os.path.join(current_dir, IOS_RUNTIME_SYMLINK_PATH))
         run_aut("npm install")
         os.chdir(current_dir)
 
@@ -94,7 +89,7 @@ def create_project(proj_name, path=None, app_id=None, copy_from=None):
     if copy_from is None:
         copy_from = "template-hello-world"
 
-    command = tnsPath + " create {0}".format(proj_name)
+    command = TNSPATH + " create {0}".format(proj_name)
 
     if path is not None:
         command += " --path " + path
@@ -108,9 +103,9 @@ def create_project(proj_name, path=None, app_id=None, copy_from=None):
     return output
 
 
-def platform_add(platform=None, framework_path=None, path=None, symlink=False, assertSuccess=True):
+def platform_add(platform=None, framework_path=None, path=None, symlink=False, assert_success=True):
 
-    command = tnsPath + " platform add"
+    command = TNSPATH + " platform add"
 
     if platform is not None:
         command += " {0}".format(platform)
@@ -126,16 +121,16 @@ def platform_add(platform=None, framework_path=None, path=None, symlink=False, a
 
     output = run_aut(command)
 
-    if assertSuccess:
+    if assert_success:
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
     return output
 
 
-def prepare(path=None, platform=None, logTrace=False, assertSuccess=True):
+def prepare(path=None, platform=None, log_trace=False, assert_success=True):
 
-    command = tnsPath + " prepare"
+    command = TNSPATH + " prepare"
 
     if platform is not None:
         command += " {0}".format(platform)
@@ -143,35 +138,35 @@ def prepare(path=None, platform=None, logTrace=False, assertSuccess=True):
     if path is not None:
         command += " --path {0}".format(path)
 
-    if logTrace:
+    if log_trace:
         command += " --log trace"
 
     output = run_aut(command)
 
-    if assertSuccess:
-        assert ("Project successfully prepared" in output)
+    if assert_success:
+        assert "Project successfully prepared" in output
 
     return output
 
 
-def library_add(platform=None, libPath=None, path=None, assertSuccess=True):
+def library_add(platform=None, lib_path=None, path=None, assert_success=True):
 
-    command = tnsPath + " library add"
+    command = TNSPATH + " library add"
 
     if platform is not None:
         command += " {0}".format(platform)
 
-    if libPath is not None:
-        command += " {0}".format(libPath)
+    if lib_path is not None:
+        command += " {0}".format(lib_path)
 
     if path is not None:
         command += " --path {0}".format(path)
 
     output = run_aut(command)
 
-    if assertSuccess:
+    if assert_success:
         if platform is "android":
-            assert ("was successfully added for android platform" in output)
+            assert "was successfully added for android platform" in output
         else:
             assert (
                 "The iOS Deployment Target is now 8.0 in order to support Cocoa Touch Frameworks." in output)
@@ -180,7 +175,7 @@ def library_add(platform=None, libPath=None, path=None, assertSuccess=True):
 
 def plugin_add(plugin=None, path=None, assert_success=True):
 
-    command = tnsPath + " plugin add"
+    command = TNSPATH + " plugin add"
 
     if plugin is not None:
         command += " {0}".format(plugin)
@@ -200,10 +195,10 @@ def build(
         mode=None,
         path=None,
         forDevice=False,
-        logTrace=False,
-        assertSuccess=True):
+        log_trace=False,
+        assert_success=True):
 
-    command = tnsPath + " build"
+    command = TNSPATH + " build"
 
     if platform is not None:
         command += " {0}".format(platform)
@@ -217,19 +212,19 @@ def build(
     if path is not None:
         command += " --path {0}".format(path)
 
-    if logTrace:
+    if log_trace:
         command += " --log trace"
 
     output = run_aut(command)
 
-    if assertSuccess:
-        assert ("Project successfully prepared" in output)
+    if assert_success:
+        assert "Project successfully prepared" in output
         if platform is "android":
-            assert ("BUILD SUCCESSFUL" in output)
+            assert "BUILD SUCCESSFUL" in output
         else:
-            assert ("BUILD SUCCEEDED" in output)
-        assert ("Project successfully built" in output)
-        assert not ("ERROR" in output)
+            assert "BUILD SUCCEEDED" in output
+        assert "Project successfully built" in output
+        assert not "ERROR" in output
 
     return output
 
@@ -240,9 +235,9 @@ def run(
         device=None,
         path=None,
         justLaunch=True,
-        assertSuccess=True):
+        assert_success=True):
 
-    command = tnsPath + " run"
+    command = TNSPATH + " run"
 
     if platform is not None:
         command += " {0}".format(platform)
@@ -261,18 +256,17 @@ def run(
 
     output = run_aut(command)
 
-    if assertSuccess:
-        assert ("Project successfully prepared" in output)
-        assert ("Project successfully built" in output)
+    if assert_success:
+        assert "Project successfully prepared" in output
+        assert "Project successfully built" in output
         if platform is "android":
-            assert ("Successfully deployed on device with identifier" in output)
+            assert "Successfully deployed on device with identifier" in output
         else:
             if emulator:
-                assert ("Session started without errors." in output)
+                assert "Session started without errors." in output
             else:
-                assert ("Successfully deployed on device" in output)
-                assert (
-                    "Successfully run application org.nativescript." in output)
+                assert "Successfully deployed on device" in output
+                assert "Successfully run application org.nativescript." in output
 
     return output
 
@@ -283,9 +277,9 @@ def live_sync(
         device=None,
         watch=False,
         path=None,
-        assertSuccess=True):
+        assert_success=True):
 
-    command = tnsPath + " livesync"
+    command = TNSPATH + " livesync"
 
     if platform is not None:
         command += " {0}".format(platform)
@@ -304,13 +298,13 @@ def live_sync(
 
     output = run_aut(command + " --log trace")
 
-    if assertSuccess:
-        assert ("Project successfully prepared" in output)
+    if assert_success:
+        assert "Project successfully prepared" in output
         if platform is "android":
-            assert ("Transferring project files..." in output)
-            assert ("Successfully transferred all project files." in output)
-            assert ("Applying changes..." in output)
-            assert ("Successfully synced application org.nativescript." in output)
+            assert "Transferring project files..." in output
+            assert "Successfully transferred all project files." in output
+            assert "Applying changes..." in output
+            assert "Successfully synced application org.nativescript." in output
             sleep(10)
 
     return output
@@ -322,4 +316,4 @@ def create_project_add_platform(proj_name, platform=None, framework_path=None, s
 
 
 def get_cli_version():
-    return run_aut(tnsPath + " --version")
+    return run_aut(TNSPATH + " --version")

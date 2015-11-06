@@ -1,8 +1,8 @@
 import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut, file_exists
-from helpers._tns_lib import build, iosRuntimeSymlinkPath, \
-    tnsPath, create_project, platform_add, prepare, create_project_add_platform
+from helpers._tns_lib import build, IOS_RUNTIME_SYMLINK_PATH, \
+    TNSPATH, create_project, platform_add, prepare, create_project_add_platform
 
 # pylint: disable=R0201, C0111
 
@@ -28,11 +28,11 @@ class Plugins_OSX_Pods(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimeSymlinkPath,
+            framework_path=IOS_RUNTIME_SYMLINK_PATH,
             symlink=True)
 
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " plugin add QA-TestApps/CocoaPods/carousel --path TNS_App")
         assert "TNS_App/node_modules/carousel" in output
         assert "Successfully installed plugin carousel." in output
@@ -44,7 +44,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         assert "carousel" in output
 
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " plugin add QA-TestApps/CocoaPods/keychain --path TNS_App")
         assert "TNS_App/node_modules/keychain" in output
         assert "Successfully installed plugin keychain." in output
@@ -78,7 +78,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         create_project(proj_name="TNS_App")
 
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " plugin add QA-TestApps/CocoaPods/googlesdk --path TNS_App")
         assert "TNS_App/node_modules/googlesdk" in output
         assert "Successfully installed plugin googlesdk." in output
@@ -93,10 +93,10 @@ class Plugins_OSX_Pods(unittest.TestCase):
 
         platform_add(
             platform="ios",
-            framework_path=iosRuntimeSymlinkPath,
+            framework_path=IOS_RUNTIME_SYMLINK_PATH,
             path="TNS_App",
             symlink=True)
-        output = prepare(platform="ios", path="TNS_App", logTrace=True)
+        output = prepare(platform="ios", path="TNS_App", log_trace=True)
         assert "The iOS Deployment Target is now 8.0" in output
         assert "Successfully prepared plugin googlesdk for ios." in output
         assert "Creating project scheme..." in output
@@ -128,11 +128,11 @@ class Plugins_OSX_Pods(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimeSymlinkPath,
+            framework_path=IOS_RUNTIME_SYMLINK_PATH,
             symlink=True)
 
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " plugin add QA-TestApps/CocoaPods/googlesdk --path TNS_App")
         assert "TNS_App/node_modules/googlesdk" in output
         assert "Successfully installed plugin googlesdk." in output
@@ -180,7 +180,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimeSymlinkPath,
+            framework_path=IOS_RUNTIME_SYMLINK_PATH,
             symlink=True)
 
         run_aut(
@@ -203,11 +203,11 @@ class Plugins_OSX_Pods(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimeSymlinkPath,
+            framework_path=IOS_RUNTIME_SYMLINK_PATH,
             symlink=True)
 
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " plugin add QA-TestApps/CocoaPods/invalidpod --path TNS_App")
         assert "TNS_App/node_modules/invalidpod" in output
         assert "Successfully installed plugin invalidpod." in output
@@ -218,7 +218,7 @@ class Plugins_OSX_Pods(unittest.TestCase):
         output = run_aut("cat TNS_App/package.json")
         assert "invalidpod" in output
 
-        output = prepare(platform="ios", path="TNS_App", assertSuccess=False)
+        output = prepare(platform="ios", path="TNS_App", assert_success=False)
         assert "Installing pods..." in output
         assert "Processing node_modules failed. Error:" in output
 

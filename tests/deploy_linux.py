@@ -5,9 +5,9 @@ import os
 import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut
-from helpers._tns_lib import create_project_add_platform, androidRuntimePath, \
-    tnsPath, androidKeyStorePath, androidKeyStorePassword, androidKeyStoreAlias, \
-    androidKeyStoreAliasPassword, create_project
+from helpers._tns_lib import create_project_add_platform, ANDROID_RUNTIME_PATH, \
+    TNSPATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, \
+    ANDROID_KEYSTORE_ALIAS_PASS, create_project
 from helpers.device import given_running_emulator, given_real_device
 
 # C0103 - Invalid %s name "%s"
@@ -23,7 +23,7 @@ class DeployAndroid(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
 
     def setUp(self):
 
@@ -47,7 +47,7 @@ class DeployAndroid(unittest.TestCase):
 
     def test_001_deploy_android(self):
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " deploy android --path TNS_App  --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -56,10 +56,10 @@ class DeployAndroid(unittest.TestCase):
         # running on this device
 
     def test_002_deploy_android_release(self):
-        output = run_aut(tnsPath + " deploy android --keyStorePath " + androidKeyStorePath +
-                        " --keyStorePassword " + androidKeyStorePassword +
-                        " --keyStoreAlias " + androidKeyStoreAlias +
-                        " --keyStoreAliasPassword " + androidKeyStoreAliasPassword +
+        output = run_aut(TNSPATH + " deploy android --keyStorePath " + ANDROID_KEYSTORE_PATH +
+                        " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
+                        " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS +
+                        " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS +
                         " --release --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -69,7 +69,7 @@ class DeployAndroid(unittest.TestCase):
 
     def test_200_deploy_android_deviceid(self):
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " deploy android --device emulator-5554 --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -80,7 +80,7 @@ class DeployAndroid(unittest.TestCase):
     def test_201_deploy_android_insideproject(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
-        output = run_aut(os.path.join("..", tnsPath) +
+        output = run_aut(os.path.join("..", TNSPATH) +
                         " deploy android --path TNS_App --justlaunch")
         os.chdir(current_dir)
         assert "Project successfully prepared" in output
@@ -89,7 +89,7 @@ class DeployAndroid(unittest.TestCase):
 
     def test_300_deploy_android_platform_not_added(self):
         create_project(proj_name="TNS_AppNoPlatform")
-        output = run_aut(tnsPath + " deploy android --path TNS_AppNoPlatform --justlaunch")
+        output = run_aut(TNSPATH + " deploy android --path TNS_AppNoPlatform --justlaunch")
         assert "Copying template files..." in output
         assert "Project successfully created." in output
         assert "Project successfully prepared" in output
@@ -99,12 +99,12 @@ class DeployAndroid(unittest.TestCase):
         # running on this device
 
     def test_401_deploy_invalid_platform(self):
-        output = run_aut(tnsPath + " deploy invalidPlatform --path TNS_App --justlaunch")
+        output = run_aut(TNSPATH + " deploy invalidPlatform --path TNS_App --justlaunch")
         assert "Invalid platform invalidplatform. Valid platforms are ios or android." in output
 
     def test_402_deploy_invalid_device(self):
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " deploy android --device invaliddevice_id --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output

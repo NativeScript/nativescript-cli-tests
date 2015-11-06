@@ -60,12 +60,10 @@ def run_tests():
     # Following environment variables should be set:
     # - CLI_PATH - Path to CLI package under test (package file should be named nativescript.tgz)
     # - ANDROID_PATH - Path to Android runtime package (should be named tns-android.tgz)
-    # - androidKeyStorePath - Path to the keystore file
-    # - androidKeyStorePassword - Password for the keystore file
-    # - androidKeyStoreAlias
-    # - androidKeyStoreAliasPassword
-    # - KEYCHAIN - Keychain for signing iOS Apps
-    # - KEYCHAIN_PASS - Keychain password
+    # - ANDROID_KEYSTORE_PATH - Path to the keystore file
+    # - ANDROID_KEYSTORE_PASS - Password for the keystore file
+    # - ANDROID_KEYSTORE_ALIAS
+    # - ANDROID_KEYSTORE_ALIAS_PASS
     #
     # Test name convention:
     # 001 - 199 - High priority

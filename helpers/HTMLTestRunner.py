@@ -96,12 +96,12 @@ import sys
 import time
 import unittest
 from xml.sax import saxutils
-# bdLibPath2=os.path.abspath(sys.argv[0]+"..")
-# print("bdlibpath="+bdLibPath)
-#bdLibPath=os.path.abspath(os.path.join(sys.argv[0], "nosexunit"))
-# print("bdlibpath="+bdLibPath)
-#if not bdLibPath2 in sys.path: sys.path.append(bdLibPath2)
-#if not bdLibPath in sys.path: sys.path.append(bdLibPath)
+# bdlib_path2=os.path.abspath(sys.argv[0]+"..")
+# print("bdlib_path="+bdlib_path)
+#bdlib_path=os.path.abspath(os.path.join(sys.argv[0], "nosexunit"))
+# print("bdlib_path="+bdlib_path)
+#if not bdlib_path2 in sys.path: sys.path.append(bdlib_path2)
+#if not bdlib_path in sys.path: sys.path.append(bdlib_path)
 print sys.path
 from nosexunit import core as ncore
 from nosexunit import const as nconst

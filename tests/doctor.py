@@ -2,7 +2,7 @@ import platform
 import unittest
 
 from helpers._os_lib import run_aut
-from helpers._tns_lib import tnsPath
+from helpers._tns_lib import TNSPATH
 
 # pylint: disable=R0201, C0111
 
@@ -21,7 +21,7 @@ class Doctor(unittest.TestCase):
         pass
 
     def test_001_Doctor(self):
-        output = run_aut(tnsPath + " doctor")
+        output = run_aut(TNSPATH + " doctor")
 
         # Ignore this check on Windows and Linux because of
         # https://github.com/NativeScript/nativescript-cli/issues/615

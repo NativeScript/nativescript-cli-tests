@@ -5,7 +5,7 @@ import os
 import unittest
 
 from helpers._os_lib import remove, run_aut
-from helpers._tns_lib import tnsPath
+from helpers._tns_lib import TNSPATH
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
@@ -27,10 +27,10 @@ class Output_STRERR(unittest.TestCase):
         remove('stderr.txt')
 
     def test_001_output_strerr(self):
-        os.system(tnsPath + " emulate asdf 2>stderr.txt")
+        os.system(TNSPATH + " emulate asdf 2>stderr.txt")
         output = run_aut("cat stderr.txt")
         assert "The input is not valid sub-command for 'emulate' command" in output
 
     def test_002_command_option_validation(self):
-        output = run_aut(tnsPath + " create tns-app --Copy-From tns-app")
+        output = run_aut(TNSPATH + " create tns-app --Copy-From tns-app")
         assert "The option 'Copy-From' is not supported. " in output

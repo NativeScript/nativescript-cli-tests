@@ -5,7 +5,7 @@ import unittest
 import psutil
 
 from helpers._os_lib import cleanup_folder, replace, cat_app_file
-from helpers._tns_lib import androidRuntimePath, iosRuntimePath, \
+from helpers._tns_lib import ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH, \
     create_project_add_platform, LiveSync, Run
 from helpers.device import given_real_device, get_physical_device_id
 
@@ -32,7 +32,7 @@ class LiveSync_Simulator(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimePath)
+            framework_path=IOS_RUNTIME_PATH)
         run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -46,7 +46,7 @@ class LiveSync_Simulator(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimePath)
+            framework_path=IOS_RUNTIME_PATH)
         run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
@@ -60,7 +60,7 @@ class LiveSync_Simulator(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimePath)
+            framework_path=IOS_RUNTIME_PATH)
         run(platform="ios", path="TNS_App")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
 
@@ -103,7 +103,7 @@ class LiveSync_Simulator(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
         run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -117,7 +117,7 @@ class LiveSync_Simulator(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
         run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
@@ -131,7 +131,7 @@ class LiveSync_Simulator(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
         run(platform="android", path="TNS_App")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
 
@@ -174,6 +174,6 @@ class LiveSync_Simulator(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimePath)
-        output = live_sync(path="TNS_App", assertSuccess=False)
+            framework_path=IOS_RUNTIME_PATH)
+        output = live_sync(path="TNS_App", assert_success=False)
         assert "Multiple device platforms detected (iOS and Android). Specify platform or device on command line" in output

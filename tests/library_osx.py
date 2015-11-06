@@ -1,7 +1,7 @@
 import unittest
 
 from helpers._os_lib import cleanup_folder, check_file_exists, folder_exists, run_aut
-from helpers._tns_lib import iosRuntimePath, \
+from helpers._tns_lib import IOS_RUNTIME_PATH, \
     build, create_project, platform_add, library_add
 
 # pylint: disable=R0201, C0111
@@ -26,12 +26,12 @@ class Library_OSX(unittest.TestCase):
         create_project(proj_name="TNS_App")
         platform_add(
             platform="ios",
-            framework_path=iosRuntimePath,
+            framework_path=IOS_RUNTIME_PATH,
             path="TNS_App")
 
         library_add(
             platform="ios",
-            libPath="QA-TestApps/external-lib/TelerikUI.framework",
+            lib_path="QA-TestApps/external-lib/TelerikUI.framework",
             path="TNS_App")
         assert (
             check_file_exists(
@@ -50,13 +50,13 @@ class Library_OSX(unittest.TestCase):
         create_project(proj_name="TNS_App")
         platform_add(
             platform="ios",
-            framework_path=iosRuntimePath,
+            framework_path=IOS_RUNTIME_PATH,
             path="TNS_App")
 
         output = library_add(
             platform="ios",
-            libPath="TelerikUI.framework",
+            lib_path="TelerikUI.framework",
             path="TNS_App",
-            assertSuccess=False)
+            assert_success=False)
         assert ".framework does not exist" in output
         assert not folder_exists("TNS_App/lib")

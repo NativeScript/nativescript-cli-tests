@@ -5,8 +5,8 @@ import unittest
 import os
 
 from helpers._os_lib import cleanup_folder, file_exists, run_aut, replace
-from helpers._tns_lib import androidRuntimePath, create_project, create_project_add_platform, \
-    platform_add, tnsPath
+from helpers._tns_lib import ANDROID_RUNTIME_PATH, create_project, create_project_add_platform, \
+    platform_add, TNSPATH
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
@@ -32,8 +32,8 @@ class PrepareAndroid(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
-        output = run_aut(tnsPath + " prepare android --path TNS_App")
+            framework_path=ANDROID_RUNTIME_PATH)
+        output = run_aut(TNSPATH + " prepare android --path TNS_App")
         assert "Project successfully prepared" in output
 
         # Verify app and modules are processed and available in platform folder
@@ -50,10 +50,10 @@ class PrepareAndroid(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
-        output = run_aut(os.path.join("..", tnsPath) + " prepare android")
+        output = run_aut(os.path.join("..", TNSPATH) + " prepare android")
         os.chdir(current_dir)
         assert "Project successfully prepared" in output
 
@@ -74,7 +74,7 @@ class PrepareAndroid(unittest.TestCase):
         platform_add(
             platform="android",
             path="TNS_App",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
 
         # Make a change in tns-core-modules to verify they are not overwritten.
         replace(
@@ -87,7 +87,7 @@ class PrepareAndroid(unittest.TestCase):
         for i in range(1, 3):
             print "prepare number: " + str(i)
 
-            output = run_aut(tnsPath + " prepare android --path TNS_App")
+            output = run_aut(TNSPATH + " prepare android --path TNS_App")
             assert "You have tns_modules dir in your app folder" in output
             assert "Project successfully prepared" in output
 
@@ -110,7 +110,7 @@ class PrepareAndroid(unittest.TestCase):
 
     def test_210_prepare_Android_PlatformNotAdded(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(tnsPath + " prepare android --path TNS_App")
+        output = run_aut(TNSPATH + " prepare android --path TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created." in output
         assert "Project successfully prepared" in output
@@ -121,8 +121,8 @@ class PrepareAndroid(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
-        output = run_aut(tnsPath + " prepare android --path TNS_App")
+            framework_path=ANDROID_RUNTIME_PATH)
+        output = run_aut(TNSPATH + " prepare android --path TNS_App")
         assert "Project successfully prepared" in output
 
         assert file_exists(
@@ -136,7 +136,7 @@ class PrepareAndroid(unittest.TestCase):
         run_aut("mv TNS_App/app/app.css TNS_App/app/app-new.css")
         run_aut("mv TNS_App/app/main-page.xml TNS_App/app/main-page-new.xml")
 
-        output = run_aut(tnsPath + " prepare android --path TNS_App")
+        output = run_aut(TNSPATH + " prepare android --path TNS_App")
         assert "Project successfully prepared" in output
         assert file_exists(
             'TNS_App/platforms/android/src/main/assets/app/app-new.js')
@@ -156,8 +156,8 @@ class PrepareAndroid(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
-        output = run_aut(tnsPath + " prepare android --path TNS_App")
+            framework_path=ANDROID_RUNTIME_PATH)
+        output = run_aut(TNSPATH + " prepare android --path TNS_App")
         assert "Project successfully prepared" in output
         assert file_exists(
             'TNS_App/platforms/android/src/main/assets/app/app.css')
@@ -173,7 +173,7 @@ class PrepareAndroid(unittest.TestCase):
         run_aut("mv TNS_App/app/app.js TNS_App/app/appNew.js")
         run_aut("mv TNS_App/app/app.css TNS_App/app/appNew.css")
 
-        output = run_aut(tnsPath + " prepare android --path TNS_App")
+        output = run_aut(TNSPATH + " prepare android --path TNS_App")
         assert "Project successfully prepared" in output
         assert file_exists(
             'TNS_App/platforms/android/src/main/assets/app/app.css')
@@ -194,10 +194,10 @@ class PrepareAndroid(unittest.TestCase):
 
     def test_400_prepare_MissingPlatform(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(tnsPath + " prepare --path TNS_App")
+        output = run_aut(TNSPATH + " prepare --path TNS_App")
         assert "You need to provide all the required parameters." in output
 
     def test_401_prepare_InvalidPlatform(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(tnsPath + " prepare windows --path TNS_App")
+        output = run_aut(TNSPATH + " prepare windows --path TNS_App")
         assert "Invalid platform windows. Valid platforms are ios or android." in output

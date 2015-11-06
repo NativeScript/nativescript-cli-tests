@@ -2,9 +2,9 @@ import os
 import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut
-from helpers._tns_lib import create_project_add_platform, androidRuntimePath, \
-    tnsPath, androidKeyStorePath, androidKeyStorePassword, androidKeyStoreAlias, \
-    androidKeyStoreAliasPassword, create_project
+from helpers._tns_lib import create_project_add_platform, ANDROID_RUNTIME_PATH, \
+    TNSPATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, \
+    ANDROID_KEYSTORE_ALIAS_PASS, create_project
 from helpers.device import stop_emulators, given_running_emulator
 
 # pylint: disable=R0201, C0111
@@ -19,7 +19,7 @@ class Emulate_Linux(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
 
     def setUp(self):
 
@@ -50,9 +50,9 @@ class Emulate_Linux(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
-            framework_path=androidRuntimePath)
+            framework_path=ANDROID_RUNTIME_PATH)
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " emulate android --path TNS_App --timeout 600 --justlaunch",
             set_timeout=660)
         assert "Project successfully prepared" in output
@@ -69,10 +69,10 @@ class Emulate_Linux(unittest.TestCase):
 
     def test_002_Emulate_Android_ReleaseConfiguration(self):
 
-        output = run_aut(tnsPath + " emulate android --avd Api19 --keyStorePath " + androidKeyStorePath +
-                        " --keyStorePassword " + androidKeyStorePassword +
-                        " --keyStoreAlias " + androidKeyStoreAlias +
-                        " --keyStoreAliasPassword " + androidKeyStoreAliasPassword +
+        output = run_aut(TNSPATH + " emulate android --avd Api19 --keyStorePath " + ANDROID_KEYSTORE_PATH +
+                        " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
+                        " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS +
+                        " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS +
                         " --release --path TNS_App --timeout 600 --justlaunch", set_timeout=660)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -87,14 +87,14 @@ class Emulate_Linux(unittest.TestCase):
     def test_014_Emulate_Android_Genymotion(self):
         pass
 
-    def test_200_Emulate_Android_InsideProjectAndSpecifyEmulatorName(self):
+    def test_200_Emulate_Android_InsideProjectAndSpecifyemulator_name(self):
 
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
         output = run_aut(
             os.path.join(
                 "..",
-                tnsPath) +
+                TNSPATH) +
             " emulate android --avd Api19 --timeout 600 --justlaunch",
             set_timeout=660)
         os.chdir(current_dir)
@@ -110,7 +110,7 @@ class Emulate_Linux(unittest.TestCase):
     def test_210_Emulate_Android_PlatformNotAdded(self):
         create_project(proj_name="TNSAppNoPlatform")
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " emulate android --avd Api19 --timeout 600  --justlaunch --path TNSAppNoPlatform",
             set_timeout=660)
         assert "Copying template files..." in output
@@ -126,7 +126,7 @@ class Emulate_Linux(unittest.TestCase):
 
     def test_401_Emulate_InvalidPlatform(self):
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " emulate invalidPlatform --path TNS_App --timeout 600 --justlaunch",
             set_timeout=660)
         assert "The input is not valid sub-command for 'emulate' command" in output
@@ -136,7 +136,7 @@ class Emulate_Linux(unittest.TestCase):
         "Skipped because of https://github.com/NativeScript/nativescript-cli/issues/289")
     def test_402_Emulate_InvalidAvd(self):
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " emulate android --avd invaliddevice_id --path TNS_App --timeout 600 --justlaunch",
             set_timeout=660)
         # TODO: Modify assert when issue is fixed

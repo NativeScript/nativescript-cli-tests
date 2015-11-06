@@ -3,7 +3,7 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut, is_running_process
 from helpers._tns_lib import create_project, create_project_add_platform, \
-    iosRuntimeSymlinkPath, tnsPath
+    IOS_RUNTIME_SYMLINK_PATH, TNSPATH
 
 # pylint: disable=R0201, C0111
 
@@ -16,7 +16,7 @@ class Emulate_OSX(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimeSymlinkPath,
+            framework_path=IOS_RUNTIME_SYMLINK_PATH,
             symlink=True)
 
     def setUp(self):
@@ -37,13 +37,13 @@ class Emulate_OSX(unittest.TestCase):
 
     def test_001_Emulate_ListDevices(self):
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " emulate ios --availableDevices --path TNS_App --justlaunch")
         assert "iPhone 6 81" in output
 
     def test_002_Emulate_iOS(self):
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " emulate ios --device 'iPhone 6 81' --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -55,7 +55,7 @@ class Emulate_OSX(unittest.TestCase):
 
     def test_003_Emulate_iOS_Release(self):
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " emulate ios --device 'iPhone 6 81' --path TNS_App --release --justlaunch")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
@@ -69,7 +69,7 @@ class Emulate_OSX(unittest.TestCase):
     def test_210_Emulate_iOS_PlatformNotAdded(self):
         create_project(proj_name="TNS_AppNoPlatform")
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " emulate ios --device 'iPhone 6 81' --path TNS_AppNoPlatform --justlaunch")
         assert "Copying template files..." in output
         assert "Project successfully created." in output
@@ -83,7 +83,7 @@ class Emulate_OSX(unittest.TestCase):
 
     def test_400_Emulate_InvalidDevice(self):
         output = run_aut(
-            tnsPath +
+            TNSPATH +
             " emulate ios --device invalidDevice --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output

@@ -5,7 +5,7 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut
 from helpers._tns_lib import create_project, create_project_add_platform, \
-    iosRuntimeSymlinkPath, tnsPath
+    IOS_RUNTIME_SYMLINK_PATH, TNSPATH
 from helpers.device import given_real_device
 
 # C0103 - Invalid %s name "%s"
@@ -39,9 +39,9 @@ class DeployiOS(unittest.TestCase):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
-            framework_path=iosRuntimeSymlinkPath,
+            framework_path=IOS_RUNTIME_SYMLINK_PATH,
             symlink=True)
-        output = run_aut(tnsPath + " deploy ios --path TNS_App  --justlaunch")
+        output = run_aut(TNSPATH + " deploy ios --path TNS_App  --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device" in output
@@ -50,7 +50,7 @@ class DeployiOS(unittest.TestCase):
 
     def test_300_deploy_ios_platform_not_added(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(tnsPath + " deploy ios --path TNS_App --justlaunch")
+        output = run_aut(TNSPATH + " deploy ios --path TNS_App --justlaunch")
         assert "Copying template files..." in output
         assert "Project successfully created." in output
 
