@@ -125,23 +125,15 @@ def run_tests():
         suite.addTests(
             unittest.TestLoader().loadTestsFromTestCase(DeployAndroid))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_Linux))
-        suite.addTests(
-            unittest.TestLoader().loadTestsFromTestCase(DeviceAndroid))
-        suite.addTests(
-            unittest.TestLoader().loadTestsFromTestCase(DebugAndroid))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceAndroid))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugAndroid))
         if 'Darwin' in platform.platform():
-            suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(DeployiOS))
-            suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(Run_OSX))
-            suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(LiveSync_Android))
-            suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(LiveSync_iOS))
-            suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(DeviceiOS))
-            suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeployiOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_OSX))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Android))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_iOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceiOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
 
     # Smoke test runs only high priority tests
     if ('TESTRUN' in os.environ) and ("SMOKE" in os.environ['TESTRUN']):
