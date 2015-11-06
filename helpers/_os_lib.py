@@ -1,8 +1,9 @@
 # W0612 - Unused variable %r
 # W0621 - Redefining name from outer scope
 # W0702: No exception type(s) specified
+# W1401 - Anomalous backslash in string
 # E1305 - Too many arguments for format string
-# pylint: disable=W0612, W0621, W0702, E1305
+# pylint: disable=W0612, W0621, W0702, W1401, E1305
 '''
 Wraper around OS commands
 '''
@@ -231,7 +232,6 @@ def remove(file_path):
         if err.errno != errno.ENOENT:  # errno.ENOENT = no such file or directory
             raise
 
-
 def uninstall_app(app_name, platform, fail=True):
     '''Uninstall mobile app'''
 
@@ -251,3 +251,11 @@ def uninstall_app(app_name, platform, fail=True):
             if fail:
                 raise NameError(
                     "{0} application failed to uninstall.".format(app_name))
+
+def cleanup_xcode_cache():
+    '''Cleanup Xcode cache and derived data'''
+    run_aut("rm -rf ~/Library/Developer/Xcode/DerivedData/", 600)
+    run_aut("sudo find /var/folders/ -type d -name 'com.apple.DeveloperTools' | " + \
+                "xargs -n 1 -I dir sudo find dir -name \* -type f -delete")
+    output = run_aut("sudo find /var/folders/ -type d -name 'Xcode'")
+    #assert "Xcode" not in output, "Failed to cleanup Xcode cache"

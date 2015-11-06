@@ -4,9 +4,10 @@ Test for building projects with iOS platform
 import os
 import unittest
 
-from helpers._os_lib import cleanup_folder, remove, run_aut, file_exists
+from helpers._os_lib import cleanup_folder, remove, run_aut, file_exists, cleanup_xcode_cache
 from helpers._tns_lib import TNSPATH, create_project, prepare, \
     create_project_add_platform, IOS_RUNTIME_SYMLINK_PATH
+
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
@@ -30,10 +31,7 @@ class BuildiOS(unittest.TestCase):
         # create_project_add_platform(proj_name="TNSAppNoSym", \
         #                            platform="ios", framework_path=IOS_RUNTIME_SYMLINK_PATH)
 
-        # Delete derived data
-        run_aut("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
-        # Delete precompiled headers
-        run_aut('sudo find /var/folders/ -name \'*tnsapp-*\' -exec rm -rf {} \;')
+        cleanup_xcode_cache()
 
     def setUp(self):
 

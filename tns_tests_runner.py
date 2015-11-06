@@ -18,8 +18,8 @@ from tests.deploy_osx import DeployiOS
 from tests.device_linux import DeviceAndroid
 from tests.device_osx import DeviceiOS
 from tests.doctor import Doctor
-from tests.emulate_linux import Emulate_Linux
-from tests.emulate_osx import Emulate_OSX
+from tests.emulate_linux import EmulateAndroid
+from tests.emulate_osx import EmulateiOS
 from tests.initinstall import InitAndInstall
 from tests.library_linux import Library_Linux
 from tests.library_osx import Library_OSX
@@ -107,11 +107,11 @@ def run_tests():
 
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_Linux))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Emulator))
         if 'Darwin' in platform.platform():
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Emulate_OSX))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateiOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_OSX))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Pods))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Libs))

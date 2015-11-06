@@ -8,7 +8,7 @@ from helpers._tns_lib import create_project, create_project_add_platform, \
 # pylint: disable=R0201, C0111
 
 
-class Emulate_OSX(unittest.TestCase):
+class EmulateiOS(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):

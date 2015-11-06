@@ -1,10 +1,11 @@
 """
 Entry point of functional tests
 """
-import platform
 import os
+import platform
 
-from helpers._os_lib import cleanup_folder, remove, run_aut, uninstall_app
+from helpers._os_lib import cleanup_folder, remove, run_aut, uninstall_app, \
+    cleanup_xcode_cache, kill_process
 from helpers._tns_lib import uninstall_cli, install_cli, get_android_runtime, get_ios_runtime, \
     ANDROID_RUNTIME_SYMLINK_PATH, IOS_RUNTIME_SYMLINK_PATH, ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH
 from helpers.device import stop_emulators, stop_simulators
@@ -33,13 +34,11 @@ def analyze_result_and_exit():
 
 if __name__ == '__main__':
 
-    # Clean NPM cache, Derived Data and compilation symbols
+    # Clean NPM cache
     if 'Windows' in platform.platform():
         run_aut("npm cache clean", 600)
     else:
         run_aut("rm -rf ~/.npm/tns/*", 600)
-        run_aut("rm -rf ~/Library/Developer/Xcode/DerivedData/", 600)
-        run_aut("sudo rm -rf /var/folders/*", 600)
 
     # Stop emulators and simulators
     stop_emulators()
@@ -69,6 +68,7 @@ if __name__ == '__main__':
     cleanup_folder('template')
     cleanup_folder('tns_modules')
     cleanup_folder('tns_helloworld_app')
+    cleanup_folder('node_modules')
 
     # Uninstall previous CLI and install latest
     uninstall_cli()
@@ -93,6 +93,10 @@ if __name__ == '__main__':
         "git clone git@github.com:NativeScript/QA-TestApps.git QA-TestApps")
     assert not (
         "fatal" in OUTPUT), "Failed to clone git@github.com:NativeScript/QA-TestApps.git"
+
+    # Clean Xcode cache and Derived data
+    if 'Darwin' in platform.platform():
+        cleanup_xcode_cache()
 
     # Execute tests
     execute_tests()
