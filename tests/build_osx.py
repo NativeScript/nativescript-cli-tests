@@ -186,9 +186,8 @@ class BuildiOS(unittest.TestCase):
         assert file_exists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
 
         # Verify Xcode project name is not empty
-        command = "cat TNS_App/platforms/ios/", \
-                "TNSApp.xcodeproj/project.xcworkspace/contents.xcworkspacedata"
-        output = run_aut(command)
+        output = run_aut("cat TNS_App/platforms/ios/TNSApp.xcodeproj/" + \
+                         "project.xcworkspace/contents.xcworkspacedata")
         assert not "__PROJECT_NAME__.xcodeproj" in output
 
     def test_213_build_ios_platform_not_added(self):

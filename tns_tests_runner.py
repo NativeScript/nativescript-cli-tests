@@ -36,8 +36,8 @@ from tests.plugins_osx_libs import Plugins_OSX_Libs
 from tests.plugins_osx_pods import Plugins_OSX_Pods
 from tests.plugins_osx_sandbox_pods import Plugins_OSX_Sandbox_Pods
 from tests.plugins_osx_xcconfig import Plugins_OSX_Xcconfig
-from tests.prepare_linux import Prepare_Linux
-from tests.prepare_osx import Prepare_OSX
+from tests.prepare_linux import PrepareAndroid
+from tests.prepare_osx import PrepareiOS
 from tests.run_linux import Run_Linux
 from tests.run_osx import Run_OSX
 from tests.usage import UsageAndErrorTracking
@@ -96,13 +96,13 @@ def run_tests():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PlatformAndroid))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_Linux))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PrepareAndroid))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildAndroid))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_Linux))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(InitAndInstall))
     if 'Darwin' in platform.platform():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PlatformiOS))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PrepareiOS))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildiOS))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Sandbox_Pods))

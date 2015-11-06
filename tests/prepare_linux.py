@@ -1,3 +1,6 @@
+'''
+Tests for building projects with the Android platform
+'''
 import unittest
 import os
 
@@ -5,10 +8,12 @@ from helpers._os_lib import cleanup_folder, file_exists, run_aut, replace
 from helpers._tns_lib import androidRuntimePath, create_project, create_project_add_platform, \
     platform_add, tnsPath
 
-# pylint: disable=R0201, C0111
-
-
-class Prepare_Linux(unittest.TestCase):
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=C0111, R0201, R0904
+class PrepareAndroid(unittest.TestCase):
 
     def setUp(self):
 

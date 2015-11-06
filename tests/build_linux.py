@@ -100,7 +100,7 @@ class BuildAndroid(unittest.TestCase):
                 "Build modify original AndroidManifest.xml, this is a problem!"
 
     def test_200_build_android_inside_project_folder(self):
-        current_dir = os.getcwd();
+        current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
         output = run_aut(os.path.join("..", tnsPath) +
                         " build android --path TNS_App")
