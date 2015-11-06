@@ -5,7 +5,7 @@ import os
 import platform
 import shutil
 
-from helpers._os_lib import runAUT, FileExists, ExtractArchive
+from helpers._os_lib import run_aut, file_exists, extract_archive
 from time import sleep
 
 tnsPath = os.path.join('node_modules', '.bin', 'tns')
@@ -43,9 +43,9 @@ def install_cli(path_to_package=None):
                 "nativescript.tgz")))
 
     installCommand = "npm i nativescript.tgz"
-    output = runAUT(installCommand)
+    output = run_aut(installCommand)
     assert "ERR" "error" "FiberFuture" "dev-post-install" not in output, "{N} CLI installation failed."
-    assert FileExists("node_modules/.bin/tns"), "{N} CLI installation failed."
+    assert file_exists("node_modules/.bin/tns"), "{N} CLI installation failed."
     print output
 
 def get_android_runtime():
@@ -58,8 +58,8 @@ def get_android_runtime():
             (os.path.join(
                 os.getcwd(),
                 androidRuntimePath)))
-    if FileExists(os.path.join(os.getcwd(), androidRuntimePath)):
-        ExtractArchive(
+    if file_exists(os.path.join(os.getcwd(), androidRuntimePath)):
+        extract_archive(
             androidRuntimePath,
             os.path.splitext(androidRuntimePath)[0])
 
@@ -73,18 +73,18 @@ def get_ios_runtime():
             (os.path.join(
                 os.getcwd(),
                 iosRuntimePath)))
-    if FileExists(os.path.join(os.getcwd(), iosRuntimePath)):
-        ExtractArchive(iosRuntimePath, os.path.splitext(iosRuntimePath)[0])
+    if file_exists(os.path.join(os.getcwd(), iosRuntimePath)):
+        extract_archive(iosRuntimePath, os.path.splitext(iosRuntimePath)[0])
 
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, iosRuntimeSymlinkPath))
-        runAUT("npm install")
+        run_aut("npm install")
         os.chdir(current_dir)
 
 def uninstall_cli():
     '''Uninstall local {N} installation'''
 
-    output = runAUT("npm rm nativescript")
+    output = run_aut("npm rm nativescript")
     print output
 
 def create_project(proj_name, path=None, app_id=None, copy_from=None):
@@ -103,7 +103,7 @@ def create_project(proj_name, path=None, app_id=None, copy_from=None):
     if copy_from is not None:
         command += " --copy-from " + copy_from
 
-    output = runAUT(command)
+    output = run_aut(command)
     assert "Project {0} was successfully created".format(proj_name.replace("\"", "")) in output
     return output
 
@@ -124,7 +124,7 @@ def platform_add(platform=None, framework_path=None, path=None, symlink=False, a
     if symlink is True:
         command += " --symlink"
 
-    output = runAUT(command)
+    output = run_aut(command)
 
     if assertSuccess:
         assert "Copying template files..." in output
@@ -133,7 +133,7 @@ def platform_add(platform=None, framework_path=None, path=None, symlink=False, a
     return output
 
 
-def Prepare(path=None, platform=None, logTrace=False, assertSuccess=True):
+def prepare(path=None, platform=None, logTrace=False, assertSuccess=True):
 
     command = tnsPath + " prepare"
 
@@ -146,7 +146,7 @@ def Prepare(path=None, platform=None, logTrace=False, assertSuccess=True):
     if logTrace:
         command += " --log trace"
 
-    output = runAUT(command)
+    output = run_aut(command)
 
     if assertSuccess:
         assert ("Project successfully prepared" in output)
@@ -154,7 +154,7 @@ def Prepare(path=None, platform=None, logTrace=False, assertSuccess=True):
     return output
 
 
-def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
+def library_add(platform=None, libPath=None, path=None, assertSuccess=True):
 
     command = tnsPath + " library add"
 
@@ -167,7 +167,7 @@ def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
     if path is not None:
         command += " --path {0}".format(path)
 
-    output = runAUT(command)
+    output = run_aut(command)
 
     if assertSuccess:
         if platform is "android":
@@ -179,7 +179,7 @@ def LibraryAdd(platform=None, libPath=None, path=None, assertSuccess=True):
     return output
 
 
-def Build(
+def build(
         platform=None,
         mode=None,
         path=None,
@@ -204,7 +204,7 @@ def Build(
     if logTrace:
         command += " --log trace"
 
-    output = runAUT(command)
+    output = run_aut(command)
 
     if assertSuccess:
         assert ("Project successfully prepared" in output)
@@ -218,7 +218,7 @@ def Build(
     return output
 
 
-def Run(
+def run(
         platform=None,
         emulator=False,
         device=None,
@@ -243,7 +243,7 @@ def Run(
     if justLaunch:
         command += " --justlaunch"
 
-    output = runAUT(command)
+    output = run_aut(command)
 
     if assertSuccess:
         assert ("Project successfully prepared" in output)
@@ -261,7 +261,7 @@ def Run(
     return output
 
 
-def LiveSync(
+def live_sync(
         platform=None,
         emulator=False,
         device=None,
@@ -286,7 +286,7 @@ def LiveSync(
     if path is not None:
         command += " --path {0}".format(path)
 
-    output = runAUT(command + " --log trace")
+    output = run_aut(command + " --log trace")
 
     if assertSuccess:
         assert ("Project successfully prepared" in output)
@@ -306,4 +306,4 @@ def create_project_add_platform(proj_name, platform=None, framework_path=None, s
 
 
 def get_cli_version():
-    return runAUT(tnsPath + " --version")
+    return run_aut(tnsPath + " --version")

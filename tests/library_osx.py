@@ -1,8 +1,8 @@
 import unittest
 
-from helpers._os_lib import CleanupFolder, CheckFilesExists, FolderExists, runAUT
+from helpers._os_lib import cleanup_folder, check_file_exists, folder_exists, run_aut
 from helpers._tns_lib import iosRuntimePath, \
-    Build, create_project, platform_add, LibraryAdd
+    build, create_project, platform_add, library_add
 
 # pylint: disable=R0201, C0111
 
@@ -17,7 +17,7 @@ class Library_OSX(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_App')
+        cleanup_folder('./TNS_App')
 
     def tearDown(self):
         pass
@@ -29,17 +29,17 @@ class Library_OSX(unittest.TestCase):
             framework_path=iosRuntimePath,
             path="TNS_App")
 
-        LibraryAdd(
+        library_add(
             platform="ios",
             libPath="QA-TestApps/external-lib/TelerikUI.framework",
             path="TNS_App")
         assert (
-            CheckFilesExists(
+            check_file_exists(
                 "TNS_App/lib/iOS/TelerikUI.framework",
                 "library_add_Framework_1.1.0.txt"))
 
-        Build(platform="ios", path="TNS_App")
-        output = runAUT(
+        build(platform="ios", path="TNS_App")
+        output = run_aut(
             "cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep TelerikUI")
         assert "TelerikUI.framework in Frameworks" in output
         assert "TelerikUI.framework in Embed Frameworks" in output
@@ -53,10 +53,10 @@ class Library_OSX(unittest.TestCase):
             framework_path=iosRuntimePath,
             path="TNS_App")
 
-        output = LibraryAdd(
+        output = library_add(
             platform="ios",
             libPath="TelerikUI.framework",
             path="TNS_App",
             assertSuccess=False)
         assert ".framework does not exist" in output
-        assert not FolderExists("TNS_App/lib")
+        assert not folder_exists("TNS_App/lib")

@@ -1,9 +1,9 @@
 import os, unittest
 
-from helpers._os_lib import CleanupFolder, runAUT, IsRunningProcess
+from helpers._os_lib import cleanup_folder, run_aut, is_running_process
 from helpers._tns_lib import create_project, create_project_add_platform, \
     iosRuntimeSymlinkPath, tnsPath
-from helpers.device import GivenRealDeviceRunning, StopSimulators
+from helpers.device import given_real_device, stop_simulators
 
 # pylint: disable=R0201, C0111
 
@@ -13,11 +13,11 @@ class Run_OSX(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
 
-        GivenRealDeviceRunning(platform="ios")
+        given_real_device(platform="ios")
 
-        CleanupFolder('./TNS App')
-        CleanupFolder('./TNS_App')
-        CleanupFolder('./TNSAppNoPlatform')
+        cleanup_folder('./TNS App')
+        cleanup_folder('./TNS_App')
+        cleanup_folder('./TNSAppNoPlatform')
         create_project_add_platform(
             proj_name="\"TNS App\"",
             platform="ios",
@@ -42,13 +42,13 @@ class Run_OSX(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        CleanupFolder('./TNS App')
-        CleanupFolder('./TNS_App')
-        CleanupFolder('./TNSAppNoPlatform')
-        StopSimulators()
+        cleanup_folder('./TNS App')
+        cleanup_folder('./TNS_App')
+        cleanup_folder('./TNSAppNoPlatform')
+        stop_simulators()
 
     def test_001_run_ios(self):
-        output = runAUT(tnsPath + " run ios --path TNS_App --justlaunch")
+        output = run_aut(tnsPath + " run ios --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output
         assert "Project successfully built" in output
@@ -57,7 +57,7 @@ class Run_OSX(unittest.TestCase):
         # running on this device
 
     def test_002_run_ios_release_configuration(self):
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " run ios --release --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
@@ -68,7 +68,7 @@ class Run_OSX(unittest.TestCase):
         # running on this device
 
     def test_003_run_ios_simulator(self):
-        output = runAUT(tnsPath + " run ios --emulator --path \"TNS App\" --justlaunch")
+        output = run_aut(tnsPath + " run ios --emulator --path \"TNS App\" --justlaunch")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output
         assert "Project successfully built" in output
@@ -77,13 +77,13 @@ class Run_OSX(unittest.TestCase):
         # Simulator can not be started without active UI
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
             assert "Session started without errors" in output
-            assert IsRunningProcess("Simulator")
+            assert is_running_process("Simulator")
 
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
 
     def test_004_run_ios_release_configuration_simulator(self):
-        output = runAUT(tnsPath + " run ios --emulator --release --path \"TNS App\" --justlaunch")
+        output = run_aut(tnsPath + " run ios --emulator --release --path \"TNS App\" --justlaunch")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
         assert "Project successfully built" in output
@@ -92,13 +92,13 @@ class Run_OSX(unittest.TestCase):
         # Simulator can not be started without active UI
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
             assert "Session started without errors" in output
-            assert IsRunningProcess("Simulator")
+            assert is_running_process("Simulator")
 
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
 
     def test_005_run_ios_default(self):
-        output = runAUT(tnsPath + " run ios --path TNS_App", 60)
+        output = run_aut(tnsPath + " run ios --path TNS_App", 60)
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output
         assert "Project successfully built" in output
@@ -109,7 +109,7 @@ class Run_OSX(unittest.TestCase):
     def test_200_run_ios_inside_project(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
-        output = runAUT(
+        output = run_aut(
             os.path.join(
                 "..",
                 tnsPath) +
@@ -122,7 +122,7 @@ class Run_OSX(unittest.TestCase):
 
     def test_300_run_ios_platform_not_added(self):
         create_project(proj_name="TNSAppNoPlatform")
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " run ios --path TNSAppNoPlatform --justlaunch")
 

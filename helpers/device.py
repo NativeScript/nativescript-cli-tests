@@ -2,11 +2,11 @@ import os
 import platform
 import time
 
-from helpers._os_lib import runAUT, KillProcess
+from helpers._os_lib import run_aut, kill_process
 from helpers._tns_lib import tnsPath
-from helpers.adb import RestartAdb
+from helpers.adb import restart_adb
 
-def StartEmulator(emulatorName, port="5554", timeout=300, waitFor=True):
+def start_emulator(emulatorName, port="5554", timeout=300, waitFor=True):
 
     print "Starting emulator on {0}".format(platform.platform())
 
@@ -18,60 +18,60 @@ def StartEmulator(emulatorName, port="5554", timeout=300, waitFor=True):
             startCommand = "emulator -avd " + emulatorName + " -port " + port
 
     if 'Windows' in platform.platform():
-        runAUT(startCommand, timeout, False)
+        run_aut(startCommand, timeout, False)
     else:
-        runAUT(startCommand + " &", timeout, False)
+        run_aut(startCommand + " &", timeout, False)
 
     if (waitFor):
         # Check if emulator is running
         deviceName = "emulator-" + port
-        if WaitForDevice(deviceName, timeout):
+        if wait_for_device(deviceName, timeout):
             print "Emulator started successfully."
         else:
             raise NameError("Wait for emulator failed!")
 
 
-def WaitForDevice(deviceName, timeout=600):
+def wait_for_device(deviceName, timeout=600):
 
     found = False
     startTime = time.time()
     endTime = startTime + timeout
     while not found:
         time.sleep(5)
-        output = runAUT(tnsPath + " device")
+        output = run_aut(tnsPath + " device")
         if (deviceName in output):
             found = True
         if (time.time() > startTime + 60):
-            RestartAdb()
+            restart_adb()
         if (found is True) or (time.time() > endTime):
             break
     return found
 
 
-def StopEmulators():
-    KillProcess("emulator")
-    KillProcess("emulator64-arm")
-    KillProcess("emulator64-x86")
+def stop_emulators():
+    kill_process("emulator")
+    kill_process("emulator64-arm")
+    kill_process("emulator64-x86")
 
 
-def StopSimulators():
-    KillProcess("iOS Simulator")
-    KillProcess("Simulator")
+def stop_simulators():
+    kill_process("iOS Simulator")
+    kill_process("Simulator")
 
 
-def GivenRunningEmulator():
+def given_running_emulator():
 
-    output = runAUT(tnsPath + " device")
+    output = run_aut(tnsPath + " device")
     if not ('emulator' in output):
-        output = runAUT(tnsPath + " device")
+        output = run_aut(tnsPath + " device")
         if not ('emulator' in output):
-            StopEmulators()
-            StartEmulator(emulatorName="Api19", port="5554", waitFor=True)
+            stop_emulators()
+            start_emulator(emulatorName="Api19", port="5554", waitFor=True)
 
 
-def GivenRealDeviceRunning(platform):
+def given_real_device(platform):
 
-    count = GetDeviceCount(platform, excludeEmulators=True)
+    count = get_device_count(platform, excludeEmulators=True)
     if (count > 0):
         print "{0} {1} devices are running".format(count, platform)
     else:
@@ -80,10 +80,10 @@ def GivenRealDeviceRunning(platform):
 # Get Id of first connected physical device
 
 
-def GetPhysicalDeviceId(platform):
+def get_physical_device_id(platform):
 
     deviceId = None
-    output = runAUT(tnsPath + " device " + platform)
+    output = run_aut(tnsPath + " device " + platform)
     lines = output.splitlines()
     for line in lines:
         lline = line.lower()
@@ -98,9 +98,9 @@ def GetPhysicalDeviceId(platform):
 # Get device count
 
 
-def GetDeviceCount(platform="", excludeEmulators=False):
+def get_device_count(platform="", excludeEmulators=False):
 
-    output = runAUT(tnsPath + " device " + platform)
+    output = run_aut(tnsPath + " device " + platform)
     lines = output.splitlines()
     count = len(lines)
     if (excludeEmulators):

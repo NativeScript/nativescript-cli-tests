@@ -4,10 +4,10 @@ import unittest
 
 import psutil
 
-from helpers._os_lib import CleanupFolder, replace, catAppFile
+from helpers._os_lib import cleanup_folder, replace, cat_app_file
 from helpers._tns_lib import androidRuntimePath, iosRuntimePath, \
     create_project_add_platform, LiveSync, Run
-from helpers.device import GivenRealDeviceRunning, GetPhysicalDeviceId
+from helpers.device import given_real_device, get_physical_device_id
 
 
 # pylint: disable=R0201, C0111
@@ -21,9 +21,9 @@ class LiveSync_Simulator(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_App')
-        GivenRealDeviceRunning(platform="ios")
-        GivenRealDeviceRunning(platform="android")
+        cleanup_folder('./TNS_App')
+        given_real_device(platform="ios")
+        given_real_device(platform="android")
 
     def tearDown(self):
         pass
@@ -33,26 +33,26 @@ class LiveSync_Simulator(unittest.TestCase):
             proj_name="TNS_App",
             platform="ios",
             framework_path=iosRuntimePath)
-        Run(platform="ios", path="TNS_App")
+        run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        LiveSync(platform="ios", path="TNS_App")
+        live_sync(platform="ios", path="TNS_App")
 
-        output = catAppFile("ios", "TNSApp", "app/main-page.xml")
+        output = cat_app_file("ios", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
 
     def test_002_LiveSync_iOS_Device(self):
-        device_id = GetPhysicalDeviceId(platform="ios")
+        device_id = get_physical_device_id(platform="ios")
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
             framework_path=iosRuntimePath)
-        Run(platform="ios", path="TNS_App")
+        run(platform="ios", path="TNS_App")
 
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
-        LiveSync(platform="ios", device=device_id, path="TNS_App")
+        live_sync(platform="ios", device=device_id, path="TNS_App")
 
-        output = catAppFile("ios", "TNSApp", "app/main-view-model.js")
+        output = cat_app_file("ios", "TNSApp", "app/main-view-model.js")
         assert "this.set(\"message\", this.counter + \" clicks left\");" in output
 
     @unittest.skip("TODO: Fix.")
@@ -61,7 +61,7 @@ class LiveSync_Simulator(unittest.TestCase):
             proj_name="TNS_App",
             platform="ios",
             framework_path=iosRuntimePath)
-        Run(platform="ios", path="TNS_App")
+        run(platform="ios", path="TNS_App")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
 
         pr = subprocess.Popen(
@@ -71,7 +71,7 @@ class LiveSync_Simulator(unittest.TestCase):
 
         time.sleep(60)
         print "assert"
-        output = catAppFile("ios", "TNSApp", "app/main-page.xml")
+        output = cat_app_file("ios", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST1\" tap=\"{{ tapAction }}\" />" in output
 
         time.sleep(5)
@@ -79,7 +79,7 @@ class LiveSync_Simulator(unittest.TestCase):
 
         time.sleep(15)
         print "assert"
-        output = catAppFile("ios", "TNSApp", "app/main-page.xml")
+        output = cat_app_file("ios", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST2\" tap=\"{{ tapAction }}\" />" in output
 
         time.sleep(5)
@@ -87,7 +87,7 @@ class LiveSync_Simulator(unittest.TestCase):
 
         time.sleep(15)
         print "assert"
-        output = catAppFile("ios", "TNSApp", "app/main-page.xml")
+        output = cat_app_file("ios", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST3\" tap=\"{{ tapAction }}\" />" in output
 
         print "killing child ..."
@@ -104,12 +104,12 @@ class LiveSync_Simulator(unittest.TestCase):
             proj_name="TNS_App",
             platform="android",
             framework_path=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
+        run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        LiveSync(platform="android", path="TNS_App")
+        live_sync(platform="android", path="TNS_App")
 
-        output = catAppFile("android", "TNSApp", "app/main-page.xml")
+        output = cat_app_file("android", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
 
     @unittest.skip("Fix LiveSync for Android device.")
@@ -118,12 +118,12 @@ class LiveSync_Simulator(unittest.TestCase):
             proj_name="TNS_App",
             platform="android",
             framework_path=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
+        run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
-        LiveSync(platform="android", device="030b206908e6c3c5", path="TNS_App")
+        live_sync(platform="android", device="030b206908e6c3c5", path="TNS_App")
 
-        output = catAppFile("android", "TNSApp", "app/main-view-model.js")
+        output = cat_app_file("android", "TNSApp", "app/main-view-model.js")
         assert "this.set(\"message\", this.counter + \" clicks left\");" in output
 
     @unittest.skip("Fix LiveSync for Android device.")
@@ -132,7 +132,7 @@ class LiveSync_Simulator(unittest.TestCase):
             proj_name="TNS_App",
             platform="android",
             framework_path=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
+        run(platform="android", path="TNS_App")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
 
         print "tns livesync android --watch --path TNS_App"
@@ -143,7 +143,7 @@ class LiveSync_Simulator(unittest.TestCase):
 
         time.sleep(60)
         print "assert"
-        output = catAppFile("android", "TNSApp", "app/main-page.xml")
+        output = cat_app_file("android", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST1\" tap=\"{{ tapAction }}\" />" in output
 
         time.sleep(5)
@@ -151,7 +151,7 @@ class LiveSync_Simulator(unittest.TestCase):
 
         time.sleep(15)
         print "assert"
-        output = catAppFile("android", "TNSApp", "app/main-page.xml")
+        output = cat_app_file("android", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST2\" tap=\"{{ tapAction }}\" />" in output
 
         time.sleep(5)
@@ -159,7 +159,7 @@ class LiveSync_Simulator(unittest.TestCase):
 
         time.sleep(15)
         print "assert"
-        output = catAppFile("android", "TNSApp", "app/main-page.xml")
+        output = cat_app_file("android", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST3\" tap=\"{{ tapAction }}\" />" in output
 
         print "killing child ..."
@@ -175,5 +175,5 @@ class LiveSync_Simulator(unittest.TestCase):
             proj_name="TNS_App",
             platform="ios",
             framework_path=iosRuntimePath)
-        output = LiveSync(path="TNS_App", assertSuccess=False)
+        output = live_sync(path="TNS_App", assertSuccess=False)
         assert "Multiple device platforms detected (iOS and Android). Specify platform or device on command line" in output

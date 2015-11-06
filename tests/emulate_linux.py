@@ -1,11 +1,11 @@
 import os
 import unittest
 
-from helpers._os_lib import CleanupFolder, runAUT
+from helpers._os_lib import cleanup_folder, run_aut
 from helpers._tns_lib import create_project_add_platform, androidRuntimePath, \
     tnsPath, androidKeyStorePath, androidKeyStorePassword, androidKeyStoreAlias, \
     androidKeyStoreAliasPassword, create_project
-from helpers.device import StopEmulators, GivenRunningEmulator
+from helpers.device import stop_emulators, given_running_emulator
 
 # pylint: disable=R0201, C0111
 
@@ -14,8 +14,8 @@ class Emulate_Linux(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        CleanupFolder('./TNSAppNoPlatform')
-        CleanupFolder('./TNS_App')
+        cleanup_folder('./TNSAppNoPlatform')
+        cleanup_folder('./TNS_App')
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -29,29 +29,29 @@ class Emulate_Linux(unittest.TestCase):
         print "#####"
         print ""
 
-        StopEmulators()
-        CleanupFolder('./TNSAppNoPlatform')
-        CleanupFolder('./TNS_App/platforms/android/build/outputs')
+        stop_emulators()
+        cleanup_folder('./TNSAppNoPlatform')
+        cleanup_folder('./TNS_App/platforms/android/build/outputs')
 
     def tearDown(self):
         pass
 
     @classmethod
     def tearDownClass(cls):
-        StopEmulators()
-        CleanupFolder('./TNS_App')
+        stop_emulators()
+        cleanup_folder('./TNS_App')
 
     @unittest.skip(
         "Skipped because of https://github.com/NativeScript/nativescript-cli/issues/352")
     def test_001_Emulate_Android_InRunningEmulator(self):
 
-        GivenRunningEmulator()
+        given_running_emulator()
 
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
             framework_path=androidRuntimePath)
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " emulate android --path TNS_App --timeout 600 --justlaunch",
             set_timeout=660)
@@ -69,7 +69,7 @@ class Emulate_Linux(unittest.TestCase):
 
     def test_002_Emulate_Android_ReleaseConfiguration(self):
 
-        output = runAUT(tnsPath + " emulate android --avd Api19 --keyStorePath " + androidKeyStorePath +
+        output = run_aut(tnsPath + " emulate android --avd Api19 --keyStorePath " + androidKeyStorePath +
                         " --keyStorePassword " + androidKeyStorePassword +
                         " --keyStoreAlias " + androidKeyStoreAlias +
                         " --keyStoreAliasPassword " + androidKeyStoreAliasPassword +
@@ -91,7 +91,7 @@ class Emulate_Linux(unittest.TestCase):
 
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
-        output = runAUT(
+        output = run_aut(
             os.path.join(
                 "..",
                 tnsPath) +
@@ -109,7 +109,7 @@ class Emulate_Linux(unittest.TestCase):
 
     def test_210_Emulate_Android_PlatformNotAdded(self):
         create_project(proj_name="TNSAppNoPlatform")
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " emulate android --avd Api19 --timeout 600  --justlaunch --path TNSAppNoPlatform",
             set_timeout=660)
@@ -125,7 +125,7 @@ class Emulate_Linux(unittest.TestCase):
         # running on this device
 
     def test_401_Emulate_InvalidPlatform(self):
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " emulate invalidPlatform --path TNS_App --timeout 600 --justlaunch",
             set_timeout=660)
@@ -135,7 +135,7 @@ class Emulate_Linux(unittest.TestCase):
     @unittest.skip(
         "Skipped because of https://github.com/NativeScript/nativescript-cli/issues/289")
     def test_402_Emulate_InvalidAvd(self):
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " emulate android --avd invaliddevice_id --path TNS_App --timeout 600 --justlaunch",
             set_timeout=660)

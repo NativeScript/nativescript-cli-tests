@@ -1,8 +1,8 @@
 import unittest
 
-from helpers._os_lib import CleanupFolder, runAUT, FileExists
+from helpers._os_lib import cleanup_folder, run_aut, file_exists
 from helpers._tns_lib import iosRuntimeSymlinkPath, \
-    tnsPath, Prepare, create_project_add_platform
+    tnsPath, prepare, create_project_add_platform
 
 # pylint: disable=R0201, C0111
 
@@ -18,8 +18,8 @@ class Plugins_OSX_Sandbox_Pods(unittest.TestCase):
         print ""
 
         # Delete derived data
-        runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
-        CleanupFolder('./TNS_App')
+        run_aut("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
+        cleanup_folder('./TNS_App')
 
     def tearDown(self):
         pass
@@ -31,18 +31,18 @@ class Plugins_OSX_Sandbox_Pods(unittest.TestCase):
             framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " plugin add QA-TestApps/CocoaPods/nativescript-ios-working-with-sandbox-plugin --path TNS_App")
         assert "Successfully installed plugin nativescript-ios-working-with-sandbox-plugin." in output
 
-        output = runAUT("cat TNS_App/package.json")
+        output = run_aut("cat TNS_App/package.json")
         assert "nativescript-ios-working-with-sandbox-plugin" in output
 
-        output = Prepare(platform="ios", path="TNS_App")
+        output = prepare(platform="ios", path="TNS_App")
         assert "Successfully prepared plugin nativescript-ios-working-with-sandbox-plugin for ios." in output
 
-        output = runAUT(
+        output = run_aut(
             "cat TNS_App/platforms/ios/TNSApp/app/I_MADE_THIS_FILE.txt")
         assert "content" in output
 
@@ -53,16 +53,16 @@ class Plugins_OSX_Sandbox_Pods(unittest.TestCase):
             framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " plugin add QA-TestApps/CocoaPods/nativescript-ios-fail-with-sandbox-plugin --path TNS_App")
         assert "Successfully installed plugin nativescript-ios-fail-with-sandbox-plugin." in output
 
-        output = runAUT("cat TNS_App/package.json")
+        output = run_aut("cat TNS_App/package.json")
         assert "nativescript-ios-fail-with-sandbox-plugin" in output
 
-        output = Prepare(platform="ios", path="TNS_App")
+        output = prepare(platform="ios", path="TNS_App")
         assert "Successfully prepared plugin nativescript-ios-fail-with-sandbox-plugin for ios." in output
 
         assert "sh: ../I_MADE_THIS_FILE.txt: Operation not permitted" in output
-        assert not FileExists("TNS_App/platforms/I_MADE_THIS_FILE.txt")
+        assert not file_exists("TNS_App/platforms/I_MADE_THIS_FILE.txt")

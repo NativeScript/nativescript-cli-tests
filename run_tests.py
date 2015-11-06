@@ -4,10 +4,10 @@ Entry point of functional tests
 import platform
 import os
 
-from helpers._os_lib import CleanupFolder, remove, runAUT, uninstall_app
+from helpers._os_lib import cleanup_folder, remove, run_aut, uninstall_app
 from helpers._tns_lib import uninstall_cli, install_cli, get_android_runtime, get_ios_runtime, \
     androidRuntimeSymlinkPath, iosRuntimeSymlinkPath, androidRuntimePath, iosRuntimePath
-from helpers.device import StopEmulators, StopSimulators
+from helpers.device import stop_emulators, stop_simulators
 import tns_tests_runner
 
 
@@ -35,15 +35,15 @@ if __name__ == '__main__':
 
     # Clean NPM cache, Derived Data and compilation symbols
     if 'Windows' in platform.platform():
-        runAUT("npm cache clean", 600)
+        run_aut("npm cache clean", 600)
     else:
-        runAUT("rm -rf ~/.npm/tns/*", 600)
-        runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/", 600)
-        runAUT("sudo rm -rf /var/folders/*", 600)
+        run_aut("rm -rf ~/.npm/tns/*", 600)
+        run_aut("rm -rf ~/Library/Developer/Xcode/DerivedData/", 600)
+        run_aut("sudo rm -rf /var/folders/*", 600)
 
     # Stop emulators and simulators
-    StopEmulators()
-    StopSimulators()
+    stop_emulators()
+    stop_simulators()
 
     # Uninstall test apps on real devices (if FULL RUN)
     if 'TESTRUN' in os.environ and "FULL" in os.environ['TESTRUN']:
@@ -51,8 +51,8 @@ if __name__ == '__main__':
         uninstall_app("TNSApp", platform="ios", fail=False)
 
     # Cleanup old runtimes
-    CleanupFolder(os.path.split(androidRuntimeSymlinkPath)[0])
-    CleanupFolder(os.path.split(iosRuntimeSymlinkPath)[0])
+    cleanup_folder(os.path.split(androidRuntimeSymlinkPath)[0])
+    cleanup_folder(os.path.split(iosRuntimeSymlinkPath)[0])
     if os.path.isfile(androidRuntimePath):
         os.remove(androidRuntimePath)
     if os.path.isfile(iosRuntimePath):
@@ -60,15 +60,15 @@ if __name__ == '__main__':
 
     # Cleanup folders created by test execution
     remove('stderr.txt')
-    CleanupFolder('app')
-    CleanupFolder('appTest')
-    CleanupFolder('TNS App')
-    CleanupFolder('TNS_App')
-    CleanupFolder('TNS_TempApp')
-    CleanupFolder('folder')
-    CleanupFolder('template')
-    CleanupFolder('tns_modules')
-    CleanupFolder('tns_helloworld_app')
+    cleanup_folder('app')
+    cleanup_folder('appTest')
+    cleanup_folder('TNS App')
+    cleanup_folder('TNS_App')
+    cleanup_folder('TNS_TempApp')
+    cleanup_folder('folder')
+    cleanup_folder('template')
+    cleanup_folder('tns_modules')
+    cleanup_folder('tns_helloworld_app')
 
     # Uninstall previous CLI and install latest
     uninstall_cli()
@@ -80,16 +80,16 @@ if __name__ == '__main__':
         get_ios_runtime()
 
     # Clone hello-world template repo
-    CleanupFolder('template-hello-world')
-    OUTPUT = runAUT('git clone '
+    cleanup_folder('template-hello-world')
+    OUTPUT = run_aut('git clone '
                     'git@github.com:NativeScript/template-hello-world.git '
                     'template-hello-world')
     assert not ("fatal" in OUTPUT), \
         'Failed to clone git@github.com:NativeScript/template-hello-world.git'
 
     # Clone QA-TestApps repo
-    CleanupFolder('QA-TestApps')
-    OUTPUT = runAUT(
+    cleanup_folder('QA-TestApps')
+    OUTPUT = run_aut(
         "git clone git@github.com:NativeScript/QA-TestApps.git QA-TestApps")
     assert not (
         "fatal" in OUTPUT), "Failed to clone git@github.com:NativeScript/QA-TestApps.git"
@@ -99,9 +99,9 @@ if __name__ == '__main__':
 
     # Stop running emulators
     if 'TESTRUN' in os.environ and not "SMOKE" in os.environ['TESTRUN']:
-        StopEmulators()
+        stop_emulators()
         if 'Darwin' in platform.platform():
-            StopSimulators()
+            stop_simulators()
 
     # Exit
     analyze_result_and_exit()

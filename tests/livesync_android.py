@@ -3,11 +3,11 @@ import shutil
 import time
 import unittest
 
-from helpers._os_lib import CleanupFolder, replace, catAppFile
+from helpers._os_lib import cleanup_folder, replace, cat_app_file
 from helpers._tns_lib import androidRuntimePath, \
-    create_project_add_platform, LiveSync, Run
-from helpers.device import GivenRealDeviceRunning, \
-    StopEmulators, StopSimulators, GetPhysicalDeviceId
+    create_project_add_platform, live_sync, run
+from helpers.device import given_real_device, \
+    stop_emulators, stop_simulators, get_physical_device_id
 
 # pylint: disable=R0201, C0111
 
@@ -19,8 +19,8 @@ class LiveSync_Android(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
 
-        StopEmulators()
-        StopSimulators()
+        stop_emulators()
+        stop_simulators()
 
     def setUp(self):
 
@@ -30,8 +30,8 @@ class LiveSync_Android(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_App')
-        GivenRealDeviceRunning(platform="android")
+        cleanup_folder('./TNS_App')
+        given_real_device(platform="android")
 
     def tearDown(self):
         pass
@@ -45,7 +45,7 @@ class LiveSync_Android(unittest.TestCase):
             proj_name="TNS_App",
             platform="android",
             framework_path=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
+        run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
@@ -57,18 +57,18 @@ class LiveSync_Android(unittest.TestCase):
             "(\"globals\");",
             "(\"globals\"); // test")
 
-        LiveSync(platform="android", path="TNS_App")
+        live_sync(platform="android", path="TNS_App")
 
-        output = catAppFile("android", "TNSApp", "app/main-page.xml")
+        output = cat_app_file("android", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
-        output = catAppFile("android", "TNSApp", "app/main-view-model.js")
+        output = cat_app_file("android", "TNSApp", "app/main-view-model.js")
         assert "this.set(\"message\", this.counter + \" clicks left\");" in output
-        output = catAppFile("android", "TNSApp", "app/app.css")
+        output = cat_app_file("android", "TNSApp", "app/app.css")
         assert "font-size: 20;" in output
 
-        output = catAppFile("android", "TNSApp", "app/tns_modules/LICENSE")
+        output = cat_app_file("android", "TNSApp", "app/tns_modules/LICENSE")
         assert "Copyright (c) 9999 Telerik AD" in output
-        output = catAppFile(
+        output = cat_app_file(
             "android",
             "TNSApp",
             "app/tns_modules/application/application-common.js")
@@ -76,24 +76,24 @@ class LiveSync_Android(unittest.TestCase):
 
     # This test executes the Run -> LiveSync -> Run work flow on an android
     # device with API level 21.
-    def test_002_LiveSync_Android_Device_XmlFile_Run(self):
+    def test_002_LiveSync_Android_Device_XmlFile_run(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
             framework_path=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
+        run(platform="android", path="TNS_App")
 
-        device_id = GetPhysicalDeviceId(platform="android")
+        device_id = get_physical_device_id(platform="android")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        LiveSync(platform="android", device=device_id, path="TNS_App")
+        live_sync(platform="android", device=device_id, path="TNS_App")
 
-        output = catAppFile("android", "TNSApp", "app/main-page.xml")
+        output = cat_app_file("android", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
 
         replace("TNS_App/app/main-page.xml", "TEST", "RUN")
-        Run(platform="android", path="TNS_App")
+        run(platform="android", path="TNS_App")
 
-        output = catAppFile("android", "TNSApp", "app/main-page.xml")
+        output = cat_app_file("android", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"RUN\" tap=\"{{ tapAction }}\" />" in output
 
     def test_201_LiveSync_Android_AddNewFiles(self):
@@ -101,7 +101,7 @@ class LiveSync_Android(unittest.TestCase):
             proj_name="TNS_App",
             platform="android",
             framework_path=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
+        run(platform="android", path="TNS_App")
 
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
         shutil.copyfile("TNS_App/app/main-page.js", "TNS_App/app/test.js")
@@ -112,16 +112,16 @@ class LiveSync_Android(unittest.TestCase):
             "TNS_App/app/main-view-model.js",
             "TNS_App/app/test/main-view-model.js")
 
-        LiveSync(platform="android", path="TNS_App")
+        live_sync(platform="android", path="TNS_App")
         time.sleep(5)
 
-        output = catAppFile("android", "TNSApp", "app/test.xml")
+        output = cat_app_file("android", "TNSApp", "app/test.xml")
         assert "<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output
-        output = catAppFile("android", "TNSApp", "app/test.js")
+        output = cat_app_file("android", "TNSApp", "app/test.js")
         assert "page.bindingContext = vmModule.mainViewModel;" in output
-        output = catAppFile("android", "TNSApp", "app/test.css")
+        output = cat_app_file("android", "TNSApp", "app/test.css")
         assert "color: #284848;" in output
-        output = catAppFile("android", "TNSApp", "app/test/main-view-model.js")
+        output = cat_app_file("android", "TNSApp", "app/test/main-view-model.js")
         assert "HelloWorldModel.prototype.tapAction" in output
 
     @unittest.skip("TODO: Not implemented.")
@@ -132,15 +132,15 @@ class LiveSync_Android(unittest.TestCase):
     def test_203_LiveSync_Android_Watch(self):
         pass
 
-    def test_301_LiveSync_BeforeRun(self):
+    def test_301_LiveSync_Beforerun(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
             framework_path=androidRuntimePath)
-        Run(platform="android", path="TNS_App")
+        run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        output = LiveSync(path="TNS_App", assertSuccess=False)
+        output = live_sync(path="TNS_App", assertSuccess=False)
 
         assert "Multiple device platforms detected (iOS and Android). Specify platform or device on command line" in output
 

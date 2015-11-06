@@ -4,11 +4,11 @@ Test for device command in context of iOS
 from time import sleep
 import unittest
 
-from helpers._os_lib import CleanupFolder, runAUT
+from helpers._os_lib import cleanup_folder, run_aut
 from helpers._tns_lib import tnsPath, create_project_add_platform, \
     androidRuntimePath, iosRuntimeSymlinkPath
-from helpers.adb import StopApplication, WaitUntilAppIsRunning
-from helpers.device import GivenRealDeviceRunning, GetPhysicalDeviceId
+from helpers.adb import stop_application, wait_until_app_is_running
+from helpers.device import given_real_device, get_physical_device_id
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
@@ -25,19 +25,19 @@ class DeviceiOS(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_App')
-        GivenRealDeviceRunning(platform="ios")
+        cleanup_folder('./TNS_App')
+        given_real_device(platform="ios")
 
     def tearDown(self):
         pass
 
     def test_001_Device_Log_ListApplications_And_Run_Android(self):
 
-        device_id = GetPhysicalDeviceId(platform="android")
+        device_id = get_physical_device_id(platform="android")
         if device_id is not None:
 
             # Start DeviceLog
-            runAUT(
+            run_aut(
                 tnsPath +
                 " device log --device " +
                 device_id +
@@ -50,7 +50,7 @@ class DeviceiOS(unittest.TestCase):
                 proj_name="TNS_App",
                 platform="android",
                 framework_path=androidRuntimePath)
-            output = runAUT(tnsPath + " deploy android --path TNS_App")
+            output = run_aut(tnsPath + " deploy android --path TNS_App")
             assert "Project successfully prepared" in output
             assert "Project successfully built" in output
             assert "Successfully deployed on device" in output
@@ -59,47 +59,47 @@ class DeviceiOS(unittest.TestCase):
 
             # VErify "tns device list-applications" list
             # org.nativescript.TNSApp
-            output = runAUT(
+            output = run_aut(
                 tnsPath +
                 " device list-applications --device " +
                 device_id)
             assert "org.nativescript.TNSApp" in output
 
             # Verify app is running
-            WaitUntilAppIsRunning(
+            wait_until_app_is_running(
                 app_id="org.nativescript.TNSApp",
                 device_id=device_id,
                 timeout=60)
 
             # Kill the app
-            StopApplication(app_id="org.nativescript.TNSApp", device_id=device_id)
+            stop_application(app_id="org.nativescript.TNSApp", device_id=device_id)
 
             # Start it via device command and verify app is running
-            runAUT(
+            run_aut(
                 tnsPath +
                 " device run org.nativescript.TNSApp --device " +
                 device_id)
 
             # Verify app is running
-            WaitUntilAppIsRunning(
+            wait_until_app_is_running(
                 app_id="org.nativescript.TNSApp",
                 device_id=device_id,
                 timeout=60)
 
             # Stop logging and print it
-            runAUT("ps -A | grep \"device " + device_id +
+            run_aut("ps -A | grep \"device " + device_id +
                    "\" | awk '{print $1}' | xargs kill -9")
-            runAUT("cat deviceLog.txt")
+            run_aut("cat deviceLog.txt")
         else:
             print "Prerequisites not met. This test requires at least one real android device."
             assert False
 
     def test_002_Device_Log_ListApplications_And_Run_iOS(self):
-        device_id = GetPhysicalDeviceId(platform="ios")
+        device_id = get_physical_device_id(platform="ios")
         if device_id is not None:
 
             # Start DeviceLog
-            runAUT(
+            run_aut(
                 tnsPath +
                 " device log --device " +
                 device_id +
@@ -113,7 +113,7 @@ class DeviceiOS(unittest.TestCase):
                 platform="ios",
                 framework_path=iosRuntimeSymlinkPath,
                 symlink=True)
-            output = runAUT(tnsPath + " deploy ios --path TNS_App")
+            output = run_aut(tnsPath + " deploy ios --path TNS_App")
             assert "Project successfully prepared" in output
             assert "Project successfully built" in output
             assert "Successfully deployed on device" in output
@@ -121,23 +121,23 @@ class DeviceiOS(unittest.TestCase):
             sleep(10)
 
             # Get list installed apps
-            output = runAUT(
+            output = run_aut(
                 tnsPath +
                 " device list-applications --device " +
                 device_id)
             assert "org.nativescript.TNSApp" in output
 
             # Start it via device command and verify app is running
-            output = runAUT(
+            output = run_aut(
                 tnsPath +
                 " device run org.nativescript.TNSApp --device " +
                 device_id)
             sleep(10)
 
             # Stop logging and print it
-            runAUT("ps -A | grep \"device " + device_id +
+            run_aut("ps -A | grep \"device " + device_id +
                    "\" | awk '{print $1}' | xargs kill -9")
-            runAUT("cat deviceLog.txt")
+            run_aut("cat deviceLog.txt")
         else:
             print "Prerequisites not met. This test requires at least one real ios device."
             assert False

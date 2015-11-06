@@ -4,11 +4,11 @@ Test for deploy command
 import os
 import unittest
 
-from helpers._os_lib import CleanupFolder, runAUT
+from helpers._os_lib import cleanup_folder, run_aut
 from helpers._tns_lib import create_project_add_platform, androidRuntimePath, \
     tnsPath, androidKeyStorePath, androidKeyStorePassword, androidKeyStoreAlias, \
     androidKeyStoreAliasPassword, create_project
-from helpers.device import GivenRunningEmulator, GivenRealDeviceRunning
+from helpers.device import given_running_emulator, given_real_device
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
@@ -19,7 +19,7 @@ class DeployAndroid(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        CleanupFolder('./TNS_App')
+        cleanup_folder('./TNS_App')
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -33,20 +33,20 @@ class DeployAndroid(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_AppNoPlatform')
-        GivenRunningEmulator()
-        GivenRealDeviceRunning(platform="android")
-        CleanupFolder('./TNS_App/platforms/android/build/outputs')
+        cleanup_folder('./TNS_AppNoPlatform')
+        given_running_emulator()
+        given_real_device(platform="android")
+        cleanup_folder('./TNS_App/platforms/android/build/outputs')
 
     def tearDown(self):
         pass
 
     @classmethod
     def tearDownClass(cls):
-        CleanupFolder('./TNS_App')
+        cleanup_folder('./TNS_App')
 
     def test_001_deploy_android(self):
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " deploy android --path TNS_App  --justlaunch")
         assert "Project successfully prepared" in output
@@ -56,7 +56,7 @@ class DeployAndroid(unittest.TestCase):
         # running on this device
 
     def test_002_deploy_android_release(self):
-        output = runAUT(tnsPath + " deploy android --keyStorePath " + androidKeyStorePath +
+        output = run_aut(tnsPath + " deploy android --keyStorePath " + androidKeyStorePath +
                         " --keyStorePassword " + androidKeyStorePassword +
                         " --keyStoreAlias " + androidKeyStoreAlias +
                         " --keyStoreAliasPassword " + androidKeyStoreAliasPassword +
@@ -68,7 +68,7 @@ class DeployAndroid(unittest.TestCase):
         # running on this device
 
     def test_200_deploy_android_deviceid(self):
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " deploy android --device emulator-5554 --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
@@ -80,7 +80,7 @@ class DeployAndroid(unittest.TestCase):
     def test_201_deploy_android_insideproject(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
-        output = runAUT(os.path.join("..", tnsPath) +
+        output = run_aut(os.path.join("..", tnsPath) +
                         " deploy android --path TNS_App --justlaunch")
         os.chdir(current_dir)
         assert "Project successfully prepared" in output
@@ -89,7 +89,7 @@ class DeployAndroid(unittest.TestCase):
 
     def test_300_deploy_android_platform_not_added(self):
         create_project(proj_name="TNS_AppNoPlatform")
-        output = runAUT(tnsPath + " deploy android --path TNS_AppNoPlatform --justlaunch")
+        output = run_aut(tnsPath + " deploy android --path TNS_AppNoPlatform --justlaunch")
         assert "Copying template files..." in output
         assert "Project successfully created." in output
         assert "Project successfully prepared" in output
@@ -99,11 +99,11 @@ class DeployAndroid(unittest.TestCase):
         # running on this device
 
     def test_401_deploy_invalid_platform(self):
-        output = runAUT(tnsPath + " deploy invalidPlatform --path TNS_App --justlaunch")
+        output = run_aut(tnsPath + " deploy invalidPlatform --path TNS_App --justlaunch")
         assert "Invalid platform invalidplatform. Valid platforms are ios or android." in output
 
     def test_402_deploy_invalid_device(self):
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " deploy android --device invaliddevice_id --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output

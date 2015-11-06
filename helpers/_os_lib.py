@@ -13,7 +13,7 @@ default_timeout = 180  # seconds
 default_output_file = "output.txt"
 DEBUG = 0
 
-def runAUT(cmd, set_timeout=None, getOutput=True):
+def run_aut(cmd, set_timeout=None, getOutput=True):
     def forkIt():
         # this function will be run in parallel thread
         # #    You can redirect the output to one place, and the errors to another.
@@ -41,7 +41,7 @@ def runAUT(cmd, set_timeout=None, getOutput=True):
     if thread.is_alive():
         print '#### Process has timeouted at ', time.strftime("%X")
         # kill node.js instance if tns has started it
-        KillProcess("node", "tns")
+        kill_process("node", "tns")
         thread.join()
     # do get whenever exist in the pipe
     out = "NOT_COLLECTED"
@@ -64,22 +64,22 @@ def runAUT(cmd, set_timeout=None, getOutput=True):
         print "##### OUTPUT END #####"
 
 
-def CleanupFolder(folder):
+def cleanup_folder(folder):
     try:
         shutil.rmtree(folder, False)
         sleep(1)
     except:
         if (os.path.exists(folder)):
             if ('Windows' in platform.platform()):
-                runAUT('rmdir /S /Q \"{}\"'.format(folder))
+                run_aut('rmdir /S /Q \"{}\"'.format(folder))
             else:
-                runAUT('rm -rf ' + folder)
+                run_aut('rm -rf ' + folder)
             sleep(1)
 
 # Check if output of command contains string from file
 
 
-def CheckOutput(output, fileName):
+def check_output(output, fileName):
     f = open('testdata/outputs/' + fileName)
     expected_lines = 0
     for line in f:
@@ -94,7 +94,7 @@ def CheckOutput(output, fileName):
 # Check if folder contains list of files
 
 
-def CheckFilesExists(rootFolder, listFile, ignoreFileCount=True):
+def check_file_exists(rootFolder, listFile, ignoreFileCount=True):
     f = open('testdata/files/' + listFile)
     expected_lines = 0
     for line in f:
@@ -119,54 +119,54 @@ def CheckFilesExists(rootFolder, listFile, ignoreFileCount=True):
 # Check if folder is empty
 
 
-def IsEmpty(path):
+def is_empty(path):
     if os.listdir(path) == []:
         return True
     else:
         return False
 
 
-def FolderExists(path):
+def folder_exists(path):
     if os.path.isdir(path):
         return True
     else:
         return False
 
 
-def FileExists(path):
+def file_exists(path):
     if os.path.exists(path):
         return True
     else:
         return False
 
 
-def IsRunningProcess(processName):
+def is_running_process(process_name):
     result = False
     for proc in psutil.process_iter():
-        if processName in str(proc):
+        if process_name in str(proc):
             result = True
     return result
 
 
-def KillProcess(processName, commandLine=None):
+def kill_process(process_name, commandLine=None):
     result = False
     for proc in psutil.process_iter():
-        if processName in str(proc):
+        if process_name in str(proc):
             if commandLine is None:
                 proc.kill()
-                print "Process : {0} has been killed".format(processName)
+                print "Process : {0} has been killed".format(process_name)
                 result = True
             else:
-                for commandLineOptions in proc.cmdline():
-                    if commandLine in commandLineOptions:
+                for command_line_options in proc.cmdline():
+                    if commandLine in command_line_options:
                         proc.kill()
-                        print "Process : {0} with {1} command line options, has been killed".format(processName, commandLineOptions)
+                        print "Process : {0} with {1} command line options, has been killed".format(process_name, command_line_options)
                         result = True
                         break
     return result
 
 
-def ExtractArchive(fileName, folder):
+def extract_archive(fileName, folder):
     if (fileName.endswith(".tgz")):
         tar = tarfile.open(fileName)
         tar.extractall(path=os.path.join(os.getcwd(), folder))
@@ -180,19 +180,19 @@ def replace(filePath, str1, str2):
     for line in fileinput.input(filePath, inplace=1):
         print line.replace(str1, str2)
     sleep(1)
-    output = runAUT("cat " + filePath)
+    output = run_aut("cat " + filePath)
     assert (str2 in output)
 
 
-def catAppFile(platform, appName, filePath):
+def cat_app_file(platform, appName, filePath):
     if platform is "android":
-        output = runAUT(
+        output = run_aut(
             "adb shell run-as org.nativescript." +
             appName +
             " cat files/" +
             filePath)
     if platform is "ios":
-        output = runAUT(
+        output = run_aut(
             "ddb device get-file \"Library/Application Support/LiveSync/" +
             filePath +
             "\" --app org.nativescript." +
@@ -200,8 +200,8 @@ def catAppFile(platform, appName, filePath):
     return output
 
 
-def catAppFileOnEmulator(platform, appName, filePath):
-    output = runAUT(
+def cat_app_file_on_emulator(platform, appName, filePath):
+    output = run_aut(
         "adb -s emulator-5554 shell run-as org.nativescript." +
         appName +
         " cat files/" +
@@ -219,7 +219,7 @@ def remove(file_path):
 
 def uninstall_app(appName, platform, fail=True):
     if (platform == "android"):
-        output = runAUT("ddb device uninstall org.nativescript." + appName, set_timeout=120)
+        output = run_aut("ddb device uninstall org.nativescript." + appName, set_timeout=120)
         if ("[Uninstalling] Status: RemovingApplication" in output):
             print "{0} application successfully uninstalled.".format(appName)
         else:
@@ -227,7 +227,7 @@ def uninstall_app(appName, platform, fail=True):
                 raise NameError(
                     "{0} application failed to uninstall.".format(appName))
     else:
-        output = runAUT("ideviceinstaller -U " + appName, set_timeout=120)
+        output = run_aut("ideviceinstaller -U " + appName, set_timeout=120)
         if ("Uninstall: Complete" in output):
             print "{0} application successfully uninstalled.".format(appName)
         else:

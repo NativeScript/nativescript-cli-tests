@@ -48,8 +48,6 @@ from tests.version import Version
 # W0212 - Access to a protected member
 # W0640 - Cell variable test defined in loop
 # pylint: disable=C0111, R0915, W0212, W0640
-
-
 def run_tests():
 
     print "Platform : ", platform.platform()
@@ -93,7 +91,7 @@ def run_tests():
 
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
-    suite.addTests( unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Output_STRERR))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))
@@ -106,7 +104,7 @@ def run_tests():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PlatformiOS))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Prepare_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildiOS))
-        suite.addTests( unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Sandbox_Pods))
 
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):

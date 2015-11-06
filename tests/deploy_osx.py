@@ -3,10 +3,10 @@ Test for deploy command
 '''
 import unittest
 
-from helpers._os_lib import CleanupFolder, runAUT
+from helpers._os_lib import cleanup_folder, run_aut
 from helpers._tns_lib import create_project, create_project_add_platform, \
     iosRuntimeSymlinkPath, tnsPath
-from helpers.device import GivenRealDeviceRunning
+from helpers.device import given_real_device
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
@@ -17,7 +17,7 @@ class DeployiOS(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        GivenRealDeviceRunning(platform="ios")
+        given_real_device(platform="ios")
 
     def setUp(self):
         print ""
@@ -26,10 +26,10 @@ class DeployiOS(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_App')
+        cleanup_folder('./TNS_App')
 
     def tearDown(self):
-        CleanupFolder('./TNS_App')
+        cleanup_folder('./TNS_App')
 
     @classmethod
     def tearDownClass(cls):
@@ -41,7 +41,7 @@ class DeployiOS(unittest.TestCase):
             platform="ios",
             framework_path=iosRuntimeSymlinkPath,
             symlink=True)
-        output = runAUT(tnsPath + " deploy ios --path TNS_App  --justlaunch")
+        output = run_aut(tnsPath + " deploy ios --path TNS_App  --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device" in output
@@ -50,7 +50,7 @@ class DeployiOS(unittest.TestCase):
 
     def test_300_deploy_ios_platform_not_added(self):
         create_project(proj_name="TNS_App")
-        output = runAUT(tnsPath + " deploy ios --path TNS_App --justlaunch")
+        output = run_aut(tnsPath + " deploy ios --path TNS_App --justlaunch")
         assert "Copying template files..." in output
         assert "Project successfully created." in output
 

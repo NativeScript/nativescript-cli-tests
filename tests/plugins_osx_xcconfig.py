@@ -1,8 +1,8 @@
 import unittest
 
-from helpers._os_lib import CleanupFolder, runAUT, FileExists
-from helpers._tns_lib import Build, iosRuntimeSymlinkPath, \
-    tnsPath, create_project, platform_add, Prepare, create_project_add_platform
+from helpers._os_lib import cleanup_folder, run_aut, file_exists
+from helpers._tns_lib import build, iosRuntimeSymlinkPath, \
+    tnsPath, create_project, platform_add, prepare, create_project_add_platform
 
 # pylint: disable=R0201, C0111
 
@@ -18,8 +18,8 @@ class Plugins_OSX_Xcconfig(unittest.TestCase):
         print ""
 
         # Delete derived data
-        runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
-        CleanupFolder('./TNS_App')
+        run_aut("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
+        cleanup_folder('./TNS_App')
 
     def tearDown(self):
         pass
@@ -27,19 +27,19 @@ class Plugins_OSX_Xcconfig(unittest.TestCase):
     def test_001_PluginAdd_Xcconfig_Before_platform_add_iOS(self):
         create_project(proj_name="TNS_App")
 
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " plugin add QA-TestApps/CocoaPods/xcconfig-plugin --path TNS_App")
         assert "Successfully installed plugin xcconfig-plugin." in output
-        assert FileExists("TNS_App/node_modules/xcconfig-plugin/package.json")
-        assert FileExists(
+        assert file_exists("TNS_App/node_modules/xcconfig-plugin/package.json")
+        assert file_exists(
             "TNS_App/node_modules/xcconfig-plugin/platforms/ios/build.xcconfig")
-        assert FileExists(
+        assert file_exists(
             "TNS_App/node_modules/xcconfig-plugin/platforms/ios/module.modulemap")
-        assert FileExists(
+        assert file_exists(
             "TNS_App/node_modules/xcconfig-plugin/platforms/ios/XcconfigPlugin.h")
 
-        output = runAUT("cat TNS_App/package.json")
+        output = run_aut("cat TNS_App/package.json")
         assert "xcconfig-plugin" in output
 
         platform_add(
@@ -47,22 +47,22 @@ class Plugins_OSX_Xcconfig(unittest.TestCase):
             framework_path=iosRuntimeSymlinkPath,
             path="TNS_App",
             symlink=True)
-        output = Prepare(platform="ios", path="TNS_App")
+        output = prepare(platform="ios", path="TNS_App")
         assert "Successfully prepared plugin xcconfig-plugin for ios." in output
 
-        output = runAUT("cat TNS_App/platforms/ios/plugins-debug.xcconfig")
+        output = run_aut("cat TNS_App/platforms/ios/plugins-debug.xcconfig")
         assert "OTHER_LDFLAGS = $(inherited) -l\"sqlite3\"" in output
-        output = runAUT("cat TNS_App/platforms/ios/plugins-release.xcconfig")
+        output = run_aut("cat TNS_App/platforms/ios/plugins-release.xcconfig")
         assert "OTHER_LDFLAGS = $(inherited) -l\"sqlite3\"" in output
 
-        output = runAUT(
+        output = run_aut(
             "cat TNS_App/platforms/ios/TNSApp/build-debug.xcconfig")
         assert "#include \"../plugins-debug.xcconfig\"" in output
-        output = runAUT(
+        output = run_aut(
             "cat TNS_App/platforms/ios/TNSApp/build-release.xcconfig")
         assert "#include \"../plugins-release.xcconfig\"" in output
 
-        Build(platform="ios", path="TNS_App")
+        build(platform="ios", path="TNS_App")
 
     def test_202_PluginAdd_Xcconfig_After_platform_add_iOS(self):
         create_project_add_platform(
@@ -71,32 +71,32 @@ class Plugins_OSX_Xcconfig(unittest.TestCase):
             framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " plugin add QA-TestApps/CocoaPods/xcconfig-plugin --path TNS_App")
         assert "Successfully installed plugin xcconfig-plugin." in output
-        assert FileExists("TNS_App/node_modules/xcconfig-plugin/package.json")
-        assert FileExists(
+        assert file_exists("TNS_App/node_modules/xcconfig-plugin/package.json")
+        assert file_exists(
             "TNS_App/node_modules/xcconfig-plugin/platforms/ios/build.xcconfig")
-        assert FileExists(
+        assert file_exists(
             "TNS_App/node_modules/xcconfig-plugin/platforms/ios/module.modulemap")
-        assert FileExists(
+        assert file_exists(
             "TNS_App/node_modules/xcconfig-plugin/platforms/ios/XcconfigPlugin.h")
 
-        output = runAUT("cat TNS_App/package.json")
+        output = run_aut("cat TNS_App/package.json")
         assert "xcconfig-plugin" in output
 
-        output = Build(platform="ios", path="TNS_App")
+        output = build(platform="ios", path="TNS_App")
         assert "Successfully prepared plugin xcconfig-plugin for ios." in output
 
-        output = runAUT("cat TNS_App/platforms/ios/plugins-debug.xcconfig")
+        output = run_aut("cat TNS_App/platforms/ios/plugins-debug.xcconfig")
         assert "OTHER_LDFLAGS = $(inherited) -l\"sqlite3\"" in output
-        output = runAUT("cat TNS_App/platforms/ios/plugins-release.xcconfig")
+        output = run_aut("cat TNS_App/platforms/ios/plugins-release.xcconfig")
         assert "OTHER_LDFLAGS = $(inherited) -l\"sqlite3\"" in output
 
-        output = runAUT(
+        output = run_aut(
             "cat TNS_App/platforms/ios/TNSApp/build-debug.xcconfig")
         assert "#include \"../plugins-debug.xcconfig\"" in output
-        output = runAUT(
+        output = run_aut(
             "cat TNS_App/platforms/ios/TNSApp/build-release.xcconfig")
         assert "#include \"../plugins-release.xcconfig\"" in output

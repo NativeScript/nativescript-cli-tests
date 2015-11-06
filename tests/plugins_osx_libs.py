@@ -1,8 +1,8 @@
 import unittest
 
-from helpers._os_lib import CleanupFolder, runAUT, FileExists
-from helpers._tns_lib import Build, iosRuntimeSymlinkPath, \
-    tnsPath, create_project, platform_add, Prepare, create_project_add_platform
+from helpers._os_lib import cleanup_folder, run_aut, file_exists
+from helpers._tns_lib import build, iosRuntimeSymlinkPath, \
+    tnsPath, create_project, platform_add, prepare, create_project_add_platform
 
 # pylint: disable=R0201, C0111
 
@@ -18,8 +18,8 @@ class Plugins_OSX_Libs(unittest.TestCase):
         print ""
 
         # Delete derived data
-        runAUT("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
-        CleanupFolder('./TNS_App')
+        run_aut("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
+        cleanup_folder('./TNS_App')
 
     def tearDown(self):
         pass
@@ -27,21 +27,21 @@ class Plugins_OSX_Libs(unittest.TestCase):
     def test_201_PluginAdd_StaticLib_Universal_Before_platform_add_iOS(self):
         create_project(proj_name="TNS_App")
 
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " plugin add QA-TestApps/static-lib/hello-plugin --path TNS_App")
         assert "TNS_App/node_modules/hello" in output
         assert "Successfully installed plugin hello." in output
-        assert FileExists("TNS_App/node_modules/hello/package.json")
-        assert FileExists("TNS_App/node_modules/hello/hello-plugin.ios.js")
-        assert FileExists(
+        assert file_exists("TNS_App/node_modules/hello/package.json")
+        assert file_exists("TNS_App/node_modules/hello/hello-plugin.ios.js")
+        assert file_exists(
             "TNS_App/node_modules/hello/platforms/ios/HelloLib.a")
-        assert FileExists(
+        assert file_exists(
             "TNS_App/node_modules/hello/platforms/ios/include/HelloLib/Bye.h")
-        assert FileExists(
+        assert file_exists(
             "TNS_App/node_modules/hello/platforms/ios/include/HelloLib/Hello.h")
 
-        output = runAUT("cat TNS_App/package.json")
+        output = run_aut("cat TNS_App/package.json")
         assert "static-lib/hello-plugin" in output
 
         platform_add(
@@ -49,13 +49,13 @@ class Plugins_OSX_Libs(unittest.TestCase):
             framework_path=iosRuntimeSymlinkPath,
             path="TNS_App",
             symlink=True)
-        output = Build(platform="ios", path="TNS_App")
+        output = build(platform="ios", path="TNS_App")
         assert "The iOS Deployment Target is now 8.0" not in output
-        assert FileExists(
+        assert file_exists(
             "TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
-        assert FileExists(
+        assert file_exists(
             "TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/hello-plugin.js")
-        output = runAUT(
+        output = run_aut(
             "cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
         assert "HelloLib.a in Frameworks" in output
 
@@ -66,30 +66,30 @@ class Plugins_OSX_Libs(unittest.TestCase):
             framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " plugin add QA-TestApps/static-lib/hello-plugin --path TNS_App")
         assert "TNS_App/node_modules/hello" in output
         assert "Successfully installed plugin hello." in output
-        assert FileExists("TNS_App/node_modules/hello/package.json")
-        assert FileExists("TNS_App/node_modules/hello/hello-plugin.ios.js")
-        assert FileExists(
+        assert file_exists("TNS_App/node_modules/hello/package.json")
+        assert file_exists("TNS_App/node_modules/hello/hello-plugin.ios.js")
+        assert file_exists(
             "TNS_App/node_modules/hello/platforms/ios/HelloLib.a")
-        assert FileExists(
+        assert file_exists(
             "TNS_App/node_modules/hello/platforms/ios/include/HelloLib/Bye.h")
-        assert FileExists(
+        assert file_exists(
             "TNS_App/node_modules/hello/platforms/ios/include/HelloLib/Hello.h")
 
-        output = runAUT("cat TNS_App/package.json")
+        output = run_aut("cat TNS_App/package.json")
         assert "static-lib/hello-plugin" in output
 
-        output = Build(platform="ios", path="TNS_App")
+        output = build(platform="ios", path="TNS_App")
         assert "The iOS Deployment Target is now 8.0" not in output
-        assert FileExists(
+        assert file_exists(
             "TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
-        assert FileExists(
+        assert file_exists(
             "TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/hello-plugin.js")
-        output = runAUT(
+        output = run_aut(
             "cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
         assert "HelloLib.a in Frameworks" in output
 
@@ -100,12 +100,12 @@ class Plugins_OSX_Libs(unittest.TestCase):
             framework_path=iosRuntimeSymlinkPath,
             symlink=True)
 
-        output = runAUT(
+        output = run_aut(
             tnsPath +
             " plugin add QA-TestApps/static-lib/bye-plugin --path TNS_App")
         assert "TNS_App/node_modules/bye" in output
 
-        output = Prepare(platform="ios", path="TNS_App", assertSuccess=False)
+        output = prepare(platform="ios", path="TNS_App", assertSuccess=False)
         assert "The static library at" in output
         assert "ByeLib.a is not built for one or more of the following required architectures:" in output
         assert "armv7, arm64, i386." in output

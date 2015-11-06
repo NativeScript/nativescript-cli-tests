@@ -4,7 +4,7 @@ Test redirecting error log
 import os
 import unittest
 
-from helpers._os_lib import remove, runAUT
+from helpers._os_lib import remove, run_aut
 from helpers._tns_lib import tnsPath
 
 # C0103 - Invalid %s name "%s"
@@ -28,9 +28,9 @@ class Output_STRERR(unittest.TestCase):
 
     def test_001_output_strerr(self):
         os.system(tnsPath + " emulate asdf 2>stderr.txt")
-        output = runAUT("cat stderr.txt")
+        output = run_aut("cat stderr.txt")
         assert "The input is not valid sub-command for 'emulate' command" in output
 
     def test_002_command_option_validation(self):
-        output = runAUT(tnsPath + " create tns-app --Copy-From tns-app")
+        output = run_aut(tnsPath + " create tns-app --Copy-From tns-app")
         assert "The option 'Copy-From' is not supported. " in output

@@ -2,7 +2,7 @@
 Test for Android debugger
 '''
 import unittest
-from helpers._os_lib import CleanupFolder
+from helpers._os_lib import cleanup_folder
 
 # C0111 - Missing docstring
 # R0201 - Method could be a function
@@ -18,7 +18,7 @@ class DebugAndroid(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_App')
+        cleanup_folder('./TNS_App')
 
     def tearDown(self):
         pass

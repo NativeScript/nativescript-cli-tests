@@ -3,7 +3,7 @@ LogTrace tests
 '''
 import unittest
 
-from helpers._os_lib import CleanupFolder, runAUT
+from helpers._os_lib import cleanup_folder, run_aut
 from helpers._tns_lib import create_project, tnsPath
 
 # C0103 - Invalid %s name "%s"
@@ -22,13 +22,13 @@ class LogTrace(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_App')
+        cleanup_folder('./TNS_App')
 
     def tearDown(self):
         pass
 
     def test_001_create_project_logtrace(self):
-        output = runAUT(tnsPath + " create TNS_App --log trace")
+        output = run_aut(tnsPath + " create TNS_App --log trace")
         assert "Creating a new NativeScript project with name TNS_App" in output
         assert "id org.nativescript.TNSApp at location" in output
         assert "Using NativeScript hello world application" in output
@@ -37,7 +37,7 @@ class LogTrace(unittest.TestCase):
 
     def test_002_platform_add_logtrace(self):
         create_project(proj_name="TNS_App")
-        output = runAUT(tnsPath + " platform add android --path TNS_App --log trace")
+        output = run_aut(tnsPath + " platform add android --path TNS_App --log trace")
         assert "Looking for project in" in output
         assert "Project directory is" in output
         assert "Package: org.nativescript.TNSApp" in output

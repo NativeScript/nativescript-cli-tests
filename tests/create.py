@@ -4,8 +4,8 @@ Test for create command
 import unittest
 import fileinput
 
-from helpers._os_lib import CleanupFolder, CheckFilesExists, FileExists, FolderExists, \
-    IsEmpty, runAUT
+from helpers._os_lib import cleanup_folder, check_file_exists, file_exists, folder_exists, \
+    is_empty, run_aut
 from helpers._tns_lib import create_project, tnsPath
 
 # C0103 - Invalid %s name "%s"
@@ -17,11 +17,11 @@ class Create(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        CleanupFolder('./app')
-        CleanupFolder('./123')
-        CleanupFolder('./folder')
-        CleanupFolder('./tns-app')
-        CleanupFolder('./TNS App')
+        cleanup_folder('./app')
+        cleanup_folder('./123')
+        cleanup_folder('./folder')
+        cleanup_folder('./tns-app')
+        cleanup_folder('./TNS App')
 
     def setUp(self):
 
@@ -31,62 +31,62 @@ class Create(unittest.TestCase):
         print "#####"
         print ""
 
-        CleanupFolder('./TNS_App')
-        CleanupFolder('./template')
+        cleanup_folder('./TNS_App')
+        cleanup_folder('./template')
 
     def tearDown(self):
-        CleanupFolder('./TNS_App')
-        CleanupFolder('./template')
+        cleanup_folder('./TNS_App')
+        cleanup_folder('./template')
 
     @classmethod
     def tearDownClass(cls):
-        CleanupFolder('./app')
-        CleanupFolder('./123')
-        CleanupFolder('./folder')
-        CleanupFolder('./tns-app')
-        CleanupFolder('./TNS App')
+        cleanup_folder('./app')
+        cleanup_folder('./123')
+        cleanup_folder('./folder')
+        cleanup_folder('./tns-app')
+        cleanup_folder('./TNS App')
 
     def test_001_create_project(self):
         create_project(proj_name="TNS_App")
 
-        assert IsEmpty("TNS_App/platforms")
-        assert not FolderExists("TNS_App/app/tns_modules")
+        assert is_empty("TNS_App/platforms")
+        assert not folder_exists("TNS_App/app/tns_modules")
 
-        output = runAUT("cat TNS_App/package.json")
+        output = run_aut("cat TNS_App/package.json")
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
         assert "\"tns-core-modules\": \"1." in output
 
-        assert FileExists("TNS_App/node_modules/tns-core-modules/package.json")
-        assert FileExists("TNS_App/node_modules/tns-core-modules/LICENSE")
-        assert FileExists("TNS_App/node_modules/tns-core-modules/xml/xml.js")
+        assert file_exists("TNS_App/node_modules/tns-core-modules/package.json")
+        assert file_exists("TNS_App/node_modules/tns-core-modules/LICENSE")
+        assert file_exists("TNS_App/node_modules/tns-core-modules/xml/xml.js")
 
-        assert CheckFilesExists(
+        assert check_file_exists(
             "TNS_App", "template_javascript_files_1.2.0.txt")
 
     def test_002_create_project_with_path(self):
         create_project(proj_name="TNS_App", path='folder/subfolder/')
 
-        assert IsEmpty("folder/subfolder/TNS_App/platforms")
-        assert not FolderExists("folder/subfolder/TNS_App/app/tns_modules")
+        assert is_empty("folder/subfolder/TNS_App/platforms")
+        assert not folder_exists("folder/subfolder/TNS_App/app/tns_modules")
 
-        output = runAUT("cat folder/subfolder/TNS_App/package.json")
+        output = run_aut("cat folder/subfolder/TNS_App/package.json")
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
         assert "\"tns-core-modules\": \"1." in output
 
-        assert FileExists(
+        assert file_exists(
             "folder/subfolder/TNS_App/node_modules/tns-core-modules/package.json")
-        assert FileExists(
+        assert file_exists(
             "folder/subfolder/TNS_App/node_modules/tns-core-modules/LICENSE")
-        assert FileExists(
+        assert file_exists(
             "folder/subfolder/TNS_App/node_modules/tns-core-modules/xml/xml.js")
 
-        assert CheckFilesExists(
+        assert check_file_exists(
             'folder/subfolder/TNS_App',
             'template_javascript_files_1.2.0.txt')
 
     def test_003_create_project_with_appid(self):
         create_project(proj_name="TNS_App", app_id="org.nativescript.MyApp")
-        output = runAUT("cat TNS_App/package.json")
+        output = run_aut("cat TNS_App/package.json")
         assert "\"id\": \"org.nativescript.MyApp\"" in output
 
     def test_004_create_project_with_copyfrom(self):
@@ -101,38 +101,38 @@ class Create(unittest.TestCase):
         create_project(proj_name="TNS_App", copy_from="template/app")
 
         # Verify new project corresponds to name of the new project
-        output = runAUT("cat TNS_App/package.json")
+        output = run_aut("cat TNS_App/package.json")
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
 
         # Verify that content of the new project is based on first project
-        output = runAUT("cat TNS_App/app/LICENSE")
+        output = run_aut("cat TNS_App/app/LICENSE")
         assert not "Copyright (c) 2015, Telerik AD" in output
         assert "Copyright (c) 2015, Telerik A D" in output
 
     def test_005_create_project_with_space(self):
         create_project(proj_name="\"TNS App\"")
-        output = runAUT("cat \"TNS App/package.json\"")
+        output = run_aut("cat \"TNS App/package.json\"")
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
 
     def test_006_create_project_with_dash(self):
         create_project(proj_name="\"tns-app\"")
-        output = runAUT("cat \"tns-app/package.json\"")
+        output = run_aut("cat \"tns-app/package.json\"")
         assert "\"id\": \"org.nativescript.tnsapp\"" in output
 
     def test_007_create_project_named_123(self):
         create_project(proj_name="123")
-        output = runAUT("cat 123/package.json")
+        output = run_aut("cat 123/package.json")
         assert "\"id\": \"org.nativescript.the123\"" in output
 
     def test_008_create_project_named_app(self):
         output = create_project(proj_name="app")
         assert "You cannot build applications named 'app' in Xcode." in output
 
-        output = runAUT("cat app/package.json")
+        output = run_aut("cat app/package.json")
         assert "\"id\": \"org.nativescript.app\"" in output
 
     def test_400_create_project_with_copyfrom_wrong_path(self):
-        output = runAUT(tnsPath + " create TNS_App --copy-from invalidFolder")
+        output = run_aut(tnsPath + " create TNS_App --copy-from invalidFolder")
         assert not "successfully created" in output
 
         assert "The specified path" in output
@@ -140,7 +140,7 @@ class Create(unittest.TestCase):
 
     def test_401_create_project_in_folder_with_existing_project(self):
         create_project(proj_name="TNS_App")
-        output = runAUT(tnsPath + " create TNS_App")
+        output = run_aut(tnsPath + " create TNS_App")
         assert not "successfully created" in output
         assert "Path already exists and is not empty" in output
 
@@ -148,11 +148,11 @@ class Create(unittest.TestCase):
         # Create initial template project
         create_project(proj_name="template")
 
-        output = runAUT(tnsPath + " create TNS_App -copy-from template")
+        output = run_aut(tnsPath + " create TNS_App -copy-from template")
         assert not "successfully created" in output
         assert "To see command's options, use '$ tns help create'" in output
 
     def test_403_create_project_with_no_name(self):
-        output = runAUT(tnsPath + " create")
+        output = run_aut(tnsPath + " create")
         assert "You need to provide all the required parameters." in output
         assert "# create" in output

@@ -4,10 +4,10 @@ Test for iOS debugger
 from time import sleep
 import unittest
 
-from helpers._os_lib import CleanupFolder, runAUT, KillProcess, uninstall_app
+from helpers._os_lib import cleanup_folder, run_aut, kill_process, uninstall_app
 from helpers._tns_lib import create_project_add_platform, iosRuntimeSymlinkPath, \
     tnsPath
-from helpers.device import GivenRealDeviceRunning, StopSimulators
+from helpers.device import given_real_device, stop_simulators
 
 # C0111 - Missing docstring
 # R0201 - Method could be a function
@@ -17,7 +17,7 @@ class DebugiOS(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        CleanupFolder('./TNS_App')
+        cleanup_folder('./TNS_App')
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -27,25 +27,25 @@ class DebugiOS(unittest.TestCase):
 
         print ""
 
-        GivenRealDeviceRunning(platform="ios")
+        given_real_device(platform="ios")
 
-        StopSimulators()
-        KillProcess("Safari")
-        KillProcess("Inspector")
+        stop_simulators()
+        kill_process("Safari")
+        kill_process("Inspector")
         uninstall_app("TNSApp", platform="ios", fail=False)
 
     def tearDown(self):
-        StopSimulators()
-        KillProcess("Safari")
-        KillProcess("Inspector")
+        stop_simulators()
+        kill_process("Safari")
+        kill_process("Inspector")
 
     @classmethod
     def tearDownClass(cls):
-        CleanupFolder('./TNS_App')
+        cleanup_folder('./TNS_App')
 
     def test_001_debug_ios_simulator_debugbrk(self):
 
-        output = runAUT(tnsPath +
+        output = run_aut(tnsPath +
                         " debug ios --debug-brk --emulator --path TNS_App --frameworkPath " +
                         iosRuntimeSymlinkPath, 2 * 60, True)
 
@@ -61,13 +61,13 @@ class DebugiOS(unittest.TestCase):
 
     def test_002_debug_ios_simulator_start(self):
 
-        output = runAUT(tnsPath + " emulate ios --path TNS_App --justlaunch")
+        output = run_aut(tnsPath + " emulate ios --path TNS_App --justlaunch")
         assert "** BUILD SUCCEEDED **" in output
         assert "Starting iOS Simulator" in output
         assert "Session started without errors" in output
         sleep(10)
 
-        output = runAUT(tnsPath +
+        output = run_aut(tnsPath +
             " debug ios --start --emulator --path TNS_App --frameworkPath " +
             iosRuntimeSymlinkPath, 2 * 60, True)
 
@@ -82,7 +82,7 @@ class DebugiOS(unittest.TestCase):
 
     def test_003_debug_ios_device_debugbrk(self):
 
-        output = runAUT(tnsPath +
+        output = run_aut(tnsPath +
             " debug ios --debug-brk --path TNS_App --timeout 120 --frameworkPath " +
             iosRuntimeSymlinkPath, 2 * 60 + 30, True)
 
@@ -101,11 +101,11 @@ class DebugiOS(unittest.TestCase):
 
     def test_004_debug_ios_device_start(self):
 
-        output = runAUT(tnsPath + " run ios --path TNS_App --justlaunch")
+        output = run_aut(tnsPath + " run ios --path TNS_App --justlaunch")
         assert "** BUILD SUCCEEDED **" in output
         assert "Successfully deployed on device " in output
         sleep(10)
-        output = runAUT(tnsPath +
+        output = run_aut(tnsPath +
             " debug ios --start --path TNS_App --timeout 120 --frameworkPath " +
             iosRuntimeSymlinkPath, 2 * 60, True)
 
