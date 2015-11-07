@@ -2,7 +2,7 @@
 *.pyc
 output.txt
 Report.*
-node_modules
+/node_modules
 *.tgz
 TNS*
 TestApp*
@@ -11,7 +11,7 @@ setup*
 tns-android
 tns-ios
 tns-core
-tns_modules
+/tns_modules
 template
 deviceLog.txt
 template-hello-world
