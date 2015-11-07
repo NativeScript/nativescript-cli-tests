@@ -1,13 +1,18 @@
+'''
+Test for library command in context of iOS
+'''
 import unittest
 
 from helpers._os_lib import cleanup_folder, check_file_exists, folder_exists, run_aut
 from helpers._tns_lib import IOS_RUNTIME_PATH, \
     build, create_project, platform_add, library_add
 
-# pylint: disable=R0201, C0111
-
-
-class Library_OSX(unittest.TestCase):
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=C0103, C0111, R0201, R0904
+class LibraryiOS(unittest.TestCase):
 
     def setUp(self):
 
@@ -22,7 +27,7 @@ class Library_OSX(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_Library_Add_iOS_Framework(self):
+    def test_001_library_add_ios_Framework(self):
         create_project(proj_name="TNS_App")
         platform_add(
             platform="ios",
@@ -46,7 +51,7 @@ class Library_OSX(unittest.TestCase):
         assert "/TelerikUI.framework" in output
         assert not "TNS_App/lib/iOS/TelerikUI.framework" in output
 
-    def test_401_Library_Add_iOS_NoLib(self):
+    def test_401_library_add_ios_NoLib(self):
         create_project(proj_name="TNS_App")
         platform_add(
             platform="ios",

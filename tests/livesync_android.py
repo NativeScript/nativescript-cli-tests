@@ -1,3 +1,6 @@
+'''
+Test for livesync command in context of Android devices
+'''
 import os
 import shutil
 import time
@@ -9,10 +12,12 @@ from helpers._tns_lib import ANDROID_RUNTIME_PATH, \
 from helpers.device import given_real_device, \
     stop_emulators, stop_simulators, get_physical_device_id
 
-# pylint: disable=R0201, C0111
-
-
-class LiveSync_Android(unittest.TestCase):
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=C0103, C0111, R0201, R0904
+class LiveSyncAndroid(unittest.TestCase):
 
     # LiveSync Tests on Android Device
 
@@ -40,7 +45,7 @@ class LiveSync_Android(unittest.TestCase):
     def tearDownClass(cls):
         pass
 
-    def test_001_LiveSync_Android_XmlJsCss_TnsModules_Files(self):
+    def test_001_LiveSync_android_XmlJsCss_TnsModules_Files(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -76,7 +81,7 @@ class LiveSync_Android(unittest.TestCase):
 
     # This test executes the Run -> LiveSync -> Run work flow on an android
     # device with API level 21.
-    def test_002_LiveSync_Android_Device_XmlFile_run(self):
+    def test_002_LiveSync_android_device_XmlFile_run(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -96,7 +101,7 @@ class LiveSync_Android(unittest.TestCase):
         output = cat_app_file("android", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"RUN\" tap=\"{{ tapAction }}\" />" in output
 
-    def test_201_LiveSync_Android_AddNewFiles(self):
+    def test_201_LiveSync_android_addNewFiles(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -125,11 +130,11 @@ class LiveSync_Android(unittest.TestCase):
         assert "HelloWorldModel.prototype.tapAction" in output
 
     @unittest.skip("TODO: Not implemented.")
-    def test_202_LiveSync_Android_DeleteFiles(self):
+    def test_202_LiveSync_android_DeleteFiles(self):
         pass
 
     @unittest.skip("TODO: Implement this test.")
-    def test_203_LiveSync_Android_Watch(self):
+    def test_203_LiveSync_android_Watch(self):
         pass
 
     def test_301_LiveSync_Beforerun(self):
@@ -145,7 +150,7 @@ class LiveSync_Android(unittest.TestCase):
         assert "Multiple device platforms detected (iOS and Android). Specify platform or device on command line" in output
 
     @unittest.skip("TODO: Implement this test..")
-    def test_302_LiveSync_Android_MultipleDevice(self):
+    def test_302_LiveSync_android_MultipleDevice(self):
         pass
 
     # TODO:

@@ -10,7 +10,8 @@ from helpers._tns_lib import TNSPATH
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function
-# pylint: disable=C0103, C0111, R0201
+# R0904 - Too many public methods
+# pylint: disable=C0103, C0111, R0201, R0904
 class Output_STRERR(unittest.TestCase):
 
     def setUp(self):

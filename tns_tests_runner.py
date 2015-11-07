@@ -21,11 +21,11 @@ from tests.doctor import Doctor
 from tests.emulate_linux import EmulateAndroid
 from tests.emulate_osx import EmulateiOS
 from tests.initinstall import InitAndInstall
-from tests.library_linux import Library_Linux
-from tests.library_osx import Library_OSX
-from tests.livesync_android import LiveSync_Android
-from tests.livesync_emulator import LiveSync_Emulator
-from tests.livesync_ios import LiveSync_iOS
+from tests.library_linux import LibraryAndroid
+from tests.library_osx import LibraryiOS
+from tests.livesync_android import LiveSyncAndroid
+from tests.livesync_emulator import LiveSyncEmulator
+from tests.livesync_ios import LiveSynciOS
 from tests.logtrace import LogTrace
 from tests.output_stderr import Output_STRERR
 from tests.platform_linux import PlatformAndroid
@@ -108,11 +108,11 @@ def run_tests():
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_Linux))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Emulator))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryAndroid))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
         if 'Darwin' in platform.platform():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateiOS))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Library_OSX))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryiOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Pods))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Libs))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Xcconfig))
@@ -126,8 +126,8 @@ def run_tests():
         if 'Darwin' in platform.platform():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeployiOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_OSX))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_Android))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSync_iOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceiOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
 

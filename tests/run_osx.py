@@ -1,3 +1,6 @@
+'''
+Tests for run command in context of iOS
+'''
 import os, unittest
 
 from helpers._os_lib import cleanup_folder, run_aut, is_running_process
@@ -5,9 +8,11 @@ from helpers._tns_lib import create_project, create_project_add_platform, \
     IOS_RUNTIME_SYMLINK_PATH, TNSPATH
 from helpers.device import given_real_device, stop_simulators
 
-# pylint: disable=R0201, C0111
-
-
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=C0103, C0111, R0201, R0904
 class Run_OSX(unittest.TestCase):
 
     @classmethod

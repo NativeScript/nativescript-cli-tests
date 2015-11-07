@@ -1,3 +1,6 @@
+'''
+Test for livesync command in context of iOS simulators
+'''
 import subprocess
 import time
 import unittest
@@ -6,12 +9,16 @@ import psutil
 
 from helpers._os_lib import cleanup_folder, replace, cat_app_file
 from helpers._tns_lib import ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH, \
-    create_project_add_platform, LiveSync, Run
+    create_project_add_platform, live_sync, run
 from helpers.device import given_real_device, get_physical_device_id
 
 
-# pylint: disable=R0201, C0111
-class LiveSync_Simulator(unittest.TestCase):
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=C0103, C0111, R0201, R0904
+class LiveSyncSimulator(unittest.TestCase):
 
     def setUp(self):
 
@@ -28,7 +35,7 @@ class LiveSync_Simulator(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_LiveSync_iOS(self):
+    def test_001_LiveSync_ios(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -41,7 +48,7 @@ class LiveSync_Simulator(unittest.TestCase):
         output = cat_app_file("ios", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
 
-    def test_002_LiveSync_iOS_Device(self):
+    def test_002_LiveSync_ios_device(self):
         device_id = get_physical_device_id(platform="ios")
         create_project_add_platform(
             proj_name="TNS_App",
@@ -56,7 +63,7 @@ class LiveSync_Simulator(unittest.TestCase):
         assert "this.set(\"message\", this.counter + \" clicks left\");" in output
 
     @unittest.skip("TODO: Fix.")
-    def test_003_LiveSync_iOS_Watch(self):
+    def test_003_LiveSync_ios_Watch(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -99,7 +106,7 @@ class LiveSync_Simulator(unittest.TestCase):
             pr.kill()
 
     @unittest.skip("Fix LiveSync for Android device.")
-    def test_101_LiveSync_Android(self):
+    def test_101_LiveSync_android(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -113,7 +120,7 @@ class LiveSync_Simulator(unittest.TestCase):
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
 
     @unittest.skip("Fix LiveSync for Android device.")
-    def test_102_LiveSync_Android_Device(self):
+    def test_102_LiveSync_android_device(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -127,7 +134,7 @@ class LiveSync_Simulator(unittest.TestCase):
         assert "this.set(\"message\", this.counter + \" clicks left\");" in output
 
     @unittest.skip("Fix LiveSync for Android device.")
-    def test_103_LiveSync_Android_Watch(self):
+    def test_103_LiveSync_android_Watch(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",

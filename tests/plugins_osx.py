@@ -1,3 +1,6 @@
+'''
+Test for plugin* commands in context of iOS
+'''
 import os
 import platform
 import unittest
@@ -7,9 +10,11 @@ from helpers._tns_lib import create_project_add_platform, IOS_RUNTIME_PATH, \
     TNSPATH, create_project, ANDROID_RUNTIME_PATH, platform_add, build, \
     IOS_RUNTIME_SYMLINK_PATH, ANDROID_RUNTIME_SYMLINK_PATH
 
-# pylint: disable=R0201, C0111
-
-
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=C0103, C0111, R0201, R0904
 class Plugins_OSX(unittest.TestCase):
 
     def setUp(self):
@@ -27,7 +32,7 @@ class Plugins_OSX(unittest.TestCase):
     def tearDown(self):
         cleanup_folder('./TNS_App')
 
-    def test_001_PluginAdd_Before_platform_add_iOS(self):
+    def test_001_plugin_add_Before_platform_add_ios(self):
         create_project(proj_name="TNS_App")
         output = run_aut(TNSPATH + " plugin add tns-plugin --path TNS_App")
         assert "TNS_App/node_modules/tns-plugin" in output
@@ -39,7 +44,7 @@ class Plugins_OSX(unittest.TestCase):
         assert "dependencies" in output
         assert "tns-plugin" in output
 
-    def test_002_PluginAdd_After_platform_add_iOS(self):
+    def test_002_plugin_add_After_platform_add_ios(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -55,7 +60,7 @@ class Plugins_OSX(unittest.TestCase):
         assert "dependencies" in output
         assert "tns-plugin" in output
 
-    def test_201_PluginAdd_Before_platform_add_iOS(self):
+    def test_201_plugin_add_Before_platform_add_ios(self):
         create_project(proj_name="TNS_App")
         output = run_aut(
             TNSPATH +
@@ -80,7 +85,7 @@ class Plugins_OSX(unittest.TestCase):
             path="TNS_App")
         build(platform="ios", path="TNS_App")
 
-    def test_202_PluginAdd_After_platform_add_iOS(self):
+    def test_202_plugin_add_After_platform_add_ios(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -104,7 +109,7 @@ class Plugins_OSX(unittest.TestCase):
         assert "nativescript-telerik-ui" in output
         build(platform="ios", path="TNS_App")
 
-    def test_203_PluginAdd_InsideProject(self):
+    def test_203_plugin_add_InsideProject(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -122,7 +127,7 @@ class Plugins_OSX(unittest.TestCase):
         assert "dependencies" in output
         assert "tns-plugin" in output
 
-    def test_204_BuildAppWithPluginInsideProject(self):
+    def test_204_buildAppWithPluginInsideProject(self):
 
         create_project_add_platform(
             proj_name="TNS_App",
@@ -142,7 +147,7 @@ class Plugins_OSX(unittest.TestCase):
         assert not "ERROR" in output
         assert not "malformed" in output
 
-    def test_300_BuildAppWithPluginOutside(self):
+    def test_300_buildAppWithPluginOutside(self):
 
         create_project_add_platform(
             proj_name="TNS_App",
@@ -159,7 +164,7 @@ class Plugins_OSX(unittest.TestCase):
         assert not "ERROR" in output
         assert not "malformed" in output
 
-    def test_301_BuildAppForBothPlatforms(self):
+    def test_301_buildAppForBothPlatforms(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -267,13 +272,13 @@ class Plugins_OSX(unittest.TestCase):
         assert not file_exists(
             "TNS_App/platforms/android/src/main/assets/app/tns_modules/nativescript-appversion/appversion.ios.js")
 
-    def test_401_PluginAdd_InvalidPlugin(self):
+    def test_401_plugin_add_invalid_plugin(self):
         create_project(proj_name="TNS_App")
         output = run_aut(TNSPATH + " plugin add wd --path TNS_App")
         assert "wd is not a valid NativeScript plugin" in output
         assert "Verify that the plugin package.json file contains a nativescript key and try again" in output
 
-    def test_403_PluginAdd_PluginNotSupportedOnSpecificPlatform(self):
+    def test_403_plugin_add_PluginNotSupportedOnSpecificPlatform(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",

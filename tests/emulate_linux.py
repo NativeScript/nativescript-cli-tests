@@ -1,3 +1,6 @@
+'''
+Test for emulate command in context of Android
+'''
 import os
 import unittest
 
@@ -18,10 +21,7 @@ class EmulateAndroid(unittest.TestCase):
     def setUpClass(cls):
         cleanup_folder('./TNSAppNoPlatform')
         cleanup_folder('./TNS_App')
-        create_project_add_platform(
-            proj_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
+        create_project_add_platform(proj_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
 
     def setUp(self):
 

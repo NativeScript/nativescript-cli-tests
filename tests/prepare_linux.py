@@ -1,5 +1,5 @@
 '''
-Tests for building projects with the Android platform
+Tests for prepare command in context of Android
 '''
 import unittest
 import os
@@ -28,7 +28,7 @@ class PrepareAndroid(unittest.TestCase):
     def tearDown(self):
         cleanup_folder('./TNS_App')
 
-    def test_001_prepare_Android(self):
+    def test_001_prepare_android(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -46,7 +46,7 @@ class PrepareAndroid(unittest.TestCase):
         assert not file_exists(
             'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.ios.js')
 
-    def test_002_prepare_Android_InsideProject(self):
+    def test_002_prepare_android_InsideProject(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -67,7 +67,7 @@ class PrepareAndroid(unittest.TestCase):
         assert not file_exists(
             'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.ios.js')
 
-    def test_010_prepare_Android_TnsCoreModules(self):
+    def test_010_prepare_android_TnsCoreModules(self):
         create_project(
             proj_name="TNS_App",
             copy_from="QA-TestApps/tns-modules-app/app")
@@ -108,7 +108,7 @@ class PrepareAndroid(unittest.TestCase):
                 "cat TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application-common.js")
             assert "require(\"globals\"); // test" in output
 
-    def test_210_prepare_Android_PlatformNotAdded(self):
+    def test_210_prepare_android_patform_not_added(self):
         create_project(proj_name="TNS_App")
         output = run_aut(TNSPATH + " prepare android --path TNS_App")
         assert "Copying template files..." in output
@@ -117,7 +117,7 @@ class PrepareAndroid(unittest.TestCase):
         assert file_exists(
             'TNS_App/platforms/android/src/main/assets/app/tns_modules/xml/xml.js')
 
-    def test_300_prepare_Android_RemoveOldFiles(self):
+    def test_300_prepare_android_RemoveOldFiles(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -152,7 +152,7 @@ class PrepareAndroid(unittest.TestCase):
         assert not file_exists(
             'TNS_App/platforms/android/src/main/assets/app/main-page.xml')
 
-    def test_301_prepare_Android_PlatformSpecificFiles(self):
+    def test_301_prepare_android_platformSpecificFiles(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -197,7 +197,7 @@ class PrepareAndroid(unittest.TestCase):
         output = run_aut(TNSPATH + " prepare --path TNS_App")
         assert "You need to provide all the required parameters." in output
 
-    def test_401_prepare_InvalidPlatform(self):
+    def test_401_prepare_invalid_platform(self):
         create_project(proj_name="TNS_App")
         output = run_aut(TNSPATH + " prepare windows --path TNS_App")
         assert "Invalid platform windows. Valid platforms are ios or android." in output

@@ -1,3 +1,6 @@
+'''
+Test for livesync command in context of Android emulators
+'''
 import os
 import shutil
 import time
@@ -9,10 +12,12 @@ from helpers._tns_lib import ANDROID_RUNTIME_PATH, \
 from helpers.device import given_running_emulator, \
     stop_emulators, stop_simulators
 
-# pylint: disable=R0201, C0111
-
-
-class LiveSync_Emulator(unittest.TestCase):
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=C0103, C0111, R0201, R0904
+class LiveSyncEmulator(unittest.TestCase):
 
     # LiveSync Tests on Android Emulator
     # TODO: Add tests for #942
@@ -40,7 +45,7 @@ class LiveSync_Emulator(unittest.TestCase):
     def tearDownClass(cls):
         stop_emulators()
 
-    def test_001_LiveSync_Android_XmlJsCss_TnsModules_Files(self):
+    def test_001_LiveSync_android_XmlJsCss_TnsModules_Files(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -63,24 +68,20 @@ class LiveSync_Emulator(unittest.TestCase):
             device="emulator-5554",
             path="TNS_App")
 
-        output = cat_app_file_on_emulator("android", "TNSApp", "app/main-page.xml")
+        output = cat_app_file_on_emulator("TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
-        output = cat_app_file_on_emulator(
-            "android", "TNSApp", "app/main-view-model.js")
+        output = cat_app_file_on_emulator("TNSApp", "app/main-view-model.js")
         assert "this.set(\"message\", this.counter + \" clicks left\");" in output
-        output = cat_app_file_on_emulator("android", "TNSApp", "app/app.css")
+        output = cat_app_file_on_emulator("TNSApp", "app/app.css")
         assert "font-size: 20;" in output
 
-        output = cat_app_file_on_emulator(
-            "android", "TNSApp", "app/tns_modules/LICENSE")
+        output = cat_app_file_on_emulator("TNSApp", "app/tns_modules/LICENSE")
         assert "Copyright (c) 9999 Telerik AD" in output
-        output = cat_app_file_on_emulator(
-            "android",
-            "TNSApp",
+        output = cat_app_file_on_emulator("TNSApp",
             "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output
 
-    def test_201_LiveSync_Android_AddNewFiles(self):
+    def test_201_LiveSync_android_addNewFiles(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -98,18 +99,17 @@ class LiveSync_Emulator(unittest.TestCase):
         live_sync(platform="android", device="emulator-5554", path="TNS_App")
 
         time.sleep(1)
-        output = cat_app_file_on_emulator("android", "TNSApp", "app/test.xml")
+        output = cat_app_file_on_emulator("TNSApp", "app/test.xml")
         assert "<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output
-        output = cat_app_file_on_emulator("android", "TNSApp", "app/test.js")
+        output = cat_app_file_on_emulator("TNSApp", "app/test.js")
         assert "page.bindingContext = vmModule.mainViewModel;" in output
-        output = cat_app_file_on_emulator("android", "TNSApp", "app/test.css")
+        output = cat_app_file_on_emulator("TNSApp", "app/test.css")
         assert "color: #284848;" in output
-        output = cat_app_file_on_emulator(
-            "android", "TNSApp", "app/test/main-view-model.js")
+        output = cat_app_file_on_emulator("TNSApp", "app/test/main-view-model.js")
         assert "HelloWorldModel.prototype.tapAction" in output
 
     @unittest.skip("TODO: Fix this test.")
-    def test_202_LiveSync_Android_Watch(self):
+    def test_202_LiveSync_android_Watch(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -159,5 +159,5 @@ class LiveSync_Emulator(unittest.TestCase):
         live_sync(platform="android", device="emulator-5554", path="TNS_App")
 
         time.sleep(3)
-        output = cat_app_file_on_emulator("android", "TNSApp", "app/main-page.xml")
+        output = cat_app_file_on_emulator("TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output

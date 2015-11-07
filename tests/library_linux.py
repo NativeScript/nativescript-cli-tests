@@ -1,3 +1,6 @@
+'''
+Test for library command in context of Android
+'''
 import unittest
 
 from helpers._os_lib import cleanup_folder, check_file_exists, check_output, run_aut, \
@@ -5,10 +8,12 @@ from helpers._os_lib import cleanup_folder, check_file_exists, check_output, run
 from helpers._tns_lib import ANDROID_RUNTIME_PATH, TNSPATH, \
     build, create_project, platform_add, library_add
 
-# pylint: disable=R0201, C0111
-
-
-class Library_Linux(unittest.TestCase):
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=C0103, C0111, R0201, R0904
+class LibraryAndroid(unittest.TestCase):
 
     def setUp(self):
 
@@ -23,7 +28,7 @@ class Library_Linux(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_Library_Add_Android_JarLib(self):
+    def test_001_library_add_android_JarLib(self):
         create_project(proj_name="TNS_App")
         platform_add(
             platform="android",
@@ -34,21 +39,21 @@ class Library_Linux(unittest.TestCase):
             platform="android",
             lib_path="QA-TestApps/external-lib",
             path="TNS_App")
-        assert (check_file_exists("TNS_App", "library_add_JarLib_1.4.0.txt"))
+        assert check_file_exists("TNS_App", "library_add_JarLib_1.4.0.txt")
 
         build(platform="android", path="TNS_App")
-        assert (check_file_exists("TNS_App", "library_build_JarLib_master.txt"))
+        assert check_file_exists("TNS_App", "library_build_JarLib_master.txt")
 
     # TODO: Implement this test.
     @unittest.skip("Not implemented.")
-    def test_201_Library_Add_Android_Lib(self):
+    def test_201_library_add_android_Lib(self):
         pass
 
-    def test_301_Library(self):
+    def test_301_library(self):
         output = run_aut(TNSPATH + " library")
         assert check_output(output, 'library_help_output.txt')
 
-    def test_400_Library_Add_Android_EclipseProjLib(self):
+    def test_400_library_add_android_EclipseProjLib(self):
         create_project(
             proj_name="TNS_App",
             copy_from="QA-TestApps/external-lib/external-lib-android")
@@ -63,9 +68,10 @@ class Library_Linux(unittest.TestCase):
             path="TNS_App",
             assert_success=False)
         assert "Unable to add android library" in output
-        assert "You can use `library add` command only with path to folder containing one or more .jar files." in output
+        assert "You can use `library add` command only with " + \
+            "path to folder containing one or more .jar files." in output
 
-    def test_401_Library_Add_Android_NoLib(self):
+    def test_401_library_add_android_NoLib(self):
         create_project(
             proj_name="TNS_App",
             copy_from="QA-TestApps/external-lib/external-lib-android")
@@ -81,11 +87,12 @@ class Library_Linux(unittest.TestCase):
         assert "Invalid library path" in output
         assert not folder_exists("TNS_App/lib/Android")
 
-    def test_402_Library_Add_NoPlatform(self):
+    def test_402_library_add_NoPlatform(self):
         create_project(proj_name="TNS_App")
         output = run_aut(
             TNSPATH +
             " library add android QA-TestApps/ --path TNS_App")
 
-        assert "The platform android is not added to this project. Please use 'tns platform add <platform>'" in output
+        assert "The platform android is not added to this project. " + \
+            "Please use 'tns platform add <platform>'" in output
         assert not file_exists("TNS_App/lib/Android/java-project.jar")

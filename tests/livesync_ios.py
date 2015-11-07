@@ -1,3 +1,6 @@
+'''
+Test for livesync command in context of iOS devices
+'''
 import os
 import shutil
 import unittest
@@ -8,10 +11,12 @@ from helpers._tns_lib import IOS_RUNTIME_PATH, \
 from helpers.device import given_real_device, \
     stop_emulators, stop_simulators, get_physical_device_id
 
-# pylint: disable=R0201, C0111
-
-
-class LiveSync_iOS(unittest.TestCase):
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=C0103, C0111, R0201, R0904
+class LiveSynciOS(unittest.TestCase):
 
     # LiveSync Tests on iOS Device
 
@@ -40,7 +45,7 @@ class LiveSync_iOS(unittest.TestCase):
     def tearDownClass(cls):
         uninstall_app("TNSApp", platform="ios", fail=False)
 
-    def test_001_LiveSync_iOS_XmlJsCss_TnsModules_Files(self):
+    def test_001_LiveSync_ios_XmlJsCss_TnsModules_Files(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -74,7 +79,7 @@ class LiveSync_iOS(unittest.TestCase):
             "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output
 
-    def test_002_LiveSync_iOS_Device_XmlFile(self):
+    def test_002_LiveSync_ios_device_XmlFile(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -94,7 +99,7 @@ class LiveSync_iOS(unittest.TestCase):
 #         output = cat_app_file("ios", "TNSApp", "app/main-view-model.js")
 #         assert "this.set(\"message\", this.counter + \" runs left\");" in output
 
-    def test_201_LiveSync_iOS_AddNewFiles(self):
+    def test_201_LiveSync_ios_addNewFiles(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -122,9 +127,9 @@ class LiveSync_iOS(unittest.TestCase):
         assert "HelloWorldModel.prototype.tapAction" in output
 
     @unittest.skip("TODO: Not implemented.")
-    def test_202_LiveSync_iOS_DeleteFiles(self):
+    def test_202_LiveSync_ios_DeleteFiles(self):
         pass
 
     @unittest.skip("TODO: Implement this test.")
-    def test_203_LiveSync_iOS_Watch(self):
+    def test_203_LiveSync_ios_Watch(self):
         pass

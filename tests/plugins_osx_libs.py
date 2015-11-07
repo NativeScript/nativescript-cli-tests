@@ -1,12 +1,17 @@
+'''
+Test for plugin* commands in context of iOS
+'''
 import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut, file_exists
 from helpers._tns_lib import build, IOS_RUNTIME_SYMLINK_PATH, \
     TNSPATH, create_project, platform_add, prepare, create_project_add_platform
 
-# pylint: disable=R0201, C0111
-
-
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=C0103, C0111, R0201, R0904
 class Plugins_OSX_Libs(unittest.TestCase):
 
     def setUp(self):
@@ -24,7 +29,7 @@ class Plugins_OSX_Libs(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_201_PluginAdd_StaticLib_Universal_Before_platform_add_iOS(self):
+    def test_201_plugin_add_StaticLib_Universal_Before_platform_add_ios(self):
         create_project(proj_name="TNS_App")
 
         output = run_aut(
@@ -59,7 +64,7 @@ class Plugins_OSX_Libs(unittest.TestCase):
             "cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
         assert "HelloLib.a in Frameworks" in output
 
-    def test_202_PluginAdd_StaticLib_Universal_After_platform_add_iOS(self):
+    def test_202_plugin_add_StaticLib_Universal_After_platform_add_ios(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -93,7 +98,7 @@ class Plugins_OSX_Libs(unittest.TestCase):
             "cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
         assert "HelloLib.a in Frameworks" in output
 
-    def test_401_PluginAdd_StaticLib_NonUniversal(self):
+    def test_401_plugin_add_StaticLib_NonUniversal(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",

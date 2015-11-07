@@ -1,3 +1,6 @@
+'''
+Tests for run command in context of Android
+'''
 import os
 import unittest
 
@@ -7,9 +10,11 @@ from helpers._tns_lib import create_project, create_project_add_platform, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, ANDROID_RUNTIME_PATH
 from helpers.device import given_running_emulator, given_real_device
 
-# pylint: disable=R0201, C0111
-
-
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=C0103, C0111, R0201, R0904
 class Run_Linux(unittest.TestCase):
 
     @classmethod
@@ -42,7 +47,7 @@ class Run_Linux(unittest.TestCase):
         cleanup_folder('./TNS_App')
         cleanup_folder('./TNS_App_NoPlatform')
 
-    def test_001_Run_Android(self):
+    def test_001_run_android(self):
         output = run_aut(TNSPATH + " run android --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -50,7 +55,7 @@ class Run_Linux(unittest.TestCase):
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
 
-    def test_002_Run_Android_ReleaseConfiguration(self):
+    def test_002_run_android_releaseConfiguration(self):
         output = run_aut(TNSPATH + " run android --keyStorePath " + ANDROID_KEYSTORE_PATH +
                         " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
                         " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS +
@@ -62,14 +67,14 @@ class Run_Linux(unittest.TestCase):
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
 
-    def test_003_Run_Android_Default(self):
+    def test_003_run_android_default(self):
         output = run_aut(TNSPATH + " run android --path TNS_App", 60)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
         assert "I/ActivityManager" in output
 
-    def test_200_Run_Android_InsideProject(self):
+    def test_200_run_android_InsideProject(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
         output = run_aut(os.path.join("..", TNSPATH) +
@@ -79,7 +84,7 @@ class Run_Linux(unittest.TestCase):
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
 
-    def test_201_Run_Android_device_id_RenamedProjDir(self):
+    def test_201_run_android_device_id_RenamedProjDir(self):
         run_aut("mv TNS_App appTest")
         output = run_aut(
             TNSPATH +
@@ -91,7 +96,7 @@ class Run_Linux(unittest.TestCase):
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
 
-    def test_300_Run_Android_PlatformNotAdded(self):
+    def test_300_run_android_patform_not_added(self):
         create_project(proj_name="TNS_App_NoPlatform")
         output = run_aut(
             TNSPATH +

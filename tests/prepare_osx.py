@@ -1,5 +1,5 @@
 '''
-Tests for building projects with the iOS platform
+Tests for prepare command in context of iOS
 '''
 import unittest
 
