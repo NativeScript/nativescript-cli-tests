@@ -77,7 +77,11 @@ def get_ios_runtime():
 
 def uninstall_cli():
     '''Uninstall local {N} installation'''
-    kill_process("tns")
+    try:
+        kill_process("tns")
+    except OSError as err:
+        print "Failed to kill tns processes. Error: " + err
+
     output = run_aut("npm rm nativescript")
     print output
 

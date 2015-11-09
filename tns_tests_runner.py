@@ -87,17 +87,17 @@ def run_tests():
     # Temporary ignore Help tests because of expected breaking changes
     # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))
 
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Output_STRERR))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Output_STRERR))
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor))
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PlatformAndroid))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PrepareAndroid))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildAndroid))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_Linux))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(InitAndInstall))
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PrepareAndroid))
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildAndroid))
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_Linux))
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(InitAndInstall))
     if 'Darwin' in platform.platform():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PlatformiOS))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PrepareiOS))
@@ -106,8 +106,8 @@ def run_tests():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Sandbox_Pods))
 
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
-        if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
+        #if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
+            #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryAndroid))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
         if 'Darwin' in platform.platform():

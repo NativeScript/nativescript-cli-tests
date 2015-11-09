@@ -37,7 +37,7 @@ class LibraryAndroid(unittest.TestCase):
 
         library_add(
             platform="android",
-            lib_path="QA-TestApps/external-lib",
+            lib_path="testdata/projects/external-lib-android",
             path="TNS_App")
         assert check_file_exists("TNS_App", "library_add_JarLib_1.4.0.txt")
 
