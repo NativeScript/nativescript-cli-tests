@@ -4,7 +4,7 @@ Wraper around tns commands
 import os
 import shutil
 
-from helpers._os_lib import run_aut, file_exists, extract_archive, kill_process
+from helpers._os_lib import run_aut, file_exists, extract_archive
 from time import sleep
 
 TNSPATH = os.path.join('node_modules', '.bin', 'tns')
@@ -77,11 +77,6 @@ def get_ios_runtime():
 
 def uninstall_cli():
     '''Uninstall local {N} installation'''
-    try:
-        kill_process("tns")
-    except OSError as err:
-        print "Failed to kill tns processes. Error: " + err
-
     output = run_aut("npm rm nativescript")
     print output
 
