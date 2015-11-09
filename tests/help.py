@@ -30,7 +30,7 @@ class Help(unittest.TestCase):
         assert check_output(output, 'help_output.txt')
         assert not "error" in output
 
-    def test_002_NativescriptHelp(self):
+    def test_002_nativescript_help(self):
         output = run_aut(NPATH + " help")
         assert check_output(output, 'help_output.txt')
         assert not "error" in output

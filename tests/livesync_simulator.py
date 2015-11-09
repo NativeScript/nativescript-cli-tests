@@ -35,7 +35,7 @@ class LiveSyncSimulator(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_LiveSync_ios(self):
+    def test_001_livesync_ios(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -48,7 +48,7 @@ class LiveSyncSimulator(unittest.TestCase):
         output = cat_app_file("ios", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
 
-    def test_002_LiveSync_ios_device(self):
+    def test_002_livesync_ios_device(self):
         device_id = get_physical_device_id(platform="ios")
         create_project_add_platform(
             proj_name="TNS_App",
@@ -63,7 +63,7 @@ class LiveSyncSimulator(unittest.TestCase):
         assert "this.set(\"message\", this.counter + \" clicks left\");" in output
 
     @unittest.skip("TODO: Fix.")
-    def test_003_LiveSync_ios_Watch(self):
+    def test_003_livesync_ios_watch(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -106,7 +106,7 @@ class LiveSyncSimulator(unittest.TestCase):
             pr.kill()
 
     @unittest.skip("Fix LiveSync for Android device.")
-    def test_101_LiveSync_android(self):
+    def test_101_livesync_android(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -120,7 +120,7 @@ class LiveSyncSimulator(unittest.TestCase):
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
 
     @unittest.skip("Fix LiveSync for Android device.")
-    def test_102_LiveSync_android_device(self):
+    def test_102_livesync_android_device(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -134,7 +134,7 @@ class LiveSyncSimulator(unittest.TestCase):
         assert "this.set(\"message\", this.counter + \" clicks left\");" in output
 
     @unittest.skip("Fix LiveSync for Android device.")
-    def test_103_LiveSync_android_Watch(self):
+    def test_103_livesync_android_watch(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -177,10 +177,11 @@ class LiveSyncSimulator(unittest.TestCase):
             print "force killing child ..."
             pr.kill()
 
-    def test_301_LiveSync_MultiplePlatforms(self):
+    def test_301_livesync_multiple_platforms(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
             framework_path=IOS_RUNTIME_PATH)
         output = live_sync(path="TNS_App", assert_success=False)
-        assert "Multiple device platforms detected (iOS and Android). Specify platform or device on command line" in output
+        assert "Multiple device platforms detected (iOS and Android). " + \
+            "Specify platform or device on command line" in output

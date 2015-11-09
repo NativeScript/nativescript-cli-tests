@@ -66,10 +66,10 @@ class BuildAndroid(unittest.TestCase):
         assert file_exists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
     def test_002_build_android_release(self):
-        output = run_aut(TNSPATH + " build android --keyStorePath " + ANDROID_KEYSTORE_PATH +
-                        " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
-                        " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS +
-                        " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS +
+        output = run_aut(TNSPATH + " build android --keyStorePath " + ANDROID_KEYSTORE_PATH + \
+                        " --keyStorePassword " + ANDROID_KEYSTORE_PASS + \
+                        " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + \
+                        " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS + \
                         " --release --path TNS_App")
 
         assert "Project successfully prepared" in output
@@ -83,7 +83,7 @@ class BuildAndroid(unittest.TestCase):
             print "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282"
         else:
             create_project(proj_name="TNS_AppSymlink")
-            output = platform_add(platform="android", path="TNS_AppSymlink",
+            output = platform_add(platform="android", path="TNS_AppSymlink", \
                                  framework_path=ANDROID_RUNTIME_SYMLINK_PATH, symlink=True)
             assert "Project successfully created" in output
             output = run_aut(TNSPATH + " build android --path TNS_AppSymlink")
@@ -92,7 +92,7 @@ class BuildAndroid(unittest.TestCase):
             assert "Project successfully built" in output
 
             # Verify build does not modify original manifest
-            output = run_aut("cat " + ANDROID_RUNTIME_SYMLINK_PATH +
+            output = run_aut("cat " + ANDROID_RUNTIME_SYMLINK_PATH + \
                    "/framework/src/main/AndroidManifest.xml")
             assert "__PACKAGE__" in output, \
                 "Build modify original AndroidManifest.xml, this is a problem!"
@@ -102,7 +102,7 @@ class BuildAndroid(unittest.TestCase):
     def test_200_build_android_inside_project_folder(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
-        output = run_aut(os.path.join("..", TNSPATH) +
+        output = run_aut(os.path.join("..", TNSPATH) + \
                         " build android --path TNS_App")
         os.chdir(current_dir)
         assert "Project successfully prepared" in output
@@ -242,10 +242,10 @@ class BuildAndroid(unittest.TestCase):
             " but it is not installed on your system." in output
 
     def test_320_build_release_with_copyto_option(self):
-        output = run_aut(TNSPATH + " build android --keyStorePath " + ANDROID_KEYSTORE_PATH +
-                        " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
-                        " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS +
-                        " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS +
+        output = run_aut(TNSPATH + " build android --keyStorePath " + ANDROID_KEYSTORE_PATH + \
+                        " --keyStorePassword " + ANDROID_KEYSTORE_PASS + \
+                        " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + \
+                        " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS + \
                         " --release --path TNS_App --copy-to ./")
 
         assert "Project successfully prepared" in output

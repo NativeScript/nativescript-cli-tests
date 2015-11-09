@@ -45,7 +45,7 @@ class LiveSynciOS(unittest.TestCase):
     def tearDownClass(cls):
         uninstall_app("TNSApp", platform="ios", fail=False)
 
-    def test_001_LiveSync_ios_XmlJsCss_TnsModules_Files(self):
+    def test_001_livesync_ios_xml_js_css_tnsmodules_files(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -79,7 +79,7 @@ class LiveSynciOS(unittest.TestCase):
             "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output
 
-    def test_002_LiveSync_ios_device_XmlFile(self):
+    def test_002_livesync_ios_device_xm(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -99,7 +99,7 @@ class LiveSynciOS(unittest.TestCase):
 #         output = cat_app_file("ios", "TNSApp", "app/main-view-model.js")
 #         assert "this.set(\"message\", this.counter + \" runs left\");" in output
 
-    def test_201_LiveSync_ios_addNewFiles(self):
+    def test_201_livesync_ios_add_new_files(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -127,9 +127,9 @@ class LiveSynciOS(unittest.TestCase):
         assert "HelloWorldModel.prototype.tapAction" in output
 
     @unittest.skip("TODO: Not implemented.")
-    def test_202_LiveSync_ios_DeleteFiles(self):
+    def test_202_livesync_ios_delete_files(self):
         pass
 
     @unittest.skip("TODO: Implement this test.")
-    def test_203_LiveSync_ios_Watch(self):
+    def test_203_livesync_ios_watch(self):
         pass

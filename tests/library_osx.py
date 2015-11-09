@@ -27,7 +27,7 @@ class LibraryiOS(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_library_add_ios_Framework(self):
+    def test_001_library_add_ios_framework(self):
         create_project(proj_name="TNS_App")
         platform_add(
             platform="ios",
@@ -51,7 +51,7 @@ class LibraryiOS(unittest.TestCase):
         assert "/TelerikUI.framework" in output
         assert not "TNS_App/lib/iOS/TelerikUI.framework" in output
 
-    def test_401_library_add_ios_NoLib(self):
+    def test_401_library_add_ios_no_lib(self):
         create_project(proj_name="TNS_App")
         platform_add(
             platform="ios",

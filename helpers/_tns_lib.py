@@ -101,7 +101,6 @@ def create_project(proj_name, path=None, app_id=None, copy_from=None):
     assert "Project {0} was successfully created".format(proj_name.replace("\"", "")) in output
     return output
 
-
 def platform_add(platform=None, framework_path=None, path=None, symlink=False, assert_success=True):
     '''Add platform to {N} project'''
 

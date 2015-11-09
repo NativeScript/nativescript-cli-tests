@@ -45,7 +45,7 @@ class LiveSyncAndroid(unittest.TestCase):
     def tearDownClass(cls):
         pass
 
-    def test_001_LiveSync_android_XmlJsCss_TnsModules_Files(self):
+    def test_001_livesync_android_xml_js_css_tnsmodules_files(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -81,7 +81,7 @@ class LiveSyncAndroid(unittest.TestCase):
 
     # This test executes the Run -> LiveSync -> Run work flow on an android
     # device with API level 21.
-    def test_002_LiveSync_android_device_XmlFile_run(self):
+    def test_002_livesync_android_device_xml_run(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -101,7 +101,7 @@ class LiveSyncAndroid(unittest.TestCase):
         output = cat_app_file("android", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"RUN\" tap=\"{{ tapAction }}\" />" in output
 
-    def test_201_LiveSync_android_addNewFiles(self):
+    def test_201_livesync_android_add_new_files(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -130,14 +130,14 @@ class LiveSyncAndroid(unittest.TestCase):
         assert "HelloWorldModel.prototype.tapAction" in output
 
     @unittest.skip("TODO: Not implemented.")
-    def test_202_LiveSync_android_DeleteFiles(self):
+    def test_202_livesync_android_delete_files(self):
         pass
 
     @unittest.skip("TODO: Implement this test.")
-    def test_203_LiveSync_android_Watch(self):
+    def test_203_livesync_android_watch(self):
         pass
 
-    def test_301_LiveSync_Beforerun(self):
+    def test_301_livesync_Beforerun(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -147,10 +147,11 @@ class LiveSyncAndroid(unittest.TestCase):
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         output = live_sync(path="TNS_App", assert_success=False)
 
-        assert "Multiple device platforms detected (iOS and Android). Specify platform or device on command line" in output
+        assert "Multiple device platforms detected (iOS and Android). " + \
+            "Specify platform or device on command line" in output
 
     @unittest.skip("TODO: Implement this test..")
-    def test_302_LiveSync_android_MultipleDevice(self):
+    def test_302_livesync_android_MultipleDevice(self):
         pass
 
     # TODO:

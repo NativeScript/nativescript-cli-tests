@@ -1,3 +1,7 @@
+# C0111 - Missing docstring
+# W0602 - Using global for %r but no assignment is done
+# W0603 - Using the global statement
+# pylint: disable=C0111, W0602, W0603
 """
 Entry point of functional tests
 """
@@ -13,17 +17,11 @@ import tns_tests_runner
 
 SMOKETESTRESULT = ""
 
-# C0111 - Missing docstring
-# W0603 - Using the global statement
-# pylint: disable=C0111, W0603
 def execute_tests():
     print "####RUNNING TESTS####"
     global SMOKETESTRESULT
     SMOKETESTRESULT = str(tns_tests_runner.run_tests())
 
-# C0111 - Missing docstring
-# W0602 - Using global for %r but no assignment is done
-# pylint: disable=C0111, W0602
 def analyze_result_and_exit():
     global SMOKETESTRESULT
     if not "errors=0" in SMOKETESTRESULT or not "failures=0" in SMOKETESTRESULT:
@@ -32,6 +30,12 @@ def analyze_result_and_exit():
         exit(0)
 
 if __name__ == '__main__':
+
+    # Run pylint
+    run_aut("pylint tests", write_to_file="pylint_tests.log")
+    run_aut("pylint helpers", write_to_file="pylint_helpers.log")
+    run_aut("pylint run_tests.py", write_to_file="pylint_run_tests.log")
+    run_aut("pylint tns_tests_runner.py", write_to_file="pylint_tns_tests_runner.log")
 
     # Clean NPM cache
     if 'Windows' in platform.platform():
@@ -80,11 +84,11 @@ if __name__ == '__main__':
 
     # Clone hello-world template repo
     cleanup_folder('template-hello-world')
-    OUTPUT = run_aut('git clone '
-                    'git@github.com:NativeScript/template-hello-world.git '
+    OUTPUT = run_aut('git clone ' + \
+                    'git@github.com:NativeScript/template-hello-world.git ' + \
                     'template-hello-world')
     assert not ("fatal" in OUTPUT), \
-        'Failed to clone git@github.com:NativeScript/template-hello-world.git'
+        "Failed to clone git@github.com:NativeScript/template-hello-world.git"
 
     # Clone QA-TestApps repo
     cleanup_folder('QA-TestApps')

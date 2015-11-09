@@ -28,7 +28,7 @@ class LibraryAndroid(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_library_add_android_JarLib(self):
+    def test_001_library_add_android_jar_lib(self):
         create_project(proj_name="TNS_App")
         platform_add(
             platform="android",
@@ -53,7 +53,7 @@ class LibraryAndroid(unittest.TestCase):
         output = run_aut(TNSPATH + " library")
         assert check_output(output, 'library_help_output.txt')
 
-    def test_400_library_add_android_EclipseProjLib(self):
+    def test_400_library_add_android_eclipse_proj_lib(self):
         create_project(
             proj_name="TNS_App",
             copy_from="QA-TestApps/external-lib/external-lib-android")
@@ -71,7 +71,7 @@ class LibraryAndroid(unittest.TestCase):
         assert "You can use `library add` command only with " + \
             "path to folder containing one or more .jar files." in output
 
-    def test_401_library_add_android_NoLib(self):
+    def test_401_library_add_android_no_lib(self):
         create_project(
             proj_name="TNS_App",
             copy_from="QA-TestApps/external-lib/external-lib-android")
@@ -87,7 +87,7 @@ class LibraryAndroid(unittest.TestCase):
         assert "Invalid library path" in output
         assert not folder_exists("TNS_App/lib/Android")
 
-    def test_402_library_add_NoPlatform(self):
+    def test_402_library_add_no_platform(self):
         create_project(proj_name="TNS_App")
         output = run_aut(
             TNSPATH +

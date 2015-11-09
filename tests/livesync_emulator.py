@@ -45,7 +45,7 @@ class LiveSyncEmulator(unittest.TestCase):
     def tearDownClass(cls):
         stop_emulators()
 
-    def test_001_LiveSync_android_XmlJsCss_TnsModules_Files(self):
+    def test_001_livesync_android_xml_js_css_tnsmodules_files(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -81,7 +81,7 @@ class LiveSyncEmulator(unittest.TestCase):
             "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output
 
-    def test_201_LiveSync_android_addNewFiles(self):
+    def test_201_livesync_android_add_new_files(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -109,7 +109,7 @@ class LiveSyncEmulator(unittest.TestCase):
         assert "HelloWorldModel.prototype.tapAction" in output
 
     @unittest.skip("TODO: Fix this test.")
-    def test_202_LiveSync_android_Watch(self):
+    def test_202_livesync_android_watch(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -150,7 +150,7 @@ class LiveSyncEmulator(unittest.TestCase):
 #             print "force killing child ..."
 #             pr.kill()
 
-    def test_301_LiveSync_Beforerun(self):
+    def test_301_livesync_before_run(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",

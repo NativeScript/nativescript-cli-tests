@@ -13,7 +13,7 @@ from helpers.device import given_real_device, stop_simulators
 # R0201 - Method could be a function
 # R0904 - Too many public methods
 # pylint: disable=C0103, C0111, R0201, R0904
-class Run_OSX(unittest.TestCase):
+class RuniOS(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -61,7 +61,7 @@ class Run_OSX(unittest.TestCase):
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
 
-    def test_002_run_ios_release_configuration(self):
+    def test_002_run_ios_release(self):
         output = run_aut(
             TNSPATH +
             " run ios --release --path TNS_App --justlaunch")
@@ -87,7 +87,7 @@ class Run_OSX(unittest.TestCase):
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
 
-    def test_004_run_ios_release_configuration_simulator(self):
+    def test_004_run_ios_release_simulator(self):
         output = run_aut(TNSPATH + " run ios --emulator --release --path \"TNS App\" --justlaunch")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output

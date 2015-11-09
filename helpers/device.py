@@ -99,8 +99,7 @@ def get_physical_device_id(platform):
         lline = line.lower()
         if (platform in lline) and (not "emulator" in lline):
             device_id = lline.split(
-                (platform), 1)[1].replace(
-                " ", "")  # deviceId = @030b206908e6c3c5@
+                (platform), 1)[1].replace(" ", "")  # deviceId = @030b206908e6c3c5@
             device_id = device_id[3:-3]  # devideId = 030b206908e6c3c5
             print device_id
     return device_id

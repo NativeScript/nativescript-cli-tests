@@ -12,7 +12,7 @@ from helpers._tns_lib import build, IOS_RUNTIME_SYMLINK_PATH, \
 # R0201 - Method could be a function
 # R0904 - Too many public methods
 # pylint: disable=C0103, C0111, R0201, R0904
-class Plugins_OSX_Xcconfig(unittest.TestCase):
+class PluginsiOSXcconfig(unittest.TestCase):
 
     def setUp(self):
 
@@ -29,7 +29,7 @@ class Plugins_OSX_Xcconfig(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_plugin_add_Xcconfig_Before_platform_add_ios(self):
+    def test_001_plugin_add_xcconfig_before_platform_add_ios(self):
         create_project(proj_name="TNS_App")
 
         output = run_aut(
@@ -69,7 +69,7 @@ class Plugins_OSX_Xcconfig(unittest.TestCase):
 
         build(platform="ios", path="TNS_App")
 
-    def test_202_plugin_add_Xcconfig_After_platform_add_ios(self):
+    def test_202_plugin_add_xcconfig_after_platform_add_ios(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",

@@ -12,7 +12,7 @@ from helpers._tns_lib import ANDROID_RUNTIME_PATH, create_project, create_projec
 # C0111 - Missing docstring
 # R0201 - Method could be a function
 # R0904 - Too many public methods
-# pylint: disable=C0111, R0201, R0904
+# pylint: disable=C0103, C0111, R0201, R0904
 class PrepareAndroid(unittest.TestCase):
 
     def setUp(self):
@@ -42,11 +42,13 @@ class PrepareAndroid(unittest.TestCase):
         assert file_exists(
             'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.js')
         assert not file_exists(
-            'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.android.js')
+            'TNS_App/platforms/android/src/main/assets/app/tns_modules/" + \
+        "application/application.android.js')
         assert not file_exists(
-            'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.ios.js')
+            'TNS_App/platforms/android/src/main/assets/app/tns_modules/" + \
+        "application/application.ios.js')
 
-    def test_002_prepare_android_InsideProject(self):
+    def test_002_prepare_android_inside_project(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -59,15 +61,16 @@ class PrepareAndroid(unittest.TestCase):
 
         # Verify app and modules are processed and available in platform folder
         assert file_exists(
-            'TNS_App/platforms/android/src/main/assets/app/main-view-model.js')
+        'TNS_App/platforms/android/src/main/assets/app/main-view-model.js')
         assert file_exists(
-            'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.js')
+        'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.js')
         assert not file_exists(
-            'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.android.js')
+        'TNS_App/platforms/android/src/main/assets/app/tns_modules/' + \
+        'application/application.android.js')
         assert not file_exists(
-            'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.ios.js')
+        'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.ios.js')
 
-    def test_010_prepare_android_TnsCoreModules(self):
+    def test_010_prepare_android_tns_core_modules(self):
         create_project(
             proj_name="TNS_App",
             copy_from="QA-TestApps/tns-modules-app/app")
@@ -105,7 +108,8 @@ class PrepareAndroid(unittest.TestCase):
                 "cat TNS_App/platforms/android/src/main/assets/app/tns_modules/package.json")
             assert "\"version\": \"1.2.1\"," not in output
             output = run_aut(
-                "cat TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application-common.js")
+                "cat TNS_App/platforms/android/src/main/assets/app/" + \
+                "tns_modules/application/application-common.js")
             assert "require(\"globals\"); // test" in output
 
     def test_210_prepare_android_patform_not_added(self):
@@ -117,7 +121,7 @@ class PrepareAndroid(unittest.TestCase):
         assert file_exists(
             'TNS_App/platforms/android/src/main/assets/app/tns_modules/xml/xml.js')
 
-    def test_300_prepare_android_RemoveOldFiles(self):
+    def test_300_prepare_android_remove_old_files(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -152,7 +156,7 @@ class PrepareAndroid(unittest.TestCase):
         assert not file_exists(
             'TNS_App/platforms/android/src/main/assets/app/main-page.xml')
 
-    def test_301_prepare_android_platformSpecificFiles(self):
+    def test_301_prepare_android_platform_specific_files(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -192,7 +196,7 @@ class PrepareAndroid(unittest.TestCase):
         assert not file_exists(
             'TNS_App/platforms/android/src/main/assets/app/app.android.css')
 
-    def test_400_prepare_MissingPlatform(self):
+    def test_400_prepare_missing_platform(self):
         create_project(proj_name="TNS_App")
         output = run_aut(TNSPATH + " prepare --path TNS_App")
         assert "You need to provide all the required parameters." in output

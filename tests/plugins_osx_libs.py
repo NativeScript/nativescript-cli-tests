@@ -12,7 +12,7 @@ from helpers._tns_lib import build, IOS_RUNTIME_SYMLINK_PATH, \
 # R0201 - Method could be a function
 # R0904 - Too many public methods
 # pylint: disable=C0103, C0111, R0201, R0904
-class Plugins_OSX_Libs(unittest.TestCase):
+class PluginsiOSLibs(unittest.TestCase):
 
     def setUp(self):
 
@@ -29,7 +29,7 @@ class Plugins_OSX_Libs(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_201_plugin_add_StaticLib_Universal_Before_platform_add_ios(self):
+    def test_201_plugin_add_static_lib_universal_before_platform_add_ios(self):
         create_project(proj_name="TNS_App")
 
         output = run_aut(
@@ -64,7 +64,7 @@ class Plugins_OSX_Libs(unittest.TestCase):
             "cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
         assert "HelloLib.a in Frameworks" in output
 
-    def test_202_plugin_add_StaticLib_Universal_After_platform_add_ios(self):
+    def test_202_plugin_add_static_lib_universal_after_platform_add_ios(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -98,7 +98,7 @@ class Plugins_OSX_Libs(unittest.TestCase):
             "cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
         assert "HelloLib.a in Frameworks" in output
 
-    def test_401_plugin_add_StaticLib_NonUniversal(self):
+    def test_401_plugin_add_static_lib_non_universal(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -112,6 +112,7 @@ class Plugins_OSX_Libs(unittest.TestCase):
 
         output = prepare(platform="ios", path="TNS_App", assert_success=False)
         assert "The static library at" in output
-        assert "ByeLib.a is not built for one or more of the following required architectures:" in output
+        assert "ByeLib.a is not built for one or more of " + \
+            "the following required architectures:" in output
         assert "armv7, arm64, i386." in output
         assert "The static library must be built for all required architectures." in output

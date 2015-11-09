@@ -14,7 +14,7 @@ from helpers._tns_lib import create_project_add_platform, ANDROID_RUNTIME_PATH, 
 # R0201 - Method could be a function
 # R0904 - Too many public methods
 # pylint: disable=C0103, C0111, R0201, R0904
-class Plugins_Linux(unittest.TestCase):
+class PluginsAndroid(unittest.TestCase):
 
     def setUp(self):
 
@@ -29,7 +29,7 @@ class Plugins_Linux(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_plugin_add_Before_platform_add_android(self):
+    def test_001_plugin_add_before_platform_add_android(self):
         create_project(proj_name="TNS_App")
         output = run_aut(TNSPATH + " plugin add tns-plugin --path TNS_App")
         if 'Windows' not in platform.platform():
@@ -42,7 +42,7 @@ class Plugins_Linux(unittest.TestCase):
         assert "dependencies" in output
         assert "tns-plugin" in output
 
-    def test_002_plugin_add_After_platform_add_android(self):
+    def test_002_plugin_add_after_platform_add_android(self):
         create_project_add_platform(proj_name="TNS_App", platform="android", \
                                     framework_path=ANDROID_RUNTIME_PATH)
         output = run_aut(TNSPATH + " plugin add tns-plugin --path TNS_App")
@@ -56,7 +56,7 @@ class Plugins_Linux(unittest.TestCase):
         assert "dependencies" in output
         assert "tns-plugin" in output
 
-    def test_003_plugin_add_InsideProject(self):
+    def test_003_plugin_add_inside_project(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -75,7 +75,7 @@ class Plugins_Linux(unittest.TestCase):
         assert "dependencies" in output
         assert "tns-plugin" in output
 
-    def test_100_buildAppWithPluginAddedInsideProject(self):
+    def test_100_build_app_with_plugin_added_inside_project(self):
 
         create_project_add_platform(
             proj_name="TNS_App",
@@ -104,7 +104,7 @@ class Plugins_Linux(unittest.TestCase):
         assert file_exists(
             "TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
 
-    def test_200_plugin_add_Before_platform_add_android(self):
+    def test_200_plugin_add_before_platform_add_android(self):
         create_project(proj_name="TNS_App")
         output = run_aut(
             TNSPATH +
@@ -128,7 +128,7 @@ class Plugins_Linux(unittest.TestCase):
             path="TNS_App")
         build(platform="android", path="TNS_App")
 
-    def test_201_plugin_add_After_platform_add_android(self):
+    def test_201_plugin_add_after_platform_add_android(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -151,7 +151,7 @@ class Plugins_Linux(unittest.TestCase):
         assert "nativescript-telerik-ui" in output
         build(platform="android", path="TNS_App")
 
-    def test_300_buildAppWithPluginAddedOutsideProject(self):
+    def test_300_build_app_with_plugin_added_outside_project(self):
 
         create_project_add_platform(
             proj_name="TNS_App",
@@ -177,7 +177,7 @@ class Plugins_Linux(unittest.TestCase):
             "TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
 
     @unittest.skip("This test breaks the xml parser.")
-    def test_400_plugin_add_NotExistingPlugin(self):
+    def test_400_plugin_add_not_existing_plugin(self):
         create_project(proj_name="TNS_App")
         output = run_aut(TNSPATH + " plugin add fakePlugin --path TNS_App")
         assert "no such package available" in output
@@ -189,7 +189,7 @@ class Plugins_Linux(unittest.TestCase):
         assert "Verify that the plugin package.json file " + \
             "contains a nativescript key and try again" in output
 
-    def test_403_plugin_add_PluginNotSupportedOnSpecificPlatform(self):
+    def test_403_plugin_add_plugin_not_supported_on_specific_platform(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",

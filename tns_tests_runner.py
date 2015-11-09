@@ -30,18 +30,18 @@ from tests.logtrace import LogTrace
 from tests.output_stderr import Output_STRERR
 from tests.platform_linux import PlatformAndroid
 from tests.platform_osx import PlatformiOS
-from tests.plugins_linux import Plugins_Linux
-from tests.plugins_osx import Plugins_OSX
-from tests.plugins_osx_libs import Plugins_OSX_Libs
-from tests.plugins_osx_pods import Plugins_OSX_Pods
-from tests.plugins_osx_sandbox_pods import Plugins_OSX_Sandbox_Pods
-from tests.plugins_osx_xcconfig import Plugins_OSX_Xcconfig
+from tests.plugins_linux import PluginsAndroid
+from tests.plugins_osx import PluginsiOS
+from tests.plugins_osx_libs import PluginsiOSLibs
+from tests.plugins_osx_pods import PluginsiOSPods
+from tests.plugins_osx_sandbox_pods import PluginsiOSSandboxPods
+from tests.plugins_osx_xcconfig import PluginsiOSXcconfig
 from tests.prepare_linux import PrepareAndroid
 from tests.prepare_osx import PrepareiOS
-from tests.run_linux import Run_Linux
-from tests.run_osx import Run_OSX
+from tests.run_osx import RuniOS
 from tests.usage import UsageAndErrorTracking
 from tests.version import Version
+
 
 # C0111 - Missing docstring
 # R0915 - Too many statements
@@ -96,14 +96,14 @@ def run_tests():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PlatformAndroid))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PrepareAndroid))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildAndroid))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_Linux))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsAndroid))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(InitAndInstall))
     if 'Darwin' in platform.platform():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PlatformiOS))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PrepareiOS))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildiOS))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Sandbox_Pods))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOS))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSSandboxPods))
 
     if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
@@ -113,19 +113,19 @@ def run_tests():
         if 'Darwin' in platform.platform():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateiOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryiOS))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Pods))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Libs))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Plugins_OSX_Xcconfig))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSPods))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSLibs))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSXcconfig))
 
     if ('TESTRUN' in os.environ) and ("FULL" in os.environ['TESTRUN']):
         suite.addTests(
             unittest.TestLoader().loadTestsFromTestCase(DeployAndroid))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_Linux))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(RuniOS))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceAndroid))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugAndroid))
         if 'Darwin' in platform.platform():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeployiOS))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Run_OSX))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(RuniOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceiOS))

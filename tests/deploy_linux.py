@@ -77,7 +77,7 @@ class DeployAndroid(unittest.TestCase):
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
 
-    def test_201_deploy_android_insideproject(self):
+    def test_201_deploy_android_inside_project(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
         output = run_aut(os.path.join("..", TNSPATH) +

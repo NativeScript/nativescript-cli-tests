@@ -1,7 +1,6 @@
 '''
 Test redirecting error log
 '''
-import os
 import unittest
 
 from helpers._os_lib import remove, run_aut
@@ -28,7 +27,7 @@ class Output_STRERR(unittest.TestCase):
         remove('stderr.txt')
 
     def test_001_output_strerr(self):
-        os.system(TNSPATH + " emulate asdf 2>stderr.txt")
+        run_aut(TNSPATH + " emulate asdf", write_to_file="stderr.txt")
         output = run_aut("cat stderr.txt")
         assert "The input is not valid sub-command for 'emulate' command" in output
 

@@ -15,7 +15,7 @@ from helpers.device import given_running_emulator, given_real_device
 # R0201 - Method could be a function
 # R0904 - Too many public methods
 # pylint: disable=C0103, C0111, R0201, R0904
-class Run_Linux(unittest.TestCase):
+class RunAndroid(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -55,7 +55,7 @@ class Run_Linux(unittest.TestCase):
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
 
-    def test_002_run_android_releaseConfiguration(self):
+    def test_002_run_android_release(self):
         output = run_aut(TNSPATH + " run android --keyStorePath " + ANDROID_KEYSTORE_PATH +
                         " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
                         " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS +
@@ -74,7 +74,7 @@ class Run_Linux(unittest.TestCase):
         assert "Successfully deployed on device with identifier" in output
         assert "I/ActivityManager" in output
 
-    def test_200_run_android_InsideProject(self):
+    def test_200_run_android_inside_project(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
         output = run_aut(os.path.join("..", TNSPATH) +
@@ -84,7 +84,7 @@ class Run_Linux(unittest.TestCase):
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
 
-    def test_201_run_android_device_id_RenamedProjDir(self):
+    def test_201_run_android_device_id_renamed_proj_dir(self):
         run_aut("mv TNS_App appTest")
         output = run_aut(
             TNSPATH +

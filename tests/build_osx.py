@@ -102,9 +102,9 @@ class BuildiOS(unittest.TestCase):
         assert "arm64" in output
 
     def test_200_build_ios_release(self):
-        create_project_add_platform(proj_name="TNS_App",
-            platform="ios",
-            framework_path=IOS_RUNTIME_SYMLINK_PATH,
+        create_project_add_platform(proj_name="TNS_App", \
+            platform="ios", \
+            framework_path=IOS_RUNTIME_SYMLINK_PATH, \
             symlink=True)
         output = run_aut(TNSPATH + " build ios --path TNS_App --release")
         assert "Project successfully prepared" in output
@@ -115,9 +115,9 @@ class BuildiOS(unittest.TestCase):
         assert file_exists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
 
     def test_201_build_ios_fordevice(self):
-        create_project_add_platform(proj_name="TNS_App",
-            platform="ios",
-            framework_path=IOS_RUNTIME_SYMLINK_PATH,
+        create_project_add_platform(proj_name="TNS_App", \
+            platform="ios", \
+            framework_path=IOS_RUNTIME_SYMLINK_PATH, \
             symlink=True)
         output = run_aut(TNSPATH + " build ios --path TNS_App --forDevice")
         assert "Project successfully prepared" in output
@@ -130,11 +130,11 @@ class BuildiOS(unittest.TestCase):
 
     def test_210_build_ios_non_symlink(self):
         create_project_add_platform(
-            proj_name="TNSAppNoSym",
-            platform="ios",
+            proj_name="TNSAppNoSym", \
+            platform="ios", \
             framework_path=IOS_RUNTIME_SYMLINK_PATH)
         output = run_aut(
-            TNSPATH +
+            TNSPATH + \
             " build ios --path TNSAppNoSym --forDevice --release")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
@@ -147,16 +147,16 @@ class BuildiOS(unittest.TestCase):
 
     def test_211_build_ios_inside_project(self):
         create_project_add_platform(
-            proj_name="TNS_App",
-            platform="ios",
-            framework_path=IOS_RUNTIME_SYMLINK_PATH,
+            proj_name="TNS_App", \
+            platform="ios", \
+            framework_path=IOS_RUNTIME_SYMLINK_PATH, \
             symlink=True)
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
         output = run_aut(
             os.path.join(
-                "..",
-                TNSPATH) +
+                "..", \
+                TNSPATH) + \
             " build ios --path TNS_App")
         os.chdir(current_dir)
 
@@ -168,9 +168,9 @@ class BuildiOS(unittest.TestCase):
 
     def test_212_build_ios_wiht_prepare(self):
         create_project_add_platform(
-            proj_name="TNS_App",
-            platform="ios",
-            framework_path=IOS_RUNTIME_SYMLINK_PATH,
+            proj_name="TNS_App", \
+            platform="ios", \
+            framework_path=IOS_RUNTIME_SYMLINK_PATH, \
             symlink=True)
         prepare(path="TNS_App", platform="ios")
 
@@ -211,9 +211,9 @@ class BuildiOS(unittest.TestCase):
 
     def test_300_build_ios_with_dash(self):
         create_project_add_platform(
-            proj_name="tns-app",
-            platform="ios",
-            framework_path=IOS_RUNTIME_SYMLINK_PATH,
+            proj_name="tns-app", \
+            platform="ios", \
+            framework_path=IOS_RUNTIME_SYMLINK_PATH, \
             symlink=True)
 
         # Verify project builds
@@ -230,9 +230,9 @@ class BuildiOS(unittest.TestCase):
 
     def test_301_build_ios_with_space(self):
         create_project_add_platform(
-            proj_name="\"tns app\"",
-            platform="ios",
-            framework_path=IOS_RUNTIME_SYMLINK_PATH,
+            proj_name="\"tns app\"", \
+            platform="ios", \
+            framework_path=IOS_RUNTIME_SYMLINK_PATH, \
             symlink=True)
 
         # Verify project builds
@@ -245,9 +245,9 @@ class BuildiOS(unittest.TestCase):
 
     def test_302_build_ios_with_ios_in_path(self):
         create_project_add_platform(
-            proj_name="my-ios-app",
-            platform="ios",
-            framework_path=IOS_RUNTIME_SYMLINK_PATH,
+            proj_name="my-ios-app", \
+            platform="ios", \
+            framework_path=IOS_RUNTIME_SYMLINK_PATH, \
             symlink=True)
 
         # Verify project builds
@@ -263,9 +263,9 @@ class BuildiOS(unittest.TestCase):
 
     def test_310_build_ios_with_copy_to(self):
         create_project_add_platform(
-            proj_name="TNS_App",
-            platform="ios",
-            framework_path=IOS_RUNTIME_SYMLINK_PATH,
+            proj_name="TNS_App", \
+            platform="ios", \
+            framework_path=IOS_RUNTIME_SYMLINK_PATH, \
             symlink=True)
         output = run_aut(TNSPATH + " build ios --path TNS_App --copy-to ./")
         assert "Project successfully prepared" in output
@@ -277,12 +277,12 @@ class BuildiOS(unittest.TestCase):
 
     def test_311_build_ios_release_with_copy_to(self):
         create_project_add_platform(
-            proj_name="TNS_App",
-            platform="ios",
-            framework_path=IOS_RUNTIME_SYMLINK_PATH,
+            proj_name="TNS_App", \
+            platform="ios", \
+            framework_path=IOS_RUNTIME_SYMLINK_PATH, \
             symlink=True)
         output = run_aut(
-            TNSPATH +
+            TNSPATH + \
             " build ios --path TNS_App --forDevice --release --copy-to ./")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
@@ -296,7 +296,7 @@ class BuildiOS(unittest.TestCase):
     def test_400_build_ios_with_wrong_param(self):
         create_project(proj_name="TNS_AppNoPlatform")
         output = run_aut(
-            TNSPATH +
+            TNSPATH + \
             " build iOS --debug --path TNS_AppNoPlatform")
         assert "The option 'debug' is not supported." in output
         assert not "error" in output

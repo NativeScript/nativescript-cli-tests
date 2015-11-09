@@ -30,8 +30,9 @@ class PlatformiOS(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_platform_List_ios_Project(self):
-        create_project_add_platform(proj_name="TNS_App", platform="ios", framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
+    def test_001_platform_list_ios_project(self):
+        create_project_add_platform(proj_name="TNS_App", platform="ios", \
+                                    framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
         output = run_aut(TNSPATH + " platform list --path TNS_App")
         assert "The project is not prepared for any platform" in output
         assert "Installed platforms:  ios" in output
@@ -70,7 +71,7 @@ class PlatformiOS(unittest.TestCase):
 
     @unittest.skip(
         "This test is not valid, adding symlink platform from npm cache cause issues")
-    def test_003_platform_add_ios_Symlink(self):
+    def test_003_platform_add_ios_symlink(self):
         create_project(proj_name="TNS_App")
         output = platform_add(
             platform="ios",
@@ -91,7 +92,7 @@ class PlatformiOS(unittest.TestCase):
         assert "NativeScript.framework ->" in output
         assert "package/framework/NativeScript.framework" in output
 
-    def test_004_platform_add_ios_Symlink_And_FrameworkPath(self):
+    def test_004_platform_add_ios_symlink_and_framework_path(self):
         create_project(proj_name="TNS_App")
         output = platform_add(
             platform="ios",
@@ -112,7 +113,7 @@ class PlatformiOS(unittest.TestCase):
         assert "internal ->" in output
         assert "package/framework/internal" in output
 
-    def test_200_platform_add_ios_FrameworkPath(self):
+    def test_200_platform_add_ios_framework_path(self):
         create_project(proj_name="TNS_App")
         output = platform_add(
             platform="ios",
@@ -131,7 +132,7 @@ class PlatformiOS(unittest.TestCase):
         assert not file_exists(
             "TNS_App/platforms/ios/TNSApp.xcodeproj/project.xcworkspace")
 
-    def test_201_platform_Remove_ios(self):
+    def test_201_platform_remove_ios(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -146,7 +147,7 @@ class PlatformiOS(unittest.TestCase):
         output = run_aut("cat TNS_App/package.json")
         assert not "tns-ios" in output
 
-    def test_202_platform_Remove_ios_Symlink(self):
+    def test_202_platform_remove_ios_symlink(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -162,7 +163,7 @@ class PlatformiOS(unittest.TestCase):
         output = run_aut("cat TNS_App/package.json")
         assert not "tns-ios" in output
 
-    def test_300_platform_add_ios_CustomVersion(self):
+    def test_300_platform_add_ios_custom_version(self):
         create_project(proj_name="TNS_App")
         output = platform_add(platform="ios@1.4.0", path="TNS_App")
         assert "Copying template files..." in output
@@ -203,8 +204,10 @@ class PlatformiOS(unittest.TestCase):
                 'platform_ios_1.3.0.txt')
         build(platform="ios", path="TNS_App")
 
-    @unittest.skip("This test fails on the build machine because it needs more time to update ios@1.1.0. Try to execute update command again with run_aut or add time.sleep(x).")
-    def test_302_platform_downgrade_ios_ToOlderVersion(self):
+    @unittest.skip("This test fails on the build machine because " + \
+                   "it needs more time to update ios@1.1.0. " + \
+                   "Try to execute update command again with run_aut or add time.sleep(x).")
+    def test_302_platform_downgrade_ios_to_old_version(self):
         create_project_add_platform(proj_name="TNS_App", platform="ios@1.2.0")
         output = run_aut("cat TNS_App/package.json")
         assert "\"version\": \"1.2.0\"" in output
@@ -217,9 +220,8 @@ class PlatformiOS(unittest.TestCase):
         assert "\"version\": \"1.1.0\"" in output
         build(platform="ios", path="TNS_App")
 
-    @unittest.skip(
-        "Execute when platform update command starts respecting --frameworkPath: https://github.com/NativeScript/nativescript-cli/issues/743")
-    def test_303_platform_update_ios_ToLatestVersion(self):
+    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/743")
+    def test_303_platform_update_ios_to_latest_version(self):
         create_project_add_platform(proj_name="TNS_App", platform="ios@1.0.0")
         output = run_aut("cat TNS_App/package.json")
         assert "\"version\": \"1.0.0\"" in output
@@ -236,7 +238,7 @@ class PlatformiOS(unittest.TestCase):
 
     @unittest.skip(
         "Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
-    def test_304_platform_downgrade_ios_FromLatestVersion(self):
+    def test_304_platform_downgrade_ios_from_latest_version(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
@@ -253,7 +255,7 @@ class PlatformiOS(unittest.TestCase):
         assert "\"version\": \"1.1.0\"" in output
         build(platform="ios", path="TNS_App")
 
-    def test_310_platform_add_ios_CustomExperimentalVersion(self):
+    def test_310_platform_add_ios_custom_experimental_version(self):
         create_project(proj_name="TNS_App")
         output = platform_add(platform="ios@0.9.2-exp-ios-8.2", path="TNS_App")
         assert "Copying template files..." in output
@@ -262,7 +264,7 @@ class PlatformiOS(unittest.TestCase):
         output = run_aut("cat TNS_App/package.json")
         assert "\"version\": \"0.9.2-exp-ios-8.2\"" in output
 
-    def test_320_platform_add_ios_CustomBundleId(self):
+    def test_320_platform_add_ios_custom_bundle_id(self):
         # Create project with different appId
         create_project(proj_name="TNS_App", app_id="org.nativescript.MyApp")
         output = run_aut("cat TNS_App/package.json")
@@ -287,8 +289,8 @@ class PlatformiOS(unittest.TestCase):
         assert "Project successfully created." in output
         assert not is_empty("TNS_App/platforms/ios/internal/metadata-generator")
 
-    def test_400_platform_add_AlreadyExistingPlatform(self):
-        self.test_004_platform_add_ios_Symlink_And_FrameworkPath()
+    def test_400_platform_add_existing_platform(self):
+        self.test_004_platform_add_ios_symlink_and_framework_path()
 
         output = run_aut(TNSPATH + " platform add ios --path TNS_App")
         assert "Platform ios already added" in output

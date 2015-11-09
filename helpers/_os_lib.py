@@ -22,7 +22,7 @@ DEFAULT_TIMEOUT = 180  # seconds
 DEFAULT_OUTPUT_FILE = "output.txt"
 DEBUG = 0
 
-def run_aut(cmd, set_timeout=None, get_output=True):
+def run_aut(cmd, set_timeout=None, get_output=True, write_to_file=None):
     '''Run system command'''
     def fork_it():
         '''
@@ -66,16 +66,15 @@ def run_aut(cmd, set_timeout=None, get_output=True):
         print out
         print 'Thread finished. Returning ', out
 
-    try:
-        print "##### OUTPUT BEGIN #####"
-        print out
-        print "##### OUTPUT END #####"
-        return out.strip('\n\r')
-    except:
-        print "##### OUTPUT BEGIN #####"
-        print "Failed to print output"
-        print "##### OUTPUT END #####"
+    print "##### OUTPUT BEGIN #####"
+    print out
+    print "##### OUTPUT END #####"
 
+    if write_to_file != None:
+        with open(write_to_file, "w") as text_file:
+            text_file.write(out)
+
+    return out.strip('\n\r')
 
 def cleanup_folder(folder):
     '''Cleanup folder'''
@@ -258,4 +257,4 @@ def cleanup_xcode_cache():
     run_aut("sudo find /var/folders/ -type d -name 'com.apple.DeveloperTools' | " + \
                 "xargs -n 1 -I dir sudo find dir -name \* -type f -delete")
     output = run_aut("sudo find /var/folders/ -type d -name 'Xcode'")
-    #assert "Xcode" not in output, "Failed to cleanup Xcode cache"
+    # assert "Xcode" not in output, "Failed to cleanup Xcode cache"
