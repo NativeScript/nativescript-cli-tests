@@ -47,12 +47,22 @@ if __name__ == '__main__':
     stop_emulators()
     stop_simulators()
 
-    # Uninstall test apps on real devices (if FULL RUN)
     if 'TESTRUN' in os.environ and "FULL" in os.environ['TESTRUN']:
-        uninstall_app("TNSApp", platform="android", fail=False)
-        uninstall_app("TNSApp", platform="ios", fail=False)
 
-    # Cleanup old runtimes
+        # Uninstall test apps on real devices
+        uninstall_app("TNSApp", platform="android", fail=False)
+        uninstall_app("TNSAppNoPlatform", platform="android", fail=False)
+
+        uninstall_app("TNSApp", platform="ios", fail=False)
+        uninstall_app("TNSAppNoPlatform", platform="ios", fail=False)
+
+        # Clean .gradle
+        if 'Windows' in platform.platform():
+            run_aut("rmdir /s /q {USERPROFILE}\\.gradle".format(**os.environ), 600)
+        else:
+            run_aut("rm -rf ~/.gradle", 600)
+
+    # Clean old runtimes
     cleanup_folder(os.path.split(ANDROID_RUNTIME_SYMLINK_PATH)[0])
     cleanup_folder(os.path.split(IOS_RUNTIME_SYMLINK_PATH)[0])
     if os.path.isfile(ANDROID_RUNTIME_PATH):
