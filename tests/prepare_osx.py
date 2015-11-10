@@ -74,7 +74,7 @@ class PrepareiOS(unittest.TestCase):
 
             output = run_aut("cat TNS_App/platforms/ios/TNSApp/app/tns_modules/package.json")
             assert "\"version\": \"1.2.1\"," not in output
-            output = run_aut("cat TNSApp121/platforms/ios/" + \
+            output = run_aut("cat TNS_App/platforms/ios/" + \
                              "TNSApp/app/tns_modules/application/application-common.js")
             assert "require(\"globals\"); // test" in output
 

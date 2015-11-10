@@ -200,7 +200,6 @@ def replace(file_path, str1, str2):
     output = run_aut("cat " + file_path)
     assert str2 in output
 
-
 def cat_app_file(platform, app_name, file_path):
     '''Return content of file on device'''
     if platform is "android":

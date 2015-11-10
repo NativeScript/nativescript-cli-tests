@@ -5,7 +5,7 @@ import unittest
 import fileinput
 
 from helpers._os_lib import cleanup_folder, check_file_exists, file_exists, folder_exists, \
-    is_empty, run_aut
+    is_empty, run_aut, replace
 from helpers._tns_lib import create_project, TNSPATH
 
 # C0103 - Invalid %s name "%s"
@@ -94,8 +94,7 @@ class Create(unittest.TestCase):
         create_project(proj_name="template")
 
         # Modify some files in template project
-        for line in fileinput.input("template/app/LICENSE", inplace=1):
-            print line.replace("Copyright (c) 2015, Telerik AD", "Copyright (c) 2015, Telerik A D"),
+        replace("template/app/LICENSE", "Telerik", "T3l3r1k")
 
         # Create new project based on first one
         create_project(proj_name="TNS_App", copy_from="template/app")
@@ -106,8 +105,8 @@ class Create(unittest.TestCase):
 
         # Verify that content of the new project is based on first project
         output = run_aut("cat TNS_App/app/LICENSE")
-        assert not "Copyright (c) 2015, Telerik AD" in output
-        assert "Copyright (c) 2015, Telerik A D" in output
+        assert not "Telerik" in output
+        assert "T3l3r1k" in output
 
     def test_005_create_project_with_space(self):
         create_project(proj_name="\"TNS App\"")
