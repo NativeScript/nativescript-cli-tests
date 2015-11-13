@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import StringIO
 import codecs
 import logging
@@ -12,11 +12,11 @@ import nosexunit.tools as ntools
 
 
 # Get a logger
-logger =  logging.getLogger('%s.%s' % (nconst.LOGGER, __name__))
+logger = logging.getLogger('%s.%s' % (nconst.LOGGER, __name__))
 
 class StdRecorder:
     '''Class to capture the standard outputs'''
-    
+
     def __init__(self, fd):
         '''Initialize with an empty record'''
         # Initialize record
@@ -37,7 +37,7 @@ class StdRecorder:
     def __getattr__(self, attr):
         '''Call the functions on the output'''
         return getattr(self.save, attr)
-    
+
     def write(self, value):
         '''Write on the record and on the standard output'''
         # Check if UTF-8 value
@@ -52,11 +52,11 @@ class StdRecorder:
             if self.rec: self.record.write(value.decode(self.encoding, 'replace'))
             # Write on default
             return self.save.write(value)
-    
+
     def start(self):
         '''Start to record the stream given by constructor'''
         self.rec = True
-        
+
     def stop(self):
         '''Stop recording the steam given by constructor'''
         self.rec = False
@@ -68,19 +68,19 @@ class StdRecorder:
     def reset(self):
         '''Reset the recorder'''
         self.record = StringIO.StringIO()
-    
+
     def end(self):
         '''End the recorder'''
         self.stop()
 
 class StdOutRecoder(StdRecorder):
     '''Class to record the standard output'''
-    
+
     def __init__(self):
         '''Replace the sys.stdout output by this one'''
         StdRecorder.__init__(self, sys.stdout)
         sys.stdout = self
-        
+
     def end(self):
         '''Replace the sys.stdout output by his old value'''
         StdRecorder.end(self)
@@ -88,12 +88,12 @@ class StdOutRecoder(StdRecorder):
 
 class StdErrRecorder(StdRecorder):
     '''Class to record the error output'''
-    
+
     def __init__(self):
         '''Replace the sys.stderr output by this one'''
         StdRecorder.__init__(self, sys.stderr)
         sys.stderr = self
-        
+
     def end(self):
         '''Replace the sys.stderr output by his old value'''
         StdRecorder.end(self)
@@ -118,10 +118,10 @@ class XTestElmt:
     def setStart(self, begin):
         '''Set the start time'''
         self.begin = begin
-        
+
     def setStop(self, end):
         '''Set the end time'''
-        self.end = end    
+        self.end = end
 
     def getTime(self):
         '''Get the running time'''
@@ -144,7 +144,7 @@ class XSuite(XTestElmt):
     def setStderr(self, string):
         '''Set the standard outputs for the suite'''
         self.stderr = string
-        
+
     def setStdout(self, string):
         '''Set the error outputs for the suite'''
         self.stdout = string
@@ -268,7 +268,7 @@ class XTest(XTestElmt):
     def writeXmlOnStream(self, stream):
         '''Write the xml result on the stream'''
         if self.kind in [nconst.TEST_SUCCESS, nconst.TEST_FAIL, nconst.TEST_ERROR, ]:
-            stream.write('<testcase classname="%s' % self.getClass().replace("__main__.","") + '" name="%s' % self.getName() + '"' + ' time="%.3f"' % self.getTime())
+            stream.write('<testcase classname="%s' % self.getClass().replace("__main__.", "") + '" name="%s' % self.getName() + '"' + ' time="%.3f"' % self.getTime())
 #            if self.kind == nconst.TEST_SUCCESS: stream.write('/>')
 #            else:
             stream.write('>')

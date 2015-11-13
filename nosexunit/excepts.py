@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 class NoseXUnitError(StandardError):
     '''Super class of error for NoseXunit'''
@@ -23,5 +23,4 @@ class CoverError(NoseXUnitError):
 class ToolError(NoseXUnitError):
     '''Class of exception for tools'''
     pass
-    
-    
+

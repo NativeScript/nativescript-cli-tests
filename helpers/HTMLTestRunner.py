@@ -104,12 +104,12 @@ from nosexunit import core as ncore
 
 # bdLibPath2=os.path.abspath(sys.argv[0]+"..")
 # print("bdlibpath="+bdLibPath)
-#bdLibPath=os.path.abspath(os.path.join(sys.argv[0], "nosexunit"))
+# bdLibPath=os.path.abspath(os.path.join(sys.argv[0], "nosexunit"))
 # print("bdlibpath="+bdLibPath)
-#if not bdLibPath2 in sys.path: sys.path.append(bdLibPath2)
-#if not bdLibPath in sys.path: sys.path.append(bdLibPath)
+# if not bdLibPath2 in sys.path: sys.path.append(bdLibPath2)
+# if not bdLibPath in sys.path: sys.path.append(bdLibPath)
 print sys.path
-#from _ice_lib import *
+# from _ice_lib import *
 
 # ------------------------------------------------------------------------
 # The redirectors below are used to capture output during testing. Output
@@ -594,7 +594,7 @@ class _TestResult(TestResult):
         kind = nconst.TEST_SUCCESS
         # Add the test
         self.addTestCase(kind, test, err=str(test))
-        #testcases.append(TestCase(test, output , test_type="Success"))
+        # testcases.append(TestCase(test, output , test_type="Success"))
 
     def addError(self, test, err):
         self.error_count += 1
@@ -612,7 +612,7 @@ class _TestResult(TestResult):
         kind = nconst.TEST_ERROR
         # Add the test
         self.addTestCase(kind, test, err=err)
-        #testcases.append(TestCase(test, output + _exc_str, test_type="Error"))
+        # testcases.append(TestCase(test, output + _exc_str, test_type="Error"))
 
     def addFailure(self, test, err):
         self.failure_count += 1
@@ -629,7 +629,7 @@ class _TestResult(TestResult):
         kind = nconst.TEST_FAIL
         # Add the test
         self.addTestCase(kind, test, err=err)
-        #testcases.append(TestCase(test, output + _exc_str, test_type="Failure"))
+        # testcases.append(TestCase(test, output + _exc_str, test_type="Failure"))
 
 
 class HTMLTestRunner(Template_mixin):
@@ -666,7 +666,7 @@ class HTMLTestRunner(Template_mixin):
         test(result)
         self.stopTime = datetime.datetime.now()
         self.generateReport(test, result)
-        print >>sys.stderr, '\nTime Elapsed: %s' % (
+        print >> sys.stderr, '\nTime Elapsed: %s' % (
             self.stopTime - self.startTime)
         TestSuite.writeXml(self.jUnitResultOutputFolder)
         return result
@@ -801,9 +801,9 @@ class HTMLTestRunner(Template_mixin):
         doc = t.shortDescription() or ""
         desc = doc and ('%s: %s' % (name, doc)) or name
         tmpl = has_output and self.REPORT_TEST_WITH_OUTPUT_TMPL or self.REPORT_TEST_NO_OUTPUT_TMPL
-        #print("name=" + name)
-        #print("doc=" + doc)
-        #print("desc=" + desc)
+        # print("name=" + name)
+        # print("doc=" + doc)
+        # print("desc=" + desc)
         # o and e should be byte string because they are collected from stdout
         # and stderr?
         if isinstance(o, str):
@@ -818,13 +818,13 @@ class HTMLTestRunner(Template_mixin):
             ue = e.decode('latin-1')
         else:
             ue = e
-        #print("ue=" + ue)
+        # print("ue=" + ue)
         script = self.REPORT_TEST_OUTPUT_TMPL % dict(
             id=tid,
             output=saxutils.escape(uo + ue),
         )
-        #print("script=" + script)
-        #print("output=" + saxutils.escape(uo+ue))
+        # print("script=" + script)
+        # print("output=" + saxutils.escape(uo+ue))
         row = tmpl % dict(
             tid=tid,
             Class=(n == 0 and 'hiddenRow' or 'none'),

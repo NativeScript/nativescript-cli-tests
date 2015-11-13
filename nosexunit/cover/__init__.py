@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import StringIO
 import compiler
 import datetime
@@ -15,7 +15,7 @@ import nosexunit.tools as ntools
 
 
 # Get a logger
-logger =  logging.getLogger('%s.%s' % (nconst.LOGGER, __name__))
+logger = logging.getLogger('%s.%s' % (nconst.LOGGER, __name__))
 
 try:
     import coverage
@@ -38,7 +38,7 @@ class Source(object):
         self.i_cyclo = None
         # Store the total lines number
         self.i_lines = 0
-        
+
     def full(self):
         '''Get the description'''
         return self.i_full
@@ -46,15 +46,15 @@ class Source(object):
     def all(self):
         '''Get the number of statements'''
         return self.i_all
-    
+
     def exe(self):
         '''Get the number of executed statements'''
         return self.i_exe
-    
+
     def err(self):
         '''Get the error'''
         return self.i_err
-    
+
     def has_err(self):
         '''Return True if has error'''
         return self.i_err is not None
@@ -98,12 +98,12 @@ class Source(object):
 
 class Sources(list):
     '''Store the sources'''
-    
+
     def percent(self):
         '''Get the global coverage: 0 - 100'''
         try: return 100 * float(sum([ source.exe() for source in self if not source.has_err() ])) / sum([ source.all() for source in self if not source.has_err() ])
         except ZeroDivisionError: return 100
-        
+
     def all(self):
         '''Get the global number of statements'''
         return sum([ source.all() for source in self ])
@@ -111,11 +111,11 @@ class Sources(list):
     def exe(self):
         '''Get the global number of executed statements'''
         return sum([ source.exe() for source in self ])
-    
+
     def cyclo(self):
         '''Get the complexity'''
         return max([ source.cyclo() for source in self ])
-    
+
     def lines(self):
         '''Get the line number'''
         return sum([ source.lines() for source in self ])
@@ -162,7 +162,7 @@ def report(target, sources):
                     # Else add the content
                     else: content.append(line[2:])
                 # Get the text
-                text = '%s' % ('\n'.join(content), )
+                text = '%s' % ('\n'.join(content),)
                 # Get the highlighted lines
                 lines = ntools.highlight(text)
                 # Get complexity
@@ -210,8 +210,8 @@ def parse(content):
                 try:
                     # Get the source with no error
                     source = Source(line[:e_all].strip(),
-                                    all=int(line[e_all:e_all+6]),
-                                    exe=int(line[e_exe:e_exe+6]))
+                                    all=int(line[e_all:e_all + 6]),
+                                    exe=int(line[e_exe:e_exe + 6]))
                 except:
                     # Get the source with error
                     source = Source(line[:e_all].strip(),
@@ -232,7 +232,7 @@ def available():
         import pygments.lexers
         import pygments.formatters
     # Unable to get it
-    except BaseException, e: return False, str(e)    # pylint: disable-msg=E0601
+    except BaseException, e: return False, str(e)  # pylint: disable-msg=E0601
     # OK, it's available
     return True, None
 
@@ -284,7 +284,7 @@ def annotate(morfs, directory, ignore_errors=0, omit_prefixes=[]):
     for morf in morfs:
         # Try to perform annotation
         try:
-            # Get the data on the module 
+            # Get the data on the module
             filename, statements, excluded, missing, _ = coverage.the_coverage.analysis2(morf)
             # In order to generate the ?cover at the right place, we're obliges to copy the source file in the destination folder
             path = os.path.join(directory, '%s.py' % morf.__name__)

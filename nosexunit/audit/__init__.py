@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import ConfigParser
 import datetime
 import logging
@@ -15,7 +15,7 @@ import nosexunit.tools as ntools
 
 
 # Get a logger
-logger =  logging.getLogger('%s.%s' % (nconst.LOGGER, __name__))
+logger = logging.getLogger('%s.%s' % (nconst.LOGGER, __name__))
 
 try:
     import pylint.lint
@@ -29,7 +29,7 @@ class AuditTestCase(unittest.TestCase):
 
 class Entry(object):
     '''A PyLint Entry'''
-    
+
     def __init__(self, eid, line, output):
         '''initialize the entry'''
         # Store the ID
@@ -38,7 +38,7 @@ class Entry(object):
         self.line = line
         # Store the content
         self.output = output
-        
+
     def __str__(self):
         '''String representation'''
         return '%s: %d: %s' % (self.eid, self.line, self.output)
@@ -58,15 +58,15 @@ class Source(dict):
         self.i_path = path
         # Store the PyLint entries
         self.i_entries = []
-        
+
     def desc(self):
         '''Get the description of the package'''
         return self.i_desc
-    
+
     def path(self):
         '''Get the path of the file'''
         return self.i_path
-    
+
     def father(self):
         '''Get the parent package'''
         return self.i_father
@@ -84,24 +84,24 @@ class Source(dict):
         self[source.desc()] = source
         # Add father to children
         source.i_father = self
-    
+
     def add(self, entry):
         '''Add an entry to the source'''
         self.i_entries.append(entry)
-    
+
     def entries(self):
         '''Get all the PyLint entries'''
         return self.i_entries
-    
+
     def count(self, filter):
         '''Count the pyLint entries for the provided filter'''
         return len(self.search(filter))
-    
+
     def search(self, filter):
         '''Get all the entries corresponding to the filter'''
         try: return [ entry for entry in self.entries() if entry.line == int(filter) ]
         except: return [ entry for entry in self.entries() if entry.eid.startswith(filter) ]
-    
+
     def __str__(self):
         '''String description'''
         if self.entries() == []: return '%s (%s)' % (self.full(), self.path())
@@ -109,11 +109,11 @@ class Source(dict):
 
 class Sources(dict):
     '''Store all sources'''
-    
+
     def get(self, path, desc):
         '''Get a source given its path and description'''
         # Get the right description by ignoring __init__
-        desc = desc.replace('.__init__', '') 
+        desc = desc.replace('.__init__', '')
         # Get package deep
         count = desc.count('.')
         # Start from head package
@@ -125,11 +125,11 @@ class Sources(dict):
             # Get the path
             c_path = path
             # Step out until package is reached
-            for i in range(count-pos): c_path = os.path.dirname(c_path)
+            for i in range(count - pos): c_path = os.path.dirname(c_path)
             # Check if source already defined
             if not current.has_key(part):
                 # Source not already defined, create it. Here this is a module.
-                if count-pos == 0: current.set(Source(c_path, part))
+                if count - pos == 0: current.set(Source(c_path, part))
                 # Here this is a package
                 else: current.set(Source(os.path.join(c_path, '__init__.py'), part))
             # Set the current source
@@ -137,16 +137,16 @@ class Sources(dict):
             # Go deeper
             pos += 1
         # Check the path
-        if not ntools.identical(current.path(), path):    # pylint: disable-msg=E1103
+        if not ntools.identical(current.path(), path):  # pylint: disable-msg=E1103
             # Invalid path
-            raise nexcepts.AuditError('two path for %s, only one expected:\n- %s\n- %s' % (current.full(), current.path(), path))    # pylint: disable-msg=E1103
+            raise nexcepts.AuditError('two path for %s, only one expected:\n- %s\n- %s' % (current.full(), current.path(), path))  # pylint: disable-msg=E1103
         # Return the source
         return current
 
     def set(self, source):
         '''Set head source'''
         self[source.desc()] = source
-            
+
     def listing(self):
         '''Get all the sources'''
         # Recursive function to search all sources
@@ -189,11 +189,11 @@ class AuditReporter(object):
     def add_message(self, msg_id, location, msg):
         '''Add an id'''
         pass
-    
+
     def display_results(self, layout):
         '''Display the results'''
         pass
-    
+
     def set_output(self, fd):
         '''Set the output'''
         pass
@@ -203,7 +203,7 @@ class AuditWrapper(object):
     Reporter for NoseXUnit
     Wrap the selected PyLint reporter 
     '''
-    
+
     def __init__(self, package, output, target):
         '''Initialize the reporter'''
         # Store the package
@@ -228,7 +228,7 @@ class AuditWrapper(object):
         # Get the absolute path for location
         path, desc, useless, line = location
         # Add errors
-        self.data.append( (msg_id, (os.path.abspath(path), desc, useless, line), msg) )
+        self.data.append((msg_id, (os.path.abspath(path), desc, useless, line), msg))
 
     def __getattr__(self, name):
         '''Delegate for getters'''
@@ -286,7 +286,7 @@ def generate(listing):
     # Go threw the packages to generate the tests
     for package in listing.keys():
         # Create the class
-        functions = [] 
+        functions = []
         # Go threw the tests
         for data in listing[package]:
             # Unpack
@@ -298,7 +298,7 @@ def generate(listing):
             # Create the entry for the data
             entry = Entry(oid, line, out)
             # Add it to the source object
-            source.add(entry)    # pylint: disable-msg=E1103
+            source.add(entry)  # pylint: disable-msg=E1103
             # Check if has to generate a test
             if oid[0] in ['E', 'F', ]:
                 # Get the output
@@ -310,19 +310,19 @@ function   : %s
 description: %s
 """ % (oid, loc[0], loc[3], loc[1], loc[2], out)
                 # Get the code
-                code = 'def test(cls): cls.fail(%s)' % (repr(output), )
+                code = 'def test(cls): cls.fail(%s)' % (repr(output),)
                 # Execute it
                 exec(code)
                 # Add to functions
-                functions.append(test)    # pylint: disable-msg=E0602
+                functions.append(test)  # pylint: disable-msg=E0602
         # Create a test case only if there is at least one function
         if functions != []:
             # Create the test case
-            case = new.classobj('TestAudit%s' % package.capitalize(), (AuditTestCase, ), {})
+            case = new.classobj('TestAudit%s' % package.capitalize(), (AuditTestCase,), {})
             # Go threw the functions
             for i, function in enumerate(functions):
                 # Set the class attribute
-                setattr(case, 'test_%d' % (i+1, ), function)
+                setattr(case, 'test_%d' % (i + 1,), function)
             # Add case
             cases.append(case)
     # Return sources and tests
@@ -384,10 +384,10 @@ def server():
         # Get a wrapper
         wrapper = AuditWrapper(package, output, os.path.join(target, package))
         # Get the arguments
-        argv = ['--include-ids=yes', # Set id
-                '--files-output=yes', # Set file output
+        argv = ['--include-ids=yes',  # Set id
+                '--files-output=yes',  # Set file output
                 '--reports=yes',
-                '--comment=yes', ] # Do not generate report
+                '--comment=yes', ]  # Do not generate report
         # Check if configuration
         if config is not None: argv.append('--rcfile=%s' % config)
         # Add the package
@@ -487,7 +487,7 @@ def create_reporter(output):
     # Check if default reporter selected
     if output == nconst.AUDIT_DEFAULT_REPORTER: return AuditReporter()
     # Get PyLint reporter
-    else: return pylint.lint.REPORTER_OPT_MAP[output]()     
+    else: return pylint.lint.REPORTER_OPT_MAP[output]()
 
 def available():
     '''Check if PyLint is available'''
@@ -502,6 +502,6 @@ def available():
         import pylint.reporters
         import pygments.formatters
     # Unable to get it
-    except BaseException, e: return False, str(e)    # pylint: disable-msg=E0601
+    except BaseException, e: return False, str(e)  # pylint: disable-msg=E0601
     # OK, it's available
     return True, None

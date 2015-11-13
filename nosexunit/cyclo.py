@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """ Meager code path measurement tool.
     Ned Batchelder
     http://nedbatchelder.com/blog/200803/python_code_complexity_microtool.html
@@ -12,10 +12,10 @@ class PathNode:
     def __init__(self, name, look="circle"):
         self.name = name
         self.look = look
-        
+
     def to_dot(self):
         print 'node [shape=%s,label="%s"] %d;' % (self.look, self.name, self.dot_id())
-        
+
     def dot_id(self):
         return id(self)
 
@@ -24,7 +24,7 @@ class PathGraph:
     def __init__(self, name):
         self.name = name
         self.nodes = {}
-    
+
     def add_node(self, n):
         assert n
         self.nodes.setdefault(n, [])
@@ -66,7 +66,7 @@ class PathGraphingAstVisitor(compiler.visitor.ASTVisitor):
     def reset(self):
         self.graph = None
         self.tail = None
-        
+
     def visitFunction(self, node):
         name = "Function %s%s %d" % (self.classname, node.name, node.lineno)
         self.graph = PathGraph(name)
@@ -75,13 +75,13 @@ class PathGraphingAstVisitor(compiler.visitor.ASTVisitor):
         self.default(node)
         self.graphs["%s%s" % (self.classname, node.name)] = self.graph
         self.reset()
-        
+
     def visitClass(self, node):
         old_classname = self.classname
         self.classname += node.name + "."
         self.default(node)
         self.classname = old_classname
-        
+
     def appendPathNode(self, name):
         if not self.tail:
             return
@@ -90,11 +90,11 @@ class PathGraphingAstVisitor(compiler.visitor.ASTVisitor):
         self.graph.connect(self.tail, pathnode)
         self.tail = pathnode
         return pathnode
-    
+
     def visitSimpleStatement(self, node):
         name = "Stmt %d" % node.lineno
         self.appendPathNode(name)
-    
+
     visitAssert = visitAssign = visitAssTuple = visitPrint = \
         visitPrintnl = visitRaise = visitSubscript = visitDecorators = \
         visitPass = visitDiscard = visitGlobal = visitReturn = \
@@ -110,9 +110,9 @@ class PathGraphingAstVisitor(compiler.visitor.ASTVisitor):
         self.graph.connect(pathnode, bottom)
         self.tail = bottom
         # TODO: else clause in node.else_
-        
+
     visitFor = visitWhile = visitLoop
-    
+
     def visitIf(self, node):
         name = "If %d" % node.lineno
         pathnode = self.appendPathNode(name)
@@ -133,24 +133,24 @@ class PathGraphingAstVisitor(compiler.visitor.ASTVisitor):
         for le in loose_ends:
             self.graph.connect(le, bottom)
         self.tail = bottom
-        
+
     # TODO: visitTryExcept
     # TODO: visitTryFinally
     # TODO: visitWith
-            
+
 
 def main(argv):
     opar = optparse.OptionParser()
     opar.add_option("-d", "--dot", dest="dot", help="output a graphviz dot file", action="store_true")
     opar.add_option("-m", "--min", dest="min", help="minimum complexity for output", type="int", default=2)
-    
+
     options, args = opar.parse_args(argv)
-    
-    text = open(args[0], "rU").read()+'\n\n'
+
+    text = open(args[0], "rU").read() + '\n\n'
     ast = compiler.parse(text)
     visitor = PathGraphingAstVisitor()
     visitor.preorder(ast, visitor)
-    
+
     if options.dot:
         print 'graph {'
         for graph in visitor.graphs.values():

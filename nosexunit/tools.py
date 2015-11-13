@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import logging
 import os
 import pickle
@@ -9,14 +9,14 @@ import nosexunit.excepts as nexcepts
 
 
 # Get a logger
-logger =  logging.getLogger('%s.%s' % (nconst.LOGGER, __name__))
+logger = logging.getLogger('%s.%s' % (nconst.LOGGER, __name__))
 
 class Singleton(object):
     '''
     Singleton implementation
     On: http://www.python.org/download/releases/2.2.3/descrintro/
     '''
-    
+
     def __new__(cls, *args, **kwds):
         '''
         Return the instance of the singleton
@@ -29,11 +29,11 @@ class Singleton(object):
         it.init(cls, *args, **kwds)
         cls.__it__ = it
         return it
-    
+
     def init(self, *args, **kwds):
         '''Initialization on first call'''
         pass
-    
+
     def reset(cls):
         '''
         Reset the instance of the singleton
@@ -44,7 +44,7 @@ class Singleton(object):
             cls.__it__ = None
             it.close()
     reset = staticmethod(reset)
-    
+
     def close(self):
         '''Close the instance of the singleton'''
         pass
@@ -113,7 +113,7 @@ def split(fn):
     '''Return the extension of the provided base file'''
     # Get the parts of the file
     sf = fn.split('.')
-    # Get the length 
+    # Get the length
     l = len(sf)
     # Check if not extension
     if l == 1: return (fn, None)
@@ -122,7 +122,7 @@ def split(fn):
         # Get the last part as extension
         ext = sf[-1]
         # Join to get base
-        bn = '.'.join(sf[0:l-1])
+        bn = '.'.join(sf[0:l - 1])
     # Return the 2-UPLE: base, extension
     return (bn, ext)
 
@@ -159,7 +159,7 @@ def create(folder):
     # If not exists, create the folders
     if not os.path.exists(folder): os.makedirs(folder)
     # If exists and is a file, raise
-    elif os.path.isfile(folder): raise nexcepts.ToolError('following path exists but is not a folder: %s' %folder)
+    elif os.path.isfile(folder): raise nexcepts.ToolError('following path exists but is not a folder: %s' % folder)
 
 def clean(folder, prefix=None, ext=None):
     '''Clean all file with the given extension and/or prefix in specified folder'''
@@ -308,7 +308,7 @@ def expand(environ):
             # Go threw the parts
             for section in sections:
                 # Delete quote if on Win32
-                if not on_posix(): section = section.replace('"', '') 
+                if not on_posix(): section = section.replace('"', '')
                 # Get the right one
                 section = section.strip()
                 # Check that useful
