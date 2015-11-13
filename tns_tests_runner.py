@@ -71,7 +71,7 @@ def run_tests():
     # 300 - 399 - Low priority
     # 400 - 499 - Negative tests
     #
-    # TESTRUN Types:
+    # TEST_RUN Types:
     # SMOKE
     # - Runs tests with High priority.
     # DEFAULT
@@ -105,7 +105,7 @@ def run_tests():
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOS))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSSandboxPods))
 
-    if ('TESTRUN' in os.environ) and (not "SMOKE" in os.environ['TESTRUN']):
+    if ('TEST_RUN' in os.environ) and (not "SMOKE" in os.environ['TEST_RUN']):
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryAndroid))
@@ -117,7 +117,7 @@ def run_tests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSLibs))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSXcconfig))
 
-    if ('TESTRUN' in os.environ) and ("FULL" in os.environ['TESTRUN']):
+    if ('TEST_RUN' in os.environ) and ("FULL" in os.environ['TEST_RUN']):
         suite.addTests(
             unittest.TestLoader().loadTestsFromTestCase(DeployAndroid))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(RuniOS))
@@ -132,7 +132,7 @@ def run_tests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
 
     # Smoke test runs only high priority tests
-    if ('TESTRUN' in os.environ) and ("SMOKE" in os.environ['TESTRUN']):
+    if ('TEST_RUN' in os.environ) and ("SMOKE" in os.environ['TEST_RUN']):
         for test in suite:
             if test._testMethodName.find('test_4') >= 0:
                 setattr(test, test._testMethodName, lambda: test.skipTest(

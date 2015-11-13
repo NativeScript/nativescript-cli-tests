@@ -62,8 +62,8 @@ class PlatformiOS(unittest.TestCase):
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
-        if ('TESTRUN' in os.environ) and (
-                not "SMOKE" in os.environ['TESTRUN']):
+        if ('TEST_RUN' in os.environ) and (
+                not "SMOKE" in os.environ['TEST_RUN']):
             assert check_file_exists(
                 'TNS_App/platforms/ios',
                 'platform_ios_current.txt')
@@ -81,8 +81,8 @@ class PlatformiOS(unittest.TestCase):
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
-        if ('TESTRUN' in os.environ) and (
-                not "SMOKE" in os.environ['TESTRUN']):
+        if ('TEST_RUN' in os.environ) and (
+                not "SMOKE" in os.environ['TEST_RUN']):
             assert check_file_exists(
                 'TNS_App/platforms/ios',
                 'platform_ios_symlink.txt')
@@ -102,8 +102,8 @@ class PlatformiOS(unittest.TestCase):
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
-        if ('TESTRUN' in os.environ) and (
-                not "SMOKE" in os.environ['TESTRUN']):
+        if ('TEST_RUN' in os.environ) and (
+                not "SMOKE" in os.environ['TEST_RUN']):
             assert check_file_exists(
                 'TNS_App/platforms/ios',
                 'platform_ios_symlink.txt')
@@ -122,8 +122,8 @@ class PlatformiOS(unittest.TestCase):
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
-        if ('TESTRUN' in os.environ) and (
-                not "SMOKE" in os.environ['TESTRUN']):
+        if ('TEST_RUN' in os.environ) and (
+                not "SMOKE" in os.environ['TEST_RUN']):
             assert check_file_exists(
                 'TNS_App/platforms/ios',
                 'platform_ios_current.txt')
@@ -172,8 +172,8 @@ class PlatformiOS(unittest.TestCase):
         output = run_aut("cat TNS_App/package.json")
         assert "\"version\": \"1.4.0\"" in output
 
-        if ('TESTRUN' in os.environ) and (
-                not "SMOKE" in os.environ['TESTRUN']):
+        if ('TEST_RUN' in os.environ) and (
+                not "SMOKE" in os.environ['TEST_RUN']):
             assert check_file_exists(
                 'TNS_App/platforms/ios',
                 'platform_ios_1.4.0.txt')
@@ -197,8 +197,8 @@ class PlatformiOS(unittest.TestCase):
         output = run_aut("cat TNS_App/package.json")
         assert "\"version\": \"1.3.0\"" in output
 
-        if ('TESTRUN' in os.environ) and (
-                not "SMOKE" in os.environ['TESTRUN']):
+        if ('TEST_RUN' in os.environ) and (
+                not "SMOKE" in os.environ['TEST_RUN']):
             assert check_file_exists(
                 'TNS_App/platforms/ios',
                 'platform_ios_1.3.0.txt')
