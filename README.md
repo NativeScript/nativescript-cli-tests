@@ -12,7 +12,7 @@ Environment setup:
 ==
 Following environment variables should be set:
 
-    - TESTRUN - Type of test run (set FULL to run all tests)
+    - TEST_RUN - Type of test run (set FULL to run all tests)
  
     - CLI_PATH - Path to CLI package under test (package file should be named nativescript.tgz)
     
@@ -30,7 +30,7 @@ Following environment variables should be set:
     
     - KEYCHAIN_PASS - Keychain password
 
-TESTRUN=FULL suggests test are executed in specific test environment.
+TEST_RUN=FULL suggests test are executed in specific test environment.
 For that, following should be available: 
 
     - Android emulator with API17 (AVD Name = Api17)

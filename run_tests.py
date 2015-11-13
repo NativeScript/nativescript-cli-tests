@@ -47,7 +47,7 @@ if __name__ == '__main__':
     stop_emulators()
     stop_simulators()
 
-    if 'TESTRUN' in os.environ and "FULL" in os.environ['TESTRUN']:
+    if 'TEST_RUN' in os.environ and "FULL" in os.environ['TEST_RUN']:
 
         # Uninstall test apps on real devices
         uninstall_app("TNSApp", platform="android", fail=False)
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     execute_tests()
 
     # Stop running emulators
-    if 'TESTRUN' in os.environ and not "SMOKE" in os.environ['TESTRUN']:
+    if 'TEST_RUN' in os.environ and not "SMOKE" in os.environ['TEST_RUN']:
         stop_emulators()
         if 'Darwin' in platform.platform():
             stop_simulators()
