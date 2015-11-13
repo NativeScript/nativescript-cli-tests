@@ -7,6 +7,7 @@ from helpers._os_lib import cleanup_folder, check_file_exists, folder_exists, ru
 from helpers._tns_lib import IOS_RUNTIME_PATH, \
     build, create_project, platform_add, library_add
 
+
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function

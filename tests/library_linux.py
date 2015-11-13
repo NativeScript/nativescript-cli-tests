@@ -8,6 +8,7 @@ from helpers._os_lib import cleanup_folder, check_file_exists, check_output, run
 from helpers._tns_lib import ANDROID_RUNTIME_PATH, TNSPATH, \
     build, create_project, platform_add, library_add
 
+
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function

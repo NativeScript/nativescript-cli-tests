@@ -1,12 +1,13 @@
 '''
 Tests for prepare command in context of Android
 '''
-import unittest
 import os
+import unittest
 
 from helpers._os_lib import cleanup_folder, file_exists, run_aut, replace
 from helpers._tns_lib import ANDROID_RUNTIME_PATH, create_project, create_project_add_platform, \
     platform_add, TNSPATH
+
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring

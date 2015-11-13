@@ -91,12 +91,17 @@ Version in 0.7.1
 # TODO: color stderr
 # TODO: simplify javascript using ,ore than 1 class in the class attribute?
 
-import datetime
 import StringIO
+import datetime
 import sys
 import time
 import unittest
 from xml.sax import saxutils
+
+from nosexunit import const as nconst
+from nosexunit import core as ncore
+
+
 # bdLibPath2=os.path.abspath(sys.argv[0]+"..")
 # print("bdlibpath="+bdLibPath)
 #bdLibPath=os.path.abspath(os.path.join(sys.argv[0], "nosexunit"))
@@ -104,8 +109,6 @@ from xml.sax import saxutils
 #if not bdLibPath2 in sys.path: sys.path.append(bdLibPath2)
 #if not bdLibPath in sys.path: sys.path.append(bdLibPath)
 print sys.path
-from nosexunit import core as ncore
-from nosexunit import const as nconst
 #from _ice_lib import *
 
 # ------------------------------------------------------------------------

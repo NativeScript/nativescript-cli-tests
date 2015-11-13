@@ -8,6 +8,7 @@ from helpers._os_lib import cleanup_folder, run_aut, is_running_process
 from helpers._tns_lib import create_project, create_project_add_platform, \
     IOS_RUNTIME_SYMLINK_PATH, TNSPATH
 
+
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function

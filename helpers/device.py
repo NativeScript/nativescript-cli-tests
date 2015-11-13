@@ -11,6 +11,7 @@ from helpers._os_lib import run_aut, kill_process
 from helpers._tns_lib import TNSPATH
 from helpers.adb import restart_adb
 
+
 def start_emulator(emulator_name, port="5554", timeout=300, wait_for=True):
     '''Start Android Emulator'''
 

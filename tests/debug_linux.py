@@ -2,7 +2,9 @@
 Test for Android debugger
 '''
 import unittest
+
 from helpers._os_lib import cleanup_folder
+
 
 # C0111 - Missing docstring
 # R0201 - Method could be a function

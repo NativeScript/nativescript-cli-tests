@@ -7,16 +7,18 @@
 '''
 Wraper around OS commands
 '''
-import os
 import errno
 import fileinput
-import time
-import threading
-import psutil
-import shutil
+import os
 import platform
+import shutil
 import tarfile
+import threading
 from time import sleep
+import time
+
+import psutil
+
 
 DEFAULT_TIMEOUT = 180  # seconds
 DEFAULT_OUTPUT_FILE = "output.txt"

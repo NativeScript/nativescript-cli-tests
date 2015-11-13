@@ -1,11 +1,12 @@
 #-*- coding: utf-8 -*-
+import logging
 import os
 import pickle
-import logging
 
 import nosexunit
 import nosexunit.const as nconst
 import nosexunit.excepts as nexcepts
+
 
 # Get a logger
 logger =  logging.getLogger('%s.%s' % (nconst.LOGGER, __name__))

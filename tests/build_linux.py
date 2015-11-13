@@ -11,6 +11,7 @@ from helpers._tns_lib import TNSPATH, create_project, create_project_add_platfor
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, platform_add, \
     ANDROID_RUNTIME_SYMLINK_PATH
 
+
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function

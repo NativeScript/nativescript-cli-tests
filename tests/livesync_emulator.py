@@ -12,6 +12,7 @@ from helpers._tns_lib import ANDROID_RUNTIME_PATH, \
 from helpers.device import given_running_emulator, \
     stop_emulators, stop_simulators
 
+
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function

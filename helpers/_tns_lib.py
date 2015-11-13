@@ -3,9 +3,10 @@ Wraper around tns commands
 '''
 import os
 import shutil
+from time import sleep
 
 from helpers._os_lib import run_aut, file_exists, extract_archive
-from time import sleep
+
 
 TNSPATH = os.path.join('node_modules', '.bin', 'tns')
 NPATH = os.path.join('node_modules', '.bin', 'nativescript')

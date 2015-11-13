@@ -1,10 +1,11 @@
 '''
 Wraper around adb commands
 '''
+from time import sleep
 import time
 
-from time import sleep
 from helpers._os_lib import run_aut
+
 
 def restart_adb():
     '''Restart Adb'''

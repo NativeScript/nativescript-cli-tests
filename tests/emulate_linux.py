@@ -10,6 +10,7 @@ from helpers._tns_lib import create_project_add_platform, ANDROID_RUNTIME_PATH, 
     ANDROID_KEYSTORE_ALIAS_PASS, create_project
 from helpers.device import stop_emulators, given_running_emulator
 
+
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function

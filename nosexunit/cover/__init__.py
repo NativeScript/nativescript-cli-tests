@@ -1,17 +1,18 @@
 #-*- coding: utf-8 -*-
-import os
-import time
-import shutil
-import logging
-import datetime
-import compiler
 import StringIO
+import compiler
+import datetime
+import logging
+import os
+import shutil
+import time
 import traceback
 
 import nosexunit
 import nosexunit.const as nconst
-import nosexunit.tools as ntools
 import nosexunit.cyclo as ncyclo
+import nosexunit.tools as ntools
+
 
 # Get a logger
 logger =  logging.getLogger('%s.%s' % (nconst.LOGGER, __name__))

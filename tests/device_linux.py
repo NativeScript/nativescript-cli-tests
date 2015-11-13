@@ -11,6 +11,7 @@ from helpers.adb import stop_application, wait_until_app_is_running
 from helpers.device import get_device_count, get_physical_device_id, \
     given_real_device, given_running_emulator
 
+
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function

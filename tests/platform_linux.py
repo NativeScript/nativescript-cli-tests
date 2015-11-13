@@ -3,13 +3,14 @@ Test platform add (android)
 '''
 import os
 import platform
+from time import sleep
 import unittest
 
 from helpers._os_lib import run_aut, cleanup_folder, is_empty, \
     check_file_exists
 from helpers._tns_lib import ANDROID_RUNTIME_PATH, ANDROID_RUNTIME_SYMLINK_PATH, build, \
     TNSPATH, create_project, create_project_add_platform, platform_add
-from time import sleep
+
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring

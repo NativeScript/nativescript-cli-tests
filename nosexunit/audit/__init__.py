@@ -1,17 +1,18 @@
 #-*- coding: utf-8 -*-
-import os
-import sys
-import new
-import logging
-import unittest
-import datetime
-import traceback
-import subprocess
 import ConfigParser
+import datetime
+import logging
+import new
+import os
+import subprocess
+import sys
+import traceback
+import unittest
 
 import nosexunit.const as nconst
-import nosexunit.tools as ntools
 import nosexunit.excepts as nexcepts
+import nosexunit.tools as ntools
+
 
 # Get a logger
 logger =  logging.getLogger('%s.%s' % (nconst.LOGGER, __name__))

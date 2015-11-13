@@ -1,14 +1,15 @@
 #-*- coding: utf-8 -*-
+import StringIO
+import codecs
+import logging
 import os
 import sys
 import time
-import codecs
-import logging
-import StringIO
 import traceback
 
 import nosexunit.const as nconst
 import nosexunit.tools as ntools
+
 
 # Get a logger
 logger =  logging.getLogger('%s.%s' % (nconst.LOGGER, __name__))

@@ -10,6 +10,7 @@ from helpers._tns_lib import create_project_add_platform, IOS_RUNTIME_PATH, \
     TNSPATH, create_project, ANDROID_RUNTIME_PATH, platform_add, build, \
     IOS_RUNTIME_SYMLINK_PATH, ANDROID_RUNTIME_SYMLINK_PATH
 
+
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function
