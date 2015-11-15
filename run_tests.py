@@ -92,13 +92,21 @@ if __name__ == '__main__':
     if 'Darwin' in platform.platform():
         get_ios_runtime()
 
-    # Clone hello-world template repo
+    # Clone template-hello-world repo
     cleanup_folder('template-hello-world')
     OUTPUT = run_aut('git clone ' + \
                     'git@github.com:NativeScript/template-hello-world.git ' + \
                     'template-hello-world')
     assert not ("fatal" in OUTPUT), \
         "Failed to clone git@github.com:NativeScript/template-hello-world.git"
+
+    # Clone template-hello-world-ts repo
+    cleanup_folder('template-hello-world-ts')
+    OUTPUT = run_aut('git clone ' + \
+                    'git@github.com:NativeScript/template-hello-world-ts.git ' + \
+                    'template-hello-world-ts')
+    assert not ("fatal" in OUTPUT), \
+        "Failed to clone git@github.com:NativeScript/template-hello-world-ts.git"
 
     # Clone QA-TestApps repo
     cleanup_folder('QA-TestApps')

@@ -145,7 +145,6 @@ def folder_exists(path):
     else:
         return False
 
-
 def file_exists(path):
     '''Check if file exists'''
     if os.path.exists(path):
@@ -153,6 +152,17 @@ def file_exists(path):
     else:
         return False
 
+def file_with_extension_exists(path, extension):
+    '''Check if file with extension exists'''
+    count = 0
+    for file_name in os.listdir(path):
+        if file_name.endswith(extension):
+            print "File: {0}".format(os.path.join(path, file_name))
+            count += 1
+    if count > 0:
+        return True
+    else:
+        return False
 
 def is_running_process(process_name):
     '''Check process is running'''
@@ -161,7 +171,6 @@ def is_running_process(process_name):
         if process_name in str(proc):
             result = True
     return result
-
 
 def kill_process(process_name, command_line=None):
     '''Kill process'''
@@ -182,7 +191,6 @@ def kill_process(process_name, command_line=None):
                         break
     return result
 
-
 def extract_archive(file_name, folder):
     '''Extract archive'''
     if file_name.endswith(".tgz"):
@@ -192,7 +200,6 @@ def extract_archive(file_name, folder):
         print "{0} extracted in {1}".format(file_name, folder)
     else:
         print "Failed to extract {0}".format(file_name)
-
 
 def replace(file_path, str1, str2):
     '''Replace strings in file'''
