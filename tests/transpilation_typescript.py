@@ -1,17 +1,14 @@
 '''
-Tests for transpilation of typescript in context of Android
+Tests for transpilation of typescript in context
 '''
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function
 # R0904 - Too many public methods
-
-# TODO:
-# pylint: disable=
+# pylint: disable=C0111, R0201
 
 import platform, unittest
-# import os
 
 from helpers._os_lib import cleanup_folder, \
     file_exists, file_with_extension_exists, is_empty, run_aut
@@ -30,11 +27,11 @@ class TranspilationTypeScript(unittest.TestCase):
         print ""
 
         cleanup_folder('TNS_App')
-# TODO:
-#     def tearDown(self):
-#         cleanup_folder('TNS_App')
 
-    def test_001(self):
+    def tearDown(self):
+        cleanup_folder('TNS_App')
+
+    def test_001_transpilation_ts(self):
         create_project(proj_name="TNS_App", copy_from="template-hello-world-ts")
         platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, path="TNS_App")
 
@@ -78,7 +75,7 @@ class TranspilationTypeScript(unittest.TestCase):
                 path="TNS_App",
                 symlink=True)
 
-            output = build(platform="ios", path="TNS_App")
+            output = prepare(platform="ios", path="TNS_App")
             assert "Executing before-prepare hook" in output
             assert "Found peer TypeScript" in output
             assert not "error" in output
@@ -92,6 +89,7 @@ class TranspilationTypeScript(unittest.TestCase):
                 "TNS_App/platforms/ios/TNSApp/app", ".ts")
             assert not file_with_extension_exists(
                 "TNS_App/platforms/ios/TNSApp/app/tns_modules", ".ts")
+            build(platform="ios", path="TNS_App")
 
 #         output = run_aut(TNS_PATH + " prepare android --path TNS_App")
 #         assert "Project successfully prepared" in output
