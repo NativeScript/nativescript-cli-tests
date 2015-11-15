@@ -8,7 +8,7 @@ import platform
 import time
 
 from helpers._os_lib import run_aut, kill_process
-from helpers._tns_lib import TNSPATH
+from helpers._tns_lib import TNS_PATH
 from helpers.adb import restart_adb
 
 
@@ -46,7 +46,7 @@ def wait_for_device(device_name, timeout=600):
     end_time = start_time + timeout
     while not found:
         time.sleep(5)
-        output = run_aut(TNSPATH + " device")
+        output = run_aut(TNS_PATH + " device")
         if device_name in output:
             found = True
         if time.time() > start_time + 60:
@@ -74,9 +74,9 @@ def stop_simulators():
 def given_running_emulator():
     '''Ensure Android Emulator is running'''
 
-    output = run_aut(TNSPATH + " device")
+    output = run_aut(TNS_PATH + " device")
     if not 'emulator' in output:
-        output = run_aut(TNSPATH + " device")
+        output = run_aut(TNS_PATH + " device")
         if not 'emulator' in output:
             stop_emulators()
             start_emulator(emulator_name="Api19", port="5554", wait_for=True)
@@ -94,7 +94,7 @@ def get_physical_device_id(platform):
     '''Get Id of first connected physical device'''
 
     device_id = None
-    output = run_aut(TNSPATH + " device " + platform)
+    output = run_aut(TNS_PATH + " device " + platform)
     lines = output.splitlines()
     for line in lines:
         lline = line.lower()
@@ -108,7 +108,7 @@ def get_physical_device_id(platform):
 def get_device_count(platform="", exclude_emulators=False):
     '''Get device count'''
 
-    output = run_aut(TNSPATH + " device " + platform)
+    output = run_aut(TNS_PATH + " device " + platform)
     lines = output.splitlines()
     count = len(lines)
     if exclude_emulators:

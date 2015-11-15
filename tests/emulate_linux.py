@@ -6,7 +6,7 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut
 from helpers._tns_lib import create_project_add_platform, ANDROID_RUNTIME_PATH, \
-    TNSPATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, \
+    TNS_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, \
     ANDROID_KEYSTORE_ALIAS_PASS, create_project
 from helpers.device import stop_emulators, given_running_emulator
 
@@ -51,7 +51,7 @@ class EmulateAndroid(unittest.TestCase):
 
         create_project_add_platform(proj_name="TNS_App", \
                                     platform="android", framework_path=ANDROID_RUNTIME_PATH)
-        output = run_aut(TNSPATH + " emulate android --path TNS_App --timeout 600 --justlaunch", \
+        output = run_aut(TNS_PATH + " emulate android --path TNS_App --timeout 600 --justlaunch", \
                          set_timeout=660)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -67,7 +67,7 @@ class EmulateAndroid(unittest.TestCase):
 
     def test_002_emulate_android_release(self):
 
-        output = run_aut(TNSPATH + " emulate android --avd Api19 " + \
+        output = run_aut(TNS_PATH + " emulate android --avd Api19 " + \
                          "--keyStorePath " + ANDROID_KEYSTORE_PATH + \
                         " --keyStorePassword " + ANDROID_KEYSTORE_PASS + \
                         " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + \
@@ -90,7 +90,7 @@ class EmulateAndroid(unittest.TestCase):
 
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
-        output = run_aut(os.path.join("..", TNSPATH) + \
+        output = run_aut(os.path.join("..", TNS_PATH) + \
                          " emulate android --avd Api19 --timeout 600 --justlaunch", set_timeout=660)
         os.chdir(current_dir)
         assert "Project successfully prepared" in output
@@ -104,7 +104,7 @@ class EmulateAndroid(unittest.TestCase):
 
     def test_300_emulate_android_platform_not_added(self):
         create_project(proj_name="TNSAppNoPlatform")
-        output = run_aut(TNSPATH + \
+        output = run_aut(TNS_PATH + \
             " emulate android --avd Api19 --timeout 600  --justlaunch --path TNSAppNoPlatform", \
             set_timeout=660)
         assert "Copying template files..." in output
@@ -119,7 +119,7 @@ class EmulateAndroid(unittest.TestCase):
         # running on this device
 
     def test_400_emulate_invalid_platform(self):
-        output = run_aut(TNSPATH + \
+        output = run_aut(TNS_PATH + \
             " emulate invalidPlatform --path TNS_App --timeout 600 --justlaunch", \
             set_timeout=660)
         assert "The input is not valid sub-command for 'emulate' command" in output
@@ -128,7 +128,7 @@ class EmulateAndroid(unittest.TestCase):
     @unittest.skip(
         "Skipped because of https://github.com/NativeScript/nativescript-cli/issues/289")
     def test_401_emulate_invalid_avd(self):
-        output = run_aut(TNSPATH + \
+        output = run_aut(TNS_PATH + \
             " emulate android --avd invaliddevice_id --path TNS_App --timeout 600 --justlaunch", \
             set_timeout=660)
         # TODO: Modify assert when issue is fixed

@@ -6,7 +6,7 @@ import unittest
 
 from helpers._os_lib import run_aut, cleanup_folder, check_file_exists, \
     is_empty, file_exists
-from helpers._tns_lib import TNSPATH, ANDROID_RUNTIME_PATH, build, \
+from helpers._tns_lib import TNS_PATH, ANDROID_RUNTIME_PATH, build, \
     create_project, create_project_add_platform, IOS_RUNTIME_PATH, IOS_RUNTIME_SYMLINK_PATH, \
     platform_add, prepare
 
@@ -34,12 +34,12 @@ class PlatformiOS(unittest.TestCase):
     def test_001_platform_list_ios_project(self):
         create_project_add_platform(proj_name="TNS_App", platform="ios", \
                                     framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
-        output = run_aut(TNSPATH + " platform list --path TNS_App")
+        output = run_aut(TNS_PATH + " platform list --path TNS_App")
         assert "The project is not prepared for any platform" in output
         assert "Installed platforms:  ios" in output
 
         prepare(path="TNS_App", platform="ios")
-        output = run_aut(TNSPATH + " platform list --path TNS_App")
+        output = run_aut(TNS_PATH + " platform list --path TNS_App")
         assert "The project is prepared for:  ios" in output
         assert "Installed platforms:  ios" in output
 
@@ -48,12 +48,12 @@ class PlatformiOS(unittest.TestCase):
             framework_path=ANDROID_RUNTIME_PATH,
             path="TNS_App",
             symlink=True)
-        output = run_aut(TNSPATH + " platform list --path TNS_App")
+        output = run_aut(TNS_PATH + " platform list --path TNS_App")
         assert "The project is prepared for:  ios" in output
         assert "Installed platforms:  android and ios" in output
 
         prepare(path="TNS_App", platform="android")
-        output = run_aut(TNSPATH + " platform list --path TNS_App")
+        output = run_aut(TNS_PATH + " platform list --path TNS_App")
         assert "The project is prepared for:  ios and android" in output
         assert "Installed platforms:  android and ios" in output
 
@@ -139,7 +139,7 @@ class PlatformiOS(unittest.TestCase):
             platform="ios",
             framework_path=IOS_RUNTIME_PATH)
 
-        output = run_aut(TNSPATH + " platform remove ios --path TNS_App")
+        output = run_aut(TNS_PATH + " platform remove ios --path TNS_App")
         assert "Platform ios successfully removed." in output
 
         assert not "error" in output
@@ -155,7 +155,7 @@ class PlatformiOS(unittest.TestCase):
             framework_path=IOS_RUNTIME_SYMLINK_PATH,
             symlink=True)
 
-        output = run_aut(TNSPATH + " platform remove ios --path TNS_App")
+        output = run_aut(TNS_PATH + " platform remove ios --path TNS_App")
         assert "Platform ios successfully removed." in output
 
         assert not "error" in output
@@ -191,7 +191,7 @@ class PlatformiOS(unittest.TestCase):
         output = run_aut("cat TNS_App/package.json")
         assert "\"version\": \"1.2.2\"" in output
 
-        command = TNSPATH + " platform update ios@1.3.0 --path TNS_App < enter_key.txt"
+        command = TNS_PATH + " platform update ios@1.3.0 --path TNS_App < enter_key.txt"
         run_aut("echo " + command)
         os.system(command)
 
@@ -213,7 +213,7 @@ class PlatformiOS(unittest.TestCase):
         output = run_aut("cat TNS_App/package.json")
         assert "\"version\": \"1.2.0\"" in output
 
-        command = TNSPATH + " platform update ios@1.1.0 --path TNS_App < enter_key.txt"
+        command = TNS_PATH + " platform update ios@1.1.0 --path TNS_App < enter_key.txt"
         run_aut("echo " + command)
         os.system(command)
 
@@ -227,13 +227,13 @@ class PlatformiOS(unittest.TestCase):
         output = run_aut("cat TNS_App/package.json")
         assert "\"version\": \"1.0.0\"" in output
 
-        command = TNSPATH + \
+        command = TNS_PATH + \
             " platform update ios --frameworkPath {0} --path TNS_App".format(
                 IOS_RUNTIME_PATH)
         output = run_aut(command)
         assert "We need to override xcodeproj file. The old one will be saved at" in output
 
-        # output = run_aut("echo '' | " + TNSPATH + " platform update")
+        # output = run_aut("echo '' | " + TNS_PATH + " platform update")
         assert "Successfully updated to version  1.2.0" in output
         build(platform="ios", path="TNS_App")
 
@@ -248,7 +248,7 @@ class PlatformiOS(unittest.TestCase):
         output = run_aut("cat TNS_App/package.json")
         assert "\"version\": \"1." in output
 
-        command = TNSPATH + " platform update ios@1.1.0 --path TNS_App < enter_key.txt"
+        command = TNS_PATH + " platform update ios@1.1.0 --path TNS_App < enter_key.txt"
         run_aut("echo " + command)
         os.system(command)
 
@@ -285,7 +285,7 @@ class PlatformiOS(unittest.TestCase):
 
     def test_330_platform_update_ios_patform_not_added(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(TNSPATH + " platform update ios --path TNS_App")
+        output = run_aut(TNS_PATH + " platform update ios --path TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created." in output
         assert not is_empty("TNS_App/platforms/ios/internal/metadata-generator")
@@ -293,6 +293,6 @@ class PlatformiOS(unittest.TestCase):
     def test_400_platform_add_existing_platform(self):
         self.test_004_platform_add_ios_symlink_and_framework_path()
 
-        output = run_aut(TNSPATH + " platform add ios --path TNS_App")
+        output = run_aut(TNS_PATH + " platform add ios --path TNS_App")
         assert "Platform ios already added" in output
         assert "Usage" in output

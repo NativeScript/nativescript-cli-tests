@@ -5,7 +5,7 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut, file_exists
 from helpers._tns_lib import build, IOS_RUNTIME_SYMLINK_PATH, \
-    TNSPATH, create_project, platform_add, prepare, create_project_add_platform
+    TNS_PATH, create_project, platform_add, prepare, create_project_add_platform
 
 
 # C0103 - Invalid %s name "%s"
@@ -34,7 +34,7 @@ class PluginsiOSXcconfig(unittest.TestCase):
         create_project(proj_name="TNS_App")
 
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " plugin add QA-TestApps/CocoaPods/xcconfig-plugin --path TNS_App")
         assert "Successfully installed plugin xcconfig-plugin." in output
         assert file_exists("TNS_App/node_modules/xcconfig-plugin/package.json")
@@ -78,7 +78,7 @@ class PluginsiOSXcconfig(unittest.TestCase):
             symlink=True)
 
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " plugin add QA-TestApps/CocoaPods/xcconfig-plugin --path TNS_App")
         assert "Successfully installed plugin xcconfig-plugin." in output
         assert file_exists("TNS_App/node_modules/xcconfig-plugin/package.json")

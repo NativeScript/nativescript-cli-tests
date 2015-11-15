@@ -4,7 +4,7 @@ log_trace tests
 import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut
-from helpers._tns_lib import create_project, TNSPATH
+from helpers._tns_lib import create_project, TNS_PATH
 
 
 # C0103 - Invalid %s name "%s"
@@ -28,7 +28,7 @@ class LogTrace(unittest.TestCase):
         pass
 
     def test_001_create_project_log_trace(self):
-        output = run_aut(TNSPATH + " create TNS_App --log trace")
+        output = run_aut(TNS_PATH + " create TNS_App --log trace")
         assert "Creating a new NativeScript project with name TNS_App" in output
         assert "id org.nativescript.TNSApp at location" in output
         assert "Using NativeScript hello world application" in output
@@ -37,7 +37,7 @@ class LogTrace(unittest.TestCase):
 
     def test_002_platform_add_log_trace(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(TNSPATH + " platform add android --path TNS_App --log trace")
+        output = run_aut(TNS_PATH + " platform add android --path TNS_App --log trace")
         assert "Looking for project in" in output
         assert "Project directory is" in output
         assert "Package: org.nativescript.TNSApp" in output

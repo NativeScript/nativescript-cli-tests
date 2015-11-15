@@ -5,7 +5,7 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, check_file_exists, check_output, run_aut, \
     file_exists, folder_exists
-from helpers._tns_lib import ANDROID_RUNTIME_PATH, TNSPATH, \
+from helpers._tns_lib import ANDROID_RUNTIME_PATH, TNS_PATH, \
     build, create_project, platform_add, library_add
 
 
@@ -51,7 +51,7 @@ class LibraryAndroid(unittest.TestCase):
         pass
 
     def test_301_library(self):
-        output = run_aut(TNSPATH + " library")
+        output = run_aut(TNS_PATH + " library")
         assert check_output(output, 'library_help_output.txt')
 
     def test_400_library_add_android_eclipse_proj_lib(self):
@@ -91,7 +91,7 @@ class LibraryAndroid(unittest.TestCase):
     def test_402_library_add_no_platform(self):
         create_project(proj_name="TNS_App")
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " library add android QA-TestApps/ --path TNS_App")
 
         assert "The platform android is not added to this project. " + \

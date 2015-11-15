@@ -8,7 +8,7 @@ from time import sleep
 from helpers._os_lib import run_aut, file_exists, extract_archive
 
 
-TNSPATH = os.path.join('node_modules', '.bin', 'tns')
+TNS_PATH = os.path.join('node_modules', '.bin', 'tns')
 NPATH = os.path.join('node_modules', '.bin', 'nativescript')
 ANDROID_RUNTIME_PATH = "tns-android.tgz"
 IOS_RUNTIME_PATH = "tns-ios.tgz"
@@ -89,7 +89,7 @@ def create_project(proj_name, path=None, app_id=None, copy_from=None):
     if copy_from is None:
         copy_from = "template-hello-world"
 
-    command = TNSPATH + " create {0}".format(proj_name)
+    command = TNS_PATH + " create {0}".format(proj_name)
 
     if path is not None:
         command += " --path " + path
@@ -105,7 +105,7 @@ def create_project(proj_name, path=None, app_id=None, copy_from=None):
 def platform_add(platform=None, framework_path=None, path=None, symlink=False, assert_success=True):
     '''Add platform to {N} project'''
 
-    command = TNSPATH + " platform add"
+    command = TNS_PATH + " platform add"
 
     if platform is not None:
         command += " {0}".format(platform)
@@ -131,7 +131,7 @@ def platform_add(platform=None, framework_path=None, path=None, symlink=False, a
 def prepare(path=None, platform=None, log_trace=False, assert_success=True):
     '''Prepare platform'''
 
-    command = TNSPATH + " prepare"
+    command = TNS_PATH + " prepare"
 
     if platform is not None:
         command += " {0}".format(platform)
@@ -153,7 +153,7 @@ def prepare(path=None, platform=None, log_trace=False, assert_success=True):
 def library_add(platform=None, lib_path=None, path=None, assert_success=True):
     '''Add library'''
 
-    command = TNSPATH + " library add"
+    command = TNS_PATH + " library add"
 
     if platform is not None:
         command += " {0}".format(platform)
@@ -178,7 +178,7 @@ def library_add(platform=None, lib_path=None, path=None, assert_success=True):
 def plugin_add(plugin=None, path=None, assert_success=True):
     '''Install {N} plugin'''
 
-    command = TNSPATH + " plugin add"
+    command = TNS_PATH + " plugin add"
 
     if plugin is not None:
         command += " {0}".format(plugin)
@@ -199,7 +199,7 @@ def plugin_add(plugin=None, path=None, assert_success=True):
 def build(platform=None, mode=None, path=None, for_device=False, log_trace=False, assert_success=True):
     '''Build {N} project'''
 
-    command = TNSPATH + " build"
+    command = TNS_PATH + " build"
 
     if platform is not None:
         command += " {0}".format(platform)
@@ -233,7 +233,7 @@ def build(platform=None, mode=None, path=None, for_device=False, log_trace=False
 def run(platform=None, emulator=False, device=None, path=None, just_launch=True, assert_success=True):
     '''Run {N} project'''
 
-    command = TNSPATH + " run"
+    command = TNS_PATH + " run"
 
     if platform is not None:
         command += " {0}".format(platform)
@@ -270,7 +270,7 @@ def run(platform=None, emulator=False, device=None, path=None, just_launch=True,
 def live_sync(platform=None, emulator=False, device=None, watch=False, path=None, assert_success=True):
     '''LiveSync {N} project'''
 
-    command = TNSPATH + " livesync"
+    command = TNS_PATH + " livesync"
 
     if platform is not None:
         command += " {0}".format(platform)
@@ -309,4 +309,4 @@ def create_project_add_platform(proj_name, platform=None, framework_path=None, s
 
 def get_cli_version():
     '''Return {N} CLI version'''
-    return run_aut(TNSPATH + " --version")
+    return run_aut(TNS_PATH + " --version")

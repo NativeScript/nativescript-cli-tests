@@ -6,7 +6,7 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut, is_running_process
 from helpers._tns_lib import create_project, create_project_add_platform, \
-    IOS_RUNTIME_SYMLINK_PATH, TNSPATH
+    IOS_RUNTIME_SYMLINK_PATH, TNS_PATH
 
 
 # C0103 - Invalid %s name "%s"
@@ -43,13 +43,13 @@ class EmulateiOS(unittest.TestCase):
 
     def test_001_emulate_list_devices(self):
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " emulate ios --availableDevices --path TNS_App --justlaunch")
         assert "iPhone 6 81" in output
 
     def test_002_emulate_ios(self):
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " emulate ios --device 'iPhone 6 81' --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -61,7 +61,7 @@ class EmulateiOS(unittest.TestCase):
 
     def test_003_emulate_ios_release(self):
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " emulate ios --device 'iPhone 6 81' --path TNS_App --release --justlaunch")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
@@ -75,7 +75,7 @@ class EmulateiOS(unittest.TestCase):
     def test_210_emulate_ios_patform_not_added(self):
         create_project(proj_name="TNS_AppNoPlatform")
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " emulate ios --device 'iPhone 6 81' --path TNS_AppNoPlatform --justlaunch")
         assert "Copying template files..." in output
         assert "Project successfully created." in output
@@ -89,7 +89,7 @@ class EmulateiOS(unittest.TestCase):
 
     def test_400_emulate_invalid_device(self):
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " emulate ios --device invalidDevice --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output

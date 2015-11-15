@@ -6,7 +6,7 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut, kill_process, uninstall_app
 from helpers._tns_lib import create_project_add_platform, IOS_RUNTIME_SYMLINK_PATH, \
-    TNSPATH
+    TNS_PATH
 from helpers.device import given_real_device, stop_simulators
 
 
@@ -46,7 +46,7 @@ class DebugiOS(unittest.TestCase):
 
     def test_001_debug_ios_simulator_debugbrk(self):
 
-        output = run_aut(TNSPATH + \
+        output = run_aut(TNS_PATH + \
                         " debug ios --debug-brk --emulator --path TNS_App --frameworkPath " + \
                         IOS_RUNTIME_SYMLINK_PATH, 2 * 60, True)
 
@@ -62,13 +62,13 @@ class DebugiOS(unittest.TestCase):
 
     def test_002_debug_ios_simulator_start(self):
 
-        output = run_aut(TNSPATH + " emulate ios --path TNS_App --justlaunch")
+        output = run_aut(TNS_PATH + " emulate ios --path TNS_App --justlaunch")
         assert "** BUILD SUCCEEDED **" in output
         assert "Starting iOS Simulator" in output
         assert "Session started without errors" in output
         sleep(10)
 
-        output = run_aut(TNSPATH + \
+        output = run_aut(TNS_PATH + \
             " debug ios --start --emulator --path TNS_App --frameworkPath " + \
             IOS_RUNTIME_SYMLINK_PATH, 2 * 60, True)
 
@@ -83,7 +83,7 @@ class DebugiOS(unittest.TestCase):
 
     def test_003_debug_ios_device_debugbrk(self):
 
-        output = run_aut(TNSPATH + \
+        output = run_aut(TNS_PATH + \
             " debug ios --debug-brk --path TNS_App --timeout 120 --frameworkPath " + \
             IOS_RUNTIME_SYMLINK_PATH, 2 * 60 + 30, True)
 
@@ -102,11 +102,11 @@ class DebugiOS(unittest.TestCase):
 
     def test_004_debug_ios_device_start(self):
 
-        output = run_aut(TNSPATH + " run ios --path TNS_App --justlaunch")
+        output = run_aut(TNS_PATH + " run ios --path TNS_App --justlaunch")
         assert "** BUILD SUCCEEDED **" in output
         assert "Successfully deployed on device " in output
         sleep(10)
-        output = run_aut(TNSPATH + \
+        output = run_aut(TNS_PATH + \
             " debug ios --start --path TNS_App --timeout 120 --frameworkPath " + \
             IOS_RUNTIME_SYMLINK_PATH, 2 * 60, True)
 

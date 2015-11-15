@@ -5,7 +5,7 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut
 from helpers._tns_lib import create_project, create_project_add_platform, \
-    IOS_RUNTIME_SYMLINK_PATH, TNSPATH
+    IOS_RUNTIME_SYMLINK_PATH, TNS_PATH
 from helpers.device import given_real_device
 
 
@@ -42,7 +42,7 @@ class DeployiOS(unittest.TestCase):
             platform="ios",
             framework_path=IOS_RUNTIME_SYMLINK_PATH,
             symlink=True)
-        output = run_aut(TNSPATH + " deploy ios --path TNS_App  --justlaunch")
+        output = run_aut(TNS_PATH + " deploy ios --path TNS_App  --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device" in output
@@ -51,7 +51,7 @@ class DeployiOS(unittest.TestCase):
 
     def test_300_deploy_ios_platform_not_added(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(TNSPATH + " deploy ios --path TNS_App --justlaunch")
+        output = run_aut(TNS_PATH + " deploy ios --path TNS_App --justlaunch")
         assert "Copying template files..." in output
         assert "Project successfully created." in output
 

@@ -5,7 +5,7 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, file_exists, run_aut, replace
 from helpers._tns_lib import create_project, create_project_add_platform, \
-    IOS_RUNTIME_SYMLINK_PATH, platform_add, TNSPATH, plugin_add, prepare
+    IOS_RUNTIME_SYMLINK_PATH, platform_add, TNS_PATH, plugin_add, prepare
 
 
 # C0103 - Invalid %s name "%s"
@@ -33,7 +33,7 @@ class PrepareiOS(unittest.TestCase):
         create_project_add_platform(proj_name="TNS_App", platform="ios", \
                         framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
 
-        output = run_aut(TNSPATH + " prepare ios --path TNS_App")
+        output = run_aut(TNS_PATH + " prepare ios --path TNS_App")
         assert "Project successfully prepared" in output
 
         # Verify app and modules are processed and available in platform folder
@@ -60,7 +60,7 @@ class PrepareiOS(unittest.TestCase):
         for i in range(1, 3):
             print "prepare number: " + str(i)
 
-            output = run_aut(TNSPATH + " prepare ios --path TNS_App")
+            output = run_aut(TNS_PATH + " prepare ios --path TNS_App")
             assert "You have tns_modules dir in your app folder" in output
             assert "Project successfully prepared" in output
 
@@ -88,7 +88,7 @@ class PrepareiOS(unittest.TestCase):
                              " TNS_App/app/App_Resources/iOS/newDefault.png")
 
         # prepare project
-        output = run_aut(TNSPATH + " prepare ios --path TNS_App")
+        output = run_aut(TNS_PATH + " prepare ios --path TNS_App")
         assert "Project successfully prepared" in output
 
         # Verify app and modules are processed and available in platform folder
@@ -108,7 +108,7 @@ class PrepareiOS(unittest.TestCase):
 
     def test_201_prepare_ios_platform_not_added(self):
         create_project(proj_name="TNS_App")
-        output = run_aut(TNSPATH + " prepare ios --path TNS_App")
+        output = run_aut(TNS_PATH + " prepare ios --path TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created." in output
         assert "Project successfully prepared" in output
@@ -128,7 +128,7 @@ class PrepareiOS(unittest.TestCase):
         run_aut("cp TNS_App/node_modules/tns-core-modules/application/application.ios.js" + \
                     " TNS_App/node_modules/tns-core-modules/application/New-application.ios.js")
 
-        output = run_aut(TNSPATH + " prepare ios --path TNS_App")
+        output = run_aut(TNS_PATH + " prepare ios --path TNS_App")
         assert "Project successfully prepared" in output
 
         # Verify app and modules are processed and available in platform folder

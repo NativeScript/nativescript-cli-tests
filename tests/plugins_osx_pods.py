@@ -5,7 +5,7 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut, file_exists
 from helpers._tns_lib import build, IOS_RUNTIME_SYMLINK_PATH, \
-    TNSPATH, create_project, platform_add, prepare, create_project_add_platform
+    TNS_PATH, create_project, platform_add, prepare, create_project_add_platform
 
 
 # C0103 - Invalid %s name "%s"
@@ -38,7 +38,7 @@ class PluginsiOSPods(unittest.TestCase):
             symlink=True)
 
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " plugin add QA-TestApps/CocoaPods/carousel --path TNS_App")
         assert "TNS_App/node_modules/carousel" in output
         assert "Successfully installed plugin carousel." in output
@@ -50,7 +50,7 @@ class PluginsiOSPods(unittest.TestCase):
         assert "carousel" in output
 
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " plugin add QA-TestApps/CocoaPods/keychain --path TNS_App")
         assert "TNS_App/node_modules/keychain" in output
         assert "Successfully installed plugin keychain." in output
@@ -84,7 +84,7 @@ class PluginsiOSPods(unittest.TestCase):
         create_project(proj_name="TNS_App")
 
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " plugin add QA-TestApps/CocoaPods/googlesdk --path TNS_App")
         assert "TNS_App/node_modules/googlesdk" in output
         assert "Successfully installed plugin googlesdk." in output
@@ -138,7 +138,7 @@ class PluginsiOSPods(unittest.TestCase):
             symlink=True)
 
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " plugin add QA-TestApps/CocoaPods/googlesdk --path TNS_App")
         assert "TNS_App/node_modules/googlesdk" in output
         assert "Successfully installed plugin googlesdk." in output
@@ -214,7 +214,7 @@ class PluginsiOSPods(unittest.TestCase):
             symlink=True)
 
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " plugin add QA-TestApps/CocoaPods/invalidpod --path TNS_App")
         assert "TNS_App/node_modules/invalidpod" in output
         assert "Successfully installed plugin invalidpod." in output

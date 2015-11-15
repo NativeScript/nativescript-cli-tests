@@ -5,7 +5,7 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut, file_exists
 from helpers._tns_lib import IOS_RUNTIME_SYMLINK_PATH, \
-    TNSPATH, prepare, create_project_add_platform
+    TNS_PATH, prepare, create_project_add_platform
 
 
 # C0103 - Invalid %s name "%s"
@@ -38,7 +38,7 @@ class PluginsiOSSandboxPods(unittest.TestCase):
             symlink=True)
 
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " plugin add QA-TestApps/CocoaPods/nativescript-ios-working-with-sandbox-plugin" + \
             " --path TNS_App")
         assert "Successfully installed plugin " + \
@@ -63,7 +63,7 @@ class PluginsiOSSandboxPods(unittest.TestCase):
             symlink=True)
 
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " plugin add QA-TestApps/CocoaPods/nativescript-ios-fail-with-sandbox-plugin" + \
             " --path TNS_App")
         assert "Successfully installed plugin nativescript-ios-fail-with-sandbox-plugin." in output

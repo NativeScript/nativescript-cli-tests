@@ -6,7 +6,7 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut
 from helpers._tns_lib import create_project, create_project_add_platform, \
-    TNSPATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
+    TNS_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, ANDROID_RUNTIME_PATH
 from helpers.device import given_running_emulator, given_real_device
 
@@ -49,7 +49,7 @@ class RunAndroid(unittest.TestCase):
         cleanup_folder('./TNS_App_NoPlatform')
 
     def test_001_run_android(self):
-        output = run_aut(TNSPATH + " run android --path TNS_App --justlaunch")
+        output = run_aut(TNS_PATH + " run android --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
@@ -57,7 +57,7 @@ class RunAndroid(unittest.TestCase):
         # running on this device
 
     def test_002_run_android_release(self):
-        output = run_aut(TNSPATH + " run android --keyStorePath " + ANDROID_KEYSTORE_PATH +
+        output = run_aut(TNS_PATH + " run android --keyStorePath " + ANDROID_KEYSTORE_PATH +
                         " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
                         " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS +
                         " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS +
@@ -69,7 +69,7 @@ class RunAndroid(unittest.TestCase):
         # running on this device
 
     def test_003_run_android_default(self):
-        output = run_aut(TNSPATH + " run android --path TNS_App", 60)
+        output = run_aut(TNS_PATH + " run android --path TNS_App", 60)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
@@ -78,7 +78,7 @@ class RunAndroid(unittest.TestCase):
     def test_200_run_android_inside_project(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
-        output = run_aut(os.path.join("..", TNSPATH) +
+        output = run_aut(os.path.join("..", TNS_PATH) +
                         " run android --path TNS_App --justlaunch")
         os.chdir(current_dir)
         assert "Project successfully prepared" in output
@@ -88,7 +88,7 @@ class RunAndroid(unittest.TestCase):
     def test_201_run_android_device_id_renamed_proj_dir(self):
         run_aut("mv TNS_App appTest")
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " run android --device emulator-5554 --path appTest --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -100,7 +100,7 @@ class RunAndroid(unittest.TestCase):
     def test_300_run_android_patform_not_added(self):
         create_project(proj_name="TNS_App_NoPlatform")
         output = run_aut(
-            TNSPATH +
+            TNS_PATH +
             " run android --path TNS_App_NoPlatform --justlaunch")
 
         assert "Project successfully created." in output

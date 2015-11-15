@@ -5,7 +5,7 @@ import platform
 import unittest
 
 from helpers._os_lib import run_aut
-from helpers._tns_lib import TNSPATH
+from helpers._tns_lib import TNS_PATH
 
 
 # C0103 - Invalid %s name "%s"
@@ -27,7 +27,7 @@ class Doctor(unittest.TestCase):
         pass
 
     def test_001_doctor(self):
-        output = run_aut(TNSPATH + " doctor")
+        output = run_aut(TNS_PATH + " doctor")
 
         # Ignore this check on Windows and Linux because of
         # https://github.com/NativeScript/nativescript-cli/issues/615

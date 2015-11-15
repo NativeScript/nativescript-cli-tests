@@ -5,7 +5,7 @@ from time import sleep
 import unittest
 
 from helpers._os_lib import cleanup_folder, run_aut
-from helpers._tns_lib import TNSPATH, create_project_add_platform, IOS_RUNTIME_SYMLINK_PATH, \
+from helpers._tns_lib import TNS_PATH, create_project_add_platform, IOS_RUNTIME_SYMLINK_PATH, \
     ANDROID_RUNTIME_PATH
 from helpers.adb import stop_application, wait_until_app_is_running
 from helpers.device import given_real_device, get_physical_device_id
@@ -39,7 +39,7 @@ class DeviceiOS(unittest.TestCase):
 
             # Start DeviceLog
             run_aut(
-                TNSPATH +
+                TNS_PATH +
                 " device log --device " +
                 device_id +
                 " > deviceLog.txt &",
@@ -51,7 +51,7 @@ class DeviceiOS(unittest.TestCase):
                 proj_name="TNS_app",
                 platform="android",
                 framework_path=ANDROID_RUNTIME_PATH)
-            output = run_aut(TNSPATH + " deploy android --path TNS_app")
+            output = run_aut(TNS_PATH + " deploy android --path TNS_app")
             assert "Project successfully prepared" in output
             assert "Project successfully built" in output
             assert "Successfully deployed on device" in output
@@ -61,7 +61,7 @@ class DeviceiOS(unittest.TestCase):
             # VErify "tns device list-applications" list
             # org.nativescript.TNSApp
             output = run_aut(
-                TNSPATH +
+                TNS_PATH +
                 " device list-applications --device " +
                 device_id)
             assert "org.nativescript.TNSApp" in output
@@ -77,7 +77,7 @@ class DeviceiOS(unittest.TestCase):
 
             # Start it via device command and verify app is running
             run_aut(
-                TNSPATH +
+                TNS_PATH +
                 " device run org.nativescript.TNSApp --device " +
                 device_id)
 
@@ -101,7 +101,7 @@ class DeviceiOS(unittest.TestCase):
 
             # Start DeviceLog
             run_aut(
-                TNSPATH +
+                TNS_PATH +
                 " device log --device " +
                 device_id +
                 " > deviceLog.txt &",
@@ -114,7 +114,7 @@ class DeviceiOS(unittest.TestCase):
                 platform="ios",
                 framework_path=IOS_RUNTIME_SYMLINK_PATH,
                 symlink=True)
-            output = run_aut(TNSPATH + " deploy ios --path TNS_app")
+            output = run_aut(TNS_PATH + " deploy ios --path TNS_app")
             assert "Project successfully prepared" in output
             assert "Project successfully built" in output
             assert "Successfully deployed on device" in output
@@ -123,14 +123,14 @@ class DeviceiOS(unittest.TestCase):
 
             # Get list installed apps
             output = run_aut(
-                TNSPATH +
+                TNS_PATH +
                 " device list-applications --device " +
                 device_id)
             assert "org.nativescript.TNSApp" in output
 
             # Start it via device command and verify app is running
             output = run_aut(
-                TNSPATH +
+                TNS_PATH +
                 " device run org.nativescript.TNSApp --device " +
                 device_id)
             sleep(10)
