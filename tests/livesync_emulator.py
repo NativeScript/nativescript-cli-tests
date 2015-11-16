@@ -1,23 +1,22 @@
 '''
-Test for livesync command in context of Android emulators
+Tests for the livesync command in context of Android emulators
 '''
-import os
-import shutil
-import time
-import unittest
-
-from helpers._os_lib import cleanup_folder, replace, cat_app_file_on_emulator
-from helpers._tns_lib import ANDROID_RUNTIME_PATH, \
-    create_project_add_platform, live_sync, run
-from helpers.device import given_running_emulator, \
-    stop_emulators, stop_simulators
-
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function
 # R0904 - Too many public methods
 # pylint: disable=C0103, C0111, R0201, R0904
+
+import os, shutil, time, unittest
+
+from helpers._os_lib import cleanup_folder, cat_app_file_on_emulator, replace
+from helpers._tns_lib import ANDROID_RUNTIME_PATH, \
+    create_project_add_platform, live_sync, run
+from helpers.device import given_running_emulator, \
+    stop_emulators, stop_simulators
+
+
 class LiveSyncEmulator(unittest.TestCase):
 
     # LiveSync Tests on Android Emulator
@@ -46,7 +45,7 @@ class LiveSyncEmulator(unittest.TestCase):
     def tearDownClass(cls):
         stop_emulators()
 
-    def test_001_livesync_android_xml_js_css_tnsmodules_files(self):
+    def test_001_livesync_android_xml_js_css_tns_files(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
@@ -78,11 +77,11 @@ class LiveSyncEmulator(unittest.TestCase):
 
         output = cat_app_file_on_emulator("TNSApp", "app/tns_modules/LICENSE")
         assert "Copyright (c) 9999 Telerik AD" in output
-        output = cat_app_file_on_emulator("TNSApp",
+        output = cat_app_file_on_emulator("TNSApp", \
             "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output
 
-    def test_201_livesync_android_add_new_files(self):
+    def test_201_livesync_android_add_files(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
