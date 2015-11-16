@@ -7,6 +7,7 @@
 '''
 Wraper around OS commands
 '''
+
 import errno
 import fileinput
 import os
@@ -18,6 +19,8 @@ from time import sleep
 import time
 
 import psutil
+
+ADB_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'platform-tools', 'adb')
 
 
 DEFAULT_TIMEOUT = 180  # seconds
@@ -213,7 +216,7 @@ def cat_app_file(platform, app_name, file_path):
     '''Return content of file on device'''
     if platform is "android":
         output = run_aut(
-            "adb shell run-as org.nativescript." +
+            ADB_PATH + " shell run-as org.nativescript." +
             app_name +
             " cat files/" +
             file_path)
@@ -227,7 +230,7 @@ def cat_app_file(platform, app_name, file_path):
 
 def cat_app_file_on_emulator(app_name, file_path):
     '''Return content of file on emulator'''
-    output = run_aut("adb -s emulator-5554 shell run-as org.nativescript." + \
+    output = run_aut(ADB_PATH + " -s emulator-5554 shell run-as org.nativescript." + \
         app_name + " cat files/" + file_path)
     return output
 

@@ -12,6 +12,8 @@ from helpers._tns_lib import TNS_PATH
 from helpers.adb import restart_adb
 
 
+EMULATOR_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'emulator')
+
 def start_emulator(emulator_name, port="5554", timeout=300, wait_for=True):
     '''Start Android Emulator'''
 
@@ -19,10 +21,10 @@ def start_emulator(emulator_name, port="5554", timeout=300, wait_for=True):
 
     if 'ACTIVE_UI' in os.environ:
         if "NO" in os.environ['ACTIVE_UI']:
-            start_command = "emulator -avd " + emulator_name + \
+            start_command = EMULATOR_PATH + " -avd " + emulator_name + \
                 " -port " + port + " -no-skin -no-audio -no-window"
         else:
-            start_command = "emulator -avd " + emulator_name + " -port " + port
+            start_command = EMULATOR_PATH + " -avd " + emulator_name + " -port " + port
 
     if 'Windows' in platform.platform():
         run_aut(start_command, timeout, False)
