@@ -39,6 +39,7 @@ from tests.plugins_osx_xcconfig import PluginsiOSXcconfig
 from tests.prepare_linux import PrepareAndroid
 from tests.prepare_osx import PrepareiOS
 from tests.run_osx import RuniOS
+from tests.transpilation_typescript import TranspilationTypeScript
 from tests.usage import UsageAndErrorTracking
 from tests.version import Version
 
@@ -117,6 +118,7 @@ def run_tests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryAndroid))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TranspilationTypeScript))
         if 'Darwin' in platform.platform():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateiOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryiOS))
