@@ -42,7 +42,7 @@ class TranspilationTypeScript(unittest.TestCase):
         platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, path="TNS_App")
 
         assert file_with_extension_exists(
-            "TNS_App/node_modules/tns-core-modules", ".ts")
+            "TNS_App/node_modules/tns-core-modules", ".d.ts")
 
         output = run_aut(TNS_PATH + " install typescript --path TNS_App")
         assert "TNS_App/node_modules/nativescript-dev-typescript" in output
@@ -100,3 +100,8 @@ class TranspilationTypeScript(unittest.TestCase):
     def test_201_transpilation_after_node_modules_deleted(self):
         run_aut("rm -rf TNS_App/node_modules")
         prepare(platform="android", path="TNS_App")
+
+        # Verify that the `prepare` command
+        # installs correct dependencies.
+        output = run_aut("ls TNS_App/node_modules | wc -l")
+        assert "3" in output, "The 'prepare' command does not install correct dependences."
