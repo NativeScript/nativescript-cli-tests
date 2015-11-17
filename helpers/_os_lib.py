@@ -163,6 +163,7 @@ def file_with_extension_exists(path, extension):
             print "File: {0}".format(os.path.join(path, file_name))
             count += 1
     if count > 0:
+        print "There is at least one {0} file in {1} directory.".format(extension, path)
         return True
     else:
         print "There are no {0} files in {1} directory.".format(extension, path)
