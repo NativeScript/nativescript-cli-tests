@@ -119,9 +119,14 @@ def check_file_exists(root_folder, files_list, ignore_file_count=True):
         expected_lines += 1
         rel_path = root_folder + '/' + line.rstrip('\r\n')
         print "checking ", rel_path
-        if not os.path.exists(rel_path):
-            print "File " + rel_path + " does not exist!"
-            return False
+        if "!" in line:
+            if os.path.exists(rel_path):
+                print "File " + rel_path + " exist, this is a problem!"
+                return False
+        else:
+            if not os.path.exists(rel_path):
+                print "File " + rel_path + " does not exist!"
+                return False
     total = 0
     for root, dirs, files in os.walk(root_folder):
         total += len(files)

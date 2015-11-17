@@ -107,9 +107,7 @@ class DeployAndroid(unittest.TestCase):
         output = run_aut(
             TNS_PATH +
             " deploy android --device invaliddevice_id --path TNS_App --justlaunch")
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Cannot resolve the specified connected device " + \
-            "by the provided index or identifier" in output
-        assert "To list currently connected devices and " + \
-            "verify that the specified index or identifier exists, run 'tns device'" in output
+        assert not "Project successfully prepared" in output
+        assert "Cannot resolve the specified connected device" in output
+        assert "To list currently connected devices" in output
+        assert "'tns device'." in output

@@ -40,10 +40,10 @@ class LibraryAndroid(unittest.TestCase):
             platform="android",
             lib_path="testdata/projects/external-lib-android",
             path="TNS_App")
-        assert check_file_exists("TNS_App", "library_add_JarLib_1.4.0.txt")
+        assert check_file_exists("TNS_App", "library_add_JarLib_current.txt")
 
         build(platform="android", path="TNS_App")
-        assert check_file_exists("TNS_App", "library_build_JarLib_master.txt")
+        assert check_file_exists("TNS_App", "library_build_JarLib_current.txt")
 
     # TODO: Implement this test.
     @unittest.skip("Not implemented.")

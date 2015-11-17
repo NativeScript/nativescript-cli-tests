@@ -58,7 +58,7 @@ class RuniOS(unittest.TestCase):
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output
         assert "Project successfully built" in output
-        assert "Successfully deployed on device" in output
+
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
 
@@ -82,7 +82,6 @@ class RuniOS(unittest.TestCase):
 
         # Simulator can not be started without active UI
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
-            assert "Session started without errors" in output
             assert is_running_process("Simulator")
 
         # TODO: Get device id and verify files are deployed and process is
@@ -97,7 +96,6 @@ class RuniOS(unittest.TestCase):
 
         # Simulator can not be started without active UI
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
-            assert "Session started without errors" in output
             assert is_running_process("Simulator")
 
         # TODO: Get device id and verify files are deployed and process is
