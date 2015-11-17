@@ -45,7 +45,7 @@ class TranspilationTypeScript(unittest.TestCase):
             "TNS_App/node_modules/tns-core-modules", ".d.ts")
 
         output = run_aut(TNS_PATH + " install typescript --path TNS_App")
-        assert "TNS_App/node_modules/nativescript-dev-typescript" in output
+        assert "nativescript-dev-typescript@" in output
         assert "nativescript-hook@" in output
 
         assert file_exists("TNS_App/tsconfig.json")

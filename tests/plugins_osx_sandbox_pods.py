@@ -71,7 +71,7 @@ class PluginsiOSSandboxPods(unittest.TestCase):
         output = run_aut("cat TNS_App/package.json")
         assert "nativescript-ios-fail-with-sandbox-plugin" in output
 
-        output = prepare(platform="ios", path="TNS_App")
+        output = prepare(platform="ios", path="TNS_App", assert_success=False)
         assert "Successfully prepared " + \
             "plugin nativescript-ios-fail-with-sandbox-plugin for ios." in output
 
