@@ -165,6 +165,7 @@ def file_with_extension_exists(path, extension):
     if count > 0:
         return True
     else:
+        print "There are no {0} files in {1} directory.".format(extension, path)
         return False
 
 def is_running_process(process_name):
