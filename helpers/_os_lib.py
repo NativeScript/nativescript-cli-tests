@@ -21,7 +21,7 @@ import time
 import psutil
 
 ADB_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'platform-tools', 'adb')
-
+DDB_PATH = os.path.join('node_modules', '.bin', 'ddb')
 
 DEFAULT_TIMEOUT = 180  # seconds
 DEFAULT_OUTPUT_FILE = "output.txt"
@@ -229,7 +229,7 @@ def cat_app_file(platform, app_name, file_path):
             file_path)
     if platform is "ios":
         output = run_aut(
-            "ddb device get-file \"Library/Application Support/LiveSync/" +
+            DDB_PATH + " device get-file \"Library/Application Support/LiveSync/" +
             file_path +
             "\" --app org.nativescript." +
             app_name)
@@ -253,7 +253,8 @@ def uninstall_app(app_name, platform, fail=True):
     '''Uninstall mobile app'''
 
     if platform == "android":
-        output = run_aut("ddb device uninstall org.nativescript." + app_name, set_timeout=120)
+        output = run_aut(DDB_PATH + " device uninstall org.nativescript." + app_name, \
+                         set_timeout=120)
         if "[Uninstalling] Status: RemovingApplication" in output:
             print "{0} application successfully uninstalled.".format(app_name)
         else:

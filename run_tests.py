@@ -49,6 +49,10 @@ if __name__ == '__main__':
 
     if 'TEST_RUN' in os.environ and "FULL" in os.environ['TEST_RUN']:
 
+        # Install ddb
+        cleanup_folder("node_modules")
+        run_aut("npm install ddb")
+
         # Uninstall test apps on real devices
         uninstall_app("TNSApp", platform="android", fail=False)
         uninstall_app("TNSAppNoPlatform", platform="android", fail=False)
