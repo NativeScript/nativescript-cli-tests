@@ -1,7 +1,6 @@
 '''
 Test for create command
 '''
-import fileinput
 import unittest
 
 from helpers._os_lib import cleanup_folder, check_file_exists, file_exists, folder_exists, \

@@ -42,10 +42,15 @@ class EmulateiOS(unittest.TestCase):
         cleanup_folder('./TNS_App')
 
     def test_001_emulate_list_devices(self):
-        output = run_aut(
-            TNS_PATH +
-            " emulate ios --availableDevices --path TNS_App --justlaunch")
-        assert "iPhone 6 81" in output
+        output = run_aut("xcodebuild -version")
+        if "6." in output:
+            output = run_aut(TNS_PATH + \
+                             " emulate ios --availableDevices --path TNS_App --justlaunch")
+            assert "iPhone-6" in output
+        else:
+            output = run_aut(TNS_PATH + \
+                             " emulate ios --availableDevices --path TNS_App --justlaunch")
+            assert "iPhone 6 81" in output
 
     def test_002_emulate_ios(self):
         output = run_aut(

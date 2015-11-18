@@ -48,7 +48,7 @@ class DebugiOS(unittest.TestCase):
 
         output = run_aut(TNS_PATH + \
                         " debug ios --debug-brk --emulator --path TNS_App --frameworkPath " + \
-                        IOS_RUNTIME_SYMLINK_PATH, 2 * 60, True)
+                        IOS_RUNTIME_SYMLINK_PATH + " --timeout 120", 2 * 60, True)
 
         assert "Project successfully prepared" in output
         assert "** BUILD SUCCEEDED **" in output
@@ -70,9 +70,8 @@ class DebugiOS(unittest.TestCase):
 
         output = run_aut(TNS_PATH + \
             " debug ios --start --emulator --path TNS_App --frameworkPath " + \
-            IOS_RUNTIME_SYMLINK_PATH, 2 * 60, True)
+            IOS_RUNTIME_SYMLINK_PATH + " --timeout 120", 2 * 60, True)
 
-        assert "Setting up debugger proxy..." in output
         assert "Frontend client connected" in output
         assert "Backend socket created" in output
         assert not "Backend socket closed" in output
@@ -84,8 +83,8 @@ class DebugiOS(unittest.TestCase):
     def test_003_debug_ios_device_debugbrk(self):
 
         output = run_aut(TNS_PATH + \
-            " debug ios --debug-brk --path TNS_App --timeout 120 --frameworkPath " + \
-            IOS_RUNTIME_SYMLINK_PATH, 2 * 60 + 30, True)
+            " debug ios --debug-brk --path TNS_App --frameworkPath " + \
+            IOS_RUNTIME_SYMLINK_PATH + " --timeout 120", 2 * 60 + 30, True)
 
         assert "Project successfully prepared" in output
         assert "** BUILD SUCCEEDED **" in output
@@ -93,7 +92,6 @@ class DebugiOS(unittest.TestCase):
         assert "Successfully run application org.nativescript.TNSApp on device with ID" in output
         assert "NativeScript waiting for debugger" in output
 
-        assert "Setting up debugger proxy..." in output
         assert "Frontend client connected" in output
         assert "Backend socket created" in output
         assert "NativeScript debugger attached" in output
@@ -107,10 +105,9 @@ class DebugiOS(unittest.TestCase):
         assert "Successfully deployed on device " in output
         sleep(10)
         output = run_aut(TNS_PATH + \
-            " debug ios --start --path TNS_App --timeout 120 --frameworkPath " + \
-            IOS_RUNTIME_SYMLINK_PATH, 2 * 60, True)
+            " debug ios --start --path TNS_App --frameworkPath " + \
+            IOS_RUNTIME_SYMLINK_PATH + " --timeout 120", 2 * 60, True)
 
-        assert "Setting up debugger proxy..." in output
         assert "Frontend client connected" in output
         assert "Backend socket created" in output
         assert not "closed" in output
