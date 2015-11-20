@@ -5,9 +5,10 @@ import os
 import shutil
 import unittest
 
-from helpers._os_lib import cleanup_folder, replace, cat_app_file, uninstall_app
+from helpers._os_lib import cleanup_folder, replace, cat_app_file, uninstall_app, \
+    file_exists, DDB_PATH
 from helpers._tns_lib import IOS_RUNTIME_PATH, \
-    create_project_add_platform, live_sync, run
+    create_project_add_platform, live_sync, run, run_aut
 from helpers.device import given_real_device, \
     stop_emulators, stop_simulators, get_physical_device_id
 
@@ -26,6 +27,9 @@ class LiveSynciOS(unittest.TestCase):
 
         stop_emulators()
         stop_simulators()
+
+        if not file_exists(DDB_PATH):
+            run_aut("npm install ddb")
 
     def setUp(self):
 
@@ -80,7 +84,7 @@ class LiveSynciOS(unittest.TestCase):
             "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output
 
-    def test_002_livesync_ios_device_xm(self):
+    def test_002_livesync_ios_device(self):
         create_project_add_platform(
             proj_name="TNS_App",
             platform="ios",
