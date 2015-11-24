@@ -1,5 +1,5 @@
 '''
-Tests for the livesync command in context of Android emulators
+Tests for livesync command in context of Android emulator
 '''
 
 # C0103 - Invalid %s name "%s"

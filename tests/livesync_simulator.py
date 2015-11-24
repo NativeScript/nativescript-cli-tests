@@ -1,24 +1,28 @@
 '''
-Test for livesync command in context of iOS simulators
+Tests for livesync command in context of iOS simulator
 '''
-import subprocess
-import time
-import unittest
-
-import psutil
-
-from helpers._os_lib import cleanup_folder, replace, cat_app_file
-from helpers._tns_lib import ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH, \
-    create_project_add_platform, live_sync, run
-from helpers.device import given_real_device, get_physical_device_id
-
 
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function
 # R0904 - Too many public methods
-# pylint: disable=C0103, C0111, R0201, R0904
+# pylint: disable=C0111
+
+import psutil, subprocess, time, unittest
+
+from helpers._os_lib import cleanup_folder, replace, cat_app_file
+from helpers._tns_lib import ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH, \
+    create_project_add_platform, live_sync, run
+from helpers.device import start_simulator, \
+    stop_emulators, stop_simulators
+
+
 class LiveSyncSimulator(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        stop_emulators()
+        stop_simulators()
 
     def setUp(self):
 
@@ -28,160 +32,16 @@ class LiveSyncSimulator(unittest.TestCase):
         print "#####"
         print ""
 
-        cleanup_folder('./TNS_App')
-        given_real_device(platform="ios")
-        given_real_device(platform="android")
+        cleanup_folder('TNS_App')
+        start_simulator('iPhone 6s 90')
 
     def tearDown(self):
         pass
 
-    def test_001_livesync_ios(self):
-        create_project_add_platform(
-            proj_name="TNS_App",
-            platform="ios",
-            framework_path=IOS_RUNTIME_PATH)
-        run(platform="ios", path="TNS_App")
+    @classmethod
+    def tearDownClass(cls):
+        stop_simulators()
+        cleanup_folder('TNS_App')
 
-        replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        live_sync(platform="ios", path="TNS_App")
-
-        output = cat_app_file("ios", "TNSApp", "app/main-page.xml")
-        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
-
-    def test_002_livesync_ios_device(self):
-        device_id = get_physical_device_id(platform="ios")
-        create_project_add_platform(
-            proj_name="TNS_App",
-            platform="ios",
-            framework_path=IOS_RUNTIME_PATH)
-        run(platform="ios", path="TNS_App")
-
-        replace("TNS_App/app/main-view-model.js", "taps", "clicks")
-        live_sync(platform="ios", device=device_id, path="TNS_App")
-
-        output = cat_app_file("ios", "TNSApp", "app/main-view-model.js")
-        assert "this.set(\"message\", this.counter + \" clicks left\");" in output
-
-    @unittest.skip("TODO: Fix.")
-    def test_003_livesync_ios_watch(self):
-        create_project_add_platform(
-            proj_name="TNS_App",
-            platform="ios",
-            framework_path=IOS_RUNTIME_PATH)
-        run(platform="ios", path="TNS_App")
-        replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
-
-        pr = subprocess.Popen(
-            "tns livesync ios --watch --path TNS_App",
-            shell=True)
-        pr_pid = pr.pid
-
-        time.sleep(60)
-        print "assert"
-        output = cat_app_file("ios", "TNSApp", "app/main-page.xml")
-        assert "<Button text=\"TEST1\" tap=\"{{ tapAction }}\" />" in output
-
-        time.sleep(5)
-        replace("TNS_App/app/main-page.xml", "TEST1", "TEST2")
-
-        time.sleep(15)
-        print "assert"
-        output = cat_app_file("ios", "TNSApp", "app/main-page.xml")
-        assert "<Button text=\"TEST2\" tap=\"{{ tapAction }}\" />" in output
-
-        time.sleep(5)
-        replace("TNS_App/app/main-page.xml", "TEST2", "TEST3")
-
-        time.sleep(15)
-        print "assert"
-        output = cat_app_file("ios", "TNSApp", "app/main-page.xml")
-        assert "<Button text=\"TEST3\" tap=\"{{ tapAction }}\" />" in output
-
-        print "killing child ..."
-        pr.terminate()
-
-        time.sleep(5)
-        if psutil.pid_exists(pr_pid):
-            print "force killing child ..."
-            pr.kill()
-
-    @unittest.skip("Fix LiveSync for Android device.")
-    def test_101_livesync_android(self):
-        create_project_add_platform(
-            proj_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
-        run(platform="android", path="TNS_App")
-
-        replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        live_sync(platform="android", path="TNS_App")
-
-        output = cat_app_file("android", "TNSApp", "app/main-page.xml")
-        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
-
-    @unittest.skip("Fix LiveSync for Android device.")
-    def test_102_livesync_android_device(self):
-        create_project_add_platform(
-            proj_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
-        run(platform="android", path="TNS_App")
-
-        replace("TNS_App/app/main-view-model.js", "taps", "clicks")
-        live_sync(platform="android", device="030b206908e6c3c5", path="TNS_App")
-
-        output = cat_app_file("android", "TNSApp", "app/main-view-model.js")
-        assert "this.set(\"message\", this.counter + \" clicks left\");" in output
-
-    @unittest.skip("Fix LiveSync for Android device.")
-    def test_103_livesync_android_watch(self):
-        create_project_add_platform(
-            proj_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
-        run(platform="android", path="TNS_App")
-        replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
-
-        print "tns livesync android --watch --path TNS_App"
-        pr = subprocess.Popen(
-            "tns livesync android --watch --path TNS_App",
-            shell=True)
-        pr_pid = pr.pid
-
-        time.sleep(60)
-        print "assert"
-        output = cat_app_file("android", "TNSApp", "app/main-page.xml")
-        assert "<Button text=\"TEST1\" tap=\"{{ tapAction }}\" />" in output
-
-        time.sleep(5)
-        replace("TNS_App/app/main-page.xml", "TEST1", "TEST2")
-
-        time.sleep(15)
-        print "assert"
-        output = cat_app_file("android", "TNSApp", "app/main-page.xml")
-        assert "<Button text=\"TEST2\" tap=\"{{ tapAction }}\" />" in output
-
-        time.sleep(5)
-        replace("TNS_App/app/main-page.xml", "TEST2", "TEST3")
-
-        time.sleep(15)
-        print "assert"
-        output = cat_app_file("android", "TNSApp", "app/main-page.xml")
-        assert "<Button text=\"TEST3\" tap=\"{{ tapAction }}\" />" in output
-
-        print "killing child ..."
-        pr.terminate()
-
-        time.sleep(5)
-        if psutil.pid_exists(pr_pid):
-            print "force killing child ..."
-            pr.kill()
-
-    def test_301_livesync_multiple_platforms(self):
-        create_project_add_platform(
-            proj_name="TNS_App",
-            platform="ios",
-            framework_path=IOS_RUNTIME_PATH)
-        output = live_sync(path="TNS_App", assert_success=False)
-        assert "Multiple device platforms detected (iOS and Android). " + \
-            "Specify platform or device on command line" in output
+    def test_000_test(self):
+        pass
