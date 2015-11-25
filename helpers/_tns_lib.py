@@ -259,7 +259,7 @@ def run(platform=None, emulator=False, device=None, path=None, just_launch=True,
             assert "Successfully deployed on device with identifier" in output
         else:
             if emulator:
-                assert "Session started without errors." in output
+                assert "Starting iOS Simulator" in output
             else:
                 assert "Successfully deployed on device" in output
                 assert "Successfully run application org.nativescript." in output
@@ -297,7 +297,8 @@ def live_sync(platform=None, emulator=False, device=None, watch=False, path=None
             assert "Applying changes..." in output
             assert "Successfully synced application org.nativescript." in output
             sleep(10)
-
+        else:
+            assert "Project successfully prepared" in output
     return output
 
 

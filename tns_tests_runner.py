@@ -26,6 +26,7 @@ from tests.library_osx import LibraryiOS
 from tests.livesync_android import LiveSyncAndroid
 from tests.livesync_emulator import LiveSyncEmulator
 from tests.livesync_ios import LiveSynciOS
+from tests.livesync_simulator import LiveSyncSimulator
 from tests.logtrace import LogTrace
 from tests.output_stderr import Output_STRERR
 from tests.platform_linux import PlatformAndroid
@@ -137,6 +138,7 @@ def run_tests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(RuniOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceiOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
 
