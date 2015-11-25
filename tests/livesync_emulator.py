@@ -13,8 +13,8 @@ import os, shutil, time, unittest
 from helpers._os_lib import cleanup_folder, cat_app_file_on_emulator, replace
 from helpers._tns_lib import ANDROID_RUNTIME_PATH, \
     create_project_add_platform, live_sync, run
-from helpers.device import given_running_emulator, \
-    stop_emulators, stop_simulators
+from helpers.device import given_running_emulator, stop_emulators
+from helpers.simulator import stop_simulators
 
 
 class LiveSyncEmulator(unittest.TestCase):

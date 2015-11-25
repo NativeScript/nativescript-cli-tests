@@ -8,13 +8,13 @@ Tests for livesync command in context of iOS simulator
 # R0904 - Too many public methods
 # pylint: disable=C0111
 
-import psutil, subprocess, time, unittest
+import unittest
 
 from helpers._os_lib import cleanup_folder, replace, cat_app_file
 from helpers._tns_lib import ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH, \
     create_project_add_platform, live_sync, run
-from helpers.device import start_simulator, \
-    stop_emulators, stop_simulators
+from helpers.device import stop_emulators
+from helpers.simulator import start_simulator, stop_simulators
 
 
 class LiveSyncSimulator(unittest.TestCase):

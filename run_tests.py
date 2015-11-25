@@ -11,7 +11,9 @@ import platform
 from helpers._os_lib import cleanup_folder, remove, run_aut, uninstall_app, cleanup_xcode_cache
 from helpers._tns_lib import uninstall_cli, install_cli, get_android_runtime, get_ios_runtime, \
     ANDROID_RUNTIME_SYMLINK_PATH, IOS_RUNTIME_SYMLINK_PATH, ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH
-from helpers.device import stop_emulators, stop_simulators
+from helpers.device import stop_emulators
+from helpers.simulator import stop_simulators
+
 import tns_tests_runner
 
 

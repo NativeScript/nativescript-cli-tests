@@ -6,7 +6,8 @@ import os, unittest
 from helpers._os_lib import cleanup_folder, run_aut, is_running_process
 from helpers._tns_lib import create_project, create_project_add_platform, \
     IOS_RUNTIME_SYMLINK_PATH, TNS_PATH
-from helpers.device import given_real_device, stop_simulators
+from helpers.device import given_real_device
+from helpers.simulator import stop_simulators
 
 
 # C0103 - Invalid %s name "%s"

@@ -10,7 +10,8 @@ from helpers._os_lib import cleanup_folder, replace, cat_app_file
 from helpers._tns_lib import ANDROID_RUNTIME_PATH, \
     create_project_add_platform, live_sync, run
 from helpers.device import given_real_device, \
-    stop_emulators, stop_simulators, get_physical_device_id
+    stop_emulators, get_physical_device_id
+from helpers.simulator import stop_simulators
 
 
 # C0103 - Invalid %s name "%s"
