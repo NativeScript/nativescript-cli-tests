@@ -47,7 +47,7 @@ class PrepareiOS(unittest.TestCase):
             'TNS_App/platforms/ios/TNSApp/app/tns_modules/application/application.ios.js')
 
     def test_010_prepare_ios_tns_core_modules(self):
-        create_project(proj_name="TNS_App", copy_from="testdata/projects/helloworld-1.2.1/app")
+        create_project(proj_name="TNS_App", copy_from="data/projects/helloworld-1.2.1/app")
         platform_add(platform="ios", path="TNS_App", \
                      framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
 

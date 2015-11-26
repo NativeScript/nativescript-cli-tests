@@ -100,7 +100,7 @@ def cleanup_folder(folder):
 def check_output(output, file_name):
     '''Check if output string contains content of the file'''
 
-    out_file = open('testdata/outputs/' + file_name)
+    out_file = open('data/outputs/' + file_name)
     for line in out_file:
         line = line.rstrip('\r\n')
         print "checking ", line
@@ -113,7 +113,7 @@ def check_output(output, file_name):
 def check_file_exists(root_folder, files_list, ignore_file_count=True):
     '''Check if files in list exists on file system'''
 
-    list_of_file = open('testdata/files/' + files_list)
+    list_of_file = open('data/files/' + files_list)
     expected_lines = 0
     for line in list_of_file:
         expected_lines += 1

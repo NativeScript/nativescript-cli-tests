@@ -154,7 +154,7 @@ class BuildAndroid(unittest.TestCase):
         # This is test for issue 644
 
         run_aut("mkdir -p TestApp/app/App_Resources/Android/values")
-        run_aut("cp testdata/data/styles.xml TestApp/app/App_Resources/Android/values")
+        run_aut("cp data/data/styles.xml TestApp/app/App_Resources/Android/values")
         output = run_aut(TNS_PATH + " build android --path TNS_App")
 
         assert "Project successfully prepared" in output

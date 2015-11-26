@@ -47,7 +47,7 @@ class LiveSyncSimulator(unittest.TestCase):
 #         cleanup_folder('TNS_App')
 
     def test_000_livesync(self):
-        create_project(proj_name="TNS_App", copy_from="testdata/apps/livesync-hello-world")
+        create_project(proj_name="TNS_App", copy_from="data/apps/livesync-hello-world")
         platform_add(platform="ios", framework_path=IOS_RUNTIME_SYMLINK_PATH, \
                      path="TNS_App", symlink=True)
         run(platform="ios", emulator=True, path="TNS_App")
