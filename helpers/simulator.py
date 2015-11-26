@@ -69,7 +69,7 @@ def cat_app_file_on_simulator(app_name, file_path):
     app_path = run_aut(
         "xcrun simctl get_app_container {0} org.nativescript.{1}".format(sim_id, app_name))
     print "Application path: " + app_path
-
+    print "+++ Cat file +++"
     output = run_aut("cat {0}/{1}".format(app_path, file_path))
     return output
 
