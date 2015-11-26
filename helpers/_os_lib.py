@@ -216,7 +216,7 @@ def replace(file_path, str1, str2):
     for line in fileinput.input(file_path, inplace=1):
         print line.replace(str1, str2)
     sleep(1)
-    print "+++ Replace +++"
+    print "~~~ Replace ~~~"
     output = run_aut("cat " + file_path)
     assert str2 in output
 
