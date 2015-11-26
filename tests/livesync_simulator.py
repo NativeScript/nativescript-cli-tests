@@ -152,7 +152,32 @@ class LiveSyncSimulator(unittest.TestCase):
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.css")
         assert "color: #284848;" in output
 
-    def test_111_livesync_ios_simulator_watch_delete_xml_file(self):
+    def test_111_livesync_ios_simulator_watch_change_xml_file(self):
+        replace("TNS_App/app/test/test.xml", "TEST", "WATCH")
+
+        self.wait_for_text_in_output("app/test/test.xml")
+
+        output = cat_app_file_on_simulator("TNSApp", "app/test/test.xml")
+        assert "<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />" in output
+
+    def test_112_livesync_ios_simulator_watch_change_js_file(self):
+        replace("TNS_App/app/test/test.js", "start();", "start(); // test")
+
+        self.wait_for_text_in_output("app/test/test.js")
+        time.sleep(2)
+
+        output = cat_app_file_on_simulator("TNSApp", "app/test/test.js")
+        assert "application.start(); // test" in output
+
+    def test_113_livesync_ios_simulator_watch_change_css_file(self):
+        replace("TNS_App/app/test/test.css", "#284848", "lightgreen")
+
+        self.wait_for_text_in_output("app/test/test.css")
+
+        output = cat_app_file_on_simulator("TNSApp", "app/test/test.css")
+        assert "color: lightgreen;" in output
+
+    def test_121_livesync_ios_simulator_watch_delete_xml_file(self):
         remove("TNS_App/app/test/test.xml")
 
         self.wait_for_text_in_output("app/test/test.xml")
@@ -160,7 +185,7 @@ class LiveSyncSimulator(unittest.TestCase):
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.xml")
         assert output is None
 
-    def test_112_livesync_ios_simulator_watch_delete_js_file(self):
+    def test_122_livesync_ios_simulator_watch_delete_js_file(self):
         remove("TNS_App/app/test/test.js")
 
         self.wait_for_text_in_output("app/test/test.js")
@@ -169,7 +194,7 @@ class LiveSyncSimulator(unittest.TestCase):
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.js")
         assert output is None
 
-    def test_113_livesync_ios_simulator_watch_delete_css_file(self):
+    def test_123_livesync_ios_simulator_watch_delete_css_file(self):
         remove("TNS_App/app/test/test.css")
 
         self.wait_for_text_in_output("app/test/test.css")
