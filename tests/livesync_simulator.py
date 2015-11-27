@@ -20,7 +20,7 @@ from helpers.simulator import create_simulator, delete_simulator, \
 
 class LiveSyncSimulator(unittest.TestCase):
 
-    SECONDS_TO_WAIT = 10
+    SECONDS_TO_WAIT = 20
 
     @classmethod
     def setUpClass(cls):
@@ -63,6 +63,8 @@ class LiveSyncSimulator(unittest.TestCase):
         print self.id()
         print "#####"
         print ""
+
+        # TODO: check is --watch still running? if not - start it again?
 
     def tearDown(self):
         pass
@@ -111,9 +113,9 @@ class LiveSyncSimulator(unittest.TestCase):
 
     def test_001_full_livesync_ios_simulator_xml_js_css_tns_files(self):
 
-        # TODO: To be updated with console.log() when supported on simulators.
+        # TODO: Update with console.log() when supported on simulators ...
         self.wait_for_text_in_output("prepared")
-        time.sleep(2)
+        time.sleep(2) # ... than delete these.
 
         output = cat_app_file_on_simulator("TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
