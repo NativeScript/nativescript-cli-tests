@@ -5,10 +5,9 @@ import os
 import shutil
 import unittest
 
-from helpers._os_lib import cleanup_folder, replace, cat_app_file, uninstall_app, \
-    file_exists, DDB_PATH
+from helpers._os_lib import cleanup_folder, replace, cat_app_file, uninstall_app
 from helpers._tns_lib import IOS_RUNTIME_PATH, \
-    create_project_add_platform, live_sync, run, run_aut
+    create_project_add_platform, live_sync, run
 from helpers.device import given_real_device, \
     stop_emulators, get_physical_device_id
 from helpers.simulator import stop_simulators
@@ -28,9 +27,6 @@ class LiveSynciOS(unittest.TestCase):
 
         stop_emulators()
         stop_simulators()
-
-        if not file_exists(DDB_PATH):
-            run_aut("npm install ddb")
 
     def setUp(self):
 
