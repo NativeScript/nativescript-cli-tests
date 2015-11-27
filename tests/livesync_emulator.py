@@ -5,27 +5,57 @@ Tests for livesync command in context of Android emulator
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function
-# R0904 - Too many public methods
-# pylint: disable=C0103, C0111, R0201, R0904
+# pylint: disable=C0103, C0111, R0201
 
-import os, shutil, time, unittest
+import psutil, subprocess, shutil, time, unittest
+from multiprocessing import Process
 
-from helpers._os_lib import cleanup_folder, cat_app_file_on_emulator, replace
-from helpers._tns_lib import ANDROID_RUNTIME_PATH, \
-    create_project_add_platform, live_sync, run
+from helpers._os_lib import cat_app_file_on_emulator, \
+    cleanup_folder, replace, remove
+from helpers._tns_lib import ANDROID_RUNTIME_PATH, create_project_add_platform, \
+    create_project, platform_add, run, live_sync
 from helpers.device import given_running_emulator, stop_emulators
 from helpers.simulator import stop_simulators
 
 
 class LiveSyncEmulator(unittest.TestCase):
 
-    # LiveSync Tests on Android Emulator
-    # TODO: Add tests for #942
+    # TODO: Add a test for #942.
+
+    SECONDS_TO_WAIT = 20
 
     @classmethod
     def setUpClass(cls):
+
+        # setup simulator
         stop_emulators()
         stop_simulators()
+
+        # TODO: Allow parameter for emulator name - Api23.
+        given_running_emulator()
+        cleanup_folder('./TNS_App')
+
+        # setup app
+        create_project(proj_name="TNS_App", copy_from="data/apps/livesync-hello-world")
+        platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, \
+            path="TNS_App", symlink=True)
+        run(platform="android", device="emulator-5554", path="TNS_App")
+
+        # replace
+        replace("TNS_App/app/main-page.xml", "TAP", "TEST")
+        replace("TNS_App/app/main-view-model.js", "taps", "clicks")
+        replace("TNS_App/app/app.css", "30", "20")
+
+        replace("TNS_App/node_modules/tns-core-modules/LICENSE", "2015", "9999")
+        replace(
+            "TNS_App/node_modules/tns-core-modules/application/application-common.js",
+            "(\"globals\");", "(\"globals\"); // test")
+
+        # livesync
+        command = "tns livesync android " + \
+            "--emulator --device emulator-5554 --watch --path TNS_App --log trace"
+        print command
+        cls.process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
 
     def setUp(self):
 
@@ -35,38 +65,53 @@ class LiveSyncEmulator(unittest.TestCase):
         print "#####"
         print ""
 
-        cleanup_folder('./TNS_App')
-        given_running_emulator()
-
     def tearDown(self):
         pass
 
     @classmethod
     def tearDownClass(cls):
+        print "~~~ Killing subprocess ..."
+        cls.process.terminate()
+
+        time.sleep(2)
+        if psutil.pid_exists(cls.process.pid):
+            print "~~~ Forced killing subprocess ..."
+            cls.process.kill()
+
         stop_emulators()
+        cleanup_folder('TNS_App')
 
-    def test_001_livesync_android_xml_js_css_tns_files(self):
-        create_project_add_platform(
-            proj_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
-        run(platform="android", device="emulator-5554", path="TNS_App")
+    def wait_for_text_in_output(self, text):
+        def read_loop():
+            print "~~~ Waiting for: " + text
+            while True:
+                line = self.process.stdout.readline()
+                if text in line:
+                    print " + Text \"{0}\" found in: ".format(text) + line.rstrip(),
+                    break
+                else:
+                    print (" - " + line),
 
-        replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        replace("TNS_App/app/main-view-model.js", "taps", "clicks")
-        replace("TNS_App/app/app.css", "30", "20")
+        self.run_with_timeout(self.SECONDS_TO_WAIT, read_loop)
 
-        replace("TNS_App/node_modules/tns-core-modules/LICENSE", "2015", "9999")
-        replace(
-            "TNS_App/node_modules/tns-core-modules/application/application-common.js",
-            "(\"globals\");",
-            "(\"globals\"); // test")
+    def run_with_timeout(self, timeout, func):
+        if not timeout:
+            func()
+            return
 
-        live_sync(
-            platform="android",
-            emulator=True,
-            device="emulator-5554",
-            path="TNS_App")
+        p = Process(target=func)
+        p.start()
+
+        start_time = time.time()
+        end_time = start_time + timeout
+        while p.is_alive():
+            if time.time() > end_time:
+                p.terminate()
+                raise Exception("Timeout while waiting for livesync.")
+            time.sleep(0.5)
+
+    def test_001_full_livesync_android_emulator_xml_js_css_tns_files(self):
+        self.wait_for_text_in_output("Page loaded 1 times.")
 
         output = cat_app_file_on_emulator("TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
@@ -81,83 +126,87 @@ class LiveSyncEmulator(unittest.TestCase):
             "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output
 
-    def test_201_livesync_android_add_files(self):
-        create_project_add_platform(
-            proj_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
-        run(platform="android", device="emulator-5554", path="TNS_App")
 
-        shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
-        shutil.copyfile("TNS_App/app/main-page.js", "TNS_App/app/test.js")
-        shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test.css")
+    def test_101_livesync_android_emulator_watch_add_xml_file(self):
+        shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test/test.xml")
+        self.wait_for_text_in_output("Page loaded 2 times.")
 
-        os.makedirs("TNS_App/app/test")
-        shutil.copyfile(
-            "TNS_App/app/main-view-model.js",
-            "TNS_App/app/test/main-view-model.js")
-        live_sync(platform="android", device="emulator-5554", path="TNS_App")
+        output = cat_app_file_on_emulator("TNSApp", "app/test/test.xml")
+        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
 
-        time.sleep(1)
-        output = cat_app_file_on_emulator("TNSApp", "app/test.xml")
-        assert "<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output
-        output = cat_app_file_on_emulator("TNSApp", "app/test.js")
-        assert "page.bindingContext = vmModule.mainViewModel;" in output
-        output = cat_app_file_on_emulator("TNSApp", "app/test.css")
+    def test_102_livesync_android_emulator_watch_add_js_file(self):
+        shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/test/test.js")
+        self.wait_for_text_in_output("Page loaded 1 times.")
+
+        output = cat_app_file_on_emulator("TNSApp", "app/test/test.js")
+        assert "application.start();" in output
+
+    def test_103_livesync_android_emulator_watch_add_css_file(self):
+        shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test/test.css")
+        self.wait_for_text_in_output("Page loaded 2 times.")
+
+        output = cat_app_file_on_emulator("TNSApp", "app/test/test.css")
         assert "color: #284848;" in output
-        output = cat_app_file_on_emulator("TNSApp", "app/test/main-view-model.js")
-        assert "HelloWorldModel.prototype.tapAction" in output
 
-    @unittest.skip("TODO: Fix this test.")
-    def test_202_livesync_android_watch(self):
+    def test_111_livesync_android_emulator_watch_change_xml_file(self):
+        replace("TNS_App/app/test/test.xml", "TEST", "WATCH")
+        self.wait_for_text_in_output("Page loaded 3 times.")
+
+        output = cat_app_file_on_emulator("TNSApp", "app/test/test.xml")
+        assert "<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />" in output
+
+    def test_112_livesync_android_emulator_watch_change_js_file(self):
+        replace("TNS_App/app/test/test.js", "start();", "start(); // test")
+        self.wait_for_text_in_output("Page loaded 1 times.")
+
+        output = cat_app_file_on_emulator("TNSApp", "app/test/test.js")
+        assert "application.start(); // test" in output
+
+    def test_113_livesync_android_emulator_watch_change_css_file(self):
+        replace("TNS_App/app/test/test.css", "#284848", "lightgreen")
+        self.wait_for_text_in_output("Page loaded 2 times.")
+
+        output = cat_app_file_on_emulator("TNSApp", "app/test/test.css")
+        assert "color: lightgreen;" in output
+
+    def test_121_livesync_android_emulator_watch_delete_xml_file(self):
+        remove("TNS_App/app/test/test.xml")
+        self.wait_for_text_in_output("Page loaded 3 times.")
+
+        output = cat_app_file_on_emulator("TNSApp", "app/test/test.xml")
+        assert output is None
+
+    def test_122_livesync_android_emulator_watch_delete_js_file(self):
+        remove("TNS_App/app/test/test.js")
+        self.wait_for_text_in_output("Page loaded 1 times.")
+
+        output = cat_app_file_on_emulator("TNSApp", "app/test/test.js")
+        assert output is None
+
+    def test_123_livesync_android_emulator_watch_delete_css_file(self):
+        remove("TNS_App/app/test/test.css")
+        self.wait_for_text_in_output("Page loaded 2 times.")
+
+        output = cat_app_file_on_emulator("TNSApp", "app/test/test.css")
+        assert output is None
+
+    def test_301_livesync_android_emulator_before_run(self):
+        print "~~~ Killing subprocess ..."
+        self.process.terminate()
+ 
+        time.sleep(2)
+        if psutil.pid_exists(self.process.pid):
+            print "~~~ Forced killing subprocess ..."
+            self.process.kill()
+ 
+        cleanup_folder('TNS_App')
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
             framework_path=ANDROID_RUNTIME_PATH)
-        run(platform="android", path="TNS_App")
-        replace("TNS_App/app/main-page.xml", "TAP", "TEST1")
-
-#         print "tns livesync android --watch --path TNS_App"
-#         pr = subprocess.Popen("tns livesync android --watch --path TNS_App", shell=True)
-#         pr_pid = pr.pid
-#
-#         time.sleep(60)
-#         print "assert"
-#         output = cat_app_file("android", "TNSApp", "app/main-page.xml")
-#         assert "<Button text=\"TEST1\" tap=\"{{ tapAction }}\" />" in output
-#
-#         time.sleep(5)
-#         replace("TNS_App/app/main-page.xml", "TEST1", "TEST2")
-#
-#         time.sleep(15)
-#         print "assert"
-#         output = cat_app_file("android", "TNSApp", "app/main-page.xml")
-#         assert "<Button text=\"TEST2\" tap=\"{{ tapAction }}\" />" in output
-#
-#         time.sleep(5)
-#         replace("TNS_App/app/main-page.xml", "TEST2", "TEST3")
-#
-#         time.sleep(15)
-#         print "assert"
-#         output = cat_app_file("android", "TNSApp", "app/main-page.xml")
-#         assert "<Button text=\"TEST3\" tap=\"{{ tapAction }}\" />" in output
-#
-#         print "killing child ..."
-#         pr.terminate()
-#
-#         time.sleep(5)
-#         if psutil.pid_exists(pr_pid):
-#             print "force killing child ..."
-#             pr.kill()
-
-    def test_301_livesync_before_run(self):
-        create_project_add_platform(
-            proj_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
+ 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         live_sync(platform="android", device="emulator-5554", path="TNS_App")
-
-        time.sleep(3)
+ 
         output = cat_app_file_on_emulator("TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output

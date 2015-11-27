@@ -287,7 +287,8 @@ def live_sync(platform=None, emulator=False, device=None, watch=False, path=None
     if path is not None:
         command += " --path {0}".format(path)
 
-    output = run_aut(command + " --log trace")
+    command += " --log trace"
+    output = run_aut(command)
 
     if assert_success:
         assert "Project successfully prepared" in output
