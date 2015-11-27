@@ -111,6 +111,7 @@ class LiveSyncSimulator(unittest.TestCase):
 
     def test_001_full_livesync_ios_simulator_xml_js_css_tns_files(self):
 
+        # TODO: To be updated with console.log() when supported on simulators.
         self.wait_for_text_in_output("prepared")
         time.sleep(2)
 
@@ -129,7 +130,6 @@ class LiveSyncSimulator(unittest.TestCase):
 
     def test_101_livesync_ios_simulator_watch_add_xml_file(self):
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test/test.xml")
-
         self.wait_for_text_in_output("app/test/test.xml")
 
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.xml")
@@ -137,7 +137,6 @@ class LiveSyncSimulator(unittest.TestCase):
 
     def test_102_livesync_ios_simulator_watch_add_js_file(self):
         shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/test/test.js")
-
         self.wait_for_text_in_output("app/test/test.js")
         time.sleep(2)
 
@@ -146,7 +145,6 @@ class LiveSyncSimulator(unittest.TestCase):
 
     def test_103_livesync_ios_simulator_watch_add_css_file(self):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test/test.css")
-
         self.wait_for_text_in_output("app/test/test.css")
 
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.css")
@@ -154,7 +152,6 @@ class LiveSyncSimulator(unittest.TestCase):
 
     def test_111_livesync_ios_simulator_watch_change_xml_file(self):
         replace("TNS_App/app/test/test.xml", "TEST", "WATCH")
-
         self.wait_for_text_in_output("app/test/test.xml")
 
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.xml")
@@ -162,7 +159,6 @@ class LiveSyncSimulator(unittest.TestCase):
 
     def test_112_livesync_ios_simulator_watch_change_js_file(self):
         replace("TNS_App/app/test/test.js", "start();", "start(); // test")
-
         self.wait_for_text_in_output("app/test/test.js")
         time.sleep(2)
 
@@ -171,7 +167,6 @@ class LiveSyncSimulator(unittest.TestCase):
 
     def test_113_livesync_ios_simulator_watch_change_css_file(self):
         replace("TNS_App/app/test/test.css", "#284848", "lightgreen")
-
         self.wait_for_text_in_output("app/test/test.css")
 
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.css")
@@ -179,7 +174,6 @@ class LiveSyncSimulator(unittest.TestCase):
 
     def test_121_livesync_ios_simulator_watch_delete_xml_file(self):
         remove("TNS_App/app/test/test.xml")
-
         self.wait_for_text_in_output("app/test/test.xml")
 
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.xml")
@@ -187,7 +181,6 @@ class LiveSyncSimulator(unittest.TestCase):
 
     def test_122_livesync_ios_simulator_watch_delete_js_file(self):
         remove("TNS_App/app/test/test.js")
-
         self.wait_for_text_in_output("app/test/test.js")
         time.sleep(2)
 
@@ -196,7 +189,6 @@ class LiveSyncSimulator(unittest.TestCase):
 
     def test_123_livesync_ios_simulator_watch_delete_css_file(self):
         remove("TNS_App/app/test/test.css")
-
         self.wait_for_text_in_output("app/test/test.css")
 
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.css")
