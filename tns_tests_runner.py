@@ -86,6 +86,9 @@ def run_tests():
     # - At least one real Android device must be attached to Linux hosts
     # - At least one real iOS device must be attached to OSX hosts
     #
+    # LIVESYNC
+    # - Runs all LiveSync tests
+    #
     # Test name convention:
     # 001 - 199 - High priority
     # 200 - 299 - Medium priority
@@ -141,6 +144,12 @@ def run_tests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceiOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
+
+    if ('TEST_RUN' in os.environ) and ("LIVESYNC" in os.environ['TEST_RUN']):
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
+#         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
+#         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
 
     # Smoke test runs only high priority tests
     if ('TEST_RUN' in os.environ) and ("SMOKE" in os.environ['TEST_RUN']):
