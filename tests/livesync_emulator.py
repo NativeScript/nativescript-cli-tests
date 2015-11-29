@@ -13,7 +13,7 @@ from multiprocessing import Process
 from helpers._os_lib import cat_app_file_on_emulator, \
     cleanup_folder, replace, remove
 from helpers._tns_lib import ANDROID_RUNTIME_PATH, create_project_add_platform, \
-    create_project, platform_add, run, live_sync
+    create_project, platform_add, run, livesync
 from helpers.device import given_running_emulator, stop_emulators
 from helpers.simulator import stop_simulators
 
@@ -206,7 +206,7 @@ class LiveSyncEmulator(unittest.TestCase):
             framework_path=ANDROID_RUNTIME_PATH)
  
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        live_sync(platform="android", device="emulator-5554", path="TNS_App")
+        livesync(platform="android", device="emulator-5554", path="TNS_App")
  
         output = cat_app_file_on_emulator("TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output

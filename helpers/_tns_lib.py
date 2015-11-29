@@ -267,7 +267,7 @@ def run(platform=None, emulator=False, device=None, path=None, just_launch=True,
     return output
 
 
-def live_sync(platform=None, emulator=False, device=None, watch=False, path=None, assert_success=True):
+def livesync(platform=None, emulator=False, device=None, watch=False, path=None, assert_success=True):
     '''LiveSync {N} project'''
 
     command = TNS_PATH + " livesync"

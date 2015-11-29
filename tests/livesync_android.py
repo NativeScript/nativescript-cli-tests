@@ -8,7 +8,7 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, replace, cat_app_file
 from helpers._tns_lib import ANDROID_RUNTIME_PATH, \
-    create_project_add_platform, live_sync, run
+    create_project_add_platform, livesync, run
 from helpers.device import given_real_device, \
     stop_emulators, get_physical_device_id
 from helpers.simulator import stop_simulators
@@ -64,7 +64,7 @@ class LiveSyncAndroid(unittest.TestCase):
             "(\"globals\");",
             "(\"globals\"); // test")
 
-        live_sync(platform="android", path="TNS_App")
+        livesync(platform="android", path="TNS_App")
 
         output = cat_app_file("android", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
@@ -92,7 +92,7 @@ class LiveSyncAndroid(unittest.TestCase):
 
         device_id = get_physical_device_id(platform="android")
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        live_sync(platform="android", device=device_id, path="TNS_App")
+        livesync(platform="android", device=device_id, path="TNS_App")
 
         output = cat_app_file("android", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
@@ -119,7 +119,7 @@ class LiveSyncAndroid(unittest.TestCase):
             "TNS_App/app/main-view-model.js",
             "TNS_App/app/test/main-view-model.js")
 
-        live_sync(platform="android", path="TNS_App")
+        livesync(platform="android", path="TNS_App")
         time.sleep(5)
 
         output = cat_app_file("android", "TNSApp", "app/test.xml")
@@ -147,7 +147,7 @@ class LiveSyncAndroid(unittest.TestCase):
         run(platform="android", path="TNS_App")
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        output = live_sync(path="TNS_App", assert_success=False)
+        output = livesync(path="TNS_App", assert_success=False)
 
         assert "Multiple device platforms detected (iOS and Android). " + \
             "Specify platform or device on command line" in output

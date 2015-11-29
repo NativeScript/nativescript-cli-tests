@@ -12,7 +12,7 @@ from multiprocessing import Process
 
 from helpers._os_lib import cleanup_folder, replace, remove
 from helpers._tns_lib import IOS_RUNTIME_SYMLINK_PATH, \
-    create_project, platform_add, run, live_sync
+    create_project, platform_add, run, livesync
 from helpers.device import stop_emulators
 from helpers.simulator import create_simulator, delete_simulator, \
     cat_app_file_on_simulator, start_simulator, stop_simulators
@@ -211,7 +211,7 @@ class LiveSyncSimulator(unittest.TestCase):
             path="TNS_App", symlink=True)
 
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        live_sync(platform="ios", emulator=True, path="TNS_App")
+        livesync(platform="ios", emulator=True, path="TNS_App")
 
         output = cat_app_file_on_simulator("TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output

@@ -7,7 +7,7 @@ import unittest
 
 from helpers._os_lib import cleanup_folder, replace, cat_app_file, uninstall_app
 from helpers._tns_lib import IOS_RUNTIME_PATH, \
-    create_project_add_platform, live_sync, run
+    create_project_add_platform, livesync, run
 from helpers.device import given_real_device, \
     stop_emulators, get_physical_device_id
 from helpers.simulator import stop_simulators
@@ -64,7 +64,7 @@ class LiveSynciOS(unittest.TestCase):
             "(\"globals\");",
             "(\"globals\"); // test")
 
-        live_sync(platform="ios", path="TNS_App")
+        livesync(platform="ios", path="TNS_App")
 
         output = cat_app_file("ios", "TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
@@ -90,7 +90,7 @@ class LiveSynciOS(unittest.TestCase):
 
         device_id = get_physical_device_id(platform="ios")
         replace("TNS_App/app/main-view-model.js", "taps", "clicks")
-        live_sync(platform="ios", device=device_id, path="TNS_App")
+        livesync(platform="ios", device=device_id, path="TNS_App")
 
         output = cat_app_file("ios", "TNSApp", "app/main-view-model.js")
         assert "this.set(\"message\", this.counter + \" clicks left\");" in output
@@ -117,7 +117,7 @@ class LiveSynciOS(unittest.TestCase):
             "TNS_App/app/main-view-model.js",
             "TNS_App/app/test/main-view-model.js")
 
-        live_sync(platform="ios", path="TNS_App")
+        livesync(platform="ios", path="TNS_App")
 
         output = cat_app_file("ios", "TNSApp", "app/test.xml")
         assert "<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output
