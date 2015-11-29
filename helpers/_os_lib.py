@@ -21,7 +21,6 @@ import time
 import psutil
 
 ADB_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'platform-tools', 'adb')
-DDB_PATH = 'ddb'
 
 DEFAULT_TIMEOUT = 180  # seconds
 DEFAULT_OUTPUT_FILE = "output.txt"
@@ -230,7 +229,7 @@ def cat_app_file(platform, app_name, file_path):
             file_path)
     if platform is "ios":
         output = run_aut(
-            DDB_PATH + " device get-file \"Library/Application Support/LiveSync/" +
+            "ddb device get-file \"Library/Application Support/LiveSync/" +
             file_path +
             "\" --app org.nativescript." +
             app_name)
@@ -252,10 +251,9 @@ def remove(file_path):
 
 def uninstall_app(app_name, platform, fail=True):
     '''Uninstall mobile app'''
-
     if platform == "android":
-        output = run_aut(DDB_PATH + " device uninstall org.nativescript." + app_name, \
-                         set_timeout=120)
+        output = run_aut("ddb device uninstall org.nativescript." + app_name, \
+            set_timeout=120)
         if "[Uninstalling] Status: RemovingApplication" in output:
             print "{0} application successfully uninstalled.".format(app_name)
         else:
@@ -276,5 +274,7 @@ def cleanup_xcode_cache():
     run_aut("rm -rf ~/Library/Developer/Xcode/DerivedData/", 600)
     run_aut("sudo find /var/folders/ -type d -name 'com.apple.DeveloperTools' | " + \
                 "xargs -n 1 -I dir sudo find dir -name \* -type f -delete")
-    output = run_aut("sudo find /var/folders/ -type d -name 'Xcode'")
-    # assert "Xcode" not in output, "Failed to cleanup Xcode cache"
+    run_aut("sudo find /var/folders/ -type d -name 'Xcode'")
+
+#     output = run_aut("sudo find /var/folders/ -type d -name 'Xcode'")
+#     assert "Xcode" not in output, "Failed to cleanup Xcode cache"

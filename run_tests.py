@@ -9,8 +9,7 @@ Entry point of functional tests
 import os
 import platform
 
-from helpers._os_lib import cleanup_folder, remove, run_aut, uninstall_app, cleanup_xcode_cache,\
-    DDB_PATH
+from helpers._os_lib import cleanup_folder, remove, run_aut, uninstall_app, cleanup_xcode_cache
 from helpers._tns_lib import uninstall_cli, install_cli, get_android_runtime, get_ios_runtime, \
     ANDROID_RUNTIME_SYMLINK_PATH, IOS_RUNTIME_SYMLINK_PATH, ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH
 from helpers.device import stop_emulators
@@ -54,7 +53,7 @@ if __name__ == '__main__':
     if 'TEST_RUN' in os.environ and "FULL" in os.environ['TEST_RUN']:
 
         # Install ddb
-        output = run_aut(DDB_PATH)
+        output = run_aut("ddb")
         if "Device Debug Bridge" not in output:
             run_aut("npm i -g ddb")
 
