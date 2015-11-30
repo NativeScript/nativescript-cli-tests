@@ -193,20 +193,20 @@ class LiveSyncEmulator(unittest.TestCase):
     def test_301_livesync_android_emulator_before_run(self):
         print "~~~ Killing subprocess ..."
         self.process.terminate()
- 
+
         time.sleep(2)
         if psutil.pid_exists(self.process.pid):
             print "~~~ Forced killing subprocess ..."
             self.process.kill()
- 
+
         cleanup_folder('TNS_App')
         create_project_add_platform(
             proj_name="TNS_App",
             platform="android",
             framework_path=ANDROID_RUNTIME_PATH)
- 
+
         replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         livesync(platform="android", device="emulator-5554", path="TNS_App")
- 
+
         output = cat_app_file_on_emulator("TNSApp", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output

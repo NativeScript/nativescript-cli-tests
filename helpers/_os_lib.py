@@ -19,7 +19,7 @@ from time import sleep
 import time
 import psutil
 
-from helpers.adb import ADB_PATH
+ADB_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'platform-tools', 'adb')
 
 
 DEFAULT_TIMEOUT = 180  # seconds
