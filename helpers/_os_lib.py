@@ -221,6 +221,7 @@ def replace(file_path, str1, str2):
 
 def cat_app_file(platform, app_name, file_path):
     '''Return content of file on device'''
+    print "~~~ Catenate ~~~"
     if platform is "android":
         output = run_aut(
             ADB_PATH + " shell run-as org.nativescript." +
@@ -237,6 +238,7 @@ def cat_app_file(platform, app_name, file_path):
 
 def cat_app_file_on_emulator(app_name, file_path):
     '''Return content of file on emulator'''
+    print "~~~ Catenate ~~~"
     output = run_aut(ADB_PATH + " -s emulator-5554 shell run-as org.nativescript." + \
         app_name + " cat files/" + file_path)
     return output

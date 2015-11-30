@@ -64,7 +64,7 @@ def delete_simulator(name):
 
 def cat_app_file_on_simulator(app_name, file_path):
     '''Return content of file on simulator'''
-
+    print "~~~ Catenate ~~~"
     sim_id = get_simulator_id_by_name('iPhone 6s 90')
     app_path = run_aut(
         "xcrun simctl get_app_container {0} org.nativescript.{1}".format(sim_id, app_name))
