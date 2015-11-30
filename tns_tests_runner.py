@@ -99,57 +99,59 @@ def run_tests():
     # Temporary ignore Help tests because of expected breaking changes
     # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))
 
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Output_STRERR))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PlatformAndroid))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PrepareAndroid))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildAndroid))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsAndroid))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(InitAndInstall))
-    if 'Darwin' in platform.platform():
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PlatformiOS))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PrepareiOS))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildiOS))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOS))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSSandboxPods))
-
-    if ('TEST_RUN' in os.environ) and (not "SMOKE" in os.environ['TEST_RUN']):
-        if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryAndroid))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TranspilationTypeScript))
-        if 'Darwin' in platform.platform():
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateiOS))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryiOS))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSPods))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSLibs))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSXcconfig))
-
-    if ('TEST_RUN' in os.environ) and ("FULL" in os.environ['TEST_RUN']):
-        suite.addTests(
-            unittest.TestLoader().loadTestsFromTestCase(DeployAndroid))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(RuniOS))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceAndroid))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugAndroid))
-        if 'Darwin' in platform.platform():
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeployiOS))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(RuniOS))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceiOS))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
-
     if ('TEST_RUN' in os.environ) and ("LIVESYNC" in os.environ['TEST_RUN']):
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
-#         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
+        # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
-#         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
+        # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
+    else:
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Output_STRERR))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PlatformAndroid))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PrepareAndroid))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildAndroid))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsAndroid))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(InitAndInstall))
+        if 'Darwin' in platform.platform():
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PlatformiOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PrepareiOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildiOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSSandboxPods))
+
+        if ('TEST_RUN' in os.environ) and (not "SMOKE" in os.environ['TEST_RUN']):
+            if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryAndroid))
+            # move it only to OSX due to python failures on Windows
+            # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TranspilationTypeScript))
+            if 'Darwin' in platform.platform():
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateiOS))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryiOS))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSPods))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSLibs))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSXcconfig))
+
+        if ('TEST_RUN' in os.environ) and ("FULL" in os.environ['TEST_RUN']):
+            suite.addTests(
+                unittest.TestLoader().loadTestsFromTestCase(DeployAndroid))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(RuniOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceAndroid))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugAndroid))
+            if 'Darwin' in platform.platform():
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeployiOS))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(RuniOS))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceiOS))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
 
     # Smoke test runs only high priority tests
     if ('TEST_RUN' in os.environ) and ("SMOKE" in os.environ['TEST_RUN']):
