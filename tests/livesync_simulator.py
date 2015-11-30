@@ -20,7 +20,7 @@ from helpers.simulator import create_simulator, delete_simulator, \
 
 class LiveSyncSimulator(unittest.TestCase):
 
-    SECONDS_TO_WAIT = 20
+    SECONDS_TO_WAIT = 120
 
     @classmethod
     def setUpClass(cls):
@@ -84,14 +84,29 @@ class LiveSyncSimulator(unittest.TestCase):
 
     def wait_for_text_in_output(self, text):
         def read_loop():
+            count = 0
+            found = False
             print "~~~ Waiting for: " + text
-            while True:
-                line = self.process.stdout.readline()
-                if text in line:
-                    print " + Text \"{0}\" found in: ".format(text) + line.rstrip(),
-                    break
-                else:
-                    print (" - " + line),
+
+            while not found:
+                if count == 0:
+                    line = self.process.stdout.readline()
+                    if text in line:
+                        print " + Text \"{0}\" found in: ".format(text) + line.rstrip(),
+                        print '\n'
+                        count = 1
+                        continue
+                    else:
+                        print (" - " + line),
+                if count == 1:
+                    line = self.process.stdout.readline()
+                    if text in line:
+                        print " + Text \"{0}\" found in: ".format(text) + line.rstrip(),
+                        raise Exception("The console.log() message duplicates.")
+                    else:
+                        found = True
+                        print (" - " + line),
+                        break
 
         self.run_with_timeout(self.SECONDS_TO_WAIT, read_loop)
 
@@ -179,7 +194,7 @@ class LiveSyncSimulator(unittest.TestCase):
         self.wait_for_text_in_output("app/test/test.xml")
 
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.xml")
-        assert output is None
+        assert "No such file or directory" in output
 
     def test_122_livesync_ios_simulator_watch_delete_js_file(self):
         remove("TNS_App/app/test/test.js")
@@ -187,14 +202,14 @@ class LiveSyncSimulator(unittest.TestCase):
         time.sleep(2)
 
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.js")
-        assert output is None
+        assert "No such file or directory" in output
 
     def test_123_livesync_ios_simulator_watch_delete_css_file(self):
         remove("TNS_App/app/test/test.css")
         self.wait_for_text_in_output("app/test/test.css")
 
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.css")
-        assert output is None
+        assert "No such file or directory" in output
 
     def test_301_livesync_ios_simulator_before_run(self):
         print "~~~ Killing subprocess ..."

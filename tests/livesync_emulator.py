@@ -22,7 +22,7 @@ class LiveSyncEmulator(unittest.TestCase):
 
     # TODO: Add a test for #942.
 
-    SECONDS_TO_WAIT = 20
+    SECONDS_TO_WAIT = 120
 
     @classmethod
     def setUpClass(cls):
@@ -37,8 +37,7 @@ class LiveSyncEmulator(unittest.TestCase):
 
         # setup app
         create_project(proj_name="TNS_App", copy_from="data/apps/livesync-hello-world")
-        platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, \
-            path="TNS_App", symlink=True)
+        platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, path="TNS_App")
         run(platform="android", device="emulator-5554", path="TNS_App")
 
         # replace
@@ -83,14 +82,29 @@ class LiveSyncEmulator(unittest.TestCase):
 
     def wait_for_text_in_output(self, text):
         def read_loop():
+            count = 0
+            found = False
             print "~~~ Waiting for: " + text
-            while True:
-                line = self.process.stdout.readline()
-                if text in line:
-                    print " + Text \"{0}\" found in: ".format(text) + line.rstrip(),
-                    break
-                else:
-                    print (" - " + line),
+
+            while not found:
+                if count == 0:
+                    line = self.process.stdout.readline()
+                    if text in line:
+                        print " + Text \"{0}\" found in: ".format(text) + line.rstrip(),
+                        print '\n'
+                        count = 1
+                        continue
+                    else:
+                        print (" - " + line),
+                if count == 1:
+                    line = self.process.stdout.readline()
+                    if text in line:
+                        print " + Text \"{0}\" found in: ".format(text) + line.rstrip(),
+                        raise Exception("The console.log() message duplicates.")
+                    else:
+                        found = True
+                        print (" - " + line),
+                        break
 
         self.run_with_timeout(self.SECONDS_TO_WAIT, read_loop)
 
@@ -125,7 +139,6 @@ class LiveSyncEmulator(unittest.TestCase):
         output = cat_app_file_on_emulator("TNSApp", \
             "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output
-
 
     def test_101_livesync_android_emulator_watch_add_xml_file(self):
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test/test.xml")
@@ -174,21 +187,21 @@ class LiveSyncEmulator(unittest.TestCase):
         self.wait_for_text_in_output("Page loaded 3 times.")
 
         output = cat_app_file_on_emulator("TNSApp", "app/test/test.xml")
-        assert output is None
+        assert "No such file or directory" in output
 
     def test_122_livesync_android_emulator_watch_delete_js_file(self):
         remove("TNS_App/app/test/test.js")
         self.wait_for_text_in_output("Page loaded 1 times.")
 
         output = cat_app_file_on_emulator("TNSApp", "app/test/test.js")
-        assert output is None
+        assert "No such file or directory" in output
 
     def test_123_livesync_android_emulator_watch_delete_css_file(self):
         remove("TNS_App/app/test/test.css")
         self.wait_for_text_in_output("Page loaded 2 times.")
 
         output = cat_app_file_on_emulator("TNSApp", "app/test/test.css")
-        assert output is None
+        assert "No such file or directory" in output
 
     def test_301_livesync_android_emulator_before_run(self):
         print "~~~ Killing subprocess ..."
