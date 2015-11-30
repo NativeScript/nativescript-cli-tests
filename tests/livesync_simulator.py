@@ -12,7 +12,7 @@ from multiprocessing import Process
 
 from helpers._os_lib import cleanup_folder, replace, remove
 from helpers._tns_lib import IOS_RUNTIME_SYMLINK_PATH, \
-    create_project, platform_add, run, livesync
+    create_project, platform_add, run, livesync, TNS_PATH
 from helpers.device import stop_emulators
 from helpers.simulator import create_simulator, delete_simulator, \
     cat_app_file_on_simulator, start_simulator, stop_simulators
@@ -52,7 +52,7 @@ class LiveSyncSimulator(unittest.TestCase):
             "(\"globals\");", "(\"globals\"); // test")
 
         # livesync
-        command = "tns livesync ios --emulator --watch --path TNS_App --log trace"
+        command = TNS_PATH + " livesync ios --emulator --watch --path TNS_App --log trace"
         print command
         cls.process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
 

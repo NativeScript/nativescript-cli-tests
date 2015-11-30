@@ -13,7 +13,7 @@ from multiprocessing import Process
 from helpers._os_lib import cat_app_file_on_emulator, \
     cleanup_folder, replace, remove
 from helpers._tns_lib import ANDROID_RUNTIME_PATH, create_project_add_platform, \
-    create_project, platform_add, run, livesync
+    create_project, platform_add, run, livesync, TNS_PATH
 from helpers.device import given_running_emulator, stop_emulators
 from helpers.simulator import stop_simulators
 
@@ -52,7 +52,7 @@ class LiveSyncEmulator(unittest.TestCase):
             "(\"globals\");", "(\"globals\"); // test")
 
         # livesync
-        command = "tns livesync android " + \
+        command = TNS_PATH + " livesync android " + \
             "--emulator --device emulator-5554 --watch --path TNS_App --log trace"
         print command
         cls.process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
