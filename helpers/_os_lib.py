@@ -17,10 +17,10 @@ import tarfile
 import threading
 from time import sleep
 import time
-
 import psutil
 
-ADB_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'platform-tools', 'adb')
+from helpers.adb import ADB_PATH
+
 
 DEFAULT_TIMEOUT = 180  # seconds
 DEFAULT_OUTPUT_FILE = "output.txt"

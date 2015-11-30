@@ -1,10 +1,8 @@
 '''
-Wraper around adb commands
+Wrapper around adb commands
 '''
-import os
-from time import sleep
-import time
 
+import os, time
 from helpers._os_lib import run_aut
 
 
@@ -13,14 +11,14 @@ ADB_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'platform-tools', 'adb')
 def restart_adb():
     '''Restart Adb'''
     run_aut(ADB_PATH + " kill-server")
-    run_aut(ADB_PATH + "adb start-server")
-    run_aut(ADB_PATH + "adb devices")
+    run_aut(ADB_PATH + " start-server")
+    run_aut(ADB_PATH + " devices")
 
 def stop_application(app_id, device_id):
     '''Stop application'''
     output = run_aut(ADB_PATH + " -s " + device_id + " shell am force-stop " + app_id)
-    sleep(5)
-    assert not (app_id in output), "Failed to stop " + app_id
+    time.sleep(5)
+    assert app_id not in output, "Failed to stop " + app_id
 
 def is_running(app_id, device_id):
     '''Check if app is running'''
