@@ -9,6 +9,9 @@ import time
 
 from helpers._os_lib import run_aut, kill_process
 
+
+SIMULATOR_NAME = 'iPhone 6s 90'
+
 def create_simulator(name, device_type, ios_version):
     '''Create simulator'''
 
@@ -39,7 +42,7 @@ def wait_for_simulator(timeout=300):
     start_time = time.time()
     end_time = start_time + timeout
     while not found:
-        time.sleep(5)
+        time.sleep(2)
         output = run_aut("xcrun simctl list devices")
         if "Booted" in output:
             found = True
@@ -65,7 +68,7 @@ def delete_simulator(name):
 def cat_app_file_on_simulator(app_name, file_path):
     '''Return content of file on simulator'''
     print "~~~ Catenate ~~~"
-    sim_id = get_simulator_id_by_name('iPhone 6s 90')
+    sim_id = get_simulator_id_by_name(SIMULATOR_NAME)
     app_path = run_aut(
         "xcrun simctl get_app_container {0} org.nativescript.{1}".format(sim_id, app_name))
     print "~~~ Application path: " + app_path
