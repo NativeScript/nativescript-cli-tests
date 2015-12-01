@@ -12,10 +12,11 @@ from multiprocessing import Process
 
 from helpers._os_lib import cleanup_folder, replace, remove
 from helpers._tns_lib import IOS_RUNTIME_SYMLINK_PATH, \
-    create_project, platform_add, run, livesync, TNS_PATH
+    create_project, platform_add, build, run, livesync, TNS_PATH
 from helpers.device import stop_emulators
 from helpers.simulator import create_simulator, delete_simulator, \
-    cat_app_file_on_simulator, start_simulator, stop_simulators
+    cat_app_file_on_simulator, start_simulator, stop_simulators, \
+    SIMULATOR_NAME
 
 
 class LiveSyncSimulator(unittest.TestCase):
@@ -29,11 +30,12 @@ class LiveSyncSimulator(unittest.TestCase):
         stop_emulators()
         stop_simulators()
 
-        delete_simulator('iPhone 6s 90')
-        create_simulator('iPhone 6s 90', 'iPhone 6s', '9.0')
+        delete_simulator(SIMULATOR_NAME)
+        create_simulator(SIMULATOR_NAME, 'iPhone 6s', '9.0')
 
-        start_simulator('iPhone 6s 90')
+        start_simulator(SIMULATOR_NAME)
         cleanup_folder('TNS_App')
+        cleanup_folder('appTest')
 
         # setup app
         create_project(proj_name="TNS_App", copy_from="data/apps/livesync-hello-world")
@@ -81,6 +83,7 @@ class LiveSyncSimulator(unittest.TestCase):
 
         stop_simulators()
         cleanup_folder('TNS_App')
+        cleanup_folder('appTest')
 
     def wait_for_text_in_output(self, text):
         def read_loop():
@@ -220,13 +223,35 @@ class LiveSyncSimulator(unittest.TestCase):
             print "~~~ Forced killing subprocess ..."
             self.process.kill()
 
-        cleanup_folder('TNS_App')
-        create_project(proj_name="TNS_App")
+        cleanup_folder('appTest')
+        create_project(proj_name="appTest")
         platform_add(platform="ios", framework_path=IOS_RUNTIME_SYMLINK_PATH, \
-            path="TNS_App", symlink=True)
+            path="appTest", symlink=True)
+        build(platform="ios", path="appTest")
 
-        replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        livesync(platform="ios", emulator=True, path="TNS_App")
+        # replace
+        replace("appTest/app/main-page.xml", "TAP", "TEST")
+        replace("appTest/app/main-view-model.js", "taps", "clicks")
+        replace("appTest/app/app.css", "30", "20")
 
-        output = cat_app_file_on_simulator("TNSApp", "app/main-page.xml")
+        replace("appTest/node_modules/tns-core-modules/LICENSE", "2015", "9999")
+        replace(
+            "appTest/node_modules/tns-core-modules/application/application-common.js",
+            "(\"globals\");", "(\"globals\"); // test")
+
+        livesync(platform="ios", emulator=True, path="appTest")
+        self.wait_for_text_in_output("prepared")
+        time.sleep(2)
+
+        output = cat_app_file_on_simulator("appTest", "app/main-page.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
+        output = cat_app_file_on_simulator("appTest", "app/main-view-model.js")
+        assert "this.set(\"message\", this.counter + \" clicks left\");" in output
+        output = cat_app_file_on_simulator("appTest", "app/app.css")
+        assert "font-size: 20;" in output
+
+        output = cat_app_file_on_simulator("appTest", "app/tns_modules/LICENSE")
+        assert "Copyright (c) 9999 Telerik AD" in output
+        output = cat_app_file_on_simulator("appTest", \
+            "app/tns_modules/application/application-common.js")
+        assert "require(\"globals\"); // test" in output
