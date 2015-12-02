@@ -171,25 +171,25 @@ class LiveSyncSimulator(unittest.TestCase):
         assert "color: #284848;" in output
 
     def test_111_livesync_ios_simulator_watch_change_xml_file(self):
-        replace("TNS_App/app/test/test.xml", "TEST", "WATCH")
-        self.wait_for_text_in_output("app/test/test.xml")
+        replace("TNS_App/app/main-page.xml", "TEST", "WATCH")
+        self.wait_for_text_in_output("app/main-page.xml")
 
-        output = cat_app_file_on_simulator("TNSApp", "app/test/test.xml")
+        output = cat_app_file_on_simulator("TNSApp", "app/main-page.xml")
         assert "<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />" in output
 
     def test_112_livesync_ios_simulator_watch_change_js_file(self):
-        replace("TNS_App/app/test/test.js", "start();", "start(); // test")
-        self.wait_for_text_in_output("app/test/test.js")
+        replace("TNS_App/app/main-view-model.js", "clicks", "tricks")
+        self.wait_for_text_in_output("app/main-view-model.js")
         time.sleep(2)
 
-        output = cat_app_file_on_simulator("TNSApp", "app/test/test.js")
-        assert "application.start(); // test" in output
+        output = cat_app_file_on_simulator("TNSApp", "app/main-view-model.js")
+        assert "this.set(\"message\", this.counter + \" tricks left\");" in output
 
     def test_113_livesync_ios_simulator_watch_change_css_file(self):
-        replace("TNS_App/app/test/test.css", "#284848", "lightgreen")
-        self.wait_for_text_in_output("app/test/test.css")
+        replace("TNS_App/app/app.css", "#284848", "lightgreen")
+        self.wait_for_text_in_output("app/app.css")
 
-        output = cat_app_file_on_simulator("TNSApp", "app/test/test.css")
+        output = cat_app_file_on_simulator("TNSApp", "app/app.css")
         assert "color: lightgreen;" in output
 
 #     https://github.com/NativeScript/nativescript-cli/issues/1210
