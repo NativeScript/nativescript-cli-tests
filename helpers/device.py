@@ -17,6 +17,7 @@ EMULATOR_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'emulator'
 def start_emulator(emulator_name, port="5554", timeout=300, wait_for=True):
     '''Start Android Emulator'''
 
+    start_command = ''
     print "Starting emulator on {0}".format(platform.platform())
 
     if 'ACTIVE_UI' in os.environ:
