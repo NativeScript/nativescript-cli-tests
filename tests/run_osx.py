@@ -54,7 +54,7 @@ class RuniOS(unittest.TestCase):
         cleanup_folder('./TNSAppNoPlatform')
         stop_simulators()
 
-    def test_001_run_ios(self):
+    def test_001_run_ios_justlaunch(self):
         output = run_aut(TNS_PATH + " run ios --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output
@@ -125,13 +125,19 @@ class RuniOS(unittest.TestCase):
         assert "Project successfully built" in output
         assert "Successfully deployed on device" in output
 
-    def test_300_run_ios_platform_not_added(self):
+    def test_301_run_ios_platform_not_added(self):
         create_project(proj_name="TNSAppNoPlatform")
         output = run_aut(
-            TNS_PATH +
-            " run ios --path TNSAppNoPlatform --justlaunch")
+            TNS_PATH + " run ios --path TNSAppNoPlatform --justlaunch")
 
         assert "Project successfully created." in output
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device" in output
+
+    def test_302_run_ios_device_not_connected(self):
+        output = run_aut(TNS_PATH + " run android --device xxxxx --path TNSAppNoPlatform")
+        assert "Cannot resolve the specified connected device" in output
+        assert "Project successfully prepared" not in output
+        assert "Project successfully built" not in output
+        assert "Successfully deployed on device" not in output

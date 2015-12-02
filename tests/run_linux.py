@@ -37,7 +37,6 @@ class RunAndroid(unittest.TestCase):
         given_running_emulator()
         given_real_device(platform="android")
         cleanup_folder('./TNS_App/platforms/android/build/outputs')
-        cleanup_folder('./appTest')
 
     def tearDown(self):
         pass
@@ -48,7 +47,7 @@ class RunAndroid(unittest.TestCase):
         cleanup_folder('./TNS_App')
         cleanup_folder('./TNS_App_NoPlatform')
 
-    def test_001_run_android(self):
+    def test_001_run_android_justlaunch(self):
         output = run_aut(TNS_PATH + " run android --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -97,13 +96,19 @@ class RunAndroid(unittest.TestCase):
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
 
-    def test_300_run_android_patform_not_added(self):
+    def test_301_run_android_patform_not_added(self):
         create_project(proj_name="TNS_App_NoPlatform")
         output = run_aut(
-            TNS_PATH +
-            " run android --path TNS_App_NoPlatform --justlaunch")
+            TNS_PATH + " run android --path TNS_App_NoPlatform --justlaunch")
 
         assert "Project successfully created." in output
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
+
+    def test_302_run_android_device_not_connected(self):
+        output = run_aut(TNS_PATH + " run android --device xxxxx --path TNS_App_NoPlatform")
+        assert "Cannot resolve the specified connected device" in output
+        assert "Project successfully prepared" not in output
+        assert "Project successfully built" not in output
+        assert "Successfully deployed on device" not in output
