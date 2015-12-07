@@ -146,10 +146,10 @@ def run_tests():
             if 'Darwin' in platform.platform():
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeployiOS))
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(RuniOS))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
+#                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
+#                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceiOS))
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
 
