@@ -10,9 +10,9 @@ Tests for livesync command in context of iOS simulator
 import psutil, subprocess, shutil, time, unittest
 from multiprocessing import Process
 
-from helpers._os_lib import cleanup_folder, replace, remove
+from helpers._os_lib import cleanup_folder, replace
 from helpers._tns_lib import IOS_RUNTIME_SYMLINK_PATH, \
-    create_project, platform_add, build, run, livesync, TNS_PATH
+    create_project, platform_add, run, livesync, TNS_PATH
 from helpers.device import stop_emulators
 from helpers.simulator import create_simulator, delete_simulator, \
     cat_app_file_on_simulator, start_simulator, stop_simulators, \
@@ -186,11 +186,11 @@ class LiveSyncSimulator(unittest.TestCase):
         assert "this.set(\"message\", this.counter + \" tricks left\");" in output
 
     def test_113_livesync_ios_simulator_watch_change_css_file(self):
-        replace("TNS_App/app/app.css", "#284848", "lightgreen")
+        replace("TNS_App/app/app.css", "#284848", "green")
         self.wait_for_text_in_output("app/app.css")
 
         output = cat_app_file_on_simulator("TNSApp", "app/app.css")
-        assert "color: lightgreen;" in output
+        assert "color: green;" in output
 
 #     https://github.com/NativeScript/nativescript-cli/issues/1210
 #     def test_121_livesync_ios_simulator_watch_delete_xml_file(self):
