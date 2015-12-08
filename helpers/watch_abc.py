@@ -1,5 +1,5 @@
 '''
-This class implements my Abstract Base Class.
+This class implements Watch Abstract Base Class.
 '''
 
 # C0111 - Missing docstring
@@ -8,10 +8,10 @@ This class implements my Abstract Base Class.
 
 from abc import ABCMeta, abstractmethod
 from multiprocessing import Process
-import subprocess, time
+import psutil, subprocess, time
 
 
-class MyABC:
+class WatchABC:
     __metaclass__ = ABCMeta
 
     SECONDS_TO_WAIT = 120
@@ -65,3 +65,13 @@ class MyABC:
                 proc.terminate()
                 raise Exception("Timeout while waiting for livesync.")
             time.sleep(0.5)
+
+    @abstractmethod
+    def terminate(self):
+        print "~~~ Killing subprocess ..."
+        self.process.terminate()
+
+        time.sleep(2)
+        if psutil.pid_exists(self.process.pid):
+            print "~~~ Forced killing subprocess ..."
+            self.process.kill()
