@@ -7,8 +7,7 @@ Tests for livesync command in context of iOS simulator
 # R0201 - Method could be a function
 # pylint: disable=C0103, C0111, R0201
 
-import psutil, subprocess, shutil, time, unittest
-from multiprocessing import Process
+import shutil, time
 
 from helpers._os_lib import cleanup_folder, replace
 from helpers._tns_lib import IOS_RUNTIME_SYMLINK_PATH, \
@@ -17,9 +16,10 @@ from helpers.device import stop_emulators
 from helpers.simulator import create_simulator, delete_simulator, \
     cat_app_file_on_simulator, start_simulator, stop_simulators, \
     SIMULATOR_NAME
+from helpers.watch_base_class import WatchBaseClass
 
 
-class LiveSyncSimulator(unittest.TestCase):
+class LiveSyncSimulator(WatchBaseClass):
 
     SECONDS_TO_WAIT = 120
 
@@ -56,7 +56,7 @@ class LiveSyncSimulator(unittest.TestCase):
         # livesync
         command = TNS_PATH + " livesync ios --emulator --watch --path TNS_App --log trace"
         print command
-        cls.process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+        cls.start_watcher(command)
 
     def setUp(self):
 
@@ -73,61 +73,11 @@ class LiveSyncSimulator(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        print "~~~ Killing subprocess ..."
-        cls.process.terminate()
-
-        time.sleep(2)
-        if psutil.pid_exists(cls.process.pid):
-            print "~~~ Forced killing subprocess ..."
-            cls.process.kill()
-
+        cls.terminate_watcher()
         stop_simulators()
+
         cleanup_folder('TNS_App')
         cleanup_folder('appTest')
-
-    def wait_for_text_in_output(self, text):
-        def read_loop():
-            count = 0
-            found = False
-            print "~~~ Waiting for: " + text
-
-            while not found:
-                if count == 0:
-                    line = self.process.stdout.readline()
-                    if text in line:
-                        print " + Text \"{0}\" found in: ".format(text) + line.rstrip(),
-                        print '\n'
-                        count = 1
-                        continue
-                    else:
-                        print (" - " + line),
-                if count == 1:
-                    line = self.process.stdout.readline()
-                    if text in line:
-                        print " + Text \"{0}\" found in: ".format(text) + line.rstrip(),
-                        raise Exception("The console.log() message duplicates.")
-                    else:
-                        found = True
-                        print (" - " + line),
-                        break
-
-        self.run_with_timeout(self.SECONDS_TO_WAIT, read_loop)
-
-    def run_with_timeout(self, timeout, func):
-        if not timeout:
-            func()
-            return
-
-        p = Process(target=func)
-        p.start()
-
-        start_time = time.time()
-        end_time = start_time + timeout
-        while p.is_alive():
-            if time.time() > end_time:
-                p.terminate()
-                raise Exception("Timeout while waiting for livesync.")
-            time.sleep(0.5)
 
     def test_001_full_livesync_ios_simulator_xml_js_css_tns_files(self):
 
@@ -216,15 +166,9 @@ class LiveSyncSimulator(unittest.TestCase):
 #         assert "No such file or directory" in output
 
     def test_301_livesync_ios_simulator_before_run(self):
-        print "~~~ Killing subprocess ..."
-        self.process.terminate()
-
-        time.sleep(2)
-        if psutil.pid_exists(self.process.pid):
-            print "~~~ Forced killing subprocess ..."
-            self.process.kill()
-
+        self.terminate_watcher()
         cleanup_folder('TNS_App')
+
         create_project(proj_name="TNS_App")
         platform_add(platform="ios", framework_path=IOS_RUNTIME_SYMLINK_PATH, \
             path="TNS_App", symlink=True)

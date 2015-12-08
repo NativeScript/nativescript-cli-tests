@@ -1,26 +1,23 @@
 '''
-This class implements Watch Abstract Base Class.
+This class implements Watch Base Class.
 '''
 
 # C0111 - Missing docstring
 # R0201 - Method could be a function
 # pylint: disable=C0111, R0201
 
-from abc import ABCMeta, abstractmethod
+import psutil, subprocess, time, unittest
 from multiprocessing import Process
-import psutil, subprocess, time
 
 
-class WatchABC:
-    __metaclass__ = ABCMeta
+class WatchBaseClass(unittest.TestCase):
 
     SECONDS_TO_WAIT = 120
 
-    @abstractmethod
-    def __init__(self, command):
-        self.process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+    @classmethod
+    def start_watcher(cls, command):
+        cls.process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
 
-    @abstractmethod
     def wait_for_text_in_output(self, text):
         def read_loop():
             count = 0
@@ -49,7 +46,6 @@ class WatchABC:
 
         self.run_with_timeout(self.SECONDS_TO_WAIT, read_loop)
 
-    @abstractmethod
     def run_with_timeout(self, timeout, func):
         if not timeout:
             func()
@@ -66,12 +62,12 @@ class WatchABC:
                 raise Exception("Timeout while waiting for livesync.")
             time.sleep(0.5)
 
-    @abstractmethod
-    def terminate(self):
+    @classmethod
+    def terminate_watcher(cls):
         print "~~~ Killing subprocess ..."
-        self.process.terminate()
+        cls.process.terminate()
 
         time.sleep(2)
-        if psutil.pid_exists(self.process.pid):
+        if psutil.pid_exists(cls.process.pid):
             print "~~~ Forced killing subprocess ..."
-            self.process.kill()
+            cls.process.kill()
