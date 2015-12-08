@@ -102,7 +102,7 @@ def run_tests():
     if ('TEST_RUN' in os.environ) and ("LIVESYNC" in os.environ['TEST_RUN']):
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
         # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
-        # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
         # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
     else:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))

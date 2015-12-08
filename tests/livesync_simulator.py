@@ -21,8 +21,6 @@ from helpers.watch_base_class import WatchBaseClass
 
 class LiveSyncSimulator(WatchBaseClass):
 
-    SECONDS_TO_WAIT = 120
-
     @classmethod
     def setUpClass(cls):
 
