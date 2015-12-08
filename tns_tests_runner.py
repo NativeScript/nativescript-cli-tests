@@ -100,10 +100,13 @@ def run_tests():
     # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))
 
     if ('TEST_RUN' in os.environ) and ("LIVESYNC" in os.environ['TEST_RUN']):
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
-        # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
-        # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
+        if 'Darwin' in platform.platform():
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
+            # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
+            # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
+        if 'Windows' in platform.platform():
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
     else:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
@@ -127,8 +130,6 @@ def run_tests():
             if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryAndroid))
-            # move it only to OSX due to python failures on Windows
-            # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TranspilationTypeScript))
             if 'Darwin' in platform.platform():
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateiOS))
