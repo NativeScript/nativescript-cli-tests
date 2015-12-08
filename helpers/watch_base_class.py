@@ -12,7 +12,7 @@ from multiprocessing import Process
 
 class WatchBaseClass(unittest.TestCase):
 
-    SECONDS_TO_WAIT = 120
+    SECONDS_TO_WAIT = 150
 
     @classmethod
     def start_watcher(cls, command):
