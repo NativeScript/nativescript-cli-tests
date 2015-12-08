@@ -29,7 +29,6 @@ class LiveSyncEmulator(WatchBaseClass):
         stop_emulators()
         stop_simulators()
 
-        
         # TODO: Allow parameter for emulator name - Api23.
         # start_emulator(EMULATOR_NAME)
 
