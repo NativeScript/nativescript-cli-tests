@@ -15,10 +15,10 @@ from helpers._tns_lib import ANDROID_RUNTIME_PATH, create_project_add_platform, 
     create_project, platform_add, run, livesync, TNS_PATH
 from helpers.device import given_running_emulator, stop_emulators
 from helpers.simulator import stop_simulators
-from helpers.watch_base_class import WatchBaseClass
+from helpers.watcher import Watcher
 
 
-class LiveSyncEmulator(WatchBaseClass):
+class LiveSyncEmulator(Watcher):
 
     # TODO: Add a test for #942.
 

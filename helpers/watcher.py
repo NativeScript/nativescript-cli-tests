@@ -1,5 +1,5 @@
 '''
-This class implements Watch Base Class.
+This class implements Watcher Base Class.
 '''
 
 # C0111 - Missing docstring
@@ -10,7 +10,7 @@ import psutil, subprocess, time, unittest
 from multiprocessing import Process
 
 
-class WatchBaseClass(unittest.TestCase):
+class Watcher(unittest.TestCase):
 
     SECONDS_TO_WAIT = 150
 

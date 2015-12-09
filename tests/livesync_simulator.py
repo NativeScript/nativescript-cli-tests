@@ -16,10 +16,10 @@ from helpers.device import stop_emulators
 from helpers.simulator import create_simulator, delete_simulator, \
     cat_app_file_on_simulator, start_simulator, stop_simulators, \
     SIMULATOR_NAME
-from helpers.watch_base_class import WatchBaseClass
+from helpers.watcher import Watcher
 
 
-class LiveSyncSimulator(WatchBaseClass):
+class LiveSyncSimulator(Watcher):
 
     @classmethod
     def setUpClass(cls):
