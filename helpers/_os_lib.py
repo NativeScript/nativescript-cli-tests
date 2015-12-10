@@ -80,6 +80,22 @@ def run_aut(cmd, set_timeout=None, get_output=True, write_to_file=None):
 
     return out.strip('\n\r')
 
+def create_folder(folder):
+    '''Create folder'''
+    if not os.path.exists(folder):
+        try:
+            os.makedirs(folder)
+        except OSError:
+            if not os.path.isdir(folder):
+                raise
+
+def folder_exists(path):
+    '''Check if folder exists'''
+    if os.path.isdir(path):
+        return True
+    else:
+        return False
+
 def cleanup_folder(folder):
     '''Cleanup folder'''
     try:
@@ -141,13 +157,6 @@ def check_file_exists(root_folder, files_list, ignore_file_count=True):
 def is_empty(path):
     '''Check if folder is empty'''
     if os.listdir(path) == []:
-        return True
-    else:
-        return False
-
-def folder_exists(path):
-    '''Check if folder exists'''
-    if os.path.isdir(path):
         return True
     else:
         return False

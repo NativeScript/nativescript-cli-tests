@@ -9,7 +9,7 @@ Tests for livesync command in context of iOS simulator
 
 import shutil, time
 
-from helpers._os_lib import cleanup_folder, replace, remove
+from helpers._os_lib import create_folder, cleanup_folder, replace, remove
 from helpers._tns_lib import IOS_RUNTIME_SYMLINK_PATH, \
     create_project, platform_add, run, livesync, TNS_PATH
 from helpers.device import stop_emulators
@@ -95,6 +95,11 @@ class LiveSyncSimulator(Watcher):
         output = cat_app_file_on_simulator("TNSApp", \
             "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output
+
+
+#     # Add a new folder
+#     def test_100_livesync_ios_simulator_watch_add_new_folder(self):
+#         create_folder("folder")
 
 
     # Add new files
