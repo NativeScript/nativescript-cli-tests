@@ -1,9 +1,14 @@
 '''
 Tests for building projects with the Android platform
 '''
-import os
-import platform
-import unittest
+
+# C0103 - Invalid %s name "%s"
+# C0111 - Missing docstring
+# R0201 - Method could be a function
+# R0904 - Too many public methods
+# pylint: disable=C0103, C0111, R0201, R0904
+
+import os, platform, unittest
 
 from helpers._os_lib import cleanup_folder, remove, run_aut, file_exists
 from helpers._tns_lib import TNS_PATH, create_project, create_project_add_platform, \
@@ -12,11 +17,6 @@ from helpers._tns_lib import TNS_PATH, create_project, create_project_add_platfo
     ANDROID_RUNTIME_SYMLINK_PATH
 
 
-# C0103 - Invalid %s name "%s"
-# C0111 - Missing docstring
-# R0201 - Method could be a function
-# R0904 - Too many public methods
-# pylint: disable=C0103, C0111, R0201, R0904
 class BuildAndroid(unittest.TestCase):
 
     @classmethod
@@ -25,6 +25,7 @@ class BuildAndroid(unittest.TestCase):
         remove("TNSApp-release.apk")
 
         cleanup_folder('./tns-app')
+        cleanup_folder('./TNS App')
         cleanup_folder('./TNS_App')
         cleanup_folder('./TNS_AppSymlink')
         create_project_add_platform(proj_name="TNS_App", \
@@ -51,6 +52,7 @@ class BuildAndroid(unittest.TestCase):
         remove("TNSApp-release.apk")
 
         cleanup_folder('./tns-app')
+        cleanup_folder('./TNS App')
         cleanup_folder('./TNS_App')
         cleanup_folder('./TNS_AppSymlink')
 
@@ -184,7 +186,28 @@ class BuildAndroid(unittest.TestCase):
             "cat tns-app/platforms/android/src/main/AndroidManifest.xml")
         assert "org.nativescript.tnsapp" in output
 
-    def test_302_build_project_with_gz_file(self):
+    def test_301_build_project_with_space(self):
+        create_project_add_platform(proj_name="\"TNS App\"",
+            platform="android", framework_path=ANDROID_RUNTIME_PATH)
+
+        # Verify project build
+        output = run_aut(TNS_PATH + " build android --path \"TNS App\"")
+        assert "Project successfully prepared" in output
+        assert "BUILD SUCCESSFUL" in output
+        assert "Project successfully built" in output
+        assert file_exists(
+            "TNS App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+
+        # Verify project id
+        output = run_aut("cat TNS\\ App/package.json")
+        assert "org.nativescript.TNSApp" in output
+
+        # Verify AndroidManifest.xml
+        output = run_aut(
+            "cat TNS\\ App/platforms/android/src/main/AndroidManifest.xml")
+        assert "org.nativescript.TNSApp" in output
+
+    def test_303_build_project_with_gz_file(self):
         # TODO: Find better way to skip tests on different OS
         # Skip on Windows, because tar is not available
         if 'Windows' not in platform.platform():
