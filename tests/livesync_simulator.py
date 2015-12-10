@@ -100,14 +100,14 @@ class LiveSyncSimulator(Watcher):
     # Add new files
     def test_101_livesync_ios_simulator_watch_add_xml_file(self):
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test/test.xml")
-        self.wait_for_text_in_output("app/test/test.xml")
+        self.wait_for_text_in_output("app/test/test.xml to")
 
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.xml")
         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
 
     def test_102_livesync_ios_simulator_watch_add_js_file(self):
         shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/test/test.js")
-        self.wait_for_text_in_output("app/test/test.js")
+        self.wait_for_text_in_output("app/test/test.js to")
         time.sleep(2)
 
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.js")
@@ -115,7 +115,7 @@ class LiveSyncSimulator(Watcher):
 
     def test_103_livesync_ios_simulator_watch_add_css_file(self):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test/test.css")
-        self.wait_for_text_in_output("app/test/test.css")
+        self.wait_for_text_in_output("app/test/test.css to")
 
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.css")
         assert "color: #284848;" in output
@@ -124,14 +124,14 @@ class LiveSyncSimulator(Watcher):
     # Change in files
     def test_111_livesync_ios_simulator_watch_change_xml_file(self):
         replace("TNS_App/app/main-page.xml", "TEST", "WATCH")
-        self.wait_for_text_in_output("app/main-page.xml")
+        self.wait_for_text_in_output("app/main-page.xml to")
 
         output = cat_app_file_on_simulator("TNSApp", "app/main-page.xml")
         assert "<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />" in output
 
     def test_112_livesync_ios_simulator_watch_change_js_file(self):
         replace("TNS_App/app/main-view-model.js", "clicks", "tricks")
-        self.wait_for_text_in_output("app/main-view-model.js")
+        self.wait_for_text_in_output("app/main-view-model.js to")
         time.sleep(2)
 
         output = cat_app_file_on_simulator("TNSApp", "app/main-view-model.js")
@@ -139,7 +139,7 @@ class LiveSyncSimulator(Watcher):
 
     def test_113_livesync_ios_simulator_watch_change_css_file(self):
         replace("TNS_App/app/app.css", "#284848", "green")
-        self.wait_for_text_in_output("app/app.css")
+        self.wait_for_text_in_output("app/app.css to")
 
         output = cat_app_file_on_simulator("TNSApp", "app/app.css")
         assert "color: green;" in output
