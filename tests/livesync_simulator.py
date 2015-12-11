@@ -97,11 +97,6 @@ class LiveSyncSimulator(Watcher):
         assert "require(\"globals\"); // test" in output
 
 
-#     # Add a new folder
-#     def test_100_livesync_ios_simulator_watch_add_new_folder(self):
-#         create_folder("folder")
-
-
     # Add new files
     def test_101_livesync_ios_simulator_watch_add_xml_file(self):
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test/test.xml")
@@ -172,6 +167,39 @@ class LiveSyncSimulator(Watcher):
 
         output = cat_app_file_on_simulator("TNSApp", "app/test/test.css")
         assert "No such file or directory" in output
+
+
+    # Add files to a new folder
+    def test_131_livesync_ios_simulator_watch_add_xml_file_to_new_folder(self):
+        create_folder("TNS_App/app/folder")
+        self.wait_for_text_in_output("app/folder/ to")
+
+        shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/folder/test.xml")
+        self.wait_for_text_in_output("app/folder/test.xml to")
+
+        output = cat_app_file_on_simulator("TNSApp", "app/folder/test.xml")
+        assert "<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />" in output
+
+#         remove("TNS_App/app/folder")
+#         self.wait_for_text_in_output("app/folder/")
+#
+#         output = cat_app_file_on_simulator("TNSApp", "app/folder/test.xml")
+#         assert "No such file or directory" in output
+
+    def test_132_livesync_ios_simulator_watch_add_js_file_to_new_folder(self):
+        shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/folder/test.js")
+        self.wait_for_text_in_output("app/folder/test.js to")
+        time.sleep(2)
+
+        output = cat_app_file_on_simulator("TNSApp", "app/folder/test.js")
+        assert "application.start();" in output
+
+    def test_133_livesync_ios_simulator_watch_add_css_file_to_new_folder(self):
+        shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/folder/test.css")
+        self.wait_for_text_in_output("app/folder/test.css to")
+
+        output = cat_app_file_on_simulator("TNSApp", "app/folder/test.css")
+        assert "color: green;" in output
 
 
     def test_301_livesync_ios_simulator_before_run(self):
