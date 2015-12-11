@@ -24,8 +24,8 @@ class UnitTests(unittest.TestCase):
 
         cleanup_folder('TNS_App')
 
-#     def tearDown(self):
-#         cleanup_folder('TNS_App')
+    def tearDown(self):
+        cleanup_folder('TNS_App')
 
     def test_001_test_init_jasmine(self):
         create_project(proj_name="TNS_App")
