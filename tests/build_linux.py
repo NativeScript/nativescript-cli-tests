@@ -186,7 +186,7 @@ class BuildAndroid(unittest.TestCase):
             "cat tns-app/platforms/android/src/main/AndroidManifest.xml")
         assert "org.nativescript.tnsapp" in output
 
-    def test_301_build_project_with_space(self):
+    def test_302_build_project_with_space(self):
         create_project_add_platform(proj_name="\"TNS App\"",
             platform="android", framework_path=ANDROID_RUNTIME_PATH)
 

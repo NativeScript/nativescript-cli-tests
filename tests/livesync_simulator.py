@@ -150,28 +150,28 @@ class LiveSyncSimulator(Watcher):
         assert "color: green;" in output
 
 
-#     # Delete files
-#     def test_121_livesync_ios_simulator_watch_delete_xml_file(self):
-#         remove("TNS_App/app/test/test.xml")
-#         self.wait_for_text_in_output("app/test/test.xml")
-# 
-#         output = cat_app_file_on_simulator("TNSApp", "app/test/test.xml")
-#         assert "No such file or directory" in output
-# 
-#     def test_122_livesync_ios_simulator_watch_delete_js_file(self):
-#         remove("TNS_App/app/test/test.js")
-#         self.wait_for_text_in_output("app/test/test.js")
-#         time.sleep(2)
-# 
-#         output = cat_app_file_on_simulator("TNSApp", "app/test/test.js")
-#         assert "No such file or directory" in output
-# 
-#     def test_123_livesync_ios_simulator_watch_delete_css_file(self):
-#         remove("TNS_App/app/test/test.css")
-#         self.wait_for_text_in_output("app/test/test.css")
-# 
-#         output = cat_app_file_on_simulator("TNSApp", "app/test/test.css")
-#         assert "No such file or directory" in output
+    # Delete files
+    def test_121_livesync_ios_simulator_watch_delete_xml_file(self):
+        remove("TNS_App/app/test/test.xml")
+        self.wait_for_text_in_output("app/test/test.xml")
+
+        output = cat_app_file_on_simulator("TNSApp", "app/test/test.xml")
+        assert "No such file or directory" in output
+
+    def test_122_livesync_ios_simulator_watch_delete_js_file(self):
+        remove("TNS_App/app/test/test.js")
+        self.wait_for_text_in_output("app/test/test.js")
+        time.sleep(2)
+
+        output = cat_app_file_on_simulator("TNSApp", "app/test/test.js")
+        assert "No such file or directory" in output
+
+    def test_123_livesync_ios_simulator_watch_delete_css_file(self):
+        remove("TNS_App/app/test/test.css")
+        self.wait_for_text_in_output("app/test/test.css")
+
+        output = cat_app_file_on_simulator("TNSApp", "app/test/test.css")
+        assert "No such file or directory" in output
 
 
     def test_301_livesync_ios_simulator_before_run(self):
