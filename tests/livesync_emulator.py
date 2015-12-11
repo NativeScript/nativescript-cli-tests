@@ -92,48 +92,50 @@ class LiveSyncEmulator(Watcher):
             "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output
 
-#     def test_101_livesync_android_emulator_watch_add_xml_file(self):
-#         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test/test.xml")
-#         self.wait_for_text_in_output("Page loaded 2 times.")
-# 
-#         output = cat_app_file_on_emulator("TNSApp", "app/test/test.xml")
-#         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
-# 
-#     def test_102_livesync_android_emulator_watch_add_js_file(self):
-#         shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/test/test.js")
-#         self.wait_for_text_in_output("Page loaded 1 times.")
-# 
-#         output = cat_app_file_on_emulator("TNSApp", "app/test/test.js")
-#         assert "application.start();" in output
-# 
-#     def test_103_livesync_android_emulator_watch_add_css_file(self):
-#         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test/test.css")
-#         self.wait_for_text_in_output("Page loaded 2 times.")
-# 
-#         output = cat_app_file_on_emulator("TNSApp", "app/test/test.css")
-#         assert "color: #284848;" in output
-# 
-#     def test_111_livesync_android_emulator_watch_change_xml_file(self):
-#         replace("TNS_App/app/test/test.xml", "TEST", "WATCH")
-#         self.wait_for_text_in_output("Page loaded 3 times.")
-# 
-#         output = cat_app_file_on_emulator("TNSApp", "app/test/test.xml")
-#         assert "<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />" in output
-# 
-#     def test_112_livesync_android_emulator_watch_change_js_file(self):
-#         replace("TNS_App/app/test/test.js", "start();", "start(); // test")
-#         self.wait_for_text_in_output("Page loaded 1 times.")
-# 
-#         output = cat_app_file_on_emulator("TNSApp", "app/test/test.js")
-#         assert "application.start(); // test" in output
-# 
-#     def test_113_livesync_android_emulator_watch_change_css_file(self):
-#         replace("TNS_App/app/test/test.css", "#284848", "lightgreen")
-#         self.wait_for_text_in_output("Page loaded 2 times.")
-# 
-#         output = cat_app_file_on_emulator("TNSApp", "app/test/test.css")
-#         assert "color: lightgreen;" in output
-# 
+    # Add new files
+    def test_101_livesync_android_emulator_watch_add_xml_file(self):
+        shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test/test.xml")
+        self.wait_for_text_in_output("Page loaded 2 times.")
+
+        output = cat_app_file_on_emulator("TNSApp", "app/test/test.xml")
+        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
+
+    def test_102_livesync_android_emulator_watch_add_js_file(self):
+        shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/test/test.js")
+        self.wait_for_text_in_output("Page loaded 1 times.")
+
+        output = cat_app_file_on_emulator("TNSApp", "app/test/test.js")
+        assert "application.start();" in output
+
+    def test_103_livesync_android_emulator_watch_add_css_file(self):
+        shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test/test.css")
+        self.wait_for_text_in_output("Page loaded 2 times.")
+
+        output = cat_app_file_on_emulator("TNSApp", "app/test/test.css")
+        assert "color: #284848;" in output
+
+    # Change in files
+    def test_111_livesync_android_emulator_watch_change_xml_file(self):
+        replace("TNS_App/app/main-page.xml", "TEST", "WATCH")
+        self.wait_for_text_in_output("Page loaded 3 times.")
+
+        output = cat_app_file_on_emulator("TNSApp", "app/main-page.xml")
+        assert "<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />" in output
+
+    def test_112_livesync_android_emulator_watch_change_js_file(self):
+        replace("TNS_App/app/main-view-model.js", "clicks", "tricks")
+        self.wait_for_text_in_output("Page loaded 1 times.")
+
+        output = cat_app_file_on_emulator("TNSApp", "app/main-view-model.js")
+        assert "this.set(\"message\", this.counter + \" tricks left\");" in output
+
+    def test_113_livesync_android_emulator_watch_change_css_file(self):
+        replace("TNS_App/app/app.css", "#284848", "green")
+        self.wait_for_text_in_output("Page loaded 2 times.")
+
+        output = cat_app_file_on_emulator("TNSApp", "app/app.css")
+        assert "color: green;" in output
+
 #     def test_121_livesync_android_emulator_watch_delete_xml_file(self):
 #         remove("TNS_App/app/test/test.xml")
 #         self.wait_for_text_in_output("Page loaded 3 times.")
