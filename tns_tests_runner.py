@@ -42,6 +42,7 @@ from tests.prepare_linux import PrepareAndroid
 from tests.prepare_osx import PrepareiOS
 from tests.run_osx import RuniOS
 from tests.transpilation_typescript import TranspilationTypeScript
+from tests.unittests import UnitTests
 from tests.usage import UsageAndErrorTracking
 from tests.version import Version
 
@@ -129,10 +130,11 @@ def run_tests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSSandboxPods))
 
         if ('TEST_RUN' in os.environ) and (not "SMOKE" in os.environ['TEST_RUN']):
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTests))
             if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryAndroid))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TranspilationTypeScript))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryAndroid))
+                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TranspilationTypeScript))
             if 'Darwin' in platform.platform():
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateiOS))
                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryiOS))
