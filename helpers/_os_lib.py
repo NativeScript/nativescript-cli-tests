@@ -102,7 +102,7 @@ def cleanup_folder(folder):
     except:
         if os.path.exists(folder):
             if 'Windows' in platform.platform():
-                run_aut('rmdir /s /q {0}'.format(folder))
+                run_aut('rmdir /s /q \"{0}\"'.format(folder))
             else:
                 run_aut('rm -rf ' + folder)
             time.sleep(1)
