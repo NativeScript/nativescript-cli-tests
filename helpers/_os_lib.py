@@ -1,33 +1,26 @@
+'''
+Wraper around OS commands
+'''
+
 # W0612 - Unused variable %r
 # W0621 - Redefining name from outer scope
 # W0702: No exception type(s) specified
 # W1401 - Anomalous backslash in string
 # E1305 - Too many arguments for format string
 # pylint: disable=W0612, W0621, W0702, W1401, E1305
-'''
-Wraper around OS commands
-'''
 
-import errno
-import fileinput
-import os
-import platform
-import shutil
-import tarfile
-import threading
-from time import sleep
-import time
-import psutil
+import errno, fileinput, os, platform, psutil, shutil, tarfile, threading, time
+
 
 ADB_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'platform-tools', 'adb')
-
-
+DEFAULT_COMMANDS_FILE = 'commands.txt'
+DEFAULT_OUTPUT_FILE = 'output.txt'
 DEFAULT_TIMEOUT = 180  # seconds
-DEFAULT_OUTPUT_FILE = "output.txt"
 DEBUG = 0
 
 def run_aut(cmd, set_timeout=None, get_output=True, write_to_file=None):
     '''Run system command'''
+
     def fork_it():
         '''
         This function will be run in parallel thread.
@@ -39,7 +32,7 @@ def run_aut(cmd, set_timeout=None, get_output=True, write_to_file=None):
         '''
 
         # write to commads.txt
-        with open('commands.txt', 'a') as commands_file:
+        with open(DEFAULT_COMMANDS_FILE, 'a') as commands_file:
             commands_file.write(cmd + '\r\n')
 
         # execute command
@@ -105,16 +98,11 @@ def cleanup_folder(folder):
     '''Cleanup folder'''
     try:
         shutil.rmtree(folder, False)
-        sleep(1)
+        time.sleep(1)
     except:
         if os.path.exists(folder):
-            if 'Windows' in platform.platform():
-                run_aut('rmdir /s /q \"{}\"'.format(folder))
-            else:
-                run_aut('rm -rf ' + folder)
-            sleep(1)
-
-# Check if output of command contains string from file
+            run_aut('rm -rf ' + folder)
+            time.sleep(1)
 
 
 def check_output(output, file_name):
@@ -198,20 +186,25 @@ def is_running_process(process_name):
 def kill_process(process_name, command_line=None):
     '''Kill process'''
     result = False
-    for proc in psutil.process_iter():
-        if process_name in str(proc):
-            if command_line is None:
-                proc.kill()
-                print "Process : {0} has been killed".format(process_name)
-                result = True
-            else:
-                for command_line_options in proc.cmdline():
-                    if command_line in command_line_options:
-                        proc.kill()
-                        print "Process : {0} with {1} command line options, " + \
-                            "has been killed".format(process_name, command_line_options)
-                        result = True
-                        break
+    if "Windows" in platform.platform():
+        os.system("taskkill /im /t /f \"node.exe\"")
+        result = True
+    else:
+        for proc in psutil.process_iter():
+            if process_name in str(proc):
+                if command_line is None:
+                    proc.kill()
+                    print "Process : {0} has been killed".format(process_name)
+                    result = True
+                else:
+                    for command_line_options in proc.cmdline():
+                        if command_line in command_line_options:
+                            proc.kill()
+                            print "Process : {0} with {1} command line options, " + \
+                                "has been killed".format(process_name, command_line_options)
+                            result = True
+                            break
+
     return result
 
 def extract_archive(file_name, folder):
@@ -228,7 +221,7 @@ def replace(file_path, str1, str2):
     '''Replace strings in file'''
     for line in fileinput.input(file_path, inplace=1):
         print line.replace(str1, str2)
-    sleep(1)
+    time.sleep(1)
     print "~~~ Replace ~~~"
     output = run_aut("cat " + file_path)
     assert str2 in output

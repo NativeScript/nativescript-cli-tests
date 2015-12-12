@@ -199,7 +199,7 @@ class BuildAndroid(unittest.TestCase):
             "TNS App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
         if 'Windows' in platform.platform():
-        # Verify project id
+            # Verify project id
             output = run_aut("cat \"TNS App/package.json\"")
             assert "org.nativescript.TNSApp" in output
 
