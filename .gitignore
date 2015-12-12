@@ -2,6 +2,7 @@
 *.pyc
 *.tgz
 node_modules
+commands.txt
 deviceLog.txt
 output.txt
 pylint*

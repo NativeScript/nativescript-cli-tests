@@ -38,6 +38,9 @@ def run_aut(cmd, set_timeout=None, get_output=True, write_to_file=None):
         # dir file.xxx 1> output.msg 2>&1
         '''
 
+        with open('commands.txt', 'a') as commands_file:
+            commands_file.write(cmd + '\r\n')
+
         print 'Thread started'
         if get_output:
             os.system(cmd + ' 1> output.txt 2>&1')

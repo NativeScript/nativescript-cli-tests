@@ -78,8 +78,9 @@ if __name__ == '__main__':
     if os.path.isfile(IOS_RUNTIME_PATH):
         os.remove(IOS_RUNTIME_PATH)
 
-    # Cleanup folders created by test execution
+    # Cleanup files and folders created by the test execution
     remove('stderr.txt')
+    remove('commands.txt')
     cleanup_folder('app')
     cleanup_folder('appTest')
     cleanup_folder('TNS App')
