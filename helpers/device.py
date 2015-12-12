@@ -60,9 +60,13 @@ def wait_for_device(device_name, timeout=600):
 def stop_emulators():
     '''Stop running emulators'''
 
-    kill_process("emulator")
-    kill_process("emulator64-arm")
-    kill_process("emulator64-x86")
+    if 'Windows' in platform.platform():
+        kill_process("emulator-arm")
+        kill_process("emulator-x86")
+    else:
+        kill_process("emulator")
+        kill_process("emulator64-arm")
+        kill_process("emulator64-x86")
 
 def given_running_emulator():
     '''Ensure Android Emulator is running'''

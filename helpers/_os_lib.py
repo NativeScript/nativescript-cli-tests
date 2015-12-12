@@ -190,7 +190,7 @@ def kill_process(process_name, command_line=None):
     '''Kill process'''
     result = False
     if "Windows" in platform.platform():
-        os.system("taskkill /im /t /f \"node.exe\"")
+        os.system("taskkill /im {0}.exe  /t /f".format(process_name))
         result = True
     else:
         for proc in psutil.process_iter():
