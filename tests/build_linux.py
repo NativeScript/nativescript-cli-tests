@@ -198,14 +198,25 @@ class BuildAndroid(unittest.TestCase):
         assert file_exists(
             "TNS App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
+        if 'Windows' in platform.platform():
         # Verify project id
-        output = run_aut("cat TNS\\ App/package.json")
-        assert "org.nativescript.TNSApp" in output
+            output = run_aut("cat \"TNS App/package.json\"")
+            assert "org.nativescript.TNSApp" in output
 
-        # Verify AndroidManifest.xml
-        output = run_aut(
-            "cat TNS\\ App/platforms/android/src/main/AndroidManifest.xml")
-        assert "org.nativescript.TNSApp" in output
+            # Verify AndroidManifest.xml
+            output = run_aut(
+                "cat \"TNS App/platforms/android/src/main/AndroidManifest.xml\"")
+            assert "org.nativescript.TNSApp" in output
+
+        elif 'Darwin' in platform.platform():
+            # Verify project id
+            output = run_aut("cat TNS\\ App/package.json")
+            assert "org.nativescript.TNSApp" in output
+
+            # Verify AndroidManifest.xml
+            output = run_aut(
+                "cat TNS\\ App/platforms/android/src/main/AndroidManifest.xml")
+            assert "org.nativescript.TNSApp" in output
 
     def test_303_build_project_with_gz_file(self):
         # TODO: Find better way to skip tests on different OS
