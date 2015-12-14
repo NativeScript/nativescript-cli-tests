@@ -25,7 +25,7 @@ from tests.library_linux import LibraryAndroid
 from tests.library_osx import LibraryiOS
 from tests.livesync_android import LiveSyncAndroid
 from tests.livesync_emulator import LiveSyncEmulator
-from tests.livesync_windows import LiveSyncWindows
+from tests.livesync_emulator_full import LivesyncEmulatorFull
 from tests.livesync_ios import LiveSynciOS
 from tests.livesync_simulator import LiveSyncSimulator
 from tests.logtrace import LogTrace
@@ -108,7 +108,7 @@ def run_tests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
             # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
         if 'Windows' in platform.platform():
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncWindows))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LivesyncEmulatorFull))
             # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
     else:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))
