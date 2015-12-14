@@ -15,7 +15,7 @@ import errno, fileinput, os, platform, psutil, shutil, tarfile, threading, time
 ADB_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'platform-tools', 'adb')
 DEFAULT_COMMANDS_FILE = 'commands.txt'
 DEFAULT_OUTPUT_FILE = 'output.txt'
-DEFAULT_TIMEOUT = 180  # seconds
+DEFAULT_TIMEOUT = 300  # seconds
 DEBUG = 0
 
 def run_aut(cmd, set_timeout=None, get_output=True, write_to_file=None):
