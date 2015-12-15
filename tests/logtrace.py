@@ -30,9 +30,10 @@ class LogTrace(unittest.TestCase):
     def test_001_create_project_log_trace(self):
         output = run_aut(TNS_PATH + " create TNS_App --log trace")
         assert "Creating a new NativeScript project with name TNS_App" in output
-        assert "id org.nativescript.TNSApp at location" in output
-        assert "Using NativeScript hello world application" in output
-        assert "Copying NativeScript hello world application into" in output
+        assert "and id org.nativescript.TNSApp at location" in output
+
+        assert "Using NativeScript verified template:" in output
+        assert "tns-template-hello-world with version undefined." in output
         assert "Project TNS_App was successfully created" in output
 
     def test_002_platform_add_log_trace(self):
