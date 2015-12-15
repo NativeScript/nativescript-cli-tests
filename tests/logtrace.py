@@ -34,6 +34,9 @@ class LogTrace(unittest.TestCase):
 
         assert "Using NativeScript verified template:" in output
         assert "tns-template-hello-world with version undefined." in output
+
+        assert "Copying application from" in output
+        assert "Updating AppResources values" in output
         assert "Project TNS_App was successfully created" in output
 
     def test_002_platform_add_log_trace(self):
