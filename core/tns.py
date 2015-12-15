@@ -54,6 +54,29 @@ class Tns(object):
         return output
 
     @classmethod
+    def tns_create_app_from_template(cls, app_name, path=None, app_id=None, template=None):
+        '''
+        Create {N} project.
+        '''
+
+        command = TNS_PATH + " create {0}".format(app_name)
+
+        if path is not None:
+            command += " --path " + path
+
+        if app_id is not None:
+            command += " --appid " + app_id
+
+        if template is not None:
+            command += " --template " + path
+
+        command += " --log trace"
+        output = run(command)
+
+        assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
+        return output
+
+    @classmethod
     def tns_platform_add(cls, platform=None, framework_path=None, path=None, symlink=False):
         '''
         Add target platform.
