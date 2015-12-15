@@ -23,4 +23,4 @@ class Version(unittest.TestCase):
     def test_001_version(self):
         output = run(TNS_PATH + " --version")
         version = re.compile("^\\d+\\.\\d+\\.\\d+(-\\S+)?$").match(output)
-        assert (version), "Not a valid version."
+        assert version, "{0} is not a valid version.".format(output)
