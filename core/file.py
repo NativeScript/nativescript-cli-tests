@@ -15,13 +15,13 @@ class File(object):
 
     @classmethod
     def read_file(cls, file_path):
-        with open(file_path,'r') as file_to_read:
+        with open(file_path, 'r') as file_to_read:
             output = file_to_read.read()
         return output
 
     @classmethod
     def write_file(cls, file_path, text):
-        with open(file_path,'w') as file_to_write:
+        with open(file_path, 'w') as file_to_write:
             file_to_write.write(text + '\n')
 
     @classmethod

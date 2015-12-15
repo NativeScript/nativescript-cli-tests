@@ -1,18 +1,12 @@
-'''
-Test for version command
-'''
-import re, unittest
-
-from helpers._os_lib import run_aut
-from helpers._tns_lib import TNS_PATH
-
-
-# C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function
-# R0904 - Too many public methods
-# W1401 - Anomalous backslash in string
-# pylint: disable=C0103, C0111, R0201, R0904, W1401
+# pylint: disable=C0111, R0201
+
+import re, unittest
+from core.commons import run
+from core.constants import TNS_PATH
+
+
 class Version(unittest.TestCase):
 
     def setUp(self):
@@ -27,6 +21,6 @@ class Version(unittest.TestCase):
         pass
 
     def test_001_version(self):
-        output = run_aut(TNS_PATH + " --version")
-        is_valid_version = re.compile("^\d+\.\d+\.\d+(-\S+)?$").match(output)
-        assert (is_valid_version), "Not a valid version."
+        output = run(TNS_PATH + " --version")
+        version = re.compile("^\\d+\\.\\d+\\.\\d+(-\\S+)?$").match(output)
+        assert (version), "Not a valid version."
