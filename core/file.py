@@ -8,7 +8,7 @@ Created on Dec 14, 2015
 # C0111 - Missing docstring
 # pylint: disable=C0111
 
-import os, time
+import errno, os, time
 
 
 class File(object):
@@ -30,6 +30,17 @@ class File(object):
             file_to_append.write(time.strftime("%X") + text + '\n')
 
     @classmethod
+    def file_exists(cls, path):
+        if os.path.exists(path):
+            return True
+        else:
+            return False
+
+    @classmethod
     def remove_file(cls, file_path):
         if os.path.exists(file_path):
-            os.remove(file_path)
+            try:
+                os.remove(file_path)
+            except OSError as err:
+                if err.errno != errno.ENOENT:  # errno.ENOENT = no such file or directory
+                    raise
