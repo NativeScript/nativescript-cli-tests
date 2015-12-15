@@ -74,7 +74,7 @@ def run(cmd, timeout=None, output=True, file_name=None):
         print 'Thread finished. Returning ', pipe_output
 
     print "##### OUTPUT BEGIN #####\n"
-    print "{0}: {1}".format(time.strftime("%X"), pipe_output)
+    print pipe_output
     print "##### OUTPUT END #####\n"
 
     if file_name != None:
