@@ -5,7 +5,7 @@
 
 import os, shutil, unittest
 
-from core.tns_lib import tns_livesync
+from core.tns import tns_livesync
 
 # TODO: remove this imports
 from helpers._os_lib import cat_app_file_on_emulator, cleanup_folder, replace
