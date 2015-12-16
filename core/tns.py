@@ -18,7 +18,7 @@ from core.commons import run
 class Tns(object):
 
     @classmethod
-    def tns_version(cls):
+    def version(cls):
         '''
         Return {N} CLI version.
         '''
