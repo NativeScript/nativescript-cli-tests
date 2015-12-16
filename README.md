@@ -48,3 +48,44 @@ Run Tests
 ```Shell
 python run_tests.py
 ```
+===
+
+Android Requirements:
+- Valid pair of keystore and password
+
+iOS Requirements:
+- Valid pair of certificate and provisioning profile on your OS X system
+
+Following environment variables should be set:
+- CLI_PATH - Path to CLI package under test (package file should be named nativescript.tgz)
+
+- ANDROID_PATH - Path to Android runtime package (should be named tns-android.tgz)
+- ANDROID_KEYSTORE_PATH - Path to the keystore file
+- ANDROID_KEYSTORE_PASS - Password for the keystore file
+- ANDROID_KEYSTORE_ALIAS
+- ANDROID_KEYSTORE_ALIAS_PASS
+
+- IOS_PATH - Path to iOS runtime package (should be named tns-ios.tgz)
+
+- ACTIVE_UI - YES or NO
+
+- TEST_RUN - types:
+SMOKE
+- Runs tests with High priority.
+DEFAULT
+- All suites without dependencies on real devices  (all priorities)
+- Following AVDs should be available
+   Api19 - Android emulator with API19
+FULL
+- Runs all tests
+- At least one real Android device must be attached to Linux hosts
+- At least one real iOS device must be attached to OSX hosts
+
+LIVESYNC
+- Runs all LiveSync tests
+
+Test name convention:
+001 - 199 - High priority
+200 - 299 - Medium priority
+300 - 399 - Low priority
+400 - 499 - Negative tests
