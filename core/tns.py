@@ -28,7 +28,7 @@ class Tns(object):
         return output
 
     @classmethod
-    def tns_create_app(cls, app_name, path=None, app_id=None, copy_from=None):
+    def create_app(cls, app_name, path=None, app_id=None, copy_from=None):
         '''
         Create {N} project.
         '''
@@ -54,9 +54,9 @@ class Tns(object):
         return output
 
     @classmethod
-    def tns_create_app_from_template(cls, app_name, path=None, app_id=None, template=None):
+    def create_app_from_template(cls, app_name, path=None, app_id=None, template=None):
         '''
-        Create {N} project.
+        Create {N} project from template.
         '''
 
         command = TNS_PATH + " create {0}".format(app_name)
@@ -68,7 +68,7 @@ class Tns(object):
             command += " --appid " + app_id
 
         if template is not None:
-            command += " --template " + path
+            command += " --template " + template
 
         command += " --log trace"
         output = run(command)
@@ -77,7 +77,7 @@ class Tns(object):
         return output
 
     @classmethod
-    def tns_platform_add(cls, platform=None, framework_path=None, path=None, symlink=False):
+    def platform_add(cls, platform=None, framework_path=None, path=None, symlink=False):
         '''
         Add target platform.
         '''
@@ -104,7 +104,7 @@ class Tns(object):
         return output
 
     @classmethod
-    def tns_prepare(cls, platform=None, path=None):
+    def prepare(cls, platform=None, path=None):
         '''
         Prepare target platform.
         '''
@@ -124,7 +124,7 @@ class Tns(object):
         return output
 
     @classmethod
-    def tns_plugin_add(cls, plugin=None, path=None):
+    def plugin_add(cls, plugin=None, path=None):
         '''
         Install {N} plugin.
         '''
@@ -144,7 +144,7 @@ class Tns(object):
         return output
 
     @classmethod
-    def tns_build(cls, platform=None, mode=None, for_device=False, path=None):
+    def build(cls, platform=None, mode=None, for_device=False, path=None):
         '''
         Build {N} project.
         '''
@@ -176,7 +176,7 @@ class Tns(object):
         return output
 
     @classmethod
-    def tns_run(cls, platform=None, emulator=False, device=None, path=None):
+    def run(cls, platform=None, emulator=False, device=None, path=None):
         '''
         Run {N} project.
         '''
@@ -211,7 +211,7 @@ class Tns(object):
         return output
 
     @classmethod
-    def tns_livesync(cls, platform=None, emulator=False, device=None, path=None):
+    def livesync(cls, platform=None, emulator=False, device=None, path=None):
         '''
         The livesync command.
 
@@ -250,11 +250,11 @@ class Tns(object):
         return output
 
     @classmethod
-    def tns_create_app_platform_add(cls, app_name, platform=None, framework_path=None, \
+    def create_app_platform_add(cls, app_name, platform=None, framework_path=None, \
                                     symlink=False):
         '''
         Create {N} project and add target platform.
         '''
 
-        cls.tns_create_app(app_name)
-        cls.tns_platform_add(platform, framework_path, app_name, symlink)
+        cls.create_app(app_name)
+        cls.platform_add(platform, framework_path, app_name, symlink)

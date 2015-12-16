@@ -1,6 +1,10 @@
 """
 Define test suites
 """
+
+# C0103 - Invalid %s name "%s"
+# pylint: disable=C0103
+
 import os
 import platform
 import unittest
@@ -42,10 +46,11 @@ from tests.prepare_linux import PrepareAndroid
 from tests.prepare_osx import PrepareiOS
 from tests.run_osx import RuniOS
 from tests.transpilation_typescript import TranspilationTypeScript
-from tests.unittests import UnitTests
-from tests.usage import UsageAndErrorTracking
-from tests.version import Version
 
+from tests.unittests import UnitTests
+from tests.error import Error
+from tests.usage import Usage
+from tests.version import Version
 
 # C0111 - Missing docstring
 # R0915 - Too many statements
@@ -111,9 +116,12 @@ def run_tests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LivesyncEmulatorFull))
             # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
     else:
+
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Usage))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Error))
+
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UsageAndErrorTracking))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Output_STRERR))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))

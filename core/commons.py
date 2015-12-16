@@ -43,10 +43,10 @@ def run(cmd, timeout=None, output=True, file_name=None):
             os.system(cmd)
 
     # remove output.txt
-    File.remove_file(DEFAULT_OUTPUT_FILE)
+    File.remove(DEFAULT_OUTPUT_FILE)
 
     # append to commads.txt
-    File.append_file(DEFAULT_COMMANDS_FILE, cmd)
+    File.append(DEFAULT_COMMANDS_FILE, cmd)
 
     # prepare command line
     print "##### {0} Executing command : {1}\n".format(time.strftime("%X"), cmd)
@@ -68,7 +68,7 @@ def run(cmd, timeout=None, output=True, file_name=None):
     # get whenever exist in the pipe ?
     pipe_output = 'NOT_COLLECTED'
     if output:
-        pipe_output = File.read_file(DEFAULT_OUTPUT_FILE)
+        pipe_output = File.read(DEFAULT_OUTPUT_FILE)
     if DEBUG == 1:
         print pipe_output
         print 'Thread finished. Returning ', pipe_output
@@ -78,6 +78,6 @@ def run(cmd, timeout=None, output=True, file_name=None):
     print "##### OUTPUT END #####\n"
 
     if file_name != None:
-        File.write_file(file_name, pipe_output)
+        File.write(file_name, pipe_output)
 
     return pipe_output.strip('\r\n')

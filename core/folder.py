@@ -8,13 +8,13 @@ Created on Dec 14, 2015
 # C0111 - Missing docstring
 # pylint: disable=C0111
 
-import os, shutil, time
+import errno, os, shutil
 
 
 class Folder(object):
 
     @classmethod
-    def create_folder(cls, folder):
+    def create(cls, folder):
         if not os.path.exists(folder):
             try:
                 os.makedirs(folder)
@@ -22,15 +22,15 @@ class Folder(object):
                 raise
 
     @classmethod
-    def cleanup_folder(cls, folder):
+    def cleanup(cls, folder):
         try:
             shutil.rmtree(folder, False)
-            time.sleep(1)
-        except:
-            raise
+        except OSError as err:
+            if err.errno != errno.ENOENT:  # errno.ENOENT = no such file or directory
+                raise
 
     @classmethod
-    def folder_exists(cls, path):
+    def exists(cls, path):
         if os.path.isdir(path):
             return True
         else:

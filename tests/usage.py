@@ -1,18 +1,15 @@
-'''
-Test for usage* commands
-'''
-import unittest
-
-from helpers._os_lib import run_aut
-from helpers._tns_lib import TNS_PATH
-
-
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function
-# R0904 - Too many public methods
-# pylint: disable=C0103, C0111, R0201, R0904
-class UsageAndErrorTracking(unittest.TestCase):
+# pylint: disable=C0103, C0111, R0201
+
+
+import unittest
+from core.commons import run
+from core.constants import TNS_PATH
+
+
+class Usage(unittest.TestCase):
 
     def setUp(self):
 
@@ -25,50 +22,26 @@ class UsageAndErrorTracking(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_001_feature_usage_tracking(self):
-        output = run_aut(TNS_PATH + " usage-reporting")
+    def test_001_usage_reporting(self):
+        output = run(TNS_PATH + " usage-reporting")
         assert "Usage reporting is" in output
 
-    def test_002_feature_usage_tracking_enable(self):
-        output = run_aut(TNS_PATH + " usage-reporting enable")
+    def test_002_usage_reporting_enable(self):
+        output = run(TNS_PATH + " usage-reporting enable")
         assert "Usage reporting is now enabled." in output
 
-        output = run_aut(TNS_PATH + " usage-reporting status")
+        output = run(TNS_PATH + " usage-reporting status")
         assert "Usage reporting is enabled." in output
 
-    def test_003_feature_usage_tracking_disable(self):
-        output = run_aut(TNS_PATH + " usage-reporting disable")
+    def test_003_usage_reporting_disable(self):
+        output = run(TNS_PATH + " usage-reporting disable")
         assert "Usage reporting is now disabled." in output
 
-        output = run_aut(TNS_PATH + " usage-reporting status")
+        output = run(TNS_PATH + " usage-reporting status")
         assert "Usage reporting is disabled." in output
 
-    def test_100_error_reporting(self):
-        output = run_aut(TNS_PATH + " error-reporting")
-        assert "Error reporting is" in output
-
-    def test_101_error_reporting_enable(self):
-        output = run_aut(TNS_PATH + " error-reporting enable")
-        assert "Error reporting is now enabled." in output
-
-        output = run_aut(TNS_PATH + " error-reporting status")
-        assert "Error reporting is enabled." in output
-
-    def test_102_error_reporting_disable(self):
-        output = run_aut(TNS_PATH + " error-reporting disable")
-        assert "Error reporting is now disabled." in output
-
-        output = run_aut(TNS_PATH + " error-reporting status")
-        assert "Error reporting is disabled." in output
-
-    def test_400_feature_usage_tracking_with_invalid_parameter(self):
+    def test_401_usage_reporting_with_invalid_parameter(self):
         command = TNS_PATH + " usage-reporting invalidParam"
-        output = run_aut(command)
-        assert "The value 'invalidParam' is not valid. " + \
-            "Valid values are 'enable', 'disable' and 'status'" in output
-
-    def test_401_error_reporting_with_invalid_parameter(self):
-        command = TNS_PATH + " error-reporting invalidParam"
-        output = run_aut(command)
+        output = run(command)
         assert "The value 'invalidParam' is not valid. " + \
             "Valid values are 'enable', 'disable' and 'status'" in output

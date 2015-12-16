@@ -23,8 +23,6 @@ ADB_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'platform-tools', 'adb')
 DEFAULT_OUTPUT_FILE = 'output.txt'
 DEFAULT_COMMANDS_FILE = 'commands.txt'
 
-# TODO: RESULTS_DIR = os.path.join(MAIN_DIR, 'results')
-
 # 180 seconds are not enough for not accelerated emulators
 DEFAULT_TIMEOUT = 300 # seconds
 DEBUG = 0
@@ -35,12 +33,4 @@ DEBUG = 0
 # ANDROID_KEYSTORE_ALIAS = os.environ.get('ANDROID_KEYSTORE_ALIAS')
 # ANDROID_KEYSTORE_ALIAS_PASS = os.environ.get('ANDROID_KEYSTORE_ALIAS_PASS')
 
-# class Enums(object):
-#
-#     class Language(object):
-#         JavaScript = "javascript"
-#         TypeScript = "typescript"
-#
-#     class Platform(object):
-#         Android = 'android'
-#         iOS = 'ios'
+# TODO: RESULTS_DIR = os.path.join(MAIN_DIR, 'results')

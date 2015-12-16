@@ -2,6 +2,7 @@
 # R0201 - Method could be a function
 # pylint: disable=C0111, R0201
 
+
 import re, unittest
 from core.commons import run
 from core.constants import TNS_PATH
