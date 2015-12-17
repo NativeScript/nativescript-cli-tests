@@ -37,6 +37,19 @@ class File(object):
             return False
 
     @classmethod
+    def extension_exists(cls, path, extension):
+        result = False
+        for file_name in os.listdir(path):
+            if file_name.endswith(extension):
+                print "File: {0}".format(os.path.join(path, file_name))
+                break
+        if result:
+            print "There is at least one {0} file in {1} directory.".format(extension, path)
+        else:
+            print "There are no {0} files in {1} directory.".format(extension, path)
+        return result
+
+    @classmethod
     def remove(cls, file_path):
         if os.path.exists(file_path):
             try:

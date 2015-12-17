@@ -12,9 +12,7 @@ from core.constants import DEBUG, \
     DEFAULT_COMMANDS_FILE, DEFAULT_OUTPUT_FILE, \
     DEFAULT_TIMEOUT
 from core.file import File
-
-# TODO: remove this import
-from helpers._os_lib import kill_process
+from core.process import Process
 
 
 def run(cmd, timeout=None, output=True, file_name=None):
@@ -62,7 +60,7 @@ def run(cmd, timeout=None, output=True, file_name=None):
     # kill thread
     if thread.is_alive():
         print '##### ERROR: Process has timed out at ', time.strftime("%X")
-        kill_process('node')
+        Process.kill('node')
         thread.join()
 
     # get whenever exist in the pipe ?
