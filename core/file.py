@@ -9,8 +9,7 @@ Created on Dec 14, 2015
 # pylint: disable=C0111
 
 import errno, os, time
-from core.commons import run
-
+from core.constants import DEFAULT_COMMANDS_FILE
 
 class File(object):
 
@@ -37,9 +36,13 @@ class File(object):
         else:
             return False
 
+    # TODO: from core.commons import run
     @classmethod
     def cat(cls, path):
-        output = run("cat " + path)
+        command = "cat " + path
+        output = os.system(command)
+        cls.append(DEFAULT_COMMANDS_FILE, command)
+        print command
         return output
 
     @classmethod

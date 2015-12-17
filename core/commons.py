@@ -15,7 +15,7 @@ from core.file import File
 from core.process import Process
 
 
-def run(cmd, timeout=None, output=True, file_name=None):
+def run(command, timeout=None, output=True, file_name=None):
     '''
     Execute command in subshell.
     '''
@@ -36,18 +36,18 @@ def run(cmd, timeout=None, output=True, file_name=None):
         # execute command
         # print "Thread started"
         if output:
-            os.system(cmd + ' 1> output.txt 2>&1')
+            os.system(command + ' 1> output.txt 2>&1')
         else:
-            os.system(cmd)
+            os.system(command)
 
     # remove output.txt
     File.remove(DEFAULT_OUTPUT_FILE)
 
     # append to commads.txt
-    File.append(DEFAULT_COMMANDS_FILE, cmd)
+    File.append(DEFAULT_COMMANDS_FILE, command)
 
     # prepare command line
-    print "##### {0} Executing command : {1}\n".format(time.strftime("%X"), cmd)
+    print "##### {0} Executing command : {1}\n".format(time.strftime("%X"), command)
     thread = threading.Thread(target=fork_it)
     thread.start()
 
