@@ -43,9 +43,9 @@ from tests.plugins_osx_xcconfig import PluginsiOSXcconfig
 from tests.prepare_linux import PrepareAndroid
 from tests.prepare_osx import PrepareiOS
 from tests.run_osx import RuniOS
-from tests.transpilation_typescript import TranspilationTypeScript
 
 from tests.error import Error
+from tests.typescript import TypeScript
 from tests.unittests import UnitTests
 from tests.usage import Usage
 from tests.version import Version
@@ -83,13 +83,14 @@ def run_tests():
     def suite_default():
 
 
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TypeScript))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTests))
 
 
         if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryAndroid))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TranspilationTypeScript))
+            
         if 'Darwin' in platform.platform():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateiOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryiOS))

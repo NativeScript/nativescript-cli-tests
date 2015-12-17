@@ -9,6 +9,7 @@ Created on Dec 14, 2015
 # pylint: disable=C0111
 
 import errno, os, time
+from core.commons import run
 
 
 class File(object):
@@ -35,6 +36,11 @@ class File(object):
             return True
         else:
             return False
+
+    @classmethod
+    def cat(cls, path):
+        output = run("cat " + path)
+        return output
 
     @classmethod
     def extension_exists(cls, path, extension):
