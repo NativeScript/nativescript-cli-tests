@@ -99,14 +99,12 @@ def cleanup_folder(folder):
     try:
         shutil.rmtree(folder, False)
         time.sleep(1)
-    except:
+    except OSError:
         if os.path.exists(folder):
             if 'Windows' in platform.platform():
                 run_aut('rmdir /s /q \"{0}\"'.format(folder))
             else:
                 run_aut('rm -rf ' + folder)
-            time.sleep(1)
-
 
 def check_output(output, file_name):
     '''Check if output string contains content of the file'''

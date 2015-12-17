@@ -8,7 +8,8 @@ Created on Dec 14, 2015
 # C0111 - Missing docstring
 # pylint: disable=C0111
 
-import errno, os, shutil
+import os, platform, shutil
+from core.commons import run
 
 
 class Folder(object):
@@ -25,9 +26,12 @@ class Folder(object):
     def cleanup(cls, folder):
         try:
             shutil.rmtree(folder, False)
-        except OSError as err:
-            if err.errno != errno.ENOENT:  # errno.ENOENT = no such file or directory
-                raise
+        except OSError:
+            if os.path.exists(folder):
+                if 'Windows' in platform.platform():
+                    run('rmdir /s /q \"{0}\"'.format(folder))
+                else:
+                    run('rm -rf ' + folder)
 
     @classmethod
     def exists(cls, path):
