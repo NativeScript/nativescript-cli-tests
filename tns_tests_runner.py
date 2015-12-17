@@ -157,7 +157,7 @@ def run_tests():
 
     with open("Report.html", "w") as report:
         descr = "Platform : {0}\n \
-                {N} CLI build version : {1}\n \
+                NativeScript CLI build version : {1}\n \
                 Test Suite : {2}".format(
                     platform.platform(),
                     Tns.version(),
