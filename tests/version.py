@@ -5,7 +5,7 @@
 
 import re, unittest
 from core.commons import run
-from core.constants import TNS_PATH
+from core.tns import Tns
 
 
 class Version(unittest.TestCase):
@@ -22,6 +22,6 @@ class Version(unittest.TestCase):
         pass
 
     def test_001_version(self):
-        output = run(TNS_PATH + " --version")
+        output = Tns.version()
         version = re.compile("^\\d+\\.\\d+\\.\\d+(-\\S+)?$").match(output)
         assert version, "{0} is not a valid version.".format(output)

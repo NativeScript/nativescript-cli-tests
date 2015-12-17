@@ -23,7 +23,7 @@ class Tns(object):
         Return {N} CLI version.
         '''
 
-        command = TNS_PATH + "--version"
+        command = TNS_PATH + " --version"
         output = run(command)
         return output
 
