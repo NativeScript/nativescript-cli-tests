@@ -45,7 +45,7 @@ class Tns(object):
         if copy_from is not None:
             command += " --copy-from " + copy_from
         else:
-            command += " --copy-from  template-hello-world"
+            command += " --copy-from template-hello-world"
 
         command += " --log trace"
         output = run(command)

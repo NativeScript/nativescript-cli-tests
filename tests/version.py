@@ -4,7 +4,6 @@
 
 
 import re, unittest
-from core.commons import run
 from core.tns import Tns
 
 
