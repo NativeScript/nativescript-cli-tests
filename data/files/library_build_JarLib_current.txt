@@ -73,7 +73,7 @@ platforms/android/libs/jni/armeabi-v7a/libNativeScript.so
 platforms/android/libs/jni/x86
 platforms/android/libs/jni/x86/libNativeScript.so
 platforms/android/libs/nativescript.jar
-platforms/android/libs/widgets.jar
+!platforms/android/libs/widgets.jar
 platforms/android/metadata
 platforms/android/metadata/output
 platforms/android/metadata/output/treeNodeStream.dat

@@ -1,2 +1,0 @@
-lib/Android/androidappproject.jar
-platforms/android/libs/androidappproject.jar
