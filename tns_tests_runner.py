@@ -1,16 +1,14 @@
-"""
-Define test suites
-"""
+# C0111 - Missing docstring
+# W0212 - Access to a protected member
+# W0640 - Cell variable test defined in loop
+# pylint: disable=C0111, W0212, W0640
 
-# C0103 - Invalid %s name "%s"
-# pylint: disable=C0103
 
-import os
-import platform
-import unittest
+import os, platform, unittest
 
+from core.tns import Tns
 from helpers import HTMLTestRunner
-from helpers._tns_lib import get_cli_version
+
 from tests.autocomplete import Autocomplete
 from tests.build_linux import BuildAndroid
 from tests.build_osx import BuildiOS
@@ -47,78 +45,23 @@ from tests.prepare_osx import PrepareiOS
 from tests.run_osx import RuniOS
 from tests.transpilation_typescript import TranspilationTypeScript
 
-from tests.unittests import UnitTests
 from tests.error import Error
+from tests.unittests import UnitTests
 from tests.usage import Usage
 from tests.version import Version
 
-# C0111 - Missing docstring
-# R0915 - Too many statements
-# W0212 - Access to a protected member
-# W0640 - Cell variable test defined in loop
-# pylint: disable=C0111, R0915, W0212, W0640
 
 def run_tests():
 
-    print "Platform : ", platform.platform()
-
-    # Android Requirements:
-    # - Valid pair of keystore and password
-    #
-    # iOS Requirements:
-    # - Valid pair of certificate and provisioning profile on your OS X system
-    #
-    # Following environment variables should be set:
-    # - CLI_PATH - Path to CLI package under test (package file should be named nativescript.tgz)
-    #
-    # - ANDROID_PATH - Path to Android runtime package (should be named tns-android.tgz)
-    # - ANDROID_KEYSTORE_PATH - Path to the keystore file
-    # - ANDROID_KEYSTORE_PASS - Password for the keystore file
-    # - ANDROID_KEYSTORE_ALIAS
-    # - ANDROID_KEYSTORE_ALIAS_PASS
-    #
-    # - IOS_PATH - Path to iOS runtime package (should be named tns-ios.tgz)
-    #
-    # - ACTIVE_UI - YES or NO
-    #
-    # - TEST_RUN - types:
-    # SMOKE
-    # - Runs tests with High priority.
-    # DEFAULT
-    # - All suites without dependencies on real devices  (all priorities)
-    # - Following AVDs should be available
-    #    Api19 - Android emulator with API19
-    # FULL
-    # - Runs all tests
-    # - At least one real Android device must be attached to Linux hosts
-    # - At least one real iOS device must be attached to OSX hosts
-    #
-    # LIVESYNC
-    # - Runs all LiveSync tests
-    #
-    # Test name convention:
-    # 001 - 199 - High priority
-    # 200 - 299 - Medium priority
-    # 300 - 399 - Low priority
-    # 400 - 499 - Negative tests
-
+    print "Platform : " + platform.platform()
     suite = unittest.TestLoader().loadTestsFromTestCase(Version)
-    # Temporary ignore Help tests because of expected breaking changes
-    # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))
 
-    if ('TEST_RUN' in os.environ) and ("LIVESYNC" in os.environ['TEST_RUN']):
-        if 'Darwin' in platform.platform():
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
-            # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
-            # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
-        if 'Windows' in platform.platform():
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LivesyncEmulatorFull))
-            # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
-    else:
+    def suite_smoke():
+
 
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Usage))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Error))
+
 
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Autocomplete))
@@ -137,53 +80,85 @@ def run_tests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSSandboxPods))
 
-        if ('TEST_RUN' in os.environ) and (not "SMOKE" in os.environ['TEST_RUN']):
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTests))
-            if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryAndroid))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TranspilationTypeScript))
-            if 'Darwin' in platform.platform():
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateiOS))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryiOS))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSPods))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSLibs))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSXcconfig))
+    def suite_default():
 
-        if ('TEST_RUN' in os.environ) and ("FULL" in os.environ['TEST_RUN']):
-            suite.addTests(
-                unittest.TestLoader().loadTestsFromTestCase(DeployAndroid))
+
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTests))
+
+
+        if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryAndroid))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TranspilationTypeScript))
+        if 'Darwin' in platform.platform():
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateiOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LibraryiOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSPods))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSLibs))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSXcconfig))
+
+    def suite_run():
+        suite.addTests(
+            unittest.TestLoader().loadTestsFromTestCase(DeployAndroid))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(RuniOS))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceAndroid))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugAndroid))
+        if 'Darwin' in platform.platform():
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeployiOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(RuniOS))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceAndroid))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugAndroid))
-            if 'Darwin' in platform.platform():
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeployiOS))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(RuniOS))
 #                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
 #                 suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceiOS))
-                suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceiOS))
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
 
-    # Smoke test runs only high priority tests
-    if ('TEST_RUN' in os.environ) and ("SMOKE" in os.environ['TEST_RUN']):
+    def suite_livesync():
+        if 'Darwin' in platform.platform():
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
+            # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
+#             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
+            # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
+        if 'Windows' in platform.platform():
+            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LivesyncEmulatorFull))
+            # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
+
+    # TODO: Uncomment Help Tests
+    # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))
+
+
+    if 'SMOKE' in os.environ['TEST_RUN']:
+        suite_smoke()
+    elif 'DEFAULT' in os.environ['TEST_RUN']:
+        suite_smoke()
+        suite_default()
+    elif 'RUN' in os.environ['TEST_RUN']:
+        suite_run()
+    elif 'LIVESYNC' in os.environ['TEST_RUN']:
+        suite_livesync()
+    elif 'FULL' in os.environ['TEST_RUN']:
+        suite_smoke()
+        suite_default()
+        suite_run()
+        suite_livesync()
+
+    # Smoke suite runs only high priority tests
+    if 'SMOKE' in os.environ['TEST_RUN']:
         for test in suite:
             if test._testMethodName.find('test_4') >= 0:
                 setattr(test, test._testMethodName, lambda: test.skipTest(
-                    'Skip negative tests in SMOKE TEST run.'))
+                    'Skip negative tests in SMOKE suite run.'))
             if test._testMethodName.find('test_3') >= 0:
                 setattr(test, test._testMethodName, lambda: test.skipTest(
-                    'Skip low priority tests in SMOKE TEST run.'))
+                    'Skip low priority tests in SMOKE suite run.'))
             if test._testMethodName.find('test_2') >= 0:
                 setattr(test, test._testMethodName, lambda: test.skipTest(
-                    'Skip medium priority tests in SMOKE TEST run.'))
+                    'Skip medium priority tests in SMOKE suite run.'))
 
     with open("Report.html", "w") as report:
         descr = "Platform : {0};  nativescript-cli build version : {1}" \
-                .format(platform.platform(), get_cli_version())
-        runner = HTMLTestRunner.HTMLTestRunner(
-            report, title='TNS_CLI_tests', description=descr)
+                .format(platform.platform(), Tns.version())
+        runner = HTMLTestRunner.HTMLTestRunner(report, title='TNS_CLI_tests', description=descr)
         result = runner.run(suite)
     return result
 
