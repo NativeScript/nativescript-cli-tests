@@ -56,7 +56,7 @@ def run_tests():
     print "Platform : " + platform.platform()
     suite = unittest.TestLoader().loadTestsFromTestCase(Version)
 
-    def smoke():
+    def suite_smoke():
 
 
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Usage))
@@ -80,7 +80,7 @@ def run_tests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSSandboxPods))
 
-    def default():
+    def suite_default():
 
 
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTests))
@@ -97,7 +97,7 @@ def run_tests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSLibs))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PluginsiOSXcconfig))
 
-    def run():
+    def suite_run():
         suite.addTests(
             unittest.TestLoader().loadTestsFromTestCase(DeployAndroid))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(RuniOS))
@@ -113,11 +113,11 @@ def run_tests():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceiOS))
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
 
-    def livesync():
+    def suite_livesync():
         if 'Darwin' in platform.platform():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
             # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
-            suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
+#             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulator))
             # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
         if 'Windows' in platform.platform():
             suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LivesyncEmulatorFull))
@@ -128,14 +128,19 @@ def run_tests():
 
 
     if 'SMOKE' in os.environ['TEST_RUN']:
-        smoke()
+        suite_smoke() # PR
     elif 'DEFAULT' in os.environ['TEST_RUN']:
-        smoke()
-        default()
+        suite_smoke()
+        suite_default()
     elif 'RUN' in os.environ['TEST_RUN']:
-        run()
+        suite_run()
     elif 'LIVESYNC' in os.environ['TEST_RUN']:
-        livesync()
+        suite_livesync()
+    elif 'FULL' in os.environ['TEST_RUN']:
+        suite_smoke()
+        suite_default()
+        suite_run()
+        suite_livesync()
 
     # Smoke suite runs only high priority tests
     if 'SMOKE' in os.environ['TEST_RUN']:
