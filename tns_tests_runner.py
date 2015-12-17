@@ -128,7 +128,7 @@ def run_tests():
 
 
     if 'SMOKE' in os.environ['TEST_RUN']:
-        suite_smoke() # PR
+        suite_smoke()
     elif 'DEFAULT' in os.environ['TEST_RUN']:
         suite_smoke()
         suite_default()
