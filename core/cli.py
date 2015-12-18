@@ -30,7 +30,6 @@ def install():
     message = "NativeScript CLI installation failed - \"{e}\" found in output."
     assert "ERR" not in output, message.format(e="ERR")
     assert "Error" not in output, message.format(e="Error")
-    assert "error" not in output, message.format(e="error")
     assert "FiberFuture" not in output, message.format(e="FiberFuture")
     assert "dev-post-install" not in output, message.format(e="dev-post-install")
     assert File.exists("node_modules/.bin/tns"), \
