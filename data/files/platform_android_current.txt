@@ -5,7 +5,7 @@ libs/jni/armeabi-v7a/libNativeScript.so
 libs/jni/x86
 libs/jni/x86/libNativeScript.so
 libs/nativescript.jar
-libs/widgets.jar
+!libs/widgets.jar
 build-tools
 build-tools/metadata-generator.jar
 build.gradle

@@ -4,6 +4,6 @@ build.gradle
 libs
 libs/jni
 libs/nativescript.jar
-libs/widgets.jar
+!libs/widgets.jar
 settings.gradle
 src/main
