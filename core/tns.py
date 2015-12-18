@@ -47,7 +47,7 @@ class Tns(object):
         else:
             command += " --copy-from template-hello-world"
 
-        command += " --log trace"
+        # command += " --log trace"
         output = run(command)
 
         assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
@@ -70,7 +70,7 @@ class Tns(object):
         if template is not None:
             command += " --template " + template
 
-        command += " --log trace"
+        # command += " --log trace"
         output = run(command)
 
         assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
@@ -96,7 +96,7 @@ class Tns(object):
         if symlink is True:
             command += " --symlink"
 
-        command += " --log trace"
+        # command += " --log trace"
         output = run(command)
 
         assert "Copying template files..." in output
@@ -117,7 +117,7 @@ class Tns(object):
         if path is not None:
             command += " --path {0}".format(path)
 
-        command += " --log trace"
+        # command += " --log trace"
         output = run(command)
 
         assert "Project successfully prepared" in output
@@ -137,7 +137,7 @@ class Tns(object):
         if path is not None:
             command += " --path {0}".format(path)
 
-        command += " --log trace"
+        # command += " --log trace"
         output = run(command)
 
         assert "Successfully installed plugin {0}".format(plugin) in output
@@ -163,7 +163,7 @@ class Tns(object):
         if path is not None:
             command += " --path {0}".format(path)
 
-        command += " --log trace"
+        # command += " --log trace"
         output = run(command)
 
         assert "Project successfully prepared" in output

@@ -50,14 +50,14 @@ class TypeScript(unittest.TestCase):
         assert File.exists("TNS_App/hooks/before-prepare/nativescript-dev-typescript.js")
         assert File.exists("TNS_App/hooks/before-watch/nativescript-dev-typescript.js")
 
-        output = File.cat("TNS_App/package.json")
+        output = run("cat TNS_App/package.json")
         assert "devDependencies" in output
         assert "nativescript-dev-typescript" in output
 
         output = Tns.prepare(path="TNS_App", platform="android")
         assert "Executing before-prepare hook" in output
         assert "Found peer TypeScript" in output
-        assert not "error" in output
+        assert "error" not in output
 
         assert File.extension_exists("TNS_App/app", ".js")
         assert File.extension_exists("TNS_App/app", ".ts")
