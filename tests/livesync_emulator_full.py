@@ -58,7 +58,7 @@ class LivesyncEmulatorFull(unittest.TestCase):
             "TNS_App/node_modules/tns-core-modules/application/application-common.js",
             "(\"globals\");", "(\"globals\"); // test")
 
-        Tns.tns_livesync(
+        Tns.livesync(
             platform="android",
             emulator=True,
             device="emulator-5554",
@@ -93,7 +93,7 @@ class LivesyncEmulatorFull(unittest.TestCase):
         os.makedirs("TNS_App/app/test")
         shutil.copyfile(
             "TNS_App/app/main-view-model.js", "TNS_App/app/test/main-view-model.js")
-        Tns.tns_livesync(
+        Tns.livesync(
             platform="android",
             device="emulator-5554",
             path="TNS_App")
@@ -126,7 +126,7 @@ class LivesyncEmulatorFull(unittest.TestCase):
             "TNS_App/node_modules/tns-core-modules/application/application-common.js",
             "(\"globals\");", "(\"globals\"); // test")
 
-        Tns.tns_livesync(
+        Tns.livesync(
             platform="android",
             device="emulator-5554",
             path="TNS_App")
