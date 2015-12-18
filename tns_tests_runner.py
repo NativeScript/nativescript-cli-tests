@@ -157,12 +157,8 @@ def run_tests():
                     'Skip medium priority tests in SMOKE suite run.'))
 
     with open("Report.html", "w") as report:
-        descr = "Platform : {0}\n \
-                NativeScript CLI build version : {1}\n \
-                Test Suite : {2}".format(
-                    platform.platform(),
-                    Tns.version(),
-                    os.environ['TEST_RUN'])
+        descr = "Platform : {0}; NativeScript CLI build version : {1}; Test Suite : {2}".format(
+                    platform.platform(), Tns.version(), os.environ['TEST_RUN'])
         runner = HTMLTestRunner.HTMLTestRunner(report, title='TNS_CLI_tests', description=descr)
         result = runner.run(suite)
     return result
