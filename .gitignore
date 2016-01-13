@@ -1,4 +1,5 @@
 .settings
+.idea
 *.pyc
 *.tgz
 node_modules
