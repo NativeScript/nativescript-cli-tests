@@ -4,7 +4,6 @@ platforms/android/build/generated
 platforms/android/build/generated/res
 platforms/android/build/generated/res/resValues
 platforms/android/build/generated/res/rs
-platforms/android/build/generated/res/rs/debug
 platforms/android/build/generated/source
 platforms/android/build/generated/source/aidl
 platforms/android/build/generated/source/aidl/debug
