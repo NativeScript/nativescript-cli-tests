@@ -250,7 +250,7 @@ def run(platform=None, emulator=False, device=None, path=None, just_launch=True,
     if just_launch:
         command += " --justlaunch"
 
-    output = run_aut(command + "--log trace")
+    output = run_aut(command + " --log trace")
 
     if assert_success:
         assert "Project successfully prepared" in output
