@@ -258,10 +258,8 @@ def run(platform=None, emulator=False, device=None, path=None, just_launch=True,
         if platform is "android":
             assert "Successfully deployed on device with identifier" in output
         else:
-            if emulator:
-                assert "Starting iOS Simulator" in output
-            else:
-                assert "Successfully deployed on device" in output
+            assert "Successfully deployed on device" in output
+            if not emulator:
                 assert "Successfully run application org.nativescript." in output
 
     return output
