@@ -6,6 +6,7 @@ The NativeScript CLI integration tests
 Software Prerequisites
 ==
 Install [Python](https://www.python.org/downloads/) 2.7.*
+
 Install dependencies
 ```
 pip install psutil 
