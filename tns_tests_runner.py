@@ -63,7 +63,7 @@ def suite_smoke():
 
 def suite_build():
     suite = unittest.TestLoader().loadTestsFromTestCase(Version)
-    # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Usage))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(ErrorReporting))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))
@@ -139,7 +139,7 @@ def run_tests():
     print "Platform : " + platform.platform()
 
     suite = unittest.TestSuite()
-    if 'plugin' in os.environ['TEST_RUN']:
+    if 'SMOKE' in os.environ['TEST_RUN']:
         suite = suite_smoke()
     elif 'BUILD' in os.environ['TEST_RUN']:
         suite = suite_build()

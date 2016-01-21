@@ -1,4 +1,3 @@
-# pylint: disable=C0103, C0111, C0112, C0325, E1121, R0201, R0902, R0903, R0913, R0914, W0105, W0201, W0603, W0613
 """
 A TestRunner for use with the Python unit testing framework. It
 generates a HTML report to show the result at a glance.
@@ -29,8 +28,8 @@ HTMLTestRunner is a counterpart to unittest's TextTestRunner. E.g.
     # See the Template_mixin class for more customizable options
     runner.STYLESHEET_TMPL = '<link rel="stylesheet" href="my_stylesheet.css" type="text/css">'
 
-    # emulate the test
-    runner.emulate(my_test_suite)
+    # run the test
+    runner.run(my_test_suite)
 
 
 ------------------------------------------------------------------------
@@ -66,10 +65,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # URL: http://tungwaiyip.info/software/HTMLTestRunner.html
 
 __author__ = "Wai Yip Tung"
-__version__ = "0.8.2"
+__version__ = "0.8.3"
 
 """
 Change History
+
+Version 0.8.3
+* Prevent crash on class or module-level exceptions (Darren Wurf).
 
 Version 0.8.2
 * Show output inline instead of popup window (Viorel Lupu).
@@ -93,23 +95,9 @@ Version in 0.7.1
 import StringIO
 import datetime
 import sys
-import time
 import unittest
 from xml.sax import saxutils
 
-from nosexunit import const as nconst
-from nosexunit import core as ncore
-
-# bdLibPath2=os.path.abspath(sys.argv[0]+"..")
-# print("bdlibpath="+bdLibPath)
-# bdLibPath=os.path.abspath(os.path.join(sys.argv[0], "nosexunit"))
-# print("bdlibpath="+bdLibPath)
-# if not bdLibPath2 in sys.path: sys.path.append(bdLibPath2)
-# if not bdLibPath in sys.path: sys.path.append(bdLibPath)
-print sys.path
-
-
-# from _ice_lib import *
 
 # ------------------------------------------------------------------------
 # The redirectors below are used to capture output during testing. Output
@@ -121,7 +109,6 @@ print sys.path
 # e.g.
 #   >>> logging.basicConfig(stream=HTMLTestRunner.stdout_redirector)
 #   >>>
-
 
 class OutputRedirector(object):
     """ Wrapper to redirect stdout or stderr """
@@ -311,6 +298,7 @@ function showOutput(id, name) {
 </html>
 """
     # variables: (title, generator, stylesheet, heading, report, ending)
+
 
     # ------------------------------------------------------------------------
     # Stylesheet
@@ -514,23 +502,23 @@ a.popup_link:hover {
 # -------------------- The end of the Template class -------------------
 
 
-TestSuite = ncore.XSuite('')
 TestResult = unittest.TestResult
 
 
 class _TestResult(TestResult):
     # note: _TestResult is a pure representation of results.
-    # It lacks the output and reporting ability compares to
-    # unittest._TextTestResult.
+    # It lacks the output and reporting ability compares to unittest._TextTestResult.
 
     def __init__(self, verbosity=1):
         TestResult.__init__(self)
+        self.outputBuffer = StringIO.StringIO()
         self.stdout0 = None
         self.stderr0 = None
         self.success_count = 0
         self.failure_count = 0
         self.error_count = 0
         self.verbosity = verbosity
+
         # result is a list of result in 4 tuple
         # (
         #   result code (0: success; 1: fail; 2: error),
@@ -543,14 +531,12 @@ class _TestResult(TestResult):
     def startTest(self, test):
         TestResult.startTest(self, test)
         # just one buffer for both stdout and stderr
-        self.outputBuffer = StringIO.StringIO()
         stdout_redirector.fp = self.outputBuffer
         stderr_redirector.fp = self.outputBuffer
         self.stdout0 = sys.stdout
         self.stderr0 = sys.stderr
         sys.stdout = stdout_redirector
         sys.stderr = stderr_redirector
-        self.startTime = time.time()
 
     def complete_output(self):
         """
@@ -567,19 +553,8 @@ class _TestResult(TestResult):
     def stopTest(self, test):
         # Usually one of addSuccess, addError or addFailure would have been called.
         # But there are some path in unittest that would bypass this.
-        # We must disconnect stdout in stopTest(), which is guaranteed to be
-        # called.
+        # We must disconnect stdout in stopTest(), which is guaranteed to be called.
         self.complete_output()
-
-    def addTestCase(self, kind, test, err=None):
-        '''Add a new test result in the current suite'''
-        # Create a test
-        elmt = ncore.XTest(kind, test, err=err)
-        # Set the start time
-        elmt.setStart(self.startTime)
-        elmt.stop()
-        # Add test to the suite
-        TestSuite.addTest(elmt)
 
     def addSuccess(self, test):
         self.success_count += 1
@@ -592,11 +567,6 @@ class _TestResult(TestResult):
             sys.stderr.write('\n')
         else:
             sys.stderr.write('.')
-
-        kind = nconst.TEST_SUCCESS
-        # Add the test
-        self.addTestCase(kind, test, err=str(test))
-        # testcases.append(TestCase(test, output , test_type="Success"))
 
     def addError(self, test, err):
         self.error_count += 1
@@ -611,11 +581,6 @@ class _TestResult(TestResult):
         else:
             sys.stderr.write('E')
 
-        kind = nconst.TEST_ERROR
-        # Add the test
-        self.addTestCase(kind, test, err=err)
-        # testcases.append(TestCase(test, output + _exc_str, test_type="Error"))
-
     def addFailure(self, test, err):
         self.failure_count += 1
         TestResult.addFailure(self, test, err)
@@ -628,23 +593,13 @@ class _TestResult(TestResult):
             sys.stderr.write('\n')
         else:
             sys.stderr.write('F')
-        kind = nconst.TEST_FAIL
-        # Add the test
-        self.addTestCase(kind, test, err=err)
-        # testcases.append(TestCase(test, output + _exc_str, test_type="Failure"))
 
 
 class HTMLTestRunner(Template_mixin):
     """
     """
 
-    def __init__(
-            self,
-            stream=sys.stdout,
-            verbosity=1,
-            title=None,
-            description=None,
-            jUnitResultOutputFolder='.'):
+    def __init__(self, stream=sys.stdout, verbosity=1, title=None, description=None):
         self.stream = stream
         self.verbosity = verbosity
         if title is None:
@@ -657,30 +612,24 @@ class HTMLTestRunner(Template_mixin):
             self.description = description
 
         self.startTime = datetime.datetime.now()
-        self.jUnitResultOutputFolder = jUnitResultOutputFolder
 
     def run(self, test):
-        global TestSuite
         "Run the given test case or test suite."
-        print("Self.Title=" + self.title)
-        TestSuite = ncore.XSuite(self.title)
         result = _TestResult(self.verbosity)
         test(result)
         self.stopTime = datetime.datetime.now()
         self.generateReport(test, result)
-        print >> sys.stderr, '\nTime Elapsed: %s' % (
-            self.stopTime - self.startTime)
-        TestSuite.writeXml(self.jUnitResultOutputFolder)
+        print >> sys.stderr, '\nTime Elapsed: %s' % (self.stopTime - self.startTime)
         return result
 
     def sortResult(self, result_list):
-        # unittest does not seems to emulate in any particular order.
+        # unittest does not seems to run in any particular order.
         # Here at least we want to group them together by class.
         rmap = {}
         classes = []
         for n, t, o, e in result_list:
             cls = t.__class__
-            if cls not in rmap:
+            if not rmap.has_key(cls):
                 rmap[cls] = []
                 classes.append(cls)
             rmap[cls].append((n, t, o, e))
@@ -695,12 +644,9 @@ class HTMLTestRunner(Template_mixin):
         startTime = str(self.startTime)[:19]
         duration = str(self.stopTime - self.startTime)
         status = []
-        if result.success_count:
-            status.append('Pass %s' % result.success_count)
-        if result.failure_count:
-            status.append('Failure %s' % result.failure_count)
-        if result.error_count:
-            status.append('Error %s' % result.error_count)
+        if result.success_count: status.append('Pass %s' % result.success_count)
+        if result.failure_count: status.append('Failure %s' % result.failure_count)
+        if result.error_count:   status.append('Error %s' % result.error_count)
         if status:
             status = ' '.join(status)
         else:
@@ -784,14 +730,10 @@ class HTMLTestRunner(Template_mixin):
 
         report = self.REPORT_TMPL % dict(
                 test_list=''.join(rows),
-                count=str(
-                        result.success_count + result.failure_count + result.error_count),
-                Pass=str(
-                        result.success_count),
-                fail=str(
-                        result.failure_count),
-                error=str(
-                        result.error_count),
+                count=str(result.success_count + result.failure_count + result.error_count),
+                Pass=str(result.success_count),
+                fail=str(result.failure_count),
+                error=str(result.error_count),
         )
         return report
 
@@ -803,11 +745,8 @@ class HTMLTestRunner(Template_mixin):
         doc = t.shortDescription() or ""
         desc = doc and ('%s: %s' % (name, doc)) or name
         tmpl = has_output and self.REPORT_TEST_WITH_OUTPUT_TMPL or self.REPORT_TEST_NO_OUTPUT_TMPL
-        # print("name=" + name)
-        # print("doc=" + doc)
-        # print("desc=" + desc)
-        # o and e should be byte string because they are collected from stdout
-        # and stderr?
+
+        # o and e should be byte string because they are collected from stdout and stderr?
         if isinstance(o, str):
             # TODO: some problem with 'string_escape': it escape \n and mess up formating
             # uo = unicode(o.encode('string_escape'))
@@ -820,13 +759,12 @@ class HTMLTestRunner(Template_mixin):
             ue = e.decode('latin-1')
         else:
             ue = e
-        # print("ue=" + ue)
+
         script = self.REPORT_TEST_OUTPUT_TMPL % dict(
                 id=tid,
                 output=saxutils.escape(uo + ue),
         )
-        # print("script=" + script)
-        # print("output=" + saxutils.escape(uo+ue))
+
         row = tmpl % dict(
                 tid=tid,
                 Class=(n == 0 and 'hiddenRow' or 'none'),
@@ -835,7 +773,6 @@ class HTMLTestRunner(Template_mixin):
                 script=script,
                 status=self.STATUS[n],
         )
-
         rows.append(row)
         if not has_output:
             return

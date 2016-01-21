@@ -16,7 +16,8 @@ from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
-    COMMAND_TIMEOUT, ANDROID_PATH, IOS_PATH, SUT_ROOT_FOLDER, TEST_RUN, CLI_PATH, ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH, \
+    COMMAND_TIMEOUT, ANDROID_PATH, IOS_PATH, SUT_ROOT_FOLDER, TEST_RUN, CLI_PATH, ANDROID_RUNTIME_PATH, \
+    IOS_RUNTIME_PATH, \
     TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH
 from core.xcode.xcode import Xcode
 
@@ -27,6 +28,13 @@ def clone_git_repo(repo_url, local_folder):
     output = run('git clone ' + repo_url + ' ' + local_folder)
     assert not ("fatal" in output), \
         "Failed to clone {0}".format(repo_url)
+
+
+def clean_npm():
+    if CURRENT_OS == OSType.WINDOWS:
+        run("npm cache clean", COMMAND_TIMEOUT)
+    else:
+        run("rm -rf ~/.npm/tns/*", COMMAND_TIMEOUT)
 
 
 def clean_npm():
@@ -66,15 +74,18 @@ def extract_archive(file_name, folder):
     else:
         print "Failed to extract {0}".format(file_name)
 
+
 def get_tns_core_modules():
     """Copy android runtime form ANDROID_PATH to local folder"""
     location = os.path.join(TNS_MODULES_PATH, "tns-core-modules.tgz")
     shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-core-modules.tgz"))
 
+
 def get_tns_core_modules_widgets():
     """Copy android runtime form ANDROID_PATH to local folder"""
     location = os.path.join(TNS_MODULES_WIDGETS_PATH, "tns-core-modules-widgets.tgz")
     shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-core-modules-widgets.tgz"))
+
 
 def get_android_runtime():
     """Copy android runtime form ANDROID_PATH to local folder"""
@@ -90,6 +101,7 @@ def get_ios_runtime():
     shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-ios.tgz"))
     if File.exists(os.path.join(os.getcwd(), IOS_RUNTIME_PATH)):
         extract_archive(IOS_RUNTIME_PATH, os.path.splitext(IOS_RUNTIME_PATH)[0])
+
 
 def get_test_repos():
     # Clone template-hello-world repos (both js and ts)
@@ -130,8 +142,8 @@ if __name__ == '__main__':
 
     # Copy test packages and cleanup
     get_cli()  # Get {N} CLI
-    get_tns_core_modules() # Get core modules
-    get_tns_core_modules_widgets() # Get widgets (dependency of core modules)
+    get_tns_core_modules()  # Get core modules
+    get_tns_core_modules_widgets()  # Get widgets (dependency of core modules)
     get_android_runtime()  # Get Android Runtime
     if CURRENT_OS == OSType.OSX:
         Simulator.stop_simulators()  # Stop running simulators

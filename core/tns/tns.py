@@ -52,6 +52,8 @@ class Tns(object):
             assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
 
         if update_modules:
+            if path is not None:
+                app_name = path + app_name;
             current_dir = os.getcwd()
             os.chdir(os.path.join(current_dir, app_name))
             npm_out1 = run("npm uninstall tns-core-modules")

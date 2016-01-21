@@ -3,6 +3,8 @@ Test for create command
 """
 import unittest
 
+from nose_parameterized import parameterized
+
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -49,7 +51,7 @@ class Create(unittest.TestCase):
 
         output = run("cat TNS_App/package.json")
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
-        assert "\"tns-core-modules\": \"1." in output
+        assert "\"tns-core-modules\": " in output
 
         assert File.exists("TNS_App/node_modules/tns-core-modules/package.json")
         assert File.exists("TNS_App/node_modules/tns-core-modules/LICENSE")
@@ -58,14 +60,14 @@ class Create(unittest.TestCase):
         assert File.list_of_files_exists("TNS_App", "template_javascript_files_1.2.0.txt")
 
     def test_002_create_project_with_path(self):
-        Tns.create_app(app_name="TNS_App", path='folder/subfolder/')
+        Tns.create_app(app_name="TNS_App", path='folder/subfolder/', assert_success=False, update_modules=False)
 
         assert Folder.is_empty("folder/subfolder/TNS_App/platforms")
         assert not Folder.exists("folder/subfolder/TNS_App/app/tns_modules")
 
         output = run("cat folder/subfolder/TNS_App/package.json")
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
-        assert "\"tns-core-modules\": \"1." in output
+        assert "\"tns-core-modules\": " in output
 
         assert File.exists(
                 "folder/subfolder/TNS_App/node_modules/tns-core-modules/package.json")
@@ -103,12 +105,12 @@ class Create(unittest.TestCase):
         assert "T3l3r1k" in output
 
     def test_005_create_project_with_space(self):
-        Tns.create_app(app_name="\"TNS App\"")
+        Tns.create_app(app_name="\"TNS App\"", assert_success=False, update_modules=False)
         output = run("cat \"TNS App/package.json\"")
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
 
     def test_006_create_project_with_dash(self):
-        Tns.create_app(app_name="\"tns-app\"")
+        Tns.create_app(app_name="tns-app", assert_success=False)
         output = run("cat \"tns-app/package.json\"")
         assert "\"id\": \"org.nativescript.tnsapp\"" in output
 
@@ -123,6 +125,23 @@ class Create(unittest.TestCase):
 
         output = run("cat app/package.json")
         assert "\"id\": \"org.nativescript.app\"" in output
+
+    @parameterized.expand([
+        "tns-template-hello-world",
+        "tns-template-hello-world-ts",
+        "https://github.com/NativeScript/template-hello-world-ts/tarball/master",
+        "https://github.com/NativeScript/template-hello-world-ts.git",
+        "https://github.com/NativeScript/template-hello-world-ts.git#master",
+        "typescript",
+        "tsc",
+    ])
+    def test_100_create_project_with_template(self, template_source):
+        Tns.create_app(app_name="TNS_App", template=template_source)
+        assert Folder.is_empty("TNS_App/platforms")
+        assert not Folder.is_empty("TNS_App/app")
+        assert not Folder.exists("TNS_App/app/tns_modules")
+        output = run("cat TNS_App/package.json")
+        assert "\"id\": \"org.nativescript.TNSApp\"" in output
 
     def test_400_create_project_with_copyfrom_wrong_path(self):
         output = run(TNS_PATH + " create TNS_App --copy-from invalidFolder")
