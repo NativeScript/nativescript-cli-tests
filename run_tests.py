@@ -1,144 +1,159 @@
-# C0103 - Invalid %s name "%s"
-# C0111 - Missing docstring
-# W0602 - Using global for %r but no assignment is done
-# W0603 - Using the global statement
-# pylint: disable=C0103, C0111, W0602, W0603
 """
 Entry point of functional tests
 """
 
-
-import os, platform
-import core.cli
-
-
-from helpers._os_lib import cleanup_folder, remove, run_aut, uninstall_app, cleanup_xcode_cache
-from helpers._tns_lib import get_android_runtime, get_ios_runtime, \
-    ANDROID_RUNTIME_SYMLINK_PATH, IOS_RUNTIME_SYMLINK_PATH, ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH
-from helpers.device import stop_emulators
-from helpers.simulator import stop_simulators
+import os
+import shutil
+import tarfile
 
 import tns_tests_runner
+from core.device.device import Device
+from core.device.emulator import Emulator
+from core.device.simulator import Simulator
+from core.installer.cli import Cli
+from core.installer.tools import Tools
+from core.osutils.command import run
+from core.osutils.file import File
+from core.osutils.folder import Folder
+from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
+    COMMAND_TIMEOUT, ANDROID_PATH, IOS_PATH, SUT_ROOT_FOLDER, TEST_RUN, CLI_PATH, ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH, \
+    TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH
+from core.xcode.xcode import Xcode
+
+TEST_RESULT = ""
 
 
-SMOKETESTRESULT = ""
+def clone_git_repo(repo_url, local_folder):
+    output = run('git clone ' + repo_url + ' ' + local_folder)
+    assert not ("fatal" in output), \
+        "Failed to clone {0}".format(repo_url)
+
+
+def clean_npm():
+    if CURRENT_OS == OSType.WINDOWS:
+        run("npm cache clean", COMMAND_TIMEOUT)
+    else:
+        run("rm -rf ~/.npm/tns/*", COMMAND_TIMEOUT)
+
+
+def clean_tgz():
+    if CURRENT_OS == OSType.WINDOWS:
+        run("del *.tgz", COMMAND_TIMEOUT)
+    else:
+        run("rm -rf *.tgz", COMMAND_TIMEOUT)
+
+
+def clean_gradle():
+    if CURRENT_OS == OSType.WINDOWS:
+        run("rmdir /s /q {USERPROFILE}\\.gradle".format(**os.environ), COMMAND_TIMEOUT)
+    else:
+        run("rm -rf ~/.gradle", 600)
+
+
+def get_cli():
+    """Copy {N} CLI form CLI_PATH to local folder"""
+    location = os.path.join(CLI_PATH, "nativescript.tgz")
+    shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "nativescript.tgz"))
+
+
+def extract_archive(file_name, folder):
+    """Extract archive"""
+    if file_name.endswith(".tgz"):
+        tar = tarfile.open(file_name)
+        tar.extractall(path=os.path.join(os.getcwd(), folder))
+        tar.close()
+        print "{0} extracted in {1}".format(file_name, folder)
+    else:
+        print "Failed to extract {0}".format(file_name)
+
+def get_tns_core_modules():
+    """Copy android runtime form ANDROID_PATH to local folder"""
+    location = os.path.join(TNS_MODULES_PATH, "tns-core-modules.tgz")
+    shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-core-modules.tgz"))
+
+def get_tns_core_modules_widgets():
+    """Copy android runtime form ANDROID_PATH to local folder"""
+    location = os.path.join(TNS_MODULES_WIDGETS_PATH, "tns-core-modules-widgets.tgz")
+    shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-core-modules-widgets.tgz"))
+
+def get_android_runtime():
+    """Copy android runtime form ANDROID_PATH to local folder"""
+    location = os.path.join(ANDROID_PATH, "tns-android.tgz")
+    shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-android.tgz"))
+    if File.exists(os.path.join(os.getcwd(), ANDROID_RUNTIME_PATH)):
+        extract_archive(ANDROID_RUNTIME_PATH, os.path.splitext(ANDROID_RUNTIME_PATH)[0])
+
+
+def get_ios_runtime():
+    """Copy android runtime form IOS_PATH to local folder"""
+    location = os.path.join(IOS_PATH, "tns-ios.tgz")
+    shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-ios.tgz"))
+    if File.exists(os.path.join(os.getcwd(), IOS_RUNTIME_PATH)):
+        extract_archive(IOS_RUNTIME_PATH, os.path.splitext(IOS_RUNTIME_PATH)[0])
+
+def get_test_repos():
+    # Clone template-hello-world repos (both js and ts)
+    clone_git_repo("git@github.com:NativeScript/template-hello-world.git", SUT_ROOT_FOLDER + "/template-hello-world")
+    clone_git_repo("git@github.com:NativeScript/template-hello-world-ts.git",
+                   SUT_ROOT_FOLDER + "/template-hello-world-ts")
+
+    # Clone QA-TestApps repo
+    clone_git_repo("git@github.com:NativeScript/QA-TestApps.git", SUT_ROOT_FOLDER + "/QA-TestApps")
+    # TODO: QA-TestApps is privite, we should make it public or move all test data to data folder#
+
 
 def execute_tests():
-    print "####RUNNING TESTS####"
-    global SMOKETESTRESULT
-    SMOKETESTRESULT = str(tns_tests_runner.run_tests())
+    print "####runNING TESTS####"
+    global TEST_RESULT
+    TEST_RESULT = str(tns_tests_runner.run_tests())
+
 
 def analyze_result_and_exit():
-    global SMOKETESTRESULT
-    if not "errors=0" in SMOKETESTRESULT or not "failures=0" in SMOKETESTRESULT:
+    global TEST_RESULT
+    if "errors=0" not in TEST_RESULT or "failures=0" not in TEST_RESULT:
         exit(1)
     else:
         exit(0)
 
+
 if __name__ == '__main__':
 
-    # Run pylint
-    run_aut("pylint tests", write_to_file="pylint_tests.log")
-    run_aut("pylint helpers", write_to_file="pylint_helpers.log")
-    run_aut("pylint run_tests.py", write_to_file="pylint_run_tests.log")
-    run_aut("pylint tns_tests_runner.py", write_to_file="pylint_tns_tests_runner.log")
+    # Cleanup files and folders created by the test execution
+    Folder.cleanup(OUTPUT_FOLDER)
+    Folder.cleanup(SUT_ROOT_FOLDER)
+    Folder.cleanup("node_modules")
+    clean_npm()  # Clean NPM cache
+    clean_gradle()  # Clean Gradle
+    get_test_repos()  # Clone test repos
+    Emulator.stop_emulators()  # Stop running emulators
+    Tools.install_ddb()  # Install ddb
 
-    # Clean NPM cache
-    if 'Windows' in platform.platform():
-        run_aut("npm cache clean", 600)
-    else:
-        run_aut("rm -rf ~/.npm/tns/*", 600)
+    # Copy test packages and cleanup
+    get_cli()  # Get {N} CLI
+    get_tns_core_modules() # Get core modules
+    get_tns_core_modules_widgets() # Get widgets (dependency of core modules)
+    get_android_runtime()  # Get Android Runtime
+    if CURRENT_OS == OSType.OSX:
+        Simulator.stop_simulators()  # Stop running simulators
+        Xcode.cleanup_cache()  # Clean Xcode cache folders
+        get_ios_runtime()  # Get iOS Runtime
+    if TEST_RUN == "FULL":
+        Tools.install_ddb()  # Install ddb (if not already available)
+        Device.uninstall_app("org.nativescript.", platform="android", fail=False)
+        if CURRENT_OS == OSType.OSX:
+            Device.uninstall_app("org.nativescript.", platform="ios", fail=False)
 
-    # Stop emulators and simulators
-    stop_emulators()
-    stop_simulators()
-
-    if 'TEST_RUN' in os.environ and "FULL" in os.environ['TEST_RUN']:
-
-        # Install ddb
-        output = run_aut("ddb")
-        if "Device Debug Bridge" not in output:
-            run_aut("npm i -g ddb")
-
-        # Uninstall test apps on real devices
-        uninstall_app("TNSApp", platform="android", fail=False)
-        uninstall_app("TNSAppNoPlatform", platform="android", fail=False)
-
-        uninstall_app("TNSApp", platform="ios", fail=False)
-        uninstall_app("TNSAppNoPlatform", platform="ios", fail=False)
-
-        # Clean .gradle
-        if 'Windows' in platform.platform():
-            run_aut("rmdir /s /q {USERPROFILE}\\.gradle".format(**os.environ), 600)
-        else:
-            run_aut("rm -rf ~/.gradle", 600)
-
-    # Clean old runtimes
-    cleanup_folder(os.path.split(ANDROID_RUNTIME_SYMLINK_PATH)[0])
-    cleanup_folder(os.path.split(IOS_RUNTIME_SYMLINK_PATH)[0])
-    if os.path.isfile(ANDROID_RUNTIME_PATH):
-        os.remove(ANDROID_RUNTIME_PATH)
-    if os.path.isfile(IOS_RUNTIME_PATH):
-        os.remove(IOS_RUNTIME_PATH)
-
-    # cleanup files and folders created by the test execution
-    remove('stderr.txt')
-    remove('commands.txt')
-    cleanup_folder('app')
-    cleanup_folder('appTest')
-    cleanup_folder('TNS App')
-    cleanup_folder('TNS_App')
-    cleanup_folder('TNS_TempApp')
-    cleanup_folder('folder')
-    cleanup_folder('template')
-    cleanup_folder('tns_modules')
-    cleanup_folder('tns_helloworld_app')
-    cleanup_folder('node_modules')
-
-    # uninstall/install CLI
-    core.cli.uninstall()
-    core.cli.install()
-
-    # Get latest Android and iOS runtimes
-    get_android_runtime()
-    if 'Darwin' in platform.platform():
-        get_ios_runtime()
-
-    # Clone template-hello-world repo
-    cleanup_folder('template-hello-world')
-    OUTPUT = run_aut('git clone ' + \
-                    'git@github.com:NativeScript/template-hello-world.git ' + \
-                    'template-hello-world')
-    assert not ("fatal" in OUTPUT), \
-        "Failed to clone git@github.com:NativeScript/template-hello-world.git"
-
-    # Clone template-hello-world-ts repo
-    cleanup_folder('template-hello-world-ts')
-    OUTPUT = run_aut('git clone ' + \
-                    'git@github.com:NativeScript/template-hello-world-ts.git ' + \
-                    'template-hello-world-ts')
-    assert not ("fatal" in OUTPUT), \
-        "Failed to clone git@github.com:NativeScript/template-hello-world-ts.git"
-
-    # Clone QA-TestApps repo
-    cleanup_folder('QA-TestApps')
-    OUTPUT = run_aut(
-        "git clone git@github.com:NativeScript/QA-TestApps.git QA-TestApps")
-    assert not (
-        "fatal" in OUTPUT), "Failed to clone git@github.com:NativeScript/QA-TestApps.git"
-
-    # Clean Xcode cache and Derived data
-    if 'Darwin' in platform.platform():
-        cleanup_xcode_cache()
+    # Install CLI
+    Cli.install()
 
     # Execute tests
     execute_tests()
 
-    # Stop running emulators
-    if 'TEST_RUN' in os.environ and not "SMOKE" in os.environ['TEST_RUN']:
-        stop_emulators()
-        if 'Darwin' in platform.platform():
-            stop_simulators()
+    # Final cleanup
+    Emulator.stop_emulators()  # Stop running emulators
+    if CURRENT_OS == OSType.OSX:
+        Simulator.stop_simulators()  # Stop running simulators
+        Xcode.cleanup_cache()  # Clean Xcode cache folders
 
     # Exit
     analyze_result_and_exit()

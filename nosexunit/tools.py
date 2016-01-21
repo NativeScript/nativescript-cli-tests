@@ -199,7 +199,7 @@ def identical(file1, file2):
     except: return os.path.normpath(file1) == os.path.normpath(file2)
 
 def on_posix():
-    '''Return True if run on POSIX platform'''
+    '''Return True if emulate on POSIX platform'''
     # Check OS name
     return os.name == 'posix'
 
