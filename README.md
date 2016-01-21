@@ -12,6 +12,9 @@ pip install psutil
 pip install nose-parameterized
 ```
 3. (iOS Real Device Tests Only) ideviceinstaller
+```
+brew install ideviceinstaller
+```
 
 Environment setup:
 ==
