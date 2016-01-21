@@ -5,13 +5,13 @@ The NativeScript CLI integration tests
 
 Software Prerequisites
 ==
-1. Install Python 2.7.*
-2. Install dependencies
+Install [Python](https://www.python.org/downloads/) 2.7.*
+Install dependencies
 ```
 pip install psutil 
 pip install nose-parameterized
 ```
-3. iOS Only: Install ideviceinstaller
+iOS Only: Install ideviceinstaller
 ```
 brew install ideviceinstaller
 ```
