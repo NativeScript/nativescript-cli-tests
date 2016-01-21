@@ -58,6 +58,7 @@ def suite_smoke():
         if test._testMethodName.find('test_2') >= 0:
             setattr(test, test._testMethodName, lambda: test.skipTest(
                     'Skip medium priority tests in SMOKE suite run.'))
+    return suite
 
 
 def suite_build():
@@ -138,7 +139,7 @@ def run_tests():
     print "Platform : " + platform.platform()
 
     suite = unittest.TestSuite()
-    if 'SMOKE' in os.environ['TEST_RUN']:
+    if 'plugin' in os.environ['TEST_RUN']:
         suite = suite_smoke()
     elif 'BUILD' in os.environ['TEST_RUN']:
         suite = suite_build()
