@@ -6,7 +6,11 @@ The NativeScript CLI integration tests
 Software Prerequisites
 ==
 1. Install Python 2.7.*
-2. Install psutil package.
+2. Install dependencies
+```
+pip install psutil 
+pip install nose-parameterized
+```
 3. (iOS Real Device Tests Only) ideviceinstaller
 
 Environment setup:
