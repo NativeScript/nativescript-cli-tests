@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: iso-8859-1 -*-
 """
 A TestRunner for use with the Python unit testing framework. It
 generates a HTML report to show the result at a glance.
@@ -65,13 +67,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # URL: http://tungwaiyip.info/software/HTMLTestRunner.html
 
 __author__ = "Wai Yip Tung"
-__version__ = "0.8.3"
+__version__ = "0.8.2"
 
 """
 Change History
-
-Version 0.8.3
-* Prevent crash on class or module-level exceptions (Darren Wurf).
 
 Version 0.8.2
 * Show output inline instead of popup window (Viorel Lupu).
@@ -94,9 +93,21 @@ Version in 0.7.1
 
 import StringIO
 import datetime
+import os
 import sys
+import time
 import unittest
 from xml.sax import saxutils
+
+# bdLibPath2=os.path.abspath(sys.argv[0]+"..")
+# print("bdlibpath="+bdLibPath)
+# bdLibPath=os.path.abspath(os.path.join(sys.argv[0], "nosexunit"))
+# print("bdlibpath="+bdLibPath)
+# if not bdLibPath2 in sys.path: sys.path.append(bdLibPath2)
+# if not bdLibPath in sys.path: sys.path.append(bdLibPath)
+print sys.path
+from nosexunit import core as ncore
+from nosexunit import const as nconst
 
 
 # ------------------------------------------------------------------------
@@ -177,6 +188,8 @@ class Template_mixin(object):
         0: 'pass',
         1: 'fail',
         2: 'error',
+        3: 'unexpsucc',
+        4: 'expfail',
     }
 
     DEFAULT_TITLE = 'Unit Test Report'
@@ -243,7 +256,7 @@ function showClassDetail(cid, count) {
     for (var i = 0; i < count; i++) {
         tid = id_list[i];
         if (toHide) {
-            document.getElementById('div_'+tid).style.display = 'none'
+            document.getElementById('div_'+tid).style.display = 'none';
             document.getElementById(tid).className = 'hiddenRow';
         }
         else {
@@ -292,6 +305,7 @@ function showOutput(id, name) {
 
 %(heading)s
 %(report)s
+%(testlog)s
 %(ending)s
 
 </body>
@@ -351,7 +365,7 @@ a.popup_link:hover {
     font-family: "Lucida Console", "Courier New", Courier, monospace;
     text-align: left;
     font-size: 8pt;
-    width: 500px;
+    width: 1000px;
 }
 
 }
@@ -471,9 +485,10 @@ a.popup_link:hover {
         <a onfocus='this.blur();' onclick="document.getElementById('div_%(tid)s').style.display = 'none' " >
            [x]</a>
         </div>
-        <pre>
+        <pre style='word-wrap: break-word'>
         %(script)s
         </pre>
+        <img src='%(image)s'>
     </div>
     <!--css div popup end-->
 
@@ -496,12 +511,22 @@ a.popup_link:hover {
     # ENDING
     #
 
+    TEST_LOG_TMPL = r"""
+    </div id='testlog'>
+        <h3>TEST LOG</h3>
+        <pre style='word-wrap: break-word;background-color: #E8E8E8'>
+        %(text)s
+        </pre>
+    </div>
+    """
+
     ENDING_TMPL = """<div id='ending'>&nbsp;</div>"""
 
 
 # -------------------- The end of the Template class -------------------
 
 
+TestSuite = ncore.XSuite('')
 TestResult = unittest.TestResult
 
 
@@ -511,14 +536,12 @@ class _TestResult(TestResult):
 
     def __init__(self, verbosity=1):
         TestResult.__init__(self)
-        self.outputBuffer = StringIO.StringIO()
         self.stdout0 = None
         self.stderr0 = None
         self.success_count = 0
         self.failure_count = 0
         self.error_count = 0
         self.verbosity = verbosity
-
         # result is a list of result in 4 tuple
         # (
         #   result code (0: success; 1: fail; 2: error),
@@ -531,12 +554,14 @@ class _TestResult(TestResult):
     def startTest(self, test):
         TestResult.startTest(self, test)
         # just one buffer for both stdout and stderr
+        self.outputBuffer = StringIO.StringIO()
         stdout_redirector.fp = self.outputBuffer
         stderr_redirector.fp = self.outputBuffer
         self.stdout0 = sys.stdout
         self.stderr0 = sys.stderr
         sys.stdout = stdout_redirector
         sys.stderr = stderr_redirector
+        self.startTime = time.time()
 
     def complete_output(self):
         """
@@ -556,6 +581,16 @@ class _TestResult(TestResult):
         # We must disconnect stdout in stopTest(), which is guaranteed to be called.
         self.complete_output()
 
+    def addTestCase(self, kind, test, err=None):
+        '''Add a new test result in the current suite'''
+        # Create a test
+        elmt = ncore.XTest(kind, test, err=err)
+        # Set the start time
+        elmt.setStart(self.startTime)
+        elmt.stop()
+        # Add test to the suite
+        TestSuite.addTest(elmt)
+
     def addSuccess(self, test):
         self.success_count += 1
         TestResult.addSuccess(self, test)
@@ -567,6 +602,28 @@ class _TestResult(TestResult):
             sys.stderr.write('\n')
         else:
             sys.stderr.write('.')
+
+        kind = nconst.TEST_SUCCESS
+        # Add the test
+        self.addTestCase(kind, test, err=str(test))
+        # testcases.append(TestCase(test, output , test_type="Success"))
+
+    def addFailure(self, test, err):
+        self.failure_count += 1
+        TestResult.addFailure(self, test, err)
+        _, _exc_str = self.failures[-1]
+        output = self.complete_output()
+        self.result.append((1, test, output, _exc_str))
+        if self.verbosity > 1:
+            sys.stderr.write('F  ')
+            sys.stderr.write(str(test))
+            sys.stderr.write('\n')
+        else:
+            sys.stderr.write('F')
+        kind = nconst.TEST_FAIL
+        # Add the test
+        self.addTestCase(kind, test, err=err)
+        # testcases.append(TestCase(test, output + _exc_str, test_type="Failure"))
 
     def addError(self, test, err):
         self.error_count += 1
@@ -581,18 +638,46 @@ class _TestResult(TestResult):
         else:
             sys.stderr.write('E')
 
-    def addFailure(self, test, err):
-        self.failure_count += 1
-        TestResult.addFailure(self, test, err)
-        _, _exc_str = self.failures[-1]
+        kind = nconst.TEST_ERROR
+        # Add the test
+        self.addTestCase(kind, test, err=err)
+        # testcases.append(TestCase(test, output + _exc_str, test_type="Error"))
+
+    ######################################################
+
+    def addUnexpectedSuccess(self, test):
+        # self.success_count += 1
+        TestResult.addUnexpectedSuccess(self, test)
         output = self.complete_output()
-        self.result.append((1, test, output, _exc_str))
+        self.result.append((3, test, output, 'UnexpectedSuccess'))
         if self.verbosity > 1:
-            sys.stderr.write('F  ')
+            sys.stderr.write('ok ')
             sys.stderr.write(str(test))
             sys.stderr.write('\n')
         else:
-            sys.stderr.write('F')
+            sys.stderr.write('U')
+
+        kind = nconst.TEST_SUCCESS
+        # Add the test
+        self.addTestCase(kind, test, err=str(test))
+        # testcases.append(TestCase(test, output , test_type="Success"))
+
+    def addExpectedFailure(self, test, err):
+        # self.failure_count += 1
+        TestResult.addExpectedFailure(self, test, err)
+        # _, _exc_str = self.failures[-1]
+        output = self.complete_output()
+        self.result.append((4, test, output, "ExpectedFailure"))
+        if self.verbosity > 1:
+            sys.stderr.write('ExpF')
+            sys.stderr.write(str(test))
+            sys.stderr.write('\n')
+        else:
+            sys.stderr.write('X')
+        kind = nconst.TEST_SUCCESS
+        # Add the test
+        self.addTestCase(kind, test, err=err)
+        # testcases.append(TestCase(test, output + _exc_str, test_type="Failure"))
 
 
 class HTMLTestRunner(Template_mixin):
@@ -601,6 +686,7 @@ class HTMLTestRunner(Template_mixin):
 
     def __init__(self, stream=sys.stdout, verbosity=1, title=None, description=None):
         self.stream = stream
+        jUnitResultOutputFolder = os.path.dirname(stream.name)
         self.verbosity = verbosity
         if title is None:
             self.title = self.DEFAULT_TITLE
@@ -612,14 +698,20 @@ class HTMLTestRunner(Template_mixin):
             self.description = description
 
         self.startTime = datetime.datetime.now()
+        self.jUnitResultOutputFolder = jUnitResultOutputFolder
 
     def run(self, test):
+        global TestSuite
         "Run the given test case or test suite."
+        print("Self.Title=" + self.title)
+        TestSuite = ncore.XSuite(self.title)
         result = _TestResult(self.verbosity)
         test(result)
         self.stopTime = datetime.datetime.now()
         self.generateReport(test, result)
-        print >> sys.stderr, '\nTime Elapsed: %s' % (self.stopTime - self.startTime)
+        duration = str(self.stopTime - self.startTime)
+        print >> sys.stderr, '\nTime Elapsed: %s' % (duration)
+        TestSuite.writeXml(self.jUnitResultOutputFolder, duration)
         return result
 
     def sortResult(self, result_list):
@@ -663,6 +755,7 @@ class HTMLTestRunner(Template_mixin):
         stylesheet = self._generate_stylesheet()
         heading = self._generate_heading(report_attrs)
         report = self._generate_report(result)
+        testlog = self._generate_testlog()
         ending = self._generate_ending()
         output = self.HTML_TMPL % dict(
                 title=saxutils.escape(self.title),
@@ -670,6 +763,7 @@ class HTMLTestRunner(Template_mixin):
                 stylesheet=stylesheet,
                 heading=heading,
                 report=report,
+                testlog=testlog,
                 ending=ending,
         )
         self.stream.write(output.encode('utf8'))
@@ -703,7 +797,7 @@ class HTMLTestRunner(Template_mixin):
                     np += 1
                 elif n == 1:
                     nf += 1
-                else:
+                elif n == 2:
                     ne += 1
 
             # format class description
@@ -726,7 +820,8 @@ class HTMLTestRunner(Template_mixin):
             rows.append(row)
 
             for tid, (n, t, o, e) in enumerate(cls_results):
-                self._generate_report_test(rows, cid, tid, n, t, o, e)
+                classStyle = ne > 0 and 'errorClass' or nf > 0 and 'failClass' or 'passClass'  # get test suite status
+                self._generate_report_test(rows, cid, tid, n, t, o, e, classStyle)
 
         report = self.REPORT_TMPL % dict(
                 test_list=''.join(rows),
@@ -737,7 +832,7 @@ class HTMLTestRunner(Template_mixin):
         )
         return report
 
-    def _generate_report_test(self, rows, cid, tid, n, t, o, e):
+    def _generate_report_test(self, rows, cid, tid, n, t, o, e, parentClassStyle):
         # e.g. 'pt1.1', 'ft1.1', etc
         has_output = bool(o or e)
         tid = (n == 0 and 'p' or 'f') + 't%s.%s' % (cid + 1, tid + 1)
@@ -745,7 +840,9 @@ class HTMLTestRunner(Template_mixin):
         doc = t.shortDescription() or ""
         desc = doc and ('%s: %s' % (name, doc)) or name
         tmpl = has_output and self.REPORT_TEST_WITH_OUTPUT_TMPL or self.REPORT_TEST_NO_OUTPUT_TMPL
-
+        # print("name=" + name)
+        # print("doc=" + doc)
+        # print("desc=" + desc)
         # o and e should be byte string because they are collected from stdout and stderr?
         if isinstance(o, str):
             # TODO: some problem with 'string_escape': it escape \n and mess up formating
@@ -760,22 +857,49 @@ class HTMLTestRunner(Template_mixin):
         else:
             ue = e
 
+        # print("ue=" + ue)
         script = self.REPORT_TEST_OUTPUT_TMPL % dict(
                 id=tid,
                 output=saxutils.escape(uo + ue),
         )
+        # print("script=" + script)
+        # print("output=" + saxutils.escape(uo+ue))
+        if parentClassStyle == 'passClass':
+            classStyle = 'hiddenRow'
+        else:
+            classStyle = 'none'
+        image = r'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'  # 1x1px transparent image
+        if '<img src="' in ue:
+            if 'AssertionError' in ue:
+                imageStartIndex = ue.rfind(r'<img src="') + 10
+                imageEndIndex = ue.rfind(r'">')
+                image = ue[imageStartIndex:imageEndIndex]
 
         row = tmpl % dict(
                 tid=tid,
-                Class=(n == 0 and 'hiddenRow' or 'none'),
+                Class=classStyle,
                 style=n == 2 and 'errorCase' or (n == 1 and 'failCase' or 'none'),
                 desc=desc,
                 script=script,
                 status=self.STATUS[n],
+                image=image,
         )
+
         rows.append(row)
         if not has_output:
             return
+
+    def _generate_testlog(self):
+        text = ""
+        try:
+            with open(ConfigurationManager.TEST_LOG, 'r') as textFile:
+                text = textFile.read()
+        except:
+            pass
+        testlog = self.TEST_LOG_TMPL % dict(
+                text=text
+        )
+        return testlog
 
     def _generate_ending(self):
         return self.ENDING_TMPL
