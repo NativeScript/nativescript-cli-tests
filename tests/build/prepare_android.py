@@ -108,7 +108,7 @@ class PrepareAndroid(unittest.TestCase):
                     "tns_modules/application/application-common.js")
             assert "require(\"globals\"); // test" in output
 
-    def test_210_prepare_android_patform_not_added(self):
+    def test_200_prepare_android_patform_not_added(self):
         Tns.create_app(app_name="TNS_App")
         output = run(TNS_PATH + " prepare android --path TNS_App")
         assert "Copying template files..." in output
@@ -116,6 +116,16 @@ class PrepareAndroid(unittest.TestCase):
         assert "Project successfully prepared" in output
         assert File.exists(
                 'TNS_App/platforms/android/src/main/assets/app/tns_modules/xml/xml.js')
+
+    def test_201_prepare_xml_error(self):
+        Tns.create_app(app_name="TNS_App")
+        File.replace("TNS_App/app/main-page.xml", "</Page>", "</Page")
+        output = run(TNS_PATH + " prepare android --path TNS_App")
+        assert "Copying template files..." in output
+        assert "Project successfully created." in output
+        assert "Project successfully prepared" in output
+        assert "main-page.xml has syntax errors." in output
+        assert "unclosed xml attribute" in output
 
     def test_300_prepare_android_remove_old_files(self):
         Tns.create_app_platform_add(
