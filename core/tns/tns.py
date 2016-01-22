@@ -55,13 +55,16 @@ class Tns(object):
             if path is not None:
                 app_name = path + app_name;
             current_dir = os.getcwd()
-            os.chdir(os.path.join(current_dir, app_name))
+            application_dir = os.path.join(current_dir, app_name).replace("\"", "")
+            os.chdir(application_dir)
             npm_out1 = run("npm uninstall tns-core-modules")
-            npm_out2 = run("npm uninstall tns-core-modules-widgets")
-            npm_out3 = run(
-                    "npm install .." + os.path.sep + SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules.tgz -save")
+            npm_out2 = run(
+                "npm install .." + os.path.sep + SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules.tgz -save")
+            tns_core_modules_dir = os.path.join(application_dir, "node_modules", "tns-core-modules")
+            os.chdir(tns_core_modules_dir)
+            npm_out3 = run("npm uninstall tns-core-modules-widgets")
             npm_out4 = run(
-                    "npm install .." + os.path.sep + SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules-widgets.tgz -save")
+                    "npm install ..\..\..\\" + os.path.sep + SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules-widgets.tgz -save")
             os.chdir(current_dir)
             output = output + npm_out1 + npm_out2 + npm_out3 + npm_out4
         return output

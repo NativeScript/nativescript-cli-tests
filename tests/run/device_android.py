@@ -74,9 +74,8 @@ class DeviceAndroid(unittest.TestCase):
     def test_002_device_log_android(self):
         device_id = Device.get_id("android")
         output = run(TNS_PATH + " device log --device " + device_id, timeout=60)
-        assert "beginning of main" in output
-        assert "beginning of system" in output
-        assert "ActivityManager" in output
+        assert ("beginning of main" in output) or ("beginning of system" in output)
+        assert ("ActivityManager" in output) or ("AndroidRuntime" in output) or ("Wifi" in output) or ("WIFI" in output)
 
     def test_200_device_log_android_two_devices(self):
         if Device.get_count(platform="android") > 1:

@@ -4,11 +4,6 @@ Tests for prepare command in context of Android
 import os
 import unittest
 
-# C0103 - Invalid %s name "%s"
-# C0111 - Missing docstring
-# R0201 - Method could be a function
-# R0904 - Too many public methods
-# pylint: disable=C0103, C0111, R0201, R0904
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -17,9 +12,7 @@ from core.tns.tns import Tns
 
 
 class PrepareAndroid(unittest.TestCase):
-
     def setUp(self):
-
         print ""
         print "#####"
         print self.id()
@@ -33,29 +26,29 @@ class PrepareAndroid(unittest.TestCase):
 
     def test_001_prepare_android(self):
         Tns.create_app_platform_add(
-            app_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
+                app_name="TNS_App",
+                platform="android",
+                framework_path=ANDROID_RUNTIME_PATH)
         output = run(TNS_PATH + " prepare android --path TNS_App")
         assert "Project successfully prepared" in output
 
         # Verify app and modules are processed and available in platform folder
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/main-view-model.js')
+                'TNS_App/platforms/android/src/main/assets/app/main-view-model.js')
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.js')
+                'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.js')
         assert not File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/tns_modules/" + \
-        "application/application.android.js')
+                'TNS_App/platforms/android/src/main/assets/app/tns_modules/" + \
+            "application/application.android.js')
         assert not File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/tns_modules/" + \
-        "application/application.ios.js')
+                'TNS_App/platforms/android/src/main/assets/app/tns_modules/" + \
+            "application/application.ios.js')
 
     def test_002_prepare_android_inside_project(self):
         Tns.create_app_platform_add(
-            app_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
+                app_name="TNS_App",
+                platform="android",
+                framework_path=ANDROID_RUNTIME_PATH)
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
         output = run(os.path.join("..", TNS_PATH) + " prepare android")
@@ -64,29 +57,29 @@ class PrepareAndroid(unittest.TestCase):
 
         # Verify app and modules are processed and available in platform folder
         assert File.exists(
-        'TNS_App/platforms/android/src/main/assets/app/main-view-model.js')
+                'TNS_App/platforms/android/src/main/assets/app/main-view-model.js')
         assert File.exists(
-        'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.js')
+                'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.js')
         assert not File.exists(
-        'TNS_App/platforms/android/src/main/assets/app/tns_modules/' + \
-        'application/application.android.js')
+                'TNS_App/platforms/android/src/main/assets/app/tns_modules/' +
+                'application/application.android.js')
         assert not File.exists(
-        'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.ios.js')
+                'TNS_App/platforms/android/src/main/assets/app/tns_modules/application/application.ios.js')
 
     def test_010_prepare_android_tns_core_modules(self):
         Tns.create_app(
-            app_name="TNS_App",
-            copy_from=SUT_ROOT_FOLDER + "/QA-TestApps/tns-modules-app/app")
+                app_name="TNS_App",
+                copy_from=SUT_ROOT_FOLDER + "/QA-TestApps/tns-modules-app/app")
         Tns.platform_add(
-            platform="android",
-            path="TNS_App",
-            framework_path=ANDROID_RUNTIME_PATH)
+                platform="android",
+                path="TNS_App",
+                framework_path=ANDROID_RUNTIME_PATH)
 
         # Make a change in tns-core-modules to verify they are not overwritten.
         File.replace(
-            "TNS_App/node_modules/tns-core-modules/application/application-common.js",
-            "(\"globals\");",
-            "(\"globals\"); // test")
+                "TNS_App/node_modules/tns-core-modules/application/application-common.js",
+                "(\"globals\");",
+                "(\"globals\"); // test")
 
         # Verify tns-core-modules are copied to the native project, not app's
         # tns_modules.
@@ -101,18 +94,18 @@ class PrepareAndroid(unittest.TestCase):
             assert "\"version\": \"1.2.1\"," in output
 
             output = run(
-                "cat TNS_App/node_modules/tns-core-modules/package.json")
+                    "cat TNS_App/node_modules/tns-core-modules/package.json")
             assert "\"version\": \"1.2.1\"," not in output
             output = run(
-                "cat TNS_App/node_modules/tns-core-modules/application/application-common.js")
+                    "cat TNS_App/node_modules/tns-core-modules/application/application-common.js")
             assert "require(\"globals\"); // test" in output
 
             output = run(
-                "cat TNS_App/platforms/android/src/main/assets/app/tns_modules/package.json")
+                    "cat TNS_App/platforms/android/src/main/assets/app/tns_modules/package.json")
             assert "\"version\": \"1.2.1\"," not in output
             output = run(
-                "cat TNS_App/platforms/android/src/main/assets/app/" + \
-                "tns_modules/application/application-common.js")
+                    "cat TNS_App/platforms/android/src/main/assets/app/" +
+                    "tns_modules/application/application-common.js")
             assert "require(\"globals\"); // test" in output
 
     def test_210_prepare_android_patform_not_added(self):
@@ -122,22 +115,22 @@ class PrepareAndroid(unittest.TestCase):
         assert "Project successfully created." in output
         assert "Project successfully prepared" in output
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/tns_modules/xml/xml.js')
+                'TNS_App/platforms/android/src/main/assets/app/tns_modules/xml/xml.js')
 
     def test_300_prepare_android_remove_old_files(self):
         Tns.create_app_platform_add(
-            app_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
+                app_name="TNS_App",
+                platform="android",
+                framework_path=ANDROID_RUNTIME_PATH)
         output = run(TNS_PATH + " prepare android --path TNS_App")
         assert "Project successfully prepared" in output
 
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/app.js')
+                'TNS_App/platforms/android/src/main/assets/app/app.js')
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/app.css')
+                'TNS_App/platforms/android/src/main/assets/app/app.css')
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/main-page.xml')
+                'TNS_App/platforms/android/src/main/assets/app/main-page.xml')
 
         run("mv TNS_App/app/app.js TNS_App/app/app-new.js")
         run("mv TNS_App/app/app.css TNS_App/app/app-new.css")
@@ -146,28 +139,28 @@ class PrepareAndroid(unittest.TestCase):
         output = run(TNS_PATH + " prepare android --path TNS_App")
         assert "Project successfully prepared" in output
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/app-new.js')
+                'TNS_App/platforms/android/src/main/assets/app/app-new.js')
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/app-new.css')
+                'TNS_App/platforms/android/src/main/assets/app/app-new.css')
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/main-page-new.xml')
+                'TNS_App/platforms/android/src/main/assets/app/main-page-new.xml')
 
         assert not File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/app.js')
+                'TNS_App/platforms/android/src/main/assets/app/app.js')
         assert not File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/app.css')
+                'TNS_App/platforms/android/src/main/assets/app/app.css')
         assert not File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/main-page.xml')
+                'TNS_App/platforms/android/src/main/assets/app/main-page.xml')
 
     def test_301_prepare_android_platform_specific_files(self):
         Tns.create_app_platform_add(
-            app_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
+                app_name="TNS_App",
+                platform="android",
+                framework_path=ANDROID_RUNTIME_PATH)
         output = run(TNS_PATH + " prepare android --path TNS_App")
         assert "Project successfully prepared" in output
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/app.css')
+                'TNS_App/platforms/android/src/main/assets/app/app.css')
 
         run("cp TNS_App/app/app.js TNS_App/app/app.ios.js")
         run("cp TNS_App/app/app.js TNS_App/app/app.android.js")
@@ -183,21 +176,21 @@ class PrepareAndroid(unittest.TestCase):
         output = run(TNS_PATH + " prepare android --path TNS_App")
         assert "Project successfully prepared" in output
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/app.css')
+                'TNS_App/platforms/android/src/main/assets/app/app.css')
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/app.js')
+                'TNS_App/platforms/android/src/main/assets/app/app.js')
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/appandroid.js')
+                'TNS_App/platforms/android/src/main/assets/app/appandroid.js')
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/appios.js')
+                'TNS_App/platforms/android/src/main/assets/app/appios.js')
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/android.js')
+                'TNS_App/platforms/android/src/main/assets/app/android.js')
         assert File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/ios.js')
+                'TNS_App/platforms/android/src/main/assets/app/ios.js')
         assert not File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/app.ios.css')
+                'TNS_App/platforms/android/src/main/assets/app/app.ios.css')
         assert not File.exists(
-            'TNS_App/platforms/android/src/main/assets/app/app.android.css')
+                'TNS_App/platforms/android/src/main/assets/app/app.android.css')
 
     def test_400_prepare_missing_platform(self):
         Tns.create_app(app_name="TNS_App")

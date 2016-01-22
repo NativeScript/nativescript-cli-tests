@@ -149,7 +149,7 @@ if __name__ == '__main__':
         Simulator.stop_simulators()  # Stop running simulators
         Xcode.cleanup_cache()  # Clean Xcode cache folders
         get_ios_runtime()  # Get iOS Runtime
-    if TEST_RUN == "FULL":
+    if TEST_RUN == "RUN":
         Tools.install_ddb()  # Install ddb (if not already available)
         Device.uninstall_app("org.nativescript.", platform="android", fail=False)
         if CURRENT_OS == OSType.OSX:

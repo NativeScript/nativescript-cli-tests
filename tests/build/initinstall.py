@@ -163,7 +163,6 @@ class InitAndInstall(unittest.TestCase):
         assert not File.exists(
                 "TNS_App/platforms/android/src/main/assets/app/tns_modules/gulp")
 
-        print "CURRENT_OS: " + CURRENT_OS
         if CURRENT_OS == OSType.OSX:
             assert File.exists("TNS_App/platforms/ios/TNSApp.xcodeproj")
             output = run(TNS_PATH + " prepare ios --path TNS_App")
