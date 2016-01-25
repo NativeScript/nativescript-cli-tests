@@ -132,6 +132,7 @@ if __name__ == '__main__':
 
     # Cleanup files and folders created by the test execution
     Folder.cleanup(OUTPUT_FOLDER)
+    Folder.create(OUTPUT_FOLDER)
     Folder.cleanup(SUT_ROOT_FOLDER)
     Folder.cleanup("node_modules")
     clean_npm()  # Clean NPM cache

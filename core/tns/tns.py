@@ -6,7 +6,8 @@ import os
 import time
 
 from core.osutils.command import run
-from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER
+from core.osutils.folder import Folder
+from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, TEST_RUN_HOME
 
 
 class Tns(object):
@@ -53,19 +54,16 @@ class Tns(object):
 
         if update_modules:
             if path is not None:
-                app_name = path + app_name;
-            current_dir = os.getcwd()
-            application_dir = os.path.join(current_dir, app_name).replace("\"", "")
-            os.chdir(application_dir)
+                app_name = path + app_name
+            Folder.navigate_to(app_name)
             npm_out1 = run("npm uninstall tns-core-modules")
-            npm_out2 = run(
-                "npm install .." + os.path.sep + SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules.tgz -save")
-            tns_core_modules_dir = os.path.join(application_dir, "node_modules", "tns-core-modules")
-            os.chdir(tns_core_modules_dir)
+            modules_path = SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules.tgz"
+            npm_out2 = run("npm install " + modules_path + " -save")
+            Folder.navigate_to(os.path.join("node_modules", "tns-core-modules"))
             npm_out3 = run("npm uninstall tns-core-modules-widgets")
-            npm_out4 = run(
-                    "npm install ..\..\..\\" + os.path.sep + SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules-widgets.tgz -save")
-            os.chdir(current_dir)
+            widgets_path = SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules-widgets.tgz"
+            npm_out4 = run("npm install " + widgets_path + " -save")
+            Folder.navigate_to(TEST_RUN_HOME, relative_from__current_folder=False)
             output = output + npm_out1 + npm_out2 + npm_out3 + npm_out4
         return output
 

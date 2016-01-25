@@ -28,8 +28,9 @@ if "Windows" in platform.platform():
 if "Darwin" in platform.platform():
     CURRENT_OS = OSType.OSX
 
-# Test emulate type
+# Test run type
 TEST_RUN = os.environ.get("TEST_RUN")
+TEST_RUN_HOME = os.getcwd()
 
 # Test packages location
 CLI_PATH = os.environ["CLI_PATH"]
@@ -43,8 +44,8 @@ else:
 
 # Local packages path
 TNS_PATH = os.path.join("node_modules", ".bin", "tns")
-SUT_ROOT_FOLDER = "sut"
-TOOLS_ROOT_FOLDER = "tools"
+SUT_ROOT_FOLDER = TEST_RUN_HOME + os.path.sep + "sut"
+TOOLS_ROOT_FOLDER = TEST_RUN_HOME + os.path.sep + "tools"
 DDB_PATH = os.path.join(TOOLS_ROOT_FOLDER, "ddb.tgz")
 ANDROID_RUNTIME_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-android.tgz")
 ANDROID_RUNTIME_SYMLINK_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-android", "package")
@@ -52,9 +53,9 @@ IOS_RUNTIME_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-ios.tgz")
 IOS_RUNTIME_SYMLINK_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-ios", "package")
 
 # Output settigns
-OUTPUT_FOLDER = "out"
-OUTPUT_FILE = "output.txt"
-COMMANDS_FILE = "commands.txt"
+OUTPUT_FOLDER = TEST_RUN_HOME + os.path.sep + "out"
+OUTPUT_FILE = os.path.join(OUTPUT_FOLDER, 'output.txt')
+TEST_LOG = os.path.join(OUTPUT_FOLDER, 'testLog.txt')
 
 # Default Simulator and Emulator
 EMULATOR_NAME = "Api19"
@@ -69,7 +70,6 @@ ANDROID_KEYSTORE_PATH = os.environ.get("ANDROID_KEYSTORE_PATH")
 ANDROID_KEYSTORE_PASS = os.environ.get("ANDROID_KEYSTORE_PASS")
 ANDROID_KEYSTORE_ALIAS = os.environ.get("ANDROID_KEYSTORE_ALIAS")
 ANDROID_KEYSTORE_ALIAS_PASS = os.environ.get("ANDROID_KEYSTORE_ALIAS_PASS")
-
 
 # Unknown
 DEBUG = 0

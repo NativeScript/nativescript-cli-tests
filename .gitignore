@@ -14,3 +14,5 @@ TestApp*
 TNS_App*
 template-hello*
 tns-*
+out/
+sut/

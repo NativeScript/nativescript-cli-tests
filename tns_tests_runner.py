@@ -63,7 +63,7 @@ def suite_smoke():
 
 def suite_build():
     suite = unittest.TestLoader().loadTestsFromTestCase(Version)
-    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))
+    # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Help))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Usage))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(ErrorReporting))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LogTrace))

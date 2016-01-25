@@ -65,6 +65,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 # URL: http://tungwaiyip.info/software/HTMLTestRunner.html
+from core.settings.settings import TEST_LOG
 
 __author__ = "Wai Yip Tung"
 __version__ = "0.8.2"
@@ -892,7 +893,7 @@ class HTMLTestRunner(Template_mixin):
     def _generate_testlog(self):
         text = ""
         try:
-            with open(ConfigurationManager.TEST_LOG, 'r') as textFile:
+            with open(TEST_LOG, 'r') as textFile:
                 text = textFile.read()
         except:
             pass

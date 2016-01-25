@@ -8,8 +8,7 @@ import time
 
 from core.osutils.file import File
 from core.osutils.process import Process
-from core.settings.settings import OUTPUT_FILE, COMMANDS_FILE, COMMAND_TIMEOUT, \
-    DEBUG
+from core.settings.settings import OUTPUT_FILE, COMMAND_TIMEOUT, DEBUG, TEST_LOG
 
 
 def run(command, timeout=None, output=True, file_name=None):
@@ -33,7 +32,7 @@ def run(command, timeout=None, output=True, file_name=None):
         # execute command
         # print "Thread started"
         if output:
-            os.system(command + ' 1> output.txt 2>&1')
+            os.system(command + ' 1> ' + OUTPUT_FILE + ' 2>&1')
         else:
             os.system(command)
 
@@ -41,7 +40,7 @@ def run(command, timeout=None, output=True, file_name=None):
     File.remove(OUTPUT_FILE)
 
     # append to commads.txt
-    File.append(COMMANDS_FILE, command)
+    File.append(TEST_LOG, command)
 
     # prepare command line
     print "##### {0} Executing command : {1}\n".format(time.strftime("%X"), command)
@@ -72,7 +71,7 @@ def run(command, timeout=None, output=True, file_name=None):
     print pipe_output
     print "##### OUTPUT END #####\n"
 
-    if file_name != None:
+    if file_name is not None:
         File.write(file_name, pipe_output)
 
     return pipe_output.strip('\r\n')

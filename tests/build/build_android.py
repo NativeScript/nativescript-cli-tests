@@ -10,7 +10,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_RUNTIME_SYMLINK_PATH, \
-    ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS, OSType
+    ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS, OSType, TEST_RUN_HOME
 from core.tns.tns import Tns
 
 
@@ -36,10 +36,14 @@ class BuildAndroid(unittest.TestCase):
 
         Folder.cleanup('./TNSAppNoPlatform')
         Folder.cleanup('./TNS_App/platforms/android/build/outputs')
+        Folder.cleanup('./TNS_App/platforms/android/build/intermediates/exploded-aar')
+        # TODO: Do not delete exploder-aar after https://github.com/NativeScript/android-runtime/issues/339 is fixed
 
     def tearDown(self):
         Folder.cleanup('./TNSAppNoPlatform')
         Folder.cleanup('./TNS_App/platforms/android/build/outputs')
+        Folder.cleanup('./TNS_App/platforms/android/build/intermediates/exploded-aar')
+        # TODO: Do not delete exploder-aar after https://github.com/NativeScript/android-runtime/issues/339 is fixed
 
     @classmethod
     def tearDownClass(cls):
@@ -97,11 +101,10 @@ class BuildAndroid(unittest.TestCase):
                 "Build modify original AndroidManifest.xml, this is a problem!"
 
     def test_200_build_android_inside_project_folder(self):
-        current_dir = os.getcwd()
-        os.chdir(os.path.join(current_dir, "TNS_App"))
+        Folder.navigate_to("TNS_App")
         output = run(os.path.join("..", TNS_PATH) +
                      " build android --path TNS_App")
-        os.chdir(current_dir)
+        Folder.navigate_to(TEST_RUN_HOME, relative_from__current_folder=False)
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output

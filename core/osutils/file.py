@@ -1,26 +1,29 @@
-'''
+"""
 Created on Dec 14, 2015
 
 @author: vchimev
-'''
-
+"""
 
 # C0111 - Missing docstring
 # pylint: disable=C0111
 
-import errno, os, time
+import errno
 import fileinput
+import os
+import time
 
-from core.settings.settings import COMMANDS_FILE
+from core.settings.settings import TEST_LOG
 
 
 class File(object):
-
     @staticmethod
     def read(file_path):
-        with open(file_path, 'r') as file_to_read:
-            output = file_to_read.read()
-        return output
+        try:
+            with open(file_path, 'r') as file_to_read:
+                output = file_to_read.read()
+            return output
+        except IOError:
+            return ""
 
     @staticmethod
     def write(file_path, text):
@@ -29,8 +32,11 @@ class File(object):
 
     @staticmethod
     def append(file_path, text):
-        with open(file_path, 'a') as file_to_append:
-            file_to_append.write(time.strftime("%X") +  ' ' + text + '\n')
+        try:
+            with open(file_path, 'a') as file_to_append:
+                file_to_append.write(time.strftime("%X") + ' ' + text + '\n')
+        except IOError:
+            pass
 
     @staticmethod
     def exists(path):
@@ -43,7 +49,7 @@ class File(object):
     def cat(path):
         command = "cat " + path
         output = os.system(command)
-        File.append(COMMANDS_FILE, command)
+        File.append(TEST_LOG, command)
         print command
         return output
 
@@ -72,19 +78,19 @@ class File(object):
 
     @staticmethod
     def replace(file_path, str1, str2):
-        '''Replace strings in file
+        """Replace strings in file
         :rtype: object
-        '''
+        """
         for line in fileinput.input(file_path, inplace=1):
             print line.replace(str1, str2)
         time.sleep(1)
         print "~~~ Replace ~~~"
-        #output = emulate("cat " + file_path)
-        #assert str2 in output
+        # output = emulate("cat " + file_path)
+        # assert str2 in output
 
     @staticmethod
     def list_of_files_exists(root_folder, files_list, ignore_file_count=True):
-        '''Check if files in list exists on file system'''
+        """Check if files in list exists on file system"""
 
         list_of_file = open('data/files/' + files_list)
         expected_lines = 0
@@ -114,7 +120,9 @@ class File(object):
 
     @staticmethod
     def string_contains_file_content(output, file_name):
-        '''Check if output string contains content of the file'''
+        """
+        Check if output string contains content of the file
+        """
 
         out_file = open('data/outputs/' + file_name)
         for line in out_file:
