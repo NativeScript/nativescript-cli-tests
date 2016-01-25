@@ -40,6 +40,8 @@ class File(object):
 
     @staticmethod
     def exists(path):
+        path = path.replace("\\", os.path.sep)
+        path = path.replace("/", os.path.sep)
         if os.path.exists(path):
             return True
         else:
