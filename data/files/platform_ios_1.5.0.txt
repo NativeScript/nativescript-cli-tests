@@ -107,6 +107,7 @@ TNSApp/build.xcconfig
 TNSApp/en.lproj
 TNSApp/en.lproj/InfoPlist.strings
 TNSApp/en.lproj/LaunchScreen.xib
+TNSApp/TNSApp-Info.plist
 TNSApp/TNSApp-Prefix.pch
 TNSApp.xcodeproj
 TNSApp.xcodeproj/project.pbxproj

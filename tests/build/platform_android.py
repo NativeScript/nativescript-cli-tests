@@ -46,7 +46,7 @@ class PlatformAndroid(unittest.TestCase):
             'TEST_RUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert File.list_of_files_exists(
                     'TNS_App/platforms/android',
-                    'platform_android_1.3.0.txt')
+                    'platform_android_current.txt')
 
     def test_003_platform_add_android_framework_path(self):
         Tns.create_app(app_name="TNS_App")
@@ -63,27 +63,7 @@ class PlatformAndroid(unittest.TestCase):
                     'TNS_App/platforms/android',
                     'platform_android_current.txt')
 
-    @unittest.skip(
-            "This test is not valid, adding symlink platform from npm cache cause issues")
-    def test_004_platform_add_android_symlink(self):
-        if CURRENT_OS == OSType.WINDOWS:
-            print "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282"
-        else:
-            Tns.create_app(app_name="TNS_App")
-            output = Tns.platform_add(
-                    platform="android",
-                    path="TNS_App",
-                    symlink=True)
-            assert "Copying template files..." in output
-            assert "Project successfully created" in output
-
-            if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']) and (
-                        "2" in os.environ['ANDROID_HOME']):
-                assert File.list_of_files_exists(
-                        'TNS_App/platforms/android',
-                        'platform_android_symlink.txt')
-
-    def test_005_platform_add_android_symlink_and_frameworkPath(self):
+    def test_004_platform_add_android_symlink_and_frameworkPath(self):
         if CURRENT_OS == OSType.WINDOWS:
             print "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282"
         else:
@@ -129,7 +109,7 @@ class PlatformAndroid(unittest.TestCase):
             'TEST_RUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert File.list_of_files_exists(
                     'TNS_App/platforms/android',
-                    'platform_android_1.3.0.txt')
+                    'platform_android_current.txt')
 
     def test_202_platform_remove_android(self):
         Tns.create_app_platform_add(

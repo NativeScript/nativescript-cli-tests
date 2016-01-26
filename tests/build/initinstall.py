@@ -8,7 +8,7 @@ import unittest
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, CURRENT_OS, OSType
+from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, SUT_ROOT_FOLDER
 
 
 class InitAndInstall(unittest.TestCase):
@@ -27,12 +27,10 @@ class InitAndInstall(unittest.TestCase):
 
     def test_001_init_defaults(self):
 
-        run("mkdir TNS_App")
-
-        current_dir = os.getcwd()
-        os.chdir(os.path.join(current_dir, "TNS_App"))
+        Folder.create("TNS_App")
+        Folder.navigate_to("TNS_App")
         output = run(os.path.join("..", TNS_PATH) + " init --force")
-        os.chdir(current_dir)
+        Folder.navigate_to(TEST_RUN_HOME, relative_from__current_folder=False)
 
         assert "Project successfully initialized" in output
         assert File.exists("TNS_App/package.json")
@@ -86,12 +84,10 @@ class InitAndInstall(unittest.TestCase):
 
     def test_005_install_node_modules(self):
         self.test_002_init_path()
-
-        current_dir = os.getcwd()
-        os.chdir(os.path.join(current_dir, "TNS_App"))
+        Folder.navigate_to("TNS_App")
         run("npm i gulp --save-dev")
         run("npm i lodash --save")
-        os.chdir(current_dir)
+        Folder.navigate_to(TEST_RUN_HOME, relative_from__current_folder=False)
         output = run("cat TNS_App/package.json")
         assert "devDependencies" in output
         assert "gulp" in output
@@ -105,8 +101,6 @@ class InitAndInstall(unittest.TestCase):
         assert File.exists("TNS_App/node_modules/lodash")
         assert File.exists("TNS_App/node_modules/gulp")
 
-        # Not valid for 1.3.0+
-        # assert File.exists("TNS_App/platforms/android/build.gradle")
         assert File.exists("TNS_App/platforms/android/build.gradle")
 
         if CURRENT_OS == OSType.OSX:
@@ -114,13 +108,11 @@ class InitAndInstall(unittest.TestCase):
 
     def test_300_install_node_modules_if_node_modules_folder_exists(self):
         self.test_002_init_path()
-
-        current_dir = os.getcwd()
-        os.chdir(os.path.join(current_dir, "TNS_App"))
+        Folder.navigate_to("TNS_App")
         run("npm i gulp --save-dev")
         run("npm i lodash --save")
+        Folder.navigate_to(TEST_RUN_HOME, relative_from__current_folder=False)
 
-        os.chdir(current_dir)
         output = run("cat TNS_App/package.json")
         assert "devDependencies" in output
         assert "gulp" in output
@@ -137,13 +129,12 @@ class InitAndInstall(unittest.TestCase):
     def test_301_install_and_prepare(self):
         self.test_002_init_path()
 
-        current_dir = os.getcwd()
-        os.chdir(os.path.join(current_dir, "TNS_App"))
+        Folder.navigate_to("TNS_App")
         run("npm i gulp --save-dev")
         run("npm i lodash --save")
 
-        os.chdir(current_dir)
-        run("cp -R template-hello-world TNS_App/app")
+        Folder.navigate_to(TEST_RUN_HOME, relative_from__current_folder=False)
+        run("cp -R " + SUT_ROOT_FOLDER + os.path.sep + "template-hello-world TNS_App" + os.path.sep + "app")
         output = run("cat TNS_App/package.json")
         assert "devDependencies" in output
         assert "gulp" in output

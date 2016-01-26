@@ -11,7 +11,7 @@ import unittest
 
 
 class Watcher(unittest.TestCase):
-    SECONDS_TO_WAIT = 180
+    SECONDS_TO_WAIT = 240
 
     @classmethod
     def start_watcher(cls, command):
