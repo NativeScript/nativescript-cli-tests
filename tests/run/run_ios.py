@@ -126,11 +126,12 @@ class RuniOS(unittest.TestCase):
         Tns.create_app(app_name="TNSAppNoPlatform")
         output = run(
                 TNS_PATH + " run ios --path TNSAppNoPlatform --justlaunch")
-
+        assert "Copying template files..." in output
+        assert "Installing tns-ios" in output
         assert "Project successfully created." in output
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device" in output
+        # Note:
+        # Do not assert that project runs because it adds latest official platform from npm,
+        # it might not work with latest CLI and modules.
 
     def test_302_run_ios_device_not_connected(self):
         output = run(TNS_PATH + " run ios --device xxxxx --path TNSAppNoPlatform  --justlaunch")

@@ -49,10 +49,8 @@ class DeployiOS(unittest.TestCase):
         Tns.create_app(app_name="TNS_App")
         output = run(TNS_PATH + " deploy ios --path TNS_App --justlaunch")
         assert "Copying template files..." in output
+        assert "Installing tns-ios" in output
         assert "Project successfully created." in output
-
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device" in output
-        # TODO: Get device id and verify files are deployed and process is
-        # running on this device
+        # Note:
+        # Do not assert that project runs because it adds latest official platform from npm,
+        # it might not work with latest CLI and modules.

@@ -85,12 +85,11 @@ class DeployAndroid(unittest.TestCase):
         Tns.create_app(app_name="TNS_AppNoPlatform")
         output = run(TNS_PATH + " deploy android --path TNS_AppNoPlatform --justlaunch")
         assert "Copying template files..." in output
+        assert "Installing tns-android" in output
         assert "Project successfully created." in output
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier" in output
-        # TODO: Get device id and verify files are deployed and process is
-        # running on this device
+        # Note:
+        # Do not assert that project runs because it adds latest official platform from npm,
+        # it might not work with latest CLI and modules.
 
     def test_401_deploy_invalid_platform(self):
         output = run(TNS_PATH + " deploy invalidPlatform --path TNS_App --justlaunch")
@@ -100,7 +99,7 @@ class DeployAndroid(unittest.TestCase):
         output = run(
                 TNS_PATH +
                 " deploy android --device invaliddevice_id --path TNS_App --justlaunch")
-        assert not "Project successfully prepared" in output
+        assert "Project successfully prepared" not in output
         assert "Cannot resolve the specified connected device" in output
         assert "To list currently connected devices" in output
         assert "'tns device'." in output

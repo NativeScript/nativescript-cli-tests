@@ -92,11 +92,12 @@ class RunAndroid(unittest.TestCase):
         Tns.create_app(app_name="TNS_App_NoPlatform")
         output = run(
                 TNS_PATH + " run android --path TNS_App_NoPlatform --justlaunch")
-
+        assert "Copying template files..." in output
+        assert "Installing tns-android" in output
         assert "Project successfully created." in output
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier" in output
+        # Note:
+        # Do not assert that project runs because it adds latest official platform from npm,
+        # it might not work with latest CLI and modules.
 
     def test_302_run_android_device_not_connected(self):
         output = run(TNS_PATH + " run android --device xxxxx --path TNS_App_NoPlatform --justlaunch")
