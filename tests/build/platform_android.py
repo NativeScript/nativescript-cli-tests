@@ -8,7 +8,8 @@ from time import sleep
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME_PATH, ANDROID_RUNTIME_SYMLINK_PATH
+from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME_PATH, ANDROID_RUNTIME_SYMLINK_PATH, \
+    TEST_RUN_HOME
 from core.tns.tns import Tns
 
 
@@ -41,7 +42,6 @@ class PlatformAndroid(unittest.TestCase):
         output = Tns.platform_add(platform="android", path="TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created" in output
-
         if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ[
             'TEST_RUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert File.list_of_files_exists(
@@ -56,7 +56,6 @@ class PlatformAndroid(unittest.TestCase):
                 path="TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created" in output
-
         if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ[
             'TEST_RUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert File.list_of_files_exists(
@@ -76,8 +75,8 @@ class PlatformAndroid(unittest.TestCase):
             assert "Copying template files..." in output
             assert "Project successfully created" in output
 
-            if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ[
-                'TEST_RUN']) and ("2" in os.environ['ANDROID_HOME']):
+            if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']) and (
+                        "2" in os.environ['ANDROID_HOME']):
                 assert File.list_of_files_exists(
                         'TNS_App/platforms/android',
                         'platform_android_symlink.txt')
@@ -97,14 +96,12 @@ class PlatformAndroid(unittest.TestCase):
 
     def test_201_platform_add_android_inside_project(self):
         Tns.create_app(app_name="TNS_App")
-        current_dir = os.getcwd()
-        os.chdir(os.path.join(current_dir, "TNS_App"))
+        Folder.navigate_to("TNS_App")
         output = run(os.path.join("..", TNS_PATH) + " platform add android")
-        os.chdir(current_dir)
+        Folder.navigate_to(TEST_RUN_HOME)
 
         assert "Copying template files..." in output
         assert "Project successfully created" in output
-
         if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ[
             'TEST_RUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert File.list_of_files_exists(
@@ -153,7 +150,6 @@ class PlatformAndroid(unittest.TestCase):
 
         output = run("cat TNS_App/package.json")
         assert "\"version\": \"1.2.0\"" in output
-
         if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ[
             'TEST_RUN']) and ("2" in os.environ['ANDROID_HOME']):
             assert File.list_of_files_exists(

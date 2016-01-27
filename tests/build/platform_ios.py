@@ -69,30 +69,7 @@ class PlatformiOS(unittest.TestCase):
                     'platform_ios_current.txt')
         Tns.build(platform="ios", path="TNS_App")
 
-    @unittest.skip(
-            "This test is not valid, adding symlink platform from npm cache cause issues")
-    def test_003_platform_add_ios_symlink(self):
-        Tns.create_app(app_name="TNS_App")
-        output = Tns.platform_add(
-                platform="ios",
-                path="TNS_App",
-                framework_path=IOS_RUNTIME_SYMLINK_PATH,
-                symlink=True)
-        assert "Copying template files..." in output
-        assert "Project successfully created" in output
-
-        if ('TEST_RUN' in os.environ) and (
-                    "SMOKE" not in os.environ['TEST_RUN']):
-            assert File.list_of_files_exists(
-                    'TNS_App/platforms/ios',
-                    'platform_ios_symlink.txt')
-
-        # Verify Runtime is symlink
-        output = run("ls -la TNS_App/platforms/ios/")
-        assert "NativeScript.framework ->" in output
-        assert "package/framework/NativeScript.framework" in output
-
-    def test_004_platform_add_ios_symlink_and_framework_path(self):
+    def test_003_platform_add_ios_symlink_and_framework_path(self):
         Tns.create_app(app_name="TNS_App")
         output = Tns.platform_add(
                 platform="ios",
@@ -140,11 +117,11 @@ class PlatformiOS(unittest.TestCase):
         output = run(TNS_PATH + " platform remove ios --path TNS_App")
         assert "Platform ios successfully removed." in output
 
-        assert not "error" in output
+        assert "error" not in output
         assert Folder.is_empty('TNS_App/platforms')
 
         output = run("cat TNS_App/package.json")
-        assert not "tns-ios" in output
+        assert "tns-ios" not in output
 
     def test_202_platform_remove_ios_symlink(self):
         Tns.create_app_platform_add(
@@ -156,11 +133,11 @@ class PlatformiOS(unittest.TestCase):
         output = run(TNS_PATH + " platform remove ios --path TNS_App")
         assert "Platform ios successfully removed." in output
 
-        assert not "error" in output
+        assert "error" not in output
         assert Folder.is_empty('TNS_App/platforms')
 
         output = run("cat TNS_App/package.json")
-        assert not "tns-ios" in output
+        assert "tns-ios" not in output
 
     def test_300_platform_add_ios_custom_version(self):
         Tns.create_app(app_name="TNS_App")
@@ -223,9 +200,8 @@ class PlatformiOS(unittest.TestCase):
         output = run("cat TNS_App/package.json")
         assert "\"version\": \"1.0.0\"" in output
 
-        command = TNS_PATH + \
-                  " platform update ios --frameworkPath {0} --path TNS_App".format(
-                          IOS_RUNTIME_PATH)
+        command = TNS_PATH + " platform update ios --frameworkPath {0} --path TNS_App".format(IOS_RUNTIME_PATH)
+
         output = run(command)
         assert "We need to override xcodeproj file. The old one will be saved at" in output
 
@@ -233,62 +209,68 @@ class PlatformiOS(unittest.TestCase):
         assert "Successfully updated to version  1.2.0" in output
         Tns.build(platform="ios", path="TNS_App")
 
-    @unittest.skip(
-            "Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
-    def test_304_platform_downgrade_ios_from_latest_version(self):
-        Tns.create_app_platform_add(
-                app_name="TNS_App",
-                platform="ios",
-                framework_path=IOS_RUNTIME_PATH)
 
-        output = run("cat TNS_App/package.json")
-        assert "\"version\": \"1." in output
+@unittest.skip(
+        "Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
+def test_304_platform_downgrade_ios_from_latest_version(self):
+    Tns.create_app_platform_add(
+            app_name="TNS_App",
+            platform="ios",
+            framework_path=IOS_RUNTIME_PATH)
 
-        command = TNS_PATH + " platform update ios@1.1.0 --path TNS_App < enter_key.txt"
-        run("echo " + command)
-        os.system(command)
+    output = run("cat TNS_App/package.json")
+    assert "\"version\": \"1." in output
 
-        output = run("cat TNS_App/package.json")
-        assert "\"version\": \"1.1.0\"" in output
-        Tns.build(platform="ios", path="TNS_App")
+    command = TNS_PATH + " platform update ios@1.1.0 --path TNS_App < enter_key.txt"
+    run("echo " + command)
+    os.system(command)
 
-    def test_310_platform_add_ios_custom_experimental_version(self):
-        Tns.create_app(app_name="TNS_App")
-        output = Tns.platform_add(platform="ios@0.9.2-exp-ios-8.2", path="TNS_App")
-        assert "Copying template files..." in output
-        assert "Project successfully created" in output
+    output = run("cat TNS_App/package.json")
+    assert "\"version\": \"1.1.0\"" in output
+    Tns.build(platform="ios", path="TNS_App")
 
-        output = run("cat TNS_App/package.json")
-        assert "\"version\": \"0.9.2-exp-ios-8.2\"" in output
 
-    def test_320_platform_add_ios_custom_bundle_id(self):
-        # Create project with different appId
-        Tns.create_app(app_name="TNS_App", app_id="org.nativescript.MyApp")
-        output = run("cat TNS_App/package.json")
-        assert "\"id\": \"org.nativescript.MyApp\"" in output
+def test_310_platform_add_ios_custom_experimental_version(self):
+    Tns.create_app(app_name="TNS_App")
+    output = Tns.platform_add(platform="ios@0.9.2-exp-ios-8.2", path="TNS_App")
+    assert "Copying template files..." in output
+    assert "Project successfully created" in output
 
-        # Add iOS platform
-        output = Tns.platform_add(
-                platform="ios",
-                path="TNS_App",
-                framework_path=IOS_RUNTIME_SYMLINK_PATH,
-                symlink=True)
-        assert "Project successfully created" in output
+    output = run("cat TNS_App/package.json")
+    assert "\"version\": \"0.9.2-exp-ios-8.2\"" in output
 
-        # Verify plist file
-        output = run("cat TNS_App/platforms/ios/TNSApp/TNSApp-Info.plist")
-        assert "org.nativescript.MyApp" in output
 
-    def test_330_platform_update_ios_patform_not_added(self):
-        Tns.create_app(app_name="TNS_App")
-        output = run(TNS_PATH + " platform update ios --path TNS_App")
-        assert "Copying template files..." in output
-        assert "Project successfully created." in output
-        assert not Folder.is_empty("TNS_App/platforms/ios/internal/metadata-generator")
+def test_320_platform_add_ios_custom_bundle_id(self):
+    # Create project with different appId
+    Tns.create_app(app_name="TNS_App", app_id="org.nativescript.MyApp")
+    output = run("cat TNS_App/package.json")
+    assert "\"id\": \"org.nativescript.MyApp\"" in output
 
-    def test_400_platform_add_existing_platform(self):
-        self.test_004_platform_add_ios_symlink_and_framework_path()
+    # Add iOS platform
+    output = Tns.platform_add(
+            platform="ios",
+            path="TNS_App",
+            framework_path=IOS_RUNTIME_SYMLINK_PATH,
+            symlink=True)
+    assert "Project successfully created" in output
 
-        output = run(TNS_PATH + " platform add ios --path TNS_App")
-        assert "Platform ios already added" in output
-        assert "Usage" in output
+    # Verify plist file in native project (after prepare)
+    Tns.prepare(path="TNS_App", platform="ios")
+    output = run("cat TNS_App/platforms/ios/TNSApp/TNSApp-Info.plist")
+    assert "org.nativescript.MyApp" in output
+
+
+def test_330_platform_update_ios_patform_not_added(self):
+    Tns.create_app(app_name="TNS_App")
+    output = run(TNS_PATH + " platform update ios --path TNS_App")
+    assert "Copying template files..." in output
+    assert "Project successfully created." in output
+    assert not Folder.is_empty("TNS_App/platforms/ios/internal/metadata-generator")
+
+
+def test_400_platform_add_existing_platform(self):
+    self.test_004_platform_add_ios_symlink_and_framework_path()
+
+    output = run(TNS_PATH + " platform add ios --path TNS_App")
+    assert "Platform ios already added" in output
+    assert "Usage" in output
