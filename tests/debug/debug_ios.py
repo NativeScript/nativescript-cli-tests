@@ -12,6 +12,7 @@ import unittest
 from core.device.device import Device
 from core.device.simulator import Simulator
 from core.osutils.command import run
+from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
 from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, TNS_PATH
@@ -24,19 +25,16 @@ class DebugiOS(unittest.TestCase):
     def setUpClass(cls):
         Folder.cleanup('./TNS_App')
         Tns.create_app_platform_add(
-            app_name="TNS_App", \
-            platform="ios", \
+            app_name="TNS_App",
+            platform="ios",
             framework_path=IOS_RUNTIME_SYMLINK_PATH)
 
     def setUp(self):
-
-        print ""
-
         Device.ensure_available(platform="ios")
         Simulator.stop_simulators()
         Process.kill("Safari")
         Process.kill("Inspector")
-        #Device.uninstall_app(app_prefix="org.nativescript.", platform="ios", fail=False)
+        # Device.uninstall_app(app_prefix="org.nativescript.", platform="ios", fail=False)
 
     def tearDown(self):
         Simulator.stop_simulators()
@@ -48,47 +46,41 @@ class DebugiOS(unittest.TestCase):
         Folder.cleanup('./TNS_App')
 
     def test_001_debug_ios_simulator_debugbrk(self):
-
-        output = run(TNS_PATH + \
-                        " debug ios --debug-brk --emulator --path TNS_App --frameworkPath " + \
-                        IOS_RUNTIME_SYMLINK_PATH + " --timeout 180", 200, True)
-
+        File.cat("TNS_APP/package.json")
+        output = run(TNS_PATH + " debug ios --debug-brk --emulator --path TNS_App --frameworkPath " +
+                     IOS_RUNTIME_SYMLINK_PATH + " --timeout 180", 200, True)
         assert "Project successfully prepared" in output
         assert "** BUILD SUCCEEDED **" in output
         assert "Starting iOS Simulator" in output
         assert "Frontend client connected" in output
         assert "Session started without errors" in output
         assert "Backend socket created" in output
-        assert not "closed" in output
-        assert not "detached" in output
-        assert not "disconnected" in output
+        assert "closed" not in output
+        assert "detached" not in output
+        assert "disconnected" not in output
 
     def test_002_debug_ios_simulator_start(self):
-
+        File.cat("TNS_APP/package.json")
         output = run(TNS_PATH + " emulate ios --path TNS_App --justlaunch")
         assert "** BUILD SUCCEEDED **" in output
         assert "Starting iOS Simulator" in output
         assert "Session started without errors" in output
         sleep(10)
 
-        output = run(TNS_PATH + \
-            " debug ios --start --emulator --path TNS_App --frameworkPath " + \
-            IOS_RUNTIME_SYMLINK_PATH + " --timeout 120", 2 * 60, True)
-
+        output = run(TNS_PATH + " debug ios --start --emulator --path TNS_App --frameworkPath " +
+                     IOS_RUNTIME_SYMLINK_PATH + " --timeout 120", 2 * 60, True)
         assert "Frontend client connected" in output
         assert "Backend socket created" in output
-        assert not "Backend socket closed" in output
-        assert not "Frontend socket closed" in output
-        assert not "closed" in output
-        assert not "detached" in output
-        assert not "disconnected" in output
+        assert "Backend socket closed" not in output
+        assert "Frontend socket closed" not in output
+        assert "closed" not in output
+        assert "detached" not in output
+        assert "disconnected" not in output
 
     def test_003_debug_ios_device_debugbrk(self):
-
-        output = run(TNS_PATH + \
-            " debug ios --debug-brk --path TNS_App --frameworkPath " + \
-            IOS_RUNTIME_SYMLINK_PATH + " --timeout 120", 2 * 60 + 30, True)
-
+        File.cat("TNS_APP/package.json")
+        output = run(TNS_PATH + " debug ios --debug-brk --path TNS_App --frameworkPath " +
+                     IOS_RUNTIME_SYMLINK_PATH + " --timeout 120", 2 * 60 + 30, True)
         assert "Project successfully prepared" in output
         assert "** BUILD SUCCEEDED **" in output
         assert "Successfully deployed on device " in output
@@ -98,21 +90,20 @@ class DebugiOS(unittest.TestCase):
         assert "Frontend client connected" in output
         assert "Backend socket created" in output
         assert "NativeScript debugger attached" in output
-        assert not "detached" in output
-        assert not "disconnected" in output
+        assert "detached" not in output
+        assert "disconnected" not in output
 
     def test_004_debug_ios_device_start(self):
-
+        File.cat("TNS_APP/package.json")
         output = run(TNS_PATH + " emulate ios --path TNS_App --justlaunch")
         assert "** BUILD SUCCEEDED **" in output
         assert "Successfully deployed on device " in output
         sleep(10)
-        output = run(TNS_PATH + \
-            " debug ios --start --path TNS_App --frameworkPath " + \
-            IOS_RUNTIME_SYMLINK_PATH + " --timeout 120", 2 * 60, True)
 
+        output = run(TNS_PATH + " debug ios --start --path TNS_App --frameworkPath " +
+                     IOS_RUNTIME_SYMLINK_PATH + " --timeout 120", 2 * 60, True)
         assert "Frontend client connected" in output
         assert "Backend socket created" in output
-        assert not "closed" in output
-        assert not "detached" in output
-        assert not "disconnected" in output
+        assert "closed" not in output
+        assert "detached" not in output
+        assert "disconnected" not in output
