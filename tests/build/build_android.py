@@ -1,7 +1,6 @@
 """
 Tests for building projects with the Android platform
 """
-
 import os
 import unittest
 
@@ -9,8 +8,8 @@ from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, \
-    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_RUNTIME_SYMLINK_PATH, \
-    ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS, OSType, TEST_RUN_HOME
+    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS, \
+    OSType, ANDROID_RUNTIME_SYMLINK_PATH, TEST_RUN_HOME
 from core.tns.tns import Tns
 
 
@@ -230,9 +229,8 @@ class BuildAndroid(unittest.TestCase):
 
     def test_310_build_android_with_sdk22(self):
 
-        output = run(
-                TNS_PATH +
-                " build android --compileSdk 22 --path TNS_App")
+        output = run(TNS_PATH +
+                     " build android --compileSdk 22 --path TNS_App")
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
@@ -269,7 +267,6 @@ class BuildAndroid(unittest.TestCase):
         output = run(
                 TNS_PATH +
                 " build android --compileSdk 99 --path TNS_App")
-        assert "Project successfully prepared" in output
         assert "You have specified '99' for compile sdk," \
                " but it is not installed on your system." in output
 
