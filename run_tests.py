@@ -25,16 +25,12 @@ TEST_RESULT = ""
 
 
 def clone_git_repo(repo_url, local_folder):
-    output = run('git clone ' + repo_url + ' ' + local_folder)
+    branch = 'master'
+    if 'release' in TNS_MODULES_PATH.lower():
+        branch = 'release'
+    output = run('git clone -b ' + branch + ' ' + repo_url + ' ' + local_folder)
     assert not ("fatal" in output), \
         "Failed to clone {0}".format(repo_url)
-
-
-def clean_npm():
-    if CURRENT_OS == OSType.WINDOWS:
-        run("npm cache clean", COMMAND_TIMEOUT)
-    else:
-        run("rm -rf ~/.npm/tns/*", COMMAND_TIMEOUT)
 
 
 def clean_npm():
