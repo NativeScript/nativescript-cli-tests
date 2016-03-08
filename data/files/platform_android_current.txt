@@ -13,7 +13,8 @@ src
 src/main
 src/main/assets
 src/main/assets/internal
-src/main/assets/internal/prepareExtend.js
+src/main/assets/internal/livesync.js
+src/main/assets/internal/ts_helpers.js
 src/main/AndroidManifest.xml
 src/main/res
 src/main/res/values

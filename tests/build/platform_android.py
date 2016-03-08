@@ -42,8 +42,7 @@ class PlatformAndroid(unittest.TestCase):
         output = Tns.platform_add(platform="android", path="TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created" in output
-        if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ[
-            'TEST_RUN']) and ("2" in os.environ['ANDROID_HOME']):
+        if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
             assert File.list_of_files_exists(
                     'TNS_App/platforms/android',
                     'platform_android_current.txt')
@@ -56,8 +55,7 @@ class PlatformAndroid(unittest.TestCase):
                 path="TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created" in output
-        if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ[
-            'TEST_RUN']) and ("2" in os.environ['ANDROID_HOME']):
+        if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
             assert File.list_of_files_exists(
                     'TNS_App/platforms/android',
                     'platform_android_current.txt')
@@ -75,8 +73,7 @@ class PlatformAndroid(unittest.TestCase):
             assert "Copying template files..." in output
             assert "Project successfully created" in output
 
-            if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']) and (
-                        "2" in os.environ['ANDROID_HOME']):
+            if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
                 assert File.list_of_files_exists(
                         'TNS_App/platforms/android',
                         'platform_android_symlink.txt')
@@ -102,8 +99,7 @@ class PlatformAndroid(unittest.TestCase):
 
         assert "Copying template files..." in output
         assert "Project successfully created" in output
-        if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ[
-            'TEST_RUN']) and ("2" in os.environ['ANDROID_HOME']):
+        if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
             assert File.list_of_files_exists(
                     'TNS_App/platforms/android',
                     'platform_android_current.txt')
@@ -130,8 +126,7 @@ class PlatformAndroid(unittest.TestCase):
         output = run("cat TNS_App/package.json")
         assert "\"version\": \"1.3.0\"" in output
 
-        if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ[
-            'TEST_RUN']) and ("2" in os.environ['ANDROID_HOME']):
+        if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
             assert File.list_of_files_exists(
                     'TNS_App/platforms/android',
                     'platform_android_1.3.0.txt')
@@ -150,8 +145,7 @@ class PlatformAndroid(unittest.TestCase):
 
         output = run("cat TNS_App/package.json")
         assert "\"version\": \"1.2.0\"" in output
-        if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ[
-            'TEST_RUN']) and ("2" in os.environ['ANDROID_HOME']):
+        if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
             assert File.list_of_files_exists(
                     'TNS_App/platforms/android',
                     'platform_android_1.2.0.txt')
