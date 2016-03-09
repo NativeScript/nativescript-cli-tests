@@ -43,6 +43,7 @@ from tests.run.run_android import RunAndroid
 from tests.run.run_ios import RuniOS
 from tests.transpilers.typescript import TypeScript
 from tests.unittests.unittests import UnitTests
+from tests.unittests.unittests_emulator import UnitTestsEmulator
 
 
 def suite_smoke():
@@ -99,6 +100,7 @@ def suite_plugins():
 def suite_emulate():
     suite = unittest.TestSuite()
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTestsEmulator))
     if CURRENT_OS == OSType.OSX:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateiOS))
     return suite
