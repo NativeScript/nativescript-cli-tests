@@ -1,17 +1,22 @@
 import unittest
 
 from core.device.emulator import Emulator
+from core.device.simulator import Simulator
 from core.osutils.command import run
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH
+from core.settings.settings import TNS_PATH, SIMULATOR_NAME
 from core.tns.tns import Tns
 
 
-class UnitTestsEmulator(unittest.TestCase):
+class UnitTestsSimulator(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        Emulator.ensure_available()
+        Emulator.stop_emulators()
+        Simulator.stop_simulators()
+        Simulator.delete(SIMULATOR_NAME)
+        Simulator.create(SIMULATOR_NAME, 'iPhone 6s', '9.0')
+        Simulator.start(SIMULATOR_NAME)
 
     def setUp(self):
 
@@ -28,13 +33,13 @@ class UnitTestsEmulator(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        Emulator.stop_emulators()
+        Simulator.stop_simulators()
 
-    def test_010_test_mocha_android_emulator(self):
+    def test_010_test_jasmine_ios_simulator(self):
         Tns.create_app(app_name="TNS_App")
-        run(TNS_PATH + " test init --framework mocha --path TNS_App")
+        run(TNS_PATH + " test init --framework jasmine --justlaunch --path TNS_App")
 
-        output = run(TNS_PATH + " test android --device emulator-5554 --justlaunch --path TNS_App")
+        output = run(TNS_PATH + " test ios --emulator --path TNS_App")
         assert "Successfully prepared plugin nativescript-unit-test-runner for android." in output
         assert "Project successfully prepared" in output
         assert "server started" in output
@@ -42,4 +47,4 @@ class UnitTestsEmulator(unittest.TestCase):
 
         assert "Connected on socket" in output
         assert "Executed 1 of 1 SUCCESS" in output
-        assert "server disconnect" in output
+        # assert "server disconnect" in output

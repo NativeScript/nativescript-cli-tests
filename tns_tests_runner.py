@@ -44,6 +44,7 @@ from tests.run.run_ios import RuniOS
 from tests.transpilers.typescript import TypeScript
 from tests.unittests.unittests import UnitTests
 from tests.unittests.unittests_emulator import UnitTestsEmulator
+from tests.unittests.unittests_simulator import UnitTestsSimulator
 
 
 def suite_smoke():
@@ -103,6 +104,7 @@ def suite_emulate():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTestsEmulator))
     if CURRENT_OS == OSType.OSX:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateiOS))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTestsSimulator))
     return suite
 
 
