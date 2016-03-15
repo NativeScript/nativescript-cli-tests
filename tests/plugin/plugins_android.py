@@ -119,9 +119,9 @@ class PluginsAndroid(unittest.TestCase):
         assert File.exists(
             "TNS_App/node_modules/nativescript-telerik-ui/package.json")
         assert File.exists(
-            "TNS_App/node_modules/nativescript-telerik-ui/platforms/Android")
+            "TNS_App/node_modules/nativescript-telerik-ui/platforms/android")
         assert File.exists(
-            "TNS_App/node_modules/nativescript-telerik-ui/platforms/iOS")
+            "TNS_App/node_modules/nativescript-telerik-ui/platforms/ios")
         output = run("cat TNS_App/package.json")
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
@@ -146,9 +146,9 @@ class PluginsAndroid(unittest.TestCase):
         assert File.exists(
             "TNS_App/node_modules/nativescript-telerik-ui/package.json")
         assert File.exists(
-            "TNS_App/node_modules/nativescript-telerik-ui/platforms/Android")
+            "TNS_App/node_modules/nativescript-telerik-ui/platforms/android")
         assert File.exists(
-            "TNS_App/node_modules/nativescript-telerik-ui/platforms/iOS")
+            "TNS_App/node_modules/nativescript-telerik-ui/platforms/ios")
         output = run("cat TNS_App/package.json")
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
