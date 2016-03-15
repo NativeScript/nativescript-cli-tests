@@ -40,7 +40,7 @@ class UnitTestsSimulator(unittest.TestCase):
         run(TNS_PATH + " test init --framework jasmine --justlaunch --path TNS_App")
 
         output = run(TNS_PATH + " test ios --emulator --path TNS_App")
-        assert "Successfully prepared plugin nativescript-unit-test-runner for android." in output
+        assert "Successfully prepared plugin nativescript-unit-test-runner for ios." in output
         assert "Project successfully prepared" in output
         assert "server started" in output
         assert "Starting browser NativeScript Unit Test Runner" in output
