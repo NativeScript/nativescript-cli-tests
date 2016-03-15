@@ -101,9 +101,15 @@ def suite_plugins():
 def suite_emulate():
     suite = unittest.TestSuite()
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateAndroid))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTestsEmulator))
     if CURRENT_OS == OSType.OSX:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(EmulateiOS))
+    return suite
+
+
+def suite_unittest():
+    suite = unittest.TestSuite()
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTestsEmulator))
+    if CURRENT_OS == OSType.OSX:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTestsSimulator))
     return suite
 
