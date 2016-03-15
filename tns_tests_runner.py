@@ -157,6 +157,8 @@ def run_tests():
         suite = suite_plugins()
     elif 'EMULATE' in os.environ['TEST_RUN']:
         suite = suite_emulate()
+    elif 'UNITTEST' in os.environ['TEST_RUN']:
+        suite = suite_unittest()
     elif 'RUN' in os.environ['TEST_RUN']:
         suite = suite_run()
     elif 'LIVESYNC' in os.environ['TEST_RUN']:
