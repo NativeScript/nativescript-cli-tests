@@ -45,6 +45,7 @@ from tests.transpilers.typescript import TypeScript
 from tests.unittests.unittests import UnitTests
 from tests.unittests.unittests_emulator import UnitTestsEmulator
 from tests.unittests.unittests_simulator import UnitTestsSimulator
+from tests.verbose.verbose_log_emulator import VerboseLogEmulator
 
 
 def suite_smoke():
@@ -108,6 +109,7 @@ def suite_emulate():
 
 def suite_unittest():
     suite = unittest.TestSuite()
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(VerboseLogEmulator))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTestsEmulator))
     if CURRENT_OS == OSType.OSX:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTestsSimulator))

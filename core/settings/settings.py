@@ -56,6 +56,7 @@ IOS_RUNTIME_SYMLINK_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-ios", "package")
 OUTPUT_FOLDER = TEST_RUN_HOME + os.path.sep + "out"
 OUTPUT_FILE = os.path.join(OUTPUT_FOLDER, 'output.txt')
 TEST_LOG = os.path.join(OUTPUT_FOLDER, 'testLog.txt')
+VERBOSE_LOG = os.path.join(OUTPUT_FOLDER, 'verboseLog.txt')
 
 # Default Simulator and Emulator
 EMULATOR_NAME = "Api19"
