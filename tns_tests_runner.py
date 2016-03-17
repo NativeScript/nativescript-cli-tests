@@ -145,7 +145,7 @@ def suite_debug():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugAndroid))
     if CURRENT_OS == OSType.OSX:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugSimulator))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
+        # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
     return suite
 
 
