@@ -15,6 +15,7 @@ from tests.build.prepare_android import PrepareAndroid
 from tests.build.prepare_ios import PrepareiOS
 from tests.debug.debug_android import DebugAndroid
 from tests.debug.debug_ios import DebugiOS
+from tests.debug.debug_simulator import DebugSimulator
 from tests.emulate.emulate_android import EmulateAndroid
 from tests.emulate.emulate_ios import EmulateiOS
 from tests.livesync.livesync_android import LiveSyncAndroid
@@ -143,6 +144,7 @@ def suite_debug():
     suite = unittest.TestSuite()
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugAndroid))
     if CURRENT_OS == OSType.OSX:
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugSimulator))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
     return suite
 
