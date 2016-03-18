@@ -1,6 +1,7 @@
 import time
 import unittest
 
+from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.command import run
 from core.osutils.file import File
@@ -14,6 +15,7 @@ class DebugSimulator(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        Emulator.stop_emulators()
         Folder.cleanup('./TNS_App')
         Tns.create_app_platform_add(
             app_name="TNS_App",
@@ -56,7 +58,7 @@ class DebugSimulator(unittest.TestCase):
         output = run(TNS_PATH + " emulate ios --path TNS_App --justlaunch")
         assert "Project successfully built" in output
         assert "Starting iOS Simulator" in output
-        time.sleep(10)
+        time.sleep(5)
 
         output = run(TNS_PATH + " debug ios --start --emulator --path TNS_App --frameworkPath " +
                      IOS_RUNTIME_SYMLINK_PATH + " --timeout 120", 120)
