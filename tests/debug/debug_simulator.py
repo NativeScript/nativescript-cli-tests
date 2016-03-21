@@ -39,7 +39,7 @@ class DebugSimulator(unittest.TestCase):
     def test_001_debug_ios_simulator_debug_brk(self):
         File.cat("TNS_App/package.json")
         output = run(TNS_PATH + " debug ios --debug-brk --emulator --path TNS_App --frameworkPath " +
-                     IOS_RUNTIME_SYMLINK_PATH + " --timeout 180", 200)
+                     IOS_RUNTIME_SYMLINK_PATH + " --timeout 200", 200)
 
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
