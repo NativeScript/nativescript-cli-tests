@@ -28,7 +28,7 @@ class Device(object):
         lines = output.splitlines()
         for line in lines:
             lline = line.lower()
-            if (platform in lline) and (not "emulator" in lline):
+            if (platform in lline) and (not "emulator" in lline) and (not "status" in lline):
                 device_id = lline.split(
                         (platform), 1)[1].replace(" ", "")  # deviceId = @030b206908e6c3c5@
                 device_id = device_id[3:-3]  # devideId = 030b206908e6c3c5
