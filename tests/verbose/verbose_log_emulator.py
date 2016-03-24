@@ -29,7 +29,7 @@ class VerboseLogEmulator(unittest.TestCase):
     def test_101_verbose_log_android(self):
         Tns.create_app(app_name="TNS_App", copy_from="data/apps/verbose-hello-world")
         Tns.platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, path="TNS_App")
-        output = run(TNS_PATH + " run android --emulator --path TNS_App", 180, output=True, file_name=VERBOSE_LOG)
+        output = run(TNS_PATH + " run android --emulator --justlaunch --path TNS_App", 180, output=True, file_name=VERBOSE_LOG)
         assert "Project successfully built" in output
 
         lines = output.split('\n')
