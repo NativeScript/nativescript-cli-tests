@@ -37,9 +37,9 @@ class UnitTestsSimulator(unittest.TestCase):
 
     def test_010_test_jasmine_ios_simulator(self):
         Tns.create_app(app_name="TNS_App")
-        run(TNS_PATH + " test init --framework jasmine --justlaunch --path TNS_App")
+        run(TNS_PATH + " test init --framework jasmine --path TNS_App")
 
-        output = run(TNS_PATH + " test ios --emulator --path TNS_App")
+        output = run(TNS_PATH + " test ios --emulator --justlaunch --path TNS_App", 60)
         assert "Successfully prepared plugin nativescript-unit-test-runner for ios." in output
         assert "Project successfully prepared" in output
         assert "server started" in output
