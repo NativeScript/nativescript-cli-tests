@@ -12,6 +12,7 @@ from core.tns.tns import Tns
 
 
 class PrepareiOS(unittest.TestCase):
+
     @classmethod
     def setUpClass(cls):
         if CURRENT_OS != OSType.OSX:
@@ -28,7 +29,7 @@ class PrepareiOS(unittest.TestCase):
         Folder.cleanup('./TNS_App')
 
     def tearDown(self):
-        pass
+        Folder.cleanup('./TNS_App')
 
     def test_001_prepare_ios(self):
         Tns.create_app_platform_add(app_name="TNS_App", platform="ios",
@@ -47,38 +48,19 @@ class PrepareiOS(unittest.TestCase):
         assert not File.exists(
                 'TNS_App/platforms/ios/TNSApp/app/tns_modules/application/application.ios.js')
 
-    def test_010_prepare_ios_tns_core_modules(self):
-        Tns.create_app(app_name="TNS_App", copy_from="data/projects/helloworld-1.2.1/app")
-        Tns.platform_add(platform="ios", path="TNS_App",
-                         framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
+    def test_010_prepare_android_ng_project(self):
+        output = run(TNS_PATH + " create TNS_App --ng")
+        assert "successfully created" in output
+        Tns.platform_add(
+            platform="ios",
+            path="TNS_App",
+            framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
+        Tns.prepare(platform="ios", path="TNS_App")
 
-        # Make a change in tns-core-modules to verify they are not overwritten.
-        File.replace("TNS_App/node_modules/tns-core-modules/application/application-common.js",
-                     "(\"globals\");",
-                     "(\"globals\"); // test")
-
-        # Verify tns-core-modules are copied to the native project, not app's tns_modules.
-        for i in range(1, 3):
-            print "prepare number: " + str(i)
-
-            output = run(TNS_PATH + " prepare ios --path TNS_App")
-            assert "You have tns_modules dir in your app folder" in output
-            assert "Project successfully prepared" in output
-
-            output = run("cat TNS_App/app/tns_modules/package.json")
-            assert "\"version\": \"1.2.1\"," in output
-
-            output = run("cat TNS_App/node_modules/tns-core-modules/package.json")
-            assert "\"version\": \"1.2.1\"," not in output
-            output = run("cat TNS_App/node_modules/" +
-                         "tns-core-modules/application/application-common.js")
-            assert "require(\"globals\"); // test" in output
-
-            output = run("cat TNS_App/platforms/ios/TNSApp/app/tns_modules/package.json")
-            assert "\"version\": \"1.2.1\"," not in output
-            output = run("cat TNS_App/platforms/ios/" +
-                         "TNSApp/app/tns_modules/application/application-common.js")
-            assert "require(\"globals\"); // test" in output
+        assert Folder.exists(
+            'TNS_App/platforms/ios/TNSApp/app/tns_modules/angular2')
+        assert Folder.exists(
+            'TNS_App/platforms/ios/TNSApp/app/tns_modules/nativescript-angular')
 
     def test_200_prepare_additional_appresources(self):
         Tns.create_app_platform_add(app_name="TNS_App", platform="ios",
@@ -118,6 +100,39 @@ class PrepareiOS(unittest.TestCase):
                 'TNS_App/platforms/ios/TNSApp/app/main-view-model.js')
         assert File.exists(
                 'TNS_App/platforms/ios/TNSApp/app/tns_modules/application/application.js')
+
+    def test_210_prepare_ios_tns_core_modules(self):
+        Tns.create_app(app_name="TNS_App", copy_from="data/projects/helloworld-1.2.1/app")
+        Tns.platform_add(platform="ios", path="TNS_App",
+                         framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
+
+        # Make a change in tns-core-modules to verify they are not overwritten.
+        File.replace("TNS_App/node_modules/tns-core-modules/application/application-common.js",
+                     "(\"globals\");",
+                     "(\"globals\"); // test")
+
+        # Verify tns-core-modules are copied to the native project, not app's tns_modules.
+        for i in range(1, 3):
+            print "prepare number: " + str(i)
+
+            output = run(TNS_PATH + " prepare ios --path TNS_App")
+            assert "You have tns_modules dir in your app folder" in output
+            assert "Project successfully prepared" in output
+
+            output = run("cat TNS_App/app/tns_modules/package.json")
+            assert "\"version\": \"1.2.1\"," in output
+
+            output = run("cat TNS_App/node_modules/tns-core-modules/package.json")
+            assert "\"version\": \"1.2.1\"," not in output
+            output = run("cat TNS_App/node_modules/" +
+                         "tns-core-modules/application/application-common.js")
+            assert "require(\"globals\"); // test" in output
+
+            output = run("cat TNS_App/platforms/ios/TNSApp/app/tns_modules/package.json")
+            assert "\"version\": \"1.2.1\"," not in output
+            output = run("cat TNS_App/platforms/ios/" +
+                         "TNSApp/app/tns_modules/application/application-common.js")
+            assert "require(\"globals\"); // test" in output
 
     def test_300_prepare_ios_preserve_case(self):
         Tns.create_app_platform_add(app_name="TNS_App", platform="ios",
