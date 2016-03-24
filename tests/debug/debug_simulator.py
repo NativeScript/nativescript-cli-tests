@@ -61,7 +61,7 @@ class DebugSimulator(unittest.TestCase):
         time.sleep(5)
 
         output = run(TNS_PATH + " debug ios --start --emulator --path TNS_App --frameworkPath " +
-                     IOS_RUNTIME_SYMLINK_PATH + " --timeout 120", 120)
+                     IOS_RUNTIME_SYMLINK_PATH + " --timeout 150", 150)
 
         assert "Frontend client connected" in output
         assert "Backend socket created" in output
