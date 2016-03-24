@@ -64,7 +64,7 @@ class DebugSimulator(unittest.TestCase):
                      IOS_RUNTIME_SYMLINK_PATH + " --timeout 150", 150)
 
         assert "Frontend client connected" in output
-        assert "Backend socket created" in output
+        # assert "Backend socket created" in output
 
         assert "closed" not in output
         assert "detached" not in output
