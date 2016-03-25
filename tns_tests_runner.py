@@ -6,8 +6,11 @@ from core.runner import HTMLTestRunner
 from core.settings.settings import CURRENT_OS, OSType
 from core.tns.tns import Tns
 from tests.build.build_android import BuildAndroid
+from tests.build.build_android_ng import BuildAndroidNG
 from tests.build.build_ios import BuildiOS
+from tests.build.build_ios_ng import BuildiOSNG
 from tests.build.create import Create
+from tests.build.create_ng import CreateNG
 from tests.build.initinstall import InitAndInstall
 from tests.build.platform_android import PlatformAndroid
 from tests.build.platform_ios import PlatformiOS
@@ -75,6 +78,7 @@ def suite_build():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Output_STRERR))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Doctor))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(Create))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(CreateNG))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PlatformAndroid))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(PrepareAndroid))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildAndroid))
@@ -150,6 +154,14 @@ def suite_debug():
     return suite
 
 
+def suite_angular():
+    suite = unittest.TestSuite()
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildAndroidNG))
+    if CURRENT_OS == OSType.OSX:
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(BuildiOSNG))
+    return suite
+
+
 def run_tests():
     print "Platform : " + platform.platform()
 
@@ -170,6 +182,8 @@ def run_tests():
         suite = suite_livesync()
     elif 'DEBUG' in os.environ['TEST_RUN']:
         suite = suite_debug()
+    elif 'ANGULAR' in os.environ['TEST_RUN']:
+        suite = suite_angular()
 
     with open("Report.html", "w") as report:
         descr = "Platform : {0}; NativeScript CLI build version : {1}; Test Suite : {2}".format(

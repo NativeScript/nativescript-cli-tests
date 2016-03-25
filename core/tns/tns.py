@@ -36,11 +36,12 @@ class Tns(object):
         if app_id is not None:
             command += " --appid " + app_id
 
-        # By default --copy-from template-hello-world
-        if copy_from is not None:
-            command += " --copy-from " + copy_from
-        else:
-            command += " --copy-from " + SUT_ROOT_FOLDER + os.path.sep + "template-hello-world"
+        if template is None:
+            # By default --copy-from template-hello-world
+            if copy_from is not None:
+                command += " --copy-from " + copy_from
+            else:
+                command += " --copy-from " + SUT_ROOT_FOLDER + os.path.sep + "template-hello-world"
 
         if template is not None:
             command += " --template " + template
