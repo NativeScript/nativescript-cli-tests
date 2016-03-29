@@ -3,6 +3,7 @@ import unittest
 from nose_parameterized import parameterized
 
 from core.osutils.command import run
+from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH
 from core.tns.tns import Tns
@@ -41,6 +42,7 @@ class CreateNG(unittest.TestCase):
         output = run(TNS_PATH + " create TNS_App --ng")
         assert "successfully created" in output
         self.assert_angular_project()
+        assert not File.exists("TNS_App/app/LICENSE")
 
     @parameterized.expand([
         "tns-template-hello-world-ng",
