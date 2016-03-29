@@ -32,6 +32,7 @@ class VerboseLogEmulator(unittest.TestCase):
         output = run(TNS_PATH + " run android --emulator --justlaunch --path TNS_App", 180, output=True, file_name=VERBOSE_LOG)
         assert "Project successfully built" in output
 
+        File.cat("TNS_App/app/app.js")
         lines = output.split('\n')
         count = len(lines)
 
