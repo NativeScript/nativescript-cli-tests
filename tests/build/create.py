@@ -115,7 +115,9 @@ class Create(unittest.TestCase):
         assert "\"id\": \"org.nativescript.tnsapp\"" in output
 
     def test_007_create_project_named_123(self):
-        Tns.create_app(app_name="123")
+        output = run(TNS_PATH + " create 123 --force")
+        assert "Project 123 was successfully created" in output
+
         output = run("cat 123/package.json")
         assert "\"id\": \"org.nativescript.the123\"" in output
 
