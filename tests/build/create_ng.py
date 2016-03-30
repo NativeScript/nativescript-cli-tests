@@ -25,7 +25,6 @@ class CreateNG(unittest.TestCase):
 
     def assert_angular_project(self):
         output = run("cat TNS_App/package.json")
-        assert "angular2" in output
         assert "nativescript-angular" in output
         assert "tns-core-modules" in output
         assert "nativescript-dev-typescript" in output
