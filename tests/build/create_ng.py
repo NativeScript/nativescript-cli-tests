@@ -29,7 +29,6 @@ class CreateNG(unittest.TestCase):
         assert "tns-core-modules" in output
         assert "nativescript-dev-typescript" in output
 
-        assert Folder.exists("TNS_App/node_modules/angular2")
         assert Folder.exists("TNS_App/node_modules/nativescript-angular")
         assert Folder.exists("TNS_App/node_modules/nativescript-dev-typescript")
         assert Folder.exists("TNS_App/node_modules/tns-core-modules")
