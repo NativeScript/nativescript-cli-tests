@@ -123,7 +123,7 @@ class Create(unittest.TestCase):
 
     def test_008_create_project_named_app(self):
         output = run(TNS_PATH + " create app --force")
-        assert "You cannot build applications named 'app' in Xcode." in output
+        assert "Project app was successfully created" in output
 
         output = run("cat app/package.json")
         assert "\"id\": \"org.nativescript.app\"" in output
