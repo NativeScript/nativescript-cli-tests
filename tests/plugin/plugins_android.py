@@ -47,7 +47,7 @@ class PluginsAndroid(unittest.TestCase):
         assert "tns-plugin" in output
 
     def test_002_plugin_add_after_platform_add_android(self):
-        Tns.create_app_platform_add(app_name="TNS_App", platform="android", \
+        Tns.create_app_platform_add(app_name="TNS_App", platform="android",
                                     framework_path=ANDROID_RUNTIME_PATH)
         output = run(TNS_PATH + " plugin add tns-plugin --path TNS_App")
         if CURRENT_OS != OSType.WINDOWS:
@@ -100,8 +100,8 @@ class PluginsAndroid(unittest.TestCase):
 
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
-        assert not "ERROR" in output
-        assert not "FAILURE" in output
+        assert "ERROR" not in output
+        assert "FAILURE" not in output
 
         assert File.exists(
             "TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
@@ -173,12 +173,16 @@ class PluginsAndroid(unittest.TestCase):
 
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
-        assert not "ERROR" in output
-        assert not "FAILURE" in output
+        assert "ERROR" not in output
+        assert "FAILURE" not in output
         assert File.exists(
             "TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
         assert File.exists(
             "TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
+
+        # Verify plugin commmand list used plugins
+        output = run(TNS_PATH + " plugin --path TNS_App")
+        assert "tns-plugin" in output
 
     @unittest.skip("This test breaks the xml parser.")
     def test_400_plugin_add_not_existing_plugin(self):

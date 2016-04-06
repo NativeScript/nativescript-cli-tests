@@ -121,12 +121,18 @@ class Create(unittest.TestCase):
         output = run("cat 123/package.json")
         assert "\"id\": \"org.nativescript.the123\"" in output
 
+        output = run(TNS_PATH + " create 123")
+        assert "The project name does not start with letter and will fail to build for Android." in output
+
     def test_008_create_project_named_app(self):
         output = run(TNS_PATH + " create app --force")
         assert "Project app was successfully created" in output
 
         output = run("cat app/package.json")
         assert "\"id\": \"org.nativescript.app\"" in output
+
+        output = run(TNS_PATH + " create app")
+        assert "You cannot build applications named 'app' in Xcode." in output
 
     @parameterized.expand([
         "tns-template-hello-world",

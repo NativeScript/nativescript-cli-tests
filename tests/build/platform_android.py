@@ -250,6 +250,12 @@ class PlatformAndroid(unittest.TestCase):
         assert "android:minSdkVersion=\"17\"" in output
         assert "android:targetSdkVersion=\"19\"" in output
 
+    def test_300_platform_add_android_tagname(self):
+        Tns.create_app(app_name="TNS_App")
+        output = Tns.platform_add(platform="android@next", path="TNS_App")
+        assert "Copying template files..." in output
+        assert "Project successfully created" in output
+
     def test_221_set_sdk_not_installed(self):
         Tns.create_app(app_name="TNS_App")
         output = Tns.platform_add(
