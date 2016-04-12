@@ -1,84 +1,53 @@
-nativesript-cli-tests
-=====================
-
+#nativesript-cli-tests
 The NativeScript CLI integration tests
 
-Software Prerequisites
-==
+##Software Prerequisites
 Install [Python](https://www.python.org/downloads/) 2.7.*
 
 Install dependencies
 ```
 pip install psutil 
 pip install nose-parameterized
+pip install pytest-timeout
 ```
 iOS Only: Install ideviceinstaller
 ```
 brew install ideviceinstaller
 ```
 
-Environment setup:
-==
-Following environment variables should be set:
-
-    - TEST_RUN - Type of test run (set FULL to run all tests)
- 
-    - CLI_PATH - Path to CLI package under test (package file should be named nativescript.tgz)
-    
-    - ANDROID_PATH - Path to Android runtime package under test (package file should be named tns-android.tgz)   
-    
-    - ANDROIDKEYSTOREPATH - Specifies the file path to the keystore file which you want to use to code sign your APK  
-    
-    - ANDROIDKEYSTOREPASSWORD - Password for the keystore file
-    
-    - ANDROIDKEYSTOREALIAS
-    
-    - ANDROIDKEYSTOREALIASPASSWORD
-    
-    - KEYCHAIN - Keychain for signing iOS Apps
-    
-    - KEYCHAIN_PASS - Keychain password
-
-TEST_RUN=FULL suggests test are executed in specific test environment.
-For that, following should be available: 
-
-    - Android emulator with API17 (AVD Name = Api17)
-    
-    - Android emulator with API19 (AVD Name = Api19)
-    
-    - At least one real Android device must be attached to Linux hosts
-    
-    - At least one real iOS device and one real Android device must be attached to OSX hosts
-    
-
-Run Tests
-===
-
-```Shell
-python run_tests.py
-```
-===
-
+##Requirements
 Android Requirements:
 - Valid pair of keystore and password
 
 iOS Requirements:
 - Valid pair of certificate and provisioning profile on your OS X system
 
+##Environment setup
 Following environment variables should be set:
-- CLI_PATH - Path to CLI package under test (package file should be named nativescript.tgz)
 
-- ANDROID_PATH - Path to Android runtime package (should be named tns-android.tgz)
-- ANDROID_KEYSTORE_PATH - Path to the keystore file
-- ANDROID_KEYSTORE_PASS - Password for the keystore file
-- ANDROID_KEYSTORE_ALIAS
-- ANDROID_KEYSTORE_ALIAS_PASS
+    - ACTIVE_UI - YES if machine has active UI, NO if you are runnign without UI (with NO you can run only SMOKE and DEFAULT suites)
 
-- IOS_PATH - Path to iOS runtime package (should be named tns-ios.tgz)
+    - TEST_RUN - Type of test run (set FULL to run all tests, see )
+ 
+    - CLI_PATH - Path to CLI package under test (package file should be named nativescript.tgz)
+    
+    - ANDROID_PATH - Path to Android runtime package under test (package file should be named tns-android.tgz)   
+    
+    - IOS_PATH - Path to iOS runtime package (should be named tns-ios.tgz)
+    
+    - ANDROID_KEYSTORE_PATH - Path to the keystore file
+    
+    - ANDROID_KEYSTORE_PASS - Password for the keystore file
+    
+    - ANDROID_KEYSTORE_ALIAS
+    
+    - ANDROID_KEYSTORE_ALIAS_PASS
+    
+    - KEYCHAIN - Keychain for signing iOS Apps
+    
+    - KEYCHAIN_PASS - Keychain password
 
-- ACTIVE_UI - YES or NO
-
-- TEST_RUN - types:
+##Test Run Types
 SMOKE
 - Runs tests with High priority.
 DEFAULT
@@ -93,8 +62,19 @@ FULL
 LIVESYNC
 - Runs all LiveSync tests
 
-Test name convention:
+##Run Tests
+
+```Shell
+python run_tests.py
+```
+
+##Write Tests
+
+###Test name convention:
 001 - 199 - High priority
+
 200 - 299 - Medium priority
+
 300 - 399 - Low priority
+
 400 - 499 - Negative tests
