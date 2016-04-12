@@ -20,12 +20,9 @@ class Doctor(unittest.TestCase):
     def tearDown(self):
         pass
 
+    # Ignore this check on Windows and Linux because of
+    # https://github.com/NativeScript/nativescript-cli/issues/615
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Not on OSX")
     def test_001_doctor(self):
         output = run(TNS_PATH + " doctor")
-
-        # Ignore this check on Windows and Linux because of
-        # https://github.com/NativeScript/nativescript-cli/issues/615
-        if CURRENT_OS == OSType.OSX:
-            assert "No issues were detected." in output
-        else:
-            pass
+        assert "No issues were detected." in output
