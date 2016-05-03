@@ -65,6 +65,7 @@ class PluginsiOSSandboxPods(unittest.TestCase):
         output = Tns.prepare(platform="ios", path="TNS_App", assert_success=False)
         assert "Successfully prepared " + \
                "plugin nativescript-ios-fail-with-sandbox-plugin for ios." in output
-
-        assert "sh: ../I_MADE_THIS_FILE.txt: Operation not permitted" in output
+        
+        # Comment this assert as CLI does not print CocoaPods output anymore
+        # assert "sh: ../I_MADE_THIS_FILE.txt: Operation not permitted" in output
         assert not File.exists("TNS_App/platforms/I_MADE_THIS_FILE.txt")
