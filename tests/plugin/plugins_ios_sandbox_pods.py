@@ -66,6 +66,5 @@ class PluginsiOSSandboxPods(unittest.TestCase):
         assert "Successfully prepared " + \
                "plugin nativescript-ios-fail-with-sandbox-plugin for ios." in output
         
-        # Comment this assert as CLI does not print CocoaPods output anymore
-        # assert "sh: ../I_MADE_THIS_FILE.txt: Operation not permitted" in output
+        assert "sh: ../I_MADE_THIS_FILE.txt: Operation not permitted" in output
         assert not File.exists("TNS_App/platforms/I_MADE_THIS_FILE.txt")
