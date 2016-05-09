@@ -77,7 +77,7 @@ class PrepareAndroid(unittest.TestCase):
         Tns.prepare(platform="android", path="TNS_App")
 
         assert Folder.exists(
-            'TNS_App/platforms/android/src/main/assets/app/tns_modules/angular2')
+            'TNS_App/platforms/android/src/main/assets/app/tns_modules/@angular')
         assert Folder.exists(
             'TNS_App/platforms/android/src/main/assets/app/tns_modules/nativescript-angular')
 

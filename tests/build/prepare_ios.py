@@ -58,7 +58,7 @@ class PrepareiOS(unittest.TestCase):
         Tns.prepare(platform="ios", path="TNS_App")
 
         assert Folder.exists(
-            'TNS_App/platforms/ios/TNSApp/app/tns_modules/angular2')
+            'TNS_App/platforms/ios/TNSApp/app/tns_modules/@angular')
         assert Folder.exists(
             'TNS_App/platforms/ios/TNSApp/app/tns_modules/nativescript-angular')
 
