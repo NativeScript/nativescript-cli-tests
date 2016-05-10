@@ -212,19 +212,16 @@ class BuildAndroid(unittest.TestCase):
                     "cat TNS\\ App/platforms/android/src/main/AndroidManifest.xml")
             assert "org.nativescript.TNSApp" in output
 
-    @unittest.skipIf(CURRENT_OS != OSType.WINDOWS, "Skip on Windows, because tar is not available")
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows, because tar is not available")
     def test_303_build_project_with_gz_file(self):
         run("tar -czf TNS_App/app/app.tar.gz TNS_App/app/app.js")
         assert File.exists("TNS_App/app/app.tar.gz")
-
         output = run(TNS_PATH + " build android --path TNS_App")
-
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
 
     def test_310_build_android_with_sdk22(self):
-
         output = run(TNS_PATH +
                      " build android --compileSdk 22 --path TNS_App")
         assert "Project successfully prepared" in output
@@ -324,6 +321,7 @@ class BuildAndroid(unittest.TestCase):
                 TNS_PATH +
                 " build android --invalidOption --path TNS_App")
         assert "The option 'invalidOption' is not supported" in output
+
     @unittest.skipIf(CURRENT_OS == OSType.OSX)
     def test_405_build_ios_on_linux_machine(self):
         output = run(TNS_PATH + " build ios --path TNS_App")
