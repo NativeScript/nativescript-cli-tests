@@ -78,26 +78,24 @@ class BuildAndroid(unittest.TestCase):
         assert "Project successfully built" in output
         assert File.exists("TNS_App/platforms/android/build/outputs/apk/TNSApp-release.apk")
 
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282")
     def test_100_build_android_symlink(self):
-        if CURRENT_OS == OSType.WINDOWS:
-            print "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282"
-        else:
-            Tns.create_app(app_name="TNS_AppSymlink")
-            output = Tns.platform_add(platform="android", path="TNS_AppSymlink",
-                                      framework_path=ANDROID_RUNTIME_SYMLINK_PATH, symlink=True)
-            assert "Project successfully created" in output
-            output = run(TNS_PATH + " build android --path TNS_AppSymlink")
-            assert "Project successfully prepared" in output
-            assert "BUILD SUCCESSFUL" in output
-            assert "Project successfully built" in output
+        Tns.create_app(app_name="TNS_AppSymlink")
+        output = Tns.platform_add(platform="android", path="TNS_AppSymlink",
+                                  framework_path=ANDROID_RUNTIME_SYMLINK_PATH, symlink=True)
+        assert "Project successfully created" in output
+        output = run(TNS_PATH + " build android --path TNS_AppSymlink")
+        assert "Project successfully prepared" in output
+        assert "BUILD SUCCESSFUL" in output
+        assert "Project successfully built" in output
 
-            # Verify build does not modify original manifest
-            output = run("cat " + ANDROID_RUNTIME_SYMLINK_PATH +
-                         "/framework/src/main/AndroidManifest.xml")
-            assert "__PACKAGE__" in output, \
-                "Build modify original AndroidManifest.xml, this is a problem!"
-            assert "__APILEVEL__" in output, \
-                "Build modify original AndroidManifest.xml, this is a problem!"
+        # Verify build does not modify original manifest
+        output = run("cat " + ANDROID_RUNTIME_SYMLINK_PATH +
+                     "/framework/src/main/AndroidManifest.xml")
+        assert "__PACKAGE__" in output, \
+            "Build modify original AndroidManifest.xml, this is a problem!"
+        assert "__APILEVEL__" in output, \
+            "Build modify original AndroidManifest.xml, this is a problem!"
 
     def test_200_build_android_inside_project_folder(self):
         Folder.navigate_to("TNS_App")
@@ -214,21 +212,16 @@ class BuildAndroid(unittest.TestCase):
                     "cat TNS\\ App/platforms/android/src/main/AndroidManifest.xml")
             assert "org.nativescript.TNSApp" in output
 
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows, because tar is not available")
     def test_303_build_project_with_gz_file(self):
-        # TODO: Find better way to skip tests on different OS
-        # Skip on Windows, because tar is not available
-        if CURRENT_OS != OSType.WINDOWS:
-            run("tar -czf TNS_App/app/app.tar.gz TNS_App/app/app.js")
-            assert File.exists("TNS_App/app/app.tar.gz")
-
+        run("tar -czf TNS_App/app/app.tar.gz TNS_App/app/app.js")
+        assert File.exists("TNS_App/app/app.tar.gz")
         output = run(TNS_PATH + " build android --path TNS_App")
-
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
 
     def test_310_build_android_with_sdk22(self):
-
         output = run(TNS_PATH +
                      " build android --compileSdk 22 --path TNS_App")
         assert "Project successfully prepared" in output
@@ -329,12 +322,10 @@ class BuildAndroid(unittest.TestCase):
                 " build android --invalidOption --path TNS_App")
         assert "The option 'invalidOption' is not supported" in output
 
+    @unittest.skipIf(CURRENT_OS == OSType.OSX)
     def test_405_build_ios_on_linux_machine(self):
         output = run(TNS_PATH + " build ios --path TNS_App")
-        if CURRENT_OS == OSType.OSX:
-            pass
-        else:
-            assert "Applications for platform ios can not be built on this OS" in output
+        assert "Applications for platform ios can not be built on this OS" in output
 
     def test_406_build_release_without_key_options(self):
         output = run(TNS_PATH + " build android --release --path TNS_App")
