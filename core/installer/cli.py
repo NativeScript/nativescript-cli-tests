@@ -13,7 +13,8 @@ class Cli(object):
     def install():
         output = run("npm i " + SUT_ROOT_FOLDER + os.path.sep + "nativescript.tgz")
         message = "NativeScript CLI installation failed - \"{e}\" found in output."
-        assert "ERR" not in output, message.format(e="ERR")
+        if "npm ERR! registry error parsing json" not in output:
+            assert "ERR" not in output, message.format(e="ERR")
         assert "FiberFuture" not in output, message.format(e="FiberFuture")
         assert "dev-post-install" not in output, message.format(e="dev-post-install")
         assert File.exists("node_modules/.bin/tns"), \
