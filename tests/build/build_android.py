@@ -322,7 +322,7 @@ class BuildAndroid(unittest.TestCase):
                 " build android --invalidOption --path TNS_App")
         assert "The option 'invalidOption' is not supported" in output
 
-    @unittest.skipIf(CURRENT_OS == OSType.OSX,"Skip on OSX")
+    @unittest.skipIf(CURRENT_OS == OSType.OSX, "Skip on OSX")
     def test_405_build_ios_on_linux_machine(self):
         output = run(TNS_PATH + " build ios --path TNS_App")
         assert "Applications for platform ios can not be built on this OS" in output
