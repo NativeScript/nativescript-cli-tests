@@ -51,7 +51,8 @@ class PluginsiOSLibs(unittest.TestCase):
                 path="TNS_App",
                 symlink=True)
         output = Tns.build(platform="ios", path="TNS_App")
-        assert "The iOS Deployment Target is now 8.0" not in output
+        # It targets 8.0 since a dynamic framework was added to the widgets.
+        assert "The iOS Deployment Target is now 8.0" in output
         assert File.exists(
                 "TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
         assert File.exists(
@@ -84,7 +85,8 @@ class PluginsiOSLibs(unittest.TestCase):
         assert "static-lib/hello-plugin" in output
 
         output = Tns.build(platform="ios", path="TNS_App")
-        assert "The iOS Deployment Target is now 8.0" not in output
+        # It targets 8.0 since a dynamic framework was added to the widgets.
+        assert "The iOS Deployment Target is now 8.0" in output
         assert File.exists(
                 "TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
         assert File.exists(
