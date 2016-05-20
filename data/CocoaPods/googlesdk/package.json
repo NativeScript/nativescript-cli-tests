@@ -1,0 +1,10 @@
+{ 
+  "name" : "googlesdk",
+  "version": "0.0.1",
+  "main" : "googlesdk.js",
+  "nativescript": {
+    "platforms": {
+      "ios": "1.0.0"
+    }
+  }
+}

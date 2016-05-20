@@ -1,0 +1,11 @@
+{
+  "name": "invalidpod",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "nativescript": {
+    "platforms": {
+      "ios": "1.0.0"
+    }
+  }
+}

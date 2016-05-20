@@ -1,0 +1,32 @@
+{
+  "name": "nativescript-ios-working-with-sandbox-plugin",
+  "version": "1.0.0",
+  "description": "Plugin used for testing sandbox-pod and pod support in nativescript-cli",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rosen-vladimirov/nativescript-ios-working-with-sandbox-plugin.git"
+  },
+  "keywords": [
+    "nativescript",
+    "podfile",
+    "ios",
+    "tns",
+    "sandbox-pod",
+    "pod"
+  ],
+  "author": "Rosen Vladimirov",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/rosen-vladimirov/nativescript-ios-working-with-sandbox-plugin/issues"
+  },
+  "homepage": "https://github.com/rosen-vladimirov/nativescript-ios-working-with-sandbox-plugin#readme",
+  "nativescript": {
+    "platforms": {
+      "ios": "1.3.0"
+    }
+  }
+}

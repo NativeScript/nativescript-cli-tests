@@ -1,0 +1,41 @@
+{
+  "name": "hello",
+  "version": "0.0.10",
+  "main": "hello-plugin.js",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "Apache-2.0",
+  "nativescript": {
+    "platforms": {
+      "ios": "1.0.0",
+      "android": "1.0.0"
+    }
+  },
+  "dependencies": {},
+  "gitHead": "7689b4b7208cb534f31ce3c158b8858dad5ea89a",
+  "description": "Hi!",
+  "bugs": {},
+  "homepage": "",
+  "_id": "",
+  "scripts": {},
+  "_shasum": "",
+  "_from": "",
+  "_npmVersion": "2.11.3",
+  "_nodeVersion": "0.12.7",
+  "_npmUser": {
+    "name": "e2l3n",
+    "email": "tpopov@telerik.com"
+  },
+  "dist": {},
+  "maintainers": [
+    {
+      "name": "e2l3n",
+      "email": "tpopov@telerik.com"
+    }
+  ],
+  "directories": {},
+  "_resolved": "",
+  "readme": ""
+}

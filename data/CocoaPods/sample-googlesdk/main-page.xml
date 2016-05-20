@@ -1,0 +1,9 @@
+<!-- main-page.xml -->
+<Page xmlns="http://www.nativescript.org/tns.xsd" loaded="pageLoaded">
+  <GridLayout rows="auto, auto, auto, *">
+    <Label row="0" text="Tap the button" cssClass="title"/>
+    <Button row="1" text="TAP" tap="{{ tapAction }}" />
+    <Label row="2" text="{{ message }}" cssClass="message" textWrap="true"/>
+    <Placeholder row="3" creatingView="createMapView" />
+  </GridLayout>
+</Page>s

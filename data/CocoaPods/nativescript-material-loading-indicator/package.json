@@ -1,0 +1,50 @@
+{
+  "name": "nativescript-material-loading-indicator",
+  "version": "1.0.0",
+  "description": "This package installs an activity indicator for iOS inspired by the material design indicator of Android",
+  "main": "index.js",
+  "nativescript": {
+    "platforms": {
+      "ios": "1.0.0"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikolay-diyanov/nativescript-material-loading-indicator.git"
+  },
+  "author": {
+    "name": "Nikolay Diyanov"
+  },
+  "license": {
+    "type": "MIT",
+    "url": "https://github.com/nikolay-diyanov/nativescript-material-loading-indicator/blob/master/LICENSE"
+  },
+  "gitHead": "5bbaa5ad1d21421d94d629830ab7296dc230c8cd",
+  "bugs": {
+    "url": "https://github.com/nikolay-diyanov/nativescript-material-loading-indicator/issues"
+  },
+  "homepage": "https://github.com/nikolay-diyanov/nativescript-material-loading-indicator#readme",
+  "_id": "nativescript-material-loading-indicator@1.0.0",
+  "scripts": {},
+  "_shasum": "10b4048fd845eb15d2d6f504a3bf4e98b47c3659",
+  "_from": "nativescript-material-loading-indicator@*",
+  "_npmVersion": "2.11.3",
+  "_nodeVersion": "0.12.7",
+  "_npmUser": {
+    "name": "nikolay-diyanov",
+    "email": "nikolay.diyanov@gmail.com"
+  },
+  "dist": {
+    "shasum": "10b4048fd845eb15d2d6f504a3bf4e98b47c3659",
+    "tarball": "http://registry.npmjs.org/nativescript-material-loading-indicator/-/nativescript-material-loading-indicator-1.0.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "nikolay-diyanov",
+      "email": "nikolay.diyanov@gmail.com"
+    }
+  ],
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/nativescript-material-loading-indicator/-/nativescript-material-loading-indicator-1.0.0.tgz",
+  "readme": "ERROR: No README data found!"
+}

@@ -1,0 +1,5 @@
+module XcconfigPlugin {
+  umbrella header "XcconfigPlugin.h"
+  export *
+  module * { export * }
+}

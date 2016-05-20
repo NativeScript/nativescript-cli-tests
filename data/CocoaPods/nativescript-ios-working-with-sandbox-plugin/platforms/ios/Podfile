@@ -1,0 +1,1 @@
+post_install do |installer_representation| `name=\`ls | grep .xcodeproj | cut -d . -f 1\`; echo content >  ./$name/app/I_MADE_THIS_FILE.txt` end
