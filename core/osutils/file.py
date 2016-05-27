@@ -9,6 +9,7 @@ Created on Dec 14, 2015
 
 import errno
 import fileinput
+import fnmatch
 import os
 import time
 
@@ -46,6 +47,17 @@ class File(object):
             return True
         else:
             return False
+
+    @staticmethod
+    def pattern_exists(directory, pattern):
+        found = False
+        for root, dirs, files in os.walk(directory):
+            for basename in files:
+                if fnmatch.fnmatch(basename, pattern):
+                    filename = os.path.join(root, basename)
+                    print pattern + " exists: " + filename
+                    found = True
+        return found
 
     @staticmethod
     def cat(path):

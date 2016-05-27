@@ -65,6 +65,9 @@ class BuildiOS(unittest.TestCase):
         assert "Project successfully built" in output
         assert File.exists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
 
+        assert not File.pattern_exists("TNS_App/platforms/ios", "*.aar")
+        assert not File.pattern_exists("TNS_App/platforms/ios/TNSApp/app/tns_modules", "*.framework")
+
     def test_002_build_ios_release_fordevice(self):
         Tns.create_app_platform_add(
                 app_name="TNS_App",

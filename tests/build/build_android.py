@@ -3,6 +3,7 @@ Tests for building projects with the Android platform
 """
 import os
 import unittest
+from zipfile import ZipFile
 
 from core.osutils.command import run
 from core.osutils.file import File
@@ -65,6 +66,13 @@ class BuildAndroid(unittest.TestCase):
 
         assert File.exists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
+        assert File.pattern_exists("TNS_App/platforms/android", "*.aar")
+        assert not File.pattern_exists("TNS_App/platforms/android", "*.plist")
+
+        archive = ZipFile("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+        archive.extractall("TNS_App/temp")
+        assert not File.pattern_exists("TNS_App/temp", "*.aar")
+
     def test_002_build_android_release(self):
         output = run(TNS_PATH + " build android --keyStorePath " + ANDROID_KEYSTORE_PATH +
                      " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
@@ -78,7 +86,8 @@ class BuildAndroid(unittest.TestCase):
         assert "Project successfully built" in output
         assert File.exists("TNS_App/platforms/android/build/outputs/apk/TNSApp-release.apk")
 
-    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282")
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS,
+                     "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282")
     def test_100_build_android_symlink(self):
         Tns.create_app(app_name="TNS_AppSymlink")
         output = Tns.platform_add(platform="android", path="TNS_AppSymlink",
