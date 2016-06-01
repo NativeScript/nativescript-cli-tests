@@ -39,7 +39,7 @@ class BuildAndroidNG(unittest.TestCase):
         Tns.build(platform="android", path="TNS_App")
         assert File.exists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
-    def test_210_build_android_ng_project(self):
+    def test_210_build_android_ng_project_release(self):
         output = run(TNS_PATH + " build android --keyStorePath " + ANDROID_KEYSTORE_PATH +
                      " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
                      " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS +
