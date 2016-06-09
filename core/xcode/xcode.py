@@ -11,9 +11,11 @@ class Xcode(object):
     def cleanup_cache():
         """Cleanup Xcode cache and derived data"""
         run("rm -rf ~/Library/Developer/Xcode/DerivedData/", COMMAND_TIMEOUT)
-        run("sudo find /var/folders/ -type d -name 'com.apple.DeveloperTools' | " +
-            "xargs -n 1 -I dir sudo find dir -name \* -type f -delete")
-        run("sudo find /var/folders/ -type d -name 'Xcode'")
+
+        # Try to build without deleting /var/folders
+        # run("sudo find /var/folders/ -type d -name 'com.apple.DeveloperTools' | " +
+        #    "xargs -n 1 -I dir sudo find dir -name \* -type f -delete")
+        # run("sudo find /var/folders/ -type d -name 'Xcode'")
 
         # output = run_aut("sudo find /var/folders/ -type d -name 'Xcode'")
         # assert "Xcode" not in output, "Failed to cleanup Xcode cache"
