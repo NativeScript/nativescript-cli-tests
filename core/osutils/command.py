@@ -37,7 +37,12 @@ def run(command, timeout=None, output=True, file_name=None):
             os.system(command)
 
     # remove output.txt
-    File.remove(OUTPUT_FILE)
+    try:
+        File.remove(OUTPUT_FILE)
+    except OSError as err:
+        print "Failed to delete " + OUTPUT_FILE
+        time.sleep(1)
+        File.remove(OUTPUT_FILE)
 
     # append to commads.txt
     File.append(TEST_LOG, command)
