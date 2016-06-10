@@ -3,6 +3,7 @@ Tests for prepare command in context of iOS
 """
 
 import unittest
+import re
 
 from core.osutils.command import run
 from core.osutils.file import File
@@ -47,6 +48,16 @@ class PrepareiOS(unittest.TestCase):
                 'TNS_App/platforms/ios/TNSApp/app/tns_modules/application/application.android.js')
         assert not File.exists(
                 'TNS_App/platforms/ios/TNSApp/app/tns_modules/application/application.ios.js')
+
+        # Verify Xcode Schemes
+        output = run("xcodebuild -project TNS_App/platforms/ios/TNSApp.xcodeproj/ -list")
+        assert "This project contains no schemes." not in output
+
+        result = re.search("Targets:\n\s*TNSApp", output)
+        assert result is not None
+
+        result = re.search("Schemes:\n\s*TNSApp", output)
+        assert result is not None
 
     def test_010_prepare_android_ng_project(self):
         output = run(TNS_PATH + " create TNS_App --ng")
