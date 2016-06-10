@@ -41,17 +41,16 @@ class EmulateiOS(unittest.TestCase):
     def test_001_emulate_list_devices(self):
         output = run("xcodebuild -version")
         if "6." in output:
-            output = run(TNS_PATH + \
+            output = run(TNS_PATH +
                          " emulate ios --availableDevices --path TNS_App --justlaunch")
             assert "iPhone-6" in output
         else:
-            output = run(TNS_PATH + \
+            output = run(TNS_PATH +
                          " emulate ios --availableDevices --path TNS_App --justlaunch")
             assert "iPhone 6 81" in output
 
     def test_002_emulate_ios(self):
-        output = run(
-                TNS_PATH +
+        output = run(TNS_PATH +
                 " emulate ios --device 'iPhone 6 81' --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -62,8 +61,7 @@ class EmulateiOS(unittest.TestCase):
             assert Process.is_running("Simulator")
 
     def test_003_emulate_ios_release(self):
-        output = run(
-                TNS_PATH +
+        output = run(TNS_PATH +
                 " emulate ios --device 'iPhone 6 81' --path TNS_App --release --justlaunch")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
@@ -76,8 +74,7 @@ class EmulateiOS(unittest.TestCase):
 
     def test_210_emulate_ios_patform_not_added(self):
         Tns.create_app(app_name="TNS_AppNoPlatform")
-        output = run(
-                TNS_PATH +
+        output = run(TNS_PATH +
                 " emulate ios --device 'iPhone 6 81' --path TNS_AppNoPlatform --justlaunch")
         assert "Copying template files..." in output
         assert "Project successfully created." in output
@@ -90,9 +87,6 @@ class EmulateiOS(unittest.TestCase):
             assert Process.is_running("Simulator")
 
     def test_400_emulate_invalid_device(self):
-        output = run(
-                TNS_PATH +
+        output = run(TNS_PATH +
                 " emulate ios --device invalidDevice --path TNS_App --justlaunch")
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Unable to find device invalidDevice" in output
+        assert "Cannot find device with name: invalidDevice." in output

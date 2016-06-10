@@ -101,7 +101,6 @@ class PluginsiOSPods(unittest.TestCase):
         output = Tns.prepare(platform="ios", path="TNS_App", log_trace=True)
         assert "The iOS Deployment Target is now 8.0" in output
         assert "Successfully prepared plugin googlesdk for ios." in output
-        assert "Creating project scheme..." in output
         assert "Installing pods..." in output
 
         output = run("cat TNS_App/platforms/ios/Podfile")
@@ -149,7 +148,6 @@ class PluginsiOSPods(unittest.TestCase):
         output = Tns.build(platform="ios", path="TNS_App")
         assert "The iOS Deployment Target is now 8.0" in output
         assert "Successfully prepared plugin googlesdk for ios." in output
-        assert "Creating project scheme..." in output
         assert "Installing pods..." in output
 
         output = run("cat TNS_App/platforms/ios/Podfile")
