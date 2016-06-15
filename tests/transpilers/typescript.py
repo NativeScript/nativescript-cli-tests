@@ -4,8 +4,8 @@ import unittest
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, IOS_RUNTIME_SYMLINK_PATH, CURRENT_OS, OSType, \
-    SUT_ROOT_FOLDER, TEST_RUN_HOME
+from core.settings.settings import ANDROID_RUNTIME_PATH, CURRENT_OS, IOS_RUNTIME_SYMLINK_PATH, OSType, \
+    TEST_RUN_HOME, TNS_PATH
 from core.tns.tns import Tns
 
 
@@ -28,18 +28,13 @@ class TypeScript(unittest.TestCase):
     def tearDownClass(cls):
         Folder.cleanup('TNS_App')
 
-    unittest.skip("")
     def test_001_transpilation_typescript(self):
-        Tns.create_app(app_name="TNS_App", copy_from=SUT_ROOT_FOLDER + os.path.sep + "template-hello-world-ts")
-        Tns.platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, path="TNS_App")
-
-        assert File.extension_exists(
-                "TNS_App/node_modules/tns-core-modules", ".d.ts")
-
-        output = run(TNS_PATH + " install typescript --path TNS_App")
+        output = run(TNS_PATH + " create TNS_App --tsc")
         assert "nativescript-dev-typescript@" in output
         assert "nativescript-hook@" in output
 
+        assert File.extension_exists(
+            "TNS_App/node_modules/tns-core-modules", ".d.ts")
         assert File.exists("TNS_App/tsconfig.json")
         assert File.exists("TNS_App/node_modules/typescript/bin/tsc")
         assert not Folder.is_empty("TNS_App/node_modules/nativescript-dev-typescript")
@@ -50,46 +45,106 @@ class TypeScript(unittest.TestCase):
         assert "devDependencies" in output
         assert "nativescript-dev-typescript" in output
 
+        Tns.platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, path="TNS_App")
+        if CURRENT_OS == OSType.OSX:
+            Tns.platform_add(
+                platform="ios",
+                framework_path=IOS_RUNTIME_SYMLINK_PATH,
+                path="TNS_App",
+                symlink=True)
+
+    def test_101_transpilation_typescript_prepare_debug(self):
+
+        # prepare in debug => .ts should go to the platforms folder
         output = Tns.prepare(path="TNS_App", platform="android")
         assert "Executing before-prepare hook" in output
         assert "Found peer TypeScript" in output
         assert "error" not in output
 
         assert File.extension_exists("TNS_App/app", ".js")
+        assert File.extension_exists("TNS_App/app", ".map")
         assert File.extension_exists("TNS_App/app", ".ts")
 
         assert File.extension_exists(
-                "TNS_App/platforms/android/src/main/assets/app", ".js")
+            "TNS_App/platforms/android/src/main/assets/app", ".js")
+        assert File.extension_exists(
+            "TNS_App/platforms/android/src/main/assets/app", ".map")
+        assert File.extension_exists(
+            "TNS_App/platforms/android/src/main/assets/app", ".ts")
+        assert File.extension_exists(
+            "TNS_App/platforms/android/src/main/assets/app/tns_modules/application", ".js")
         assert not File.extension_exists(
-                "TNS_App/platforms/android/src/main/assets/app", ".ts")
-        assert not File.extension_exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules", ".ts")
-        Tns.build(platform="android", path="TNS_App")
+            "TNS_App/platforms/android/src/main/assets/app/tns_modules/application", ".ts")
 
         if CURRENT_OS == OSType.OSX:
-            Tns.platform_add(
-                    platform="ios",
-                    framework_path=IOS_RUNTIME_SYMLINK_PATH,
-                    path="TNS_App",
-                    symlink=True)
 
+            # prepare in debug => .ts should go to the platforms folder
             output = Tns.prepare(platform="ios", path="TNS_App")
             assert "Executing before-prepare hook" in output
             assert "Found peer TypeScript" in output
             assert "error" not in output
 
             assert File.extension_exists("TNS_App/app", ".js")
+            assert File.extension_exists("TNS_App/app", ".map")
             assert File.extension_exists("TNS_App/app", ".ts")
 
             assert File.extension_exists(
-                    "TNS_App/platforms/ios/TNSApp/app", ".js")
+                "TNS_App/platforms/android/src/main/assets/app", ".js")
+            assert File.extension_exists(
+                "TNS_App/platforms/android/src/main/assets/app", ".map")
+            assert File.extension_exists(
+                "TNS_App/platforms/android/src/main/assets/app", ".ts")
+            assert File.extension_exists(
+                "TNS_App/platforms/android/src/main/assets/app/tns_modules/application", ".js")
             assert not File.extension_exists(
-                    "TNS_App/platforms/ios/TNSApp/app", ".ts")
-            assert not File.extension_exists(
-                    "TNS_App/platforms/ios/TNSApp/app/tns_modules", ".ts")
-            Tns.build(platform="ios", path="TNS_App")
+                "TNS_App/platforms/android/src/main/assets/app/tns_modules/application", ".ts")
 
-    def test_201_transpilation_after_node_modules_deleted(self):
+    def test_201_transpilation_typescript_prepare_release(self):
+        # prepare in release => .ts should NOT go to the platforms folder
+        output = Tns.prepare(path="TNS_App", platform="android", release=True)
+        assert "Executing before-prepare hook" in output
+        assert "Found peer TypeScript" in output
+        assert "error" not in output
+
+        assert File.extension_exists("TNS_App/app", ".js")
+        assert File.extension_exists("TNS_App/app", ".map")
+        assert File.extension_exists("TNS_App/app", ".ts")
+
+        assert File.extension_exists(
+            "TNS_App/platforms/android/src/main/assets/app", ".js")
+        assert not File.extension_exists(
+            "TNS_App/platforms/android/src/main/assets/app", ".map")
+        assert not File.extension_exists(
+            "TNS_App/platforms/android/src/main/assets/app", ".ts")
+        assert File.extension_exists(
+            "TNS_App/platforms/android/src/main/assets/app/tns_modules/application", ".js")
+        assert not File.extension_exists(
+            "TNS_App/platforms/android/src/main/assets/app/tns_modules/application", ".ts")
+
+        if CURRENT_OS == OSType.OSX:
+
+            # prepare in release => .ts should NOT go to the platforms folder
+            output = Tns.prepare(platform="ios", path="TNS_App", release=True)
+            assert "Executing before-prepare hook" in output
+            assert "Found peer TypeScript" in output
+            assert "error" not in output
+
+            assert File.extension_exists("TNS_App/app", ".js")
+            assert File.extension_exists("TNS_App/app", ".map")
+            assert File.extension_exists("TNS_App/app", ".ts")
+
+            assert File.extension_exists(
+                "TNS_App/platforms/android/src/main/assets/app", ".js")
+            assert not File.extension_exists(
+                "TNS_App/platforms/android/src/main/assets/app", ".map")
+            assert not File.extension_exists(
+                "TNS_App/platforms/android/src/main/assets/app", ".ts")
+            assert File.extension_exists(
+                "TNS_App/platforms/android/src/main/assets/app/tns_modules/application", ".js")
+            assert not File.extension_exists(
+                "TNS_App/platforms/android/src/main/assets/app/tns_modules/application", ".ts")
+
+    def test_301_transpilation_after_node_modules_deleted(self):
         Folder.cleanup("TNS_App/node_modules")
         # Next line is because prepare does not work if you npm install packages with relative path before that
         Folder.navigate_to("TNS_App")

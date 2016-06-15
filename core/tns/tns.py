@@ -50,9 +50,6 @@ class Tns(object):
             command += " --log trace"
         output = run(command)
 
-        if assert_success:
-            assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
-
         if update_modules:
             if path is not None:
                 app_name = path + app_name
@@ -66,6 +63,9 @@ class Tns(object):
             npm_out4 = run("npm install " + widgets_path + " --save")
             Folder.navigate_to(TEST_RUN_HOME, relative_from__current_folder=False)
             output = output + npm_out1 + npm_out2 + npm_out3 + npm_out4
+
+        if assert_success:
+            assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
         return output
 
     @staticmethod
@@ -97,7 +97,7 @@ class Tns(object):
         return output
 
     @staticmethod
-    def prepare(platform=None, path=None, assert_success=True, log_trace=False):
+    def prepare(platform=None, path=None, assert_success=True, log_trace=False, release=False):
         """
         Prepare target platform.
         """
@@ -112,6 +112,9 @@ class Tns(object):
 
         if log_trace:
             command += " --log trace"
+
+        if release is True:
+            command += " --release"
         output = run(command)
 
         if assert_success:
