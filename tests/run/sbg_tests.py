@@ -2,6 +2,7 @@
 Tests for static binding generator
 """
 import unittest
+import os
 
 from core.tns.tns import Tns
 from core.osutils.file import File
@@ -13,11 +14,8 @@ from core.settings.settings import ANDROID_RUNTIME_PATH
 class StaticBindingGenerator(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        # setup emulator
-        Emulator.stop_emulators()
-        Emulator.ensure_available()
         Folder.cleanup('TNS_App')
-
+        Emulator.stop_emulators()
         # setup app
         Tns.create_app(app_name="TNS_App", copy_from=os.path.join("data", "apps", "sbg-test-app"))
 
@@ -67,8 +65,7 @@ class StaticBindingGenerator(unittest.TestCase):
                          gen_folder_exsists, gen_file_exists)
         assert (js_file_exists == True) & (gen_folder_exsists == False) & (gen_file_exists == False)
 
-    def test_002_onBuild_verifyFileGeneration(self):
-        # delete platform folder
+    def test_002_on_build_verify_file_generation(self):
         print ("####################### Building app for android #######################")
         output = Tns.build(platform="android", path=self.app_folder)
 
@@ -95,15 +92,8 @@ class StaticBindingGenerator(unittest.TestCase):
                 "File and folders not created"
         else:
             assert False, "Build failed"
-    # def test_003_files_packaging(self):
-    #     # build
-    #     # find classes in sbg_test_app\platforms\android\build\intermediates\classes\debug\com\tns -
-    #  verify expected files with classes are there
-    #     # verify gen folder appeared and MyJavaClass.class
-    #     assert True
 
-    def test_004_running_app_class_called(self):
+    def test_003_running_app_class_called(self):
         print ("Running app for android")
-        output = Tns.run(platform="android", device="emulator-5554", path=self.app_folder)
-
-        assert "------we got called from onCreate" in output, "JS not called"
+        output = Tns.run(platform="android", emulator=True, path=self.app_folder)
+        assert "------we got called from onCreate" in output, "Expected output not found"
