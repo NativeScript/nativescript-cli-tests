@@ -79,10 +79,10 @@ class PlatformiOS(unittest.TestCase):
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
-        if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
-            assert File.list_of_files_exists(
-                    'TNS_App/platforms/ios',
-                    'platform_ios_symlink.txt')
+        # if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
+        #     assert File.list_of_files_exists(
+        #             'TNS_App/platforms/ios',
+        #             'platform_ios_symlink.txt')
 
         # Verify Runtime is symlink
         output = run("ls -la TNS_App/platforms/ios/")
@@ -98,11 +98,11 @@ class PlatformiOS(unittest.TestCase):
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
-        if ('TEST_RUN' in os.environ) and (
-                    "SMOKE" not in os.environ['TEST_RUN']):
-            assert File.list_of_files_exists(
-                    'TNS_App/platforms/ios',
-                    'platform_ios_current.txt')
+        # if ('TEST_RUN' in os.environ) and (
+        #             "SMOKE" not in os.environ['TEST_RUN']):
+        #     assert File.list_of_files_exists(
+        #             'TNS_App/platforms/ios',
+        #             'platform_ios_current.txt')
 
         # If project.xcworkspace is there Xcode project name is wrong
         assert not File.exists(
