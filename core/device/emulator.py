@@ -25,6 +25,8 @@ class Emulator(object):
         Process.kill("emulator")
         Process.kill("emulator64-arm")
         Process.kill("emulator64-x86")
+        Process.kill("quemu-system-i38")
+        Process.kill("qemu-system-i386")
 
     @staticmethod
     def start_emulator(emulator_name, port="5554", timeout=300, wait_for=True):
