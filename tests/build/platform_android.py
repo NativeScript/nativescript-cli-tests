@@ -42,10 +42,10 @@ class PlatformAndroid(unittest.TestCase):
         output = Tns.platform_add(platform="android", path="TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created" in output
-        if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
-            assert File.list_of_files_exists(
-                    'TNS_App/platforms/android',
-                    'platform_android_current.txt')
+        # if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
+        #     assert File.list_of_files_exists(
+        #             'TNS_App/platforms/android',
+        #             'platform_android_current.txt')
 
     def test_003_platform_add_android_framework_path(self):
         Tns.create_app(app_name="TNS_App")
@@ -99,10 +99,10 @@ class PlatformAndroid(unittest.TestCase):
 
         assert "Copying template files..." in output
         assert "Project successfully created" in output
-        if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
-            assert File.list_of_files_exists(
-                    'TNS_App/platforms/android',
-                    'platform_android_current.txt')
+        # if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
+        #     assert File.list_of_files_exists(
+        #             'TNS_App/platforms/android',
+        #             'platform_android_current.txt')
 
     def test_202_platform_remove_android(self):
         Tns.create_app_platform_add(
