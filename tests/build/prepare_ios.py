@@ -78,7 +78,7 @@ class PrepareiOS(unittest.TestCase):
                                     framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
 
         # Create new files in AppResources
-        run("cp TNS_App/app/App_Resources/iOS/Default.png" +
+        run("cp TNS_App/app/App_Resources/iOS/Assets.xcassets/AppIcon.appiconset/icon-50.png" +
             " TNS_App/app/App_Resources/iOS/newDefault.png")
 
         # prepare project
