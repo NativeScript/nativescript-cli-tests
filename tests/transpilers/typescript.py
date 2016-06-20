@@ -10,6 +10,7 @@ from core.tns.tns import Tns
 
 
 class TypeScript(unittest.TestCase):
+
     @classmethod
     def setUpClass(cls):
         Folder.cleanup('TNS_App')
@@ -65,6 +66,14 @@ class TypeScript(unittest.TestCase):
         assert File.extension_exists("TNS_App/app", ".map")
         assert File.extension_exists("TNS_App/app", ".ts")
 
+        # Verify source map in app
+        output = run("cat ./TNS_App/app/app.js")
+        assert "//# sourceMappingURL=app.js.map" in output
+
+        output = run("cat ./TNS_App/app/app.js.map")
+        assert "\"file\":\"app.js\"" in output
+        assert "\"sources\":[\"app.ts\"]" in output
+
         assert File.extension_exists(
             "TNS_App/platforms/android/src/main/assets/app", ".js")
         assert File.extension_exists(
@@ -75,6 +84,14 @@ class TypeScript(unittest.TestCase):
             "TNS_App/platforms/android/src/main/assets/app/tns_modules/application", ".js")
         assert not File.extension_exists(
             "TNS_App/platforms/android/src/main/assets/app/tns_modules/application", ".ts")
+
+        # Verify source map in native android app
+        output = run("cat ./TNS_App/platforms/android/src/main/assets/app/app.js")
+        assert "//# sourceMappingURL=app.js.map" in output
+
+        output = run("cat ./TNS_App/platforms/android/src/main/assets/app/app.js.map")
+        assert "\"file\":\"app.js\"" in output
+        assert "\"sources\":[\"app.ts\"]" in output
 
         if CURRENT_OS == OSType.OSX:
 
@@ -98,6 +115,14 @@ class TypeScript(unittest.TestCase):
                 "TNS_App/platforms/android/src/main/assets/app/tns_modules/application", ".js")
             assert not File.extension_exists(
                 "TNS_App/platforms/android/src/main/assets/app/tns_modules/application", ".ts")
+
+            # Verify source map in native iOS app
+            output = run("cat ./TNS_App/platforms/ios/TNSApp/app/app.js")
+            assert "//# sourceMappingURL=app.js.map" in output
+
+            output = run("cat ./TNS_App/platforms/ios/TNSApp/app/app.js.map")
+            assert "\"file\":\"app.js\"" in output
+            assert "\"sources\":[\"app.ts\"]" in output
 
     def test_201_transpilation_typescript_prepare_release(self):
         # prepare in release => .ts should NOT go to the platforms folder
