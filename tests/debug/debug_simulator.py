@@ -44,7 +44,7 @@ class DebugSimulator(unittest.TestCase):
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Setting up proxy" in output
-        # assert "Starting iOS Simulator" in output
+        assert "Starting iOS Simulator" in output
         assert "Frontend client connected" in output
         # assert "Backend socket created" in output
         # assert "NativeScript debugger attached" in output
@@ -57,7 +57,7 @@ class DebugSimulator(unittest.TestCase):
         File.cat("TNS_App/package.json")
         output = run(TNS_PATH + " emulate ios --path TNS_App --justlaunch")
         assert "Project successfully built" in output
-        assert "Starting iOS Simulator" in output
+        # assert "Starting iOS Simulator" in output
         time.sleep(5)
 
         output = run(TNS_PATH + " debug ios --start --emulator --path TNS_App --frameworkPath " +
