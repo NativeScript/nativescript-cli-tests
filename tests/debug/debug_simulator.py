@@ -44,7 +44,7 @@ class DebugSimulator(unittest.TestCase):
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Setting up proxy" in output
-        assert "Starting iOS Simulator" in output
+        # assert "Starting iOS Simulator" in output
         assert "Frontend client connected" in output
         # assert "Backend socket created" in output
         # assert "NativeScript debugger attached" in output
