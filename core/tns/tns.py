@@ -7,7 +7,8 @@ import time
 
 from core.osutils.command import run
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, TEST_RUN_HOME
+from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, TEST_RUN_HOME, ANDROID_KEYSTORE_PATH, \
+    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS
 
 
 class Tns(object):
@@ -114,7 +115,10 @@ class Tns(object):
             command += " --log trace"
 
         if release is True:
-            command += " --release"
+            command += " --keyStorePath " + ANDROID_KEYSTORE_PATH + " --keyStorePassword " + ANDROID_KEYSTORE_PASS
+            + " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS
+            + " --release"
+
         output = run(command)
 
         if assert_success:
@@ -142,7 +146,7 @@ class Tns(object):
         return output
 
     @staticmethod
-    def build(platform=None, mode=None, for_device=False, path=None):
+    def build(platform=None, mode=None, for_device=False, path=None, release=False):
         """
         Build {N} project.
         """
@@ -161,7 +165,11 @@ class Tns(object):
         if path is not None:
             command += " --path {0}".format(path)
 
-        # command += " --log trace"
+        if release is True:
+            command += " --keyStorePath " + ANDROID_KEYSTORE_PATH + " --keyStorePassword " + ANDROID_KEYSTORE_PASS
+            + " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS
+            + " --release"
+
         output = run(command)
 
         assert "Project successfully prepared" in output
