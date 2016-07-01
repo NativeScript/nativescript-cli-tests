@@ -52,7 +52,7 @@ class LiveSynciOS(unittest.TestCase):
         File.replace("TNS_App/app/main-view-model.js", "taps", "clicks")
         File.replace("TNS_App/app/app.css", "30", "20")
 
-        File.replace("TNS_App/node_modules/tns-core-modules/LICENSE", "2015", "9999")
+        File.replace("TNS_App/node_modules/tns-core-modules/LICENSE", "Copyright", "MyCopyright")
         File.replace(
                 "TNS_App/node_modules/tns-core-modules/application/application-common.js",
                 "(\"globals\");",
@@ -61,14 +61,14 @@ class LiveSynciOS(unittest.TestCase):
         Tns.livesync(platform="ios", path="TNS_App")
 
         output = Device.cat_app_file("ios", "TNSApp", "app/main-page.xml")
-        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
+        assert "TEST" in output
         output = Device.cat_app_file("ios", "TNSApp", "app/main-view-model.js")
-        assert "this.set(\"message\", this.counter + \" clicks left\");" in output
+        assert "clicks left" in output
         output = Device.cat_app_file("ios", "TNSApp", "app/app.css")
         assert "font-size: 20;" in output
 
         output = Device.cat_app_file("ios", "TNSApp", "app/tns_modules/LICENSE")
-        assert "Copyright (c) 9999 Telerik AD" in output
+        assert "MyCopyright" in output
         output = Device.cat_app_file(
                 "ios",
                 "TNSApp",
@@ -87,7 +87,7 @@ class LiveSynciOS(unittest.TestCase):
         Tns.livesync(platform="ios", device=device_id, path="TNS_App")
 
         output = Device.cat_app_file("ios", "TNSApp", "app/main-view-model.js")
-        assert "this.set(\"message\", this.counter + \" clicks left\");" in output
+        assert "clicks left" in output
 
     #         File.replace("TNS_App/app/main-view-model.js", "clicks", "runs")
     #         emulate(platform="ios", path="TNS_App")
@@ -114,7 +114,7 @@ class LiveSynciOS(unittest.TestCase):
         Tns.livesync(platform="ios", path="TNS_App")
 
         output = Device.cat_app_file("ios", "TNSApp", "app/test.xml")
-        assert "<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output
+        assert "TAP" in output
         output = Device.cat_app_file("ios", "TNSApp", "app/test.js")
         assert "page.bindingContext = vmModule.mainViewModel;" in output
         output = Device.cat_app_file("ios", "TNSApp", "app/test.css")

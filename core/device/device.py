@@ -14,7 +14,7 @@ class Device(object):
     @staticmethod
     def ensure_available(platform):
         """Ensure real device is running"""
-        count = Device.get_count(platform, exclude_emulators=True)
+        count = Device.get_count(platform)
         if count > 0:
             print "{0} {1} devices are running".format(count, platform)
         else:
@@ -23,31 +23,30 @@ class Device(object):
     @staticmethod
     def get_id(platform):
         """Get Id of first connected physical device"""
-        device_id = None
+        list = Device.get_ids(platform)
+        return list.pop(0)
+
+    @staticmethod
+    def get_ids(platform):
+        """Get IDs of all connected physical devices"""
+        device_ids = list()
         output = run(TNS_PATH + " device " + platform)
         lines = output.splitlines()
         for line in lines:
             lline = line.lower()
-            if (platform in lline) and (not "emulator" in lline) and (not "status" in lline):
-                device_id = lline.split(
-                        (platform), 1)[1].replace(" ", "")  # deviceId = @030b206908e6c3c5@
-                device_id = device_id[3:-3]  # devideId = 030b206908e6c3c5
-                device_id = device_id.split("\xe2\x94\x82")[0]
+            if (platform in lline) and (not "status" in lline):
+                device_id = lline.split("\xe2\x94\x82")[4].replace(" ", "")
                 print device_id
-        return device_id
+                if "emulator" not in lline:
+                    device_ids.append(device_id)
+
+        return device_ids
 
     @staticmethod
-    def get_count(platform="", exclude_emulators=False):
-        """Get device count"""
-        output = run(TNS_PATH + " device " + platform)
-        lines = output.splitlines()
-        count = len(lines)
-        if exclude_emulators:
-            for line in lines:
-                lline = line.lower()
-                if "emulator" in lline:
-                    count = count - 1
-        return count
+    def get_count(platform=""):
+        """Get physical device count"""
+        device_ids = Device.get_ids(platform)
+        return len(device_ids)
 
     @staticmethod
     def uninstall_app(app_prefix, platform, fail=True):
@@ -61,13 +60,20 @@ class Device(object):
                     raise NameError(
                             "{0} application failed to uninstall.".format(app_prefix))
         else:
-            output = run("ideviceinstaller -U " + app_prefix, timeout=120)
-            if "Uninstall: Complete" in output:
-                print "{0} application successfully uninstalled.".format(app_prefix)
-            else:
-                if fail:
-                    raise NameError(
-                            "{0} application failed to uninstall.".format(app_prefix))
+            device_ids = Device.get_ids(platform)
+            for device_id in device_ids:
+                output = run("ideviceinstaller -u {0} -l".format(device_id), timeout=120)
+                lines = output.splitlines()
+                for line in lines:
+                    if (app_prefix in line):
+                        app_name = line.split("-")[0]
+                        app_name = app_name.replace(" ","")
+                        uninstall_result = run("ideviceinstaller -u {0} -U {1}".format(device_id, app_name), timeout=120)
+                        if "Uninstall: Complete" in uninstall_result:
+                            print "{0} application successfully uninstalled.".format(app_prefix)
+                        else:
+                            if fail:
+                                raise NameError("{0} application failed to uninstall.".format(app_prefix))
 
     @staticmethod
     def stop_application(device_id, app_id):

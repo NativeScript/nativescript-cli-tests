@@ -14,31 +14,45 @@ from core.settings.settings import SIMULATOR_NAME, IOS_RUNTIME_SYMLINK_PATH, TNS
 from core.tns.tns import Tns
 
 
+#########################################
+# test_001
+#   -> first run the app and then run full sync with xml, css and js
+#   -> verify if simualtor is started run and livesync reuse running simulators
+# test_101 - test_133
+#   -> test livesync --watch with xml,css,js and add/delete files
+# test_301
+#   -> run full sync directly with out run before that
+#########################################
+
 class LiveSyncSimulator(Watcher):
     @classmethod
     def setUpClass(cls):
+
         # setup simulator
         Emulator.stop_emulators()
         Simulator.stop_simulators()
 
         Simulator.delete(SIMULATOR_NAME)
-        Simulator.create(SIMULATOR_NAME, 'iPhone 6s', '9.0')
+        Simulator.create(SIMULATOR_NAME, 'iPhone 6', '9.0')
+        Simulator.create(SIMULATOR_NAME, 'iPhone 6', '9.1')
+        Simulator.create(SIMULATOR_NAME, 'iPhone 6', '9.2')
 
-        Simulator.start(SIMULATOR_NAME)
+        Simulator.start(SIMULATOR_NAME, '9.1')
         Folder.cleanup('TNS_App')
         Folder.cleanup('appTest')
 
         # setup app
         Tns.create_app(app_name="TNS_App", copy_from="data/apps/livesync-hello-world")
         Tns.platform_add(platform="ios", framework_path=IOS_RUNTIME_SYMLINK_PATH, path="TNS_App", symlink=True)
-        Tns.run(platform="ios", emulator=True, path="TNS_App")
+        output = Tns.run(platform="ios", emulator=True, path="TNS_App", assert_success=False)
+        assert "Starting iOS Simulator" not in output
 
         # replace
         File.replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         File.replace("TNS_App/app/main-view-model.js", "taps", "clicks")
         File.replace("TNS_App/app/app.css", "30", "20")
 
-        File.replace("TNS_App/node_modules/tns-core-modules/LICENSE", "2015", "9999")
+        File.replace("TNS_App/node_modules/tns-core-modules/LICENSE", "Copyright", "MyCopyright")
         File.replace(
                 "TNS_App/node_modules/tns-core-modules/application/application-common.js",
                 "(\"globals\");", "(\"globals\"); // test")
@@ -69,7 +83,6 @@ class LiveSyncSimulator(Watcher):
         Folder.cleanup('appTest')
 
     def test_001_full_livesync_ios_simulator_xml_js_css_tns_files(self):
-        # TODO: Update with console.log() when supported on simulators ...
         self.wait_for_text_in_output("prepared")
         time.sleep(3)  # ... than delete these.
 
@@ -81,7 +94,7 @@ class LiveSyncSimulator(Watcher):
         assert "font-size: 20;" in output
 
         output = Simulator.cat_app_file("TNSApp", "app/tns_modules/LICENSE")
-        assert "Copyright (c) 9999 Telerik AD" in output
+        assert "MyCopyright" in output
         output = Simulator.cat_app_file("TNSApp", "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output
 
@@ -184,32 +197,37 @@ class LiveSyncSimulator(Watcher):
         assert "color: green;" in output
 
     def test_301_livesync_ios_simulator_before_run(self):
+
+        # TODO: Add test for https://github.com/NativeScript/nativescript-cli/issues/1548 after it is fixed
         self.terminate_watcher()
         Folder.cleanup('appTest')
+        Simulator.stop_simulators()
 
         Tns.create_app(app_name="appTest")
         Tns.platform_add(platform="ios", framework_path=IOS_RUNTIME_SYMLINK_PATH, path="appTest", symlink=True)
 
         # replace
-        File.replace("appTest/app/main-page.xml", "TAP", "TEST")
+        File.replace("appTest/app/main-page.xml", "TAP", "MYTAP")
         File.replace("appTest/app/main-view-model.js", "taps", "clicks")
         File.replace("appTest/app/app.css", "30", "20")
 
-        File.replace("appTest/node_modules/tns-core-modules/LICENSE", "2015", "9999")
+        File.replace("appTest/node_modules/tns-core-modules/LICENSE", "Copyright", "MyCopyright")
         File.replace(
                 "appTest/node_modules/tns-core-modules/application/application-common.js",
                 "(\"globals\");", "(\"globals\"); // test")
 
-        Tns.livesync(platform="ios", emulator=True, path="appTest")
+        output = Tns.livesync(platform="ios", emulator=True, path="appTest", log_trace=True)
+        assert "" in output
+        time.sleep(3)
 
         output = Simulator.cat_app_file("appTest", "app/main-page.xml")
-        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
+        assert "MYTAP" in output
         output = Simulator.cat_app_file("appTest", "app/main-view-model.js")
-        assert "this.set(\"message\", this.counter + \" clicks left\");" in output
+        assert " clicks left" in output
         output = Simulator.cat_app_file("appTest", "app/app.css")
         assert "font-size: 20;" in output
 
         output = Simulator.cat_app_file("appTest", "app/tns_modules/LICENSE")
-        assert "Copyright (c) 9999 Telerik AD" in output
+        assert "MyCopyright" in output
         output = Simulator.cat_app_file("appTest", "app/tns_modules/application/application-common.js")
         assert "require(\"globals\"); // test" in output

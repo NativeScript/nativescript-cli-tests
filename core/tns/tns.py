@@ -166,9 +166,9 @@ class Tns(object):
             command += " --path {0}".format(path)
 
         if release is True:
-            command += " --keyStorePath " + ANDROID_KEYSTORE_PATH + " --keyStorePassword " + ANDROID_KEYSTORE_PASS
-            + " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS
-            + " --release"
+            command += " --keyStorePath " + ANDROID_KEYSTORE_PATH + " --keyStorePassword " + ANDROID_KEYSTORE_PASS + \
+                       " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + \
+                       " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS + " --release"
 
         output = run(command)
 
@@ -218,7 +218,7 @@ class Tns(object):
         return output
 
     @staticmethod
-    def livesync(platform=None, emulator=False, device=None, path=None, assert_success=True):
+    def livesync(platform=None, emulator=False, device=None, sdk=None, path=None, log_trace=True, assert_success=True):
         """
         The livesync command.
 
@@ -236,12 +236,18 @@ class Tns(object):
             command += " --emulator"
 
         if device is not None:
-            command += " --device {0}".format(device)
+            command += " --device \"{0}\"".format(device)
+
+        if sdk is not None:
+            command += " --sdk \"{0}\"".format(sdk)
 
         if path is not None:
             command += " --path {0}".format(path)
 
-        command += " --justlaunch --log trace"
+        if log_trace:
+            command += " --log trace"
+
+        command += " --justlaunch"
         output = run(command)
 
         if assert_success:

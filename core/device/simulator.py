@@ -21,9 +21,11 @@ class Simulator(object):
         print "~~~ Simulator \"{0}\" id: ".format(name) + output
 
     @staticmethod
-    def start(name, timeout=300, wait_for=True):
+    def start(name, sdk=None, timeout=300, wait_for=True):
         """Start iOS Simulator"""
 
+        if sdk is not None:
+            name = "{0} ({1})".format(name, sdk)
         print "~~~ Start simulator \"{0}\".".format(name)
         start_command = "instruments -w \"{0}\"".format(name)
         output = run(start_command, timeout)
@@ -55,18 +57,20 @@ class Simulator(object):
     @staticmethod
     def stop_simulators():
         """Stop running simulators"""
-
-        # Xcode6
-        Process.kill("iOS Simulator")
-        # Xcode7
         Process.kill("Simulator")
 
     @staticmethod
     def delete(name):
         """Delete simulator"""
 
-        run("xcrun simctl delete \"{0}\"".format(name))
-        print "~~~ Simulator \"{0}\" deleted.".format(name)
+        output = run("xcrun simctl list | grep \"{0}\"".format(name))
+        while (SIMULATOR_NAME in output) and ("Invalid" not in output):
+            if "Booted" in output:
+                run("xcrun simctl shutdown \"{0}\"".format(name))
+                Simulator.stop_simulators()
+            run("xcrun simctl delete \"{0}\"".format(name))
+            print "~~~ Simulator \"{0}\" deleted.".format(name)
+            output = run("xcrun simctl list | grep \"{0}\"".format(name))
 
     @staticmethod
     def get_id_by_name(name):

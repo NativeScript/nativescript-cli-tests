@@ -60,7 +60,7 @@ VERBOSE_LOG = os.path.join(OUTPUT_FOLDER, 'verboseLog.txt')
 
 # Default Simulator and Emulator
 EMULATOR_NAME = "Api19"
-SIMULATOR_NAME = "iPhone 6s 90"
+SIMULATOR_NAME = "iPhone691"
 
 # Android SDK
 ADB_PATH = os.path.join(os.environ.get("ANDROID_HOME"), "platform-tools", "adb")
