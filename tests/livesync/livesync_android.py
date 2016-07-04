@@ -59,20 +59,16 @@ class LiveSyncAndroid(unittest.TestCase):
 
         Tns.livesync(platform="android", path="TNS_App")
 
-        output = Device.cat_app_file("android", "TNSApp", "app/main-page.xml")
-        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
-        output = Device.cat_app_file("android", "TNSApp", "app/main-view-model.js")
-        assert "this.set(\"message\", this.counter + \" clicks left\");" in output
-        output = Device.cat_app_file("android", "TNSApp", "app/app.css")
-        assert "font-size: 20;" in output
+        Device.app_file_contains_text("android", "TNSApp", "app/main-page.xml", text="<Button text=\"TEST\" tap=\"{{ tapAction }}\" />")
+        Device.app_file_contains_text("android", "TNSApp", "app/main-view-model.js", text="this.set(\"message\", this.counter + \" clicks left\");")
+        Device.app_file_contains_text("android", "TNSApp", "app/app.css", text="font-size: 20;")
 
-        output = Device.cat_app_file("android", "TNSApp", "app/tns_modules/LICENSE")
-        assert "Copyright (c) 9999 Telerik AD" in output
-        output = Device.cat_app_file(
+        Device.app_file_contains_text("android", "TNSApp", "app/tns_modules/LICENSE", text="Copyright (c) 9999 Telerik AD")
+        Device.app_file_contains_text(
                 "android",
                 "TNSApp",
-                "app/tns_modules/application/application-common.js")
-        assert "require(\"globals\"); // test" in output
+                "app/tns_modules/application/application-common.js",
+                text="require(\"globals\"); // test")
 
     # This test executes the Run -> LiveSync -> Run work flow on an android
     # device with API level 21.
@@ -86,15 +82,11 @@ class LiveSyncAndroid(unittest.TestCase):
         device_id = Device.get_id(platform="android")
         File.replace("TNS_App/app/main-page.xml", "TAP", "TEST")
         Tns.livesync(platform="android", device=device_id, path="TNS_App")
-
-        output = Device.cat_app_file("android", "TNSApp", "app/main-page.xml")
-        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
+        Device.app_file_contains_text("android", "TNSApp", "app/main-page.xml", text="<Button text=\"TEST\" tap=\"{{ tapAction }}\" />")
 
         File.replace("TNS_App/app/main-page.xml", "TEST", "RUN")
         Tns.run(platform="android", path="TNS_App")
-
-        output = Device.cat_app_file("android", "TNSApp", "app/main-page.xml")
-        assert "<Button text=\"RUN\" tap=\"{{ tapAction }}\" />" in output
+        Device.app_file_contains_text("android", "TNSApp", "app/main-page.xml", text="<Button text=\"RUN\" tap=\"{{ tapAction }}\" />")
 
     def test_201_livesync_android_add_new_files(self):
         Tns.create_app_platform_add(
@@ -115,14 +107,10 @@ class LiveSyncAndroid(unittest.TestCase):
         Tns.livesync(platform="android", path="TNS_App")
         time.sleep(5)
 
-        output = Device.cat_app_file("android", "TNSApp", "app/test.xml")
-        assert "<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output
-        output = Device.cat_app_file("android", "TNSApp", "app/test.js")
-        assert "page.bindingContext = vmModule.mainViewModel;" in output
-        output = Device.cat_app_file("android", "TNSApp", "app/test.css")
-        assert "color: #284848;" in output
-        output = Device.cat_app_file("android", "TNSApp", "app/test/main-view-model.js")
-        assert "HelloWorldModel.prototype.tapAction" in output
+        Device.app_file_contains_text("android", "TNSApp", "app/test.xml", text="<Button text=\"TAP\" tap=\"{{ tapAction }}\" />")
+        Device.app_file_contains_text("android", "TNSApp", "app/test.js", text="page.bindingContext = vmModule.mainViewModel;")
+        Device.app_file_contains_text("android", "TNSApp", "app/test.css", text="color: #284848;")
+        Device.app_file_contains_text("android", "TNSApp", "app/test/main-view-model.js", text="HelloWorldModel.prototype.tapAction")
 
     @unittest.skip("TODO: Not implemented.")
     def test_202_livesync_android_delete_files(self):

@@ -86,3 +86,13 @@ class Emulator(object):
         output = run(ADB_PATH + " -s emulator-5554 shell run-as org.nativescript." + \
                      app_name + " cat files/" + file_path)
         return output
+
+
+    @staticmethod
+    def app_file_contains_text(platform, app_name, file_path, text):
+        output = Emulator.cat_app_file(platform, app_name, file_path)
+        if text in output:
+            print("{0} exists in {1}".format(text, file_path))
+        else:
+            print("{0} does not exists in {1}".format(text, file_path))
+        assert text in output

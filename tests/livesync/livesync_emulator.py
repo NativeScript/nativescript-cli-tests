@@ -55,17 +55,11 @@ class LiveSyncEmulator(unittest.TestCase):
                 device="emulator-5554",
                 path="TNS_App")
 
-        output = Emulator.cat_app_file("TNSApp", "app/main-page.xml")
-        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
-        output = Emulator.cat_app_file("TNSApp", "app/main-view-model.js")
-        assert "this.set(\"message\", this.counter + \" clicks left\");" in output
-        output = Emulator.cat_app_file("TNSApp", "app/app.css")
-        assert "font-size: 20;" in output
-
-        output = Emulator.cat_app_file("TNSApp", "app/tns_modules/LICENSE")
-        assert "Copyright (c) 9999 Telerik AD" in output
-        output = Emulator.cat_app_file("TNSApp", "app/tns_modules/application/application-common.js")
-        assert "require(\"globals\"); // test" in output
+        Emulator.app_file_contains_text("TNSApp", "app/main-page.xml", text="<Button text=\"TEST\" tap=\"{{ tapAction }}\" />")
+        Emulator.app_file_contains_text("TNSApp", "app/main-view-model.js", text="this.set(\"message\", this.counter + \" clicks left\");")
+        Emulator.app_file_contains_text("TNSApp", "app/app.css", text="font-size: 20;")
+        Emulator.app_file_contains_text("TNSApp", "app/tns_modules/LICENSE", text="Copyright (c) 9999 Telerik AD")
+        Emulator.app_file_contains_text("TNSApp", "app/tns_modules/application/application-common.js", text="require(\"globals\"); // test")
 
     def test_201_livesync_android_add_files(self):
         Tns.create_app_platform_add(
@@ -86,14 +80,10 @@ class LiveSyncEmulator(unittest.TestCase):
                 device="emulator-5554",
                 path="TNS_App")
 
-        output = Emulator.cat_app_file("TNSApp", "app/test.xml")
-        assert "<Button text=\"TAP\" tap=\"{{ tapAction }}\" />" in output
-        output = Emulator.cat_app_file("TNSApp", "app/test.js")
-        assert "page.bindingContext = vmModule.mainViewModel;" in output
-        output = Emulator.cat_app_file("TNSApp", "app/test.css")
-        assert "color: #284848;" in output
-        output = Emulator.cat_app_file("TNSApp", "app/test/main-view-model.js")
-        assert "HelloWorldModel.prototype.tapAction" in output
+        Emulator.app_file_contains_text("TNSApp", "app/test.xml", text="<Button text=\"TAP\" tap=\"{{ tapAction }}\" />")
+        Emulator.app_file_contains_text("TNSApp", "app/test.js", text="page.bindingContext = vmModule.mainViewModel;")
+        Emulator.app_file_contains_text("TNSApp", "app/test.css", text="color: #284848;")
+        Emulator.app_file_contains_text("TNSApp", "app/test/main-view-model.js", text="HelloWorldModel.prototype.tapAction")
 
     #     TODO:
     #     def test_202_livesync_android_delete_files(self):
@@ -119,14 +109,8 @@ class LiveSyncEmulator(unittest.TestCase):
                 device="emulator-5554",
                 path="TNS_App")
 
-        output = Emulator.cat_app_file("TNSApp", "app/main-page.xml")
-        assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
-        output = Emulator.cat_app_file("TNSApp", "app/main-view-model.js")
-        assert "this.set(\"message\", this.counter + \" clicks left\");" in output
-        output = Emulator.cat_app_file("TNSApp", "app/app.css")
-        assert "font-size: 20;" in output
-
-        output = Emulator.cat_app_file("TNSApp", "app/tns_modules/LICENSE")
-        assert "Copyright (c) 9999 Telerik AD" in output
-        output = Emulator.cat_app_file("TNSApp", "app/tns_modules/application/application-common.js")
-        assert "require(\"globals\"); // test" in output
+        Emulator.app_file_contains_text("TNSApp", "app/main-page.xml", text="<Button text=\"TEST\" tap=\"{{ tapAction }}\" />")
+        Emulator.app_file_contains_text("TNSApp", "app/main-view-model.js", text="this.set(\"message\", this.counter + \" clicks left\");")
+        Emulator.app_file_contains_text("TNSApp", "app/app.css", text="font-size: 20;")
+        Emulator.app_file_contains_text("TNSApp", "app/tns_modules/LICENSE", text="Copyright (c) 9999 Telerik AD")
+        Emulator.app_file_contains_text("TNSApp", "app/tns_modules/application/application-common.js", text="require(\"globals\"); // test")

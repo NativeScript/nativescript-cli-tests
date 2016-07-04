@@ -121,3 +121,13 @@ class Device(object):
                     "\" --app org.nativescript." +
                     app_name)
         return output
+
+
+    @staticmethod
+    def app_file_contains_text(platform, app_name, file_path, text):
+        output = Device.cat_app_file(platform, app_name, file_path)
+        if text in output:
+            print("{0} exists in {1}".format(text, file_path))
+        else:
+            print("{0} does not exists in {1}".format(text, file_path))
+        assert text in output

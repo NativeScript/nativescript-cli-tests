@@ -60,20 +60,16 @@ class LiveSynciOS(unittest.TestCase):
 
         Tns.livesync(platform="ios", path="TNS_App")
 
-        output = Device.cat_app_file("ios", "TNSApp", "app/main-page.xml")
-        assert "TEST" in output
-        output = Device.cat_app_file("ios", "TNSApp", "app/main-view-model.js")
-        assert "clicks left" in output
-        output = Device.cat_app_file("ios", "TNSApp", "app/app.css")
-        assert "font-size: 20;" in output
+        Device.app_file_contains_text("ios", "TNSApp", "app/main-page.xml", text="TEST")
+        Device.app_file_contains_text("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
+        Device.app_file_contains_text("ios", "TNSApp", "app/app.css", text="font-size: 20;")
 
-        output = Device.cat_app_file("ios", "TNSApp", "app/tns_modules/LICENSE")
-        assert "MyCopyright" in output
-        output = Device.cat_app_file(
+        Device.app_file_contains_text("ios", "TNSApp", "app/tns_modules/LICENSE", text="MyCopyright")
+        Device.app_file_contains_text(
                 "ios",
                 "TNSApp",
-                "app/tns_modules/application/application-common.js")
-        assert "require(\"globals\"); // test" in output
+                "app/tns_modules/application/application-common.js",
+                text="require(\"globals\"); // test")
 
     def test_002_livesync_ios_device(self):
         Tns.create_app_platform_add(
@@ -86,14 +82,11 @@ class LiveSynciOS(unittest.TestCase):
         File.replace("TNS_App/app/main-view-model.js", "taps", "clicks")
         Tns.livesync(platform="ios", device=device_id, path="TNS_App")
 
-        output = Device.cat_app_file("ios", "TNSApp", "app/main-view-model.js")
-        assert "clicks left" in output
-
-    #         File.replace("TNS_App/app/main-view-model.js", "clicks", "runs")
-    #         emulate(platform="ios", path="TNS_App")
-
-    #         output = Device.cat_app_file("ios", "TNSApp", "app/main-view-model.js")
-    #         assert "this.set(\"message\", this.counter + \" runs left\");" in output
+        Device.app_file_contains_text("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
+        # File.replace("TNS_App/app/main-view-model.js", "clicks", "runs")
+        # emulate(platform="ios", path="TNS_App")
+        # Device.app_file_contains_text("ios", "TNSApp", "app/main-view-model.js")
+        # assert "this.set(\"message\", this.counter + \" runs left\");" in output
 
     def test_201_livesync_ios_add_new_files(self):
         Tns.create_app_platform_add(
@@ -113,14 +106,10 @@ class LiveSynciOS(unittest.TestCase):
 
         Tns.livesync(platform="ios", path="TNS_App")
 
-        output = Device.cat_app_file("ios", "TNSApp", "app/test.xml")
-        assert "TAP" in output
-        output = Device.cat_app_file("ios", "TNSApp", "app/test.js")
-        assert "page.bindingContext = vmModule.mainViewModel;" in output
-        output = Device.cat_app_file("ios", "TNSApp", "app/test.css")
-        assert "color: #284848;" in output
-        output = Device.cat_app_file("ios", "TNSApp", "app/test/main-view-model.js")
-        assert "HelloWorldModel.prototype.tapAction" in output
+        Device.app_file_contains_text("ios", "TNSApp", "app/test.xml", text="TAP")
+        Device.app_file_contains_text("ios", "TNSApp", "app/test.js", text="page.bindingContext = ")
+        Device.app_file_contains_text("ios", "TNSApp", "app/test.css", text="color: #284848;")
+        Device.app_file_contains_text("ios", "TNSApp", "app/test/main-view-model.js", text="createViewModel()")
 
     @unittest.skip("TODO: Not implemented.")
     def test_202_livesync_ios_delete_files(self):

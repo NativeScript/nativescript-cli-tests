@@ -253,10 +253,7 @@ class Tns(object):
         if assert_success:
             assert "Project successfully prepared" in output
             if platform is "android":
-                # assert "Start syncing application" in output
-                # TODO: This is not longer avalable, uncomment if available again
                 assert "Transferring project files..." in output
-                assert "Successfully transferred all project files." in output
                 assert "Applying changes..." in output
                 assert "Successfully synced application" in output
                 time.sleep(10)
