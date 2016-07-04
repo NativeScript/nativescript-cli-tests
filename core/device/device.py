@@ -93,7 +93,7 @@ class Device(object):
 
     @staticmethod
     def wait_until_app_is_running(app_id, device_id, timeout=60):
-        """Waint until app is running"""
+        """Wait until app is running"""
         running = False
         end_time = time.time() + timeout
         while not running:
@@ -124,7 +124,7 @@ class Device(object):
 
 
     @staticmethod
-    def app_file_contains_text(platform, app_name, file_path, text):
+    def file_contains(platform, app_name, file_path, text):
         output = Device.cat_app_file(platform, app_name, file_path)
         if text in output:
             print("{0} exists in {1}".format(text, file_path))

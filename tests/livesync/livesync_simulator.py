@@ -86,67 +86,67 @@ class LiveSyncSimulator(Watcher):
         self.wait_for_text_in_output("prepared")
         time.sleep(3)  # ... than delete these.
 
-        Simulator.app_file_contains_text("TNSApp", "app/main-page.xml", text="<Button text=\"TEST\" tap=\"{{ tapAction }}\" />")
-        Simulator.app_file_contains_text("TNSApp", "app/main-view-model.js", text="this.set(\"message\", this.counter + \" clicks left\");")
-        Simulator.app_file_contains_text("TNSApp", "app/app.css", text="font-size: 20;")
-        Simulator.app_file_contains_text("TNSApp", "app/tns_modules/LICENSE", text="MyCopyright")
-        Simulator.app_file_contains_text("TNSApp", "app/tns_modules/application/application-common.js",text="require(\"globals\"); // test")
+        Simulator.file_contains("TNSApp", "app/main-page.xml", text="<Button text=\"TEST\" tap=\"{{ tapAction }}\" />")
+        Simulator.file_contains("TNSApp", "app/main-view-model.js", text="this.set(\"message\", this.counter + \" clicks left\");")
+        Simulator.file_contains("TNSApp", "app/app.css", text="font-size: 20;")
+        Simulator.file_contains("TNSApp", "app/tns_modules/LICENSE", text="MyCopyright")
+        Simulator.file_contains("TNSApp", "app/tns_modules/application/application-common.js",text="require(\"globals\"); // test")
 
     # Add new files
     def test_101_livesync_ios_simulator_watch_add_xml_file(self):
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test/test.xml")
         self.wait_for_text_in_output("app/test/test.xml to")
 
-        Simulator.app_file_contains_text("TNSApp", "app/test/test.xml", text="<Button text=\"TEST\" tap=\"{{ tapAction }}\" />")
+        Simulator.file_contains("TNSApp", "app/test/test.xml", text="<Button text=\"TEST\" tap=\"{{ tapAction }}\" />")
 
     def test_102_livesync_ios_simulator_watch_add_js_file(self):
         shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/test/test.js")
         self.wait_for_text_in_output("app/test/test.js to")
         time.sleep(3)
-        Simulator.app_file_contains_text("TNSApp", "app/test/test.js", text="application.start();")
+        Simulator.file_contains("TNSApp", "app/test/test.js", text="application.start();")
 
     def test_103_livesync_ios_simulator_watch_add_css_file(self):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test/test.css")
         self.wait_for_text_in_output("app/test/test.css to")
         time.sleep(1)
-        Simulator.app_file_contains_text("TNSApp", "app/test/test.css", text="color: #284848;")
+        Simulator.file_contains("TNSApp", "app/test/test.css", text="color: #284848;")
 
     # Change in files
     def test_111_livesync_ios_simulator_watch_change_xml_file(self):
         File.replace("TNS_App/app/main-page.xml", "TEST", "WATCH")
         self.wait_for_text_in_output("app/main-page.xml to")
         time.sleep(1)
-        Simulator.app_file_contains_text("TNSApp", "app/main-page.xml", text="<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />")
+        Simulator.file_contains("TNSApp", "app/main-page.xml", text="<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />")
 
     def test_112_livesync_ios_simulator_watch_change_js_file(self):
         File.replace("TNS_App/app/main-view-model.js", "clicks", "tricks")
         self.wait_for_text_in_output("app/main-view-model.js to")
         time.sleep(3)
-        Simulator.app_file_contains_text("TNSApp", "app/main-view-model.js", text="this.set(\"message\", this.counter + \" tricks left\");")
+        Simulator.file_contains("TNSApp", "app/main-view-model.js", text="this.set(\"message\", this.counter + \" tricks left\");")
 
     def test_113_livesync_ios_simulator_watch_change_css_file(self):
         File.replace("TNS_App/app/app.css", "#284848", "green")
         self.wait_for_text_in_output("app/app.css to")
-        Simulator.app_file_contains_text("TNSApp", "app/app.css", text="color: green;")
+        Simulator.file_contains("TNSApp", "app/app.css", text="color: green;")
 
     # Delete files
     def test_121_livesync_ios_simulator_watch_delete_xml_file(self):
         File.remove("TNS_App/app/test/test.xml")
         self.wait_for_text_in_output("app/test/test.xml")
         time.sleep(3)
-        Simulator.app_file_contains_text("TNSApp", "app/test/test.xml", text="No such file or directory")
+        Simulator.file_contains("TNSApp", "app/test/test.xml", text="No such file or directory")
 
     def test_122_livesync_ios_simulator_watch_delete_js_file(self):
         File.remove("TNS_App/app/test/test.js")
         self.wait_for_text_in_output("app/test/test.js")
         time.sleep(3)
-        Simulator.app_file_contains_text("TNSApp", "app/test/test.js", text="No such file or directory")
+        Simulator.file_contains("TNSApp", "app/test/test.js", text="No such file or directory")
 
     def test_123_livesync_ios_simulator_watch_delete_css_file(self):
         File.remove("TNS_App/app/test/test.css")
         self.wait_for_text_in_output("app/test/test.css")
         time.sleep(3)
-        Simulator.app_file_contains_text("TNSApp", "app/test/test.css", text="No such file or directory")
+        Simulator.file_contains("TNSApp", "app/test/test.css", text="No such file or directory")
 
     # Add files to a new folder
     def test_131_livesync_ios_simulator_watch_add_xml_file_to_new_folder(self):
@@ -155,24 +155,24 @@ class LiveSyncSimulator(Watcher):
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/folder/test.xml")
         self.wait_for_text_in_output("app/folder/test.xml file with")
         time.sleep(3)
-        Simulator.app_file_contains_text("TNSApp", "app/folder/test.xml", text="<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />")
+        Simulator.file_contains("TNSApp", "app/folder/test.xml", text="<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />")
     #         remove("TNS_App/app/folder")
     #         self.wait_for_text_in_output("app/folder/")
     #
-    #         Simulator.app_file_contains_text("TNSApp", "app/folder/test.xml")
+    #         Simulator.file_contains("TNSApp", "app/folder/test.xml")
     #         assert "No such file or directory" in output
 
     def test_132_livesync_ios_simulator_watch_add_js_file_to_new_folder(self):
         shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/folder/test.js")
         self.wait_for_text_in_output("app/folder/test.js to")
         time.sleep(3)
-        Simulator.app_file_contains_text("TNSApp", "app/folder/test.js", text="application.start();")
+        Simulator.file_contains("TNSApp", "app/folder/test.js", text="application.start();")
 
     def test_133_livesync_ios_simulator_watch_add_css_file_to_new_folder(self):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/folder/test.css")
         self.wait_for_text_in_output("app/folder/test.css to")
         time.sleep(1)
-        Simulator.app_file_contains_text("TNSApp", "app/folder/test.css", text="color: green;")
+        Simulator.file_contains("TNSApp", "app/folder/test.css", text="color: green;")
 
     def test_301_livesync_ios_simulator_before_run(self):
 
@@ -198,8 +198,8 @@ class LiveSyncSimulator(Watcher):
         assert "" in output
         time.sleep(3)
 
-        Simulator.app_file_contains_text("appTest", "app/main-page.xml", text="MYTAP")
-        Simulator.app_file_contains_text("appTest", "app/main-view-model.js", text="clicks left" )
-        Simulator.app_file_contains_text("appTest", "app/app.css", text="font-size: 20;")
-        Simulator.app_file_contains_text("appTest", "app/tns_modules/LICENSE", text="MyCopyright")
-        Simulator.app_file_contains_text("appTest", "app/tns_modules/application/application-common.js", text="require(\"globals\"); // test")
+        Simulator.file_contains("appTest", "app/main-page.xml", text="MYTAP")
+        Simulator.file_contains("appTest", "app/main-view-model.js", text="clicks left" )
+        Simulator.file_contains("appTest", "app/app.css", text="font-size: 20;")
+        Simulator.file_contains("appTest", "app/tns_modules/LICENSE", text="MyCopyright")
+        Simulator.file_contains("appTest", "app/tns_modules/application/application-common.js", text="require(\"globals\"); // test")

@@ -11,8 +11,9 @@ from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH
+from core.settings.settings import ANDROID_RUNTIME_PATH, DeviceType
 from core.tns.tns import Tns
+from tests.livesync.livesync_helper import replace_all, verify_replaced, verify_all_replaced
 
 
 class LiveSyncAndroid(unittest.TestCase):
@@ -40,39 +41,20 @@ class LiveSyncAndroid(unittest.TestCase):
     def tearDownClass(cls):
         pass
 
-    def test_001_livesync_android_xml_js_css_tnsmodules_files(self):
+    # This test executes the Run -> LiveSync
+    def test_001_livesync_android(self):
         Tns.create_app_platform_add(
                 app_name="TNS_App",
                 platform="android",
                 framework_path=ANDROID_RUNTIME_PATH)
         Tns.run(platform="android", path="TNS_App")
 
-        File.replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        File.replace("TNS_App/app/main-view-model.js", "taps", "clicks")
-        File.replace("TNS_App/app/app.css", "30", "20")
-
-        File.replace("TNS_App/node_modules/tns-core-modules/LICENSE", "2015", "9999")
-        File.replace(
-                "TNS_App/node_modules/tns-core-modules/application/application-common.js",
-                "(\"globals\");",
-                "(\"globals\"); // test")
-
+        replace_all(app_name="TNS_App")
         Tns.livesync(platform="android", path="TNS_App")
-
-        Device.app_file_contains_text("android", "TNSApp", "app/main-page.xml", text="<Button text=\"TEST\" tap=\"{{ tapAction }}\" />")
-        Device.app_file_contains_text("android", "TNSApp", "app/main-view-model.js", text="this.set(\"message\", this.counter + \" clicks left\");")
-        Device.app_file_contains_text("android", "TNSApp", "app/app.css", text="font-size: 20;")
-
-        Device.app_file_contains_text("android", "TNSApp", "app/tns_modules/LICENSE", text="Copyright (c) 9999 Telerik AD")
-        Device.app_file_contains_text(
-                "android",
-                "TNSApp",
-                "app/tns_modules/application/application-common.js",
-                text="require(\"globals\"); // test")
+        verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")
 
     # This test executes the Run -> LiveSync -> Run work flow on an android
-    # device with API level 21.
-    def test_002_livesync_android_device_xml_run(self):
+    def test_002_livesync_run_android(self):
         Tns.create_app_platform_add(
                 app_name="TNS_App",
                 platform="android",
@@ -80,13 +62,13 @@ class LiveSyncAndroid(unittest.TestCase):
         Tns.run(platform="android", path="TNS_App")
 
         device_id = Device.get_id(platform="android")
-        File.replace("TNS_App/app/main-page.xml", "TAP", "TEST")
+        replace_all(app_name="TNS_App")
         Tns.livesync(platform="android", device=device_id, path="TNS_App")
-        Device.app_file_contains_text("android", "TNSApp", "app/main-page.xml", text="<Button text=\"TEST\" tap=\"{{ tapAction }}\" />")
+        verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")
 
         File.replace("TNS_App/app/main-page.xml", "TEST", "RUN")
         Tns.run(platform="android", path="TNS_App")
-        Device.app_file_contains_text("android", "TNSApp", "app/main-page.xml", text="<Button text=\"RUN\" tap=\"{{ tapAction }}\" />")
+        Device.file_contains("android", "TNSApp", "app/main-page.xml", text="RUN")
 
     def test_201_livesync_android_add_new_files(self):
         Tns.create_app_platform_add(
@@ -107,10 +89,10 @@ class LiveSyncAndroid(unittest.TestCase):
         Tns.livesync(platform="android", path="TNS_App")
         time.sleep(5)
 
-        Device.app_file_contains_text("android", "TNSApp", "app/test.xml", text="<Button text=\"TAP\" tap=\"{{ tapAction }}\" />")
-        Device.app_file_contains_text("android", "TNSApp", "app/test.js", text="page.bindingContext = vmModule.mainViewModel;")
-        Device.app_file_contains_text("android", "TNSApp", "app/test.css", text="color: #284848;")
-        Device.app_file_contains_text("android", "TNSApp", "app/test/main-view-model.js", text="HelloWorldModel.prototype.tapAction")
+        Device.file_contains("android", "TNSApp", "app/test.xml", text="TAP")
+        Device.file_contains("android", "TNSApp", "app/test.js", text="page.bindingContext = ")
+        Device.file_contains("android", "TNSApp", "app/test.css", text="color: #284848;")
+        Device.file_contains("android", "TNSApp", "app/test/main-view-model.js", text="createViewModel()")
 
     @unittest.skip("TODO: Not implemented.")
     def test_202_livesync_android_delete_files(self):
@@ -120,24 +102,20 @@ class LiveSyncAndroid(unittest.TestCase):
     def test_203_livesync_android_watch(self):
         pass
 
-    def test_301_livesync_Beforerun(self):
+    def test_301_livesync_before_run(self):
         Tns.create_app_platform_add(
                 app_name="TNS_App",
                 platform="android",
                 framework_path=ANDROID_RUNTIME_PATH)
-        Tns.run(platform="android", path="TNS_App")
 
-        File.replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        output = Tns.livesync(path="TNS_App", assert_success=False)
+        replace_all(app_name="TNS_App")
 
-        assert "Multiple device platforms detected (iOS and Android). " + \
-               "Specify platform or device on command line" in output
+        # Verify livesync without specify platform prompt user to specify platform
+        if (Device.get_count("android") > 0) and (Device.get_count("ios") > 0):
+            print "When both android and ios are available livesync should prompt me"
+            output = Tns.livesync(path="TNS_App", assert_success=False)
+            assert "Multiple device platforms detected (iOS and Android). " + \
+                   "Specify platform or device on command line" in output
 
-    @unittest.skip("TODO: Implement this test..")
-    def test_302_livesync_android_MultipleDevice(self):
-        pass
-
-        # TODO:
-        # - test to detect a deleted file
-        # - test to check change in a file that is not being used will not affect the app
-        # - test to check JavaScript, XML and CSS do not crash the app
+        Tns.livesync(platform="android", path="TNS_App")
+        verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")

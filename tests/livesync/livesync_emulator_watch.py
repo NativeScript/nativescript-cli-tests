@@ -62,50 +62,47 @@ class LiveSyncEmulatorWatch(Watcher):
         time.sleep(10)
         self.wait_for_text_in_output("Page loaded 1 times.")
 
-        Emulator.app_file_contains_text("TNSApp", "app/main-page.xml", text="<Button text=\"TEST\" tap=\"{{ tapAction }}\" />")
-        Emulator.app_file_contains_text("TNSApp", "app/main-view-model.js", text="this.set(\"message\", this.counter + \" clicks left\");")
-        Emulator.app_file_contains_text("TNSApp", "app/app.css", text="font-size: 20;")
-
-        Emulator.app_file_contains_text("TNSApp", "app/tns_modules/LICENSE", text="Copyright (c) 9999 Telerik AD")
-        Emulator.app_file_contains_text("TNSApp", "app/tns_modules/application/application-common.js", text="require(\"globals\"); // test")
+        Emulator.file_contains("TNSApp", "app/test.xml", text="TAP")
+        Emulator.file_contains("TNSApp", "app/test.js", text="page.bindingContext = ")
+        Emulator.file_contains("TNSApp", "app/test.css", text="color: #284848;")
+        Emulator.file_contains("TNSApp", "app/test/main-view-model.js", text="createViewModel()")
 
     # Add new files
     def test_101_livesync_android_emulator_watch_add_xml_file(self):
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test/test.xml")
         self.wait_for_text_in_output("Page loaded 2 times.", timeout=30)
-
-        Emulator.app_file_contains_text("TNSApp", "app/test/test.xml", text="<Button text=\"TEST\" tap=\"{{ tapAction }}\" />")
+        Emulator.file_contains("TNSApp", "app/test/test.xml", text="TEST")
 
     def test_102_livesync_android_emulator_watch_add_js_file(self):
         shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/test/test.js")
         self.wait_for_text_in_output("Page loaded 1 times.", timeout=30)
 
-        Emulator.app_file_contains_text("TNSApp", "app/test/test.js", text="application.start();")
+        Emulator.file_contains("TNSApp", "app/test/test.js", text="application.start();")
 
     def test_103_livesync_android_emulator_watch_add_css_file(self):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test/test.css")
         self.wait_for_text_in_output("Page loaded 2 times.", timeout=30)
 
-        Emulator.app_file_contains_text("TNSApp", "app/test/test.css", text="color: #284848;")
+        Emulator.file_contains("TNSApp", "app/test/test.css", text="color: #284848;")
 
     # Change in files
     def test_111_livesync_android_emulator_watch_change_xml_file(self):
         File.replace("TNS_App/app/main-page.xml", "TEST", "WATCH")
         self.wait_for_text_in_output("Page loaded 3 times.", timeout=30)
 
-        Emulator.app_file_contains_text("TNSApp", "app/main-page.xml", text="<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />")
+        Emulator.file_contains("TNSApp", "app/main-page.xml", text="WATCH")
 
     def test_112_livesync_android_emulator_watch_change_js_file(self):
         File.replace("TNS_App/app/main-view-model.js", "clicks", "tricks")
         self.wait_for_text_in_output("Page loaded 1 times.", timeout=30)
 
-        Emulator.app_file_contains_text("TNSApp", "app/main-view-model.js", text="this.set(\"message\", this.counter + \" tricks left\");")
+        Emulator.file_contains("TNSApp", "app/main-view-model.js", text="tricks left")
 
     def test_113_livesync_android_emulator_watch_change_css_file(self):
         File.replace("TNS_App/app/app.css", "#284848", "green")
         self.wait_for_text_in_output("Page loaded 2 times.", timeout=30)
 
-        Emulator.app_file_contains_text("TNSApp", "app/app.css", timeout=30, text="color: green;")
+        Emulator.file_contains("TNSApp", "app/app.css", timeout=30, text="color: green;")
 
         # Delete files
 
@@ -113,21 +110,21 @@ class LiveSyncEmulatorWatch(Watcher):
     #         remove("TNS_App/app/test/test.xml")
     #         self.wait_for_text_in_output("Page loaded 3 times.")
     #
-    #         Emulator.app_file_contains_text("TNSApp", "app/test/test.xml")
+    #         Emulator.file_contains("TNSApp", "app/test/test.xml")
     #         assert "No such file or directory" in output
     #
     #     def test_122_livesync_android_emulator_watch_delete_js_file(self):
     #         remove("TNS_App/app/test/test.js")
     #         self.wait_for_text_in_output("Page loaded 1 times.")
     #
-    #         Emulator.app_file_contains_text("TNSApp", "app/test/test.js")
+    #         Emulator.file_contains("TNSApp", "app/test/test.js")
     #         assert "No such file or directory" in output
     #
     #     def test_123_livesync_android_emulator_watch_delete_css_file(self):
     #         remove("TNS_App/app/test/test.css")
     #         self.wait_for_text_in_output("Page loaded 2 times.")
     #
-    #         Emulator.app_file_contains_text("TNSApp", "app/test/test.css")
+    #         Emulator.file_contains("TNSApp", "app/test/test.css")
     #         assert "No such file or directory" in output
 
     # Add files to a new folder
@@ -138,12 +135,12 @@ class LiveSyncEmulatorWatch(Watcher):
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/folder/test.xml")
         self.wait_for_text_in_output("Page loaded 2 times.", timeout=30)
 
-        Emulator.app_file_contains_text("TNSApp", "app/folder/test.xml", text="<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />")
+        Emulator.file_contains("TNSApp", "app/folder/test.xml", text="WATCH")
 
     #         remove("TNS_App/app/folder")
     #         self.wait_for_text_in_output("app/folder/") ???
     #
-    #         Emulator.app_file_contains_text("TNSApp", "app/folder/test.xml")
+    #         Emulator.file_contains("TNSApp", "app/folder/test.xml")
     #         assert "No such file or directory" in output
 
     def test_132_livesync_android_emulator_watch_add_js_file_to_new_folder(self):
@@ -151,13 +148,13 @@ class LiveSyncEmulatorWatch(Watcher):
         self.wait_for_text_in_output("Page loaded 1 times.", timeout=30)
         time.sleep(2)
 
-        Emulator.app_file_contains_text("TNSApp", "app/folder/test.js", text="application.start();")
+        Emulator.file_contains("TNSApp", "app/folder/test.js", text="application.start();")
 
     def test_133_livesync_android_emulator_watch_add_css_file_to_new_folder(self):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/folder/test.css")
         self.wait_for_text_in_output("Page loaded 2 times.", timeout=30)
 
-        Emulator.app_file_contains_text("TNSApp", "app/folder/test.css", text="color: green;")
+        Emulator.file_contains("TNSApp", "app/folder/test.css", text="color: green;")
 
         #     def test_301_livesync_android_emulator_before_run(self):
         #         self.terminate_watcher()
@@ -180,15 +177,15 @@ class LiveSyncEmulatorWatch(Watcher):
         #
         #         livesync(platform="android", device="emulator-5554", path="TNS_App")
         #
-        #         Emulator.app_file_contains_text("TNSApp", "app/main-page.xml")
+        #         Emulator.file_contains("TNSApp", "app/main-page.xml")
         #         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
-        #         Emulator.app_file_contains_text("TNSApp", "app/main-view-model.js")
+        #         Emulator.file_contains("TNSApp", "app/main-view-model.js")
         #         assert "this.set(\"message\", this.counter + \" clicks left\");" in output
-        #         Emulator.app_file_contains_text("TNSApp", "app/app.css")
+        #         Emulator.file_contains("TNSApp", "app/app.css")
         #         assert "font-size: 20;" in output
         #
-        #         Emulator.app_file_contains_text("TNSApp", "app/tns_modules/LICENSE")
+        #         Emulator.file_contains("TNSApp", "app/tns_modules/LICENSE")
         #         assert "Copyright (c) 9999 Telerik AD" in output
-        #         Emulator.app_file_contains_text("TNSApp", \
+        #         Emulator.file_contains("TNSApp", \
         #             "app/tns_modules/application/application-common.js")
         #         assert "require(\"globals\"); // test" in output

@@ -60,12 +60,12 @@ class LiveSynciOS(unittest.TestCase):
 
         Tns.livesync(platform="ios", path="TNS_App")
 
-        Device.app_file_contains_text("ios", "TNSApp", "app/main-page.xml", text="TEST")
-        Device.app_file_contains_text("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
-        Device.app_file_contains_text("ios", "TNSApp", "app/app.css", text="font-size: 20;")
+        Device.file_contains("ios", "TNSApp", "app/main-page.xml", text="TEST")
+        Device.file_contains("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
+        Device.file_contains("ios", "TNSApp", "app/app.css", text="font-size: 20;")
 
-        Device.app_file_contains_text("ios", "TNSApp", "app/tns_modules/LICENSE", text="MyCopyright")
-        Device.app_file_contains_text(
+        Device.file_contains("ios", "TNSApp", "app/tns_modules/LICENSE", text="MyCopyright")
+        Device.file_contains(
                 "ios",
                 "TNSApp",
                 "app/tns_modules/application/application-common.js",
@@ -82,10 +82,10 @@ class LiveSynciOS(unittest.TestCase):
         File.replace("TNS_App/app/main-view-model.js", "taps", "clicks")
         Tns.livesync(platform="ios", device=device_id, path="TNS_App")
 
-        Device.app_file_contains_text("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
+        Device.file_contains("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
         # File.replace("TNS_App/app/main-view-model.js", "clicks", "runs")
         # emulate(platform="ios", path="TNS_App")
-        # Device.app_file_contains_text("ios", "TNSApp", "app/main-view-model.js")
+        # Device.file_contains("ios", "TNSApp", "app/main-view-model.js")
         # assert "this.set(\"message\", this.counter + \" runs left\");" in output
 
     def test_201_livesync_ios_add_new_files(self):
@@ -106,10 +106,10 @@ class LiveSynciOS(unittest.TestCase):
 
         Tns.livesync(platform="ios", path="TNS_App")
 
-        Device.app_file_contains_text("ios", "TNSApp", "app/test.xml", text="TAP")
-        Device.app_file_contains_text("ios", "TNSApp", "app/test.js", text="page.bindingContext = ")
-        Device.app_file_contains_text("ios", "TNSApp", "app/test.css", text="color: #284848;")
-        Device.app_file_contains_text("ios", "TNSApp", "app/test/main-view-model.js", text="createViewModel()")
+        Device.file_contains("ios", "TNSApp", "app/test.xml", text="TAP")
+        Device.file_contains("ios", "TNSApp", "app/test.js", text="page.bindingContext = ")
+        Device.file_contains("ios", "TNSApp", "app/test.css", text="color: #284848;")
+        Device.file_contains("ios", "TNSApp", "app/test/main-view-model.js", text="createViewModel()")
 
     @unittest.skip("TODO: Not implemented.")
     def test_202_livesync_ios_delete_files(self):

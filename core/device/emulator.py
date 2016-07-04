@@ -89,8 +89,8 @@ class Emulator(object):
 
 
     @staticmethod
-    def app_file_contains_text(platform, app_name, file_path, text):
-        output = Emulator.cat_app_file(platform, app_name, file_path)
+    def file_contains(app_name, file_path, text):
+        output = Emulator.cat_app_file(app_name, file_path)
         if text in output:
             print("{0} exists in {1}".format(text, file_path))
         else:
