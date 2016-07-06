@@ -24,6 +24,7 @@ class LiveSyncAndroid(unittest.TestCase):
         Emulator.stop_emulators()
         Simulator.stop_simulators()
         Device.ensure_available(platform="android")
+        Device.uninstall_app(app_prefix="org.nativescript.", platform="android")
 
     def setUp(self):
         print ""

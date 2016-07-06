@@ -1,0 +1,18 @@
+<ActionBar title="Title">
+    <NavigationButton text="Back" android.systemIcon="ic_menu_back"
+        tap="onBack" visibility="{{ backButtonHidden ? 'collapsed' : 'visible' }}">
+    </NavigationButton>
+
+    <ActionBar.actionItems>
+        <ActionItem text="Index" ios.position="right"
+            tap="onIndex" visibility="{{ backButtonHidden ? 'collapsed' : 'visible' }}">
+        </ActionItem>
+    </ActionBar.actionItems>
+
+    <ActionBar.titleView>
+        <GridLayout columns="auto, 5, *">
+          <Image src="~/images/nativescript_logo.png" width="36" height="36" />
+          <Label col="2" text="{{ pageTitle }}" minWidth="100" />
+        </GridLayout>
+    </ActionBar.titleView>
+</ActionBar>

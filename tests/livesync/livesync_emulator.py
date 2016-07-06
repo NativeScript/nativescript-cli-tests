@@ -34,12 +34,12 @@ class LiveSyncEmulator(unittest.TestCase):
     def tearDownClass(cls):
         Emulator.stop_emulators()
 
-    def test_001_livesync_android_xml_js_css_tns_files(self):
+    def test_001_livesync_android(self):
         Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
         Tns.run(platform="android", device="emulator-5554", path="TNS_App")
         replace_all(app_name="TNS_App")
         Tns.livesync(platform="android", emulator=True, device="emulator-5554", path="TNS_App")
-        verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")
+        verify_all_replaced(device_type=DeviceType.EMULATOR, app_name="TNSApp")
 
     def test_201_livesync_android_add_files(self):
         Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
@@ -66,4 +66,4 @@ class LiveSyncEmulator(unittest.TestCase):
         Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
         replace_all(app_name="TNS_App")
         Tns.livesync(platform="android", emulator=True, device="emulator-5554", path="TNS_App")
-        verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")
+        verify_all_replaced(device_type=DeviceType.EMULATOR, app_name="TNSApp")

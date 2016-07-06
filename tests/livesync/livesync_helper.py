@@ -19,7 +19,7 @@ def replace(app_name, file_change):
 
 def verify_replaced(device_type, app_name, file_change):
     file = file_change[0]
-    file = file.replace("tns-core-modules", "tns_modules")
+    file = file.replace("node_modules/tns-core-modules", "app/tns_modules")
     text = file_change[2]
     if device_type == DeviceType.EMULATOR:
         Emulator.file_contains(app_name, file, text)

@@ -1,0 +1,136 @@
+.km-icon {
+    font-family: 'kendoui';
+    vertical-align: center;
+    horizontal-align: center;
+}
+
+page {
+    background-color: #fff;
+}
+
+button {
+    horizontal-align: stretch;
+}
+
+image,
+activityindicator {
+    horizontal-align: center;
+    vertical-align: center;
+}
+
+label,
+textfield,
+searchbar,
+switch {
+    vertical-align: center;
+}
+
+switch {
+    horizontal-align: right;
+}
+
+.form-item {
+    padding: 0 12;
+}
+
+.form-label {
+    margin-left: 12;
+}
+
+.form-field {
+    margin: 6 12 6 0;
+}
+
+.form-buttons {
+    padding: 0 6;
+}
+
+.form-link {
+    horizontal-align: center;
+    font-size: 18;
+    margin-top: 10;
+}
+
+.form-item-border {
+    background-color: #ccc;
+    vertical-align: bottom;
+    height: 1;
+}
+
+.ios-form-button {
+    margin: 12 6;
+}
+
+.title {
+    font-size: 30;
+    horizontal-align: center;
+    margin: 20;
+}
+
+.message {
+    font-size: 20;
+    color: #284848;
+    horizontal-align: center;
+}
+
+.padded-label {
+    padding: 0 12;
+}
+
+.padded-label-stack {
+    padding: 12;
+}
+
+.title-label {
+    padding: 0 0 12 0;
+    font-weight: bold;
+}
+
+.about-image {
+    horizontal-align: left;
+    vertical-align: top;
+    height: 100;
+    margin-right: 10;
+}
+
+.list-item {
+    padding: 10 16;
+}
+
+.list-icon {
+    width: 36;
+    text-align: center;
+}
+
+.h1 {
+    font-size: 32;
+}
+
+.h2 {
+    font-size: 26;
+}
+
+.h3 {
+    font-size: 20;
+}
+
+.h4 {
+    font-size: 16;
+}
+
+.h5 {
+    font-size: 12;
+}
+
+.h6 {
+    font-size: 8;
+}
+
+
+/* START_CUSTOM_CODE_nativeScriptApp */
+
+
+/* Add custom code here. For more information about custom code, see http://docs.telerik.com/platform/screenbuilder/troubleshooting/how-to-keep-custom-code-changes */
+
+
+/* END_CUSTOM_CODE_nativeScriptApp */

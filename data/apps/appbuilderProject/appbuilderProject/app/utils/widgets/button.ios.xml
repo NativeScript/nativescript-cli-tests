@@ -1,0 +1,3 @@
+<Border cssClass="ios-form-button" cornerRadius="5" borderWidth="1" borderColor="#007aff" loaded="onLoaded">
+    <Button id="button" isUserInteractionEnabled="false" />
+</Border>

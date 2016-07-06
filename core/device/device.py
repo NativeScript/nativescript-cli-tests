@@ -52,20 +52,27 @@ class Device(object):
     def uninstall_app(app_prefix, platform, fail=True):
         """Uninstall mobile app"""
         if platform == "android":
-            output = run("ddb device uninstall org.nativescript." + app_prefix, timeout=120)
-            if "[Uninstalling] Status: RemovingApplication" in output:
-                print "{0} application successfully uninstalled.".format(app_prefix)
-            else:
-                if fail:
-                    raise NameError(
-                            "{0} application failed to uninstall.".format(app_prefix))
+            device_ids = Device.get_ids(platform)
+            for device_id in device_ids:
+                output = run(ADB_PATH + "-s {0} shell pm list packages".format(device_id), timeout=120)
+                lines = output.splitlines()
+                for line in lines:
+                    if app_prefix in line:
+                        app_name = line.split(":")[1]
+                        app_name = app_name.replace(" ","")
+                        uninstall_result = run("-s {0} shell pm uninstall {1}".format(device_id, app_name), timeout=120)
+                        if "Success" in uninstall_result:
+                            print "{0} application successfully uninstalled.".format(app_prefix)
+                        else:
+                            if fail:
+                                raise NameError("{0} application failed to uninstall.".format(app_prefix))
         else:
             device_ids = Device.get_ids(platform)
             for device_id in device_ids:
                 output = run("ideviceinstaller -u {0} -l".format(device_id), timeout=120)
                 lines = output.splitlines()
                 for line in lines:
-                    if (app_prefix in line):
+                    if app_prefix in line:
                         app_name = line.split("-")[0]
                         app_name = app_name.replace(" ","")
                         uninstall_result = run("ideviceinstaller -u {0} -U {1}".format(device_id, app_name), timeout=120)
@@ -107,19 +114,11 @@ class Device(object):
     @staticmethod
     def cat_app_file(platform, app_name, file_path):
         '''Return content of file on device'''
-        print "~~~ Catenate ~~~"
         if platform is "android":
-            output = run(
-                    ADB_PATH + " shell run-as org.nativescript." +
-                    app_name +
-                    " cat files/" +
-                    file_path)
+            command = ADB_PATH + " shell run-as org.nativescript." + app_name + " cat files/" + file_path;
         if platform is "ios":
-            output = run(
-                    "ddb device get-file \"Library/Application Support/LiveSync/" +
-                    file_path +
-                    "\" --app org.nativescript." +
-                    app_name)
+            command = "ddb device get-file \"Library/Application Support/LiveSync/" + file_path + "\" --app org.nativescript." + app_name
+        output = run(command)
         return output
 
 
@@ -130,4 +129,7 @@ class Device(object):
             print("{0} exists in {1}".format(text, file_path))
         else:
             print("{0} does not exists in {1}".format(text, file_path))
+            print "----------------------------------------------------"
+            print output
+            print "----------------------------------------------------"
         assert text in output

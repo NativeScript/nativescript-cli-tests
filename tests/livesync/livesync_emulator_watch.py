@@ -76,7 +76,6 @@ class LiveSyncEmulatorWatch(Watcher):
     def test_102_livesync_android_emulator_watch_add_js_file(self):
         shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/test/test.js")
         self.wait_for_text_in_output("Page loaded 1 times.", timeout=30)
-
         Emulator.file_contains("TNSApp", "app/test/test.js", text="application.start();")
 
     def test_103_livesync_android_emulator_watch_add_css_file(self):
@@ -89,19 +88,16 @@ class LiveSyncEmulatorWatch(Watcher):
     def test_111_livesync_android_emulator_watch_change_xml_file(self):
         File.replace("TNS_App/app/main-page.xml", "TEST", "WATCH")
         self.wait_for_text_in_output("Page loaded 3 times.", timeout=30)
-
         Emulator.file_contains("TNSApp", "app/main-page.xml", text="WATCH")
 
     def test_112_livesync_android_emulator_watch_change_js_file(self):
         File.replace("TNS_App/app/main-view-model.js", "clicks", "tricks")
         self.wait_for_text_in_output("Page loaded 1 times.", timeout=30)
-
         Emulator.file_contains("TNSApp", "app/main-view-model.js", text="tricks left")
 
     def test_113_livesync_android_emulator_watch_change_css_file(self):
         File.replace("TNS_App/app/app.css", "#284848", "green")
         self.wait_for_text_in_output("Page loaded 2 times.", timeout=30)
-
         Emulator.file_contains("TNSApp", "app/app.css", timeout=30, text="color: green;")
 
         # Delete files
@@ -147,13 +143,11 @@ class LiveSyncEmulatorWatch(Watcher):
         shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/folder/test.js")
         self.wait_for_text_in_output("Page loaded 1 times.", timeout=30)
         time.sleep(2)
-
         Emulator.file_contains("TNSApp", "app/folder/test.js", text="application.start();")
 
     def test_133_livesync_android_emulator_watch_add_css_file_to_new_folder(self):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/folder/test.css")
         self.wait_for_text_in_output("Page loaded 2 times.", timeout=30)
-
         Emulator.file_contains("TNSApp", "app/folder/test.css", text="color: green;")
 
         #     def test_301_livesync_android_emulator_before_run(self):
