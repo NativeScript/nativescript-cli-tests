@@ -62,7 +62,7 @@ class Tns(object):
             npm_out3 = run("npm uninstall tns-core-modules-widgets")
             widgets_path = SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules-widgets.tgz"
             npm_out4 = run("npm install " + widgets_path + " --save")
-            Folder.navigate_to(TEST_RUN_HOME, relative_from__current_folder=False)
+            Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
             output = output + npm_out1 + npm_out2 + npm_out3 + npm_out4
 
         if assert_success:
@@ -115,9 +115,12 @@ class Tns(object):
             command += " --log trace"
 
         if release is True:
-            command += " --keyStorePath " + ANDROID_KEYSTORE_PATH + " --keyStorePassword " + ANDROID_KEYSTORE_PASS + \
-                       " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + \
+            if platform.contains("android"):
+                command += " --keyStorePath " + ANDROID_KEYSTORE_PATH + " --keyStorePassword " \
+                           + ANDROID_KEYSTORE_PASS + " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + \
                        " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS + " --release"
+            else:
+                command += " --release"
 
         output = run(command)
 
@@ -146,9 +149,13 @@ class Tns(object):
         return output
 
     @staticmethod
-    def build(platform=None, mode=None, for_device=False, path=None, release=False):
+    def build(platform=None, mode=None, for_device=False, path=None):
         """
         Build {N} project.
+        platform -> android or ios
+        mode -> release or debug
+        for_device -> applicable only for ios (build ipa instead of app)
+        path -> path to project
         """
 
         command = TNS_PATH + " build"
@@ -157,18 +164,18 @@ class Tns(object):
             command += " {0}".format(platform)
 
         if mode is not None:
-            command += " --{0}".format(mode)
+            if "android" in platform and "release" in mode:
+                command += " --keyStorePath " + ANDROID_KEYSTORE_PATH + " --keyStorePassword " + \
+                           ANDROID_KEYSTORE_PASS + " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + \
+                           " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS + " --release"
+            else:
+                command += " --{0}".format(mode)
 
         if for_device:
             command += " --for-device"
 
         if path is not None:
             command += " --path {0}".format(path)
-
-        if release is True:
-            command += " --keyStorePath " + ANDROID_KEYSTORE_PATH + " --keyStorePassword " + ANDROID_KEYSTORE_PASS + \
-                       " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + \
-                       " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS + " --release"
 
         output = run(command)
 

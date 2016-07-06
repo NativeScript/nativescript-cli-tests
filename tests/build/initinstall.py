@@ -30,7 +30,7 @@ class InitAndInstall(unittest.TestCase):
         Folder.create("TNS_App")
         Folder.navigate_to("TNS_App")
         output = run(os.path.join("..", TNS_PATH) + " init --force")
-        Folder.navigate_to(TEST_RUN_HOME, relative_from__current_folder=False)
+        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
         assert "Project successfully initialized" in output
         assert File.exists("TNS_App/package.json")
@@ -87,7 +87,7 @@ class InitAndInstall(unittest.TestCase):
         Folder.navigate_to("TNS_App")
         run("npm i gulp --save-dev")
         run("npm i lodash --save")
-        Folder.navigate_to(TEST_RUN_HOME, relative_from__current_folder=False)
+        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         output = run("cat TNS_App/package.json")
         assert "devDependencies" in output
         assert "gulp" in output
@@ -111,7 +111,7 @@ class InitAndInstall(unittest.TestCase):
         Folder.navigate_to("TNS_App")
         run("npm i gulp --save-dev")
         run("npm i lodash --save")
-        Folder.navigate_to(TEST_RUN_HOME, relative_from__current_folder=False)
+        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
         output = run("cat TNS_App/package.json")
         assert "devDependencies" in output
@@ -133,7 +133,7 @@ class InitAndInstall(unittest.TestCase):
         run("npm i gulp --save-dev")
         run("npm i lodash --save")
 
-        Folder.navigate_to(TEST_RUN_HOME, relative_from__current_folder=False)
+        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         run("cp -R " + SUT_ROOT_FOLDER + os.path.sep + "template-hello-world TNS_App" + os.path.sep + "app")
         output = run("cat TNS_App/package.json")
         assert "devDependencies" in output

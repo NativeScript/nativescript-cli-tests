@@ -6,6 +6,8 @@ import os
 import platform
 import shutil
 
+import errno
+
 from core.osutils.command import run
 
 
@@ -51,9 +53,19 @@ class Folder(object):
         return current_folder
 
     @staticmethod
-    def navigate_to(folder, relative_from__current_folder=True):
+    def navigate_to(folder, relative_from_current_folder=True):
         new_folder = folder
-        if relative_from__current_folder:
+        if relative_from_current_folder:
             new_folder = os.path.join(Folder.get_current_folder(), folder).replace("\"", "")
         print "Navigate to: " + new_folder
         os.chdir(new_folder)
+
+    @staticmethod
+    def copy(src, dst):
+        try:
+            shutil.copytree(src, dst)
+        except OSError as exc:  # python >2.5
+            if exc.errno == errno.ENOTDIR:
+                shutil.copy(src, dst)
+            else:
+                raise
