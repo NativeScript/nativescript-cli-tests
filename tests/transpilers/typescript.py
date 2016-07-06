@@ -174,7 +174,7 @@ class TypeScript(unittest.TestCase):
         # Next line is because prepare does not work if you npm install packages with relative path before that
         Folder.navigate_to("TNS_App")
         run(".." + os.path.sep + TNS_PATH + " prepare android")
-        Folder.navigate_to(TEST_RUN_HOME, relative_from__current_folder=False)
+        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         # Verify that the `prepare` command installs correct dependencies.
         assert File.exists("TNS_App/node_modules/nativescript-dev-typescript")
         assert File.exists("TNS_App/node_modules/tns-core-modules")
