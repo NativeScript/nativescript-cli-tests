@@ -314,7 +314,7 @@ class BuildAndroid(unittest.TestCase):
         Folder.navigate_to("temp/appbuilderProject")
         build_command = "echo \"\" | ../../node_modules/.bin/tns build android --keyStorePath " + ANDROID_KEYSTORE_PATH + \
                         " --keyStorePassword " + ANDROID_KEYSTORE_PASS + " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + \
-                        " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS + "--sdk 22 " + \
+                        " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS + "--sdk 22 --release " + \
                         "--copy-to ../appbuilderProject-debug.apk --profile-dir ../ --no-hooks --ignore-scripts"
         output = run(build_command)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)

@@ -115,7 +115,7 @@ class Tns(object):
             command += " --log trace"
 
         if release is True:
-            if platform.contains("android"):
+            if "android" in platform:
                 command += " --keyStorePath " + ANDROID_KEYSTORE_PATH + " --keyStorePassword " \
                            + ANDROID_KEYSTORE_PASS + " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + \
                        " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS + " --release"
