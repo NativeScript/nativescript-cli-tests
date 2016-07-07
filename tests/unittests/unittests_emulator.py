@@ -34,7 +34,12 @@ class UnitTestsEmulator(unittest.TestCase):
         Tns.create_app(app_name="TNS_App")
         run(TNS_PATH + " test init --framework mocha --path TNS_App")
 
-        output = run(TNS_PATH + " test android --device emulator-5554 --justlaunch --path TNS_App", 60)
+        # Next 3 lines are required because of https://github.com/NativeScript/nativescript-cli/issues/1636
+        output = run(TNS_PATH + " test android --device emulator-5554 --justlaunch --path TNS_App", 120)
+        assert "Successfully prepared plugin nativescript-unit-test-runner for android." in output
+        assert "Project successfully prepared" in output
+
+        output = run(TNS_PATH + " test android --device emulator-5554 --justlaunch --path TNS_App", 180)
         assert "Successfully prepared plugin nativescript-unit-test-runner for android." in output
         assert "Project successfully prepared" in output
         assert "server started" in output

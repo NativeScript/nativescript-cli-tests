@@ -114,7 +114,7 @@ def suite_emulate():
 
 def suite_unittest():
     suite = unittest.TestSuite()
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(VerboseLogEmulator))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTests))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTestsEmulator))
     if CURRENT_OS == OSType.OSX:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(UnitTestsSimulator))
