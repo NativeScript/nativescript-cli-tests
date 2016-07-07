@@ -142,18 +142,12 @@ class PlatformiOS(unittest.TestCase):
 
     def test_300_platform_add_ios_custom_version(self):
         Tns.create_app(app_name="TNS_App")
-        output = Tns.platform_add(platform="ios@1.4.0", path="TNS_App")
+        output = Tns.platform_add(platform="ios@2.1.0", path="TNS_App")
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
         output = run("cat TNS_App/package.json")
-        assert "\"version\": \"1.4.0\"" in output
-
-        if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
-            assert File.list_of_files_exists(
-                    'TNS_App/platforms/ios',
-                    'platform_ios_1.4.0.txt')
-        Tns.build(platform="ios", path="TNS_App")
+        assert "\"version\": \"2.1.0\"" in output
 
     @unittest.skip(
             "Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
