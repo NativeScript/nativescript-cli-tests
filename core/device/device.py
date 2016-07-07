@@ -33,11 +33,10 @@ class Device(object):
         output = run(TNS_PATH + " device " + platform)
         lines = output.splitlines()
         for line in lines:
-            lline = line.lower()
-            if (platform in lline) and (not "status" in lline):
-                device_id = lline.split("\xe2\x94\x82")[4].replace(" ", "")
-                print device_id
-                if "emulator" not in lline:
+            if (platform.lower() in line.lower()) and (not "status" in line.lower()):
+                device_id = line.split("\xe2\x94\x82")[4].replace(" ", "")
+                print "{0} device with id {1} found.".format(platform, device_id)
+                if "Emulator" not in line:
                     device_ids.append(device_id)
 
         return device_ids

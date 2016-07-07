@@ -286,8 +286,6 @@ class BuildiOS(unittest.TestCase):
 
     def test_400_build_ios_with_wrong_param(self):
         Tns.create_app(app_name="TNS_AppNoPlatform")
-        output = run(
-                TNS_PATH +
-                " build iOS --debug --path TNS_AppNoPlatform")
-        assert "The option 'debug' is not supported." in output
+        output = run(TNS_PATH + " build iOS --wrongParam --path TNS_AppNoPlatform")
+        assert "The option 'wrongParam' is not supported." in output
         assert "error" not in output
