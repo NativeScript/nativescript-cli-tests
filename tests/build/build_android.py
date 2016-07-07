@@ -282,28 +282,39 @@ class BuildAndroid(unittest.TestCase):
 
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "AppBuilder does not use Windows machines")
     def test_330_build_like_appbuilder(self):
+        Folder.cleanup("temp")
         Folder.copy("data/apps/appbuilderProject", "temp/appbuilderProject")
         android_version = run("node -e \"console.log(require('./sut/tns-android/package/package.json').version)\"")
-        init_command = "echo "" | ../node_modules/.bin/tns init --appid com.telerik.appbuilderProject " + \
+
+        init_command = "echo "" | ../../node_modules/.bin/tns init --appid com.telerik.appbuilderProject " + \
                        "--frameworkName tns-android --frameworkVersion " + android_version + \
                        " --path ./appbuilderProject --profile-dir . --no-hooks --ignoreScripts"
 
         # Init
-        Folder.navigate_to("temp")
+        Folder.navigate_to("temp/appbuilderProject")
         output = run(init_command)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         assert "Project successfully initialized." in output
 
+        # Update modules
+        Folder.navigate_to("temp/appbuilderProject/appbuilderProject")
+        uninstall_command = "npm uninstall tns-core-modules --save"
+        output = run(uninstall_command)
+        install_command = "../../../node_modules/.bin/tns plugin add tns-core-modules"
+        output = run(install_command)
+        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
+        assert "Successfully installed plugin tns-core-modules" in output
+
         # Platform Add
-        Folder.navigate_to("temp/appbuilderProject")
-        platform_add_command = "../../node_modules/.bin/tns platform add android --frameworkPath ../../sut/tns-android/package --profile-dir ../ --no-hooks --ignore-scripts --symlink"
+        Folder.navigate_to("temp/appbuilderProject/appbuilderProject")
+        platform_add_command = "../../../node_modules/.bin/tns platform add android --frameworkPath ../../../sut/tns-android/package --profile-dir ../ --no-hooks --ignore-scripts --symlink"
         output = run(platform_add_command)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         assert "Project successfully created" in output
 
         # Prepare
-        Folder.navigate_to("temp/appbuilderProject")
-        prepare_command = "../../node_modules/.bin/tns prepare android --profile-dir ../ --no-hooks --ignore-scripts --sdk 22"
+        Folder.navigate_to("temp/appbuilderProject/appbuilderProject")
+        prepare_command = "../../../node_modules/.bin/tns prepare android --profile-dir ../ --no-hooks --ignore-scripts --sdk 22"
         output = run(prepare_command)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         assert "Successfully prepared plugin tns-core-modules for android" in output
@@ -311,14 +322,15 @@ class BuildAndroid(unittest.TestCase):
         assert "Project successfully prepared" in output
 
         # Build
-        Folder.navigate_to("temp/appbuilderProject")
-        build_command = "echo \"\" | ../../node_modules/.bin/tns build android --keyStorePath " + ANDROID_KEYSTORE_PATH + \
+        Folder.navigate_to("temp/appbuilderProject/appbuilderProject")
+        build_command = "../../../node_modules/.bin/tns build android --keyStorePath " + ANDROID_KEYSTORE_PATH + \
                         " --keyStorePassword " + ANDROID_KEYSTORE_PASS + " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + \
-                        " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS + "--sdk 22 --release " + \
+                        " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS + " --sdk 22 --release " + \
                         "--copy-to ../appbuilderProject-debug.apk --profile-dir ../ --no-hooks --ignore-scripts"
         output = run(build_command)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         assert "Project successfully built" in output
+        assert File.exists("temp/appbuilderProject/appbuilderProject-debug.apk")
 
     def test_400_build_with_no_platform(self):
         output = run(TNS_PATH + " build")
