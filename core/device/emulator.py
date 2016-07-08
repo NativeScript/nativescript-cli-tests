@@ -33,10 +33,7 @@ class Emulator(object):
         """Start Android Emulator"""
         print "Starting emulator on {0}".format(platform.platform())
 
-        start_command = EMULATOR_PATH + " -avd " + emulator_name + " -port " + port
-        if 'ACTIVE_UI' in os.environ:
-            if "NO" in os.environ['ACTIVE_UI']:
-                start_command = start_command + " -no-skin -no-audio -no-window"
+        start_command = EMULATOR_PATH + " -avd " + emulator_name + " -port " + port + " -wipe-data"
 
         if CURRENT_OS == OSType.WINDOWS:
             run(start_command, timeout, False)
@@ -73,11 +70,15 @@ class Emulator(object):
     def ensure_available():
         """Ensure Android Emulator is running"""
         output = run(TNS_PATH + " device")
-        if 'emulator' not in output:
-            output = run(TNS_PATH + " device")
-            if not 'emulator' in output:
-                Emulator.stop_emulators()
-                Emulator.start_emulator(emulator_name="Api19", port="5554", wait_for=True)
+        lines = output.splitlines()
+        found = False
+        for line in lines:
+            if ('emulator' in line) and ("Connected" in line):
+                found = True
+                break
+        else:
+            Emulator.stop_emulators()
+            Emulator.start_emulator(emulator_name="Api19", port="5554", wait_for=True)
 
     @staticmethod
     def cat_app_file(app_name, file_path):

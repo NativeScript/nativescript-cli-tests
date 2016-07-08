@@ -58,6 +58,7 @@ class Simulator(object):
     def stop_simulators():
         """Stop running simulators"""
         Process.kill("Simulator")
+        time.sleep(1)
 
     @staticmethod
     def delete(name):

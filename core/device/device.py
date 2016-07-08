@@ -53,13 +53,13 @@ class Device(object):
         if platform == "android":
             device_ids = Device.get_ids(platform)
             for device_id in device_ids:
-                output = run(ADB_PATH + "-s {0} shell pm list packages".format(device_id), timeout=120)
+                output = run(ADB_PATH + " -s {0} shell pm list packages".format(device_id), timeout=120)
                 lines = output.splitlines()
                 for line in lines:
                     if app_prefix in line:
                         app_name = line.split(":")[1]
                         app_name = app_name.replace(" ","")
-                        uninstall_result = run("-s {0} shell pm uninstall {1}".format(device_id, app_name), timeout=120)
+                        uninstall_result = run(ADB_PATH + " -s {0} shell pm uninstall {1}".format(device_id, app_name), timeout=120)
                         if "Success" in uninstall_result:
                             print "{0} application successfully uninstalled.".format(app_prefix)
                         else:

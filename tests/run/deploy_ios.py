@@ -24,6 +24,7 @@ class DeployiOS(unittest.TestCase):
         print ""
 
         Folder.cleanup('./TNS_App')
+        Device.uninstall_app("org.nativescript.", platform="ios", fail=False)
 
     def tearDown(self):
         Folder.cleanup('./TNS_App')
@@ -37,7 +38,7 @@ class DeployiOS(unittest.TestCase):
                 platform="ios",
                 framework_path=IOS_RUNTIME_SYMLINK_PATH,
                 symlink=True)
-        output = run(TNS_PATH + " deploy ios --path TNS_App  --justlaunch")
+        output = run(TNS_PATH + " deploy ios --path TNS_App  --justlaunch", timeout=180)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device" in output
@@ -48,7 +49,7 @@ class DeployiOS(unittest.TestCase):
 
     def test_300_deploy_ios_platform_not_added(self):
         Tns.create_app(app_name="TNS_App")
-        output = run(TNS_PATH + " deploy ios --path TNS_App --justlaunch")
+        output = run(TNS_PATH + " deploy ios --path TNS_App --justlaunch", timeout=180)
         assert "Copying template files..." in output
         assert "Installing tns-ios" in output
         assert "Project successfully created." in output

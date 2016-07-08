@@ -39,7 +39,7 @@ class DeployAndroid(unittest.TestCase):
         Folder.cleanup('./TNS_App')
 
     def test_001_deploy_android(self):
-        output = run(TNS_PATH + " deploy android --path TNS_App  --justlaunch")
+        output = run(TNS_PATH + " deploy android --path TNS_App  --justlaunch", timeout=180)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
@@ -54,7 +54,7 @@ class DeployAndroid(unittest.TestCase):
                      " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
                      " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS +
                      " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS +
-                     " --release --path TNS_App --justlaunch")
+                     " --release --path TNS_App --justlaunch", timeout=180)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
@@ -64,7 +64,7 @@ class DeployAndroid(unittest.TestCase):
             assert id in output
 
     def test_200_deploy_android_deviceid(self):
-        output = run(TNS_PATH + " deploy android --device emulator-5554 --path TNS_App --justlaunch")
+        output = run(TNS_PATH + " deploy android --device emulator-5554 --path TNS_App --justlaunch", timeout=180)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier 'emulator-5554'" in output
@@ -75,7 +75,7 @@ class DeployAndroid(unittest.TestCase):
     def test_201_deploy_android_inside_project(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
-        output = run(os.path.join("..", TNS_PATH) + " deploy android --path TNS_App --justlaunch")
+        output = run(os.path.join("..", TNS_PATH) + " deploy android --path TNS_App --justlaunch", timeout=180)
         os.chdir(current_dir)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -87,7 +87,7 @@ class DeployAndroid(unittest.TestCase):
 
     def test_300_deploy_android_platform_not_added(self):
         Tns.create_app(app_name="TNS_AppNoPlatform")
-        output = run(TNS_PATH + " deploy android --path TNS_AppNoPlatform --justlaunch")
+        output = run(TNS_PATH + " deploy android --path TNS_AppNoPlatform --justlaunch", timeout=180)
         assert "Copying template files..." in output
         assert "Installing tns-android" in output
         assert "Project successfully created." in output
