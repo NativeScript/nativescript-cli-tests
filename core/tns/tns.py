@@ -189,7 +189,7 @@ class Tns(object):
         return output
 
     @staticmethod
-    def run(platform=None, emulator=False, device=None, path=None, assert_success=True):
+    def run(platform=None, emulator=False, device=None, path=None, log_trace=True, assert_success=True):
         """
         Run {N} project.
         """
@@ -208,7 +208,10 @@ class Tns(object):
         if path is not None:
             command += " --path {0}".format(path)
 
-        command += " --justlaunch --log trace"
+        if log_trace:
+            command += " --log trace"
+
+        command += " --justlaunch"
         output = run(command)
 
         if assert_success:
@@ -243,7 +246,10 @@ class Tns(object):
             command += " --emulator"
 
         if device is not None:
-            command += " --device \"{0}\"".format(device)
+            if " " in device:
+                command += " --device \"{0}\"".format(device)
+            else:
+                command += " --device {0}".format(device)
 
         if sdk is not None:
             command += " --sdk \"{0}\"".format(sdk)

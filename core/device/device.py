@@ -114,9 +114,12 @@ class Device(object):
     def cat_app_file(platform, app_name, file_path):
         '''Return content of file on device'''
         if platform is "android":
-            command = ADB_PATH + " shell run-as org.nativescript." + app_name + " cat files/" + file_path;
+            device_id = Device.get_id(platform="android")
+            command = ADB_PATH + " -s {0} shell run-as org.nativescript.{1} cat files/{2}"\
+                .format(device_id, app_name, file_path)
         if platform is "ios":
-            command = "ddb device get-file \"Library/Application Support/LiveSync/" + file_path + "\" --app org.nativescript." + app_name
+            command = "ddb device get-file \"Library/Application Support/LiveSync/{0}\" --app org.nativescript."\
+                .format(file_path, app_name)
         output = run(command)
         return output
 

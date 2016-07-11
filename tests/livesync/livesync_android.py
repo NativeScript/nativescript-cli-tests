@@ -43,32 +43,31 @@ class LiveSyncAndroid(unittest.TestCase):
         pass
 
     # This test executes the Run -> LiveSync
-    def test_001_livesync_android(self):
+    def test_001_livesync_android_all_devices_modify_files(self):
         Tns.create_app_platform_add(
                 app_name="TNS_App",
                 platform="android",
                 framework_path=ANDROID_RUNTIME_PATH)
-        Tns.run(platform="android", path="TNS_App")
-
+        Tns.run(platform="android", path="TNS_App", log_trace=False)
         replace_all(app_name="TNS_App")
-        Tns.livesync(platform="android", path="TNS_App")
+        Tns.livesync(platform="android", path="TNS_App", log_trace=False)
         verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")
 
     # This test executes the Run -> LiveSync -> Run work flow on an android
-    def test_002_livesync_run_android(self):
+    def test_002_livesync_single_device_modify_files(self):
         Tns.create_app_platform_add(
                 app_name="TNS_App",
                 platform="android",
                 framework_path=ANDROID_RUNTIME_PATH)
-        Tns.run(platform="android", path="TNS_App")
+        Tns.run(platform="android", path="TNS_App", log_trace=False)
 
         device_id = Device.get_id(platform="android")
         replace_all(app_name="TNS_App")
-        Tns.livesync(platform="android", device=device_id, path="TNS_App")
+        Tns.livesync(platform="android", device=device_id, path="TNS_App", log_trace=False)
         verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")
 
         File.replace("TNS_App/app/main-page.xml", "TEST", "RUN")
-        Tns.run(platform="android", path="TNS_App")
+        Tns.run(platform="android", path="TNS_App", log_trace=False)
         Device.file_contains("android", "TNSApp", "app/main-page.xml", text="RUN")
 
     def test_201_livesync_android_add_new_files(self):
@@ -76,16 +75,14 @@ class LiveSyncAndroid(unittest.TestCase):
                 app_name="TNS_App",
                 platform="android",
                 framework_path=ANDROID_RUNTIME_PATH)
-        Tns.run(platform="android", path="TNS_App")
+        Tns.run(platform="android", path="TNS_App", log_trace=False)
 
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
         shutil.copyfile("TNS_App/app/main-page.js", "TNS_App/app/test.js")
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test.css")
 
         os.makedirs("TNS_App/app/test")
-        shutil.copyfile(
-                "TNS_App/app/main-view-model.js",
-                "TNS_App/app/test/main-view-model.js")
+        shutil.copyfile("TNS_App/app/main-view-model.js", "TNS_App/app/test/main-view-model.js")
 
         Tns.livesync(platform="android", path="TNS_App")
         time.sleep(5)
@@ -104,19 +101,13 @@ class LiveSyncAndroid(unittest.TestCase):
         pass
 
     def test_301_livesync_before_run(self):
-        Tns.create_app_platform_add(
-                app_name="TNS_App",
-                platform="android",
-                framework_path=ANDROID_RUNTIME_PATH)
-
+        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
         replace_all(app_name="TNS_App")
 
         # Verify livesync without specify platform prompt user to specify platform
         if (Device.get_count("android") > 0) and (Device.get_count("ios") > 0):
-            print "When both android and ios are available livesync should prompt me"
-            output = Tns.livesync(path="TNS_App", assert_success=False)
-            assert "Multiple device platforms detected (iOS and Android). " + \
-                   "Specify platform or device on command line" in output
+            output = Tns.livesync(path="TNS_App", assert_success=False, log_trace=False)
+            assert "Multiple device platforms detected (iOS and Android)" in output
 
-        Tns.livesync(platform="android", path="TNS_App")
+        Tns.livesync(platform="android", path="TNS_App", log_trace=False)
         verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")

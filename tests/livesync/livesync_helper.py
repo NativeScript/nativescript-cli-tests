@@ -26,9 +26,9 @@ def verify_replaced(device_type, app_name, file_change):
     if device_type == DeviceType.SIMULATOR:
         Simulator.file_contains(app_name, file, text)
     if device_type == DeviceType.ANDROID:
-        Device.file_contains("android", app_name, file, text)
+        Device.file_contains(platform="android", app_name=app_name, file_path=file, text=text)
     if device_type == DeviceType.IOS:
-        Device.file_contains("ios", app_name, file, text)
+        Device.file_contains(platform="ios", app_name=app_name, file_path=file, text=text)
 
 
 def replace_all(app_name):
