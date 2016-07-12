@@ -52,7 +52,7 @@ class PluginsiOSLibs(unittest.TestCase):
                 symlink=True)
         output = Tns.build(platform="ios", path="TNS_App")
         # It targets 8.0 since a dynamic framework was added to the widgets.
-        assert "The iOS Deployment Target is now 8.0" in output
+        
         assert File.exists(
                 "TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
         assert File.exists(
