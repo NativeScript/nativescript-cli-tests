@@ -19,10 +19,7 @@ class DebugiOS(unittest.TestCase):
         Emulator.stop_emulators()
         Simulator.stop_simulators()
         Folder.cleanup('./TNS_App')
-        Tns.create_app_platform_add(
-            app_name="TNS_App",
-            platform="ios",
-            framework_path=IOS_RUNTIME_SYMLINK_PATH)
+        Tns.create_app_platform_add(app_name="TNS_App", platform="ios", framework_path=IOS_RUNTIME_SYMLINK_PATH)
 
     def setUp(self):
         Device.ensure_available(platform="ios")

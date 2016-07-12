@@ -151,7 +151,8 @@ def suite_debug():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugAndroid))
     if CURRENT_OS == OSType.OSX:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugSimulator))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
+        # Ignore because of https://github.com/NativeScript/nativescript-cli/issues/1920
+        # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
     return suite
 
 
