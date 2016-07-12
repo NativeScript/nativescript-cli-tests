@@ -28,7 +28,7 @@ class DebugiOS(unittest.TestCase):
         Device.ensure_available(platform="ios")
         Process.kill("Safari")
         Process.kill("Inspector")
-        # Device.uninstall_app(app_prefix="org.nativescript.", platform="ios", fail=False)
+        Device.uninstall_app(app_prefix="org.nativescript.", platform="ios", fail=False)
 
     def tearDown(self):
         Process.kill("Safari")
@@ -40,9 +40,7 @@ class DebugiOS(unittest.TestCase):
 
     def test_001_debug_ios_device_debug_brk(self):
         File.cat("TNS_App/package.json")
-        output = run(TNS_PATH + " debug ios --debug-brk --path TNS_App" +
-                     " --frameworkPath " + IOS_RUNTIME_SYMLINK_PATH +
-                     " --device " + Device.get_id("ios") + " --timeout 180", 200)
+        output = run(TNS_PATH + " debug ios --path TNS_App --device " + Device.get_id("ios") + " --timeout 180", 200)
 
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -61,9 +59,7 @@ class DebugiOS(unittest.TestCase):
         assert "Successfully run application " in output
         time.sleep(5)
 
-        output = run(TNS_PATH + " debug ios --start --path TNS_App" +
-                     " --frameworkPath " + IOS_RUNTIME_SYMLINK_PATH +
-                     " --timeout 120", 120)
+        output = run(TNS_PATH + " debug ios --start --path TNS_App --timeout 120", 120)
 
         assert "Frontend client connected" in output
         assert "Backend socket created" in output

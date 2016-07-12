@@ -10,7 +10,7 @@ from core.device.simulator import Simulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.watcher import Watcher
-from core.settings.settings import SIMULATOR_NAME, IOS_RUNTIME_SYMLINK_PATH, TNS_PATH
+from core.settings.settings import SIMULATOR_NAME, IOS_RUNTIME_SYMLINK_PATH, TNS_PATH, DeviceType
 from core.tns.tns import Tns
 
 
@@ -23,6 +23,8 @@ from core.tns.tns import Tns
 # test_301
 #   -> run full sync directly with out run before that
 #########################################
+from tests.livesync.livesync_helper import replace_all, verify_all_replaced
+
 
 class LiveSyncSimulator(Watcher):
     @classmethod
@@ -48,14 +50,7 @@ class LiveSyncSimulator(Watcher):
         assert "Starting iOS Simulator" not in output
 
         # replace
-        File.replace("TNS_App/app/main-page.xml", "TAP", "TEST")
-        File.replace("TNS_App/app/main-view-model.js", "taps", "clicks")
-        File.replace("TNS_App/app/app.css", "30", "20")
-
-        File.replace("TNS_App/node_modules/tns-core-modules/LICENSE", "Copyright", "MyCopyright")
-        File.replace(
-                "TNS_App/node_modules/tns-core-modules/application/application-common.js",
-                "(\"globals\");", "(\"globals\"); // test")
+        replace_all(app_name="TNS_App")
 
         # livesync
         command = TNS_PATH + " livesync ios --emulator --watch --path TNS_App --log trace"
@@ -85,25 +80,20 @@ class LiveSyncSimulator(Watcher):
     def test_001_full_livesync_ios_simulator_xml_js_css_tns_files(self):
         self.wait_for_text_in_output("prepared")
         time.sleep(3)  # ... than delete these.
-
-        Simulator.file_contains("TNSApp", "app/main-page.xml", text="<Button text=\"TEST\" tap=\"{{ tapAction }}\" />")
-        Simulator.file_contains("TNSApp", "app/main-view-model.js", text="this.set(\"message\", this.counter + \" clicks left\");")
-        Simulator.file_contains("TNSApp", "app/app.css", text="font-size: 20;")
-        Simulator.file_contains("TNSApp", "app/tns_modules/LICENSE", text="MyCopyright")
-        Simulator.file_contains("TNSApp", "app/tns_modules/application/application-common.js",text="require(\"globals\"); // test")
+        verify_all_replaced(device_type=DeviceType.SIMULATOR, app_name="TNSApp")
 
     # Add new files
     def test_101_livesync_ios_simulator_watch_add_xml_file(self):
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test/test.xml")
         self.wait_for_text_in_output("app/test/test.xml to")
 
-        Simulator.file_contains("TNSApp", "app/test/test.xml", text="<Button text=\"TEST\" tap=\"{{ tapAction }}\" />")
+        Simulator.file_contains("TNSApp", "app/test/test.xml", text="TEST")
 
     def test_102_livesync_ios_simulator_watch_add_js_file(self):
         shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/test/test.js")
         self.wait_for_text_in_output("app/test/test.js to")
         time.sleep(3)
-        Simulator.file_contains("TNSApp", "app/test/test.js", text="application.start();")
+        Simulator.file_contains("TNSApp", "app/test/test.js", text="application.start")
 
     def test_103_livesync_ios_simulator_watch_add_css_file(self):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test/test.css")
@@ -116,13 +106,13 @@ class LiveSyncSimulator(Watcher):
         File.replace("TNS_App/app/main-page.xml", "TEST", "WATCH")
         self.wait_for_text_in_output("app/main-page.xml to")
         time.sleep(1)
-        Simulator.file_contains("TNSApp", "app/main-page.xml", text="<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />")
+        Simulator.file_contains("TNSApp", "app/main-page.xml", text="WATCH")
 
     def test_112_livesync_ios_simulator_watch_change_js_file(self):
         File.replace("TNS_App/app/main-view-model.js", "clicks", "tricks")
         self.wait_for_text_in_output("app/main-view-model.js to")
         time.sleep(3)
-        Simulator.file_contains("TNSApp", "app/main-view-model.js", text="this.set(\"message\", this.counter + \" tricks left\");")
+        Simulator.file_contains("TNSApp", "app/main-view-model.js", text="tricks left")
 
     def test_113_livesync_ios_simulator_watch_change_css_file(self):
         File.replace("TNS_App/app/app.css", "#284848", "green")
@@ -155,7 +145,7 @@ class LiveSyncSimulator(Watcher):
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/folder/test.xml")
         self.wait_for_text_in_output("app/folder/test.xml file with")
         time.sleep(3)
-        Simulator.file_contains("TNSApp", "app/folder/test.xml", text="<Button text=\"WATCH\" tap=\"{{ tapAction }}\" />")
+        Simulator.file_contains("TNSApp", "app/folder/test.xml", text="WATCH")
     #         remove("TNS_App/app/folder")
     #         self.wait_for_text_in_output("app/folder/")
     #
@@ -166,7 +156,7 @@ class LiveSyncSimulator(Watcher):
         shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/folder/test.js")
         self.wait_for_text_in_output("app/folder/test.js to")
         time.sleep(3)
-        Simulator.file_contains("TNSApp", "app/folder/test.js", text="application.start();")
+        Simulator.file_contains("TNSApp", "app/folder/test.js", text="application.start")
 
     def test_133_livesync_ios_simulator_watch_add_css_file_to_new_folder(self):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/folder/test.css")
@@ -199,7 +189,7 @@ class LiveSyncSimulator(Watcher):
         time.sleep(3)
 
         Simulator.file_contains("appTest", "app/main-page.xml", text="MYTAP")
-        Simulator.file_contains("appTest", "app/main-view-model.js", text="clicks left" )
+        Simulator.file_contains("appTest", "app/main-view-model.js", text="clicks left")
         Simulator.file_contains("appTest", "app/app.css", text="font-size: 20;")
         Simulator.file_contains("appTest", "app/tns_modules/LICENSE", text="MyCopyright")
         Simulator.file_contains("appTest", "app/tns_modules/application/application-common.js", text="require(\"globals\"); // test")

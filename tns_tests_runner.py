@@ -139,7 +139,9 @@ def suite_livesync():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncEmulatorWatch))
     if CURRENT_OS == OSType.OSX:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncSimulator))
-        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
+        # Do not run livesync tests on real device becase of
+        # https://github.com/NativeScript/nativescript-cli/issues/1915
+        # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSynciOS))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(LiveSyncAndroid))
     return suite
 
@@ -149,8 +151,7 @@ def suite_debug():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugAndroid))
     if CURRENT_OS == OSType.OSX:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugSimulator))
-        # https://github.com/NativeScript/nativescript-cli/issues/1620
-        # suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
+        suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DebugiOS))
     return suite
 
 

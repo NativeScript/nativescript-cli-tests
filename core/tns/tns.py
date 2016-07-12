@@ -228,7 +228,7 @@ class Tns(object):
         return output
 
     @staticmethod
-    def livesync(platform=None, emulator=False, device=None, sdk=None, path=None, log_trace=True, assert_success=True):
+    def livesync(platform=None, emulator=False, device=None, sdk=None, path=None, watch=False, log_trace=True, assert_success=True):
         """
         The livesync command.
 
@@ -244,6 +244,9 @@ class Tns(object):
 
         if emulator:
             command += " --emulator"
+
+        if watch:
+            command += " --watch"
 
         if device is not None:
             if " " in device:

@@ -118,7 +118,7 @@ class Device(object):
             command = ADB_PATH + " -s {0} shell run-as org.nativescript.{1} cat files/{2}"\
                 .format(device_id, app_name, file_path)
         if platform is "ios":
-            command = "ddb device get-file \"Library/Application Support/LiveSync/{0}\" --app org.nativescript."\
+            command = "ddb device get-file \"Library/Application Support/LiveSync/{0}\" --app org.nativescript.{1}"\
                 .format(file_path, app_name)
         output = run(command)
         return output
