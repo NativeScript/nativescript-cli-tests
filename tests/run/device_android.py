@@ -56,7 +56,8 @@ class DeviceAndroid(unittest.TestCase):
 
         # Get logs
         output = run(TNS_PATH + " device log --device " + device_id, timeout=60)
-        assert ("ActivityManager" in output) or ("AndroidRuntime" in output) or ("Wifi" in output) or ("WIFI" in output)
+        assert ("ActivityManager" in output) or ("AndroidRuntime" in output) or \
+               ("Wifi" in output) or ("WIFI" in output) or ("Netlink" in output)
 
         # TODO: Uncomment after https://github.com/NativeScript/nativescript-cli/issues/1912 is fixed
 

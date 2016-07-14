@@ -29,6 +29,7 @@ class DeployAndroid(unittest.TestCase):
         Folder.cleanup('./TNS_AppNoPlatform')
         Emulator.ensure_available()
         Device.ensure_available(platform="android")
+        Device.uninstall_app(app_prefix="org.nativescript", platform="android", fail=False)
         Folder.cleanup('./TNS_App/platforms/android/build/outputs')
 
     def tearDown(self):
