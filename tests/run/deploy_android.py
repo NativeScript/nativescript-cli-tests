@@ -70,7 +70,8 @@ class DeployAndroid(unittest.TestCase):
         assert "Successfully deployed on device with identifier 'emulator-5554'" in output
         device_ids = Device.get_ids("android")
         for id in device_ids:
-            assert id not in output
+            if "emulator" not in id:
+                assert id not in output
 
     def test_201_deploy_android_inside_project(self):
         current_dir = os.getcwd()
