@@ -92,8 +92,8 @@ class StaticBindingGenerator(unittest.TestCase):
                 "File and folders not created"
         else:
             assert False, "Build failed"
-
-    def test_003_running_app_class_called(self):
-        print ("Running app for android")
-        output = Tns.run(platform="android", emulator=True, path=self.app_folder)
-        assert "------we got called from onCreate" in output, "Expected output not found"
+    #
+    # def test_003_running_app_class_called(self):
+    #     print ("Running app for android")
+    #     output = Tns.run(platform="android", emulator=True, path=self.app_folder)
+    #     assert "------we got called from onCreate" in output, "Expected output not found"

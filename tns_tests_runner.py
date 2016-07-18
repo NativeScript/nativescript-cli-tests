@@ -45,6 +45,7 @@ from tests.run.device_android import DeviceAndroid
 from tests.run.device_ios import DeviceiOS
 from tests.run.run_android import RunAndroid
 from tests.run.run_ios import RuniOS
+from tests.run.sbg_tests import StaticBindingGenerator
 from tests.transpilers.typescript import TypeScript
 from tests.unittests.unittests import UnitTests
 from tests.unittests.unittests_emulator import UnitTestsEmulator
@@ -126,6 +127,7 @@ def suite_run():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeployAndroid))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceAndroid))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(RunAndroid))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(StaticBindingGenerator))
     if CURRENT_OS == OSType.OSX:
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeployiOS))
         suite.addTests(unittest.TestLoader().loadTestsFromTestCase(DeviceiOS))
