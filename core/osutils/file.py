@@ -12,6 +12,7 @@ import fileinput
 import fnmatch
 import os
 import time
+from core.settings.settings import CURRENT_OS, OSType
 
 from core.settings.settings import TEST_LOG
 
@@ -61,11 +62,12 @@ class File(object):
 
     @staticmethod
     def cat(path):
-        command = "cat " + path
-        output = os.system(command)
-        File.append(TEST_LOG, command)
-        print command
-        return output
+        if CURRENT_OS == OSType.WINDOWS:
+            command = "type "
+        elif CURRENT_OS == OSType.OSX:
+            command = "cat "
+        command += path
+        return command
 
     @staticmethod
     def extension_exists(path, extension):
