@@ -1,0 +1,18 @@
+{
+	"nativescript": {
+		"id": "org.nativescript.sbgtestapp",
+		"tns-android": {
+			"version": "2.0.0"
+		}
+	},
+	"dependencies": {
+		"tns-core-modules": "1.7.1"
+	},
+	"devDependencies": {
+		"babel-traverse": "6.9.0",
+		"babel-types": "6.10.0",
+		"babylon": "6.8.1",
+		"filewalker": "0.1.2",
+		"lazy": "1.0.11"
+	}
+}
