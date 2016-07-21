@@ -59,7 +59,7 @@ TEST_LOG = os.path.join(OUTPUT_FOLDER, 'testLog.txt')
 VERBOSE_LOG = os.path.join(OUTPUT_FOLDER, 'verboseLog.txt')
 
 # Default Simulator and Emulator
-EMULATOR_NAME = "Api19"
+EMULATOR_NAME = "Emulator-Api19-Default"
 SIMULATOR_NAME = "iPhone691"
 
 # Android SDK
