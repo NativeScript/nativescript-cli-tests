@@ -8,7 +8,7 @@ import time
 
 from core.osutils.command import run
 from core.osutils.process import Process
-from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ADB_PATH, EMULATOR_PATH
+from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ADB_PATH, EMULATOR_PATH, EMULATOR_NAME
 
 
 class Emulator(object):
@@ -78,7 +78,7 @@ class Emulator(object):
                 break
         else:
             Emulator.stop_emulators()
-            Emulator.start_emulator(emulator_name="Api19", port="5554", wait_for=True)
+            Emulator.start_emulator(emulator_name=EMULATOR_NAME, port="5554", wait_for=True)
 
     @staticmethod
     def cat_app_file(app_name, file_path):

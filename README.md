@@ -53,7 +53,7 @@ SMOKE
 DEFAULT
 - All suites without dependencies on real devices  (all priorities)
 - Following AVDs should be available
-   Api19 - Android emulator with API19
+   Emulator-Api19-Default - Android emulator with API19
 - iOS SDK 9.1, 9.2 and 9.3 should be available
 FULL
 - Runs all tests

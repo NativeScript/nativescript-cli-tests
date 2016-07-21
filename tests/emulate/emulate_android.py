@@ -13,7 +13,7 @@ from core.device.emulator import Emulator
 from core.osutils.command import run
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
-    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS
+    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_NAME
 from core.tns.tns import Tns
 
 
@@ -59,7 +59,7 @@ class EmulateAndroid(unittest.TestCase):
 
     def test_002_emulate_android_release(self):
 
-        output = run(TNS_PATH + " emulate android --device Api19 " +
+        output = run(TNS_PATH + " emulate android --device " + EMULATOR_NAME +
                          "--keyStorePath " + ANDROID_KEYSTORE_PATH +
                         " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
                         " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS +
@@ -83,7 +83,7 @@ class EmulateAndroid(unittest.TestCase):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
         output = run(os.path.join("..", TNS_PATH) +
-                         " emulate android --device Api19 --timeout 600 --justlaunch", timeout=660)
+                     " emulate android --device " + EMULATOR_NAME + " --timeout 600 --justlaunch", timeout=660)
         os.chdir(current_dir)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
