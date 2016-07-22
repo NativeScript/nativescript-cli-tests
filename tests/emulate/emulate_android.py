@@ -60,7 +60,7 @@ class EmulateAndroid(unittest.TestCase):
     def test_002_emulate_android_release(self):
 
         output = run(TNS_PATH + " emulate android --device " + EMULATOR_NAME +
-                         "--keyStorePath " + ANDROID_KEYSTORE_PATH +
+                        " --keyStorePath " + ANDROID_KEYSTORE_PATH +
                         " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
                         " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS +
                         " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS +
@@ -87,7 +87,7 @@ class EmulateAndroid(unittest.TestCase):
         os.chdir(current_dir)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
-        assert "Starting Android emulator with image Api19" in output
+        assert "Starting Android emulator with image " + EMULATOR_NAME in output
         assert "installing" in output
         assert "running" in output
 
