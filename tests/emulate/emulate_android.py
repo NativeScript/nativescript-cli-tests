@@ -97,7 +97,7 @@ class EmulateAndroid(unittest.TestCase):
     def test_300_emulate_android_platform_not_added(self):
         Tns.create_app(app_name="TNSAppNoPlatform")
         output = run(TNS_PATH +
-            " emulate android --device Api19 --timeout 600  --justlaunch --path TNSAppNoPlatform",
+            " emulate android --device " + EMULATOR_NAME + " --timeout 600  --justlaunch --path TNSAppNoPlatform",
             timeout=660)
         assert "Copying template files..." in output
         assert "Project successfully created." in output
