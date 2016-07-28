@@ -256,6 +256,7 @@ class PlatformiOS_Tests(unittest.TestCase):
         assert "Project successfully created." in output
         assert not Folder.is_empty(self.app_name + "/platforms/ios/internal/metadata-generator")
 
+    @unittest.skip("REVISE")
     def test_400_platform_add_existing_platform(self):
         self.test_004_platform_add_ios_symlink_and_framework_path()
 
