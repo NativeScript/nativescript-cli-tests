@@ -71,7 +71,7 @@ class Typescript_Tests(unittest.TestCase):
         assert File.extension_exists(self.app_folder, ".ts")
 
         # Verify source map in app
-        output = run("cat ./" + self.app_folder + "app.js")
+        output = run("cat ./" + self.app_folder + "/app.js")
         assert "//# sourceMappingURL=app.js.map" in output
 
         output = run("cat ./" + self.app_folder + "/app.js.map")
@@ -105,7 +105,7 @@ class Typescript_Tests(unittest.TestCase):
             assert File.extension_exists(self.app_folder, ".ts")
 
             assert File.extension_exists(self.assets_folder + "/app", ".js")
-            assert File.extension_exists(self.assets_folder + "app", ".map")
+            assert File.extension_exists(self.assets_folder + "/app", ".map")
             assert File.extension_exists(self.assets_folder + "/app", ".ts")
             assert File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".js")
             assert not File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".ts")
