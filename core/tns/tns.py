@@ -29,7 +29,7 @@ class Tns(object):
         Create {N} project.
         """
 
-        command = TNS_PATH + " create {0}".format(app_name)
+        command = TNS_PATH + " create \"{0}\"".format(app_name)
 
         if path is not None:
             command += " --path " + path
@@ -84,7 +84,7 @@ class Tns(object):
             command += " --framework-path {0}".format(framework_path)
 
         if path is not None:
-            command += " --path {0}".format(path)
+            command += " --path \"{0}\"".format(path)
 
         if symlink is True:
             command += " --symlink"
@@ -175,7 +175,7 @@ class Tns(object):
             command += " --for-device"
 
         if path is not None:
-            command += " --path {0}".format(path)
+            command += " --path \"{0}\"".format(path)
 
         output = run(command)
 
