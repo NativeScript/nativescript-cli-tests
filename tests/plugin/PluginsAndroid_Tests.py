@@ -47,8 +47,7 @@ class PluginsAndroid_Tests(unittest.TestCase):
         assert "tns-plugin" in output
 
     def test_002_plugin_add_after_platform_add_android(self):
-        Tns.create_app_platform_add(app_name="TNS_App", platform="android",
-                                    framework_path=ANDROID_RUNTIME_PATH)
+        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
         output = run(TNS_PATH + " plugin add tns-plugin --path TNS_App")
         if CURRENT_OS != OSType.WINDOWS:
             assert "TNS_App/node_modules/tns-plugin" in output
@@ -61,10 +60,7 @@ class PluginsAndroid_Tests(unittest.TestCase):
         assert "tns-plugin" in output
 
     def test_003_plugin_add_inside_project(self):
-        Tns.create_app_platform_add(
-            app_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
+        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
         output = run(os.path.join("..", TNS_PATH) + " plugin add tns-plugin")
@@ -95,9 +91,6 @@ class PluginsAndroid_Tests(unittest.TestCase):
         output = run(TNS_PATH + " build android --path TNS_App")
         assert "Project successfully prepared" in output
 
-        # Not valid for 1.3.0+
-        # assert "Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output
-
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
         assert "ERROR" not in output
@@ -108,20 +101,15 @@ class PluginsAndroid_Tests(unittest.TestCase):
         assert File.exists(
             "TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
 
-    def test_200_plugin_add_before_platform_add_android(self):
+    def test_200_plugin_add_before_platform_add_android_and_build(self):
         Tns.create_app(app_name="TNS_App")
-        output = run(
-            TNS_PATH +
-            " plugin add nativescript-telerik-ui --path TNS_App")
+        output = run(TNS_PATH + " plugin add nativescript-telerik-ui --ignore-scripts --path TNS_App")
         if CURRENT_OS != OSType.WINDOWS:
             assert "TNS_App/node_modules/nativescript-telerik-ui" in output
         assert "Successfully installed plugin nativescript-telerik-ui" in output
-        assert File.exists(
-            "TNS_App/node_modules/nativescript-telerik-ui/package.json")
-        assert File.exists(
-            "TNS_App/node_modules/nativescript-telerik-ui/platforms/android")
-        assert File.exists(
-            "TNS_App/node_modules/nativescript-telerik-ui/platforms/ios")
+        assert File.exists("TNS_App/node_modules/nativescript-telerik-ui/package.json")
+        assert File.exists("TNS_App/node_modules/nativescript-telerik-ui/platforms/android")
+        assert File.exists("TNS_App/node_modules/nativescript-telerik-ui/platforms/ios")
         output = run("cat TNS_App/package.json")
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
@@ -133,22 +121,14 @@ class PluginsAndroid_Tests(unittest.TestCase):
         Tns.build(platform="android", path="TNS_App")
 
     def test_201_plugin_add_after_platform_add_android(self):
-        Tns.create_app_platform_add(
-            app_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
-        output = run(
-            TNS_PATH +
-            " plugin add nativescript-telerik-ui --path TNS_App")
+        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
+        output = run(TNS_PATH + " plugin add nativescript-telerik-ui --ignore-scripts --path TNS_App")
         if CURRENT_OS != OSType.WINDOWS:
             assert "TNS_App/node_modules/nativescript-telerik-ui" in output
         assert "Successfully installed plugin nativescript-telerik-ui" in output
-        assert File.exists(
-            "TNS_App/node_modules/nativescript-telerik-ui/package.json")
-        assert File.exists(
-            "TNS_App/node_modules/nativescript-telerik-ui/platforms/android")
-        assert File.exists(
-            "TNS_App/node_modules/nativescript-telerik-ui/platforms/ios")
+        assert File.exists("TNS_App/node_modules/nativescript-telerik-ui/package.json")
+        assert File.exists("TNS_App/node_modules/nativescript-telerik-ui/platforms/android")
+        assert File.exists("TNS_App/node_modules/nativescript-telerik-ui/platforms/ios")
         output = run("cat TNS_App/package.json")
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
@@ -156,20 +136,13 @@ class PluginsAndroid_Tests(unittest.TestCase):
         Tns.build(platform="android", path="TNS_App")
 
     def test_300_build_app_with_plugin_added_outside_project(self):
-
-        Tns.create_app_platform_add(
-            app_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
+        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
 
         output = run(TNS_PATH + " plugin add tns-plugin --path TNS_App")
         assert "Successfully installed plugin tns-plugin" in output
 
         output = run(TNS_PATH + " build android --path TNS_App")
         assert "Project successfully prepared" in output
-
-        # Not valid for 1.3.0+
-        # assert "Creating TNSApp-debug-unaligned.apk and signing it with a debug key..." in output
 
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
@@ -198,12 +171,7 @@ class PluginsAndroid_Tests(unittest.TestCase):
             "contains a nativescript key and try again" in output
 
     def test_403_plugin_add_plugin_not_supported_on_specific_platform(self):
-        Tns.create_app_platform_add(
-            app_name="TNS_App",
-            platform="android",
-            framework_path=ANDROID_RUNTIME_PATH)
-        output = run(
-            TNS_PATH +
-            " plugin add tns-plugin@1.0.2 --path TNS_App")
+        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
+        output = run(TNS_PATH + " plugin add tns-plugin@1.0.2 --path TNS_App")
         assert "tns-plugin is not supported for android" in output
         assert "Successfully installed plugin tns-plugin" in output
