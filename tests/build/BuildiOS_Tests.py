@@ -221,7 +221,7 @@ class BuildiOS_Tests(unittest.TestCase):
 
     def test_301_build_ios_with_space(self):
         Tns.create_app_platform_add(
-                app_name="\"tns app\"",
+                app_name="tns app",
                 platform="ios",
                 framework_path=IOS_RUNTIME_SYMLINK_PATH,
                 symlink=True)

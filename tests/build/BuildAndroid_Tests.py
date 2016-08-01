@@ -218,7 +218,8 @@ class BuildAndroid_Tests(unittest.TestCase):
         Tns.build(platform="android", path="TNS_App")
 
     def test_310_build_android_with_sdk22(self):
-        output = run(TNS_PATH + " build android --compileSdk 22 --path TNS_App")
+        Folder.cleanup(self.app_name + '/platforms')
+        output = run(TNS_PATH + " build android --compileSdk 22 --path " + self.app_name)
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
@@ -242,6 +243,7 @@ class BuildAndroid_Tests(unittest.TestCase):
         File.remove("TNSApp-debug.apk")
 
     def test_311_build_android_with_sdk23(self):
+        Folder.cleanup(self.app_name + '/platforms')
         output = run(TNS_PATH + " build android --compileSdk 23 --path " + self.app_name)
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
@@ -261,6 +263,7 @@ class BuildAndroid_Tests(unittest.TestCase):
                " but it is not installed on your system." in output
 
     def test_320_build_release_with_copyto_option(self):
+        Folder.cleanup(self.app_name + '/platforms')
         output = run(TNS_PATH + " build android --keyStorePath " + ANDROID_KEYSTORE_PATH +
                      " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
                      " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS +

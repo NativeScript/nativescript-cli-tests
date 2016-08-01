@@ -105,7 +105,7 @@ class Create_Tests(unittest.TestCase):
         assert "T3l3r1k" in output
 
     def test_005_create_project_with_space(self):
-        Tns.create_app(app_name="\"TNS App\"")
+        Tns.create_app(app_name="TNS App")
         output = run("cat \"TNS App/package.json\"")
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
 
