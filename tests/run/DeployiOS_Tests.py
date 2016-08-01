@@ -11,7 +11,7 @@ from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, TNS_PATH
 from core.tns.tns import Tns
 
 
-class DeployiOS(unittest.TestCase):
+class DeployiOS_Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         Device.ensure_available(platform="ios")

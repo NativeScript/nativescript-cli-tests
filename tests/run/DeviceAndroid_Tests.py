@@ -13,7 +13,7 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH
 from core.tns.tns import Tns
 
 
-class DeviceAndroid(unittest.TestCase):
+class DeviceAndroid_Tests(unittest.TestCase):
     def setUp(self):
 
         print ""

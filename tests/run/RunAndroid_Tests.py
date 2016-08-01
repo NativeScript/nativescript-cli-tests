@@ -1,6 +1,7 @@
 """
-Test for deploy command
+Tests for run command in context of Android
 """
+
 import os
 import unittest
 
@@ -13,11 +14,14 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYST
 from core.tns.tns import Tns
 
 
-class DeployAndroid(unittest.TestCase):
+class RuniOS_Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         Folder.cleanup('./TNS_App')
-        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
+        Tns.create_app_platform_add(
+                app_name="TNS_App",
+                platform="android",
+                framework_path=ANDROID_RUNTIME_PATH)
 
     def setUp(self):
         print ""
@@ -26,10 +30,8 @@ class DeployAndroid(unittest.TestCase):
         print "#####"
         print ""
 
-        Folder.cleanup('./TNS_AppNoPlatform')
         Emulator.ensure_available()
         Device.ensure_available(platform="android")
-        Device.uninstall_app(app_prefix="org.nativescript", platform="android", fail=False)
         Folder.cleanup('./TNS_App/platforms/android/build/outputs')
 
     def tearDown(self):
@@ -37,77 +39,72 @@ class DeployAndroid(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        Emulator.stop_emulators()
+        Folder.cleanup('./appTest')
         Folder.cleanup('./TNS_App')
+        Folder.cleanup('./TNS_App_NoPlatform')
 
-    def test_001_deploy_android(self):
-        output = run(TNS_PATH + " deploy android --path TNS_App  --justlaunch", timeout=180)
+    def test_001_run_android_justlaunch(self):
+        output = run(TNS_PATH + " run android --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
-
-        device_ids = Device.get_ids(platform="android")
+        device_ids = Device.get_ids("android")
         for id in device_ids:
-            print id
             assert id in output
+            assert Device.is_running(app_id="org.nativescript.TNSApp", device_id=id)
 
-    def test_002_deploy_android_release(self):
-        output = run(TNS_PATH + " deploy android --keyStorePath " + ANDROID_KEYSTORE_PATH +
+    def test_002_run_android_release(self):
+        output = run(TNS_PATH + " run android --keyStorePath " + ANDROID_KEYSTORE_PATH +
                      " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
                      " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS +
                      " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS +
-                     " --release --path TNS_App --justlaunch", timeout=180)
+                     " --release --path TNS_App --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
-
         device_ids = Device.get_ids("android")
         for id in device_ids:
             assert id in output
+            assert Device.is_running(app_id="org.nativescript.TNSApp", device_id=id)
 
-    def test_200_deploy_android_deviceid(self):
-        output = run(TNS_PATH + " deploy android --device emulator-5554 --path TNS_App --justlaunch", timeout=180)
+    def test_003_run_android_default(self):
+        output = run(TNS_PATH + " run android --path TNS_App", 60)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier 'emulator-5554'" in output
-        device_ids = Device.get_ids("android")
-        for id in device_ids:
-            if "emulator" not in id:
-                assert id not in output
+        assert "Successfully deployed on device with identifier" in output
+        assert "I/ActivityManager" not in output  # We do not show full adb logs (only those from app)
 
-    def test_201_deploy_android_inside_project(self):
+    def test_200_run_android_inside_project(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
-        output = run(os.path.join("..", TNS_PATH) + " deploy android --path TNS_App --justlaunch", timeout=180)
+        output = run(os.path.join("..", TNS_PATH) +
+                     " run android --path TNS_App --justlaunch")
         os.chdir(current_dir)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
 
-        device_ids = Device.get_ids("android")
-        for id in device_ids:
-            assert id in output
+    def test_201_run_android_device_id_renamed_proj_dir(self):
+        run("mv TNS_App appTest")
+        output = run(TNS_PATH + " run android --device emulator-5554 --path appTest --justlaunch")
+        assert "Project successfully prepared" in output
+        assert "Project successfully built" in output
+        assert "Successfully deployed on device with identifier 'emulator-5554'" in output
 
-    def test_300_deploy_android_platform_not_added(self):
-        Tns.create_app(app_name="TNS_AppNoPlatform")
-        output = run(TNS_PATH + " deploy android --path TNS_AppNoPlatform --justlaunch", timeout=180)
+    def test_301_run_android_patform_not_added(self):
+        Tns.create_app(app_name="TNS_App_NoPlatform")
+        output = run(
+                TNS_PATH + " run android --path TNS_App_NoPlatform --justlaunch")
         assert "Copying template files..." in output
         assert "Installing tns-android" in output
         assert "Project successfully created." in output
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier" in output
 
-        device_ids = Device.get_ids("android")
-        for id in device_ids:
-            assert id in output
-
-    def test_401_deploy_invalid_platform(self):
-        output = run(TNS_PATH + " deploy invalidPlatform --path TNS_App --justlaunch")
-        assert "Invalid platform invalidplatform. Valid platforms are ios or android." in output
-
-    def test_402_deploy_invalid_device(self):
-        output = run(TNS_PATH + " deploy android --device invaliddevice_id --path TNS_App --justlaunch")
-        assert "Project successfully prepared" not in output
+    def test_302_run_android_device_not_connected(self):
+        output = run(TNS_PATH + " run android --device xxxxx --path TNS_App_NoPlatform --justlaunch")
         assert "Cannot resolve the specified connected device" in output
-        assert "To list currently connected devices" in output
-        assert "tns device" in output
+        assert "Project successfully prepared" not in output
+        assert "Project successfully built" not in output
+        assert "Successfully deployed on device" not in output
