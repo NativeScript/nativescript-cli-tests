@@ -26,7 +26,7 @@ from core.tns.tns import Tns
 from tests.livesync.livesync_helper import replace_all, verify_all_replaced
 
 
-class LiveSyncSimulator(Watcher):
+class LivesyncSimulator_Tests(Watcher):
     @classmethod
     def setUpClass(cls):
 

@@ -16,7 +16,7 @@ from core.tns.tns import Tns
 from tests.livesync.livesync_helper import replace_all, verify_replaced, verify_all_replaced
 
 
-class LiveSyncAndroid(unittest.TestCase):
+class LivesyncAndroid_Testss(unittest.TestCase):
     # LiveSync Tests on Android Device
 
     @classmethod

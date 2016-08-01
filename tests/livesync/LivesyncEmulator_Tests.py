@@ -11,7 +11,7 @@ from core.tns.tns import Tns
 from tests.livesync.livesync_helper import replace_all, verify_all_replaced
 
 
-class LiveSyncEmulator(unittest.TestCase):
+class LivesyncEmulator_Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         Emulator.stop_emulators()
