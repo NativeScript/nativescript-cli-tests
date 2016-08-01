@@ -61,16 +61,14 @@ class EmulateiOS_Tests(unittest.TestCase):
             assert Process.is_running("Simulator")
 
     def test_003_emulate_ios_release(self):
+        Folder.cleanup('TNS_App/platforms')
         output = run(TNS_PATH +
                 " emulate ios --device 'iPhone 6 81' --path TNS_App --release --justlaunch")
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
         assert "Project successfully built" in output
         assert "Starting iOS Simulator" in output
-
-        # Simulator can not be started without active UI
-        if ('ACTIVE_UI' in os.environ) and ("YES" in os.environ['ACTIVE_UI']):
-            assert Process.is_running("Simulator")
+        assert Process.is_running("Simulator")
 
     def test_210_emulate_ios_patform_not_added(self):
         Tns.create_app(app_name="TNS_AppNoPlatform")

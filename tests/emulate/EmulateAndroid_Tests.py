@@ -9,6 +9,8 @@ import unittest
 # R0201 - Method could be a function
 # R0904 - Too many public methods
 # pylint: disable=C0103, C0111, R0201, R0904
+from time import sleep
+
 from core.device.emulator import Emulator
 from core.osutils.command import run
 from core.osutils.folder import Folder
@@ -39,15 +41,15 @@ class EmulateAndroid_Tests(unittest.TestCase):
 
     def tearDown(self):
         Emulator.stop_emulators()
+        sleep(1)
 
     @classmethod
     def tearDownClass(cls):
-        Emulator.stop_emulators()
         Folder.cleanup('./TNS_App')
 
     def test_001_emulate_android_in_running_emulator(self):
-
         Emulator.ensure_available()
+        sleep(30)
         output = run(TNS_PATH + " emulate android --path TNS_App --timeout 600 --justlaunch", timeout=660)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -103,7 +105,7 @@ class EmulateAndroid_Tests(unittest.TestCase):
         assert "Project successfully created." in output
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
-        assert "Starting Android emulator with image Api" in output
+        assert "Starting Android emulator with image " + EMULATOR_NAME in output
         assert "installing" in output
         assert "running" in output
 
