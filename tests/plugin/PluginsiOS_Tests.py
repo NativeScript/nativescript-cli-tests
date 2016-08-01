@@ -13,7 +13,7 @@ from core.settings.settings import TNS_PATH, IOS_RUNTIME_SYMLINK_PATH, CURRENT_O
 from core.tns.tns import Tns
 
 
-class PluginsiOS(unittest.TestCase):
+class PluginsiOS_Tests(unittest.TestCase):
     def setUp(self):
 
         print ""

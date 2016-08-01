@@ -11,7 +11,7 @@ from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, SUT_ROOT_FOLDER
 from core.tns.tns import Tns
 
 
-class PluginsiOSLibs(unittest.TestCase):
+class PluginsiOSLibs_Tests(unittest.TestCase):
     def setUp(self):
         print ""
         print "#####"

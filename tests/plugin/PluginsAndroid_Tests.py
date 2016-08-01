@@ -18,7 +18,7 @@ from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME
 from core.tns.tns import Tns
 
 
-class PluginsAndroid(unittest.TestCase):
+class PluginsAndroid_Tests(unittest.TestCase):
 
     def setUp(self):
 
