@@ -12,7 +12,7 @@ from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH, IOS_RUNTIME_S
 from core.tns.tns import Tns
 
 
-class DeviceiOS(unittest.TestCase):
+class DeviceiOS_Tests(unittest.TestCase):
     def setUp(self):
 
         print ""

@@ -11,7 +11,7 @@ from core.device.emulator import Emulator
 from core.settings.settings import ANDROID_RUNTIME_PATH
 
 
-class StaticBindingGenerator(unittest.TestCase):
+class SBG_Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         Folder.cleanup('TNS_App')
