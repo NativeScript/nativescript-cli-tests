@@ -50,7 +50,7 @@ from tests.transpilers.typescript import TypeScript
 from tests.unittests.unittests import UnitTests
 from tests.unittests.unittests_emulator import UnitTestsEmulator
 from tests.unittests.unittests_simulator import UnitTestsSimulator
-from tests.verbose.verbose_log_emulator import VerboseLogEmulator
+from tests.verbose.VerboseLogEmulator_Tests import VerboseLogEmulator
 
 
 def suite_smoke():
