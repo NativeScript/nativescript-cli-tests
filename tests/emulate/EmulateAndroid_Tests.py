@@ -17,7 +17,7 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYST
 from core.tns.tns import Tns
 
 
-class EmulateAndroid(unittest.TestCase):
+class EmulateAndroid_Tests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):

@@ -12,7 +12,7 @@ from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, TNS_PATH
 from core.tns.tns import Tns
 
 
-class EmulateiOS(unittest.TestCase):
+class EmulateiOS_Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         Folder.cleanup('./TNS_App')
