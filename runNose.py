@@ -100,17 +100,12 @@ def get_repos():
     clone_git_repo("git@github.com:NativeScript/QA-TestApps.git", SUT_ROOT_FOLDER + "/QA-TestApps")
     # TODO: QA-TestApps is privite, we should make it public or move all test data to data folder#
 
+
 def get_package():
     location = os.path.join(ANDROID_PATH, "tns-android.tgz")
     shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-core-modules-widgets.tgz"))
 
-
-# from core.osutils import Logger
-
-# sys.stdout = Logger.Logger("Logs/log.txt")
-
 if __name__ == '__main__':
-
 
     # Cleanup files and folders created by the test execution
     Folder.cleanup(OUTPUT_FOLDER)

@@ -51,6 +51,9 @@ class Tns(object):
             command += " --log trace"
         output = run(command)
 
+        if assert_success:
+            assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
+
         if update_modules:
             if path is not None:
                 app_name = path + app_name
@@ -65,8 +68,6 @@ class Tns(object):
             Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
             output = output + npm_out1 + npm_out2 + npm_out3 + npm_out4
 
-        if assert_success:
-            assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
         return output
 
     @staticmethod
