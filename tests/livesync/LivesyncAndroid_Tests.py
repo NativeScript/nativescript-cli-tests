@@ -16,7 +16,7 @@ from core.tns.tns import Tns
 from tests.livesync.livesync_helper import replace_all, verify_replaced, verify_all_replaced
 
 
-class LivesyncAndroid_Testss(unittest.TestCase):
+class LivesyncAndroid_Tests(unittest.TestCase):
     # LiveSync Tests on Android Device
 
     @classmethod
@@ -104,10 +104,16 @@ class LivesyncAndroid_Testss(unittest.TestCase):
         Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
         replace_all(app_name="TNS_App")
 
-        # Verify livesync without specify platform prompt user to specify platform
+        # Verify livesync without specify platform will sync only installed platform
         if (Device.get_count("android") > 0) and (Device.get_count("ios") > 0):
-            output = Tns.livesync(path="TNS_App", assert_success=False, log_trace=False)
-            assert "Multiple device platforms detected (iOS and Android)" in output
-
-        Tns.livesync(platform="android", path="TNS_App", log_trace=False)
-        verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")
+            android_id = Device.get_id(platform="android")
+            ios_id = Device.get_id(platform="ios")
+            print android_id
+            print ios_id
+            output = Tns.livesync(path="TNS_App", log_trace=True)
+            assert "Successfully prepared plugin tns-core-modules-widgets for ios" not in output
+            assert "Project successfully prepared (ios)" not in output
+            verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")
+        else:
+            Tns.livesync(platform="android", path="TNS_App", log_trace=False)
+            verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")
