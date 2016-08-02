@@ -59,18 +59,13 @@ class PluginsiOS_Tests(unittest.TestCase):
 
     def test_201_plugin_add_before_platform_add_ios(self):
         Tns.create_app(app_name="TNS_App")
-        output = run(
-                TNS_PATH +
-                " plugin add nativescript-telerik-ui --path TNS_App")
+        output = run(TNS_PATH + " plugin add nativescript-telerik-ui --ignore-scripts --path TNS_App")
         if CURRENT_OS != OSType.WINDOWS:
             assert "TNS_App/node_modules/nativescript-telerik-ui" in output
         assert "Successfully installed plugin nativescript-telerik-ui" in output
-        assert File.exists(
-                "TNS_App/node_modules/nativescript-telerik-ui/package.json")
-        assert File.exists(
-                "TNS_App/node_modules/nativescript-telerik-ui/platforms/Android")
-        assert File.exists(
-                "TNS_App/node_modules/nativescript-telerik-ui/platforms/iOS")
+        assert File.exists("TNS_App/node_modules/nativescript-telerik-ui/package.json")
+        assert File.exists("TNS_App/node_modules/nativescript-telerik-ui/platforms/Android")
+        assert File.exists("TNS_App/node_modules/nativescript-telerik-ui/platforms/iOS")
         output = run("cat TNS_App/package.json")
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
@@ -83,23 +78,15 @@ class PluginsiOS_Tests(unittest.TestCase):
         Tns.build(platform="ios", path="TNS_App")
 
     def test_202_plugin_add_after_platform_add_ios(self):
-        Tns.create_app_platform_add(
-                app_name="TNS_App",
-                platform="ios",
-                framework_path=IOS_RUNTIME_SYMLINK_PATH,
+        Tns.create_app_platform_add(app_name="TNS_App", platform="ios", framework_path=IOS_RUNTIME_SYMLINK_PATH,
                 symlink=True)
-        output = run(
-                TNS_PATH +
-                " plugin add nativescript-telerik-ui --path TNS_App")
+        output = run(TNS_PATH + " plugin add nativescript-telerik-ui  --ignore-scripts --path TNS_App")
         if CURRENT_OS != OSType.WINDOWS:
             assert "TNS_App/node_modules/nativescript-telerik-ui" in output
         assert "Successfully installed plugin nativescript-telerik-ui" in output
-        assert File.exists(
-                "TNS_App/node_modules/nativescript-telerik-ui/package.json")
-        assert File.exists(
-                "TNS_App/node_modules/nativescript-telerik-ui/platforms/Android")
-        assert File.exists(
-                "TNS_App/node_modules/nativescript-telerik-ui/platforms/iOS")
+        assert File.exists("TNS_App/node_modules/nativescript-telerik-ui/package.json")
+        assert File.exists("TNS_App/node_modules/nativescript-telerik-ui/platforms/Android")
+        assert File.exists("TNS_App/node_modules/nativescript-telerik-ui/platforms/iOS")
         output = run("cat TNS_App/package.json")
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
@@ -107,10 +94,7 @@ class PluginsiOS_Tests(unittest.TestCase):
         Tns.build(platform="ios", path="TNS_App")
 
     def test_203_plugin_add_inside_project(self):
-        Tns.create_app_platform_add(
-                app_name="TNS_App",
-                platform="ios",
-                framework_path=IOS_RUNTIME_PATH)
+        Tns.create_app_platform_add(app_name="TNS_App", platform="ios", framework_path=IOS_RUNTIME_PATH)
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, "TNS_App"))
         output = run(os.path.join("..", TNS_PATH) + " plugin add tns-plugin")
@@ -202,41 +186,24 @@ class PluginsiOS_Tests(unittest.TestCase):
                 "TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
 
         # Verify platform specific files
-        assert File.exists(
-                "TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test.js")
-        assert File.exists(
-                "TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test2.xml")
-        assert not File.exists(
-                "TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test.ios.js")
-        assert not File.exists(
-                "TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test2.ios.xml")
-        assert not File.exists(
-                "TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test.android.js")
-        assert not File.exists(
-                "TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test2.android.xml")
+        assert File.exists("TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test.js")
+        assert File.exists("TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test2.xml")
+        assert not File.exists("TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test.ios.js")
+        assert not File.exists("TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test2.ios.xml")
+        assert not File.exists("TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test.android.js")
+        assert not File.exists("TNS_App/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test2.android.xml")
 
-        assert File.exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test.js")
-        assert File.exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test2.xml")
-        assert not File.exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test.ios.js")
-        assert not File.exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test2.ios.xml")
-        assert not File.exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test.android.js")
-        assert not File.exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test2.android.xml")
+        assert File.exists("TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test.js")
+        assert File.exists("TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test2.xml")
+        assert not File.exists("TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test.ios.js")
+        assert not File.exists("TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test2.ios.xml")
+        assert not File.exists("TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test.android.js")
+        assert not File.exists("TNS_App/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test2.android.xml")
 
     def test_302_plugin_and_npm_modules_in_same_project(self):
-        Tns.create_app_platform_add(
-                app_name="TNS_App",
-                platform="android",
-                framework_path=ANDROID_RUNTIME_PATH)
+        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
 
-        output = run(
-                TNS_PATH +
-                " plugin add nativescript-social-share --path TNS_App")
+        output = run(TNS_PATH + " plugin add nativescript-social-share --path TNS_App")
         assert "Successfully installed plugin nativescript-social-share" in output
 
         current_dir = os.getcwd()
@@ -252,29 +219,29 @@ class PluginsiOS_Tests(unittest.TestCase):
 
         # Verify plugin and npm module files
         assert File.exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" + \
+                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" +
                 "nativescript-social-share/package.json")
         assert File.exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" + \
+                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" +
                 "nativescript-social-share/social-share.js")
         assert not File.exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" + \
+                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" +
                 "nativescript-social-share/social-share.android.js")
         assert not File.exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" + \
+                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" +
                 "nativescript-social-share/social-share.ios.js")
 
         assert File.exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" + \
+                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" +
                 "nativescript-appversion/package.json")
         assert File.exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" + \
+                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" +
                 "nativescript-appversion/appversion.js")
         assert not File.exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" + \
+                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" +
                 "nativescript-appversion/appversion.android.js")
         assert not File.exists(
-                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" + \
+                "TNS_App/platforms/android/src/main/assets/app/tns_modules/" +
                 "nativescript-appversion/appversion.ios.js")
 
     def test_401_plugin_add_invalid_plugin(self):
@@ -296,8 +263,6 @@ class PluginsiOS_Tests(unittest.TestCase):
                 path="TNS_App",
                 symlink=True)
 
-        output = run(
-                TNS_PATH +
-                " plugin add tns-plugin@1.0.2 --path TNS_App")
+        output = run(TNS_PATH + " plugin add tns-plugin@1.0.2 --path TNS_App")
         assert "tns-plugin is not supported for android" in output
         assert "Successfully installed plugin tns-plugin" in output
