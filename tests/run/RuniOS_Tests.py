@@ -25,7 +25,7 @@ class RuniOS(unittest.TestCase):
         Folder.cleanup('./TNS_App')
         Folder.cleanup('./TNSAppNoPlatform')
         Tns.create_app_platform_add(
-                app_name="\"TNS App\"",
+                app_name="TNS App",
                 platform="ios",
                 framework_path=IOS_RUNTIME_SYMLINK_PATH,
                 symlink=True)
