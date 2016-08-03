@@ -150,7 +150,7 @@ class Tns(object):
         return output
 
     @staticmethod
-    def build(platform=None, mode=None, for_device=False, path=None):
+    def build(platform=None, mode=None, for_device=False, path=None, assert_success=True):
         """
         Build {N} project.
         platform -> android or ios
@@ -180,13 +180,14 @@ class Tns(object):
 
         output = run(command)
 
-        assert "Project successfully prepared" in output
-        if platform is "android":
-            assert "BUILD SUCCESSFUL" in output
-        elif platform is "ios":
-            assert "BUILD SUCCEEDED" in output
-        assert "Project successfully built" in output
-        assert "ERROR" not in output
+        if assert_success:
+            assert "Project successfully prepared" in output
+            if platform is "android":
+                assert "BUILD SUCCESSFUL" in output
+            elif platform is "ios":
+                assert "BUILD SUCCEEDED" in output
+            assert "Project successfully built" in output
+            assert "ERROR" not in output
         return output
 
     @staticmethod
