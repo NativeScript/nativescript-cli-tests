@@ -225,22 +225,7 @@ class BuildAndroid_Tests(unittest.TestCase):
         assert "Project successfully built" in output
         assert "ERROR" not in output
         assert "FAILURE" not in output
-
-        assert File.exists(
-            "TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
-
-        output = Tns.build(platform="android", path=self.app_name)
-        assert "Project successfully prepared" in output
-        assert "BUILD SUCCESSFUL" in output
-        assert "Project successfully built" in output
-        assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TNSApp-debug.apk")
-
-        assert "ERROR" not in output
-        assert "FAILURE" not in output
-
-        assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
-        assert File.exists("TNSApp-debug.apk")
-        File.remove("TNSApp-debug.apk")
+        assert File.exists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
     def test_311_build_android_with_sdk23(self):
         Folder.cleanup(self.app_name + '/platforms')
