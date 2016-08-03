@@ -13,7 +13,7 @@ class Typescript_Tests(unittest.TestCase):
     app_name = "TNS_App"
     app_folder = os.path.join(app_name, "app")
     node_modules_folder = os.path.join(app_name, "node_modules")
-    hooks_folder = os.path.join(app_name, "Hooks")
+    hooks_folder = os.path.join(app_name, "hooks")
     assets_folder = os.path.join(app_name, "platforms", "android", "src", "main", "assets")
 
     @classmethod
