@@ -3,7 +3,10 @@ Tests for static binding generator
 """
 import unittest
 import os
+import subprocess
+import threading
 
+from core.osutils.command import run
 from core.tns.tns import Tns
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -92,8 +95,20 @@ class SBG_Tests(unittest.TestCase):
                 "File and folders not created"
         else:
             assert False, "Build failed"
-    #
-    # def test_003_running_app_class_called(self):
-    #     print ("Running app for android")
-    #     output = Tns.run(platform="android", emulator=True, path=self.app_folder)
-    #     assert "------we got called from onCreate" in output, "Expected output not found"
+
+    def test_003_calling_custom_generated_class_declared_in_manifest(self):
+        print ("Running app for android")
+
+        #clean logcat
+        run("adb -e logcat -c");
+
+        #run application
+        Tns.run(platform="android", emulator=True, path=self.app_folder, log_trace=False)
+
+        #wait 1 second to get emulator logcat
+        process = subprocess.Popen(["adb", "-e", "logcat"], stdout=subprocess.PIPE);
+        threading.Timer(1, process.terminate).start()
+        output = process.communicate()[0]
+
+        assert "for activity org.nativescript.TNSApp/com.tns.NativeScriptActivity" in output, "Expected output not found"
+        assert "------we got called from onCreate" in output, "Expected output not found"
