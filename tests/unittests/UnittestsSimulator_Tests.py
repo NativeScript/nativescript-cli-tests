@@ -15,10 +15,8 @@ class UnittestsSimulator_Tests(unittest.TestCase):
     def setUpClass(cls):
         Emulator.stop_emulators()
         Simulator.stop_simulators()
-
         Simulator.delete(SIMULATOR_NAME)
         Simulator.create(SIMULATOR_NAME, 'iPhone 6', '9.1')
-        #Simulator.start(SIMULATOR_NAME, '9.1')
 
     def setUp(self):
 

@@ -39,7 +39,7 @@ class UnittestsEmulator_Tests(unittest.TestCase):
         # Next 3 lines are required because of https://github.com/NativeScript/nativescript-cli/issues/1636
         run(TNS_PATH + " test android --emulator --justlaunch --path " + self.app_name, timeout=90, output=False)
 
-        output = run(TNS_PATH + " test android --emulator --justlaunch --path " + self.app_name, timeout=180)
+        output = run(TNS_PATH + " test android --emulator --justlaunch --path " + self.app_name, timeout=60)
         assert "Successfully prepared plugin nativescript-unit-test-runner for android." in output
         assert "Project successfully prepared" in output
         assert "server started" in output
