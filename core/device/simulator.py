@@ -61,6 +61,12 @@ class Simulator(object):
         time.sleep(1)
 
     @staticmethod
+    def reset_simulators():
+        """Reset settings and storage of all simulators"""
+        Simulator.stop_simulators()
+        run("xcrun simctl erase all", timeout=60)
+
+    @staticmethod
     def delete(name):
         """Delete simulator"""
 

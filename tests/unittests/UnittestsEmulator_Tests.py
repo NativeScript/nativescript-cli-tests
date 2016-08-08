@@ -36,7 +36,7 @@ class UnittestsEmulator_Tests(unittest.TestCase):
         Tns.create_app_platform_add(app_name=self.app_name, platform="android", framework_path=ANDROID_RUNTIME_PATH)
         run(TNS_PATH + " test init --framework mocha --path " + self.app_name)
 
-        # Next 3 lines are required because of https://github.com/NativeScript/nativescript-cli/issues/1636
+        # Next lines are required because of https://github.com/NativeScript/nativescript-cli/issues/1636
         run(TNS_PATH + " test android --emulator --justlaunch --path " + self.app_name, timeout=90, output=False)
 
         output = run(TNS_PATH + " test android --emulator --justlaunch --path " + self.app_name, timeout=60)

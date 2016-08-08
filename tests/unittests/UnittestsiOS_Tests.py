@@ -1,10 +1,12 @@
 import unittest
+from time import sleep
 
+from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.command import run
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, SIMULATOR_NAME
+from core.settings.settings import TNS_PATH, IOS_RUNTIME_PATH
 from core.tns.tns import Tns
 from nose.tools import timed
 
@@ -15,8 +17,8 @@ class UnittestsSimulator_Tests(unittest.TestCase):
     def setUpClass(cls):
         Emulator.stop_emulators()
         Simulator.stop_simulators()
-        Simulator.delete(SIMULATOR_NAME)
-        Simulator.create(SIMULATOR_NAME, 'iPhone 6', '9.1')
+        Device.ensure_available(platform="ios")
+        Device.uninstall_app(app_prefix="org.nativescript", platform="ios", fail=False)
 
     def setUp(self):
 
@@ -35,11 +37,17 @@ class UnittestsSimulator_Tests(unittest.TestCase):
     def tearDownClass(cls):
         Simulator.stop_simulators()
 
+    @unittest.skip("Unit testing is not very stable on iOS")
     @timed(360)
     def test_010_test_jasmine_ios_simulator(self):
-        Tns.create_app(app_name=self.app_name)
-        run(TNS_PATH + " test init --framework jasmine --path " + self.app_name, timeout=30)
-        output = run(TNS_PATH + " test ios --emulator --justlaunch --path " + self.app_name, timeout=180)
+        Tns.create_app_platform_add(app_name=self.app_name, platform="ios", framework_path=IOS_RUNTIME_PATH)
+        run(TNS_PATH + " test init --framework jasmine --path " + self.app_name, timeout=60)
+
+        # Next lines are required because of https://github.com/NativeScript/nativescript-cli/issues/1636
+        run(TNS_PATH + " test ios --justlaunch --path " + self.app_name, timeout=90)
+        sleep(10)
+
+        output = run(TNS_PATH + " test ios --justlaunch --path " + self.app_name, timeout=60)
         assert "Project successfully prepared" in output
         assert "server started" in output
         assert "Starting browser NativeScript Unit Test Runner" in output
