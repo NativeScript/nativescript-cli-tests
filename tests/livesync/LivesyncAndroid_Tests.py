@@ -13,7 +13,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, DeviceType
 from core.tns.tns import Tns
-from tests.livesync.livesync_helper import replace_all, verify_replaced, verify_all_replaced
+from tests.livesync.livesync_helper import replace_all, verify_all_replaced
 
 
 class LivesyncAndroid_Tests(unittest.TestCase):
@@ -44,10 +44,7 @@ class LivesyncAndroid_Tests(unittest.TestCase):
 
     # This test executes the Run -> LiveSync
     def test_001_livesync_android_all_devices_modify_files(self):
-        Tns.create_app_platform_add(
-                app_name="TNS_App",
-                platform="android",
-                framework_path=ANDROID_RUNTIME_PATH)
+        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
         Tns.run(platform="android", path="TNS_App", log_trace=False)
         replace_all(app_name="TNS_App")
         Tns.livesync(platform="android", path="TNS_App", log_trace=False)
@@ -55,10 +52,7 @@ class LivesyncAndroid_Tests(unittest.TestCase):
 
     # This test executes the Run -> LiveSync -> Run work flow on an android
     def test_002_livesync_single_device_modify_files(self):
-        Tns.create_app_platform_add(
-                app_name="TNS_App",
-                platform="android",
-                framework_path=ANDROID_RUNTIME_PATH)
+        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
         Tns.run(platform="android", path="TNS_App", log_trace=False)
 
         device_id = Device.get_id(platform="android")
@@ -71,10 +65,7 @@ class LivesyncAndroid_Tests(unittest.TestCase):
         Device.file_contains("android", "TNSApp", "app/main-page.xml", text="RUN")
 
     def test_201_livesync_android_add_new_files(self):
-        Tns.create_app_platform_add(
-                app_name="TNS_App",
-                platform="android",
-                framework_path=ANDROID_RUNTIME_PATH)
+        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
         Tns.run(platform="android", path="TNS_App", log_trace=False)
 
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")

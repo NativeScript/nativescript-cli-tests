@@ -230,7 +230,7 @@ class Tns(object):
         return output
 
     @staticmethod
-    def livesync(platform=None, emulator=False, device=None, sdk=None, path=None, watch=False, log_trace=True, assert_success=True):
+    def livesync(platform=None, emulator=False, device=None, sdk=None, path=None, watch=False, log_trace=True, assert_success=True, sync_all_files=None):
         """
         The livesync command.
 
@@ -261,6 +261,11 @@ class Tns(object):
 
         if path is not None:
             command += " --path \"{0}\"".format(path)
+
+        # For iOS real devices by default only app fodler is synced, to enable sync all files use --syncAllFiles
+        if sync_all_files is not None:
+            if sync_all_files:
+                command += " --syncAllFiles"
 
         if log_trace:
             command += " --log trace"

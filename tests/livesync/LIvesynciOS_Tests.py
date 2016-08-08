@@ -42,10 +42,7 @@ class LiveSynciOS(unittest.TestCase):
         Device.uninstall_app("org.nativescript.", platform="ios", fail=False)
 
     def test_001_livesync_ios_xml_js_css_tnsmodules_files(self):
-        Tns.create_app_platform_add(
-                app_name="TNS_App",
-                platform="ios",
-                framework_path=IOS_RUNTIME_PATH)
+        Tns.create_app_platform_add(app_name="TNS_App", platform="ios", framework_path=IOS_RUNTIME_PATH)
         Tns.run(platform="ios", path="TNS_App")
 
         File.replace("TNS_App/app/main-page.xml", "TAP", "TEST")
@@ -58,7 +55,7 @@ class LiveSynciOS(unittest.TestCase):
                 "(\"globals\");",
                 "(\"globals\"); // test")
 
-        Tns.livesync(platform="ios", path="TNS_App")
+        Tns.livesync(platform="ios", path="TNS_App", sync_all_files=True)
 
         Device.file_contains("ios", "TNSApp", "app/main-page.xml", text="TEST")
         Device.file_contains("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
@@ -72,27 +69,15 @@ class LiveSynciOS(unittest.TestCase):
                 text="require(\"globals\"); // test")
 
     def test_002_livesync_ios_device(self):
-        Tns.create_app_platform_add(
-                app_name="TNS_App",
-                platform="ios",
-                framework_path=IOS_RUNTIME_PATH)
+        Tns.create_app_platform_add(app_name="TNS_App", platform="ios", framework_path=IOS_RUNTIME_PATH)
         Tns.run(platform="ios", path="TNS_App")
-
         device_id = Device.get_id(platform="ios")
         File.replace("TNS_App/app/main-view-model.js", "taps", "clicks")
         Tns.livesync(platform="ios", device=device_id, path="TNS_App")
-
         Device.file_contains("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
-        # File.replace("TNS_App/app/main-view-model.js", "clicks", "runs")
-        # emulate(platform="ios", path="TNS_App")
-        # Device.file_contains("ios", "TNSApp", "app/main-view-model.js")
-        # assert "this.set(\"message\", this.counter + \" runs left\");" in output
 
     def test_201_livesync_ios_add_new_files(self):
-        Tns.create_app_platform_add(
-                app_name="TNS_App",
-                platform="ios",
-                framework_path=IOS_RUNTIME_PATH)
+        Tns.create_app_platform_add(app_name="TNS_App", platform="ios", framework_path=IOS_RUNTIME_PATH)
         Tns.run(platform="ios", path="TNS_App")
 
         shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
@@ -100,9 +85,7 @@ class LiveSynciOS(unittest.TestCase):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test.css")
 
         os.makedirs("TNS_App/app/test")
-        shutil.copyfile(
-                "TNS_App/app/main-view-model.js",
-                "TNS_App/app/test/main-view-model.js")
+        shutil.copyfile("TNS_App/app/main-view-model.js", "TNS_App/app/test/main-view-model.js")
 
         Tns.livesync(platform="ios", path="TNS_App")
 

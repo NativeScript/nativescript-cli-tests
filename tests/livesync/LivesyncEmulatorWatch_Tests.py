@@ -134,37 +134,3 @@ class LivesyncEmulatorWatch_Tests(Watcher):
         shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/folder/test.css")
         self.wait_for_text_in_output("Successfully synced application", timeout=30)
         Emulator.file_contains("TNSApp", "app/folder/test.css", text="color: green;")
-
-        #     def test_301_livesync_android_emulator_before_run(self):
-        #         self.terminate_watcher()
-        #         cleanup_folder('appTest')
-        #
-        #         create_project_add_platform(
-        #             app_name="appTest",
-        #             platform="android",
-        #             framework_path=ANDROID_RUNTIME_PATH)
-        #
-        #         # replace
-        #         replace("appTest/app/main-page.xml", "TAP", "TEST")
-        #         replace("appTest/app/main-view-model.js", "taps", "clicks")
-        #         replace("appTest/app/app.css", "30", "20")
-        #
-        #         replace("appTest/node_modules/tns-core-modules/LICENSE", "2015", "9999")
-        #         replace(
-        #             "appTest/node_modules/tns-core-modules/application/application-common.js",
-        #             "(\"globals\");", "(\"globals\"); // test")
-        #
-        #         livesync(platform="android", device="emulator-5554", path="TNS_App")
-        #
-        #         Emulator.file_contains("TNSApp", "app/main-page.xml")
-        #         assert "<Button text=\"TEST\" tap=\"{{ tapAction }}\" />" in output
-        #         Emulator.file_contains("TNSApp", "app/main-view-model.js")
-        #         assert "this.set(\"message\", this.counter + \" clicks left\");" in output
-        #         Emulator.file_contains("TNSApp", "app/app.css")
-        #         assert "font-size: 20;" in output
-        #
-        #         Emulator.file_contains("TNSApp", "app/tns_modules/LICENSE")
-        #         assert "Copyright (c) 9999 Telerik AD" in output
-        #         Emulator.file_contains("TNSApp", \
-        #             "app/tns_modules/application/application-common.js")
-        #         assert "require(\"globals\"); // test" in output

@@ -24,7 +24,7 @@ from tests.emulate.emulate_ios import EmulateiOS
 from tests.livesync.livesync_android import LiveSyncAndroid
 from tests.livesync.livesync_emulator import LiveSyncEmulator
 from tests.livesync.livesync_emulator_watch import LiveSyncEmulatorWatch
-from tests.livesync.livesync_ios import LiveSynciOS
+from tests.livesync.LIvesynciOS_Tests import LiveSynciOS
 from tests.livesync.livesync_simulator import LiveSyncSimulator
 from tests.other.autocomplete import Autocomplete
 from tests.other.doctor import Doctor
