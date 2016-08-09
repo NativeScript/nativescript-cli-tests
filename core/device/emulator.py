@@ -34,9 +34,10 @@ class Emulator(object):
         if CURRENT_OS == OSType.WINDOWS:
             print "Create emulator is not implemented for Windows"
         else:
-            command = "echo no | $ANDROID_HOME/tools/android create avd -n " + name + \
-                      " -t android-" + api + " " + abi + " -c 12M -f"
-            run(command=command, timeout=60)
+            command = "$ANDROID_HOME/tools/android create avd -n " + name + \
+                      " -t android-" + api + " --abi " + abi + " -c 12M -f" + " < data/keys/enter_key.txt"
+            output = run(command=command, timeout=60)
+            assert "error" not in output.lower()
 
     @staticmethod
     def start_emulator(emulator_name, port="5554", timeout=300, wait_for=True):

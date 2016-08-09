@@ -3,7 +3,7 @@ import unittest
 from core.device.emulator import Emulator
 from core.osutils.command import run
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH
+from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH, EMULATOR_NAME
 from core.tns.tns import Tns
 from nose.tools import timed
 
@@ -13,6 +13,7 @@ class UnittestsEmulator_Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         Emulator.stop_emulators()
+        Emulator.create(EMULATOR_NAME, api="19")
 
     def setUp(self):
 
