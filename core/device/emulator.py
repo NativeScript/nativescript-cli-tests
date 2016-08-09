@@ -29,6 +29,16 @@ class Emulator(object):
         Process.kill("qemu-system-i386")
 
     @staticmethod
+    def create(name=EMULATOR_NAME, api="19", abi="default/x86"):
+        """Create Android Emulator"""
+        if CURRENT_OS == OSType.WINDOWS:
+            print "Create emulator is not implemented for Windows"
+        else:
+            command = "echo no | $ANDROID_HOME/tools/android create avd -n " + name + \
+                      " -t android-" + api + " " + abi + " -c 12M -f"
+            run(command=command, timeout=60)
+
+    @staticmethod
     def start_emulator(emulator_name, port="5554", timeout=300, wait_for=True):
         """Start Android Emulator"""
         print "Starting emulator on {0}".format(platform.platform())

@@ -23,6 +23,7 @@ class EmulateAndroid_Tests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        Emulator.create(name=EMULATOR_NAME, api="19")
         Folder.cleanup('./TNSAppNoPlatform')
         Folder.cleanup('./TNS_App')
         Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
