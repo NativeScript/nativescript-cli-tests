@@ -2,7 +2,6 @@
 Helper for working with emulator
 """
 
-import os
 import platform
 import time
 
@@ -27,17 +26,6 @@ class Emulator(object):
         Process.kill("emulator64-x86")
         Process.kill("quemu-system-i38")
         Process.kill("qemu-system-i386")
-
-    @staticmethod
-    def create(name=EMULATOR_NAME, api="19", abi="default/x86"):
-        """Create Android Emulator"""
-        if CURRENT_OS == OSType.WINDOWS:
-            print "Create emulator is not implemented for Windows"
-        else:
-            command = "$ANDROID_HOME/tools/android create avd -n " + name + \
-                      " -t android-" + api + " --abi " + abi + " -c 12M -f" + " < data/keys/enter_key.txt"
-            output = run(command=command, timeout=60)
-            assert "error" not in output.lower()
 
     @staticmethod
     def start_emulator(emulator_name, port="5554", timeout=300, wait_for=True):
@@ -82,10 +70,8 @@ class Emulator(object):
         """Ensure Android Emulator is running"""
         output = run(TNS_PATH + " device")
         lines = output.splitlines()
-        found = False
         for line in lines:
             if ('emulator' in line) and ("Connected" in line):
-                found = True
                 break
         else:
             Emulator.stop_emulators()
@@ -93,15 +79,14 @@ class Emulator(object):
 
     @staticmethod
     def cat_app_file(app_name, file_path):
-        '''Return content of file on emulator'''
-        print "~~~ Catenate ~~~"
-        output = run(ADB_PATH + " -s emulator-5554 shell run-as org.nativescript." + \
+        """Return content of file on emulator"""
+        output = run(ADB_PATH + " -s emulator-5554 shell run-as org.nativescript." +
                      app_name + " cat files/" + file_path)
         return output
 
-
     @staticmethod
     def file_contains(app_name, file_path, text):
+        """Assert file on emulator contains text"""
         output = Emulator.cat_app_file(app_name, file_path)
         if text in output:
             print("{0} exists in {1}".format(text, file_path))

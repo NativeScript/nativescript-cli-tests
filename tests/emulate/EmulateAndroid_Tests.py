@@ -23,7 +23,6 @@ class EmulateAndroid_Tests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        Emulator.create(name=EMULATOR_NAME, api="19")
         Folder.cleanup('./TNSAppNoPlatform')
         Folder.cleanup('./TNS_App')
         Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
@@ -55,7 +54,7 @@ class EmulateAndroid_Tests(unittest.TestCase):
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier 'emulator-5554'" in output
-        assert not "Starting Android emulator with image" in output
+        assert "Starting Android emulator with image" not in output
 
         # TODO: Get device id and verify files are deployed and process is
         # running on this device

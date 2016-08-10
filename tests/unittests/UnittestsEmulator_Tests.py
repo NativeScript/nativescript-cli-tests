@@ -13,7 +13,6 @@ class UnittestsEmulator_Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         Emulator.stop_emulators()
-        Emulator.create(EMULATOR_NAME, api="19")
 
     def setUp(self):
 

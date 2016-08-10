@@ -80,22 +80,8 @@ class Simulator(object):
             output = run("xcrun simctl list | grep \"{0}\"".format(name))
 
     @staticmethod
-    def get_id_by_name(name):
-        """Get simulator id by name"""
-
-        row_data = run("xcrun simctl list devices")
-        row_list = row_data.split('\n')
-        for row_line in row_list:
-            if name in row_line and "Booted" in row_line:
-                sim_id = Simulator.find_between(row_line, '(', ')')
-                print "~~~ Booted simulator: " + row_line
-                print "~~~ Booted simulator id: " + sim_id
-                return sim_id
-
-    @staticmethod
     def find_between(string, first, last):
         """Find string between two substrings"""
-
         try:
             start = string.index(first) + len(first)
             end = string.index(last, start)
@@ -105,17 +91,15 @@ class Simulator(object):
 
     @staticmethod
     def cat_app_file(app_name, file_path):
-        """Return content of file on simulator"""
-        print "~~~ Catenate ~~~"
-        sim_id = Simulator.get_id_by_name(SIMULATOR_NAME)
-        app_path = run("xcrun simctl get_app_container {0} org.nativescript.{1}".format(sim_id, app_name))
-        print "~~~ Application path: " + app_path
+        """Return content of file on booted simulator"""
+        app_path = run("xcrun simctl get_app_container booted org.nativescript.{0}".format(app_name))
+        print "Get content of: " + app_path
         output = run("cat {0}/{1}".format(app_path, file_path))
         return output
 
-
     @staticmethod
     def file_contains(app_name, file_path, text):
+        """Assert file on booted simulator contains text"""
         output = Simulator.cat_app_file(app_name, file_path)
         if text in output:
             print("{0} exists in {1}".format(text, file_path))

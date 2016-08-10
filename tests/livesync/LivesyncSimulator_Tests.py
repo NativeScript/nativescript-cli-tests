@@ -180,16 +180,16 @@ class LivesyncSimulator_Tests(Watcher):
         File.replace("appTest/app/app.css", "30", "20")
 
         File.replace("appTest/node_modules/tns-core-modules/LICENSE", "Copyright", "MyCopyright")
-        File.replace(
-                "appTest/node_modules/tns-core-modules/application/application-common.js",
-                "(\"globals\");", "(\"globals\"); // test")
+        File.replace("appTest/node_modules/tns-core-modules/application/application-common.js",
+                     "(\"globals\");", "(\"globals\"); // test")
 
         output = Tns.livesync(platform="ios", emulator=True, path="appTest", log_trace=True)
-        assert "" in output
+        assert "Successfully synced application org.nativescript.appTest" in output
         time.sleep(3)
 
         Simulator.file_contains("appTest", "app/main-page.xml", text="MYTAP")
         Simulator.file_contains("appTest", "app/main-view-model.js", text="clicks left")
         Simulator.file_contains("appTest", "app/app.css", text="font-size: 20;")
         Simulator.file_contains("appTest", "app/tns_modules/LICENSE", text="MyCopyright")
-        Simulator.file_contains("appTest", "app/tns_modules/application/application-common.js", text="require(\"globals\"); // test")
+        Simulator.file_contains("appTest", "app/tns_modules/application/application-common.js",
+                                text="require(\"globals\"); // test")

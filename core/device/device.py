@@ -23,8 +23,8 @@ class Device(object):
     @staticmethod
     def get_id(platform):
         """Get Id of first connected physical device"""
-        list = Device.get_ids(platform)
-        return list.pop(0)
+        device_list = Device.get_ids(platform)
+        return device_list.pop(0)
 
     @staticmethod
     def get_ids(platform):
@@ -33,7 +33,7 @@ class Device(object):
         output = run(TNS_PATH + " device " + platform)
         lines = output.splitlines()
         for line in lines:
-            if (platform.lower() in line.lower()) and (not "status" in line.lower()):
+            if (platform.lower() in line.lower()) and ("status" not in line.lower()):
                 device_id = line.split("\xe2\x94\x82")[4].replace(" ", "")
                 print "{0} device with id {1} found.".format(platform, device_id)
                 if "Emulator" not in line:
@@ -58,8 +58,9 @@ class Device(object):
                 for line in lines:
                     if app_prefix in line:
                         app_name = line.split(":")[1]
-                        app_name = app_name.replace(" ","")
-                        uninstall_result = run(ADB_PATH + " -s {0} shell pm uninstall {1}".format(device_id, app_name), timeout=120)
+                        app_name = app_name.replace(" ", "")
+                        uninstall_result = run(ADB_PATH + " -s {0} shell pm uninstall {1}".format(device_id, app_name),
+                                               timeout=120)
                         if "Success" in uninstall_result:
                             print "{0} application successfully uninstalled.".format(app_prefix)
                         else:
@@ -73,8 +74,9 @@ class Device(object):
                 for line in lines:
                     if app_prefix in line:
                         app_name = line.split("-")[0]
-                        app_name = app_name.replace(" ","")
-                        uninstall_result = run("ideviceinstaller -u {0} -U {1}".format(device_id, app_name), timeout=120)
+                        app_name = app_name.replace(" ", "")
+                        uninstall_result = run("ideviceinstaller -u {0} -U {1}".format(device_id, app_name),
+                                               timeout=120)
                         if "Uninstall: Complete" in uninstall_result:
                             print "{0} application successfully uninstalled.".format(app_prefix)
                         else:
@@ -112,7 +114,8 @@ class Device(object):
 
     @staticmethod
     def cat_app_file(platform, app_name, file_path):
-        '''Return content of file on device'''
+        """Return content of file on device"""
+        command = ""
         if platform is "android":
             device_id = Device.get_id(platform="android")
             command = ADB_PATH + " -s {0} shell run-as org.nativescript.{1} cat files/{2}"\
@@ -123,9 +126,9 @@ class Device(object):
         output = run(command)
         return output
 
-
     @staticmethod
     def file_contains(platform, app_name, file_path, text):
+        """Assert file on device contains text"""
         output = Device.cat_app_file(platform, app_name, file_path)
         if text in output:
             print("{0} exists in {1}".format(text, file_path))
