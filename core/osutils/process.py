@@ -46,5 +46,4 @@ class Process(object):
                 proc.kill()
                 print "Process {0} has been killed.".format(proc_name)
                 result = True
-                break
         return result
