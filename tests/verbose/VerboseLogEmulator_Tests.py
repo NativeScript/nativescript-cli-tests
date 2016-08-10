@@ -4,7 +4,7 @@ from core.device.emulator import Emulator
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, VERBOSE_LOG
+from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, VERBOSE_LOG, EMULATOR_NAME
 from core.tns.tns import Tns
 
 
@@ -29,7 +29,8 @@ class VerboseLogEmulator(unittest.TestCase):
     def test_101_verbose_log_android(self):
         Tns.create_app(app_name="TNS_App", copy_from="data/apps/verbose-hello-world")
         Tns.platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, path="TNS_App")
-        output = run(TNS_PATH + " run android --emulator --justlaunch --path TNS_App", 180, output=True, file_name=VERBOSE_LOG)
+        output = run(TNS_PATH + " run android --emulator --device " + EMULATOR_NAME  +
+                     " --justlaunch --path TNS_App", 180, output=True, file_name=VERBOSE_LOG)
         assert "Project successfully built" in output
 
         File.cat("TNS_App/app/app.js")
