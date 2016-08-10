@@ -10,7 +10,8 @@ from core.settings.settings import TNS_PATH, IOS_RUNTIME_PATH
 from core.tns.tns import Tns
 from nose.tools import timed
 
-class UnittestsSimulator_Tests(unittest.TestCase):
+
+class UnittestsSimulator(unittest.TestCase):
     app_name = "TNS_App"
 
     @classmethod

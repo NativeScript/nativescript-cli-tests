@@ -7,7 +7,7 @@ from core.settings.settings import TNS_PATH
 from core.tns.tns import Tns
 
 
-class UnitTests_Tests(unittest.TestCase):
+class UnitTests(unittest.TestCase):
     app_name = "TNS_App"
 
     def setUp(self):

@@ -3,16 +3,20 @@ import unittest
 from core.device.emulator import Emulator
 from core.osutils.command import run
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH, EMULATOR_NAME
+from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
 from nose.tools import timed
 
-class UnittestsEmulator_Tests(unittest.TestCase):
+
+class UnittestsEmulator(unittest.TestCase):
     app_name = "TNS_App"
 
     @classmethod
     def setUpClass(cls):
+        # It is important to auto start emulator, because otherwise it start random.
+        # Latest SDK 23 emulators show some error dialogs on startup and tests fail.
         Emulator.stop_emulators()
+        Emulator.ensure_available()
 
     def setUp(self):
 
