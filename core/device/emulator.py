@@ -21,6 +21,7 @@ class Emulator(object):
     @staticmethod
     def stop_emulators():
         """Stop running emulators"""
+        print "Stop all emulators"
         Process.kill("emulator")
         Process.kill("emulator64-arm")
         Process.kill("emulator64-x86")
@@ -70,9 +71,13 @@ class Emulator(object):
         """Ensure Android Emulator is running"""
         output = run(TNS_PATH + " device")
         lines = output.splitlines()
+        found = False
         for line in lines:
             if ('emulator' in line) and ("Connected" in line):
+                found = True
                 break
+        if found:
+            print "Emulator already running."
         else:
             Emulator.stop_emulators()
             Emulator.start_emulator(emulator_name=EMULATOR_NAME, port="5554", wait_for=True)
