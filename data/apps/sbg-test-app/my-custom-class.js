@@ -6,7 +6,7 @@ var MyClass = (function (_super) {
     }
     MyClass.prototype.onCreate = function (savedInstanceState) {
      	_super.prototype.onCreate.call(this, false ? savedInstanceState : null);
-     	console.log("------we got called from onCreate");
+     	android.util.Log.d("Sbg.Test","we got called from onCreate of my-custom-class.js");
     };
 
     MyClass = __decorate([

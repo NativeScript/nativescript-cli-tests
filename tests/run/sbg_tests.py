@@ -96,19 +96,19 @@ class SBG_Tests(unittest.TestCase):
         else:
             assert False, "Build failed"
 
-    def test_003_calling_custom_generated_class_declared_in_manifest(self):
+    def test_003_calling_custom_generated_classes_declared_in_manifest(self):
         print ("Running app for android")
-
-        #clean logcat
-        run("adb -e logcat -c");
 
         #run application
         Tns.run(platform="android", emulator=True, path=self.app_folder, log_trace=False)
 
-        #wait 1 second to get emulator logcat
+        #wait 2 seconds to get emulator logcat
         process = subprocess.Popen(["adb", "-e", "logcat"], stdout=subprocess.PIPE);
-        threading.Timer(1, process.terminate).start()
+        threading.Timer(2, process.terminate).start()
         output = process.communicate()[0]
 
-        assert "for activity org.nativescript.TNSApp/com.tns.NativeScriptActivity" in output, "Expected output not found"
-        assert "------we got called from onCreate" in output, "Expected output not found"
+        #check if we got called from custom activity that overrides the default one
+        assert "we got called from onCreate of custom-nativescript-activity.js" in output, "Expected output not found"
+
+        #make sure we called custom activity declared in manifest
+        assert "we got called from onCreate of my-custom-class.js" in output, "Expected output not found"
