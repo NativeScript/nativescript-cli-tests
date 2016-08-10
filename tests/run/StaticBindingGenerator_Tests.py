@@ -6,15 +6,14 @@ import os
 import subprocess
 import threading
 
-from core.osutils.command import run
 from core.tns.tns import Tns
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.device.emulator import Emulator
-from core.settings.settings import ANDROID_RUNTIME_PATH
+from core.settings.settings import ANDROID_RUNTIME_PATH, ADB_PATH
 
 
-class SBG_Tests(unittest.TestCase):
+class StaticBindingGenerator(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         Folder.cleanup('TNS_App')
@@ -66,7 +65,7 @@ class SBG_Tests(unittest.TestCase):
         # asserting final results
         print str.format("js_file_exists: {0}, gen_folder_exsists: {1}, gen_file_exsists: {2}", js_file_exists,
                          gen_folder_exsists, gen_file_exists)
-        assert (js_file_exists == True) & (gen_folder_exsists == False) & (gen_file_exists == False)
+        assert (js_file_exists is True) and (gen_folder_exsists is False) and (gen_file_exists is False)
 
     def test_002_on_build_verify_file_generation(self):
         print ("####################### Building app for android #######################")
@@ -91,7 +90,7 @@ class SBG_Tests(unittest.TestCase):
             # asserting final results
             print str.format("gen_folder_exists: {0}, gen_folder_not_empty: {1}, gen_java_file_exists: {2}",
                              gen_folder_exists, gen_folder_not_empty, gen_java_file_exists)
-            assert (gen_folder_exists == True) & (gen_folder_not_empty == True) & (gen_java_file_exists == True), \
+            assert (gen_folder_exists is True) and (gen_folder_not_empty is True) and (gen_java_file_exists is True), \
                 "File and folders not created"
         else:
             assert False, "Build failed"
@@ -99,16 +98,16 @@ class SBG_Tests(unittest.TestCase):
     def test_003_calling_custom_generated_classes_declared_in_manifest(self):
         print ("Running app for android")
 
-        #run application
+        # run application
         Tns.run(platform="android", emulator=True, path=self.app_folder, log_trace=False)
 
-        #wait 2 seconds to get emulator logcat
-        process = subprocess.Popen(["adb", "-e", "logcat"], stdout=subprocess.PIPE);
+        # wait 2 seconds to get emulator logcat
+        process = subprocess.Popen([ADB_PATH, "-e", "logcat"], stdout=subprocess.PIPE)
         threading.Timer(2, process.terminate).start()
         output = process.communicate()[0]
 
-        #check if we got called from custom activity that overrides the default one
+        # check if we got called from custom activity that overrides the default one
         assert "we got called from onCreate of custom-nativescript-activity.js" in output, "Expected output not found"
 
-        #make sure we called custom activity declared in manifest
+        # make sure we called custom activity declared in manifest
         assert "we got called from onCreate of my-custom-class.js" in output, "Expected output not found"
