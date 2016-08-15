@@ -36,9 +36,7 @@ class Emulator(object):
         start_command = EMULATOR_PATH + " -avd " + emulator_name + " -port " + port + " -wipe-data"
 
         if CURRENT_OS == OSType.WINDOWS:
-            run(start_command, timeout, False)
         else:
-            run(start_command + " &", timeout, False)
 
         if wait_for:
             # Check if emulator is running
