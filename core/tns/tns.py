@@ -292,3 +292,37 @@ class Tns(object):
 
         Tns.create_app(app_name=app_name)
         Tns.platform_add(platform, framework_path, app_name, symlink)
+
+    @staticmethod
+    def create(app_name, attributes, log_trace=False, update_modules=True, assert_success=True):
+        command = TNS_PATH + " create \"{0}\"".format(app_name)
+        path = ""
+        for k, v in attributes.iteritems():
+            if k == "--path":
+                path = v
+            command += " " + k + " " + v
+
+        if log_trace:
+            command += " --log trace"
+
+        print(command)
+        output = run(command)
+
+        if assert_success:
+            assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
+
+        if update_modules:
+            if path != "":
+                app_name = path + app_name
+            Folder.navigate_to(app_name)
+            npm_out1 = run("npm uninstall tns-core-modules")
+            modules_path = SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules.tgz"
+            npm_out2 = run("npm install " + modules_path + " --save")
+            Folder.navigate_to(os.path.join("node_modules", "tns-core-modules"))
+            npm_out3 = run("npm uninstall tns-core-modules-widgets")
+            widgets_path = SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules-widgets.tgz"
+            npm_out4 = run("npm install " + widgets_path + " --save")
+            Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
+            output = output + npm_out1 + npm_out2 + npm_out3 + npm_out4
+
+        return output
