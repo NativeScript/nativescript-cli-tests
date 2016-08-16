@@ -23,54 +23,6 @@ class Tns(object):
         return output
 
     @staticmethod
-    def create_app(app_name, path=None, app_id=None, copy_from=None, template=None, log_trace=False,
-                   update_modules=True, assert_success=True):
-        """
-        Create {N} project.
-        """
-
-        command = TNS_PATH + " create \"{0}\"".format(app_name)
-
-        if path is not None:
-            command += " --path \"{0}\"".format(path)
-
-        if app_id is not None:
-            command += " --appid " + app_id
-
-        if template is None:
-            # By default --copy-from template-hello-world
-            if copy_from is not None:
-                command += " --copy-from " + copy_from
-            else:
-                command += " --copy-from " + SUT_ROOT_FOLDER + os.path.sep + "template-hello-world"
-
-        if template is not None:
-            command += " --template " + template
-
-        if log_trace:
-            command += " --log trace"
-        output = run(command)
-
-        if assert_success:
-            assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
-
-        if update_modules:
-            if path is not None:
-                app_name = path + app_name
-            Folder.navigate_to(app_name)
-            npm_out1 = run("npm uninstall tns-core-modules")
-            modules_path = SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules.tgz"
-            npm_out2 = run("npm install " + modules_path + " --save")
-            Folder.navigate_to(os.path.join("node_modules", "tns-core-modules"))
-            npm_out3 = run("npm uninstall tns-core-modules-widgets")
-            widgets_path = SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules-widgets.tgz"
-            npm_out4 = run("npm install " + widgets_path + " --save")
-            Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-            output = output + npm_out1 + npm_out2 + npm_out3 + npm_out4
-
-        return output
-
-    @staticmethod
     def platform_add(platform=None, framework_path=None, path=None, symlink=False, log_trace=False):
         """
         Add target platform.
@@ -294,13 +246,17 @@ class Tns(object):
         Tns.platform_add(platform, framework_path, app_name, symlink)
 
     @staticmethod
-    def create(app_name, attributes, log_trace=False, update_modules=True, assert_success=True):
+    def create_app(app_name, attributes={}, log_trace=False, update_modules=False, assert_success=True):
         command = TNS_PATH + " create \"{0}\"".format(app_name)
+        if app_name is None:
+            command = TNS_PATH + " create "
+
         path = ""
-        for k, v in attributes.iteritems():
-            if k == "--path":
-                path = v
-            command += " " + k + " " + v
+        if len(attributes) != 0:
+            for k, v in attributes.iteritems():
+                if k == "--path":
+                    path = v
+                command += " " + k + " " + v
 
         if log_trace:
             command += " --log trace"
@@ -326,3 +282,4 @@ class Tns(object):
             output = output + npm_out1 + npm_out2 + npm_out3 + npm_out4
 
         return output
+

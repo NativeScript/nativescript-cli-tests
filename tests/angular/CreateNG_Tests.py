@@ -10,6 +10,7 @@ from core.tns.tns import Tns
 
 
 class CreateNG_Tests(unittest.TestCase):
+    app_name = "TNS_App"
 
     def setUp(self):
         print ""
@@ -18,26 +19,26 @@ class CreateNG_Tests(unittest.TestCase):
         print "#####"
         print ""
 
-        Folder.cleanup('./TNS_App')
+        Folder.cleanup('./' + self.app_name)
 
     def tearDown(self):
-        Folder.cleanup('./TNS_App')
+        Folder.cleanup('./' + self.app_name)
 
     def assert_angular_project(self):
-        output = run("cat TNS_App/package.json")
+        output = run("cat " + self.app_name + "/package.json")
         assert "nativescript-angular" in output
         assert "tns-core-modules" in output
         assert "nativescript-dev-typescript" in output
 
-        assert Folder.exists("TNS_App/node_modules/nativescript-angular")
-        assert Folder.exists("TNS_App/node_modules/nativescript-dev-typescript")
-        assert Folder.exists("TNS_App/node_modules/tns-core-modules")
+        assert Folder.exists(self.app_name + "/node_modules/nativescript-angular")
+        assert Folder.exists(self.app_name + "/node_modules/nativescript-dev-typescript")
+        assert Folder.exists(self.app_name + "/node_modules/tns-core-modules")
 
-        assert Folder.exists("TNS_App/hooks")
-        assert Folder.exists("TNS_App/app/App_Resources")
+        assert Folder.exists(self.app_name + "/hooks")
+        assert Folder.exists(self.app_name + "/app/App_Resources")
 
     def test_101_create_ng_project(self):
-        output = run(TNS_PATH + " create TNS_App --ng")
+        output = Tns.create_app(app_name=self.app_name, attributes={"--ng": ""})
         assert "successfully created" in output
         self.assert_angular_project()
         # assert not File.exists("TNS_App/app/LICENSE")
@@ -50,15 +51,15 @@ class CreateNG_Tests(unittest.TestCase):
         "ng",
     ])
     def test_102_create_project_with_template_ng(self, template_source):
-        Tns.create_app(app_name="TNS_App", template=template_source)
+        Tns.create_app(app_name=self.app_name, attributes={"--template": template_source}, assert_success=False)
         self.assert_angular_project()
 
     def test_401_create_project_with_template_no_value(self):
-        output = run(TNS_PATH + " create TNS_App --template")
+        output = Tns.create_app(app_name=self.app_name, attributes={"--template": ""}, assert_success=False)
         assert "successfully created" not in output
         assert "requires non-empty value" in output
 
     def test_402_create_project_with_template_and_ng(self):
-        output = run(TNS_PATH + " create TNS_App --template --ng")
+        output = Tns.create_app(app_name=self.app_name, attributes={"--template": "--ng"}, assert_success=False)
         assert "successfully created" not in output
         assert "requires non-empty value" in output
