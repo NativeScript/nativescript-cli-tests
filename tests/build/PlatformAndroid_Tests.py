@@ -124,12 +124,12 @@ class PlatformAndroid_Tests(unittest.TestCase):
 
         output = run("cat " + self.app_name + "/package.json")
         assert "\"version\": \"1.2.0\"" in output
-        Tns.build(platform="android", path="TNS_App")
+        Tns.build(platform="android", path=self.app_name)
 
     @unittest.skip("Now it fails, need to fix the test.")
     def test_205_platform_update_android_to_same_version(self):
         Tns.create_app_platform_add(app_name=self.app_name, platform="android")
-        output = run(TNS_PATH + " platform update android --path TNS_App")
+        output = run(TNS_PATH + " platform update android --path " + self.app_name)
         assert "Current and new version are the same." in output
         assert "Usage" in output
         Tns.build(platform="android", path=self.app_name)
@@ -146,7 +146,7 @@ class PlatformAndroid_Tests(unittest.TestCase):
         #         [31;1mCannot read property 'substring' of undefined[0m
         #         TypeError: Cannot read property 'substring' of undefined
 
-        #         command = TNS_PATH + " platform update android@1.1.0 --path TNS_App"
+        #         command = TNS_PATH + " platform update android@1.1.0 --path " + self.app_name
         #         output = emulate(command + " < y_key.txt")
         #         assert "You are going to downgrade to android runtime v.1.1.0. Are you sure?" in output
         #         assert "Successfully updated to version  1.1.0" in output
@@ -186,7 +186,7 @@ class PlatformAndroid_Tests(unittest.TestCase):
         #         [31;1mCannot read property 'substring' of undefined[0m
         #         TypeError: Cannot read property 'substring' of undefined
 
-        #         command = TNS_PATH + " platform update android@1.0.0 --path TNS_App"
+        #         command = TNS_PATH + " platform update android@1.0.0 --path " + + self.app_name
         #         output = emulate(command + " < y_key.txt")
         #         assert "You are going to downgrade to android runtime v.1.0.0. Are you sure?" in output
         #         assert "Successfully updated to version  1.0.0" in output

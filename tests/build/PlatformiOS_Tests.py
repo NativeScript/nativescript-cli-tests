@@ -14,6 +14,7 @@ from core.tns.tns import Tns
 
 class PlatformiOS_Tests(unittest.TestCase):
     app_name = "TNS_App"
+
     @classmethod
     def setUpClass(cls):
         if CURRENT_OS != OSType.OSX:
@@ -67,9 +68,9 @@ class PlatformiOS_Tests(unittest.TestCase):
         # TODO: Fix files in platform_ios_current.txt
         #if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
         #    assert File.list_of_files_exists(
-        #            'TNS_App/platforms/ios',
+        #            self.app_name + '/platforms/ios',
         #            'platform_ios_current.txt')
-        #Tns.build(platform="ios", path="TNS_App")
+        #Tns.build(platform="ios", path=self.app_name)
 
     def test_003_platform_add_ios_symlink_and_framework_path(self):
         Tns.create_app(app_name=self.app_name)
@@ -83,7 +84,7 @@ class PlatformiOS_Tests(unittest.TestCase):
 
         # if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
         #     assert File.list_of_files_exists(
-        #             'TNS_App/platforms/ios',
+        #             self.app_name + '/platforms/ios',
         #             'platform_ios_symlink.txt')
 
         # Verify Runtime is symlink
@@ -103,7 +104,7 @@ class PlatformiOS_Tests(unittest.TestCase):
         # if ('TEST_RUN' in os.environ) and (
         #             "SMOKE" not in os.environ['TEST_RUN']):
         #     assert File.list_of_files_exists(
-        #             'TNS_App/platforms/ios',
+        #             self.app_name + '/platforms/ios',
         #             'platform_ios_current.txt')
 
         # If project.xcworkspace is there Xcode project name is wrong
@@ -232,7 +233,7 @@ class PlatformiOS_Tests(unittest.TestCase):
 
     def test_320_platform_add_ios_custom_bundle_id(self):
         # Create project with different appId
-        Tns.create_app(app_name=self.app_name, app_id="org.nativescript.MyApp")
+        Tns.create_app(app_name=self.app_name, attributes={"--appid": "org.nativescript.MyApp"})
         output = run("cat " + self.app_name + "/package.json")
         assert "\"id\": \"org.nativescript.MyApp\"" in output
 
@@ -260,6 +261,6 @@ class PlatformiOS_Tests(unittest.TestCase):
     def test_400_platform_add_existing_platform(self):
         self.test_004_platform_add_ios_symlink_and_framework_path()
 
-        output = run(TNS_PATH + " platform add ios --path TNS_App")
+        output = run(TNS_PATH + " platform add ios --path " + self.app_name)
         assert "Platform ios already added" in output
         assert "Usage" in output
