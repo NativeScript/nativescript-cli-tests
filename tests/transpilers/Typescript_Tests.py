@@ -35,7 +35,7 @@ class Typescript_Tests(unittest.TestCase):
         Folder.cleanup(cls.app_name)
 
     def test_001_transpilation_typescript(self):
-        output = run(TNS_PATH + " create " + self.app_name + " --tsc")
+        output = Tns.create_app(self.app_name, attributes={"--tsc": ""})
         assert "nativescript-dev-typescript@" in output
         assert "nativescript-hook@" in output
 

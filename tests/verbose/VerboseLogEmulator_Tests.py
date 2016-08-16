@@ -9,6 +9,7 @@ from core.tns.tns import Tns
 
 
 class VerboseLogEmulator(unittest.TestCase):
+    app_name = "TNS_App"
 
     def setUp(self):
 
@@ -18,22 +19,22 @@ class VerboseLogEmulator(unittest.TestCase):
         print "#####"
         print ""
 
-        Folder.cleanup('TNS_App')
+        Folder.cleanup(self.app_name)
         File.remove(VERBOSE_LOG)
         Emulator.stop_emulators()
 
     def tearDown(self):
-        Folder.cleanup('TNS_App')
+        Folder.cleanup(self.app_name)
         Emulator.stop_emulators()
 
     def test_101_verbose_log_android(self):
-        Tns.create_app(app_name="TNS_App", copy_from="data/apps/verbose-hello-world")
-        Tns.platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, path="TNS_App")
-        output = run(TNS_PATH + " run android --emulator --device " + EMULATOR_NAME  +
-                     " --justlaunch --path TNS_App", 180, output=True, file_name=VERBOSE_LOG)
+        Tns.create_app(self.app_name, attributes={"--copy-from": "data/apps/verbose-hello-world"})
+        Tns.platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, path=self.app_name)
+        output = run(TNS_PATH + " run android --emulator --device " + EMULATOR_NAME +
+                     " --justlaunch --path " + self.app_name, 180, output=True, file_name=VERBOSE_LOG)
         assert "Project successfully built" in output
 
-        File.cat("TNS_App/app/app.js")
+        File.cat(self.app_name + "/app/app.js")
         lines = output.split('\n')
         count = len(lines)
 
