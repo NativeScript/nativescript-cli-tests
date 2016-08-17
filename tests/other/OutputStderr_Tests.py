@@ -9,6 +9,8 @@ from core.settings.settings import TNS_PATH
 
 
 class OutputStderr_Tests(unittest.TestCase):
+    app_name = "tns-app"
+
     def setUp(self):
         print ""
         print "#####"
@@ -27,5 +29,5 @@ class OutputStderr_Tests(unittest.TestCase):
         assert "The input is not valid sub-command for 'emulate' command" in output
 
     def test_002_command_option_validation(self):
-        output = run(TNS_PATH + " create tns-app --Copy-From tns-app")
+        output = Tns.create_app(self.app_name, attributes={"--Copy-From": "tns-app"}, assert_success=False)
         assert "The option 'Copy-From' is not supported. " in output
