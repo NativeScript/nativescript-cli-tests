@@ -8,7 +8,6 @@ from nose_parameterized import parameterized
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH
 from core.tns.tns import Tns
 
 
@@ -64,7 +63,7 @@ class Create_Tests(unittest.TestCase):
         assert File.exists(self.app_name + "/node_modules/tns-core-modules/LICENSE")
         assert File.exists(self.app_name + "/node_modules/tns-core-modules/xml/xml.js")
 
-     # assert File.list_of_files_exists("TNS_App", "template_javascript_files_1.2.0.txt")
+    # assert File.list_of_files_exists(self.app_name, "template_javascript_files_1.2.0.txt")
 
     def test_002_create_project_with_path(self):
         Tns.create_app(app_name=self.app_name, attributes={"--path": "folder/subfolder/"},
@@ -85,7 +84,7 @@ class Create_Tests(unittest.TestCase):
                 "folder/subfolder/" + self.app_name + "/node_modules/tns-core-modules/xml/xml.js")
 
         # assert File.list_of_files_exists(
-        #         'folder/subfolder/TNS_App',
+        #         'folder/subfolder/' + self.app_name,
         #         'template_javascript_files_1.2.0.txt')
 
     def test_003_create_project_with_appid(self):
@@ -124,7 +123,7 @@ class Create_Tests(unittest.TestCase):
 
     def test_007_create_project_named_123(self):
         output = Tns.create_app(app_name=self.app_name_123, attributes={"--force": ""})
-        assert "Project 123 was successfully created" in output
+        assert "Project " + self.app_name_123 + " was successfully created" in output
 
         output = run("cat " + self.app_name_123 + "/package.json")
         assert "\"id\": \"org.nativescript.the123\"" in output
@@ -134,7 +133,7 @@ class Create_Tests(unittest.TestCase):
 
     def test_008_create_project_named_app(self):
         output = Tns.create_app(app_name=self.app_name_app, attributes={"--force": ""})
-        assert "Project app was successfully created" in output
+        assert "Project " + self.app_name_app + " was successfully created" in output
 
         output = run("cat " + self.app_name_app + "/package.json")
         assert "\"id\": \"org.nativescript.app\"" in output
@@ -160,7 +159,8 @@ class Create_Tests(unittest.TestCase):
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
 
     def test_400_create_project_with_copyfrom_wrong_path(self):
-        output = Tns.create_app(app_name=self.app_name, attributes={"--copy-from": "invalidFolder"}, assert_success=False)
+        output = Tns.create_app(app_name=self.app_name, attributes={"--copy-from": "invalidFolder"},
+                                assert_success=False)
         assert "successfully created" not in output
 
         assert "The specified path" in output

@@ -43,7 +43,8 @@ class PrepareiOS_Tests(unittest.TestCase):
         # Verify app and modules are processed and available in platform folder
         assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/main-view-model.js')
         assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.js')
-        assert not File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.android.js')
+        assert not File.exists(self.app_name +
+                               '/platforms/ios/TNSApp/app/tns_modules/application/application.android.js')
         assert not File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.ios.js')
 
         # Verify Xcode Schemes
@@ -59,10 +60,7 @@ class PrepareiOS_Tests(unittest.TestCase):
     def test_010_prepare_android_ng_project(self):
         output = Tns.create_app(self.app_name, attributes={"--ng": ""}, assert_success=False)
         assert "successfully created" in output
-        Tns.platform_add(
-            platform="ios",
-            path=self.app_name,
-            framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
+        Tns.platform_add(platform="ios", path=self.app_name, framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
         Tns.prepare(platform="ios", path=self.app_name)
 
         assert Folder.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/@angular')
@@ -83,7 +81,8 @@ class PrepareiOS_Tests(unittest.TestCase):
         # Verify app and modules are processed and available in platform folder
         assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/main-view-model.js')
         assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.js')
-        assert not File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.android.js')
+        assert not File.exists(self.app_name +
+                               '/platforms/ios/TNSApp/app/tns_modules/application/application.android.js')
         assert not File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.ios.js')
 
         # Verify XCode Project include files from App Resources folder
@@ -92,7 +91,7 @@ class PrepareiOS_Tests(unittest.TestCase):
         assert "newDefault.png" in output
 
     def test_201_prepare_ios_platform_not_added(self):
-        Tns.create_app(app_name=self.app_name)
+        Tns.create_app(self.app_name)
         output = run(TNS_PATH + " prepare ios --path " + self.app_name)
         assert "Copying template files..." in output
         assert "Project successfully created." in output
@@ -102,7 +101,7 @@ class PrepareiOS_Tests(unittest.TestCase):
         assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.js')
 
     def test_210_prepare_ios_tns_core_modules(self):
-        Tns.create_app(app_name=self.app_name, attributes={"--copy-from":"data/projects/helloworld-1.2.1/app"})
+        Tns.create_app(self.app_name, attributes={"--copy-from":"data/projects/helloworld-1.2.1/app"})
         Tns.platform_add(platform="ios", path=self.app_name,
                          framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
 
@@ -149,7 +148,8 @@ class PrepareiOS_Tests(unittest.TestCase):
 
         # Verify app and modules are processed and available in platform folder
         assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.js')
-        assert not File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.android.js')
+        assert not File.exists(self.app_name +
+                               '/platforms/ios/TNSApp/app/tns_modules/application/application.android.js')
         assert not File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.ios.js')
 
         # Verify case is preserved

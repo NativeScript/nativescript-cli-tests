@@ -15,22 +15,26 @@ from core.tns.tns import Tns
 
 
 class RuniOS(unittest.TestCase):
+    app_name = "TNS_App"
+    app_name_space = "TNS App"
+    app_name_noplatform = "TNSAppNoPlatform"
+
     @classmethod
     def setUpClass(cls):
 
         Device.ensure_available(platform="ios")
         Simulator.stop_simulators()
 
-        Folder.cleanup('./TNS App')
-        Folder.cleanup('./TNS_App')
-        Folder.cleanup('./TNSAppNoPlatform')
+        Folder.cleanup('./' + cls.app_name_space)
+        Folder.cleanup('./' + cls.app_name)
+        Folder.cleanup('./' + cls.app_name_noplatform)
         Tns.create_app_platform_add(
-                app_name="TNS App",
+                app_name=cls.app_name_space,
                 platform="ios",
                 framework_path=IOS_RUNTIME_SYMLINK_PATH,
                 symlink=True)
         Tns.create_app_platform_add(
-                app_name="TNS_App",
+                app_name=cls.app_name,
                 platform="ios",
                 framework_path=IOS_RUNTIME_SYMLINK_PATH,
                 symlink=True)
@@ -57,13 +61,13 @@ class RuniOS(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        Folder.cleanup('./TNS App')
-        Folder.cleanup('./TNS_App')
-        Folder.cleanup('./TNSAppNoPlatform')
+        Folder.cleanup('./' + cls.app_name_space)
+        Folder.cleanup('./' + cls.app_name)
+        Folder.cleanup('./' + cls.app_name_noplatform)
         Simulator.stop_simulators()
 
     def test_001_run_ios_justlaunch(self):
-        output = run(TNS_PATH + " run ios --path TNS_App --justlaunch", 180)
+        output = run(TNS_PATH + " run ios --path " + self.app_name + " --justlaunch", 180)
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output
         assert "Project successfully built" in output
@@ -72,7 +76,7 @@ class RuniOS(unittest.TestCase):
             assert id in output
 
     def test_002_run_ios_release(self):
-        output = run(TNS_PATH + " run ios --release --path TNS_App --justlaunch", 180)
+        output = run(TNS_PATH + " run ios --release --path " + self.app_name + " --justlaunch", 180)
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
         assert "Project successfully built" in output
@@ -82,7 +86,7 @@ class RuniOS(unittest.TestCase):
             assert id in output
 
     def test_003_run_ios_simulator(self):
-        output = run(TNS_PATH + " run ios --emulator --path \"TNS App\" --justlaunch", 180)
+        output = run(TNS_PATH + " run ios --emulator --path \"" + self.app_name_space + "\" --justlaunch", 180)
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output
         assert "Project successfully built" in output
@@ -90,7 +94,7 @@ class RuniOS(unittest.TestCase):
         assert Process.wait_until_running("Simulator", 60)
 
     def test_004_run_ios_release_simulator(self):
-        output = run(TNS_PATH + " run ios --emulator --release --path \"TNS App\" --justlaunch", 180)
+        output = run(TNS_PATH + " run ios --emulator --release --path \"" + self.app_name_space + "\" --justlaunch", 180)
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
         assert "Project successfully built" in output
@@ -100,7 +104,7 @@ class RuniOS(unittest.TestCase):
         # running on this device
 
     def test_005_run_ios_default(self):
-        output = run(TNS_PATH + " run ios --path TNS_App", 60)
+        output = run(TNS_PATH + " run ios --path " + self.app_name, 60)
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output
         assert "Project successfully built" in output
@@ -109,8 +113,8 @@ class RuniOS(unittest.TestCase):
 
     def test_200_run_ios_inside_project(self):
         current_dir = os.getcwd()
-        os.chdir(os.path.join(current_dir, "TNS_App"))
-        output = run(os.path.join("..", TNS_PATH) + " run ios --path TNS_App --justlaunch", 180)
+        os.chdir(os.path.join(current_dir, self.app_name))
+        output = run(os.path.join("..", TNS_PATH) + " run ios --path " + self.app_name + " --justlaunch", 180)
         os.chdir(current_dir)
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output
@@ -118,8 +122,8 @@ class RuniOS(unittest.TestCase):
         assert "Successfully deployed on device" in output
 
     def test_301_run_ios_platform_not_added(self):
-        Tns.create_app(app_name="TNSAppNoPlatform")
-        output = run(TNS_PATH + " run ios --path TNSAppNoPlatform --justlaunch", 180)
+        Tns.create_app(app_name=self.app_name_noplatform)
+        output = run(TNS_PATH + " run ios --path " + self.app_name_noplatform + " --justlaunch", 180)
         assert "Copying template files..." in output
         assert "Installing tns-ios" in output
         assert "Project successfully created." in output
@@ -127,7 +131,7 @@ class RuniOS(unittest.TestCase):
         assert "Successfully deployed on device" in output
 
     def test_302_run_ios_device_not_connected(self):
-        output = run(TNS_PATH + " run ios --device xxxxx --path TNSAppNoPlatform  --justlaunch", 180)
+        output = run(TNS_PATH + " run ios --device xxxxx --path " + self.app_name_noplatform + "  --justlaunch", 180)
         assert "Cannot resolve the specified connected device" in output
         assert "Project successfully prepared" not in output
         assert "Project successfully built" not in output
