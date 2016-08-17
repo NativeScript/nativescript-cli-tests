@@ -27,10 +27,10 @@ class BuildAndroid_Tests(unittest.TestCase):
         File.remove("TNSApp-debug.apk")
         File.remove("TNSApp-release.apk")
 
-        Folder.cleanup('./tns-app')
-        Folder.cleanup('./TNS App')
-        Folder.cleanup('./TNS_App')
-        Folder.cleanup('./TNS_AppSymlink')
+        Folder.cleanup('./' + cls.app_name_dash)
+        Folder.cleanup('./' + cls.app_name_space)
+        Folder.cleanup('./' + cls.app_name)
+        Folder.cleanup('./' + cls.app_name_symlink)
         Folder.cleanup('./temp')
         Tns.create_app_platform_add(app_name=cls.app_name, platform="android", framework_path=ANDROID_RUNTIME_PATH)
 
@@ -42,26 +42,26 @@ class BuildAndroid_Tests(unittest.TestCase):
         print "#####"
         print ""
 
-        Folder.cleanup('./TNSAppNoPlatform')
+        Folder.cleanup('./' + self.app_no_platform)
         Folder.cleanup('./' + self.platforms_android + '/build/outputs')
-        Folder.cleanup('.' + self.platforms_android + '/build/intermediates/exploded-aar')
+        Folder.cleanup('./' + self.platforms_android + '/build/intermediates/exploded-aar')
         # TODO: Do not delete exploder-aar after https://github.com/NativeScript/android-runtime/issues/339 is fixed
         # Notes:
         # Issue above looks fixed, but test test_303_build_project_with_gz_file
         # cause failures in next tests if exploded-aar is not deleted
 
     def tearDown(self):
-        Folder.cleanup('./TNSAppNoPlatform')
-        Folder.cleanup('.' + self.platforms_android + '/build/outputs')
+        Folder.cleanup('./' + self.app_no_platform)
+        Folder.cleanup('./' + self.platforms_android + '/build/outputs')
 
     @classmethod
     def tearDownClass(cls):
         File.remove("TNSApp-debug.apk")
         File.remove("TNSApp-release.apk")
 
-        Folder.cleanup('./tns-app')
-        Folder.cleanup('./TNS App')
-        Folder.cleanup('./TNS_AppSymlink')
+        Folder.cleanup('./' + cls.app_name_dash)
+        Folder.cleanup('./' + cls.app_name_space)
+        Folder.cleanup('./' + cls.app_name_symlink)
         Folder.cleanup('./temp')
 
     def test_001_build_android(self):
@@ -83,7 +83,7 @@ class BuildAndroid_Tests(unittest.TestCase):
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS,
                      "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282")
     def test_100_build_android_symlink(self):
-        Tns.create_app(app_name=self.app_name_symlink)
+        Tns.create_app(self.app_name_symlink)
         output = Tns.platform_add(platform="android", path=self.app_name_symlink,
                                   framework_path=ANDROID_RUNTIME_SYMLINK_PATH, symlink=True)
         assert "Project successfully created" in output
@@ -116,7 +116,7 @@ class BuildAndroid_Tests(unittest.TestCase):
         assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
 
     def test_202_build_android_platform_not_added(self):
-        Tns.create_app(app_name=self.app_no_platform)
+        Tns.create_app(self.app_no_platform)
         output = run(TNS_PATH + " build android --path " + self.app_no_platform + " --log trace")
 
         assert "Project successfully prepared" in output
@@ -129,7 +129,7 @@ class BuildAndroid_Tests(unittest.TestCase):
                                                   "/build/outputs/apk/TNSAppNoPlatform-debug.apk")
 
     def test_203_build_android_platform_when_platform_folder_is_empty(self):
-        Tns.create_app(app_name=self.app_no_platform)
+        Tns.create_app(self.app_no_platform)
         Folder.cleanup('./' + self.app_no_platform + '/platforms')
         output = run(TNS_PATH + " build android --path " + self.app_no_platform + "  --log trace")
 
@@ -139,7 +139,7 @@ class BuildAndroid_Tests(unittest.TestCase):
 
         assert "ERROR" not in output
         assert "FAILURE" not in output
-        assert File.exists("TNSAppNoPlatform/platforms/android"
+        assert File.exists(self.app_no_platform + "/platforms/android"
                            "/build/outputs/apk/TNSAppNoPlatform-debug.apk")
 
     def test_300_build_android_with_additional_styles_xml(self):
@@ -165,16 +165,15 @@ class BuildAndroid_Tests(unittest.TestCase):
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
-        assert File.exists(
-            "tns-app/platforms/android/build/outputs/apk/tnsapp-debug.apk")
+        assert File.exists(self.app_name_dash + "/platforms/android/build/outputs/apk/tnsapp-debug.apk")
 
         # Verify project id
-        output = run("cat tns-app/package.json")
+        output = run("cat " + self.app_name_dash + "/package.json")
         assert "org.nativescript.tnsapp" in output
 
         # Verify AndroidManifest.xml
         output = run(
-            "cat tns-app/platforms/android/src/main/AndroidManifest.xml")
+            "cat " + self.app_name_dash + "/platforms/android/src/main/AndroidManifest.xml")
         assert "org.nativescript.tnsapp" in output
 
     def test_302_build_project_with_space(self):
@@ -186,8 +185,7 @@ class BuildAndroid_Tests(unittest.TestCase):
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
-        assert File.exists(
-            "TNS App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+        assert File.exists(self.app_name_space + "/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
         if CURRENT_OS == OSType.WINDOWS:
             # Verify project id
@@ -212,10 +210,10 @@ class BuildAndroid_Tests(unittest.TestCase):
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows, because tar is not available")
     def test_303_build_project_with_gz_file(self):
         # Create zip
-        run("tar -czf TNS_App/app/app.tar.gz TNS_App/app/app.js")
-        assert File.exists("TNS_App/app/app.tar.gz")
+        run("tar -czf " + self.app_name + "/app/app.tar.gz " + self.app_name + "/app/app.js")
+        assert File.exists(self.app_name + "/app/app.tar.gz")
         # Build the project
-        Tns.build(platform="android", path="TNS_App")
+        Tns.build(platform="android", path=self.app_name)
 
     def test_310_build_android_with_sdk22(self):
         Folder.cleanup(self.app_name + '/platforms')
@@ -225,7 +223,7 @@ class BuildAndroid_Tests(unittest.TestCase):
         assert "Project successfully built" in output
         assert "ERROR" not in output
         assert "FAILURE" not in output
-        assert File.exists("TNS_App/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+        assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
     def test_311_build_android_with_sdk23(self):
         Folder.cleanup(self.app_name + '/platforms')
@@ -253,7 +251,7 @@ class BuildAndroid_Tests(unittest.TestCase):
                      " --keyStorePassword " + ANDROID_KEYSTORE_PASS +
                      " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS +
                      " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS +
-                     " --release --path TNS_App --copy-to ./")
+                     " --release --path " + self.app_name + " --copy-to ./")
 
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output

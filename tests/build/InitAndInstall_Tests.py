@@ -78,7 +78,7 @@ class InitAndInstall_Tests(unittest.TestCase):
         assert "Project successfully created" in output
 
         # Not valid for 1.3.0+
-        # assert File.exists("TNS_App/platforms/android/build.gradle")
+        # assert File.exists(self.app_name + "/platforms/android/build.gradle")
         assert File.exists(self.app_name + "/platforms/android/build.gradle")
 
         if CURRENT_OS == OSType.OSX:

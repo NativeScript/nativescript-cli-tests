@@ -76,7 +76,7 @@ class PrepareAndroid_Tests(unittest.TestCase):
         assert Folder.exists(self.app_name + '/platforms/android/src/main/assets/app/tns_modules/nativescript-angular')
 
     def test_200_prepare_android_patform_not_added(self):
-        Tns.create_app(app_name=self.app_name)
+        Tns.create_app(self.app_name)
         output = run(TNS_PATH + " prepare android --path " + self.app_name)
         assert "Copying template files..." in output
         assert "Project successfully created." in output
@@ -84,7 +84,7 @@ class PrepareAndroid_Tests(unittest.TestCase):
         assert File.exists(self.app_name + '/platforms/android/src/main/assets/app/tns_modules/xml/xml.js')
 
     def test_201_prepare_xml_error(self):
-        Tns.create_app(app_name=self.app_name)
+        Tns.create_app(self.app_name)
         File.replace(self.app_name + "/app/main-page.xml", "</Page>", "</Page")
         output = run(TNS_PATH + " prepare android --path " + self.app_name)
         assert "Copying template files..." in output
@@ -94,7 +94,7 @@ class PrepareAndroid_Tests(unittest.TestCase):
         assert "unclosed xml attribute" in output
 
     def test_210_prepare_android_tns_core_modules(self):
-        Tns.create_app(self.app_name, attributes={"--copy_from":SUT_ROOT_FOLDER + "/QA-TestApps/tns-modules-app/app"})
+        Tns.create_app(self.app_name, attributes={"--copy-from": SUT_ROOT_FOLDER + "/QA-TestApps/tns-modules-app/app"})
         Tns.platform_add(
             platform="android",
             path=self.app_name,
@@ -201,11 +201,11 @@ class PrepareAndroid_Tests(unittest.TestCase):
         assert File.exists(self.app_name + '/platforms/android/src/main/assets/app/tns_modules/@angular/core')
 
     def test_400_prepare_missing_platform(self):
-        Tns.create_app(app_name=self.app_name)
+        Tns.create_app(self.app_name)
         output = run(TNS_PATH + " prepare --path " + self.app_name)
         assert "You need to provide all the required parameters." in output
 
     def test_401_prepare_invalid_platform(self):
-        Tns.create_app(app_name=self.app_name)
+        Tns.create_app(self.app_name)
         output = run(TNS_PATH + " prepare windows --path " + self.app_name)
         assert "Invalid platform windows. Valid platforms are ios or android." in output

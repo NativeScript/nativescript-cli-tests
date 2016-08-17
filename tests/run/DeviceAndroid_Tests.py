@@ -14,6 +14,8 @@ from core.tns.tns import Tns
 
 
 class DeviceAndroid_Tests(unittest.TestCase):
+    app_name = "TNS_App"
+
     def setUp(self):
 
         print ""
@@ -22,32 +24,32 @@ class DeviceAndroid_Tests(unittest.TestCase):
         print "#####"
         print ""
 
-        Folder.cleanup('./TNS_App')
+        Folder.cleanup('./' + self.app_name)
         Device.ensure_available(platform="android")
         Device.uninstall_app(app_prefix="org.nativescript.", platform="android", fail=False)
         Emulator.ensure_available()
 
     def tearDown(self):
         Emulator.stop_emulators()
-        Folder.cleanup('./TNS_App')
+        Folder.cleanup('./' + self.app_name)
 
     def test_001_device_list_applications_and_run_android(self):
         device_id = Device.get_id(platform="android")
         device_ids = Device.get_ids("android")
 
         # Deploy TNS_App on device
-        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
-        output = run(TNS_PATH + " deploy android --path TNS_App --justlaunch")
+        Tns.create_app_platform_add(app_name=self.app_name, platform="android", framework_path=ANDROID_RUNTIME_PATH)
+        output = run(TNS_PATH + " deploy android --path " + self.app_name + " --justlaunch")
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
-        for id in device_ids:
-            assert id in output
+        for device_id in device_ids:
+            assert device_id in output
         sleep(10)
 
         # Verify list-applications command list org.nativescript.TNSApp
-        for id in device_ids:
-            output = run(TNS_PATH + " device list-applications --device " + id)
+        for device_id in device_ids:
+            output = run(TNS_PATH + " device list-applications --device " + device_id)
             assert "com.android." in output
             assert "org.nativescript.TNSApp" in output
 

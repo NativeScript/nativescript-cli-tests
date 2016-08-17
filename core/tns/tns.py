@@ -242,7 +242,7 @@ class Tns(object):
         Create {N} project and add target platform.
         """
 
-        Tns.create_app(app_name=app_name)
+        Tns.create_app(app_name, update_modules=True)
         Tns.platform_add(platform, framework_path, app_name, symlink)
 
     @staticmethod

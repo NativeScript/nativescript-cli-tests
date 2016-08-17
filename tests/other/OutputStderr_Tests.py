@@ -6,6 +6,8 @@ import unittest
 from core.osutils.command import run
 from core.osutils.file import File
 from core.settings.settings import TNS_PATH
+from core.tns.tns import Tns
+
 
 
 class OutputStderr_Tests(unittest.TestCase):

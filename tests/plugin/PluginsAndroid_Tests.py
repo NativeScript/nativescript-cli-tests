@@ -42,7 +42,7 @@ class PluginsAndroid_Tests(unittest.TestCase):
         assert "Successfully installed plugin tns-plugin" in output
         assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
         assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
-        output = run("cat " + self.app_name +  + "/package.json")
+        output = run("cat " + self.app_name + "/package.json")
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
         assert "tns-plugin" in output
