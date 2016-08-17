@@ -14,6 +14,7 @@ from core.tns.tns import Tns
 
 class PlatformiOS_Tests(unittest.TestCase):
     app_name = "TNS_App"
+
     @classmethod
     def setUpClass(cls):
         if CURRENT_OS != OSType.OSX:
@@ -59,20 +60,20 @@ class PlatformiOS_Tests(unittest.TestCase):
         assert "Installed platforms:  android and ios" in output
 
     def test_002_platform_add_ios(self):
-        Tns.create_app(app_name=self.app_name)
+        Tns.create_app(self.app_name)
         output = Tns.platform_add(platform="ios", path=self.app_name, symlink=False)
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
         # TODO: Fix files in platform_ios_current.txt
-        #if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
-        #    assert File.list_of_files_exists(
-        #            'TNS_App/platforms/ios',
-        #            'platform_ios_current.txt')
-        #Tns.build(platform="ios", path="TNS_App")
+        # if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
+        #     assert File.list_of_files_exists(
+        #             self.app_name + '/platforms/ios',
+        #             'platform_ios_current.txt')
+        # Tns.build(platform="ios", path=self.app_name)
 
     def test_003_platform_add_ios_symlink_and_framework_path(self):
-        Tns.create_app(app_name=self.app_name)
+        Tns.create_app(self.app_name)
         output = Tns.platform_add(
                 platform="ios",
                 path=self.app_name,
@@ -83,7 +84,7 @@ class PlatformiOS_Tests(unittest.TestCase):
 
         # if ('TEST_RUN' in os.environ) and ("SMOKE" not in os.environ['TEST_RUN']):
         #     assert File.list_of_files_exists(
-        #             'TNS_App/platforms/ios',
+        #             self.app_name + '/platforms/ios',
         #             'platform_ios_symlink.txt')
 
         # Verify Runtime is symlink
@@ -92,7 +93,7 @@ class PlatformiOS_Tests(unittest.TestCase):
         assert "package/framework/internal" in output
 
     def test_200_platform_add_ios_framework_path(self):
-        Tns.create_app(app_name=self.app_name)
+        Tns.create_app(self.app_name)
         output = Tns.platform_add(
                 platform="ios",
                 framework_path=IOS_RUNTIME_PATH,
@@ -103,7 +104,7 @@ class PlatformiOS_Tests(unittest.TestCase):
         # if ('TEST_RUN' in os.environ) and (
         #             "SMOKE" not in os.environ['TEST_RUN']):
         #     assert File.list_of_files_exists(
-        #             'TNS_App/platforms/ios',
+        #             self.app_name + '/platforms/ios',
         #             'platform_ios_current.txt')
 
         # If project.xcworkspace is there Xcode project name is wrong
@@ -141,7 +142,7 @@ class PlatformiOS_Tests(unittest.TestCase):
         assert "tns-ios" not in output
 
     def test_300_platform_add_ios_custom_version(self):
-        Tns.create_app(app_name=self.app_name)
+        Tns.create_app(self.app_name)
         output = Tns.platform_add(platform="ios@2.1.0", path=self.app_name)
         assert "Copying template files..." in output
         assert "Project successfully created" in output
@@ -152,7 +153,7 @@ class PlatformiOS_Tests(unittest.TestCase):
     @unittest.skip(
             "Skip until fixed: https://github.com/NativeScript/nativescript-cli/issues/772")
     def test_301_platform_update_ios(self):
-        Tns.create_app(app_name=self.app_name)
+        Tns.create_app(self.app_name)
         output = Tns.platform_add(platform="ios@1.2.2", path=self.app_name)
         assert "Copying template files..." in output
         assert "Project successfully created" in output
@@ -222,7 +223,7 @@ class PlatformiOS_Tests(unittest.TestCase):
         Tns.build(platform="ios", path=self.app_name)
 
     def test_310_platform_add_ios_custom_experimental_version(self):
-        Tns.create_app(app_name=self.app_name)
+        Tns.create_app(self.app_name)
         output = Tns.platform_add(platform="ios@0.9.2-exp-ios-8.2", path=self.app_name)
         assert "Copying template files..." in output
         assert "Project successfully created" in output
@@ -232,16 +233,13 @@ class PlatformiOS_Tests(unittest.TestCase):
 
     def test_320_platform_add_ios_custom_bundle_id(self):
         # Create project with different appId
-        Tns.create_app(app_name=self.app_name, app_id="org.nativescript.MyApp")
+        Tns.create_app(self.app_name, attributes={"--appid": "org.nativescript.MyApp"})
         output = run("cat " + self.app_name + "/package.json")
         assert "\"id\": \"org.nativescript.MyApp\"" in output
 
         # Add iOS platform
-        output = Tns.platform_add(
-                platform="ios",
-                path=self.app_name,
-                framework_path=IOS_RUNTIME_SYMLINK_PATH,
-            symlink=True)
+        output = Tns.platform_add(platform="ios", path=self.app_name, framework_path=IOS_RUNTIME_SYMLINK_PATH,
+                                  symlink=True)
         assert "Project successfully created" in output
 
         # Verify plist file in native project (after prepare)
@@ -250,7 +248,7 @@ class PlatformiOS_Tests(unittest.TestCase):
         assert "org.nativescript.MyApp" in output
 
     def test_330_platform_update_ios_patform_not_added(self):
-        Tns.create_app(app_name=self.app_name)
+        Tns.create_app(self.app_name)
         output = run(TNS_PATH + " platform update ios --path " + self.app_name)
         assert "Copying template files..." in output
         assert "Project successfully created." in output
@@ -260,6 +258,6 @@ class PlatformiOS_Tests(unittest.TestCase):
     def test_400_platform_add_existing_platform(self):
         self.test_004_platform_add_ios_symlink_and_framework_path()
 
-        output = run(TNS_PATH + " platform add ios --path TNS_App")
+        output = run(TNS_PATH + " platform add ios --path " + self.app_name)
         assert "Platform ios already added" in output
         assert "Usage" in output

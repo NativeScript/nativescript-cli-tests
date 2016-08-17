@@ -13,6 +13,8 @@ from core.tns.tns import Tns
 
 
 class DeviceiOS_Tests(unittest.TestCase):
+    app_name = "TNS_App"
+
     def setUp(self):
 
         print ""
@@ -21,7 +23,7 @@ class DeviceiOS_Tests(unittest.TestCase):
         print "#####"
         print ""
 
-        Folder.cleanup('./TNS_App')
+        Folder.cleanup('./' + self.app_name)
         Device.ensure_available(platform="ios")
 
     def tearDown(self):
@@ -32,22 +34,22 @@ class DeviceiOS_Tests(unittest.TestCase):
         device_ids = Device.get_ids("ios")
 
         # Deploy TNS_App on device
-        Tns.create_app_platform_add(app_name="TNS_App",
+        Tns.create_app_platform_add(app_name=self.app_name,
                                     platform="ios",
                                     framework_path=IOS_RUNTIME_SYMLINK_PATH,
                                     symlink=True)
 
-        output = run(TNS_PATH + " deploy ios --path TNS_App  --justlaunch", timeout=180)
+        output = run(TNS_PATH + " deploy ios --path " + self.app_name + "  --justlaunch", timeout=180)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
-        for id in device_ids:
-            assert id in output
+        for device_id in device_ids:
+            assert device_id in output
         sleep(10)
 
         # Verify list-applications command list org.nativescript.TNSApp
-        for id in device_ids:
-            output = run(TNS_PATH + " device list-applications --device " + id)
+        for device_id in device_ids:
+            output = run(TNS_PATH + " device list-applications --device " + device_id)
             assert "org.nativescript.TNSApp" in output
 
         # Get logs
