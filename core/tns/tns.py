@@ -74,16 +74,14 @@ class Tns(object):
 
     @staticmethod
     def plugin_add(name, attributes={}, log_trace=False, assert_success=True):
-        command = Tns.build_tns_command("plugin add " + name, attributes=attributes, log_trace=log_trace)
-        output = run(command)
+        output = Tns.run_tns_command("plugin add " + name, attributes=attributes, log_trace=log_trace)
         if assert_success:
             assert "Successfully installed plugin {0}".format(name) in output
         return output
 
     @staticmethod
     def plugin_remove(name, attributes={}, log_trace=False, assert_success=True):
-        command = Tns.build_tns_command("plugin remove " + name, attributes=attributes, log_trace=log_trace)
-        output = run(command)
+        output = Tns.run_tns_command("plugin remove " + name, attributes=attributes, log_trace=log_trace)
         if assert_success:
             assert "Successfully installed plugin {0}".format(name) in output
         return output
@@ -104,9 +102,7 @@ class Tns(object):
 
     @staticmethod
     def build_android(attributes={}, assert_success=True):
-        command = Tns.build_tns_command("build android", attributes=attributes)
-        print(command)
-        output = run(command)
+        output = Tns.run_tns_command("build android", attributes=attributes)
         if assert_success:
             assert "Project successfully prepared" in output
             assert "BUILD SUCCESSFUL" in output
@@ -116,9 +112,7 @@ class Tns(object):
 
     @staticmethod
     def build_ios(attributes={}, assert_success=True):
-        command = Tns.build_tns_command("build ios", attributes=attributes)
-        print(command)
-        output = run(command)
+        output = Tns.run_tns_command("build ios", attributes=attributes)
         if assert_success:
             assert "Project successfully prepared" in output
             assert "BUILD SUCCEEDED" in output
