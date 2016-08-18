@@ -40,7 +40,7 @@ class Logtrace_Tests(unittest.TestCase):
 
     def test_002_platform_add_log_trace(self):
         Tns.create_app(self.app_name)
-        output = Tns.platform_add(platform="android", path=self.app_name, log_trace=True)
+        output = Tns.platform_add_android(attributes={"--path":self.app_name}, log_trace=True)
         assert "Looking for project in" in output
         assert "Project directory is" in output
         assert "Package: org.nativescript.{0}".format(self.app_name.replace("_", "")) in output

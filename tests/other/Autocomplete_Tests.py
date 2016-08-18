@@ -4,8 +4,7 @@ Autocomplete tests
 
 import unittest
 
-from core.osutils.command import run
-from core.settings.settings import TNS_PATH
+from core.tns.tns import Tns
 
 
 class Autocomplete_Tests(unittest.TestCase):
@@ -20,28 +19,27 @@ class Autocomplete_Tests(unittest.TestCase):
         pass
 
     def test_001_autocomplete_enable(self):
-        output = run(TNS_PATH + " autocomplete status")
+        output = Tns.run_tns_command("autocomplete status")
         if "Autocompletion is disabled." in output:
-            output = run(TNS_PATH + " autocomplete enable --log trace")
+            output = Tns.run_tns_command("autocomplete enable", log_trace=True)
             assert "Restart your shell to enable command auto-completion." in output
         else:
-            output = run(TNS_PATH + " autocomplete enable --log trace")
+            output = Tns.run_tns_command("autocomplete enable", log_trace=True)
             assert "Autocompletion is already enabled." in output
-        output = run(TNS_PATH + " autocomplete status")
+        output = Tns.run_tns_command("autocomplete status")
         assert "Autocompletion is enabled." in output
 
     def test_002_autocomplete_disable(self):
-        output = run(TNS_PATH + " autocomplete status")
+        output = Tns.run_tns_command("autocomplete status")
         if "Autocompletion is enabled." in output:
-            output = run(TNS_PATH + " autocomplete disable")
+            output = Tns.run_tns_command("autocomplete disable", log_trace=True)
             assert "Restart your shell to disable command auto-completion." in output
         else:
-            output = run(TNS_PATH + " autocomplete disable")
+            output = Tns.run_tns_command("autocomplete disable", log_trace=True)
             assert "Autocompletion is already disabled." in output
-        output = run(TNS_PATH + " autocomplete status")
+        output = Tns.run_tns_command("autocomplete status")
         assert "Autocompletion is disabled." in output
 
     def test_400_autocomplete_invalid_parameter(self):
-        command = TNS_PATH + " autocomplete invalidParam"
-        output = run(command)
+        output = Tns.run_tns_command("autocomplete invalidParam")
         assert "The input is not valid sub-command for 'autocomplete' command" in output
