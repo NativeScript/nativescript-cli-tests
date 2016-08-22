@@ -32,7 +32,7 @@ class PluginsiOSXcconfig_Tests(unittest.TestCase):
         Tns.create_app(self.app_name)
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/xcconfig-plugin"
-        output = Tns.plugin_add(path=self.app_name, plugin=plugin_path, assert_success=False)
+        output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin xcconfig-plugin." in output
         assert File.exists(self.app_name + "/node_modules/xcconfig-plugin/package.json")
         assert File.exists(self.app_name + "/node_modules/xcconfig-plugin/platforms/ios/build.xcconfig")
@@ -42,12 +42,12 @@ class PluginsiOSXcconfig_Tests(unittest.TestCase):
         output = run("cat " + self.app_name + "/package.json")
         assert "xcconfig-plugin" in output
 
-        Tns.platform_add(
-                platform="ios",
-                framework_path=IOS_RUNTIME_SYMLINK_PATH,
-                path=self.app_name,
-                symlink=True)
-        output = Tns.prepare(platform="ios", path=self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""
+                                         })
+
+        output = Tns.prepare_ios(attributes={"--path": self.app_name})
         assert "Successfully prepared plugin xcconfig-plugin for ios." in output
 
         output = run("cat " + self.app_name + "/platforms/ios/plugins-debug.xcconfig")
@@ -62,17 +62,17 @@ class PluginsiOSXcconfig_Tests(unittest.TestCase):
                 "cat " + self.app_name + "/platforms/ios/TNSApp/build-release.xcconfig")
         assert "#include \"../plugins-release.xcconfig\"" in output
 
-        Tns.build(platform="ios", path=self.app_name)
+        Tns.build_ios(attributes={"--path": self.app_name})
 
     def test_202_plugin_add_xcconfig_after_platform_add_ios(self):
-        Tns.create_app_platform_add(
-                app_name=self.app_name,
-                platform="ios",
-                framework_path=IOS_RUNTIME_SYMLINK_PATH,
-                symlink=True)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""
+                                         })
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/xcconfig-plugin"
-        output = Tns.plugin_add(path=self.app_name, plugin=plugin_path, assert_success=False)
+        output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin xcconfig-plugin." in output
         assert File.exists(self.app_name + "/node_modules/xcconfig-plugin/package.json")
         assert File.exists(self.app_name + "/node_modules/xcconfig-plugin/platforms/ios/build.xcconfig")
@@ -82,7 +82,7 @@ class PluginsiOSXcconfig_Tests(unittest.TestCase):
         output = run("cat " + self.app_name + "/package.json")
         assert "xcconfig-plugin" in output
 
-        output = Tns.build(platform="ios", path=self.app_name)
+        output = Tns.build_ios(attributes={"--path": self.app_name})
         assert "Successfully prepared plugin xcconfig-plugin for ios." in output
 
         output = run("cat " + self.app_name + "/platforms/ios/plugins-debug.xcconfig")

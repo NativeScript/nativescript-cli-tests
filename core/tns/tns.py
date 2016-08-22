@@ -7,14 +7,15 @@ import time
 
 from core.osutils.command import run
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, TEST_RUN_HOME, ANDROID_KEYSTORE_PATH, \
-    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS
+from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, TEST_RUN_HOME
 
 
 class Tns(object):
     @staticmethod
-    def run_tns_command(command, attributes={}, log_trace=False, timeout=None):
+    def run_tns_command(command, tns_path=None, attributes={}, log_trace=False, timeout=None):
         cmd = TNS_PATH + " " + command
+        if tns_path is not None:
+            cmd = tns_path + " " + command
         if len(attributes) != 0:
             for k, v in attributes.iteritems():
                 cmd += " " + k + " " + v

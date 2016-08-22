@@ -29,20 +29,19 @@ class PluginsiOSSandboxPods_Tests(unittest.TestCase):
         pass
 
     def test_001_plugin_add_sandbox_pod_can_write_in_app_folder(self):
-        Tns.create_app_platform_add(
-                app_name=self.app_name,
-                platform="ios",
-                framework_path=IOS_RUNTIME_SYMLINK_PATH,
-                symlink=True)
+        Tns.create_app(self.app_name)
+        Tns. platform_add_ios(attributes={"--path": self.app_name,
+                                          "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                          "symlink": ""})
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/nativescript-ios-working-with-sandbox-plugin"
-        output = Tns.plugin_add(path=self.app_name, plugin=plugin_path, assert_success=False)
+        output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin nativescript-ios-working-with-sandbox-plugin." in output
 
         output = run("cat " + self.app_name + "/package.json")
         assert "nativescript-ios-working-with-sandbox-plugin" in output
 
-        output = Tns.prepare(platform="ios", path=self.app_name)
+        output = Tns.prepare_ios(attributes={"--path": self.app_name})
         assert "Successfully prepared plugin " + \
                "nativescript-ios-working-with-sandbox-plugin for ios." in output
 
@@ -51,20 +50,19 @@ class PluginsiOSSandboxPods_Tests(unittest.TestCase):
         assert "content" in output
 
     def test_401_plugin_add_sandbox_pod_can_not_write_outside_app_folder(self):
-        Tns.create_app_platform_add(
-                app_name=self.app_name,
-                platform="ios",
-                framework_path=IOS_RUNTIME_SYMLINK_PATH,
-                symlink=True)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "symlink": ""})
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/nativescript-ios-fail-with-sandbox-plugin"
-        output = Tns.plugin_add(path=self.app_name, plugin=plugin_path, assert_success=False)
+        output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin nativescript-ios-fail-with-sandbox-plugin." in output
 
         output = run("cat " + self.app_name + "/package.json")
         assert "nativescript-ios-fail-with-sandbox-plugin" in output
 
-        output = Tns.prepare(platform="ios", path=self.app_name, assert_success=False)
+        output = Tns.prepare_ios(attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully prepared " + \
                "plugin nativescript-ios-fail-with-sandbox-plugin for ios." in output
         
