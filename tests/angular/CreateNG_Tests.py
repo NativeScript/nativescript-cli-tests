@@ -49,7 +49,7 @@ class CreateNG_Tests(unittest.TestCase):
         "ng",
     ])
     def test_102_create_project_with_template_ng(self, template_source):
-        Tns.create_app(app_name=self.app_name, attributes={"--template": template_source}, assert_success=False)
+        output = Tns.create_app(app_name=self.app_name, attributes={"--template": template_source}, assert_success=False)
         self.assert_angular_project()
 
     def test_401_create_project_with_template_no_value(self):

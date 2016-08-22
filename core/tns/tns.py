@@ -10,8 +10,6 @@ from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, TEST_RUN_HOME, ANDROID_KEYSTORE_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS
 
-TNS_PATH = "tns"
-
 
 class Tns(object):
     @staticmethod

@@ -34,7 +34,7 @@ class BuildAndroidNG_Tests(unittest.TestCase):
         Folder.cleanup('./' + cls.app_name)
 
     def test_010_build_android_ng_project(self):
-        Tns.build_android(attributes={"path": self.app_name})
+        Tns.build_android(attributes={"--path": self.app_name})
         assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
     def test_210_build_android_ng_project_release(self):

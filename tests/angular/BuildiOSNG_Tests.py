@@ -19,7 +19,7 @@ class BuildiOSNG_Tests(unittest.TestCase):
         assert "successfully created" in output
         Tns.platform_add_ios(attributes={"--path": cls.app_name,
                                          "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "symlink": True
+                                         "--symlink": ""
                                          })
 
     def setUp(self):
