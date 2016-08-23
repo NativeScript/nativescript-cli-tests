@@ -297,7 +297,7 @@ class BuildiOS_Tests(unittest.TestCase):
 
     def test_400_build_ios_with_wrong_param(self):
         Tns.create_app(self.app_name_noplatform)
-        output = Tns.build_ios(attributes={"--psth": self.app_name_noplatform,
+        output = Tns.build_ios(attributes={"--path": self.app_name_noplatform,
                                            "--wrongParam": ""},
                                assert_success=False)
         assert "The option 'wrongParam' is not supported." in output
