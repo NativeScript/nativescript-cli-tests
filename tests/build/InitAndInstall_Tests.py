@@ -5,6 +5,7 @@ import fileinput
 import os
 import unittest
 
+from core.tns.tns import Tns
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -31,7 +32,7 @@ class InitAndInstall_Tests(unittest.TestCase):
 
         Folder.create(self.app_name)
         Folder.navigate_to(self.app_name)
-        output = run(os.path.join("..", TNS_PATH) + " init --force")
+        output = Tns.run_tns_command("init", attributes={"--force": ""}, tns_path=os.path.join("..", TNS_PATH))
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
         assert "Project successfully initialized" in output
@@ -47,7 +48,8 @@ class InitAndInstall_Tests(unittest.TestCase):
             assert "tns-ios" in output
 
     def test_002_init_path(self):
-        output = run(TNS_PATH + " init --path " + self.app_name + " --force")
+        output = Tns.run_tns_command("init", attributes={"--path": self.app_name,
+                                                         "--force": ""})
         assert "Project successfully initialized" in output
         assert File.exists(self.app_name + "/package.json")
         assert not File.exists(self.app_name + "/app")
@@ -74,7 +76,7 @@ class InitAndInstall_Tests(unittest.TestCase):
     def test_004_install_defaults(self):
         self.test_002_init_path()
 
-        output = run(TNS_PATH + " install --path " + self.app_name)
+        output = Tns.run_tns_command("install", attributes={"--path": self.app_name})
         assert "Project successfully created" in output
 
         # Not valid for 1.3.0+
@@ -98,7 +100,7 @@ class InitAndInstall_Tests(unittest.TestCase):
         Folder.cleanup('./' + self.app_name + '/node_modules')
         assert not File.exists(self.app_name + "/node_modules")
 
-        output = run(TNS_PATH + " install --path " + self.app_name)
+        output = Tns.run_tns_command("install", attributes={"--path": self.app_name})
         assert "Project successfully created" in output
         assert File.exists(self.app_name + "/node_modules/lodash")
         assert File.exists(self.app_name + "/node_modules/gulp")
@@ -120,7 +122,7 @@ class InitAndInstall_Tests(unittest.TestCase):
         assert "gulp" in output
         assert "lodash" in output
 
-        output = run(TNS_PATH + " install --path " + self.app_name)
+        output = Tns.run_tns_command("install", attributes={"--path": self.app_name})
         assert "Project successfully created" in output
         assert File.exists(self.app_name + "/node_modules/lodash")
         assert File.exists(self.app_name + "/node_modules/gulp")
@@ -142,13 +144,13 @@ class InitAndInstall_Tests(unittest.TestCase):
         assert "gulp" in output
         assert "lodash" in output
 
-        output = run(TNS_PATH + " install --path " + self.app_name)
+        output = Tns.run_tns_command("install", attributes={"--path": self.app_name})
         assert "Project successfully created" in output
         assert File.exists(self.app_name + "/node_modules/lodash")
         assert File.exists(self.app_name + "/node_modules/gulp")
         assert File.exists(self.app_name + "/platforms/android/build.gradle")
 
-        output = run(TNS_PATH + " prepare android --path " + self.app_name)
+        output = Tns.prepare_android(attributes={"--path": self.app_name})
         assert "Project successfully prepared" in output
 
         assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/lodash")
@@ -156,11 +158,11 @@ class InitAndInstall_Tests(unittest.TestCase):
 
         if CURRENT_OS == OSType.OSX:
             assert File.exists(self.app_name + "/platforms/ios/TNSApp.xcodeproj")
-            output = run(TNS_PATH + " prepare ios --path " + self.app_name)
+            output = Tns.prepare_ios(attributes={"--path": self.app_name})
             assert "Project successfully prepared" in output
             assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/lodash")
             assert not File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/gulp")
 
     def test_400_install_in_not_existing_folder(self):
-        output = run(TNS_PATH + " install --path " + self.app_name)
+        output = Tns.run_tns_command("install", attributes={"--path": self.app_name})
         assert "No project found" in output

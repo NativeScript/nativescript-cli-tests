@@ -58,15 +58,18 @@ class Tns(object):
     def platform_add_android(version=None, attributes={}, log_trace=False):
         platform = "android"
         if version is not None:
-            platform += version
+            platform += "@" + version
         output = Tns.run_tns_command("platform add " + platform, attributes=attributes, log_trace=log_trace)
         assert "Copying template files..." in output
         assert "Project successfully created." in output
         return output
 
     @staticmethod
-    def platform_add_ios(attributes={}, log_trace=False):
-        output = Tns.run_tns_command("platform add ios ", attributes=attributes, log_trace=log_trace)
+    def platform_add_ios(version=None, attributes={}, log_trace=False):
+        platform = "ios"
+        if version is not None:
+            platform += "@" + version
+        output = Tns.run_tns_command("platform add " + platform, attributes=attributes, log_trace=log_trace)
         assert "Copying template files..." in output
         assert "Project successfully created." in output
         return output

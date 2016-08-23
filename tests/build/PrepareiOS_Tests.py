@@ -8,7 +8,7 @@ import re
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, TNS_PATH, CURRENT_OS, OSType
+from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, CURRENT_OS, OSType
 from core.tns.tns import Tns
 
 
@@ -34,10 +34,12 @@ class PrepareiOS_Tests(unittest.TestCase):
         Folder.cleanup('./' + self.app_name)
 
     def test_001_prepare_ios(self):
-        Tns.create_app_platform_add(app_name=self.app_name, platform="ios",
-                                    framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""})
 
-        output = run(TNS_PATH + " prepare ios --path " + self.app_name)
+        output = Tns.prepare_ios(attributes={"--path": self.app_name})
         assert "Project successfully prepared" in output
 
         # Verify app and modules are processed and available in platform folder
@@ -60,22 +62,28 @@ class PrepareiOS_Tests(unittest.TestCase):
     def test_010_prepare_android_ng_project(self):
         output = Tns.create_app(self.app_name, attributes={"--ng": ""}, assert_success=False)
         assert "successfully created" in output
-        Tns.platform_add(platform="ios", path=self.app_name, framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
-        Tns.prepare(platform="ios", path=self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""
+                                         })
+        Tns.prepare_ios(attributes={"--path": self.app_name})
 
         assert Folder.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/@angular')
         assert Folder.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/nativescript-angular')
 
     def test_200_prepare_additional_appresources(self):
-        Tns.create_app_platform_add(app_name=self.app_name, platform="ios",
-                                    framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""
+                                         })
 
         # Create new files in AppResources
         run("cp " + self.app_name + "/app/App_Resources/iOS/Assets.xcassets/AppIcon.appiconset/icon-50.png " +
             self.app_name + "/app/App_Resources/iOS/newDefault.png")
 
         # prepare project
-        output = run(TNS_PATH + " prepare ios --path " + self.app_name)
+        output = Tns.prepare_ios(attributes={"--path": self.app_name})
         assert "Project successfully prepared" in output
 
         # Verify app and modules are processed and available in platform folder
@@ -92,7 +100,7 @@ class PrepareiOS_Tests(unittest.TestCase):
 
     def test_201_prepare_ios_platform_not_added(self):
         Tns.create_app(self.app_name)
-        output = run(TNS_PATH + " prepare ios --path " + self.app_name)
+        output = Tns.prepare_ios(attributes={"--path": self.app_name})
         assert "Copying template files..." in output
         assert "Project successfully created." in output
         assert "Project successfully prepared" in output
@@ -101,9 +109,11 @@ class PrepareiOS_Tests(unittest.TestCase):
         assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.js')
 
     def test_210_prepare_ios_tns_core_modules(self):
-        Tns.create_app(self.app_name, attributes={"--copy-from":"data/projects/helloworld-1.2.1/app"})
-        Tns.platform_add(platform="ios", path=self.app_name,
-                         framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
+        Tns.create_app(self.app_name, attributes={"--copy-from": "data/projects/helloworld-1.2.1/app"})
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""
+                                         })
 
         # Make a change in tns-core-modules to verify they are not overwritten.
         File.replace(self.app_name + "/node_modules/tns-core-modules/application/application-common.js",
@@ -114,7 +124,7 @@ class PrepareiOS_Tests(unittest.TestCase):
         for i in range(1, 3):
             print "prepare number: " + str(i)
 
-            output = run(TNS_PATH + " prepare ios --path " + self.app_name)
+            output = Tns.prepare_ios(attributes={"--path": self.app_name})
             assert "You have tns_modules dir in your app folder" in output
             assert "Project successfully prepared" in output
 
@@ -134,8 +144,11 @@ class PrepareiOS_Tests(unittest.TestCase):
             assert "require(\"globals\"); // test" in output
 
     def test_300_prepare_ios_preserve_case(self):
-        Tns.create_app_platform_add(app_name=self.app_name, platform="ios",
-                                    framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""
+                                         })
         run("cp " + self.app_name + "/node_modules/tns-core-modules/application/application-common.js" +
             " " + self.app_name + "/node_modules/tns-core-modules/application/New-application-common.js")
         run("cp " + self.app_name + "/node_modules/tns-core-modules/application/application.android.js" +
@@ -143,7 +156,7 @@ class PrepareiOS_Tests(unittest.TestCase):
         run("cp " + self.app_name + "/node_modules/tns-core-modules/application/application.ios.js" +
             " " + self.app_name + "/node_modules/tns-core-modules/application/New-application.ios.js")
 
-        output = run(TNS_PATH + " prepare ios --path " + self.app_name)
+        output = Tns.prepare_ios(attributes={"--path": self.app_name})
         assert "Project successfully prepared" in output
 
         # Verify app and modules are processed and available in platform folder
@@ -161,11 +174,14 @@ class PrepareiOS_Tests(unittest.TestCase):
 
     @unittest.skip("Ignore because of https://github.com/NativeScript/nativescript-cli/issues/1027")
     def test_301_prepare_android_does_not_prepare_ios(self):
-        Tns.create_app_platform_add(app_name=self.app_name, platform="ios",
-                                    framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""
+                                         })
 
-        Tns.plugin_add(plugin="nativescript-social-share", path=self.app_name, assert_success=True)
-        Tns.plugin_add(plugin="nativescript-iqkeyboardmanager", path=self.app_name, assert_success=True)
+        Tns.plugin_add("nativescript-social-share", attributes={"--path": self.app_name}, assert_success=True)
+        Tns.plugin_add("nativescript-iqkeyboardmanager", attributes={"--path": self.app_name}, assert_success=True)
 
-        output = Tns.prepare(path=self.app_name, platform="android")
+        output = Tns.prepare_android(attributes={"--path": self.app_name})
         # assert " " in output  # TODO: Add assert string
