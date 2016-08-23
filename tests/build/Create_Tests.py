@@ -67,7 +67,7 @@ class Create_Tests(unittest.TestCase):
 
     def test_002_create_project_with_path(self):
         Tns.create_app(self.app_name, attributes={"--path": "folder/subfolder/"},
-                       assert_success=False, update_modules=False)
+                       assert_success=False)
 
         assert Folder.is_empty("folder/subfolder/" + self.app_name + "/platforms")
         assert not Folder.exists("folder/subfolder/" + self.app_name + "/app/tns_modules")
@@ -176,11 +176,11 @@ class Create_Tests(unittest.TestCase):
         # Create initial template project
         Tns.create_app(self.app_template)
         output = Tns.create_app(self.app_name, attributes={"-copy-from": self.app_template},
-                                assert_success=False, update_modules=False)
+                                assert_success=False)
         assert "successfully created" not in output
         assert "To see command's options, use '$ tns help create'" in output
 
     def test_403_create_project_with_no_name(self):
-        output = Tns.create_app(None, assert_success=False, update_modules=False)
+        output = Tns.create_app(None, assert_success=False)
         assert "You need to provide all the required parameters." in output
         assert "# create" in output

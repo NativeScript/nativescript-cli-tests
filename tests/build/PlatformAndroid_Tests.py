@@ -30,7 +30,7 @@ class PlatformAndroid_Tests(unittest.TestCase):
 
     def test_001_platform_list_empty_project(self):
         Tns.create_app(self.app_name)
-        output = Tns.run_tns_command("platform list", attributes={"--path", self.app_name})
+        output = Tns.run_tns_command("platform list", attributes={"--path": self.app_name})
 
         assert "No installed platforms found. Use $ tns platform add" in output
         if CURRENT_OS == OSType.OSX:
@@ -40,7 +40,7 @@ class PlatformAndroid_Tests(unittest.TestCase):
 
     def test_002_platform_add_android(self):
         Tns.create_app(self.app_name)
-        output = Tns.platform_add_android(attributes={"--path", self.app_name})
+        output = Tns.platform_add_android(attributes={"--path": self.app_name})
         assert "Copying template files..." in output
         assert "Project successfully created" in output
 
@@ -106,6 +106,7 @@ class PlatformAndroid_Tests(unittest.TestCase):
         output = run("cat " + self.app_name + "/package.json")
         assert "\"version\": \"2.0.0\"" in output
 
+    @unittest.skip("1.3.0 do not support older versions, enable after 1.3.1 is released")
     def test_204_platform_update_android(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_android(version="2.0.0", attributes={"--path": self.app_name})
@@ -131,6 +132,7 @@ class PlatformAndroid_Tests(unittest.TestCase):
 
         Tns.build_android(attributes={"--path": self.app_name})
 
+    @unittest.skip("1.3.0 do not support older versions, enable after 1.3.1 is released")
     def test_206_platform_downgrade_android_to_old_version(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_android(version="2.1.0", attributes={"--path": self.app_name})
@@ -156,6 +158,7 @@ class PlatformAndroid_Tests(unittest.TestCase):
         assert "\"version\": \"1.1.0\"" in output
         Tns.build_android(attributes={"--path": self.app_name})
 
+    @unittest.skip("Execute when platform update command starts respecting --frameworkPath.")
     def test_207_platform_update_android_to_latest_version(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_android(version="2.0.0", attributes={"--path": self.app_name})
@@ -168,6 +171,7 @@ class PlatformAndroid_Tests(unittest.TestCase):
         assert "Successfully updated to version" in output
         Tns.build_android(attributes={"--path": self.app_name})
 
+    @unittest.skip("Skiped because of https://github.com/NativeScript/nativescript-cli/issues/784")
     def test_208_platform_downgrade_android_from_latest_version(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_android(attributes={"--path": self.app_name,

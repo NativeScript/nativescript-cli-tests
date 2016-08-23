@@ -131,7 +131,7 @@ class PlatformiOS_Tests(unittest.TestCase):
                                          "--symlink": ""
                                          })
 
-        output = Tns.run_tns_command("platform remove", attributes={"--path": self.app_name})
+        output = Tns.run_tns_command("platform remove ios", attributes={"--path": self.app_name})
         assert "Platform ios successfully removed." in output
 
         assert "error" not in output

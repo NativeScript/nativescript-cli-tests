@@ -48,7 +48,7 @@ class Tns(object):
     def create_app(app_name, attributes={}, log_trace=False, assert_success=True):
         attr = {"--copy-from": SUT_ROOT_FOLDER + os.path.sep + "template-hello-world"}
         attr.update(attributes)
-        output = Tns.run_tns_command("create " + app_name, attributes=attr, log_trace=log_trace)
+        output = Tns.run_tns_command("create \"" + app_name + "\"", attributes=attr, log_trace=log_trace)
         if assert_success:
             assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
 

@@ -90,7 +90,7 @@ class EmulateiOS_Tests(unittest.TestCase):
 
     def test_400_emulate_invalid_device(self):
         output = Tns.run_tns_command("emulate ios", attributes={"--device": "invalidDevice",
-                                                                "--path": self.app_name_noplatform,
+                                                                "--path": self.app_name,
                                                                 "--justlaunch": ""
                                                                 })
         assert "Cannot find device with name: invalidDevice." in output

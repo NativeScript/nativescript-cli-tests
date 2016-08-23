@@ -72,7 +72,7 @@ class EmulateAndroid_Tests(unittest.TestCase):
                                                                     "--keyStorePath": ANDROID_KEYSTORE_PATH,
                                                                     "--keyStorePassword": ANDROID_KEYSTORE_PASS,
                                                                     "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
-                                                                    "-keyStoreAliasPassword":
+                                                                    "--keyStoreAliasPassword":
                                                                         ANDROID_KEYSTORE_ALIAS_PASS,
                                                                     "--release": "",
                                                                     "--path": self.app_name,
