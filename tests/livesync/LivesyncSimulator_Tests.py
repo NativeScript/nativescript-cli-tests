@@ -48,8 +48,13 @@ class LivesyncSimulator_Tests(Watcher):
 
         # setup app
         Tns.create_app(cls.app_name, attributes={"--copy-from": "data/apps/livesync-hello-world"})
-        Tns.platform_add(platform="ios", framework_path=IOS_RUNTIME_SYMLINK_PATH, path=cls.app_name, symlink=True)
-        output = Tns.run(platform="ios", emulator=True, path=cls.app_name, assert_success=False)
+        Tns.platform_add_ios(attributes={"--path": cls.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""
+                                         })
+        output = Tns.run_ios(attributes={"--emulator": "",
+                                         "--path": cls.app_name},
+                             assert_success=False)
         assert "Starting iOS Simulator" not in output
 
         # replace
@@ -175,7 +180,10 @@ class LivesyncSimulator_Tests(Watcher):
         Folder.cleanup(self.app_name_appTest)
         Simulator.stop_simulators()
         Tns.create_app(self.app_name_appTest)
-        Tns.platform_add(platform="ios", framework_path=IOS_RUNTIME_SYMLINK_PATH, path=self.app_name_appTest, symlink=True)
+        Tns.platform_add_ios(attributes={"--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--path": self.app_name_appTest,
+                                         "--symlink": ""
+                                         })
 
         # replace
         File.replace(self.app_name_appTest + "/app/main-page.xml", "TAP", "MYTAP")
@@ -186,7 +194,9 @@ class LivesyncSimulator_Tests(Watcher):
         File.replace(self.app_name_appTest + "/node_modules/tns-core-modules/application/application-common.js",
                      "(\"globals\");", "(\"globals\"); // test")
 
-        output = Tns.livesync(platform="ios", emulator=True, path=self.app_name_appTest, log_trace=True)
+        output = Tns.livesync(platform="ios", attributes={"--emulator": "",
+                                                          "--path": self.app_name_appTest
+                                                          })
         assert "Successfully synced application org.nativescript.appTest" in output
         time.sleep(3)
 

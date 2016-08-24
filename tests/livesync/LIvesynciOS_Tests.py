@@ -43,8 +43,11 @@ class LiveSynciOS(unittest.TestCase):
         Device.uninstall_app("org.nativescript.", platform="ios", fail=False)
 
     def test_001_livesync_ios_xml_js_css_tnsmodules_files(self):
-        Tns.create_app_platform_add(app_name=self.app_name, platform="ios", framework_path=IOS_RUNTIME_PATH)
-        Tns.run(platform="ios", path=self.app_name)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_PATH
+                                         })
+        Tns.run_ios(attributes={"--path": self.app_name})
 
         File.replace(self.app_name + "/app/main-page.xml", "TAP", "TEST")
         File.replace(self.app_name + "/app/main-view-model.js", "taps", "clicks")
@@ -54,7 +57,9 @@ class LiveSynciOS(unittest.TestCase):
         File.replace(self.app_name + "/node_modules/tns-core-modules/application/application-common.js",
                                      "(\"globals\");","(\"globals\"); // test")
 
-        Tns.livesync(platform="ios", path=self.app_name, sync_all_files=True)
+        Tns.livesync(platform="ios", attributes={"--path": self.app_name,
+                                                 "--syncAllFiles": ""
+                                                 })
 
         Device.file_contains("ios", "TNSApp", "app/main-page.xml", text="TEST")
         Device.file_contains("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
@@ -68,16 +73,24 @@ class LiveSynciOS(unittest.TestCase):
                 text="require(\"globals\"); // test")
 
     def test_002_livesync_ios_device(self):
-        Tns.create_app_platform_add(app_name=self.app_name, platform="ios", framework_path=IOS_RUNTIME_PATH)
-        Tns.run(platform="ios", path=self.app_name)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_PATH
+                                         })
+        Tns.run_ios(attributes={"--path": self.app_name})
         device_id = Device.get_id(platform="ios")
         File.replace(self.app_name + "/app/main-view-model.js", "taps", "clicks")
-        Tns.livesync(platform="ios", device=device_id, path=self.app_name)
+        Tns.livesync(platform="ios", attributes={"--path": self.app_name,
+                                                 "--device": device_id
+                                                 })
         Device.file_contains("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
 
     def test_201_livesync_ios_add_new_files(self):
-        Tns.create_app_platform_add(app_name=self.app_name, platform="ios", framework_path=IOS_RUNTIME_PATH)
-        Tns.run(platform="ios", path=self.app_name)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_PATH
+                                         })
+        Tns.run_ios(attributes={"--path": self.app_name})
 
         shutil.copyfile(self.app_name + "/app/main-page.xml", self.app_name + "/app/test.xml")
         shutil.copyfile(self.app_name + "/app/main-page.js", self.app_name + "/app/test.js")
@@ -86,7 +99,7 @@ class LiveSynciOS(unittest.TestCase):
         os.makedirs(self.app_name + "/app/test")
         shutil.copyfile(self.app_name + "/app/main-view-model.js", self.app_name + "/app/test/main-view-model.js")
 
-        Tns.livesync(platform="ios", path=self.app_name)
+        Tns.livesync(platform="ios", attributes={"--path": self.app_name})
 
         Device.file_contains("ios", "TNSApp", "app/test.xml", text="TAP")
         Device.file_contains("ios", "TNSApp", "app/test.js", text="page.bindingContext = ")

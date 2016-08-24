@@ -27,8 +27,12 @@ class LivesyncEmulatorWatch_Tests(Watcher):
 
         # setup app
         Tns.create_app(cls.app_name, attributes={"--copy-from": "data/apps/livesync-hello-world"})
-        Tns.platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, path=cls.app_name)
-        Tns.run(platform="android", device="emulator-5554", path=cls.app_name, log_trace=False)
+        Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH,
+                                             "--path": cls.app_name
+                                             })
+        Tns.run_android(attributes={"--device": "emulator-5554",
+                                    "--path": cls.app_name
+                                    })
 
     def setUp(self):
         print ""
