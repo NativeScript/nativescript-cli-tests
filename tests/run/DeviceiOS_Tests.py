@@ -6,9 +6,8 @@ import unittest
 from time import sleep
 
 from core.device.device import Device
-from core.osutils.command import run
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH, IOS_RUNTIME_SYMLINK_PATH
+from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH
 from core.tns.tns import Tns
 
 
@@ -34,12 +33,16 @@ class DeviceiOS_Tests(unittest.TestCase):
         device_ids = Device.get_ids("ios")
 
         # Deploy TNS_App on device
-        Tns.create_app_platform_add(app_name=self.app_name,
-                                    platform="ios",
-                                    framework_path=IOS_RUNTIME_SYMLINK_PATH,
-                                    symlink=True)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""
+                                         })
 
-        output = run(TNS_PATH + " deploy ios --path " + self.app_name + "  --justlaunch", timeout=180)
+        output = Tns.run_tns_command("deploy ios", attributes={"--path": self.app_name,
+                                                               "--justlaunch": ""
+                                                               },
+                                     timeout=180)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
@@ -49,9 +52,9 @@ class DeviceiOS_Tests(unittest.TestCase):
 
         # Verify list-applications command list org.nativescript.TNSApp
         for device_id in device_ids:
-            output = run(TNS_PATH + " device list-applications --device " + device_id)
+            output = Tns.run_tns_command("device list-applications", attributes={"--device": device_id})
             assert "org.nativescript.TNSApp" in output
 
         # Get logs
-        output = run(TNS_PATH + " device log --device " + device_id, timeout=30)
+        output = Tns.run_tns_command("device log", attributes={"--device": device_id}, timeout=30)
         assert ("<Notice>:" in output) or ("<Error>:" in output) or ("com.apple." in output)

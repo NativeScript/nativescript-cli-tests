@@ -248,14 +248,15 @@ class PlatformAndroid_Tests(unittest.TestCase):
     def test_420_platform_add_existing_platform(self):
         self.test_002_platform_add_android()
 
-        output = Tns.platform_add_android(attributes={"--path ": self.app_name})
+        output = Tns.platform_add_android(attributes={"--path ": self.app_name}, assert_success=False)
         assert "Platform android already added" in output
 
     def test_421_platform_add_android_wrong_framework_path(self):
         Tns.create_app(self.app_name)
         output = Tns.platform_add_android(attributes={"--path": self.app_name,
                                                       "--frameworkPath": "invalidFile.tgz"
-                                                      })
+                                                      },
+                                          assert_success=False)
         assert "Error: no such package available" in output
         assert "invalidFile.tgz" in output
 
@@ -263,7 +264,8 @@ class PlatformAndroid_Tests(unittest.TestCase):
         Tns.create_app(self.app_name)
         output = Tns.platform_add_android(attributes={"--path": self.app_name,
                                                       "--frameworkpath": "tns-android.tgz"
-                                                      })
+                                                      },
+                                          assert_success=False)
         assert "The option 'frameworkpath' is not supported." in output
 
     def test_424_platform_add_android_wrong_symlink_option(self):
@@ -271,7 +273,8 @@ class PlatformAndroid_Tests(unittest.TestCase):
         output = Tns.platform_add_android(attributes={"--path": self.app_name,
                                                       "--frameworkPath": "invalidFile.tgz",
                                                       "--simlink": ""
-                                                      })
+                                                      },
+                                          assert_success=False)
         assert "The option 'simlink' is not supported." in output
 
     def test_425_platform_add_empty_platform(self):

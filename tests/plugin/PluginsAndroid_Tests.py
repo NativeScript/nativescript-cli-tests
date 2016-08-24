@@ -147,7 +147,7 @@ class PluginsAndroid_Tests(unittest.TestCase):
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH})
 
-        output = Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name})
+        output = Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin tns-plugin" in output
 
         output = Tns.build_android(attributes={"--path": self.app_name})
@@ -161,7 +161,7 @@ class PluginsAndroid_Tests(unittest.TestCase):
         assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
 
         # Verify plugin commmand list used plugins
-        output = Tns.plugin_add(name="", attributes={"--path": self.app_name})
+        output = Tns.run_tns_command("plugin",attributes={"--path": self.app_name})
         assert "tns-plugin" in output
 
     @unittest.skip("This test breaks the xml parser.")

@@ -181,6 +181,6 @@ class Create_Tests(unittest.TestCase):
         assert "To see command's options, use '$ tns help create'" in output
 
     def test_403_create_project_with_no_name(self):
-        output = Tns.create_app(None, assert_success=False)
+        output = Tns.create_app("", assert_success=False)
         assert "You need to provide all the required parameters." in output
         assert "# create" in output

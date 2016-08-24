@@ -55,7 +55,7 @@ class LiveSynciOS(unittest.TestCase):
 
         File.replace(self.app_name + "/node_modules/tns-core-modules/LICENSE", "Copyright", "MyCopyright")
         File.replace(self.app_name + "/node_modules/tns-core-modules/application/application-common.js",
-                                     "(\"globals\");","(\"globals\"); // test")
+                                     "(\"globals\");", "(\"globals\"); // test")
 
         Tns.livesync(platform="ios", attributes={"--path": self.app_name,
                                                  "--syncAllFiles": ""

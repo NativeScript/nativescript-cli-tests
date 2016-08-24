@@ -53,7 +53,7 @@ class PlatformiOS_Tests(unittest.TestCase):
                                              "--symlink": ""
                                              })
         assert "The project is prepared for:  ios" in output
-        assert "Installed platforms:  android and ios" in output
+        assert "Installed platforms:  android" in output
 
         Tns.prepare_android(attributes={"--path": self.app_name})
         assert "The project is prepared for:  ios and android" in output

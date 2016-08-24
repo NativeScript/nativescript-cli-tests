@@ -247,7 +247,7 @@ class PluginsiOS_Tests(unittest.TestCase):
 
     def test_401_plugin_add_invalid_plugin(self):
         Tns.create_app(self.app_name)
-        output = Tns.plugin_add("wd", attributes={"--path": self.app_name})
+        output = Tns.plugin_add("wd", attributes={"--path": self.app_name}, assert_success=False)
         assert "wd is not a valid NativeScript plugin" in output
         assert "Verify that the plugin package.json file " + \
                "contains a nativescript key and try again" in output
@@ -262,6 +262,6 @@ class PluginsiOS_Tests(unittest.TestCase):
                                              "--frameworkPath": ANDROID_RUNTIME_PATH,
                                              "--symlink": ""
                                              })
-        output = Tns.plugin_add("tns-plugin@1.0.2", attributes={"--path": self.app_name})
+        output = Tns.plugin_add("tns-plugin@1.0.2", attributes={"--path": self.app_name}, assert_success=False)
         assert "tns-plugin is not supported for android" in output
         assert "Successfully installed plugin tns-plugin" in output

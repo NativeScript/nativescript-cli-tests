@@ -230,7 +230,7 @@ class BuildiOS_Tests(unittest.TestCase):
 
     def test_301_build_ios_with_space(self):
         Tns.create_app(self.app_name_space)
-        Tns.platform_add_ios(attributes={"--path": self.app_name_space,
+        Tns.platform_add_ios(attributes={"--path": "\"" + self.app_name_space + "\"",
                                          "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
                                          "--symlink": ""
                                          })

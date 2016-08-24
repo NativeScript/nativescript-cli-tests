@@ -46,7 +46,8 @@ class UnittestsEmulator(unittest.TestCase):
         # Next lines are required because of https://github.com/NativeScript/nativescript-cli/issues/1636
         Tns.run_tns_command("test android", attributes={"--emulator": "",
                                                         "--justlaunch": "",
-                                                        "--path": self.app_name})
+                                                        "--path": self.app_name},
+                            timeout=90)
         # run(TNS_PATH + " test android --emulator --justlaunch --path " + self.app_name, timeout=90, output=False)
 
         output = Tns.run_tns_command("test android", attributes={"--emulator": "",

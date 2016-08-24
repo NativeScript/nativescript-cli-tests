@@ -7,9 +7,8 @@ from time import sleep
 
 from core.device.device import Device
 from core.device.emulator import Emulator
-from core.osutils.command import run
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH
+from core.settings.settings import ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
 
 
@@ -38,8 +37,13 @@ class DeviceAndroid_Tests(unittest.TestCase):
         device_ids = Device.get_ids("android")
 
         # Deploy TNS_App on device
-        Tns.create_app_platform_add(app_name=self.app_name, platform="android", framework_path=ANDROID_RUNTIME_PATH)
-        output = run(TNS_PATH + " deploy android --path " + self.app_name + " --justlaunch")
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name,
+                                             "--frameworkPath": ANDROID_RUNTIME_PATH
+                                             })
+        output = Tns.run_tns_command("deploy android", attributes={"--path": self.app_name,
+                                                                   "--justlaunch": ""
+                                                                   })
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
@@ -49,7 +53,7 @@ class DeviceAndroid_Tests(unittest.TestCase):
 
         # Verify list-applications command list org.nativescript.TNSApp
         for device_id in device_ids:
-            output = run(TNS_PATH + " device list-applications --device " + device_id)
+            output = Tns.run_tns_command("device list-applications", attributes={"--device": device_id})
             assert "com.android." in output
             assert "org.nativescript.TNSApp" in output
 
@@ -57,7 +61,7 @@ class DeviceAndroid_Tests(unittest.TestCase):
         Device.wait_until_app_is_running(app_id="org.nativescript.TNSApp", device_id=device_id, timeout=60)
 
         # Get logs
-        output = run(TNS_PATH + " device log --device " + device_id, timeout=120)
+        output = Tns.run_tns_command("device log", attributes={"--device": device_id}, timeout=120)
         assert ("ActivityManager" in output) or ("AndroidRuntime" in output) or \
                ("Wifi" in output) or ("WIFI" in output) or ("Netlink" in output) or \
                ("beginning of system" in output) or ("beginning of main" in output)
@@ -65,7 +69,10 @@ class DeviceAndroid_Tests(unittest.TestCase):
         # Kill the app
         Device.stop_application(app_id="org.nativescript.TNSApp", device_id=device_id)
         # Start via emulate command and verify it is running
-        run(TNS_PATH + " device run org.nativescript.TNSApp --device " + device_id + " --justlaunch", timeout=60)
+        Tns.run_tns_command("device run org.nativescript.TNSApp", attributes={"--device": device_id,
+                                                                              "--justlaunch": ""
+                                                                              },
+                            timeout=60)
         # Verify app is running
         Device.wait_until_app_is_running(app_id="org.nativescript.TNSApp", device_id=device_id, timeout=60)
 
@@ -73,22 +80,22 @@ class DeviceAndroid_Tests(unittest.TestCase):
         a_count = Device.get_count(platform="android")
         i_count = Device.get_count(platform="ios")
         if a_count + i_count > 2:
-            output = run(TNS_PATH + " device log")
+            output = Tns.run_tns_command("device log")
             assert "More than one device found. Specify device explicitly." in output
 
     def test_400_device_invalid_platform(self):
-        output = run(TNS_PATH + " device windows")
+        output = Tns.run_tns_command("device windows")
         assert "'windows' is not a valid device platform." in output
 
     def test_401_device_log_invalid_device_id(self):
-        output = run(TNS_PATH + " device log --device invaliddevice_id")
+        output = Tns.run_tns_command("device log", attributes={"--device": "invaliddevice_id"})
         assert "Cannot resolve the specified connected device" in output
 
     @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/1912")
     def test_402_device_run_invalid_device_id(self):
-        output = run(TNS_PATH + " device run android --device invaliddevice_id")
+        output = Tns.run_tns_command("device run android", attributes={"--device": "invaliddevice_id"})
         assert "Cannot resolve the specified connected device" in output
 
     def test_403_device_list_applications_invalid_device_id(self):
-        output = run(TNS_PATH + " device list-applications --device invaliddevice_id")
+        output = Tns.run_tns_command("device list-applications", attributes={"--device": "invaliddevice_id"})
         assert "Cannot resolve the specified connected device" in output

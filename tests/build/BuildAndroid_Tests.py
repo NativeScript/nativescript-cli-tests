@@ -324,7 +324,8 @@ class BuildAndroid_Tests(unittest.TestCase):
                                                          "--profile-dir": ".",
                                                          "--no-hooks": "",
                                                          "--ignoreScripts": ""
-                                                         })
+                                                         },
+                                     tns_path="../../node_modules/.bin/tns")
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         assert "Project successfully initialized." in output
 

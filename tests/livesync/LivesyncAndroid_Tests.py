@@ -76,9 +76,6 @@ class LivesyncAndroid_Tests(unittest.TestCase):
 
     def test_201_livesync_android_add_new_files(self):
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={})
-
-        Tns.create_app(self.app_name)
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })

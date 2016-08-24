@@ -49,7 +49,9 @@ class StaticBindingGenerator(unittest.TestCase):
         print "Check result: " + repr(js_file_exists)
 
         print "####################### Adding android platform #######################"
-        output = Tns.platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, path=self.app_name)
+        output = Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH,
+                                                      "--path": self.app_name
+                                                      })
         print output
 
         # check that we do not have folder gen before the project is built
@@ -69,7 +71,7 @@ class StaticBindingGenerator(unittest.TestCase):
 
     def test_002_on_build_verify_file_generation(self):
         print ("####################### Building app for android #######################")
-        output = Tns.build(platform="android", path=self.app_name)
+        output = Tns.build_android(attributes={"--path": self.app_name})
 
         if "BUILD SUCCESSFUL" in output:
             # check that gen folder is created
@@ -99,7 +101,10 @@ class StaticBindingGenerator(unittest.TestCase):
         print ("Running app for android")
 
         # run application
-        Tns.run(platform="android", emulator=True, path=self.app_name, log_trace=False)
+        Tns.run_android(attributes={"--emulator": "",
+                                    "--path": self.app_name,
+                                    "--timeout": "120"
+                                    })
 
         # wait 2 seconds to get emulator logcat
         process = subprocess.Popen([ADB_PATH, "-e", "logcat"], stdout=subprocess.PIPE)

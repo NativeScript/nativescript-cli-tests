@@ -208,7 +208,7 @@ class PluginsiOSPods_Tests(unittest.TestCase):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
                                          "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "symlink": ""
+                                         "--symlink": ""
                                          })
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/invalidpod"

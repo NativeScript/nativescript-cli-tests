@@ -32,7 +32,7 @@ class PluginsiOSSandboxPods_Tests(unittest.TestCase):
         Tns.create_app(self.app_name)
         Tns. platform_add_ios(attributes={"--path": self.app_name,
                                           "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                          "symlink": ""})
+                                          "--symlink": ""})
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/nativescript-ios-working-with-sandbox-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
@@ -53,7 +53,7 @@ class PluginsiOSSandboxPods_Tests(unittest.TestCase):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
                                          "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "symlink": ""})
+                                         "--symlink": ""})
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/nativescript-ios-fail-with-sandbox-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)

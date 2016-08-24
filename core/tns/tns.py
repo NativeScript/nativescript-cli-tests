@@ -46,22 +46,28 @@ class Tns(object):
 
     @staticmethod
     def create_app(app_name, attributes={}, log_trace=False, assert_success=True):
-        attr = {"--copy-from": SUT_ROOT_FOLDER + os.path.sep + "template-hello-world"}
+        attributes_to_string = "".join("{0} {1}".format(k, v) for k, v in attributes.iteritems())
+        attr = {}
+        if not any(s in attributes_to_string for s in ("--ng", "--template", "--tsc")):
+            attr = {"--copy-from": SUT_ROOT_FOLDER + os.path.sep + "template-hello-world"}
         attr.update(attributes)
-        output = Tns.run_tns_command("create \"" + app_name + "\"", attributes=attr, log_trace=log_trace)
+        if app_name is None:
+            output = Tns.run_tns_command("create ", attributes=attr, log_trace=log_trace)
+        else:
+            output = Tns.run_tns_command("create \"" + app_name + "\"", attributes=attr, log_trace=log_trace)
         if assert_success:
             assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
-
         return output
 
     @staticmethod
-    def platform_add_android(version=None, attributes={}, log_trace=False):
+    def platform_add_android(version=None, attributes={}, assert_success=True, log_trace=False):
         platform = "android"
         if version is not None:
             platform += "@" + version
         output = Tns.run_tns_command("platform add " + platform, attributes=attributes, log_trace=log_trace)
-        assert "Copying template files..." in output
-        assert "Project successfully created." in output
+        if assert_success:
+            assert "Copying template files..." in output
+            assert "Project successfully created." in output
         return output
 
     @staticmethod
@@ -123,8 +129,8 @@ class Tns(object):
         return output
 
     @staticmethod
-    def run_android(attributes={}, assert_success=True, log_trace=False):
-        output = Tns.run_tns_command("run android", attributes=attributes, log_trace=log_trace)
+    def run_android(attributes={}, assert_success=True, log_trace=False, timeout=None):
+        output = Tns.run_tns_command("run android", attributes=attributes, log_trace=log_trace, timeout=timeout)
         if assert_success:
             assert "Project successfully prepared" in output
             assert "Project successfully built" in output
@@ -132,12 +138,12 @@ class Tns(object):
         return output
 
     @staticmethod
-    def run_ios(attributes={}, assert_success=True, log_trace=False):
-        output = Tns.run_tns_command("run ios", attributes=attributes, log_trace=log_trace)
+    def run_ios(attributes={}, assert_success=True, log_trace=False, timeout=None):
+        output = Tns.run_tns_command("run ios", attributes=attributes, log_trace=log_trace, timeout=timeout)
         if assert_success:
             assert "Project successfully prepared" in output
             assert "Project successfully built" in output
-            if emulator:
+            if "emulator" in attributes.iteritems():
                 assert "Starting iOS Simulator" in output
             else:
                 assert "Successfully deployed on device" in output
