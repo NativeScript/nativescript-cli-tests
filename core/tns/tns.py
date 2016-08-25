@@ -29,10 +29,8 @@ class Tns(object):
         return output
 
     @staticmethod
-    def update_modules(app_name, path):
-        if path != "":
-            app_name = path + app_name
-        Folder.navigate_to(app_name)
+    def update_modules(path):
+        Folder.navigate_to(path)
         npm_out1 = run("npm uninstall tns-core-modules")
         modules_path = SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules.tgz"
         npm_out2 = run("npm install " + modules_path + " --save")
@@ -45,8 +43,13 @@ class Tns(object):
         return output
 
     @staticmethod
-    def create_app(app_name, attributes={}, log_trace=False, assert_success=True):
-        attributes_to_string = "".join("{0} {1}".format(k, v) for k, v in attributes.iteritems())
+    def create_app(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True):
+        path = app_name
+        attributes_to_string = ""
+        for k, v in attributes.iteritems():
+            if "--path" in k:
+                path = v
+            attributes_to_string = "".join("{0} {1}".format(k, v))
         attr = {}
         if not any(s in attributes_to_string for s in ("--ng", "--template", "--tsc")):
             attr = {"--copy-from": SUT_ROOT_FOLDER + os.path.sep + "template-hello-world"}
@@ -57,6 +60,8 @@ class Tns(object):
             output = Tns.run_tns_command("create \"" + app_name + "\"", attributes=attr, log_trace=log_trace)
         if assert_success:
             assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
+        if update_modules:
+            Tns.update_modules(path)
         return output
 
     @staticmethod
@@ -83,13 +88,6 @@ class Tns(object):
     @staticmethod
     def plugin_add(name, attributes={}, log_trace=False, assert_success=True):
         output = Tns.run_tns_command("plugin add " + name, attributes=attributes, log_trace=log_trace)
-        if assert_success:
-            assert "Successfully installed plugin {0}".format(name) in output
-        return output
-
-    @staticmethod
-    def plugin_remove(name, attributes={}, log_trace=False, assert_success=True):
-        output = Tns.run_tns_command("plugin remove " + name, attributes=attributes, log_trace=log_trace)
         if assert_success:
             assert "Successfully installed plugin {0}".format(name) in output
         return output

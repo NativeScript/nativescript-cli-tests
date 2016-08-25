@@ -194,11 +194,11 @@ class BuildAndroid_Tests(unittest.TestCase):
 
     def test_302_build_project_with_space(self):
         Tns.create_app(self.app_name_space)
-        Tns.platform_add_android(attributes={"--path": self.app_name_space,
+        Tns.platform_add_android(attributes={"--path": "\"" + self.app_name_space + "\"",
                                              "--frameworkPath": ANDROID_RUNTIME_PATH})
 
         # Verify project build
-        output = Tns.build_android(attributes={"--path": self.app_name_space})
+        output = Tns.build_android(attributes={"--path": "\"" + self.app_name_space + "\""})
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
@@ -347,7 +347,7 @@ class BuildAndroid_Tests(unittest.TestCase):
                                                                          "--ignore-scripts": "",
                                                                          "--symlink": ""
                                                                          },
-                                     tns_path="../../node_modules/.bin/tns")
+                                     tns_path="../../../node_modules/.bin/tns")
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         assert "Project successfully created" in output
 

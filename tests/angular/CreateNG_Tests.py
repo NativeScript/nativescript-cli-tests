@@ -36,7 +36,7 @@ class CreateNG_Tests(unittest.TestCase):
         assert Folder.exists(self.app_name + "/app/App_Resources")
 
     def test_101_create_ng_project(self):
-        output = Tns.create_app(self.app_name, attributes={"--ng": ""})
+        output = Tns.create_app(self.app_name, attributes={"--ng": ""}, update_modules=False)
         assert "successfully created" in output
         self.assert_angular_project()
         # assert not File.exists("TNS_App/app/LICENSE")
@@ -49,15 +49,15 @@ class CreateNG_Tests(unittest.TestCase):
         "ng",
     ])
     def test_102_create_project_with_template_ng(self, template_source):
-        Tns.create_app(self.app_name, attributes={"--template": template_source}, assert_success=False)
+        Tns.create_app(self.app_name, attributes={"--template": template_source}, assert_success=False, update_modules=False)
         self.assert_angular_project()
 
     def test_401_create_project_with_template_no_value(self):
-        output = Tns.create_app(self.app_name, attributes={"--template": ""}, assert_success=False)
+        output = Tns.create_app(self.app_name, attributes={"--template": ""}, assert_success=False, update_modules=False)
         assert "successfully created" not in output
         assert "requires non-empty value" in output
 
     def test_402_create_project_with_template_and_ng(self):
-        output = Tns.create_app(self.app_name, attributes={"--template": "--ng"}, assert_success=False)
+        output = Tns.create_app(self.app_name, attributes={"--template": "--ng"}, assert_success=False, update_modules=False)
         assert "successfully created" not in output
         assert "requires non-empty value" in output

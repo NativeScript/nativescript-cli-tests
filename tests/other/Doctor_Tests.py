@@ -30,6 +30,6 @@ class Doctor_Tests(unittest.TestCase):
 
     def test_200_doctor_show_warning_when_new_components_are_available(self):
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(version="@1.7.0", attributes={"--path": self.app_name})
+        Tns.platform_add_android(version="1.7.0", attributes={"--path": self.app_name})
         output = Tns.run_tns_command("doctor", attributes={"--path": self.app_name}, timeout=180)
         assert "Updates available" in output

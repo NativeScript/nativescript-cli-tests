@@ -52,10 +52,12 @@ class PlatformiOS_Tests(unittest.TestCase):
                                              "--frameworkPath": ANDROID_RUNTIME_PATH,
                                              "--symlink": ""
                                              })
+        output = Tns.run_tns_command("platform list", attributes={"--path": self.app_name})
         assert "The project is prepared for:  ios" in output
         assert "Installed platforms:  android" in output
 
         Tns.prepare_android(attributes={"--path": self.app_name})
+        output = Tns.run_tns_command("platform list", attributes={"--path": self.app_name})
         assert "The project is prepared for:  ios and android" in output
         assert "Installed platforms:  android and ios" in output
 

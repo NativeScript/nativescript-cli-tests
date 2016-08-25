@@ -78,7 +78,8 @@ class RuniOS(unittest.TestCase):
 
     def test_002_run_ios_release(self):
         output = Tns.run_ios(attributes={"--path": self.app_name,
-                                         " --justlaunch": ""
+                                         "--justlaunch": "",
+                                         "--release": ""
                                          },
                              assert_success=False, timeout=180)
         assert "Project successfully prepared" in output
