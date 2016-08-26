@@ -88,39 +88,39 @@ class LivesyncSimulator_Tests(Watcher):
 
     def test_001_full_livesync_ios_simulator_xml_js_css_tns_files(self):
         self.wait_for_text_in_output("prepared")
-        time.sleep(3)  # ... than delete these.
+        time.sleep(5)  # ... than delete these.
         verify_all_replaced(device_type=DeviceType.SIMULATOR, app_name="TNSApp")
 
     # Add new files
     def test_101_livesync_ios_simulator_watch_add_xml_file(self):
         shutil.copyfile(self.app_name + "/app/main-page.xml", self.app_name + "/app/test/test.xml")
-        self.wait_for_text_in_output("app/test/test.xml to")
-
+        self.wait_for_text_in_output("app/test/test.xml")
+        time.sleep(5)
         Simulator.file_contains("TNSApp", "app/test/test.xml", text="TEST")
 
     def test_102_livesync_ios_simulator_watch_add_js_file(self):
         shutil.copyfile(self.app_name + "/app/app.js", self.app_name + "/app/test/test.js")
-        self.wait_for_text_in_output("app/test/test.js to")
-        time.sleep(3)
+        self.wait_for_text_in_output("app/test/test.js")
+        time.sleep(5)
         Simulator.file_contains("TNSApp", "app/test/test.js", text="application.start")
 
     def test_103_livesync_ios_simulator_watch_add_css_file(self):
         shutil.copyfile(self.app_name + "/app/app.css", self.app_name + "/app/test/test.css")
-        self.wait_for_text_in_output("app/test/test.css to")
-        time.sleep(1)
+        self.wait_for_text_in_output("app/test/test.css")
+        time.sleep(5)
         Simulator.file_contains("TNSApp", "app/test/test.css", text="color: #284848;")
 
     # Change in files
     def test_111_livesync_ios_simulator_watch_change_xml_file(self):
         File.replace(self.app_name + "/app/main-page.xml", "TEST", "WATCH")
-        self.wait_for_text_in_output("app/main-page.xml to")
-        time.sleep(1)
+        self.wait_for_text_in_output("app/main-page.xml")
+        time.sleep(5)
         Simulator.file_contains("TNSApp", "app/main-page.xml", text="WATCH")
 
     def test_112_livesync_ios_simulator_watch_change_js_file(self):
         File.replace(self.app_name + "/app/main-view-model.js", "clicks", "tricks")
-        self.wait_for_text_in_output("app/main-view-model.js to")
-        time.sleep(3)
+        self.wait_for_text_in_output("app/main-view-model.js")
+        time.sleep(5)
         Simulator.file_contains("TNSApp", "app/main-view-model.js", text="tricks left")
 
     def test_113_livesync_ios_simulator_watch_change_css_file(self):
@@ -132,19 +132,19 @@ class LivesyncSimulator_Tests(Watcher):
     def test_121_livesync_ios_simulator_watch_delete_xml_file(self):
         File.remove(self.app_name + "/app/test/test.xml")
         self.wait_for_text_in_output("app/test/test.xml")
-        time.sleep(3)
+        time.sleep(5)
         Simulator.file_contains("TNSApp", "app/test/test.xml", text="No such file or directory")
 
     def test_122_livesync_ios_simulator_watch_delete_js_file(self):
         File.remove(self.app_name + "/app/test/test.js")
         self.wait_for_text_in_output("app/test/test.js")
-        time.sleep(3)
+        time.sleep(5)
         Simulator.file_contains("TNSApp", "app/test/test.js", text="No such file or directory")
 
     def test_123_livesync_ios_simulator_watch_delete_css_file(self):
         File.remove(self.app_name + "/app/test/test.css")
         self.wait_for_text_in_output("app/test/test.css")
-        time.sleep(3)
+        time.sleep(5)
         Simulator.file_contains("TNSApp", "app/test/test.css", text="No such file or directory")
 
     # Add files to a new folder
@@ -153,7 +153,7 @@ class LivesyncSimulator_Tests(Watcher):
         self.wait_for_text_in_output(self.app_name + "/app/folder/")
         shutil.copyfile(self.app_name + "/app/main-page.xml", self.app_name + "/app/folder/test.xml")
         self.wait_for_text_in_output("app/folder/test.xml file with")
-        time.sleep(3)
+        time.sleep(5)
         Simulator.file_contains("TNSApp", "app/folder/test.xml", text="WATCH")
     #         remove(self.app_name + "/app/folder")
     #         self.wait_for_text_in_output("app/folder/")
@@ -164,13 +164,13 @@ class LivesyncSimulator_Tests(Watcher):
     def test_132_livesync_ios_simulator_watch_add_js_file_to_new_folder(self):
         shutil.copyfile(self.app_name + "/app/app.js", self.app_name + "/app/folder/test.js")
         self.wait_for_text_in_output("app/folder/test.js to")
-        time.sleep(3)
+        time.sleep(5)
         Simulator.file_contains("TNSApp", "app/folder/test.js", text="application.start")
 
     def test_133_livesync_ios_simulator_watch_add_css_file_to_new_folder(self):
         shutil.copyfile(self.app_name + "/app/app.css", self.app_name + "/app/folder/test.css")
         self.wait_for_text_in_output("app/folder/test.css to")
-        time.sleep(1)
+        time.sleep(5)
         Simulator.file_contains("TNSApp", "app/folder/test.css", text="color: green;")
 
     def test_301_livesync_ios_simulator_before_run(self):
@@ -199,7 +199,7 @@ class LivesyncSimulator_Tests(Watcher):
                                                           "--path": self.app_name_appTest,
                                                           "--justlaunch": ""})
         assert "Successfully synced application org.nativescript.appTest" in output
-        time.sleep(3)
+        time.sleep(5)
 
         Simulator.file_contains(self.app_name_appTest, "app/main-page.xml", text="MYTAP")
         Simulator.file_contains(self.app_name_appTest, "app/main-view-model.js", text="clicks left")
