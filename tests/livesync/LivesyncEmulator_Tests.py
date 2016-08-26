@@ -41,13 +41,13 @@ class LivesyncEmulator_Tests(unittest.TestCase):
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })
         Tns.run_android(attributes={"--device": "emulator-5554",
-                                    "--path": self.app_name
-                                    })
+                                    "--path": self.app_name,
+                                    "--justlaunch": ""})
         replace_all(app_name=self.app_name)
         Tns.livesync(platform="android", attributes={"--emulator": "",
                                                      "--device": "emulator-5554",
-                                                     "--path": self.app_name
-                                                     })
+                                                     "--path": self.app_name,
+                                                     "--justlaunch": ""})
         verify_all_replaced(device_type=DeviceType.EMULATOR, app_name="TNSApp")
 
     def test_201_livesync_android_add_files(self):
@@ -56,8 +56,8 @@ class LivesyncEmulator_Tests(unittest.TestCase):
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })
         Tns.run_android(attributes={"--device": "emulator-5554",
-                                    "--path": self.app_name
-                                    })
+                                    "--path": self.app_name,
+                                    "--justlaunch": ""})
 
         shutil.copyfile(self.app_name + "/app/main-page.xml", self.app_name + "/app/test.xml")
         shutil.copyfile(self.app_name + "/app/main-page.js", self.app_name + "/app/test.js")
@@ -66,8 +66,8 @@ class LivesyncEmulator_Tests(unittest.TestCase):
         os.makedirs(self.app_name + "/app/test")
         shutil.copyfile(self.app_name + "/app/main-view-model.js", self.app_name + "/app/test/main-view-model.js")
         Tns.livesync(platform="android", attributes={"--device": "emulator-5554",
-                                                     "--path": self.app_name
-                                                     })
+                                                     "--path": self.app_name,
+                                                     "--justlaunch": ""})
 
         Emulator.file_contains("TNSApp", "app/test.xml", text="TAP")
         Emulator.file_contains("TNSApp", "app/test.js", text="page.bindingContext = ")
@@ -82,6 +82,6 @@ class LivesyncEmulator_Tests(unittest.TestCase):
         replace_all(app_name=self.app_name)
         Tns.livesync(platform="android", attributes={"--emulator": "",
                                                      "--device": "emulator-5554",
-                                                     "--path": self.app_name
-                                                     })
+                                                     "--path": self.app_name,
+                                                     "--justlaunch": ""})
         verify_all_replaced(device_type=DeviceType.EMULATOR, app_name="TNSApp")

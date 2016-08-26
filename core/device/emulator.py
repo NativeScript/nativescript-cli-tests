@@ -85,6 +85,8 @@ class Emulator(object):
     @staticmethod
     def cat_app_file(app_name, file_path):
         """Return content of file on emulator"""
+        app_name = app_name.replace("_", "")
+        app_name = app_name.replace(" ","")
         output = run(ADB_PATH + " -s emulator-5554 shell run-as org.nativescript." +
                      app_name + " cat files/" + file_path)
         return output

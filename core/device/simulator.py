@@ -92,6 +92,8 @@ class Simulator(object):
     @staticmethod
     def cat_app_file(app_name, file_path):
         """Return content of file on booted simulator"""
+        app_name = app_name.replace("_", "")
+        app_name = app_name.replace(" ","")
         app_path = run("xcrun simctl get_app_container booted org.nativescript.{0}".format(app_name))
         print "Get content of: " + app_path
         output = run("cat {0}/{1}".format(app_path, file_path))

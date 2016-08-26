@@ -47,7 +47,7 @@ class LiveSynciOS(unittest.TestCase):
         Tns.platform_add_ios(attributes={"--path": self.app_name,
                                          "--frameworkPath": IOS_RUNTIME_PATH
                                          })
-        Tns.run_ios(attributes={"--path": self.app_name})
+        Tns.run_ios(attributes={"--path": self.app_name, "--justlaunch": ""})
 
         File.replace(self.app_name + "/app/main-page.xml", "TAP", "TEST")
         File.replace(self.app_name + "/app/main-view-model.js", "taps", "clicks")
@@ -58,8 +58,8 @@ class LiveSynciOS(unittest.TestCase):
                                      "(\"globals\");", "(\"globals\"); // test")
 
         Tns.livesync(platform="ios", attributes={"--path": self.app_name,
-                                                 "--syncAllFiles": ""
-                                                 })
+                                                 "--syncAllFiles": "",
+                                                 "--justlaunch": ""})
 
         Device.file_contains("ios", "TNSApp", "app/main-page.xml", text="TEST")
         Device.file_contains("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
@@ -77,12 +77,12 @@ class LiveSynciOS(unittest.TestCase):
         Tns.platform_add_ios(attributes={"--path": self.app_name,
                                          "--frameworkPath": IOS_RUNTIME_PATH
                                          })
-        Tns.run_ios(attributes={"--path": self.app_name})
+        Tns.run_ios(attributes={"--path": self.app_name, "--justlaunch": ""})
         device_id = Device.get_id(platform="ios")
         File.replace(self.app_name + "/app/main-view-model.js", "taps", "clicks")
         Tns.livesync(platform="ios", attributes={"--path": self.app_name,
-                                                 "--device": device_id
-                                                 })
+                                                 "--device": device_id,
+                                                 "--justlaunch": ""})
         Device.file_contains("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
 
     def test_201_livesync_ios_add_new_files(self):
@@ -90,7 +90,7 @@ class LiveSynciOS(unittest.TestCase):
         Tns.platform_add_ios(attributes={"--path": self.app_name,
                                          "--frameworkPath": IOS_RUNTIME_PATH
                                          })
-        Tns.run_ios(attributes={"--path": self.app_name})
+        Tns.run_ios(attributes={"--path": self.app_name, "--justlaunch": ""})
 
         shutil.copyfile(self.app_name + "/app/main-page.xml", self.app_name + "/app/test.xml")
         shutil.copyfile(self.app_name + "/app/main-page.js", self.app_name + "/app/test.js")
@@ -99,7 +99,7 @@ class LiveSynciOS(unittest.TestCase):
         os.makedirs(self.app_name + "/app/test")
         shutil.copyfile(self.app_name + "/app/main-view-model.js", self.app_name + "/app/test/main-view-model.js")
 
-        Tns.livesync(platform="ios", attributes={"--path": self.app_name})
+        Tns.livesync(platform="ios", attributes={"--path": self.app_name, "--justlaunch": ""})
 
         Device.file_contains("ios", "TNSApp", "app/test.xml", text="TAP")
         Device.file_contains("ios", "TNSApp", "app/test.js", text="page.bindingContext = ")

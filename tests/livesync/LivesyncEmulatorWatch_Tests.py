@@ -31,8 +31,8 @@ class LivesyncEmulatorWatch_Tests(Watcher):
                                              "--path": cls.app_name
                                              })
         Tns.run_android(attributes={"--device": "emulator-5554",
-                                    "--path": cls.app_name
-                                    })
+                                    "--path": cls.app_name,
+                                    "--justlaunch": ""})
 
     def setUp(self):
         print ""

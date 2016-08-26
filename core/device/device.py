@@ -115,6 +115,8 @@ class Device(object):
     @staticmethod
     def cat_app_file(platform, app_name, file_path):
         """Return content of file on device"""
+        app_name = app_name.replace("_", "")
+        app_name = app_name.replace(" ","")
         command = ""
         if platform is "android":
             device_id = Device.get_id(platform="android")

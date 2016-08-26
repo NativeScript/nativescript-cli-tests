@@ -53,7 +53,8 @@ class LivesyncSimulator_Tests(Watcher):
                                          "--symlink": ""
                                          })
         output = Tns.run_ios(attributes={"--emulator": "",
-                                         "--path": cls.app_name},
+                                         "--path": cls.app_name,
+                                         "--justlaunch": ""},
                              assert_success=False)
         assert "Starting iOS Simulator" not in output
 
@@ -195,8 +196,8 @@ class LivesyncSimulator_Tests(Watcher):
                      "(\"globals\");", "(\"globals\"); // test")
 
         output = Tns.livesync(platform="ios", attributes={"--emulator": "",
-                                                          "--path": self.app_name_appTest
-                                                          })
+                                                          "--path": self.app_name_appTest,
+                                                          "--justlaunch": ""})
         assert "Successfully synced application org.nativescript.appTest" in output
         time.sleep(3)
 
