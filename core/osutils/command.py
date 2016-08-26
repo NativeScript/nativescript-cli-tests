@@ -11,7 +11,7 @@ from core.osutils.process import Process
 from core.settings.settings import OUTPUT_FILE, COMMAND_TIMEOUT, DEBUG, TEST_LOG
 
 
-def run(command, timeout=None, output=True, file_name=None):
+def run(command, timeout=None, output=True, file_name=None, wait=True):
     """
     Execute command in subshell.
     """
@@ -60,9 +60,10 @@ def run(command, timeout=None, output=True, file_name=None):
 
     # kill thread
     if thread.is_alive():
-        print '##### ERROR: Process has timed out at ', time.strftime("%X")
-        Process.kill('node')
-        thread.join()
+        if wait:
+            print '##### ERROR: Process has timed out at ', time.strftime("%X")
+            Process.kill('node')
+            thread.join()
 
     # get whenever exist in the pipe ?
     pipe_output = 'NOT_COLLECTED'

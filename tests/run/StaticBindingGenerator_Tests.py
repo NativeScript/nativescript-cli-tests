@@ -24,7 +24,7 @@ class StaticBindingGenerator(unittest.TestCase):
     def setUpClass(cls):
         Folder.cleanup(cls.app_name)
         Emulator.stop_emulators()
-        # setup app
+        Emulator.ensure_available()
         Tns.create_app(cls.app_name, attributes={"--copy-from": os.path.join("data", "apps", "sbg-test-app")})
 
     def setUp(self):
