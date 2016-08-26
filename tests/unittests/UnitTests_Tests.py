@@ -3,7 +3,6 @@ import unittest
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH
 from core.tns.tns import Tns
 
 
@@ -25,7 +24,8 @@ class UnitTests(unittest.TestCase):
 
     def test_101_test_init_jasmine(self):
         Tns.create_app(app_name=self.app_name)
-        output = run(TNS_PATH + " test init --framework jasmine --path " + self.app_name)
+        output = Tns.run_tns_command("test init", attributes={"--framework": "jasmine",
+                                                              "--path ": self.app_name})
 
         assert "Successfully installed plugin nativescript-unit-test-runner." in output
         assert "Example test file created in app/tests/" in output
@@ -45,7 +45,8 @@ class UnitTests(unittest.TestCase):
 
     def test_201_test_init_mocha(self):
         Tns.create_app(app_name=self.app_name)
-        output = run(TNS_PATH + " test init --framework mocha --path " + self.app_name)
+        output = Tns.run_tns_command("test init", attributes={"--framework": "mocha",
+                                                              "--path": self.app_name})
 
         assert "Successfully installed plugin nativescript-unit-test-runner." in output
         assert "Example test file created in app/tests/" in output
@@ -65,7 +66,8 @@ class UnitTests(unittest.TestCase):
 
     def test_301_test_init_qunit(self):
         Tns.create_app(app_name=self.app_name)
-        output = run(TNS_PATH + " test init --framework qunit --path " + self.app_name)
+        output = Tns.run_tns_command("test init", attributes={"--framework": "qunit",
+                                                              "--path": self.app_name})
 
         assert "Successfully installed plugin nativescript-unit-test-runner." in output
         assert "Example test file created in app/tests/" in output

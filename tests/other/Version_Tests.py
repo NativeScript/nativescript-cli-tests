@@ -20,6 +20,6 @@ class Version_Tests(unittest.TestCase):
         pass
 
     def test_001_version(self):
-        output = Tns.version()
+        output = Tns.run_tns_command("",attributes={"--version": ""})
         version = re.compile("^\\d+\\.\\d+\\.\\d+(-\\S+)?$").match(output)
         assert version, "{0} is not a valid version.".format(output)

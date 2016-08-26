@@ -14,12 +14,18 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, ADB_PATH
 
 
 class StaticBindingGenerator(unittest.TestCase):
+    app_name = "TNS_App"
+    custom_js_file = os.path.join(app_name, "app", "my-custom-class.js")
+    tns_folder = os.path.join(app_name, "platforms", "android", "src", "main", "java", "com", "tns")
+    gen_folder = os.path.join(tns_folder, "gen")
+    generated_java_file = os.path.join(tns_folder, "MyJavaClass.java")
+
     @classmethod
     def setUpClass(cls):
-        Folder.cleanup('TNS_App')
+        Folder.cleanup(cls.app_name)
         Emulator.stop_emulators()
         Emulator.ensure_available()
-        Tns.create_app(app_name="TNS_App", copy_from=os.path.join("data", "apps", "sbg-test-app"))
+        Tns.create_app(cls.app_name, attributes={"--copy-from": os.path.join("data", "apps", "sbg-test-app")})
 
     def setUp(self):
         print ""
@@ -34,13 +40,7 @@ class StaticBindingGenerator(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         Emulator.stop_emulators()
-        Folder.cleanup('TNS_App')
-
-    app_folder = "TNS_App"
-    custom_js_file = os.path.join(app_folder, "app", "my-custom-class.js")
-    tns_folder = os.path.join(app_folder, "platforms", "android", "src", "main", "java", "com", "tns")
-    gen_folder = os.path.join(tns_folder, "gen")
-    generated_java_file = os.path.join(tns_folder, "MyJavaClass.java")
+        Folder.cleanup(cls.app_name)
 
     def test_001_platform_add_verify_initial_state(self):
         # check that we have a custom javascript file in the app
@@ -49,7 +49,9 @@ class StaticBindingGenerator(unittest.TestCase):
         print "Check result: " + repr(js_file_exists)
 
         print "####################### Adding android platform #######################"
-        output = Tns.platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, path=self.app_folder)
+        output = Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH,
+                                                      "--path": self.app_name
+                                                      })
         print output
 
         # check that we do not have folder gen before the project is built
@@ -69,7 +71,7 @@ class StaticBindingGenerator(unittest.TestCase):
 
     def test_002_on_build_verify_file_generation(self):
         print ("####################### Building app for android #######################")
-        output = Tns.build(platform="android", path=self.app_folder)
+        output = Tns.build_android(attributes={"--path": self.app_name})
 
         if "BUILD SUCCESSFUL" in output:
             # check that gen folder is created
@@ -99,7 +101,10 @@ class StaticBindingGenerator(unittest.TestCase):
         print ("Running app for android")
 
         # run application
-        Tns.run(platform="android", emulator=True, path=self.app_folder, log_trace=False)
+        Tns.run_android(attributes={"--emulator": "",
+                                    "--path": self.app_name,
+                                    "--timeout": "120"
+                                    })
 
         # wait 2 seconds to get emulator logcat
         process = subprocess.Popen([ADB_PATH, "-e", "logcat"], stdout=subprocess.PIPE)

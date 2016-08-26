@@ -12,6 +12,8 @@ from core.tns.tns import Tns
 
 
 class PluginsiOSLibs_Tests(unittest.TestCase):
+    app_name = "TNS_App"
+
     def setUp(self):
         print ""
         print "#####"
@@ -21,91 +23,80 @@ class PluginsiOSLibs_Tests(unittest.TestCase):
 
         # Delete derived data
         run("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
-        Folder.cleanup('./TNS_App')
+        Folder.cleanup('./' + self.app_name)
 
     def tearDown(self):
         pass
 
     def test_201_plugin_add_static_lib_universal_before_platform_add_ios(self):
-        Tns.create_app(app_name="TNS_App")
+        Tns.create_app(self.app_name)
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/static-lib/hello-plugin"
-        output = Tns.plugin_add(path="TNS_App", plugin=plugin_path, assert_success=False)
-        assert "TNS_App/node_modules/hello" in output
+        output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name},assert_success=False)
+        assert self.app_name + "/node_modules/hello" in output
         assert "Successfully installed plugin hello." in output
-        assert File.exists("TNS_App/node_modules/hello/package.json")
-        assert File.exists("TNS_App/node_modules/hello/hello-plugin.ios.js")
-        assert File.exists(
-                "TNS_App/node_modules/hello/platforms/ios/HelloLib.a")
-        assert File.exists(
-                "TNS_App/node_modules/hello/platforms/ios/include/HelloLib/Bye.h")
-        assert File.exists(
-                "TNS_App/node_modules/hello/platforms/ios/include/HelloLib/Hello.h")
+        assert File.exists(self.app_name + "/node_modules/hello/package.json")
+        assert File.exists(self.app_name + "/node_modules/hello/hello-plugin.ios.js")
+        assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/HelloLib.a")
+        assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/include/HelloLib/Bye.h")
+        assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/include/HelloLib/Hello.h")
 
-        output = run("cat TNS_App/package.json")
+        output = run("cat " + self.app_name + "/package.json")
         assert "static-lib/hello-plugin" in output
 
-        Tns.platform_add(
-                platform="ios",
-                framework_path=IOS_RUNTIME_SYMLINK_PATH,
-                path="TNS_App",
-                symlink=True)
-        output = Tns.build(platform="ios", path="TNS_App")
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""
+                                         })
+        Tns.build_ios(attributes={"--path": self.app_name})
         # It targets 8.0 since a dynamic framework was added to the widgets.
         
-        assert File.exists(
-                "TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
-        assert File.exists(
-                "TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/hello-plugin.js")
+        assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
+        assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/hello/hello-plugin.js")
         output = run(
-                "cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
+                "cat " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
         assert "HelloLib.a in Frameworks" in output
 
     def test_202_plugin_add_static_lib_universal_after_platform_add_ios(self):
-        Tns.create_app_platform_add(
-                app_name="TNS_App",
-                platform="ios",
-                framework_path=IOS_RUNTIME_SYMLINK_PATH,
-                symlink=True)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""
+                                         })
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/static-lib/hello-plugin"
-        output = Tns.plugin_add(path="TNS_App", plugin=plugin_path, assert_success=False)
-        assert "TNS_App/node_modules/hello" in output
+        output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
+        assert self.app_name + "/node_modules/hello" in output
         assert "Successfully installed plugin hello." in output
-        assert File.exists("TNS_App/node_modules/hello/package.json")
-        assert File.exists("TNS_App/node_modules/hello/hello-plugin.ios.js")
-        assert File.exists(
-                "TNS_App/node_modules/hello/platforms/ios/HelloLib.a")
-        assert File.exists(
-                "TNS_App/node_modules/hello/platforms/ios/include/HelloLib/Bye.h")
-        assert File.exists(
-                "TNS_App/node_modules/hello/platforms/ios/include/HelloLib/Hello.h")
+        assert File.exists(self.app_name + "/node_modules/hello/package.json")
+        assert File.exists(self.app_name + "/node_modules/hello/hello-plugin.ios.js")
+        assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/HelloLib.a")
+        assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/include/HelloLib/Bye.h")
+        assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/include/HelloLib/Hello.h")
 
-        output = run("cat TNS_App/package.json")
+        output = run("cat " + self.app_name + "/package.json")
         assert "static-lib/hello-plugin" in output
 
-        Tns.build(platform="ios", path="TNS_App")
+        Tns.build_ios(attributes={"--path": self.app_name})
 
-        assert File.exists(
-                "TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
-        assert File.exists(
-                "TNS_App/platforms/ios/TNSApp/app/tns_modules/hello/hello-plugin.js")
+        assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
+        assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/hello/hello-plugin.js")
         output = run(
-                "cat TNS_App/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
+                "cat " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
         assert "HelloLib.a in Frameworks" in output
 
     def test_401_plugin_add_static_lib_non_universal(self):
-        Tns.create_app_platform_add(
-                app_name="TNS_App",
-                platform="ios",
-                framework_path=IOS_RUNTIME_SYMLINK_PATH,
-                symlink=True)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""
+                                         })
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/static-lib/bye-plugin"
-        output = Tns.plugin_add(path="TNS_App", plugin=plugin_path, assert_success=False)
-        assert "TNS_App/node_modules/bye" in output
+        output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
+        assert self.app_name + "/node_modules/bye" in output
 
-        output = Tns.prepare(platform="ios", path="TNS_App", assert_success=False)
+        output = Tns.prepare_ios(attributes={"--path": self.app_name}, assert_success=False)
         assert "The static library at" in output
         assert "ByeLib.a is not built for one or more of " + \
                "the following required architectures:" in output

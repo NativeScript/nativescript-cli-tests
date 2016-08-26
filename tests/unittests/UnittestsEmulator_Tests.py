@@ -37,13 +37,22 @@ class UnittestsEmulator(unittest.TestCase):
 
     @timed(360)
     def test_010_test_mocha_android_emulator(self):
-        Tns.create_app_platform_add(app_name=self.app_name, platform="android", framework_path=ANDROID_RUNTIME_PATH)
-        run(TNS_PATH + " test init --framework mocha --path " + self.app_name)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name,
+                                             "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.run_tns_command("test init", attributes={"--framework": "mocha",
+                                                     "--path": self.app_name})
 
         # Next lines are required because of https://github.com/NativeScript/nativescript-cli/issues/1636
-        run(TNS_PATH + " test android --emulator --justlaunch --path " + self.app_name, timeout=90, output=False)
+        Tns.run_tns_command("test android", attributes={"--emulator": "",
+                                                        "--justlaunch": "",
+                                                        "--path": self.app_name},
+                            timeout=90)
+        # run(TNS_PATH + " test android --emulator --justlaunch --path " + self.app_name, timeout=90, output=False)
 
-        output = run(TNS_PATH + " test android --emulator --justlaunch --path " + self.app_name, timeout=60)
+        output = Tns.run_tns_command("test android", attributes={"--emulator": "",
+                                                                 "--justlaunch": "",
+                                                                 "--path": self.app_name})
         assert "Successfully prepared plugin nativescript-unit-test-runner for android." in output
         assert "Project successfully prepared" in output
         assert "server started" in output

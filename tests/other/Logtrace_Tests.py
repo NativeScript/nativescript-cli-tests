@@ -24,7 +24,7 @@ class Logtrace_Tests(unittest.TestCase):
         pass
 
     def test_001_create_project_log_trace(self):
-        output = Tns.create_app(app_name=self.app_name, log_trace=True)
+        output = Tns.create_app(self.app_name, log_trace=True)
         assert "Creating a new NativeScript project with name " + self.app_name in output
         print "and id org.nativescript.{0} at location".format(self.app_name.replace("_", ""))
         assert "and id org.nativescript.{0} at location".format(self.app_name.replace("_", "")) in output
@@ -39,8 +39,8 @@ class Logtrace_Tests(unittest.TestCase):
         assert "Project " + self.app_name + " was successfully created" in output
 
     def test_002_platform_add_log_trace(self):
-        Tns.create_app(app_name=self.app_name)
-        output = Tns.platform_add(platform="android", path=self.app_name, log_trace=True)
+        Tns.create_app(self.app_name)
+        output = Tns.platform_add_android(attributes={"--path":self.app_name}, log_trace=True)
         assert "Looking for project in" in output
         assert "Project directory is" in output
         assert "Package: org.nativescript.{0}".format(self.app_name.replace("_", "")) in output

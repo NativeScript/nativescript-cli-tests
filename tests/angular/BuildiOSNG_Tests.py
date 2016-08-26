@@ -1,26 +1,26 @@
 import unittest
 
-from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, TNS_PATH
+from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
 
 class BuildiOSNG_Tests(unittest.TestCase):
+    app_name = "TNS_App"
 
     @classmethod
     def setUpClass(cls):
         Xcode.cleanup_cache()
-        Folder.cleanup('./TNS_App')
+        Folder.cleanup('./' + cls.app_name)
 
-        output = run(TNS_PATH + " create TNS_App --ng")
+        output = Tns.create_app(app_name=cls.app_name, attributes={"--ng": ""}, assert_success=False)
         assert "successfully created" in output
-        Tns.platform_add(
-            platform="ios",
-            path="TNS_App",
-            framework_path=IOS_RUNTIME_SYMLINK_PATH, symlink=True)
+        Tns.platform_add_ios(attributes={"--path": cls.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""
+                                         })
 
     def setUp(self):
         print ""
@@ -34,23 +34,24 @@ class BuildiOSNG_Tests(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        Folder.cleanup('./TNS_App')
+        Folder.cleanup('./' + cls.app_name)
 
     def test_010_build_ios_ng_project(self):
-        output = run(TNS_PATH + " build ios --path TNS_App")
+        output = Tns.build_ios(attributes={"--path": self.app_name})
         assert "Project successfully prepared" in output
         assert "build/emulator/TNSApp.app" in output
         assert "** BUILD SUCCEEDED **" in output
         assert "Project successfully built" in output
-        assert File.exists("TNS_App/platforms/ios/build/emulator/TNSApp.app")
+        assert File.exists(self.app_name + "/platforms/ios/build/emulator/TNSApp.app")
 
     def test_210_build_ios_ng_project_release_fordevice(self):
-        output = run(TNS_PATH +
-                     " build ios --path TNS_App --for-device --release")
+        output = Tns.build_ios(attributes={"--path": self.app_name,
+                                           "--for-device": "",
+                                           "--release": ""})
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
         assert "CodeSign" in output
         assert "build/device/TNSApp.app" in output
         assert "** BUILD SUCCEEDED **" in output
         assert "Project successfully built" in output
-        assert File.exists("TNS_App/platforms/ios/build/device/TNSApp.ipa")
+        assert File.exists(self.app_name + "/platforms/ios/build/device/TNSApp.ipa")

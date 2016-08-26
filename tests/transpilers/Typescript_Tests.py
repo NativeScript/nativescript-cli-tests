@@ -35,7 +35,7 @@ class Typescript_Tests(unittest.TestCase):
         Folder.cleanup(cls.app_name)
 
     def test_001_transpilation_typescript(self):
-        output = run(TNS_PATH + " create " + self.app_name + " --tsc")
+        output = Tns.create_app(self.app_name, attributes={"--tsc": ""})
         assert "nativescript-dev-typescript@" in output
         assert "nativescript-hook@" in output
 
@@ -50,18 +50,19 @@ class Typescript_Tests(unittest.TestCase):
         assert "devDependencies" in output
         assert "nativescript-dev-typescript" in output
 
-        Tns.platform_add(platform="android", framework_path=ANDROID_RUNTIME_PATH, path=self.app_name)
+        Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH,
+                                             "--path": self.app_name
+                                             })
         if CURRENT_OS == OSType.OSX:
-            Tns.platform_add(
-                platform="ios",
-                framework_path=IOS_RUNTIME_SYMLINK_PATH,
-                path=self.app_name,
-                symlink=True)
+            Tns.platform_add_ios(attributes={"--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                             "--path": self.app_name,
+                                             "--symlink": ""
+                                             })
 
     def test_101_transpilation_typescript_prepare_debug(self):
 
         # prepare in debug => .ts should go to the platforms folder
-        output = Tns.prepare(path=self.app_name, platform="android")
+        output = Tns.prepare_android(attributes={"--path": self.app_name})
         assert "Executing before-prepare hook" in output
         assert "Found peer TypeScript" in output
         assert "error" not in output
@@ -95,7 +96,7 @@ class Typescript_Tests(unittest.TestCase):
         if CURRENT_OS == OSType.OSX:
 
             # prepare in debug => .ts should go to the platforms folder
-            output = Tns.prepare(platform="ios", path=self.app_name)
+            output = Tns.prepare_ios(attributes={"--path": self.app_name})
             assert "Executing before-prepare hook" in output
             assert "Found peer TypeScript" in output
             assert "error" not in output
@@ -120,7 +121,9 @@ class Typescript_Tests(unittest.TestCase):
 
     def test_201_transpilation_typescript_prepare_release(self):
         # prepare in release => .ts should NOT go to the platforms folder
-        output = Tns.prepare(path=self.app_name, platform="android", release=True)
+        output = Tns.prepare_android({"--path": self.app_name,
+                                      "--release": ""
+                                      })
         assert "Executing before-prepare hook" in output
         assert "Found peer TypeScript" in output
         assert "error" not in output
@@ -138,7 +141,9 @@ class Typescript_Tests(unittest.TestCase):
         if CURRENT_OS == OSType.OSX:
 
             # prepare in release => .ts should NOT go to the platforms folder
-            output = Tns.prepare(platform="ios", path=self.app_name, release=True)
+            output = Tns.prepare_ios(attributes={"--path": self.app_name,
+                                                 "--release": ""
+                                                 })
             assert "Executing before-prepare hook" in output
             assert "Found peer TypeScript" in output
             assert "error" not in output
@@ -157,7 +162,7 @@ class Typescript_Tests(unittest.TestCase):
         Folder.cleanup(self.node_modules_folder)
         # Next line is because prepare does not work if you npm install packages with relative path before that
         Folder.navigate_to(self.app_name)
-        run(".." + os.path.sep + TNS_PATH + " prepare android")
+        Tns.run_tns_command("prepare android", tns_path=".." + os.path.sep + TNS_PATH)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         # Verify that the `prepare` command installs correct dependencies.
         assert File.exists(self.node_modules_folder + "/nativescript-dev-typescript")

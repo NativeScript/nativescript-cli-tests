@@ -11,6 +11,8 @@ from tests.livesync.livesync_helper import replace_all, verify_all_replaced
 
 
 class LivesyncEmulator_Tests(unittest.TestCase):
+    app_name = "TNS_App"
+
     @classmethod
     def setUpClass(cls):
         Emulator.stop_emulators()
@@ -24,33 +26,48 @@ class LivesyncEmulator_Tests(unittest.TestCase):
         print ""
 
         Emulator.ensure_available()
-        Folder.cleanup('TNS_App')
+        Folder.cleanup(self.app_name)
 
     def tearDown(self):
-        Folder.cleanup('TNS_App')
+        Folder.cleanup(self.app_name)
 
     @classmethod
     def tearDownClass(cls):
         Emulator.stop_emulators()
 
     def test_001_livesync_android(self):
-        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
-        Tns.run(platform="android", device="emulator-5554", path="TNS_App")
-        replace_all(app_name="TNS_App")
-        Tns.livesync(platform="android", emulator=True, device="emulator-5554", path="TNS_App")
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name,
+                                             "--frameworkPath": ANDROID_RUNTIME_PATH
+                                             })
+        Tns.run_android(attributes={"--device": "emulator-5554",
+                                    "--path": self.app_name
+                                    })
+        replace_all(app_name=self.app_name)
+        Tns.livesync(platform="android", attributes={"--emulator": "",
+                                                     "--device": "emulator-5554",
+                                                     "--path": self.app_name
+                                                     })
         verify_all_replaced(device_type=DeviceType.EMULATOR, app_name="TNSApp")
 
     def test_201_livesync_android_add_files(self):
-        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
-        Tns.run(platform="android", device="emulator-5554", path="TNS_App")
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name,
+                                             "--frameworkPath": ANDROID_RUNTIME_PATH
+                                             })
+        Tns.run_android(attributes={"--device": "emulator-5554",
+                                    "--path": self.app_name
+                                    })
 
-        shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
-        shutil.copyfile("TNS_App/app/main-page.js", "TNS_App/app/test.js")
-        shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test.css")
+        shutil.copyfile(self.app_name + "/app/main-page.xml", self.app_name + "/app/test.xml")
+        shutil.copyfile(self.app_name + "/app/main-page.js", self.app_name + "/app/test.js")
+        shutil.copyfile(self.app_name + "/app/app.css", self.app_name + "/app/test.css")
 
-        os.makedirs("TNS_App/app/test")
-        shutil.copyfile("TNS_App/app/main-view-model.js", "TNS_App/app/test/main-view-model.js")
-        Tns.livesync(platform="android", device="emulator-5554", path="TNS_App")
+        os.makedirs(self.app_name + "/app/test")
+        shutil.copyfile(self.app_name + "/app/main-view-model.js", self.app_name + "/app/test/main-view-model.js")
+        Tns.livesync(platform="android", attributes={"--device": "emulator-5554",
+                                                     "--path": self.app_name
+                                                     })
 
         Emulator.file_contains("TNSApp", "app/test.xml", text="TAP")
         Emulator.file_contains("TNSApp", "app/test.js", text="page.bindingContext = ")
@@ -58,7 +75,13 @@ class LivesyncEmulator_Tests(unittest.TestCase):
         Emulator.file_contains("TNSApp", "app/test/main-view-model.js", text="createViewModel()")
 
     def test_301_livesync_before_run(self):
-        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
-        replace_all(app_name="TNS_App")
-        Tns.livesync(platform="android", emulator=True, device="emulator-5554", path="TNS_App")
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name,
+                                             "--frameworkPath": ANDROID_RUNTIME_PATH
+                                             })
+        replace_all(app_name=self.app_name)
+        Tns.livesync(platform="android", attributes={"--emulator": "",
+                                                     "--device": "emulator-5554",
+                                                     "--path": self.app_name
+                                                     })
         verify_all_replaced(device_type=DeviceType.EMULATOR, app_name="TNSApp")

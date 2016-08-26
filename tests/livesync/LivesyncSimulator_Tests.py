@@ -27,6 +27,9 @@ from tests.livesync.livesync_helper import replace_all, verify_all_replaced
 
 
 class LivesyncSimulator_Tests(Watcher):
+    app_name = "TNS_App"
+    app_name_appTest = "appTest"
+
     @classmethod
     def setUpClass(cls):
 
@@ -40,20 +43,25 @@ class LivesyncSimulator_Tests(Watcher):
         Simulator.create(SIMULATOR_NAME, 'iPhone 6', '9.2')
 
         Simulator.start(SIMULATOR_NAME, '9.1')
-        Folder.cleanup('TNS_App')
-        Folder.cleanup('appTest')
+        Folder.cleanup(cls.app_name)
+        Folder.cleanup(cls.app_name_appTest)
 
         # setup app
-        Tns.create_app(app_name="TNS_App", copy_from="data/apps/livesync-hello-world")
-        Tns.platform_add(platform="ios", framework_path=IOS_RUNTIME_SYMLINK_PATH, path="TNS_App", symlink=True)
-        output = Tns.run(platform="ios", emulator=True, path="TNS_App", assert_success=False)
+        Tns.create_app(cls.app_name, attributes={"--copy-from": "data/apps/livesync-hello-world"})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--symlink": ""
+                                         })
+        output = Tns.run_ios(attributes={"--emulator": "",
+                                         "--path": cls.app_name},
+                             assert_success=False)
         assert "Starting iOS Simulator" not in output
 
         # replace
-        replace_all(app_name="TNS_App")
+        replace_all(app_name=cls.app_name)
 
         # livesync
-        command = TNS_PATH + " livesync ios --emulator --watch --path TNS_App --log trace"
+        command = TNS_PATH + " livesync ios --emulator --watch --path " + cls.app_name + " --log trace"
         print command
         cls.start_watcher(command)
 
@@ -74,8 +82,8 @@ class LivesyncSimulator_Tests(Watcher):
         cls.terminate_watcher()
         Simulator.stop_simulators()
 
-        Folder.cleanup('TNS_App')
-        Folder.cleanup('appTest')
+        Folder.cleanup(cls.app_name)
+        Folder.cleanup(cls.app_name_appTest)
 
     def test_001_full_livesync_ios_simulator_xml_js_css_tns_files(self):
         self.wait_for_text_in_output("prepared")
@@ -84,82 +92,82 @@ class LivesyncSimulator_Tests(Watcher):
 
     # Add new files
     def test_101_livesync_ios_simulator_watch_add_xml_file(self):
-        shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test/test.xml")
+        shutil.copyfile(self.app_name + "/app/main-page.xml", self.app_name + "/app/test/test.xml")
         self.wait_for_text_in_output("app/test/test.xml to")
 
         Simulator.file_contains("TNSApp", "app/test/test.xml", text="TEST")
 
     def test_102_livesync_ios_simulator_watch_add_js_file(self):
-        shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/test/test.js")
+        shutil.copyfile(self.app_name + "/app/app.js", self.app_name + "/app/test/test.js")
         self.wait_for_text_in_output("app/test/test.js to")
         time.sleep(3)
         Simulator.file_contains("TNSApp", "app/test/test.js", text="application.start")
 
     def test_103_livesync_ios_simulator_watch_add_css_file(self):
-        shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test/test.css")
+        shutil.copyfile(self.app_name + "/app/app.css", self.app_name + "/app/test/test.css")
         self.wait_for_text_in_output("app/test/test.css to")
         time.sleep(1)
         Simulator.file_contains("TNSApp", "app/test/test.css", text="color: #284848;")
 
     # Change in files
     def test_111_livesync_ios_simulator_watch_change_xml_file(self):
-        File.replace("TNS_App/app/main-page.xml", "TEST", "WATCH")
+        File.replace(self.app_name + "/app/main-page.xml", "TEST", "WATCH")
         self.wait_for_text_in_output("app/main-page.xml to")
         time.sleep(1)
         Simulator.file_contains("TNSApp", "app/main-page.xml", text="WATCH")
 
     def test_112_livesync_ios_simulator_watch_change_js_file(self):
-        File.replace("TNS_App/app/main-view-model.js", "clicks", "tricks")
+        File.replace(self.app_name + "/app/main-view-model.js", "clicks", "tricks")
         self.wait_for_text_in_output("app/main-view-model.js to")
         time.sleep(3)
         Simulator.file_contains("TNSApp", "app/main-view-model.js", text="tricks left")
 
     def test_113_livesync_ios_simulator_watch_change_css_file(self):
-        File.replace("TNS_App/app/app.css", "#284848", "green")
+        File.replace(self.app_name + "/app/app.css", "#284848", "green")
         self.wait_for_text_in_output("app/app.css to")
         Simulator.file_contains("TNSApp", "app/app.css", text="color: green;")
 
     # Delete files
     def test_121_livesync_ios_simulator_watch_delete_xml_file(self):
-        File.remove("TNS_App/app/test/test.xml")
+        File.remove(self.app_name + "/app/test/test.xml")
         self.wait_for_text_in_output("app/test/test.xml")
         time.sleep(3)
         Simulator.file_contains("TNSApp", "app/test/test.xml", text="No such file or directory")
 
     def test_122_livesync_ios_simulator_watch_delete_js_file(self):
-        File.remove("TNS_App/app/test/test.js")
+        File.remove(self.app_name + "/app/test/test.js")
         self.wait_for_text_in_output("app/test/test.js")
         time.sleep(3)
         Simulator.file_contains("TNSApp", "app/test/test.js", text="No such file or directory")
 
     def test_123_livesync_ios_simulator_watch_delete_css_file(self):
-        File.remove("TNS_App/app/test/test.css")
+        File.remove(self.app_name + "/app/test/test.css")
         self.wait_for_text_in_output("app/test/test.css")
         time.sleep(3)
         Simulator.file_contains("TNSApp", "app/test/test.css", text="No such file or directory")
 
     # Add files to a new folder
     def test_131_livesync_ios_simulator_watch_add_xml_file_to_new_folder(self):
-        Folder.create("TNS_App/app/folder")
-        self.wait_for_text_in_output("TNS_App/app/folder/")
-        shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/folder/test.xml")
+        Folder.create(self.app_name + "/app/folder")
+        self.wait_for_text_in_output(self.app_name + "/app/folder/")
+        shutil.copyfile(self.app_name + "/app/main-page.xml", self.app_name + "/app/folder/test.xml")
         self.wait_for_text_in_output("app/folder/test.xml file with")
         time.sleep(3)
         Simulator.file_contains("TNSApp", "app/folder/test.xml", text="WATCH")
-    #         remove("TNS_App/app/folder")
+    #         remove(self.app_name + "/app/folder")
     #         self.wait_for_text_in_output("app/folder/")
     #
     #         Simulator.file_contains("TNSApp", "app/folder/test.xml")
     #         assert "No such file or directory" in output
 
     def test_132_livesync_ios_simulator_watch_add_js_file_to_new_folder(self):
-        shutil.copyfile("TNS_App/app/app.js", "TNS_App/app/folder/test.js")
+        shutil.copyfile(self.app_name + "/app/app.js", self.app_name + "/app/folder/test.js")
         self.wait_for_text_in_output("app/folder/test.js to")
         time.sleep(3)
         Simulator.file_contains("TNSApp", "app/folder/test.js", text="application.start")
 
     def test_133_livesync_ios_simulator_watch_add_css_file_to_new_folder(self):
-        shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/folder/test.css")
+        shutil.copyfile(self.app_name + "/app/app.css", self.app_name + "/app/folder/test.css")
         self.wait_for_text_in_output("app/folder/test.css to")
         time.sleep(1)
         Simulator.file_contains("TNSApp", "app/folder/test.css", text="color: green;")
@@ -169,27 +177,32 @@ class LivesyncSimulator_Tests(Watcher):
         # TODO: Add test for https://github.com/NativeScript/nativescript-cli/issues/1548 after it is fixed
 
         self.terminate_watcher()
-        Folder.cleanup('appTest')
+        Folder.cleanup(self.app_name_appTest)
         Simulator.stop_simulators()
-        Tns.create_app(app_name="appTest")
-        Tns.platform_add(platform="ios", framework_path=IOS_RUNTIME_SYMLINK_PATH, path="appTest", symlink=True)
+        Tns.create_app(self.app_name_appTest)
+        Tns.platform_add_ios(attributes={"--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--path": self.app_name_appTest,
+                                         "--symlink": ""
+                                         })
 
         # replace
-        File.replace("appTest/app/main-page.xml", "TAP", "MYTAP")
-        File.replace("appTest/app/main-view-model.js", "taps", "clicks")
-        File.replace("appTest/app/app.css", "30", "20")
+        File.replace(self.app_name_appTest + "/app/main-page.xml", "TAP", "MYTAP")
+        File.replace(self.app_name_appTest + "/app/main-view-model.js", "taps", "clicks")
+        File.replace(self.app_name_appTest + "/app/app.css", "30", "20")
 
-        File.replace("appTest/node_modules/tns-core-modules/LICENSE", "Copyright", "MyCopyright")
-        File.replace("appTest/node_modules/tns-core-modules/application/application-common.js",
+        File.replace(self.app_name_appTest + "/node_modules/tns-core-modules/LICENSE", "Copyright", "MyCopyright")
+        File.replace(self.app_name_appTest + "/node_modules/tns-core-modules/application/application-common.js",
                      "(\"globals\");", "(\"globals\"); // test")
 
-        output = Tns.livesync(platform="ios", emulator=True, path="appTest", log_trace=True)
+        output = Tns.livesync(platform="ios", attributes={"--emulator": "",
+                                                          "--path": self.app_name_appTest
+                                                          })
         assert "Successfully synced application org.nativescript.appTest" in output
         time.sleep(3)
 
-        Simulator.file_contains("appTest", "app/main-page.xml", text="MYTAP")
-        Simulator.file_contains("appTest", "app/main-view-model.js", text="clicks left")
-        Simulator.file_contains("appTest", "app/app.css", text="font-size: 20;")
-        Simulator.file_contains("appTest", "app/tns_modules/LICENSE", text="MyCopyright")
-        Simulator.file_contains("appTest", "app/tns_modules/application/application-common.js",
+        Simulator.file_contains(self.app_name_appTest, "app/main-page.xml", text="MYTAP")
+        Simulator.file_contains(self.app_name_appTest, "app/main-view-model.js", text="clicks left")
+        Simulator.file_contains(self.app_name_appTest, "app/app.css", text="font-size: 20;")
+        Simulator.file_contains(self.app_name_appTest, "app/tns_modules/LICENSE", text="MyCopyright")
+        Simulator.file_contains(self.app_name_appTest, "app/tns_modules/application/application-common.js",
                                 text="require(\"globals\"); // test")

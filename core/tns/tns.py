@@ -7,271 +7,154 @@ import time
 
 from core.osutils.command import run
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, TEST_RUN_HOME, ANDROID_KEYSTORE_PATH, \
-    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS
+from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, TEST_RUN_HOME
 
 
 class Tns(object):
     @staticmethod
-    def version():
-        """
-        Return {N} CLI version.
-        """
-
-        command = TNS_PATH + " --version"
-        output = run(command)
+    def run_tns_command(command, tns_path=None, attributes={}, log_trace=False, timeout=None):
+        cmd = TNS_PATH + " " + command
+        if tns_path is not None:
+            cmd = tns_path + " " + command
+        if len(attributes) != 0:
+            for k, v in attributes.iteritems():
+                cmd += " " + k + " " + v
+        if log_trace:
+            cmd += " --log trace"
+        print cmd
+        if timeout is not None:
+            output = run(cmd, timeout)
+        else:
+            output = run(cmd)
         return output
 
     @staticmethod
-    def create_app(app_name, path=None, app_id=None, copy_from=None, template=None, log_trace=False,
-                   update_modules=True, assert_success=True):
-        """
-        Create {N} project.
-        """
+    def update_modules(path):
+        Folder.navigate_to(path)
+        npm_out1 = run("npm uninstall tns-core-modules")
+        modules_path = SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules.tgz"
+        npm_out2 = run("npm install " + modules_path + " --save")
+        Folder.navigate_to(os.path.join("node_modules", "tns-core-modules"))
+        npm_out3 = run("npm uninstall tns-core-modules-widgets")
+        widgets_path = SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules-widgets.tgz"
+        npm_out4 = run("npm install " + widgets_path + " --save")
+        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
+        output = npm_out1 + npm_out2 + npm_out3 + npm_out4
+        return output
 
-        command = TNS_PATH + " create \"{0}\"".format(app_name)
-
-        if path is not None:
-            command += " --path \"{0}\"".format(path)
-
-        if app_id is not None:
-            command += " --appid " + app_id
-
-        if template is None:
-            # By default --copy-from template-hello-world
-            if copy_from is not None:
-                command += " --copy-from " + copy_from
-            else:
-                command += " --copy-from " + SUT_ROOT_FOLDER + os.path.sep + "template-hello-world"
-
-        if template is not None:
-            command += " --template " + template
-
-        if log_trace:
-            command += " --log trace"
-        output = run(command)
-
+    @staticmethod
+    def create_app(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True):
+        path = app_name
+        attributes_to_string = ""
+        for k, v in attributes.iteritems():
+            if "--path" in k:
+                path = v
+            attributes_to_string = "".join("{0} {1}".format(k, v))
+        attr = {}
+        if not any(s in attributes_to_string for s in ("--ng", "--template", "--tsc")):
+            attr = {"--copy-from": SUT_ROOT_FOLDER + os.path.sep + "template-hello-world"}
+        attr.update(attributes)
+        if app_name is None:
+            output = Tns.run_tns_command("create ", attributes=attr, log_trace=log_trace)
+        else:
+            output = Tns.run_tns_command("create \"" + app_name + "\"", attributes=attr, log_trace=log_trace)
         if assert_success:
             assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
-
         if update_modules:
-            if path is not None:
-                app_name = path + app_name
-            Folder.navigate_to(app_name)
-            npm_out1 = run("npm uninstall tns-core-modules")
-            modules_path = SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules.tgz"
-            npm_out2 = run("npm install " + modules_path + " --save")
-            Folder.navigate_to(os.path.join("node_modules", "tns-core-modules"))
-            npm_out3 = run("npm uninstall tns-core-modules-widgets")
-            widgets_path = SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules-widgets.tgz"
-            npm_out4 = run("npm install " + widgets_path + " --save")
-            Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-            output = output + npm_out1 + npm_out2 + npm_out3 + npm_out4
-
+            Tns.update_modules(path)
         return output
 
     @staticmethod
-    def platform_add(platform=None, framework_path=None, path=None, symlink=False, log_trace=False):
-        """
-        Add target platform.
-        """
+    def platform_add_android(version=None, attributes={}, assert_success=True, log_trace=False):
+        platform = "android"
+        if version is not None:
+            platform += "@" + version
+        output = Tns.run_tns_command("platform add " + platform, attributes=attributes, log_trace=log_trace)
+        if assert_success:
+            assert "Copying template files..." in output
+            assert "Project successfully created." in output
+        return output
 
-        command = TNS_PATH + " platform add"
-
-        if platform is not None:
-            command += " {0}".format(platform)
-
-        if framework_path is not None:
-            command += " --framework-path {0}".format(framework_path)
-
-        if path is not None:
-            command += " --path \"{0}\"".format(path)
-
-        if symlink is True:
-            command += " --symlink"
-
-        if log_trace:
-            command += " --log trace"
-        output = run(command)
-
+    @staticmethod
+    def platform_add_ios(version=None, attributes={}, log_trace=False):
+        platform = "ios"
+        if version is not None:
+            platform += "@" + version
+        output = Tns.run_tns_command("platform add " + platform, attributes=attributes, log_trace=log_trace)
         assert "Copying template files..." in output
         assert "Project successfully created." in output
         return output
 
     @staticmethod
-    def prepare(platform=None, path=None, assert_success=True, log_trace=False, release=False):
-        """
-        Prepare target platform.
-        """
+    def plugin_add(name, attributes={}, log_trace=False, assert_success=True):
+        output = Tns.run_tns_command("plugin add " + name, attributes=attributes, log_trace=log_trace)
+        if assert_success:
+            assert "Successfully installed plugin {0}".format(name) in output
+        return output
 
-        command = TNS_PATH + " prepare"
-
-        if platform is not None:
-            command += " {0}".format(platform)
-
-        if path is not None:
-            command += " --path \"{0}\"".format(path)
-
-        if log_trace:
-            command += " --log trace"
-
-        if release is True:
-            if "android" in platform:
-                command += " --keyStorePath " + ANDROID_KEYSTORE_PATH + " --keyStorePassword " \
-                           + ANDROID_KEYSTORE_PASS + " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + \
-                       " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS + " --release"
-            else:
-                command += " --release"
-
-        output = run(command)
-
+    @staticmethod
+    def prepare_android(attributes={}, assert_success=True, log_trace=False):
+        output = Tns.run_tns_command("prepare android ", attributes=attributes, log_trace=log_trace)
         if assert_success:
             assert "Project successfully prepared" in output
         return output
 
     @staticmethod
-    def plugin_add(plugin=None, path=None, assert_success=True):
-        """
-        Install {N} plugin.
-        """
-
-        command = TNS_PATH + " plugin add"
-
-        if plugin is not None:
-            command += " {0}".format(plugin)
-
-        if path is not None:
-            command += " --path \"{0}\"".format(path)
-
-        # command += " --log trace"
-        output = run(command)
+    def prepare_ios(attributes={}, assert_success=True, log_trace=False):
+        output = Tns.run_tns_command("prepare ios ", attributes=attributes, log_trace=log_trace)
         if assert_success:
-            assert "Successfully installed plugin {0}".format(plugin) in output
+            assert "Project successfully prepared" in output
         return output
 
     @staticmethod
-    def build(platform=None, mode=None, for_device=False, path=None, assert_success=True):
-        """
-        Build {N} project.
-        platform -> android or ios
-        mode -> release or debug
-        for_device -> applicable only for ios (build ipa instead of app)
-        path -> path to project
-        """
-
-        command = TNS_PATH + " build"
-
-        if platform is not None:
-            command += " {0}".format(platform)
-
-        if mode is not None:
-            if "android" in platform and "release" in mode:
-                command += " --keyStorePath " + ANDROID_KEYSTORE_PATH + " --keyStorePassword " + \
-                           ANDROID_KEYSTORE_PASS + " --keyStoreAlias " + ANDROID_KEYSTORE_ALIAS + \
-                           " --keyStoreAliasPassword " + ANDROID_KEYSTORE_ALIAS_PASS + " --release"
-            else:
-                command += " --{0}".format(mode)
-
-        if for_device:
-            command += " --for-device"
-
-        if path is not None:
-            command += " --path \"{0}\"".format(path)
-
-        output = run(command)
-
+    def build_android(attributes={}, assert_success=True):
+        output = Tns.run_tns_command("build android", attributes=attributes)
         if assert_success:
             assert "Project successfully prepared" in output
-            if platform is "android":
-                assert "BUILD SUCCESSFUL" in output
-            elif platform is "ios":
-                assert "BUILD SUCCEEDED" in output
+            assert "BUILD SUCCESSFUL" in output
             assert "Project successfully built" in output
             assert "ERROR" not in output
         return output
 
     @staticmethod
-    def run(platform=None, emulator=False, device=None, path=None, log_trace=True, assert_success=True):
-        """
-        Run {N} project.
-        """
-
-        command = TNS_PATH + " run"
-
-        if platform is not None:
-            command += " {0}".format(platform)
-
-        if emulator:
-            command += " --emulator"
-
-        if device is not None:
-            command += " --device {0}".format(device)
-
-        if path is not None:
-            command += " --path \"{0}\"".format(path)
-
-        if log_trace:
-            command += " --log trace"
-
-        command += " --justlaunch"
-        output = run(command)
-
+    def build_ios(attributes={}, assert_success=True):
+        output = Tns.run_tns_command("build ios", attributes=attributes)
         if assert_success:
             assert "Project successfully prepared" in output
+            assert "BUILD SUCCEEDED" in output
             assert "Project successfully built" in output
-            if platform is "android":
-                assert "Successfully deployed on device with identifier" in output
-            elif platform is "ios":
-                if emulator:
-                    assert "Starting iOS Simulator" in output
-                else:
-                    assert "Successfully deployed on device" in output
-                    assert "Successfully run application org.nativescript." in output
+            assert "ERROR" not in output
         return output
 
     @staticmethod
-    def livesync(platform=None, emulator=False, device=None, sdk=None, path=None, watch=False, log_trace=True, assert_success=True, sync_all_files=None):
-        """
-        The livesync command.
+    def run_android(attributes={}, assert_success=True, log_trace=False, timeout=None):
+        output = Tns.run_tns_command("run android", attributes=attributes, log_trace=log_trace, timeout=timeout)
+        if assert_success:
+            assert "Project successfully prepared" in output
+            assert "Project successfully built" in output
+            assert "Successfully deployed on device with identifier" in output
+        return output
 
-        Parameters:
-            - android: --device, -- watch
-            - iOS: --emulator, -- device, --watch
-        """
-
-        command = TNS_PATH + " livesync"
-
-        if platform is not None:
-            command += " {0}".format(platform)
-
-        if emulator:
-            command += " --emulator"
-
-        if watch:
-            command += " --watch"
-
-        if device is not None:
-            if " " in device:
-                command += " --device \"{0}\"".format(device)
+    @staticmethod
+    def run_ios(attributes={}, assert_success=True, log_trace=False, timeout=None):
+        output = Tns.run_tns_command("run ios", attributes=attributes, log_trace=log_trace, timeout=timeout)
+        if assert_success:
+            assert "Project successfully prepared" in output
+            assert "Project successfully built" in output
+            if "emulator" in attributes.iteritems():
+                assert "Starting iOS Simulator" in output
             else:
-                command += " --device {0}".format(device)
+                assert "Successfully deployed on device" in output
+                assert "Successfully run application org.nativescript." in output
+        return output
 
-        if sdk is not None:
-            command += " --sdk \"{0}\"".format(sdk)
-
-        if path is not None:
-            command += " --path \"{0}\"".format(path)
-
-        # For iOS real devices by default only app fodler is synced, to enable sync all files use --syncAllFiles
-        if sync_all_files is not None:
-            if sync_all_files:
-                command += " --syncAllFiles"
-
-        if log_trace:
-            command += " --log trace"
-
-        command += " --justlaunch"
-        output = run(command)
+    @staticmethod
+    def livesync(platform=None, attributes={}, log_trace=True, assert_success=True):
+        command = "livesync "
+        if platform is not None:
+            command += platform
+        attributes.update({"--justlaunch": ""})
+        output = Tns.run_tns_command(command, attributes=attributes, log_trace=log_trace)
 
         if assert_success:
             assert "Project successfully prepared" in output
@@ -284,11 +167,4 @@ class Tns(object):
                 assert "Project successfully prepared" in output
         return output
 
-    @staticmethod
-    def create_app_platform_add(app_name, platform=None, framework_path=None, symlink=False):
-        """
-        Create {N} project and add target platform.
-        """
 
-        Tns.create_app(app_name=app_name)
-        Tns.platform_add(platform, framework_path, app_name, symlink)

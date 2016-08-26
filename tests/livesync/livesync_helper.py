@@ -38,6 +38,7 @@ def replace_all(app_name):
     replace(app_name, FILE_CHANGE_LICENSE)
     replace(app_name, FILE_CHANGE_TNS_MODULES)
 
+
 def verify_all_replaced(device_type, app_name):
     verify_replaced(device_type, app_name, FILE_CHANGE_XML)
     verify_replaced(device_type, app_name, FILE_CHANGE_JS)

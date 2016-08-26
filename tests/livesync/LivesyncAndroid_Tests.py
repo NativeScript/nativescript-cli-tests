@@ -18,6 +18,7 @@ from tests.livesync.livesync_helper import replace_all, verify_all_replaced
 
 class LivesyncAndroid_Tests(unittest.TestCase):
     # LiveSync Tests on Android Device
+    app_name = "TNS_App"
 
     @classmethod
     def setUpClass(cls):
@@ -33,7 +34,7 @@ class LivesyncAndroid_Tests(unittest.TestCase):
         print "#####"
         print ""
 
-        Folder.cleanup('./TNS_App')
+        Folder.cleanup('./' + self.app_name)
 
     def tearDown(self):
         pass
@@ -44,38 +45,50 @@ class LivesyncAndroid_Tests(unittest.TestCase):
 
     # This test executes the Run -> LiveSync
     def test_001_livesync_android_all_devices_modify_files(self):
-        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
-        Tns.run(platform="android", path="TNS_App", log_trace=False)
-        replace_all(app_name="TNS_App")
-        Tns.livesync(platform="android", path="TNS_App", log_trace=False)
-        verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name,
+                                             "--frameworkPath": ANDROID_RUNTIME_PATH
+                                             })
+        Tns.run_android(attributes={"--path": self.app_name})
+        replace_all(app_name=self.app_name)
+        Tns.livesync(platform="android", attributes={"--path": self.app_name}, log_trace=False)
+        verify_all_replaced(device_type=DeviceType.ANDROID, app_name=self.app_name)
 
     # This test executes the Run -> LiveSync -> Run work flow on an android
     def test_002_livesync_single_device_modify_files(self):
-        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
-        Tns.run(platform="android", path="TNS_App", log_trace=False)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name,
+                                             "--frameworkPath": ANDROID_RUNTIME_PATH
+                                             })
+        Tns.run_android(attributes={"--path": self.app_name})
 
         device_id = Device.get_id(platform="android")
-        replace_all(app_name="TNS_App")
-        Tns.livesync(platform="android", device=device_id, path="TNS_App", log_trace=False)
-        verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")
+        replace_all(app_name=self.app_name)
+        Tns.livesync(platform="android", attributes={"--device": device_id,
+                                                     "--path": self.app_name
+                                                     },
+                     log_trace=False)
+        verify_all_replaced(device_type=DeviceType.ANDROID, app_name=self.app_name)
 
-        File.replace("TNS_App/app/main-page.xml", "TEST", "RUN")
-        Tns.run(platform="android", path="TNS_App", log_trace=False)
-        Device.file_contains("android", "TNSApp", "app/main-page.xml", text="RUN")
+        File.replace(self.app_name + "/app/main-page.xml", "TEST", "RUN")
+        Tns.run_android(attributes={"--path": self.app_name})
+        Device.file_contains("android", self.app_name, "app/main-page.xml", text="RUN")
 
     def test_201_livesync_android_add_new_files(self):
-        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
-        Tns.run(platform="android", path="TNS_App", log_trace=False)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name,
+                                             "--frameworkPath": ANDROID_RUNTIME_PATH
+                                             })
+        Tns.run_android(attributes={"--path": self.app_name})
 
-        shutil.copyfile("TNS_App/app/main-page.xml", "TNS_App/app/test.xml")
-        shutil.copyfile("TNS_App/app/main-page.js", "TNS_App/app/test.js")
-        shutil.copyfile("TNS_App/app/app.css", "TNS_App/app/test.css")
+        shutil.copyfile(self.app_name + "/app/main-page.xml", self.app_name + "/app/test.xml")
+        shutil.copyfile(self.app_name + "/app/main-page.js", self.app_name + "/app/test.js")
+        shutil.copyfile(self.app_name + "/app/app.css", self.app_name + "/app/test.css")
 
-        os.makedirs("TNS_App/app/test")
-        shutil.copyfile("TNS_App/app/main-view-model.js", "TNS_App/app/test/main-view-model.js")
+        os.makedirs(self.app_name + "/app/test")
+        shutil.copyfile(self.app_name + "/app/main-view-model.js", self.app_name + "/app/test/main-view-model.js")
 
-        Tns.livesync(platform="android", path="TNS_App")
+        Tns.livesync(platform="android", attributes={"--path": self.app_name})
         time.sleep(5)
 
         Device.file_contains("android", "TNSApp", "app/test.xml", text="TAP")
@@ -92,8 +105,10 @@ class LivesyncAndroid_Tests(unittest.TestCase):
         pass
 
     def test_301_livesync_before_run(self):
-        Tns.create_app_platform_add(app_name="TNS_App", platform="android", framework_path=ANDROID_RUNTIME_PATH)
-        replace_all(app_name="TNS_App")
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name,
+                                             "--frameworkPath": ANDROID_RUNTIME_PATH})
+        replace_all(app_name=self.app_name)
 
         # Verify livesync without specify platform will sync only installed platform
         if (Device.get_count("android") > 0) and (Device.get_count("ios") > 0):
@@ -101,10 +116,10 @@ class LivesyncAndroid_Tests(unittest.TestCase):
             ios_id = Device.get_id(platform="ios")
             print android_id
             print ios_id
-            output = Tns.livesync(path="TNS_App", log_trace=True)
+            output = Tns.livesync(attributes={"--path": self.app_name})
             assert "Successfully prepared plugin tns-core-modules-widgets for ios" not in output
             assert "Project successfully prepared (ios)" not in output
             verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")
         else:
-            Tns.livesync(platform="android", path="TNS_App", log_trace=False)
+            Tns.livesync(platform="android", attributes={"--path": self.app_name}, log_trace=False)
             verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")
