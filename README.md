@@ -7,8 +7,7 @@ Install [Python](https://www.python.org/downloads/) 2.7.*
 Install dependencies
 ```
 pip install psutil 
-pip install nose-parameterized
-pip install pytest-timeout
+pip install nose 
 ```
 iOS Only: Install ideviceinstaller
 ```
@@ -22,13 +21,11 @@ Android Requirements:
 iOS Requirements:
 - Valid pair of certificate and provisioning profile on your OS X system
 
+Note that some of the test require connected physical Android and iOS devices.
+
 ##Environment setup
 Following environment variables should be set:
 
-    - ACTIVE_UI - YES if machine has active UI, NO if you are runnign without UI (with NO you can run only SMOKE and DEFAULT suites)
-
-    - TEST_RUN - Type of test run (set FULL to run all tests, see )
- 
     - CLI_PATH - Path to CLI package under test (package file should be named nativescript.tgz)
     
     - ANDROID_PATH - Path to Android runtime package under test (package file should be named tns-android.tgz)   
@@ -47,27 +44,14 @@ Following environment variables should be set:
     
     - KEYCHAIN_PASS - Keychain password
 
-##Test Run Types
-SMOKE
-- Runs tests with High priority.
-DEFAULT
-- All suites without dependencies on real devices  (all priorities)
-- Following AVDs should be available
-   Emulator-Api19-Default - Android emulator with API19
-- iOS SDK 9.1, 9.2 and 9.3 should be available
-FULL
-- Runs all tests
-- At least one real Android device must be attached to Linux hosts
-- At least one real iOS device must be attached to OSX hosts
-
-LIVESYNC
-- Runs all LiveSync tests
-
 ##Run Tests
 
+Run only High priority from listed folders:
 ```Shell
-python run_tests.py
+python runNose.py tests/build tests/other tests/transpilers tests/angular/CreateNG_Tests.py tests/unittests/UnitTests_Tests.py --exclude="^test_[2-9]"
 ```
+
+If you run test via PyCharm and want to see console logs, please add "--nocapture" in params.
 
 ##Write Tests
 

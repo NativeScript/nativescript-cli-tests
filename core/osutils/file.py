@@ -13,6 +13,7 @@ import fnmatch
 import os
 import time
 
+from core import osutils
 from core.settings.settings import TEST_LOG
 
 
@@ -62,7 +63,7 @@ class File(object):
     @staticmethod
     def cat(path):
         command = "cat " + path
-        output = os.system(command)
+        output = osutils.command.run(command)
         File.append(TEST_LOG, command)
         print command
         return output

@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from core.device.emulator import Emulator
@@ -11,7 +12,6 @@ class VerboseLogEmulator(unittest.TestCase):
     app_name = "TNS_App"
 
     def setUp(self):
-
         print ""
         print "#####"
         print self.id()
@@ -21,22 +21,22 @@ class VerboseLogEmulator(unittest.TestCase):
         Folder.cleanup(self.app_name)
         File.remove(VERBOSE_LOG)
         Emulator.stop_emulators()
+        Emulator.ensure_available()
 
     def tearDown(self):
         Folder.cleanup(self.app_name)
         Emulator.stop_emulators()
 
     def test_101_verbose_log_android(self):
-        Tns.create_app(self.app_name, attributes={"--copy-from": "data/apps/verbose-hello-world"})
+        Tns.create_app(self.app_name, attributes={"--copy-from": os.path.join("data", "apps", "verbose-hello-world")})
         Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH,
                                              "--path": self.app_name
                                              })
 
-        output = File.cat(self.app_name + "/app/app.js")
+        output = File.cat(os.path.join(self.app_name, "app", "app.js"))
         assert "__enableVerboseLogging()" in output, "Verbose logging not enabled in app.js"
 
         output = Tns.run_android(attributes={"--emulator": "",
-                                             "--device ": EMULATOR_NAME,
                                              "--justlaunch": "",
                                              "--path": self.app_name,
                                              },
@@ -46,6 +46,6 @@ class VerboseLogEmulator(unittest.TestCase):
         count = len(lines)
 
         print "The verbose log contains {} lines.".format(str(count))
-        assert count < 1000,\
+        assert count < 1000, \
             "The verbose log contains more than 1000 lines. It contains {} lines.".format(str(count))
         assert "***" not in output, "The verbose log contains an exception."
