@@ -103,7 +103,8 @@ class StaticBindingGenerator(unittest.TestCase):
         # run application
         Tns.run_android(attributes={"--emulator": "",
                                     "--path": self.app_name,
-                                    "--timeout": "120"
+                                    "--timeout": "120",
+                                    "--justlaunch": ""
                                     })
 
         # wait 2 seconds to get emulator logcat
