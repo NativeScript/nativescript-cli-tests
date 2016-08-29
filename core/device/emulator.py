@@ -25,8 +25,15 @@ class Emulator(object):
         Process.kill("emulator")
         Process.kill("emulator64-arm")
         Process.kill("emulator64-x86")
-        Process.kill("quemu-system-i38")
+        Process.kill("emulator-arm")
+        Process.kill("emulator-x86")
+        Process.kill("qemu-system-arm")
         Process.kill("qemu-system-i386")
+        Process.kill("qemu-system-i38")  # Linux
+
+        output = run(ADB_PATH + " devices")  # Run `adb devices` for debug purposes.
+        if "offline" in output:
+            Emulator.restart_adb()
 
     @staticmethod
     def start_emulator(emulator_name, port="5554", timeout=300, wait_for=True):
@@ -81,6 +88,7 @@ class Emulator(object):
         else:
             Emulator.stop_emulators()
             Emulator.start_emulator(emulator_name=EMULATOR_NAME, port="5554", wait_for=True)
+        run(ADB_PATH + " devices")
 
     @staticmethod
     def cat_app_file(app_name, file_path):
