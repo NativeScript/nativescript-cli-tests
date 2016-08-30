@@ -109,7 +109,7 @@ class StaticBindingGenerator(unittest.TestCase):
 
         # wait 2 seconds to get emulator logcat
         process = subprocess.Popen([ADB_PATH, "-e", "logcat"], stdout=subprocess.PIPE)
-        threading.Timer(2, process.terminate).start()
+        threading.Timer(10, process.terminate).start()
         output = process.communicate()[0]
 
         # check if we got called from custom activity that overrides the default one
