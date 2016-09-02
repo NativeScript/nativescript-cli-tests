@@ -58,26 +58,26 @@ class LivesyncEmulatorWatch_Tests(Watcher):
         command = TNS_PATH + \
                   " livesync android --emulator --device emulator-5554 --watch --path " + self.app_name + " --log trace"
         self.start_watcher(command)
-        self.wait_for_text_in_output("Successfully synced application", timeout=30)
+        self.wait_for_text_in_output("Successfully synced application", timeout=45)
         time.sleep(20)
         verify_all_replaced(device_type=DeviceType.EMULATOR, app_name=self.app_name)
 
     # Add new files
     def test_101_livesync_android_emulator_watch_add_xml_file(self):
         shutil.copyfile(self.app_name + "/app/main-page.xml", self.app_name + "/app/test/test.xml")
-        self.wait_for_text_in_output("Successfully synced application", timeout=30)
+        self.wait_for_text_in_output("Successfully synced application", timeout=45)
         time.sleep(15)
         Emulator.file_contains("TNSApp", "app/test/test.xml", text="TEST")
 
     def test_102_livesync_android_emulator_watch_add_js_file(self):
         shutil.copyfile(self.app_name + "/app/app.js", self.app_name + "/app/test/test.js")
-        self.wait_for_text_in_output("Successfully synced application", timeout=30)
+        self.wait_for_text_in_output("Successfully synced application", timeout=45)
         time.sleep(15)
         Emulator.file_contains("TNSApp", "app/test/test.js", text="application.start")
 
     def test_103_livesync_android_emulator_watch_add_css_file(self):
         shutil.copyfile(self.app_name + "/app/app.css", self.app_name + "/app/test/test.css")
-        self.wait_for_text_in_output("Successfully synced application", timeout=30)
+        self.wait_for_text_in_output("Successfully synced application", timeout=45)
         time.sleep(15)
         Emulator.file_contains("TNSApp", "app/test/test.css", text="color: #284848;")
 

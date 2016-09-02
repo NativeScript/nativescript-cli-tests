@@ -13,6 +13,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH
 from core.tns.tns import Tns
+import time
 
 
 class LiveSynciOS(unittest.TestCase):
@@ -60,7 +61,7 @@ class LiveSynciOS(unittest.TestCase):
         Tns.livesync(platform="ios", attributes={"--path": self.app_name,
                                                  "--syncAllFiles": "",
                                                  "--justlaunch": ""})
-
+        time.sleep(5)
         Device.file_contains("ios", "TNSApp", "app/main-page.xml", text="TEST")
         Device.file_contains("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
         Device.file_contains("ios", "TNSApp", "app/app.css", text="font-size: 20;")
@@ -83,6 +84,7 @@ class LiveSynciOS(unittest.TestCase):
         Tns.livesync(platform="ios", attributes={"--path": self.app_name,
                                                  "--device": device_id,
                                                  "--justlaunch": ""})
+        time.sleep(5)
         Device.file_contains("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
 
     def test_201_livesync_ios_add_new_files(self):
