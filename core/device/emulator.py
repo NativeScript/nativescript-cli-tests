@@ -89,6 +89,7 @@ class Emulator(object):
             Emulator.stop_emulators()
             Emulator.start_emulator(emulator_name=EMULATOR_NAME, port="5554", wait_for=True)
         run(ADB_PATH + " devices")
+        return found
 
     @staticmethod
     def cat_app_file(app_name, file_path):
