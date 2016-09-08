@@ -198,8 +198,9 @@ class LivesyncSimulator_Tests(Watcher):
         output = Tns.livesync(platform="ios", attributes={"--emulator": "",
                                                           "--path": self.app_name_appTest,
                                                           "--justlaunch": ""})
-        assert "Successfully synced application org.nativescript.appTest" in output
         time.sleep(10)
+        assert "Successfully synced application org.nativescript.appTest" in output
+
 
         Simulator.file_contains(self.app_name_appTest, "app/main-page.xml", text="MYTAP")
         Simulator.file_contains(self.app_name_appTest, "app/main-view-model.js", text="clicks left")
