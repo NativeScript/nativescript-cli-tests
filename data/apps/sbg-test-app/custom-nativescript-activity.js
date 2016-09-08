@@ -8,7 +8,7 @@ var MyCustomActivityClass = (function (_super) {
      	_super.prototype.onCreate.call(this, false ? savedInstanceState : null);
      	android.util.Log.d("Sbg.Test","we got called from onCreate of custom-nativescript-activity.js");
 
-        var myIntent = new android.content.Intent(this, com.tns.MyJavaClass.class);
+        var myIntent = new android.content.Intent(this, java.lang.Class.forName("com.tns.MyJavaClass");
         myIntent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
         wentToMyJavaClassOnce = true;
         this.startActivity(myIntent);
