@@ -112,6 +112,9 @@ class StaticBindingGenerator(unittest.TestCase):
         process = subprocess.Popen([ADB_PATH, "-e", "logcat"], stdout=subprocess.PIPE)
         threading.Timer(10, process.terminate).start()
         output = process.communicate()[0]
+	
+	#make sure app hasn't crashed
+	assert "Displayed org.nativescript.TNSApp/com.tns.ErrorReportActivity" not in output, "App crashed with error activity"
 
         # check if we got called from custom activity that overrides the default one
         assert "we got called from onCreate of custom-nativescript-activity.js" in output, "Expected output not found"
