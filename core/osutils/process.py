@@ -43,7 +43,10 @@ class Process(object):
         result = False
         for proc in psutil.process_iter():
             if proc_name in str(proc):
-                proc.kill()
-                print "Process {0} has been killed.".format(proc_name)
-                result = True
+                try:
+                    proc.kill()
+                    print "Process {0} has been killed.".format(proc_name)
+                    result = True
+                except psutil.NoSuchProcess:
+                    continue
         return result
