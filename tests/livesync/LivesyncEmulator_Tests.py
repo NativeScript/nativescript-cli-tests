@@ -1,6 +1,7 @@
 import os
 import shutil
 import unittest
+import time
 
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
@@ -48,6 +49,7 @@ class LivesyncEmulator_Tests(unittest.TestCase):
                                                      "--device": "emulator-5554",
                                                      "--path": self.app_name,
                                                      "--justlaunch": ""})
+        time.sleep(5)
         verify_all_replaced(device_type=DeviceType.EMULATOR, app_name="TNSApp")
 
     def test_201_livesync_android_add_files(self):
@@ -68,7 +70,7 @@ class LivesyncEmulator_Tests(unittest.TestCase):
         Tns.livesync(platform="android", attributes={"--device": "emulator-5554",
                                                      "--path": self.app_name,
                                                      "--justlaunch": ""})
-
+        time.sleep(5)
         Emulator.file_contains("TNSApp", "app/test.xml", text="TAP")
         Emulator.file_contains("TNSApp", "app/test.js", text="page.bindingContext = ")
         Emulator.file_contains("TNSApp", "app/test.css", text="color: #284848;")
@@ -84,4 +86,5 @@ class LivesyncEmulator_Tests(unittest.TestCase):
                                                      "--device": "emulator-5554",
                                                      "--path": self.app_name,
                                                      "--justlaunch": ""})
+        time.sleep(5)
         verify_all_replaced(device_type=DeviceType.EMULATOR, app_name="TNSApp")
