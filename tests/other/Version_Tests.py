@@ -3,22 +3,12 @@ Test for version command
 """
 
 import re
-import unittest
 
 from core.tns.tns import Tns
+from core.base_class.BaseClass import BaseClass
 
 
-class Version_Tests(unittest.TestCase):
-    def setUp(self):
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
-    def tearDown(self):
-        pass
-
+class Version_Tests(BaseClass):
     def test_001_version(self):
         output = Tns.run_tns_command("",attributes={"--version": ""})
         version = re.compile("^\\d+\\.\\d+\\.\\d+(-\\S+)?$").match(output)

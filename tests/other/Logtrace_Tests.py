@@ -2,29 +2,14 @@
 log_trace tests
 """
 
-import unittest
-
-from core.osutils.folder import Folder
 from core.tns.tns import Tns
+from core.base_class.BaseClass import BaseClass
 
 
-class Logtrace_Tests(unittest.TestCase):
-    app_name = "TNS_App"
-
-    def setUp(self):
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
-        Folder.cleanup('./' + self.app_name)
-
-    def tearDown(self):
-        pass
+class Logtrace_Tests(BaseClass):
 
     def test_001_create_project_log_trace(self):
-        output = Tns.create_app(self.app_name, log_trace=True)
+        output = Tns.create_app(self.app_name, log_trace=True, update_modules=False)
         assert "Creating a new NativeScript project with name " + self.app_name in output
         print "and id org.nativescript.{0} at location".format(self.app_name.replace("_", ""))
         assert "and id org.nativescript.{0} at location".format(self.app_name.replace("_", "")) in output
@@ -39,7 +24,7 @@ class Logtrace_Tests(unittest.TestCase):
         assert "Project " + self.app_name + " was successfully created" in output
 
     def test_002_platform_add_log_trace(self):
-        Tns.create_app(self.app_name)
+        Tns.create_app(self.app_name, update_modules=False)
         output = Tns.platform_add_android(attributes={"--path":self.app_name}, log_trace=True)
         assert "Looking for project in" in output
         assert "Project directory is" in output

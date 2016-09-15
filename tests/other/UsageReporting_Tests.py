@@ -2,21 +2,11 @@
 Test for usage-reporting command
 """
 
-import unittest
 from core.tns.tns import Tns
+from core.base_class.BaseClass import BaseClass
 
 
-class UsageReporting_Tests(unittest.TestCase):
-    def setUp(self):
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
-    def tearDown(self):
-        pass
-
+class UsageReporting_Tests(BaseClass):
     def test_001_usage_reporting(self):
         output = Tns.run_tns_command("usage-reporting")
         assert "Usage reporting is" in output

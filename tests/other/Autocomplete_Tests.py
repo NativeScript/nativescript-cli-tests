@@ -2,21 +2,11 @@
 Autocomplete tests
 """
 
-import unittest
-
 from core.tns.tns import Tns
+from core.base_class.BaseClass import BaseClass
 
 
-class Autocomplete_Tests(unittest.TestCase):
-    def setUp(self):
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
-    def tearDown(self):
-        pass
+class Autocomplete_Tests(BaseClass):
 
     def test_001_autocomplete_enable(self):
         output = Tns.run_tns_command("autocomplete status")
