@@ -113,7 +113,6 @@ class Tns(object):
             assert "Project successfully prepared" in output
             assert "BUILD SUCCESSFUL" in output
             assert "Project successfully built" in output
-            assert "ERROR" not in output
         return output
 
     @staticmethod
