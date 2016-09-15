@@ -11,6 +11,7 @@ from core.osutils.folder import Folder
 class BaseClass(unittest.TestCase):
     app_name = "TNS_App"
     app_name_appTest = "appTest"
+    app_name_dash = "tns-app"
 
     @classmethod
     def setUpClass(cls):
@@ -36,3 +37,4 @@ class BaseClass(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         pass
+
