@@ -135,8 +135,8 @@ class BuildAndroid_Tests(unittest.TestCase):
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
+        assert "[DEBUG]" in output
 
-        assert "ERROR" not in output
         assert "FAILURE" not in output
         assert File.exists(self.app_no_platform + "/platforms/android"
                                                   "/build/outputs/apk/TNSAppNoPlatform-debug.apk")
@@ -151,11 +151,11 @@ class BuildAndroid_Tests(unittest.TestCase):
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output
         assert "Project successfully built" in output
+        assert "[DEBUG]" in output
 
-        assert "ERROR" not in output
         assert "FAILURE" not in output
         assert File.exists(self.app_no_platform + "/platforms/android"
-                           "/build/outputs/apk/TNSAppNoPlatform-debug.apk")
+                                                  "/build/outputs/apk/TNSAppNoPlatform-debug.apk")
 
     def test_300_build_android_with_additional_styles_xml(self):
 
@@ -189,7 +189,7 @@ class BuildAndroid_Tests(unittest.TestCase):
 
         # Verify AndroidManifest.xml
         output = run(
-            "cat " + self.app_name_dash + "/platforms/android/src/main/AndroidManifest.xml")
+                "cat " + self.app_name_dash + "/platforms/android/src/main/AndroidManifest.xml")
         assert "org.nativescript.tnsapp" in output
 
     def test_302_build_project_with_space(self):
@@ -211,7 +211,7 @@ class BuildAndroid_Tests(unittest.TestCase):
 
             # Verify AndroidManifest.xml
             output = run(
-                "cat \"" + self.app_name_space + "/platforms/android/src/main/AndroidManifest.xml\"")
+                    "cat \"" + self.app_name_space + "/platforms/android/src/main/AndroidManifest.xml\"")
             assert "org.nativescript.TNSApp" in output
 
         elif CURRENT_OS == OSType.OSX:
@@ -221,7 +221,7 @@ class BuildAndroid_Tests(unittest.TestCase):
 
             # Verify AndroidManifest.xml
             output = run(
-                "cat \"" + self.app_name_space + "/platforms/android/src/main/AndroidManifest.xml\"")
+                    "cat \"" + self.app_name_space + "/platforms/android/src/main/AndroidManifest.xml\"")
             assert "org.nativescript.TNSApp" in output
 
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows, because tar is not available")
@@ -341,7 +341,7 @@ class BuildAndroid_Tests(unittest.TestCase):
         Folder.navigate_to("temp/appbuilderProject/appbuilderProject")
 
         output = Tns.run_tns_command("platform add android", attributes={"--frameworkPath":
-                                                                         "../../../sut/tns-android/package",
+                                                                             "../../../sut/tns-android/package",
                                                                          "--profile-dir": "../",
                                                                          "--no-hooks": "",
                                                                          "--ignore-scripts": "",
