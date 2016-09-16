@@ -1,6 +1,6 @@
 import os
-import unittest
 
+from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -9,30 +9,12 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, CURRENT_OS, IOS_RUNTIME
 from core.tns.tns import Tns
 
 
-class Typescript_Tests(unittest.TestCase):
-    app_name = "TNS_App"
-    app_folder = os.path.join(app_name, "app")
-    node_modules_folder = os.path.join(app_name, "node_modules")
-    hooks_folder = os.path.join(app_name, "hooks")
-    assets_folder = os.path.join(app_name, "platforms", "android", "src", "main", "assets")
+class TypescriptTests(BaseClass):
 
-    @classmethod
-    def setUpClass(cls):
-        Folder.cleanup(cls.app_name)
-
-    def setUp(self):
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
-    def tearDown(self):
-        pass
-
-    @classmethod
-    def tearDownClass(cls):
-        Folder.cleanup(cls.app_name)
+    app_folder = os.path.join(BaseClass.app_name, "app")
+    node_modules_folder = os.path.join(BaseClass.app_name, "node_modules")
+    hooks_folder = os.path.join(BaseClass.app_name, "hooks")
+    assets_folder = os.path.join(BaseClass.app_name, "platforms", "android", "src", "main", "assets")
 
     def test_001_transpilation_typescript(self):
         output = Tns.create_app(self.app_name, attributes={"--tsc": ""})
@@ -94,7 +76,6 @@ class Typescript_Tests(unittest.TestCase):
         assert "\"sources\":[\"app.ts\"]" in output
 
         if CURRENT_OS == OSType.OSX:
-
             # prepare in debug => .ts should go to the platforms folder
             output = Tns.prepare_ios(attributes={"--path": self.app_name})
             assert "Executing before-prepare hook" in output
@@ -139,7 +120,6 @@ class Typescript_Tests(unittest.TestCase):
         assert not File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".ts")
 
         if CURRENT_OS == OSType.OSX:
-
             # prepare in release => .ts should NOT go to the platforms folder
             output = Tns.prepare_ios(attributes={"--path": self.app_name,
                                                  "--release": ""
