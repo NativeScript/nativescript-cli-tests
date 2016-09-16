@@ -1,26 +1,13 @@
-import unittest
-
 from nose_parameterized import parameterized
 
+from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.folder import Folder
 from core.tns.tns import Tns
 
 
-class CreateNG_Tests(unittest.TestCase):
+class CreateNGTests(BaseClass):
     app_name = "TNS_App"
-
-    def setUp(self):
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
-        Folder.cleanup('./' + self.app_name)
-
-    def tearDown(self):
-        Folder.cleanup('./' + self.app_name)
 
     def assert_angular_project(self):
         output = run("cat " + self.app_name + "/package.json")
@@ -49,15 +36,18 @@ class CreateNG_Tests(unittest.TestCase):
         "ng",
     ])
     def test_102_create_project_with_template_ng(self, template_source):
-        Tns.create_app(self.app_name, attributes={"--template": template_source}, assert_success=False, update_modules=False)
+        Tns.create_app(self.app_name, attributes={"--template": template_source}, assert_success=False,
+                       update_modules=False)
         self.assert_angular_project()
 
     def test_401_create_project_with_template_no_value(self):
-        output = Tns.create_app(self.app_name, attributes={"--template": ""}, assert_success=False, update_modules=False)
+        output = Tns.create_app(self.app_name, attributes={"--template": ""}, assert_success=False,
+                                update_modules=False)
         assert "successfully created" not in output
         assert "requires non-empty value" in output
 
     def test_402_create_project_with_template_and_ng(self):
-        output = Tns.create_app(self.app_name, attributes={"--template": "--ng"}, assert_success=False, update_modules=False)
+        output = Tns.create_app(self.app_name, attributes={"--template": "--ng"}, assert_success=False,
+                                update_modules=False)
         assert "successfully created" not in output
         assert "requires non-empty value" in output
