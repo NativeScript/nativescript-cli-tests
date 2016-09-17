@@ -36,7 +36,7 @@ class File(object):
     def append(file_path, text):
         try:
             with open(file_path, 'a') as file_to_append:
-                file_to_append.write(time.strftime("%X") + ' ' + text + '\n')
+                file_to_append.write(text + os.linesep)
         except IOError:
             pass
 

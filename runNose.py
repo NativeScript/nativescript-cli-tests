@@ -1,8 +1,9 @@
-﻿import nose
-import sys
-import os
+﻿import os
 import shutil
+import sys
 import tarfile
+
+import nose
 
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -63,13 +64,15 @@ def extract_archive(file_name, folder):
 
 
 def get_tns_core_modules():
-    """Copy android runtime form ANDROID_PATH to local folder"""
+    """Copy tns-core-modules.tgz and tns-platform-declarations.tgz to local folder"""
     location = os.path.join(TNS_MODULES_PATH, "tns-core-modules.tgz")
     shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-core-modules.tgz"))
+    location = os.path.join(TNS_MODULES_PATH, "tns-platform-declarations.tgz")
+    shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-platform-declarations.tgz"))
 
 
 def get_tns_core_modules_widgets():
-    """Copy android runtime form ANDROID_PATH to local folder"""
+    """Copy tns-core-modules-widgets.tgz to local folder"""
     location = os.path.join(TNS_MODULES_WIDGETS_PATH, "tns-core-modules-widgets.tgz")
     shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-core-modules-widgets.tgz"))
 
@@ -104,6 +107,7 @@ def get_repos():
 def get_package():
     location = os.path.join(ANDROID_PATH, "tns-android.tgz")
     shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-core-modules-widgets.tgz"))
+
 
 if __name__ == '__main__':
 

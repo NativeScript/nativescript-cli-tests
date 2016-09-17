@@ -7,7 +7,7 @@ from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
 
-class BuildiOSNG_Tests(unittest.TestCase):
+class BuildiOSNGTests(unittest.TestCase):
     app_name = "TNS_App"
 
     @classmethod
