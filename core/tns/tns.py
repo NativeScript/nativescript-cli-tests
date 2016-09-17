@@ -65,25 +65,45 @@ class Tns(object):
         return output
 
     @staticmethod
-    def platform_add_android(version=None, attributes={}, assert_success=True, log_trace=False):
-        platform = "android"
+    def platform_add(platform="", version=None, attributes={}, assert_success=True, log_trace=False, tns_path=None):
         if version is not None:
             platform += "@" + version
-        output = Tns.run_tns_command("platform add " + platform, attributes=attributes, log_trace=log_trace)
+        output = Tns.run_tns_command("platform add " + platform, attributes=attributes, log_trace=log_trace,
+                                     tns_path=tns_path)
         if assert_success:
             assert "Copying template files..." in output
             assert "Project successfully created." in output
         return output
 
     @staticmethod
-    def platform_add_ios(version=None, attributes={}, log_trace=False):
-        platform = "ios"
-        if version is not None:
-            platform += "@" + version
-        output = Tns.run_tns_command("platform add " + platform, attributes=attributes, log_trace=log_trace)
-        assert "Copying template files..." in output
-        assert "Project successfully created." in output
+    def platform_remove(platform="", attributes={}, assert_success=True, log_trace=False, tns_path=None):
+        output = Tns.run_tns_command("platform remove " + platform, attributes=attributes, log_trace=log_trace,
+                                     tns_path=tns_path)
+        if assert_success:
+            assert "Platform android successfully removed" in output
+            assert "error" not in output
         return output
+
+    @staticmethod
+    def platform_update(platform="", attributes={}, assert_success=True, log_trace=False, tns_path=None):
+        output = Tns.run_tns_command("platform update " + platform, attributes=attributes, log_trace=log_trace,
+                                     tns_path=tns_path)
+        if assert_success:
+            assert "Successfully updated to version" in output
+        return output
+
+    @staticmethod
+    def platform_add_android(version=None, attributes={}, assert_success=True, log_trace=False, tns_path=None):
+        return Tns.platform_add(platform="android", version=version, attributes=attributes,
+                                assert_success=assert_success,
+                                log_trace=log_trace,
+                                tns_path=tns_path)
+
+    @staticmethod
+    def platform_add_ios(version=None, attributes={}, assert_success=True, log_trace=False, tns_path=None):
+        return Tns.platform_add(platform="ios", version=version, attributes=attributes, assert_success=assert_success,
+                                log_trace=log_trace,
+                                tns_path=tns_path)
 
     @staticmethod
     def plugin_add(name, attributes={}, log_trace=False, assert_success=True):
@@ -93,22 +113,22 @@ class Tns(object):
         return output
 
     @staticmethod
-    def prepare_android(attributes={}, assert_success=True, log_trace=False):
-        output = Tns.run_tns_command("prepare android ", attributes=attributes, log_trace=log_trace)
+    def prepare_android(attributes={}, assert_success=True, log_trace=False, tns_path=None):
+        output = Tns.run_tns_command("prepare android ", attributes=attributes, log_trace=log_trace, tns_path=tns_path)
         if assert_success:
             assert "Project successfully prepared" in output
         return output
 
     @staticmethod
-    def prepare_ios(attributes={}, assert_success=True, log_trace=False):
-        output = Tns.run_tns_command("prepare ios ", attributes=attributes, log_trace=log_trace)
+    def prepare_ios(attributes={}, assert_success=True, log_trace=False, tns_path=None):
+        output = Tns.run_tns_command("prepare ios ", attributes=attributes, log_trace=log_trace, tns_path=tns_path)
         if assert_success:
             assert "Project successfully prepared" in output
         return output
 
     @staticmethod
-    def build_android(attributes={}, assert_success=True):
-        output = Tns.run_tns_command("build android", attributes=attributes)
+    def build_android(attributes={}, assert_success=True, tns_path=None):
+        output = Tns.run_tns_command("build android", attributes=attributes, tns_path=tns_path)
         if assert_success:
             assert "Project successfully prepared" in output
             assert "BUILD SUCCESSFUL" in output
@@ -116,8 +136,8 @@ class Tns(object):
         return output
 
     @staticmethod
-    def build_ios(attributes={}, assert_success=True):
-        output = Tns.run_tns_command("build ios", attributes=attributes)
+    def build_ios(attributes={}, assert_success=True, tns_path=None):
+        output = Tns.run_tns_command("build ios", attributes=attributes, tns_path=tns_path)
         if assert_success:
             assert "Project successfully prepared" in output
             assert "BUILD SUCCEEDED" in output
@@ -166,4 +186,21 @@ class Tns(object):
                 assert "Project successfully prepared" in output
         return output
 
+    @staticmethod
+    def init(attributes={}, assert_success=True, tns_path=None):
+        output = Tns.run_tns_command("init", attributes=attributes, tns_path=tns_path)
+        if assert_success:
+            assert "Project successfully initialized" in output
+        return output
 
+    @staticmethod
+    def install(attributes={}, assert_success=True, tns_path=None):
+        output = Tns.run_tns_command("install", attributes=attributes, tns_path=tns_path)
+        if assert_success:
+            assert "Project successfully created" in output
+        return output
+
+    @staticmethod
+    def disable_reporting():
+        Tns.run_tns_command("usage-reporting disable")
+        Tns.run_tns_command("error-reporting disable")

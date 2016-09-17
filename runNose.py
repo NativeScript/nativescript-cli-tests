@@ -16,6 +16,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
     COMMAND_TIMEOUT, ANDROID_PATH, IOS_PATH, SUT_ROOT_FOLDER, TEST_RUN, CLI_PATH, ANDROID_RUNTIME_PATH, \
     IOS_RUNTIME_PATH, TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH
+from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
 reload(sys)
@@ -139,6 +140,7 @@ if __name__ == '__main__':
 
     # Install CLI
     Cli.install()
+    Tns.disable_reporting()
 
     arguments = ['nosetests', '-v', '-s', '--nologcapture', '--with-doctest', '--with-xunit']
     for i in sys.argv:

@@ -32,7 +32,6 @@ class BaseClass(unittest.TestCase):
         print "{0} ____________________________________TEST END____________________________________". \
             format(time.strftime("%X"))
         print ""
-        self._resultForDoCleanups
 
     @classmethod
     def tearDownClass(cls):

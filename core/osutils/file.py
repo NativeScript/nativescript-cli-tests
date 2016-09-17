@@ -20,6 +20,8 @@ from core.settings.settings import TEST_LOG
 class File(object):
     @staticmethod
     def read(file_path):
+        file_path = file_path.replace("\\", os.path.sep)
+        file_path = file_path.replace("/", os.path.sep)
         try:
             with open(file_path, 'r') as file_to_read:
                 output = file_to_read.read()

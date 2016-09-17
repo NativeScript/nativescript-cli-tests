@@ -12,7 +12,7 @@ from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
 
-class BuildiOS_Tests(unittest.TestCase):
+class BuildiOSTests(unittest.TestCase):
     app_name = "TNS_App"
     app_name_dash = "tns-app"
     app_name_space = "tns app"
@@ -25,8 +25,8 @@ class BuildiOS_Tests(unittest.TestCase):
         File.remove("TNSApp.app")
         File.remove("TNSApp.ipa")
 
-        Folder.cleanup('./' + cls.app_name)
-        Folder.cleanup('./' + cls.app_name_nosym)
+        Folder.cleanup(cls.app_name)
+        Folder.cleanup(cls.app_name_nosym)
 
         Xcode.cleanup_cache()
 
@@ -37,14 +37,14 @@ class BuildiOS_Tests(unittest.TestCase):
         print "#####"
         print ""
 
-        Folder.cleanup('./' + self.app_name_dash)
-        Folder.cleanup('./' + self.app_name_space)
-        Folder.cleanup('./' + self.app_name_ios)
-        Folder.cleanup('./' + self.app_name_noplatform)
-        Folder.cleanup('./' + self.app_name_noplatform + '/platforms/ios/build')
+        Folder.cleanup(self.app_name_dash)
+        Folder.cleanup(self.app_name_space)
+        Folder.cleanup(self.app_name_ios)
+        Folder.cleanup(self.app_name_noplatform)
+        Folder.cleanup(self.app_name_noplatform + '/platforms/ios/build')
 
-        Folder.cleanup('./' + self.app_name)
-        Folder.cleanup('./' + self.app_name_nosym)
+        Folder.cleanup(self.app_name)
+        Folder.cleanup(self.app_name_nosym)
 
     def tearDown(self):
         pass
@@ -54,10 +54,10 @@ class BuildiOS_Tests(unittest.TestCase):
         File.remove("TNSApp.app")
         File.remove("TNSApp.ipa")
 
-        Folder.cleanup('./' + cls.app_name)
-        Folder.cleanup('./' + cls.app_name_noplatform)
-        Folder.cleanup('./' + cls.app_name_dash)
-        Folder.cleanup('./' + cls.app_name_space)
+        Folder.cleanup(cls.app_name)
+        Folder.cleanup(cls.app_name_noplatform)
+        Folder.cleanup(cls.app_name_dash)
+        Folder.cleanup(cls.app_name_space)
 
     def test_001_build_ios(self):
         Tns.create_app(self.app_name)
@@ -201,7 +201,7 @@ class BuildiOS_Tests(unittest.TestCase):
 
     def test_214_build_ios_no_platform_folder(self):
         Tns.create_app(self.app_name_noplatform)
-        Folder.cleanup('./' + self.app_name_noplatform + '/platforms')
+        Folder.cleanup(self.app_name_noplatform + '/platforms')
         output = Tns.build_ios(attributes={"--path": self.app_name_noplatform}, assert_success=False)
         assert "Project successfully prepared" in output
         assert "build/emulator/TNSAppNoPlatform.app" in output
