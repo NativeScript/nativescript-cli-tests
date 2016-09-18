@@ -13,7 +13,6 @@ from core.tns.tns import Tns
 
 
 class PrepareiOSTests(BaseClass):
-
     @classmethod
     def setUpClass(cls):
         super(PrepareiOSTests, cls).setUpClass()
@@ -99,17 +98,17 @@ class PrepareiOSTests(BaseClass):
             output = Tns.prepare_ios(attributes={"--path": self.app_name})
             assert "You have tns_modules dir in your app folder" in output
 
-            output = run("cat " + self.app_name + "/app/tns_modules/package.json")
+            output = File.read(self.app_name + "/app/tns_modules/package.json")
             assert "\"version\": \"1.2.1\"," in output
 
-            output = run("cat " + self.app_name + "/node_modules/tns-core-modules/package.json")
+            output = File.read(self.app_name + "/node_modules/tns-core-modules/package.json")
             assert "\"version\": \"1.2.1\"," not in output
-            output = run("cat " + self.app_name + "/node_modules/tns-core-modules/application/application-common.js")
+            output = File.read(self.app_name + "/node_modules/tns-core-modules/application/application-common.js")
             assert "require(\"globals\"); // test" in output
-            output = run("cat " + self.app_name + "/platforms/ios/TNSApp/app/tns_modules/package.json")
+            output = File.read(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/package.json")
             assert "\"version\": \"1.2.1\"," not in output
-            output = run("cat " + self.app_name + "/platforms/ios/" +
-                         "TNSApp/app/tns_modules/application/application-common.js")
+            output = File.read(
+                self.app_name + "/platforms/ios/TNSApp/app/tns_modules/application/application-common.js")
             assert "require(\"globals\"); // test" in output
 
     def test_300_prepare_ios_preserve_case(self):

@@ -103,7 +103,8 @@ class BuildAndroidTests(BaseClass):
 
     def test_200_build_android_inside_project_folder(self):
         Folder.navigate_to(self.app_name)
-        output = Tns.build_android(tns_path=os.path.join("..", TNS_PATH), attributes={"--path": self.app_name})
+        output = Tns.build_android(tns_path=os.path.join("..", TNS_PATH), attributes={"--path": self.app_name},
+                                   assert_success=False)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         assert "Project successfully prepared" in output
         assert "BUILD SUCCESSFUL" in output

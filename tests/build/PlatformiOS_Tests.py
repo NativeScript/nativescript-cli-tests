@@ -109,7 +109,7 @@ class PlatformiOSTests(BaseClass):
         output = File.read(self.app_name + os.sep + "package.json")
         assert "\"version\": \"2.2.0\"" in output
 
-        Tns.platform_update("ios@2.3.0", attributes={"--path": self.app_name, "< enter_key.txt": ""})
+        Tns.platform_update("ios@2.3.0", attributes={"--path": self.app_name, " <  data/keys/enter_key.txt": ""})
         output = File.read(self.app_name + os.sep + "package.json")
         assert "\"version\": \"2.3.0\"" in output
 
@@ -140,7 +140,6 @@ class PlatformiOSTests(BaseClass):
 
     def test_330_platform_update_ios_patform_not_added(self):
         Tns.create_app(self.app_name)
-        output = Tns.platform_update(platform="ios", attributes={"--path": self.app_name})
-        assert "Copying template files..." in output
+        output = Tns.platform_update(platform="ios", attributes={"--path": self.app_name}, assert_success=False)
         assert "Project successfully created." in output
         assert not Folder.is_empty(self.app_name + "/platforms/ios/internal/metadata-generator")

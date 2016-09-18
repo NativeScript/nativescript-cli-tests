@@ -3,7 +3,6 @@ Test platform add (android)
 """
 import os
 import unittest
-from time import sleep
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
@@ -98,19 +97,6 @@ class PlatformAndroidTests(BaseClass):
         output = Tns.platform_update("android", attributes={"--path": self.app_name}, assert_success=False)
         assert "Current and new version are the same." in output
         assert "Usage" in output
-
-    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS,
-                     "Can not silently answer on y/n question on Windows terminal")
-    def test_206_platform_downgrade_android_to_old_version(self):
-        Tns.create_app(self.app_name, update_modules=False)
-        Tns.platform_add_android(version="2.3.0", attributes={"--path": self.app_name})
-
-        Tns.platform_update("android@2.2.0",
-                            attributes={"--path": self.app_name + " < data" + os.sep + "keys" + os.sep + "y_key.txt"},
-                            assert_success=False)
-        sleep(30)
-        output = File.read(self.app_name + os.sep + "package.json")
-        assert "\"version\": \"2.2.0\"" in output
 
     def test_210_platform_update_android_patform_not_added(self):
         Tns.create_app(self.app_name, update_modules=False)
