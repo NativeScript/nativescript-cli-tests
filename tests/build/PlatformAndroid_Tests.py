@@ -199,6 +199,7 @@ class PlatformAndroidTests(BaseClass):
 
     def test_441_platform_update_invalid_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name})
         output = Tns.platform_update("invalidPlatform", attributes={"--path": self.app_name}, assert_success=False)
         assert "Invalid platform invalidplatform. Valid platforms are ios or android." in output
         assert "Usage" in output
