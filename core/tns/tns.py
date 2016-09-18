@@ -80,7 +80,7 @@ class Tns(object):
         output = Tns.run_tns_command("platform remove " + platform, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
         if assert_success:
-            assert "Platform android successfully removed" in output
+            assert "Platform {0} successfully removed".format(platform) in output
             assert "error" not in output
         return output
 
