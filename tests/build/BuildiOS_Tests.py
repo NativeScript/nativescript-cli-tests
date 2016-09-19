@@ -189,7 +189,7 @@ class BuildiOSTests(BaseClass):
         # Verify project builds
         output = Tns.build_ios(attributes={"--path": "\"" + self.app_name_space + "\""})
         assert "build/emulator/tnsapp.app" in output
-        assert File.exists(self.app_name_space + "/platforms/ios/build/emulator/tnsapp.app")
+        assert File.exists(self.app_name_space + "/platforms/ios/build/emulator/TNSApp.app")
 
     def test_302_build_ios_with_ios_in_path(self):
         Tns.create_app(self.app_name_ios)

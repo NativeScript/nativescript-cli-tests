@@ -3,8 +3,8 @@ Test for plugin* commands in context of iOS
 """
 
 import os
-import unittest
 
+from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -13,22 +13,16 @@ from core.settings.settings import TNS_PATH, IOS_RUNTIME_SYMLINK_PATH, CURRENT_O
 from core.tns.tns import Tns
 
 
-class PluginsiOS_Tests(unittest.TestCase):
-    app_name = "TNS_App"
-
+class PluginsiOSTests(BaseClass):
     def setUp(self):
-
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
+        BaseClass.setUp()
 
         # Delete derived data
         run("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
         Folder.cleanup('./' + self.app_name)
 
     def tearDown(self):
+        BaseClass.tearDown()
         Folder.cleanup('./' + self.app_name)
 
     def test_001_plugin_add_before_platform_add_ios(self):

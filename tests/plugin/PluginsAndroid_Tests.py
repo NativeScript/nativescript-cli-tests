@@ -11,6 +11,7 @@ Test for plugin* commands in context of Android
 import os
 import unittest
 
+from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -18,21 +19,10 @@ from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME
 from core.tns.tns import Tns
 
 
-class PluginsAndroid_Tests(unittest.TestCase):
-    app_name = "TNS_App"
-
+class PluginsAndroidTests(BaseClass):
     def setUp(self):
-
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
+        BaseClass.setUp()
         Folder.cleanup('./' + self.app_name)
-
-    def tearDown(self):
-        pass
 
     def test_001_plugin_add_before_platform_add_android(self):
         Tns.create_app(self.app_name)
