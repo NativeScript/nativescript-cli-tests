@@ -6,6 +6,7 @@ import os
 import shutil
 import unittest
 
+from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
@@ -16,31 +17,22 @@ from core.tns.tns import Tns
 import time
 
 
-class LiveSynciOS(unittest.TestCase):
-    app_name = "TNS_App"
-    # LiveSync Tests on iOS Device
-
+class LiveSynciOS(BaseClass):
     @classmethod
     def setUpClass(cls):
+        BaseClass.setUpClass()
         Emulator.stop_emulators()
         Simulator.stop_simulators()
 
     def setUp(self):
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
+        BaseClass.setUp()
         Folder.cleanup('./' + self.app_name)
         Device.ensure_available(platform="ios")
         Device.uninstall_app("org.nativescript.", platform="ios", fail=False)
 
-    def tearDown(self):
-        pass
-
     @classmethod
     def tearDownClass(cls):
+        BaseClass.tearDownClass()
         Device.uninstall_app("org.nativescript.", platform="ios", fail=False)
 
     def test_001_livesync_ios_xml_js_css_tnsmodules_files(self):

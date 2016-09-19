@@ -6,6 +6,7 @@ import shutil
 import time
 import unittest
 
+from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
@@ -16,32 +17,18 @@ from core.tns.tns import Tns
 from tests.livesync.livesync_helper import replace_all, verify_all_replaced
 
 
-class LivesyncAndroid_Tests(unittest.TestCase):
-    # LiveSync Tests on Android Device
-    app_name = "TNS_App"
-
+class LivesyncAndroidTests(BaseClass):
     @classmethod
     def setUpClass(cls):
+        BaseClass.setUpClass()
         Emulator.stop_emulators()
         Simulator.stop_simulators()
         Device.ensure_available(platform="android")
         Device.uninstall_app(app_prefix="org.nativescript.", platform="android")
 
     def setUp(self):
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
+        BaseClass.setUp()
         Folder.cleanup('./' + self.app_name)
-
-    def tearDown(self):
-        pass
-
-    @classmethod
-    def tearDownClass(cls):
-        pass
 
     # This test executes the Run -> LiveSync
     def test_001_livesync_android_all_devices_modify_files(self):

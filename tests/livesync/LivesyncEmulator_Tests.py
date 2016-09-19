@@ -1,8 +1,8 @@
 import os
 import shutil
-import unittest
 import time
 
+from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.folder import Folder
@@ -11,29 +11,25 @@ from core.tns.tns import Tns
 from tests.livesync.livesync_helper import replace_all, verify_all_replaced
 
 
-class LivesyncEmulator_Tests(unittest.TestCase):
-    app_name = "TNS_App"
-
+class LivesyncEmulatorTests(BaseClass):
     @classmethod
     def setUpClass(cls):
+        BaseClass.setUpClass()
         Emulator.stop_emulators()
         Simulator.stop_simulators()
 
     def setUp(self):
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
+        BaseClass.setUp()
         Emulator.ensure_available()
         Folder.cleanup(self.app_name)
 
     def tearDown(self):
+        BaseClass.tearDown()
         Folder.cleanup(self.app_name)
 
     @classmethod
     def tearDownClass(cls):
+        BaseClass.tearDownClass()
         Emulator.stop_emulators()
 
     def test_001_livesync_android(self):
