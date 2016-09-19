@@ -12,34 +12,23 @@ from core.tns.tns import Tns
 
 
 class CreateTests(BaseClass):
-    app_template = "template"
-    app_name_space = "TNS App"
-    app_name_dash = "tns-app"
-    app_name_123 = "123"
-    app_name_app = "app"
-
     @classmethod
     def setUpClass(cls):
         super(CreateTests, cls).setUpClass()
-        Folder.cleanup(cls.app_name_app)
-        Folder.cleanup(cls.app_name_123)
         Folder.cleanup('folder')
-        Folder.cleanup(cls.app_name_dash)
-        Folder.cleanup(cls.app_name_space)
 
     def setUp(self):
         BaseClass.setUp(self)
-        Folder.cleanup(BaseClass.app_name)
+        Folder.cleanup(self.app_name)
         Folder.cleanup(self.app_template)
 
     def tearDown(self):
         BaseClass.tearDown(self)
-        Folder.cleanup(BaseClass.app_name)
+        Folder.cleanup(self.app_name)
         Folder.cleanup(self.app_template)
 
     @classmethod
     def tearDownClass(cls):
-        super(CreateTests, cls).tearDownClass()
         Folder.cleanup(cls.app_name_app)
         Folder.cleanup(cls.app_name_123)
         Folder.cleanup('folder')

@@ -15,7 +15,7 @@ from core.tns.tns import Tns
 class InitAndInstallTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
-        Folder.cleanup(BaseClass.app_name)
+        Folder.cleanup(self.app_name)
 
     def test_001_init_defaults(self):
         Folder.create(BaseClass.app_name)

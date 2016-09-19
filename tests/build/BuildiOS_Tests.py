@@ -13,21 +13,12 @@ from core.xcode.xcode import Xcode
 
 
 class BuildiOSTests(BaseClass):
-    app_name_dash = "tns-app"
-    app_name_space = "tns app"
-    app_name_ios = "my-ios-app"
-    app_name_noplatform = "TNS_AppNoPlatform"
-    app_name_nosym = "TNSAppNoSym"
-
     @classmethod
     def setUpClass(cls):
         super(BuildiOSTests, cls).setUpClass()
 
         File.remove("TNSApp.app")
         File.remove("TNSApp.ipa")
-
-        Folder.cleanup(cls.app_name)
-        Folder.cleanup(cls.app_name_nosym)
 
         Xcode.cleanup_cache()
 
@@ -45,7 +36,6 @@ class BuildiOSTests(BaseClass):
 
     @classmethod
     def tearDownClass(cls):
-        super(BuildiOSTests, cls).tearDownClass()
         File.remove("TNSApp.app")
         File.remove("TNSApp.ipa")
 

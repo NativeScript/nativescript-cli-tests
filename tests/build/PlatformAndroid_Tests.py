@@ -15,7 +15,7 @@ from core.tns.tns import Tns
 class PlatformAndroidTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
-        Folder.cleanup(BaseClass.app_name)
+        Folder.cleanup(self.app_name)
 
     def test_001_platform_list_empty_project(self):
         Tns.create_app(self.app_name, update_modules=False)

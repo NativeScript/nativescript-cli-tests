@@ -21,7 +21,7 @@ class PrepareiOSTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-        Folder.cleanup(BaseClass.app_name)
+        Folder.cleanup(self.app_name)
 
     def test_001_prepare_ios(self):
         Tns.create_app(self.app_name)
