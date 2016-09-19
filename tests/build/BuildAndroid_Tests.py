@@ -16,24 +16,14 @@ from core.tns.tns import Tns
 
 
 class BuildAndroidTests(BaseClass):
-    platforms_android = os.path.join(BaseClass.app_name, "platforms", "android")
-    app_name_space = "TNS App"
-    app_name_symlink = "TNS_AppSymlink"
-    app_name_dash = "tns-app"
-    app_no_platform = "TNSAppNoPlatform"
-
     @classmethod
     def setUpClass(cls):
         super(BuildAndroidTests, cls).setUpClass()
 
         File.remove("TNSApp-debug.apk")
         File.remove("TNSApp-release.apk")
-
-        Folder.cleanup(cls.app_name_dash)
-        Folder.cleanup(cls.app_name_space)
-        Folder.cleanup(cls.app_name)
-        Folder.cleanup(cls.app_name_symlink)
         Folder.cleanup('temp')
+
         Tns.create_app(BaseClass.app_name)
         Tns.platform_add_android(attributes={"--path": BaseClass.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
@@ -56,7 +46,6 @@ class BuildAndroidTests(BaseClass):
 
     @classmethod
     def tearDownClass(cls):
-        super(BuildAndroidTests, cls).tearDownClass()
         File.remove("TNSApp-debug.apk")
         File.remove("TNSApp-release.apk")
         Folder.cleanup(cls.app_name_dash)
