@@ -28,6 +28,9 @@ class BaseClass(unittest.TestCase):
         print self._testMethodName
         print ""
 
+        # clear app folder
+        Folder.cleanup(self.app_name)
+
     def tearDown(self):
         print ""
         print "{0} ____________________________________TEST END____________________________________". \
