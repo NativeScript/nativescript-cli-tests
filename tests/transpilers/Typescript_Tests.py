@@ -168,7 +168,6 @@ class TypescriptTests(BaseClass):
             assert File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".js")
             assert not File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".ts")
 
-
     def test_301_prepare_after_node_modules_deleted(self):
         Folder.cleanup(self.node_modules_folder)
         # Next line is because prepare does not work if you npm install packages with relative path before that
@@ -180,7 +179,6 @@ class TypescriptTests(BaseClass):
         assert File.exists(self.node_modules_folder + "/tns-core-modules")
         assert File.exists(self.node_modules_folder + "/typescript")
 
-
     def test_302_build_with_platform_dts(self):
         Folder.navigate_to(self.app_name)
         run("npm install " + SUT_ROOT_FOLDER + os.sep + "tns-platform-declarations.tgz --save-dev")
@@ -188,11 +186,14 @@ class TypescriptTests(BaseClass):
         File.exists(self.app_name + "/node_modules/tns-platform-declarations/tns-core-modules/android17.d.ts")
         File.exists(self.app_name + "/node_modules/tns-platform-declarations/tns-core-modules/ios/ios.d.ts")
         andr_ref = "/// <reference path=\"./node_modules/tns-platform-declarations/tns-core-modules/android17.d.ts\" />"
-        ios_ref = "/// <reference path=\"./node_modules/tns-platform-declarations/tns-core-modules/ios/ios.d.ts\" />"
         File.append(self.app_name + os.sep + "references.d.ts", andr_ref)
         output = Tns.build_android(attributes={"--path": self.app_name})
         assert "error TS" not in output
-        if CURRENT_OS == OSType.OSX:
-            File.append(self.app_name + os.sep + "references.d.ts", ios_ref)
-            output = Tns.build_ios(attributes={"--path": self.app_name})
-            assert "error TS" not in output
+
+        # TODO: Un commend when https://github.com/NativeScript/NativeScript/issues/2724 is fixed
+        # if CURRENT_OS == OSType.OSX:
+        #     ios_ref =
+        #     "/// <reference path=\"./node_modules/tns-platform-declarations/tns-core-modules/ios/ios.d.ts\" />"
+        #     File.append(self.app_name + os.sep + "references.d.ts", ios_ref)
+        #     output = Tns.build_ios(attributes={"--path": self.app_name})
+        #     assert "error TS" not in output
