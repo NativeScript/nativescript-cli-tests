@@ -1,32 +1,20 @@
 """
 Test for device command in context of iOS
 """
-
-import unittest
 from time import sleep
 
+from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH
 from core.tns.tns import Tns
 
 
-class DeviceiOS_Tests(unittest.TestCase):
-    app_name = "TNS_App"
-
+class DeviceiOSTests(BaseClass):
     def setUp(self):
-
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
-        Folder.cleanup('./' + self.app_name)
+        BaseClass.setUp()
+        Folder.cleanup(self.app_name)
         Device.ensure_available(platform="ios")
-
-    def tearDown(self):
-        pass
 
     def test_001_device_log_list_applications_and_run_ios(self):
         device_id = Device.get_id(platform="ios")

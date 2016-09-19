@@ -1,38 +1,27 @@
 """
-Test for deploy command
+Tests for deploy command
 """
-
-import unittest
-
+from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH
 from core.tns.tns import Tns
 
 
-class DeployiOS_Tests(unittest.TestCase):
-    app_name = "TNS_App"
-
+class DeployiOSTests(BaseClass):
     @classmethod
     def setUpClass(cls):
+        BaseClass.setUpClass()
         Device.ensure_available(platform="ios")
 
     def setUp(self):
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
+        BaseClass.setUp()
         Folder.cleanup('./' + self.app_name)
         Device.uninstall_app("org.nativescript.", platform="ios", fail=False)
 
     def tearDown(self):
+        BaseClass.tearDown()
         Folder.cleanup('./' + self.app_name)
-
-    @classmethod
-    def tearDownClass(cls):
-        pass
 
     def test_001_deploy_ios_device(self):
         Tns.create_app(self.app_name)

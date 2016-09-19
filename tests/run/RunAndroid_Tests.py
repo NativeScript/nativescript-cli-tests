@@ -3,8 +3,8 @@ Tests for run command in context of Android
 """
 
 import os
-import unittest
 
+from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.command import run
@@ -14,39 +14,27 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYST
 from core.tns.tns import Tns
 
 
-class RuniOS_Tests(unittest.TestCase):
-    app_name = "TNS_App"
-    app_name_appTest = "appTest"
-    app_name_noplatform = "TNS_App_NoPlatform"
-
+class RuniOSTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        Folder.cleanup('./' + cls.app_name)
+        BaseClass.setUpClass()
         Tns.create_app(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })
 
     def setUp(self):
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
+        BaseClass.setUp()
         Emulator.ensure_available()
         Device.ensure_available(platform="android")
-        Folder.cleanup('./' + self.app_name + '/platforms/android/build/outputs')
-
-    def tearDown(self):
-        pass
+        Folder.cleanup(self.app_name + '/platforms/android/build/outputs')
 
     @classmethod
     def tearDownClass(cls):
         Emulator.stop_emulators()
-        Folder.cleanup('./' + cls.app_name_appTest)
-        Folder.cleanup('./' + cls.app_name)
-        Folder.cleanup('./' + cls.app_name_noplatform)
+        Folder.cleanup(cls.app_name_appTest)
+        Folder.cleanup(cls.app_name)
+        Folder.cleanup(cls.app_name_noplatform)
 
     def test_001_run_android_justlaunch(self):
         output = Tns.run_android(attributes={"--path": self.app_name,

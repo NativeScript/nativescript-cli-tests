@@ -1,10 +1,11 @@
 """
-Test for device command in context of Android
+Tests for device command in context of Android
 """
 
 import unittest
 from time import sleep
 
+from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.folder import Folder
@@ -12,25 +13,18 @@ from core.settings.settings import ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
 
 
-class DeviceAndroid_Tests(unittest.TestCase):
-    app_name = "TNS_App"
-
+class DeviceAndroidTests(BaseClass):
     def setUp(self):
-
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
-        Folder.cleanup('./' + self.app_name)
+        BaseClass.setUp()
+        Folder.cleanup(self.app_name)
         Device.ensure_available(platform="android")
         Device.uninstall_app(app_prefix="org.nativescript.", platform="android", fail=False)
         Emulator.ensure_available()
 
     def tearDown(self):
+        BaseClass.tearDown()
         Emulator.stop_emulators()
-        Folder.cleanup('./' + self.app_name)
+        Folder.cleanup(self.app_name)
 
     def test_001_device_list_applications_and_run_android(self):
         device_id = Device.get_id(platform="android")

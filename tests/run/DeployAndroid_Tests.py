@@ -1,9 +1,9 @@
 """
-Test for deploy command
+Tests for deploy command
 """
 import os
-import unittest
 
+from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.folder import Folder
@@ -12,33 +12,23 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYST
 from core.tns.tns import Tns
 
 
-class DeployAndroid_Tests(unittest.TestCase):
-    app_name = "TNS_App"
-    app_name_noplatform = "TNS_AppNoPlatform"
-
+class DeployAndroidTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        Folder.cleanup('./' + cls.app_name)
+        BaseClass.setUpClass()
         Tns.create_app(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })
 
     def setUp(self):
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
+        BaseClass.setUp()
 
-        Folder.cleanup('./' + self.app_name_noplatform)
+        Folder.cleanup(self.app_name_noplatform)
         Emulator.ensure_available()
         Device.ensure_available(platform="android")
         Device.uninstall_app(app_prefix="org.nativescript", platform="android", fail=False)
-        Folder.cleanup('./' + self.app_name + '/platforms/android/build/outputs')
-
-    def tearDown(self):
-        pass
+        Folder.cleanup(self.app_name + '/platforms/android/build/outputs')
 
     @classmethod
     def tearDownClass(cls):

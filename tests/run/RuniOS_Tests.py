@@ -3,8 +3,8 @@ Tests for run command in context of iOS
 """
 
 import os
-import unittest
 
+from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.simulator import Simulator
 from core.osutils.folder import Folder
@@ -13,20 +13,13 @@ from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, TNS_PATH
 from core.tns.tns import Tns
 
 
-class RuniOS(unittest.TestCase):
-    app_name = "TNS_App"
-    app_name_space = "TNS App"
-    app_name_noplatform = "TNSAppNoPlatform"
-
+class RuniOS(BaseClass):
     @classmethod
     def setUpClass(cls):
-
+        BaseClass.setUpClass()
         Device.ensure_available(platform="ios")
         Simulator.stop_simulators()
 
-        Folder.cleanup('./' + cls.app_name_space)
-        Folder.cleanup('./' + cls.app_name)
-        Folder.cleanup('./' + cls.app_name_noplatform)
         Tns.create_app(cls.app_name_space)
         Tns.platform_add_ios(attributes={"--path":  "\"" + cls.app_name_space + "\"",
                                          "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
@@ -39,12 +32,7 @@ class RuniOS(unittest.TestCase):
                                          })
 
     def setUp(self):
-
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
+        BaseClass.setUp()
 
         # Stoping simulators is required because of issue
         # https://github.com/NativeScript/nativescript-cli/issues/1904
@@ -52,7 +40,7 @@ class RuniOS(unittest.TestCase):
         Simulator.stop_simulators()
 
     def tearDown(self):
-
+        BaseClass.tearDown()
         # Stoping simulators is required because of issue
         # https://github.com/NativeScript/nativescript-cli/issues/1904
         # TODO: Remove this after issue is fixed
