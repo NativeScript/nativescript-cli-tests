@@ -1,6 +1,7 @@
 import unittest
 from time import sleep
 
+from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
@@ -10,27 +11,21 @@ from core.tns.tns import Tns
 from nose.tools import timed
 
 
-class UnittestsSimulator(unittest.TestCase):
-    app_name = "TNS_App"
-
+class UnittestsSimulator(BaseClass):
     @classmethod
     def setUpClass(cls):
+        BaseClass.setUpClass()
         Emulator.stop_emulators()
         Simulator.stop_simulators()
         Device.ensure_available(platform="ios")
         Device.uninstall_app(app_prefix="org.nativescript", platform="ios", fail=False)
 
     def setUp(self):
-
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
+        BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
 
     def tearDown(self):
+        BaseClass.tearDown(self)
         Folder.cleanup(self.app_name)
 
     @classmethod

@@ -1,29 +1,23 @@
 import os
-import unittest
 
+from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, VERBOSE_LOG, EMULATOR_NAME
+from core.settings.settings import ANDROID_RUNTIME_PATH, VERBOSE_LOG
 from core.tns.tns import Tns
 
 
-class VerboseLogEmulator(unittest.TestCase):
-    app_name = "TNS_App"
-
+class VerboseLogEmulator(BaseClass):
     def setUp(self):
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
+        BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
         File.remove(VERBOSE_LOG)
         Emulator.stop_emulators()
         Emulator.ensure_available()
 
     def tearDown(self):
+        BaseClass.tearDown(self)
         Folder.cleanup(self.app_name)
         Emulator.stop_emulators()
 

@@ -1,25 +1,17 @@
-import unittest
-
+from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.tns.tns import Tns
 
 
-class UnitTests(unittest.TestCase):
-    app_name = "TNS_App"
-
+class UnitTests(BaseClass):
     def setUp(self):
-
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
+        BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
 
     def tearDown(self):
+        BaseClass.tearDown(self)
         Folder.cleanup(self.app_name)
 
     def test_101_test_init_jasmine(self):

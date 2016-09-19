@@ -15,14 +15,14 @@ from core.tns.tns import Tns
 
 class PluginsiOSTests(BaseClass):
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
 
         # Delete derived data
         run("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
         Folder.cleanup('./' + self.app_name)
 
     def tearDown(self):
-        BaseClass.tearDown()
+        BaseClass.tearDown(self)
         Folder.cleanup('./' + self.app_name)
 
     def test_001_plugin_add_before_platform_add_ios(self):

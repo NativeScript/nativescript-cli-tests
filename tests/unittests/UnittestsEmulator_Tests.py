@@ -1,34 +1,26 @@
-import unittest
-
+from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
-from core.osutils.command import run
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH
+from core.settings.settings import ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
 from nose.tools import timed
 
 
-class UnittestsEmulator(unittest.TestCase):
-    app_name = "TNS_App"
-
+class UnittestsEmulator(BaseClass):
     @classmethod
     def setUpClass(cls):
+        BaseClass.setUpClass()
         # It is important to auto start emulator, because otherwise it start random.
         # Latest SDK 23 emulators show some error dialogs on startup and tests fail.
         Emulator.stop_emulators()
         Emulator.ensure_available()
 
     def setUp(self):
-
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
+        BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
 
     def tearDown(self):
+        BaseClass.tearDown(self)
         Folder.cleanup(self.app_name)
 
     @classmethod
@@ -48,11 +40,11 @@ class UnittestsEmulator(unittest.TestCase):
                                                         "--justlaunch": "",
                                                         "--path": self.app_name},
                             timeout=90)
-        # run(TNS_PATH + " test android --emulator --justlaunch --path " + self.app_name, timeout=90, output=False)
 
         output = Tns.run_tns_command("test android", attributes={"--emulator": "",
                                                                  "--justlaunch": "",
-                                                                 "--path": self.app_name})
+                                                                 "--path": self.app_name,
+                                                                 "--timeout": "90"})
         assert "Successfully prepared plugin nativescript-unit-test-runner for android." in output
         assert "Project successfully prepared" in output
         assert "server started" in output

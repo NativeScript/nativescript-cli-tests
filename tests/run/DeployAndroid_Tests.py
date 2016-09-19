@@ -22,7 +22,7 @@ class DeployAndroidTests(BaseClass):
                                              })
 
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
 
         Folder.cleanup(self.app_name_noplatform)
         Emulator.ensure_available()

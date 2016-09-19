@@ -12,7 +12,7 @@ from core.tns.tns import Tns
 
 class PluginsiOSSandboxPodsTests(BaseClass):
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
 
         # Delete derived data
         run("rm -rf ~/Library/Developer/Xcode/DerivedData/*")

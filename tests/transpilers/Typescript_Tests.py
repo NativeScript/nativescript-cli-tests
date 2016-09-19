@@ -19,7 +19,7 @@ class TypescriptTests(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        super(TypescriptTests, cls).setUpClass()
+        BaseClass.setUpClass()
 
         output = Tns.create_app(TypescriptTests.app_name, attributes={"--tsc": ""})
         assert "nativescript-dev-typescript@" in output
@@ -51,11 +51,10 @@ class TypescriptTests(BaseClass):
 
     def tearDown(self):
         BaseClass.setUp(self)
-        pass
 
     @classmethod
     def tearDownClass(cls):
-        super(TypescriptTests, cls).tearDownClass()
+        BaseClass.tearDownClass()
         Folder.cleanup('./' + cls.app_name)
 
     def test_001_prepare(self):

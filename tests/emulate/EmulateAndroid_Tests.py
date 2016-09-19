@@ -23,6 +23,7 @@ class EmulateAndroidTests(BaseClass):
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass()
+        Tns.create_app(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })

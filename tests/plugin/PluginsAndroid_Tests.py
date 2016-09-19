@@ -21,8 +21,8 @@ from core.tns.tns import Tns
 
 class PluginsAndroidTests(BaseClass):
     def setUp(self):
-        BaseClass.setUp()
-        Folder.cleanup('./' + self.app_name)
+        BaseClass.setUp(self)
+        Folder.cleanup(self.app_name)
 
     def test_001_plugin_add_before_platform_add_android(self):
         Tns.create_app(self.app_name)
