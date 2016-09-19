@@ -7,11 +7,10 @@ from core.tns.tns import Tns
 from core.base_class.BaseClass import BaseClass
 
 
-
-class OutputStderr_Tests(BaseClass):
+class OutputStderrTests(BaseClass):
     def test_001_output_strerr(self):
         File.remove('./stderr.txt')
-        Tns.run_tns_command("emulate asdf", attributes={" 2> stderr.txt ": ""})
+        output = Tns.run_tns_command("emulate asdf", attributes={" 2> stderr.txt ": ""})
         assert "The input is not valid sub-command for 'emulate' command" in output
 
     def test_002_command_option_validation(self):

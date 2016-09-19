@@ -4,9 +4,13 @@ log_trace tests
 
 from core.tns.tns import Tns
 from core.base_class.BaseClass import BaseClass
+from core.osutils.folder import Folder
 
 
-class Logtrace_Tests(BaseClass):
+class LogtraceTests(BaseClass):
+    def setUp(self):
+        BaseClass.setUp(self)
+        Folder.cleanup(self.app_name)
 
     def test_001_create_project_log_trace(self):
         output = Tns.create_app(self.app_name, log_trace=True, update_modules=False)

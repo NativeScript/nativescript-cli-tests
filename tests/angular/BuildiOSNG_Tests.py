@@ -9,7 +9,7 @@ from core.xcode.xcode import Xcode
 class BuildiOSNGTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        super(BuildiOSNGTests, cls).setUpClass()
+        BaseClass.setUpClass()
 
         Xcode.cleanup_cache()
 
@@ -21,6 +21,7 @@ class BuildiOSNGTests(BaseClass):
 
     @classmethod
     def tearDownClass(cls):
+        BaseClass.tearDownClass()
         Folder.cleanup(cls.app_name)
 
     def test_010_build_ios_ng_project(self):
