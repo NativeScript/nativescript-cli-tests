@@ -7,11 +7,9 @@ from core.tns.tns import Tns
 
 
 class BuildAndroidNGTests(BaseClass):
-
     @classmethod
     def setUpClass(cls):
         super(BuildAndroidNGTests, cls).setUpClass()
-        Folder.cleanup('./' + cls.app_name)
         output = Tns.create_app(cls.app_name, attributes={"--ng": ""}, assert_success=False)
         assert "successfully created" in output
         Tns.platform_add_android(attributes={"--path": cls.app_name,
@@ -19,8 +17,7 @@ class BuildAndroidNGTests(BaseClass):
 
     @classmethod
     def tearDownClass(cls):
-        super(BuildAndroidNGTests, cls).tearDownClass()
-        Folder.cleanup('./' + cls.app_name)
+        Folder.cleanup(cls.app_name)
 
     def test_010_build_android_ng_project(self):
         Tns.build_android(attributes={"--path": self.app_name})

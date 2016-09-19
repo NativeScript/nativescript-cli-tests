@@ -7,7 +7,9 @@ from core.tns.tns import Tns
 
 
 class CreateNGTests(BaseClass):
-    app_name = "TNS_App"
+    def setUp(self):
+        super(CreateNGTests, self).setUp()
+        Folder.cleanup(self.app_name)
 
     def assert_angular_project(self):
         output = run("cat " + self.app_name + "/package.json")

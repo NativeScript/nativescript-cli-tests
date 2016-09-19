@@ -12,7 +12,6 @@ class BuildiOSNGTests(BaseClass):
         super(BuildiOSNGTests, cls).setUpClass()
 
         Xcode.cleanup_cache()
-        Folder.cleanup('./' + cls.app_name)
 
         Tns.create_app(app_name=cls.app_name, attributes={"--ng": ""})
         Tns.platform_add_ios(attributes={"--path": cls.app_name,
@@ -22,8 +21,7 @@ class BuildiOSNGTests(BaseClass):
 
     @classmethod
     def tearDownClass(cls):
-        super(BuildiOSNGTests, cls).tearDownClass()
-        Folder.cleanup('./' + cls.app_name)
+        Folder.cleanup(cls.app_name)
 
     def test_010_build_ios_ng_project(self):
         output = Tns.build_ios(attributes={"--path": self.app_name})
