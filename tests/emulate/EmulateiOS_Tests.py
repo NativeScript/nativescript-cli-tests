@@ -1,9 +1,7 @@
 """
 Test for emulate command in context of iOS
 """
-
-import unittest
-
+from core.base_class.BaseClass import BaseClass
 from core.device.simulator import Simulator
 from core.osutils.folder import Folder
 from core.osutils.process import Process
@@ -11,18 +9,14 @@ from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, SIMULATOR_NAME
 from core.tns.tns import Tns
 
 
-class EmulateiOS_Tests(unittest.TestCase):
-    app_name = "TNS_App"
-    app_name_noplatform = "TNS_AppNoPlatform"
-
+class EmulateiOSTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-
+        BaseClass.setUpClass()
         Simulator.stop_simulators()
         Simulator.delete(SIMULATOR_NAME)
         Simulator.create(SIMULATOR_NAME, 'iPhone 6', '9.1')
 
-        Folder.cleanup('./' + cls.app_name)
         Tns.create_app(cls.app_name)
         Tns.platform_add_ios(attributes={"--path": cls.app_name,
                                          "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
@@ -30,19 +24,12 @@ class EmulateiOS_Tests(unittest.TestCase):
                                          })
 
     def setUp(self):
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
+        BaseClass.setUp()
         Folder.cleanup('./' + self.app_name_noplatform)
-
-    def tearDown(self):
-        pass
 
     @classmethod
     def tearDownClass(cls):
+        BaseClass.tearDownClass()
         Folder.cleanup('./' + cls.app_name)
 
     def test_001_emulate_list_devices(self):

@@ -11,6 +11,7 @@ import unittest
 # pylint: disable=C0103, C0111, R0201, R0904
 from time import sleep
 
+from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
@@ -18,37 +19,28 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYST
 from core.tns.tns import Tns
 
 
-class EmulateAndroid_Tests(unittest.TestCase):
-    app_name = "TNS_App"
-    app_name_noplatform = "TNSAppNoPlatform"
-
+class EmulateAndroidTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        Folder.cleanup('./' + cls.app_name_noplatform)
-        Folder.cleanup('./' + cls.app_name)
-        Tns.create_app(cls.app_name)
+        BaseClass.setUpClass()
         Tns.platform_add_android(attributes={"--path": cls.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })
 
     def setUp(self):
-
-        print ""
-        print "#####"
-        print self.id()
-        print "#####"
-        print ""
-
+        BaseClass.setUp()
         Emulator.stop_emulators()
         Folder.cleanup('./' + self.app_name_noplatform)
         Folder.cleanup('./' + self.app_name + '/platforms/android/build/outputs')
 
     def tearDown(self):
+        BaseClass.tearDown()
         Emulator.stop_emulators()
         sleep(1)
 
     @classmethod
     def tearDownClass(cls):
+        BaseClass.tearDownClass()
         Folder.cleanup('./' + cls.app_name)
 
     def test_001_emulate_android_in_running_emulator(self):

@@ -1,6 +1,6 @@
 import time
-import unittest
 
+from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.file import File
@@ -10,30 +10,31 @@ from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH
 from core.tns.tns import Tns
 
 
-class DebugSimulator_Tests(unittest.TestCase):
-    app_name = "TNS_App"
-
+class DebugSimulatorTests(BaseClass):
     @classmethod
     def setUpClass(cls):
+        BaseClass.setUpClass()
         Emulator.stop_emulators()
-        Folder.cleanup('./' + cls.app_name)
         Tns.create_app(cls.app_name)
         Tns.platform_add_ios(attributes={"--path": cls.app_name,
                                          "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
                                          })
 
     def setUp(self):
+        BaseClass.setUp()
         Simulator.stop_simulators()
         Process.kill("Safari")
         Process.kill("Inspector")
 
     def tearDown(self):
+        BaseClass.tearDown()
         Simulator.stop_simulators()
         Process.kill("Safari")
         Process.kill("Inspector")
 
     @classmethod
     def tearDownClass(cls):
+        BaseClass.tearDownClass()
         Folder.cleanup('./' + cls.app_name)
 
     def test_001_debug_ios_simulator_debug_brk(self):
