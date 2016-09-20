@@ -22,8 +22,8 @@ from core.tns.tns import Tns
 class EmulateAndroidTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseClass.logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         Tns.create_app(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH

@@ -14,8 +14,8 @@ from core.tns.tns import Tns
 class EmulateiOSTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseClass.logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         Simulator.stop_simulators()
         Simulator.delete(SIMULATOR_NAME)
         Simulator.create(SIMULATOR_NAME, 'iPhone 6', '9.1')

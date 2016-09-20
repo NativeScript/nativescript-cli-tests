@@ -12,7 +12,7 @@ from core.tns.tns import Tns
 
 class DeviceiOSTests(BaseClass):
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
         Device.ensure_available(platform="ios")
 

@@ -15,14 +15,14 @@ from core.tns.tns import Tns
 
 class DeviceAndroidTests(BaseClass):
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
         Device.ensure_available(platform="android")
         Device.uninstall_app(app_prefix="org.nativescript.", platform="android", fail=False)
         Emulator.ensure_available()
 
     def tearDown(self):
-        BaseClass.tearDown()
+        BaseClass.tearDown(self)
         Emulator.stop_emulators()
         Folder.cleanup(self.app_name)
 

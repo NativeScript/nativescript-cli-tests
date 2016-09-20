@@ -17,14 +17,15 @@ from core.tns.tns import Tns
 class RuniOSTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         Tns.create_app(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })
 
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
         Emulator.ensure_available()
         Device.ensure_available(platform="android")
         Folder.cleanup(self.app_name + '/platforms/android/build/outputs')

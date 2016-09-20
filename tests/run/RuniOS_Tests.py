@@ -16,7 +16,8 @@ from core.tns.tns import Tns
 class RuniOS(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         Device.ensure_available(platform="ios")
         Simulator.stop_simulators()
 
@@ -32,7 +33,7 @@ class RuniOS(BaseClass):
                                          })
 
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
 
         # Stoping simulators is required because of issue
         # https://github.com/NativeScript/nativescript-cli/issues/1904

@@ -1,4 +1,5 @@
 import time
+import os.path
 
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
@@ -13,7 +14,8 @@ from core.tns.tns import Tns
 class DebugSimulatorTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         Emulator.stop_emulators()
         Tns.create_app(cls.app_name)
         Tns.platform_add_ios(attributes={"--path": cls.app_name,
@@ -21,13 +23,13 @@ class DebugSimulatorTests(BaseClass):
                                          })
 
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
         Simulator.stop_simulators()
         Process.kill("Safari")
         Process.kill("Inspector")
 
     def tearDown(self):
-        BaseClass.tearDown()
+        BaseClass.tearDown(self)
         Simulator.stop_simulators()
         Process.kill("Safari")
         Process.kill("Inspector")

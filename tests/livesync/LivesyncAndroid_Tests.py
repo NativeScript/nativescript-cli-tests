@@ -20,7 +20,8 @@ from tests.livesync.livesync_helper import replace_all, verify_all_replaced
 class LivesyncAndroidTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         Emulator.stop_emulators()
         Simulator.stop_simulators()
         Device.ensure_available(platform="android")

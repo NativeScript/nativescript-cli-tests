@@ -11,16 +11,17 @@ from core.tns.tns import Tns
 class DeployiOSTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         Device.ensure_available(platform="ios")
 
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
         Folder.cleanup('./' + self.app_name)
         Device.uninstall_app("org.nativescript.", platform="ios", fail=False)
 
     def tearDown(self):
-        BaseClass.tearDown()
+        BaseClass.tearDown(self)
         Folder.cleanup('./' + self.app_name)
 
     def test_001_deploy_ios_device(self):

@@ -15,7 +15,8 @@ from core.tns.tns import Tns
 class DeployAndroidTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         Tns.create_app(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
@@ -32,7 +33,7 @@ class DeployAndroidTests(BaseClass):
 
     @classmethod
     def tearDownClass(cls):
-        Folder.cleanup('./' + cls.app_name)
+        Folder.cleanup(cls.app_name)
 
     def test_001_deploy_android(self):
         output = Tns.run_tns_command("deploy android", attributes={"--path": self.app_name,

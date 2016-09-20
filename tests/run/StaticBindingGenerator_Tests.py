@@ -22,7 +22,8 @@ class StaticBindingGenerator(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         Emulator.stop_emulators()
         Emulator.ensure_available()
         Tns.create_app(cls.app_name, attributes={"--copy-from": os.path.join("data", "apps", "sbg-test-app")})
