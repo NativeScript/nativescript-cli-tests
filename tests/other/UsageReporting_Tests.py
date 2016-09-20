@@ -6,7 +6,7 @@ from core.tns.tns import Tns
 from core.base_class.BaseClass import BaseClass
 
 
-class UsageReporting_Tests(BaseClass):
+class UsageReportingTests(BaseClass):
     def test_001_usage_reporting(self):
         output = Tns.run_tns_command("usage-reporting")
         assert "Usage reporting is" in output

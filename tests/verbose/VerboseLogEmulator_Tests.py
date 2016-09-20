@@ -9,8 +9,6 @@ from core.tns.tns import Tns
 
 
 class VerboseLogEmulator(BaseClass):
-    BaseClass.logfile = os.path.join("out", "VerboseLogEmulator.txt")
-
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)

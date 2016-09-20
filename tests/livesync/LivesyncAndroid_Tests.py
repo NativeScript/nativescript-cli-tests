@@ -27,7 +27,7 @@ class LivesyncAndroidTests(BaseClass):
         Device.uninstall_app(app_prefix="org.nativescript.", platform="android")
 
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
         Folder.cleanup('./' + self.app_name)
 
     # This test executes the Run -> LiveSync

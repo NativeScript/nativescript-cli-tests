@@ -25,7 +25,7 @@ class LiveSynciOS(BaseClass):
         Simulator.stop_simulators()
 
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
         Folder.cleanup('./' + self.app_name)
         Device.ensure_available(platform="ios")
         Device.uninstall_app("org.nativescript.", platform="ios", fail=False)

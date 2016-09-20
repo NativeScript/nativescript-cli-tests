@@ -24,12 +24,13 @@ class BaseClass(unittest.TestCase):
     app_name_123 = "123"
     app_name_app = "app"
     platforms_android = os.path.join(app_name, "platforms", "android")
-    logfile = os.path.join("out", "log.txt")
 
     @classmethod
-    def setUpClass(cls):
-        File.remove(cls.logfile)
-        sys.stdout = sys.stderr = Logger.Logger(cls.logfile)
+    def setUpClass(cls, logfile=""):
+        if logfile == "":
+            logfile = os.path.join("out", cls.__name__ + ".txt")
+        File.remove(logfile)
+        sys.stdout = sys.stderr = Logger.Logger(logfile)
 
         Folder.cleanup(cls.app_name)
         Folder.cleanup(cls.app_name_appTest)

@@ -1,3 +1,4 @@
+import os
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -9,7 +10,8 @@ from core.tns.tns import Tns
 class BuildAndroidNGTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         Folder.cleanup('./' + cls.app_name)
         output = Tns.create_app(cls.app_name, attributes={"--ng": ""}, assert_success=False)
         assert "successfully created" in output

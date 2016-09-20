@@ -3,6 +3,7 @@ Tests for prepare command in context of iOS
 """
 
 import re
+import os.path
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
@@ -15,7 +16,8 @@ from core.tns.tns import Tns
 class PrepareiOSTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        super(PrepareiOSTests, cls).setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         if CURRENT_OS != OSType.OSX:
             raise NameError("Can not run iOS tests on non OSX OS.")
 

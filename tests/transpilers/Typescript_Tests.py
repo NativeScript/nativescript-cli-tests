@@ -19,7 +19,8 @@ class TypescriptTests(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
 
         output = Tns.create_app(TypescriptTests.app_name, attributes={"--tsc": ""})
         assert "nativescript-dev-typescript@" in output

@@ -6,7 +6,7 @@ from core.tns.tns import Tns
 from core.base_class.BaseClass import BaseClass
 
 
-class Autocomplete_Tests(BaseClass):
+class AutocompleteTests(BaseClass):
 
     def test_001_autocomplete_enable(self):
         output = Tns.run_tns_command("autocomplete status")

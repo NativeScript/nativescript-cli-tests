@@ -15,7 +15,8 @@ from core.tns.tns import Tns
 class PlatformiOSTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        super(PlatformiOSTests, cls).setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         if CURRENT_OS != OSType.OSX:
             raise NameError("Can not run iOS tests on non OSX OS.")
 

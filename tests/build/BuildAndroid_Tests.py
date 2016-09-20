@@ -18,7 +18,8 @@ from core.tns.tns import Tns
 class BuildAndroidTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        super(BuildAndroidTests, cls).setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
 
         File.remove("TNSApp-debug.apk")
         File.remove("TNSApp-release.apk")

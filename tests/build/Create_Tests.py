@@ -14,7 +14,8 @@ from core.tns.tns import Tns
 class CreateTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        super(CreateTests, cls).setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         Folder.cleanup('folder')
 
     def setUp(self):

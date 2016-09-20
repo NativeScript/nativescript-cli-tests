@@ -8,7 +8,7 @@ from core.tns.tns import Tns
 
 class CreateNGTests(BaseClass):
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
 
     def assert_angular_project(self):

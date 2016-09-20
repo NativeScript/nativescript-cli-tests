@@ -22,7 +22,7 @@ class PluginsiOSLibsTests(BaseClass):
         Tns.create_app(self.app_name)
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/static-lib/hello-plugin"
-        output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name},assert_success=False)
+        output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert self.app_name + "/node_modules/hello" in output
         assert "Successfully installed plugin hello." in output
         assert File.exists(self.app_name + "/node_modules/hello/package.json")

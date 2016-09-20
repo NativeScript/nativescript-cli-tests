@@ -6,7 +6,7 @@ from core.tns.tns import Tns
 from core.base_class.BaseClass import BaseClass
 
 
-class Doctor_Tests(BaseClass):
+class DoctorTests(BaseClass):
     def test_001_doctor(self):
         output = Tns.run_tns_command("doctor", timeout=180)
         assert "No issues were detected." in output

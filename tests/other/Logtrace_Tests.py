@@ -1,6 +1,7 @@
 """
 log_trace tests
 """
+import os
 
 from core.tns.tns import Tns
 from core.base_class.BaseClass import BaseClass

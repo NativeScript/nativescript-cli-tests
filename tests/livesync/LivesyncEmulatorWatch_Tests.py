@@ -11,7 +11,7 @@ from core.tns.tns import Tns
 from tests.livesync.livesync_helper import verify_all_replaced, replace_all
 
 
-class LivesyncEmulatorWatch_Tests(Watcher):
+class LivesyncEmulatorWatchTests(Watcher):
     app_name = "TNS_App"
     app_name_appTest = "appTest"
     # TODO: Add a test for #942.

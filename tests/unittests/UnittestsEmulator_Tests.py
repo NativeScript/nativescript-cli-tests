@@ -1,3 +1,4 @@
+import os.path
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.osutils.folder import Folder
@@ -9,7 +10,8 @@ from nose.tools import timed
 class UnittestsEmulator(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         # It is important to auto start emulator, because otherwise it start random.
         # Latest SDK 23 emulators show some error dialogs on startup and tests fail.
         Emulator.stop_emulators()

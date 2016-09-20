@@ -1,4 +1,5 @@
 import unittest
+import os.path
 from time import sleep
 
 from core.base_class.BaseClass import BaseClass
@@ -14,7 +15,8 @@ from nose.tools import timed
 class UnittestsSimulator(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
         Emulator.stop_emulators()
         Simulator.stop_simulators()
         Device.ensure_available(platform="ios")

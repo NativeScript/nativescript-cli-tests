@@ -19,12 +19,12 @@ class LivesyncEmulatorTests(BaseClass):
         Simulator.stop_simulators()
 
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
         Emulator.ensure_available()
         Folder.cleanup(self.app_name)
 
     def tearDown(self):
-        BaseClass.tearDown()
+        BaseClass.tearDown(self)
         Folder.cleanup(self.app_name)
 
     @classmethod

@@ -1,3 +1,5 @@
+import os
+
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -9,7 +11,8 @@ from core.xcode.xcode import Xcode
 class BuildiOSNGTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
 
         Xcode.cleanup_cache()
 

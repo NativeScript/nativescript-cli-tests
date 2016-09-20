@@ -151,7 +151,7 @@ class PluginsAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
 
         # Verify plugin commmand list used plugins
-        output = Tns.run_tns_command("plugin",attributes={"--path": self.app_name})
+        output = Tns.run_tns_command("plugin", attributes={"--path": self.app_name})
         assert "tns-plugin" in output
 
     @unittest.skip("This test breaks the xml parser.")

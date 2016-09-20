@@ -15,7 +15,8 @@ from core.xcode.xcode import Xcode
 class BuildiOSTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        super(BuildiOSTests, cls).setUpClass()
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
 
         File.remove("TNSApp.app")
         File.remove("TNSApp.ipa")
@@ -188,7 +189,7 @@ class BuildiOSTests(BaseClass):
 
         # Verify project builds
         output = Tns.build_ios(attributes={"--path": "\"" + self.app_name_space + "\""})
-        assert "build/emulator/tnsapp.app" in output
+        assert "build/emulator/TNSApp.app" in output
         assert File.exists(self.app_name_space + "/platforms/ios/build/emulator/TNSApp.app")
 
     def test_302_build_ios_with_ios_in_path(self):

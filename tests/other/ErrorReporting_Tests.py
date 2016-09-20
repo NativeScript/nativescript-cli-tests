@@ -6,7 +6,7 @@ from core.tns.tns import Tns
 from core.base_class.BaseClass import BaseClass
 
 
-class ErrorReporting_Tests(BaseClass):
+class ErrorReportingTests(BaseClass):
     def test_001_error_reporting(self):
         output = Tns.run_tns_command("error-reporting")
         assert "Error reporting is" in output
