@@ -22,6 +22,7 @@ from core.tns.tns import Tns
 class EmulateAndroidTests(BaseClass):
     @classmethod
     def setUpClass(cls):
+        BaseClass.logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass()
         Tns.create_app(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name,
@@ -29,13 +30,13 @@ class EmulateAndroidTests(BaseClass):
                                              })
 
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
         Emulator.stop_emulators()
         Folder.cleanup('./' + self.app_name_noplatform)
         Folder.cleanup('./' + self.app_name + '/platforms/android/build/outputs')
 
     def tearDown(self):
-        BaseClass.tearDown()
+        BaseClass.tearDown(self)
         Emulator.stop_emulators()
         sleep(1)
 

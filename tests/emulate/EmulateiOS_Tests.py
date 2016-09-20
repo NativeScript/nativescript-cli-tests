@@ -1,6 +1,8 @@
 """
 Test for emulate command in context of iOS
 """
+import os
+
 from core.base_class.BaseClass import BaseClass
 from core.device.simulator import Simulator
 from core.osutils.folder import Folder
@@ -12,6 +14,7 @@ from core.tns.tns import Tns
 class EmulateiOSTests(BaseClass):
     @classmethod
     def setUpClass(cls):
+        BaseClass.logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass()
         Simulator.stop_simulators()
         Simulator.delete(SIMULATOR_NAME)
@@ -24,7 +27,7 @@ class EmulateiOSTests(BaseClass):
                                          })
 
     def setUp(self):
-        BaseClass.setUp()
+        BaseClass.setUp(self)
         Folder.cleanup('./' + self.app_name_noplatform)
 
     @classmethod

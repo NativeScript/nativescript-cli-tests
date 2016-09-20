@@ -26,7 +26,7 @@ from core.tns.tns import Tns
 from tests.livesync.livesync_helper import replace_all, verify_all_replaced
 
 
-class LivesyncSimulator_Tests(Watcher):
+class LivesyncSimulatorTests(Watcher):
     app_name = "TNS_App"
     app_name_appTest = "appTest"
 
