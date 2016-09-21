@@ -1,6 +1,8 @@
 """
 Tests for deploy command
 """
+import os.path
+
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.osutils.folder import Folder

@@ -41,7 +41,7 @@ class RuniOS(BaseClass):
         Simulator.stop_simulators()
 
     def tearDown(self):
-        BaseClass.tearDown()
+        BaseClass.tearDown(self)
         # Stoping simulators is required because of issue
         # https://github.com/NativeScript/nativescript-cli/issues/1904
         # TODO: Remove this after issue is fixed
