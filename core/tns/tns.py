@@ -7,7 +7,8 @@ import time
 
 from core.osutils.command import run
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, TEST_RUN_HOME
+from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, TEST_RUN_HOME, DEVELOPMENT_TEAM
+from core.xcode.xcode import Xcode
 
 
 class Tns(object):
@@ -137,6 +138,9 @@ class Tns(object):
 
     @staticmethod
     def build_ios(attributes={}, assert_success=True, tns_path=None):
+        if "8." in Xcode.get_version():
+            attr = {"--teamId": DEVELOPMENT_TEAM}
+            attributes.update(attr)
         output = Tns.run_tns_command("build ios", attributes=attributes, tns_path=tns_path)
         if assert_success:
             assert "Project successfully prepared" in output
