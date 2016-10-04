@@ -121,7 +121,7 @@ if __name__ == '__main__':
     clean_gradle()  # Clean Gradle
     get_repos()  # Clone test repos
     Emulator.stop_emulators()  # Stop running emulators
-    Tools.install_ddb()  # Install ddb
+    # Tools.install_ddb()  # Install ddb
 
     # Copy test packages and cleanup
     get_cli()  # Get {N} CLI
