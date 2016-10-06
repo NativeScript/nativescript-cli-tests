@@ -9,7 +9,6 @@ from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.installer.cli import Cli
-from core.installer.tools import Tools
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -121,7 +120,6 @@ if __name__ == '__main__':
     clean_gradle()  # Clean Gradle
     get_repos()  # Clone test repos
     Emulator.stop_emulators()  # Stop running emulators
-    # Tools.install_ddb()  # Install ddb
 
     # Copy test packages and cleanup
     get_cli()  # Get {N} CLI

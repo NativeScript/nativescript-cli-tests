@@ -91,13 +91,6 @@ class PlatformAndroidTests(BaseClass):
         output = File.read(self.app_name + os.sep + "package.json")
         assert "\"version\": \"2.3.0\"" in output
 
-    def test_205_platform_update_android_to_same_version(self):
-        Tns.create_app(self.app_name, update_modules=False)
-        Tns.platform_add_android(attributes={"--path": self.app_name})
-        output = Tns.platform_update("android", attributes={"--path": self.app_name}, assert_success=False)
-        assert "Current and new version are the same." in output
-        assert "Usage" in output
-
     def test_210_platform_update_android_patform_not_added(self):
         Tns.create_app(self.app_name, update_modules=False)
         output = Tns.platform_update("android", attributes={"--path": self.app_name}, assert_success=False)

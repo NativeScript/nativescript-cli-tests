@@ -45,8 +45,6 @@ else:
 # Local packages path
 TNS_PATH = os.path.join("node_modules", ".bin", "tns")
 SUT_ROOT_FOLDER = TEST_RUN_HOME + os.path.sep + "sut"
-TOOLS_ROOT_FOLDER = TEST_RUN_HOME + os.path.sep + "tools"
-DDB_PATH = os.path.join(TOOLS_ROOT_FOLDER, "ddb.tgz")
 ANDROID_RUNTIME_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-android.tgz")
 ANDROID_RUNTIME_SYMLINK_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-android", "package")
 IOS_RUNTIME_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-ios.tgz")
