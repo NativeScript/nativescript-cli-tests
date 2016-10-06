@@ -109,11 +109,11 @@ class EmulateAndroidTests(BaseClass):
     def test_300_emulate_android_platform_not_added(self):
         Tns.create_app(self.app_name_noplatform)
         output = Tns.run_tns_command("emulate android", attributes={"--device": EMULATOR_NAME,
-                                                                    "--timeout": "600",
+                                                                    "--timeout": "720",
                                                                     "--justlaunch": "",
                                                                     "--path": self.app_name_noplatform
                                                                     },
-                                     timeout=660)
+                                     timeout=750)
         assert "Copying template files..." in output
         assert "Project successfully created." in output
         assert "Project successfully prepared" in output
