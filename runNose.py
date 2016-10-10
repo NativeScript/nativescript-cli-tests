@@ -131,7 +131,6 @@ if __name__ == '__main__':
         Xcode.cleanup_cache()  # Clean Xcode cache folders
         get_ios_runtime()  # Get iOS Runtime
     if TEST_RUN == "RUN":
-        Tools.install_ddb()  # Install ddb (if not already available)
         Device.uninstall_app("org.nativescript.", platform="android", fail=False)
         if CURRENT_OS == OSType.OSX:
             Device.uninstall_app("org.nativescript.", platform="ios", fail=False)
