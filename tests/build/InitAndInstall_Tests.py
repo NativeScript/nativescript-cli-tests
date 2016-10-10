@@ -1,8 +1,14 @@
 """
 Test for init and install command
+
+Specs:
+
+Init command should init package.json
+Install command should install all listed dependencies (npm install)
 """
 import fileinput
 import os
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
@@ -58,6 +64,40 @@ class InitAndInstallTests(BaseClass):
         # Overwrite changes
         self.test_002_init_path()
 
+    @unittest.skipIf("Temporary ignore.")
+    def test_004_install_defaults(self):
+        self.test_002_init_path()
+        Tns.install(attributes={"--path": self.app_name})
+        assert File.exists(self.app_name + "/platforms/android/build.gradle")
+
+        if CURRENT_OS == OSType.OSX:
+            assert File.exists(self.app_name + "/platforms/ios/TNSApp.xcodeproj")
+
+    @unittest.skipIf("Temporary ignore.")
+    def test_005_install_node_modules(self):
+        self.test_002_init_path()
+        Folder.navigate_to(BaseClass.app_name)
+        run("npm i gulp --save-dev")
+        run("npm i lodash --save")
+        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
+        output = File.read(self.app_name + "/package.json")
+        assert "devDependencies" in output
+        assert "gulp" in output
+        assert "lodash" in output
+
+        Folder.cleanup(self.app_name + '/node_modules')
+        assert not File.exists(self.app_name + "/node_modules")
+
+        Tns.install(attributes={"--path": self.app_name})
+        assert File.exists(self.app_name + "/node_modules/lodash")
+        assert File.exists(self.app_name + "/node_modules/gulp")
+
+        assert File.exists(self.app_name + "/platforms/android/build.gradle")
+
+        if CURRENT_OS == OSType.OSX:
+            assert File.exists(self.app_name + "/platforms/ios/TNSApp.xcodeproj")
+
+    @unittest.skipIf("Temporary ignore.")
     def test_300_install_node_modules_if_node_modules_folder_exists(self):
         self.test_002_init_path()
         Folder.navigate_to(BaseClass.app_name)
