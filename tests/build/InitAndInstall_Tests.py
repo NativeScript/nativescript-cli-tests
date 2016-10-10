@@ -8,7 +8,6 @@ Install command should install all listed dependencies (npm install)
 """
 import fileinput
 import os
-import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
@@ -64,7 +63,6 @@ class InitAndInstallTests(BaseClass):
         # Overwrite changes
         self.test_002_init_path()
 
-    @unittest.skipIf("Temporary ignore.")
     def test_004_install_defaults(self):
         self.test_002_init_path()
         Tns.install(attributes={"--path": self.app_name})
@@ -73,7 +71,6 @@ class InitAndInstallTests(BaseClass):
         if CURRENT_OS == OSType.OSX:
             assert File.exists(self.app_name + "/platforms/ios/TNSApp.xcodeproj")
 
-    @unittest.skipIf("Temporary ignore.")
     def test_005_install_node_modules(self):
         self.test_002_init_path()
         Folder.navigate_to(BaseClass.app_name)
@@ -97,7 +94,6 @@ class InitAndInstallTests(BaseClass):
         if CURRENT_OS == OSType.OSX:
             assert File.exists(self.app_name + "/platforms/ios/TNSApp.xcodeproj")
 
-    @unittest.skipIf("Temporary ignore.")
     def test_300_install_node_modules_if_node_modules_folder_exists(self):
         self.test_002_init_path()
         Folder.navigate_to(BaseClass.app_name)

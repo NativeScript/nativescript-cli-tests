@@ -69,7 +69,11 @@ class PrepareAndroidTests(BaseClass):
         assert "unclosed xml attribute" in output
 
     def test_210_prepare_android_tns_core_modules(self):
-        Tns.create_app(self.app_name, attributes={"--copy-from": SUT_ROOT_FOLDER + "/QA-TestApps/tns-modules-app/app"})
+        # If tns_modules exists in the app they should be ignored
+
+        Tns.create_app(self.app_name,
+                       attributes={"--copy-from": SUT_ROOT_FOLDER + "/QA-TestApps/tns-modules-app/app"},
+                       update_modules=False)
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })
@@ -84,8 +88,7 @@ class PrepareAndroidTests(BaseClass):
         for i in range(1, 3):
             print "prepare number: " + str(i)
 
-            output = Tns.prepare_android(attributes={"--path": self.app_name})
-            assert "You have tns_modules dir in your app folder" in output
+            Tns.prepare_android(attributes={"--path": self.app_name})
 
             output = File.read(self.app_name + "/app/tns_modules/package.json")
             assert "\"version\": \"1.2.1\"," in output
@@ -97,9 +100,8 @@ class PrepareAndroidTests(BaseClass):
 
             output = File.read(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/package.json")
             assert "\"version\": \"1.2.1\"," not in output
-            output = run(
-                    "cat " + self.app_name + "/platforms/android/src/main/assets/app/" +
-                    "tns_modules/application/application-common.js")
+            output = File.read(self.app_name + "/platforms/android/src/main/assets/app/" +
+                               "tns_modules/application/application-common.js")
             assert "require(\"globals\"); // test" in output
 
     def test_300_prepare_android_remove_old_files(self):

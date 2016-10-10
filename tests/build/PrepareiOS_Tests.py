@@ -82,6 +82,8 @@ class PrepareiOSTests(BaseClass):
         assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.js')
 
     def test_210_prepare_ios_tns_core_modules(self):
+        # If tns_modules exists in the app they should be ignored
+
         Tns.create_app(self.app_name, attributes={"--copy-from": "data/projects/helloworld-1.2.1/app"})
         Tns.platform_add_ios(attributes={"--path": self.app_name,
                                          "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
@@ -97,8 +99,7 @@ class PrepareiOSTests(BaseClass):
         for i in range(1, 3):
             print "prepare number: " + str(i)
 
-            output = Tns.prepare_ios(attributes={"--path": self.app_name})
-            assert "You have tns_modules dir in your app folder" in output
+            Tns.prepare_ios(attributes={"--path": self.app_name})
 
             output = File.read(self.app_name + "/app/tns_modules/package.json")
             assert "\"version\": \"1.2.1\"," in output
