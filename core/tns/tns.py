@@ -31,16 +31,8 @@ class Tns(object):
 
     @staticmethod
     def update_modules(path):
-        Folder.navigate_to(path)
-        npm_out1 = run("npm uninstall tns-core-modules")
-        modules_path = SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules.tgz"
-        npm_out2 = run("npm install " + modules_path + " --save")
-        Folder.navigate_to(os.path.join("node_modules", "tns-core-modules"))
-        npm_out3 = run("npm uninstall tns-core-modules-widgets")
-        widgets_path = SUT_ROOT_FOLDER + os.path.sep + "tns-core-modules-widgets.tgz"
-        npm_out4 = run("npm install " + widgets_path + " --save")
-        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        output = npm_out1 + npm_out2 + npm_out3 + npm_out4
+        Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False)
+        output = Tns.plugin_add("tns-core-modules@next", attributes={"--path": path})
         return output
 
     @staticmethod
@@ -110,7 +102,14 @@ class Tns(object):
     def plugin_add(name, attributes={}, log_trace=False, assert_success=True):
         output = Tns.run_tns_command("plugin add " + name, attributes=attributes, log_trace=log_trace)
         if assert_success:
-            assert "Successfully installed plugin {0}".format(name) in output
+            assert "Successfully installed plugin {0}".format(name.replace("@next", "")) in output
+        return output
+
+    @staticmethod
+    def plugin_remove(name, attributes={}, log_trace=False, assert_success=True):
+        output = Tns.run_tns_command("plugin remove " + name, attributes=attributes, log_trace=log_trace)
+        if assert_success:
+            assert "Successfully removed plugin {0}".format(name.replace("@next", "")) in output
         return output
 
     @staticmethod
@@ -160,6 +159,9 @@ class Tns(object):
 
     @staticmethod
     def run_ios(attributes={}, assert_success=True, log_trace=False, timeout=None):
+        if "8." in Xcode.get_version():
+            attr = {"--teamId": DEVELOPMENT_TEAM}
+            attributes.update(attr)
         output = Tns.run_tns_command("run ios", attributes=attributes, log_trace=log_trace, timeout=timeout)
         if assert_success:
             assert "Project successfully prepared" in output
