@@ -49,32 +49,25 @@ class DeployAndroidTests(BaseClass):
             assert device_id in output
 
     def test_002_deploy_android_release(self):
-        output = Tns.run_tns_command("deploy android", attributes={"--path": self.app_name,
-                                                                   "--keyStorePath": ANDROID_KEYSTORE_PATH,
-                                                                   "--keyStorePassword": ANDROID_KEYSTORE_PASS,
-                                                                   "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
-                                                                   "--keyStoreAliasPassword":
-                                                                       ANDROID_KEYSTORE_ALIAS_PASS,
-                                                                   "--release": "",
-                                                                   "--justlaunch": ""
-                                                                   },
-                                     timeout=180)
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier" in output
+        output = Tns.deploy_android(attributes={"--path": self.app_name,
+                                                "--keyStorePath": ANDROID_KEYSTORE_PATH,
+                                                "--keyStorePassword": ANDROID_KEYSTORE_PASS,
+                                                "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
+                                                "--keyStoreAliasPassword":
+                                                    ANDROID_KEYSTORE_ALIAS_PASS,
+                                                "--release": "",
+                                                "--justlaunch": ""
+                                                },
+                                    timeout=180)
 
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
             assert device_id in output
 
     def test_200_deploy_android_deviceid(self):
-        output = Tns.run_tns_command("deploy android", attributes={"--path": self.app_name,
-                                                                   "--device": "emulator-5554",
-                                                                   "--justlaunch": ""
-                                                                   },
-                                     timeout=180)
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
+        output = Tns.deploy_android(
+            attributes={"--path": self.app_name, "--device": "emulator-5554", "--justlaunch": ""},
+            timeout=180)
         assert "Successfully deployed on device with identifier 'emulator-5554'" in output
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
@@ -84,14 +77,9 @@ class DeployAndroidTests(BaseClass):
     def test_201_deploy_android_inside_project(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
-        output = Tns.run_tns_command("deploy android", attributes={"--path": self.app_name,
-                                                                   "--justlaunch": ""
-                                                                   },
-                                     tns_path=os.path.join("..", TNS_PATH), timeout=180)
+        output = Tns.deploy_android(attributes={"--path": self.app_name, "--justlaunch": ""},
+                                    tns_path=os.path.join("..", TNS_PATH), timeout=180)
         os.chdir(current_dir)
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier" in output
 
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
@@ -99,16 +87,9 @@ class DeployAndroidTests(BaseClass):
 
     def test_300_deploy_android_platform_not_added(self):
         Tns.create_app(app_name=self.app_name_noplatform)
-        output = Tns.run_tns_command("deploy android", attributes={"--path": self.app_name_noplatform,
-                                                                   "--justlaunch": ""
-                                                                   },
-                                     timeout=180)
+        output = Tns.deploy_android(attributes={"--path": self.app_name_noplatform, "--justlaunch": ""}, timeout=180)
         assert "Copying template files..." in output
         assert "Installing tns-android" in output
-        assert "Project successfully created." in output
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier" in output
 
         device_ids = Device.get_ids("android")
         for device_id in device_ids:

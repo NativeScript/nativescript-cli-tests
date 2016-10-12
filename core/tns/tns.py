@@ -150,6 +150,29 @@ class Tns(object):
         return output
 
     @staticmethod
+    def deploy_android(attributes={}, assert_success=True, log_trace=False, timeout=None, tns_path=None):
+        output = Tns.run_tns_command("deploy android", attributes=attributes, log_trace=log_trace, timeout=timeout,
+                                     tns_path=tns_path)
+        if assert_success:
+            assert "Project successfully prepared" in output
+            assert "Project successfully built" in output
+            assert "Successfully deployed on device" in output
+        return output
+
+    @staticmethod
+    def deploy_ios(attributes={}, assert_success=True, log_trace=False, timeout=None, tns_path=None):
+        if "8." in Xcode.get_version():
+            attr = {"--teamId": DEVELOPMENT_TEAM}
+            attributes.update(attr)
+        output = Tns.run_tns_command("deploy ios", attributes=attributes, log_trace=log_trace, timeout=timeout,
+                                     tns_path=tns_path)
+        if assert_success:
+            assert "Project successfully prepared" in output
+            assert "Project successfully built" in output
+            assert "Successfully deployed on device" in output
+        return output
+
+    @staticmethod
     def run_android(attributes={}, assert_success=True, log_trace=False, timeout=None):
         output = Tns.run_tns_command("run android", attributes=attributes, log_trace=log_trace, timeout=timeout)
         if assert_success:

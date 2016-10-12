@@ -32,13 +32,7 @@ class DeployiOSTests(BaseClass):
                                          "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
                                          "--symlink": ""
                                          })
-        output = Tns.run_tns_command("deploy ios", attributes={"--path": self.app_name,
-                                                               "--justlaunch": ""
-                                                               },
-                                     timeout=180)
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device" in output
+        output = Tns.deploy_ios(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=180)
 
         device_ids = Device.get_ids(platform="ios")
         for device_id in device_ids:
@@ -46,12 +40,6 @@ class DeployiOSTests(BaseClass):
 
     def test_300_deploy_ios_platform_not_added(self):
         Tns.create_app(app_name=self.app_name)
-        output = Tns.run_tns_command("deploy ios", attributes={"--path": self.app_name,
-                                                               "--justlaunch": ""
-                                                               },
-                                     timeout=180)
+        output = Tns.deploy_ios(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=180)
         assert "Copying template files..." in output
         assert "Installing tns-ios" in output
-        assert "Project successfully created." in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device" in output
