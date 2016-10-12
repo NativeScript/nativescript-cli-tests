@@ -22,7 +22,7 @@ class RuniOS(BaseClass):
         Simulator.stop_simulators()
 
         Tns.create_app(cls.app_name_space)
-        Tns.platform_add_ios(attributes={"--path":  "\"" + cls.app_name_space + "\"",
+        Tns.platform_add_ios(attributes={"--path": "\"" + cls.app_name_space + "\"",
                                          "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
                                          "--symlink": ""
                                          })
@@ -117,9 +117,9 @@ class RuniOS(BaseClass):
     def test_200_run_ios_inside_project(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
-        output = Tns.run_tns_command("run ios", attributes={"--path": self.app_name,
-                                                            "--justlaunch": ""},
-                                     tns_path=os.path.join("..", TNS_PATH), timeout=180)
+        output = Tns.run_ios(attributes={"--path": self.app_name,
+                                         "--justlaunch": ""},
+                             tns_path=os.path.join("..", TNS_PATH), timeout=180)
         os.chdir(current_dir)
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output
