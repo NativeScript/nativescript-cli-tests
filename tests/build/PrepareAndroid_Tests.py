@@ -7,7 +7,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, SUT_ROOT_FOLDER, TEST_RUN_HOME
+from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, TEST_RUN_HOME
 from core.tns.tns import Tns
 
 
@@ -67,42 +67,6 @@ class PrepareAndroidTests(BaseClass):
         assert "Project successfully created." in output
         assert "main-page.xml has syntax errors." in output
         assert "unclosed xml attribute" in output
-
-    def test_210_prepare_android_tns_core_modules(self):
-        # If tns_modules exists in the app they should be ignored
-
-        Tns.create_app(self.app_name,
-                       attributes={"--copy-from": SUT_ROOT_FOLDER + "/QA-TestApps/tns-modules-app/app"},
-                       update_modules=False)
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH
-                                             })
-
-        # Make a change in tns-core-modules to verify they are not overwritten.
-        File.replace(self.app_name + "/node_modules/tns-core-modules/application/application-common.js",
-                     "(\"globals\");",
-                     "(\"globals\"); // test")
-
-        # Verify tns-core-modules are copied to the native project, not app's
-        # tns_modules.
-        for i in range(1, 3):
-            print "prepare number: " + str(i)
-
-            Tns.prepare_android(attributes={"--path": self.app_name})
-
-            output = File.read(self.app_name + "/app/tns_modules/package.json")
-            assert "\"version\": \"1.2.1\"," in output
-
-            output = File.read(self.app_name + "/node_modules/tns-core-modules/package.json")
-            assert "\"version\": \"1.2.1\"," not in output
-            output = File.read(self.app_name + "/node_modules/tns-core-modules/application/application-common.js")
-            assert "require(\"globals\"); // test" in output
-
-            output = File.read(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/package.json")
-            assert "\"version\": \"1.2.1\"," not in output
-            output = File.read(self.app_name + "/platforms/android/src/main/assets/app/" +
-                               "tns_modules/application/application-common.js")
-            assert "require(\"globals\"); // test" in output
 
     def test_300_prepare_android_remove_old_files(self):
         Tns.create_app(self.app_name)

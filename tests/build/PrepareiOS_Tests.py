@@ -81,39 +81,6 @@ class PrepareiOSTests(BaseClass):
         assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/main-view-model.js')
         assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.js')
 
-    def test_210_prepare_ios_tns_core_modules(self):
-        # If tns_modules exists in the app they should be ignored
-
-        Tns.create_app(self.app_name, attributes={"--copy-from": "data/projects/helloworld-1.2.1/app"})
-        Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
-                                         })
-
-        # Make a change in tns-core-modules to verify they are not overwritten.
-        File.replace(self.app_name + "/node_modules/tns-core-modules/application/application-common.js",
-                     "(\"globals\");",
-                     "(\"globals\"); // test")
-
-        # Verify tns-core-modules are copied to the native project, not app's tns_modules.
-        for i in range(1, 3):
-            print "prepare number: " + str(i)
-
-            Tns.prepare_ios(attributes={"--path": self.app_name})
-
-            output = File.read(self.app_name + "/app/tns_modules/package.json")
-            assert "\"version\": \"1.2.1\"," in output
-
-            output = File.read(self.app_name + "/node_modules/tns-core-modules/package.json")
-            assert "\"version\": \"1.2.1\"," not in output
-            output = File.read(self.app_name + "/node_modules/tns-core-modules/application/application-common.js")
-            assert "require(\"globals\"); // test" in output
-            output = File.read(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/package.json")
-            assert "\"version\": \"1.2.1\"," not in output
-            output = File.read(
-                self.app_name + "/platforms/ios/TNSApp/app/tns_modules/application/application-common.js")
-            assert "require(\"globals\"); // test" in output
-
     def test_300_prepare_ios_preserve_case(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
