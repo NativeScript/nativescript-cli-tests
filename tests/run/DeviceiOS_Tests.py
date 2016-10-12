@@ -27,10 +27,10 @@ class DeviceiOSTests(BaseClass):
                                          "--symlink": ""
                                          })
 
-        output = Tns.run_tns_command("deploy ios", attributes={"--path": self.app_name,
-                                                               "--justlaunch": ""
-                                                               },
-                                     timeout=180)
+        output = Tns.deploy_ios(attributes={"--path": self.app_name,
+                                            "--justlaunch": ""
+                                            },
+                                timeout=180)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
