@@ -117,9 +117,9 @@ class RuniOS(BaseClass):
     def test_200_run_ios_inside_project(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
-        output = Tns.run_tns_command(attributes={"--path": self.app_name,
-                                                 "--justlaunch": "",
-                                                 "--teamId": DEVELOPMENT_TEAM},
+        output = Tns.run_tns_command("run ios", attributes={"--path": self.app_name,
+                                                            "--justlaunch": "",
+                                                            "--teamId": DEVELOPMENT_TEAM},
                                      tns_path=os.path.join("..", TNS_PATH), timeout=180)
         os.chdir(current_dir)
         assert "Project successfully prepared" in output

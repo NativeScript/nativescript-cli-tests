@@ -88,7 +88,7 @@ class StaticBindingGenerator(BaseClass):
     #             "File and folders not created"
     #     else:
     #         assert False, "Build failed"
-    @unittest.skip("Fails due to known issue in SBG")
+    
     def test_003_calling_custom_generated_classes_declared_in_manifest(self):
         print ("Running app for android")
         if Emulator.ensure_available():
