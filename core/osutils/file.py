@@ -149,3 +149,12 @@ class File(object):
                 print "Output does not contain: ", line
                 return False
         return True
+
+    @staticmethod
+    def find_text(text, f):
+        data = open(f, 'r')
+        found = False
+        for line in data:
+            if text in line:
+                found = True
+        return found
