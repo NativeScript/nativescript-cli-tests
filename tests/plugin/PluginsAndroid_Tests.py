@@ -84,14 +84,14 @@ class PluginsAndroidTests(BaseClass):
         Tns.plugin_add(plugin_name, attributes={"--path": self.app_name})
         assert File.exists(plugin_manifest_path)
         plugin_manifest_file = ET.parse(plugin_manifest_path)
-        root = plugin_manifest_file.getroot(plugin_manifest_path)
+        root = plugin_manifest_file.getroot()
         assert File.find_text('<manifest xmlns:android="http://schemas.android.com/apk/res/android">', plugin_manifest_path)
         assert File.find_text('<?xml version="1.0" encoding="UTF-8"?>', plugin_manifest_path)
         Tns.prepare_android(attributes={"--path": self.app_name})
         assert File.exists(src_manifest)
         Tns.build_android(attributes={"--path": self.app_name})
         assert File.pattern_exists(res_manifest, "AndroidManifest.xml")
-        merged_manifest_file = ET.parse(res_manifest + "\\full\F0F1\debug\AndroidManifest.xml")
+        merged_manifest_file = ET.parse(res_manifest + os.path.join("full","F0F1", "debug","AndroidManifest.xml"))
         root2 = merged_manifest_file.getroot()
         res = False
         for child in root:
