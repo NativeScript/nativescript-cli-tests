@@ -10,13 +10,14 @@ Test for plugin* commands in context of Android
 # pylint: disable=C0103, C0111, R0201, R0904
 import os
 import unittest
-
+import xml.etree.ElementTree as ET
 from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
+
 
 
 class PluginsAndroidTests(BaseClass):
@@ -71,6 +72,45 @@ class PluginsAndroidTests(BaseClass):
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
         assert "tns-plugin" in output
+
+    def test_004_check_AndroidManifest_merged(self):
+        plugin_name = "nativescript-barcodescanner"
+        plugin_manifest_path = os.path.join(self.app_name, "node_modules", plugin_name, "platforms",
+                                            "android", "AndroidManifest.xml")
+        src_manifest = os.path.join(self.platforms_android, "src", plugin_name, "AndroidManifest.xml")
+        res_manifest = os.path.join(self.platforms_android, "build", "intermediates", "manifests")
+
+        Tns.create_app(self.app_name)
+        Tns.plugin_add(plugin_name, attributes={"--path": self.app_name})
+        assert File.exists(plugin_manifest_path)
+        plugin_manifest_file = ET.parse(plugin_manifest_path)
+        root = plugin_manifest_file.getroot(plugin_manifest_path)
+        assert File.find_text('<manifest xmlns:android="http://schemas.android.com/apk/res/android">', plugin_manifest_path)
+        assert File.find_text('<?xml version="1.0" encoding="UTF-8"?>', plugin_manifest_path)
+        Tns.prepare_android(attributes={"--path": self.app_name})
+        assert File.exists(src_manifest)
+        Tns.build_android(attributes={"--path": self.app_name})
+        assert File.pattern_exists(res_manifest, "AndroidManifest.xml")
+        merged_manifest_file = ET.parse(res_manifest + "\\full\F0F1\debug\AndroidManifest.xml")
+        root2 = merged_manifest_file.getroot()
+        res = False
+        for child in root:
+            for element in root2.findall(child.tag):
+                if child.attrib == element.attrib:
+                    res = True
+                    break
+                else:
+                    res = False
+            if child.tag == "application":
+                for i in root.find("application"):
+                    for j in root2.find("application"):
+                        if i.tag == j.tag and i.attrib == j.attrib:
+                            res = True
+                            break
+                        else:
+                            res = False
+        print res
+        assert res is True, "Manifest not merged completely"
 
     def test_100_build_app_with_plugin_added_inside_project(self):
         Tns.create_app(self.app_name)
