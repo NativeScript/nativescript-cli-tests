@@ -3,12 +3,11 @@ Test for create command
 """
 import os
 
-from nose_parameterized import parameterized
-
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.tns.tns import Tns
+from core.settings.settings import CLI_PATH
 
 
 class CreateTests(BaseClass):
@@ -45,9 +44,14 @@ class CreateTests(BaseClass):
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
         assert "\"tns-core-modules\": " in output
 
+        if "release" in CLI_PATH.lower():
+            version = Tns.run_tns_command("", attributes={"--version": ""})
+            assert version in output
+
         assert File.exists(self.app_name + "/node_modules/tns-core-modules/package.json")
         assert File.exists(self.app_name + "/node_modules/tns-core-modules/LICENSE")
         assert File.exists(self.app_name + "/node_modules/tns-core-modules/xml/xml.js")
+
 
     def test_002_create_project_with_path(self):
         Tns.create_app(self.app_name, attributes={"--path": "folder/subfolder/"},
