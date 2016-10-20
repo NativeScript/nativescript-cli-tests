@@ -6,7 +6,7 @@ import os
 import time
 
 from core.osutils.command import run
-from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, DEVELOPMENT_TEAM
+from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, DEVELOPMENT_TEAM, CLI_PATH
 from core.xcode.xcode import Xcode
 
 
@@ -32,9 +32,12 @@ class Tns(object):
     def update_modules(path):
         if " " in path:
             path = "\"" + path + "\""
-        Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False)
-        output = Tns.plugin_add("tns-core-modules@next", attributes={"--path": path})
-        return output
+        if "release" in CLI_PATH.lower():
+            return "" # In release branches we relay on Sinopia
+        else:
+            Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False)
+            output = Tns.plugin_add("tns-core-modules@next", attributes={"--path": path})
+            return output
 
     @staticmethod
     def create_app(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True):
