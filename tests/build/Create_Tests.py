@@ -3,6 +3,8 @@ Test for create command
 """
 import os
 
+from nose_parameterized import parameterized
+
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
