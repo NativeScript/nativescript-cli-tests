@@ -1,8 +1,7 @@
 """
 Tests for device command in context of Android
 """
-
-import unittest
+import os.path
 from time import sleep
 
 from core.base_class.BaseClass import BaseClass
@@ -14,17 +13,20 @@ from core.tns.tns import Tns
 
 
 class DeviceAndroidTests(BaseClass):
-    def setUp(self):
-        BaseClass.setUp(self)
-        Folder.cleanup(self.app_name)
+    @classmethod
+    def setUpClass(cls):
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
+        Folder.cleanup(cls.app_name)
         Device.ensure_available(platform="android")
         Device.uninstall_app(app_prefix="org.nativescript.", platform="android", fail=False)
         Emulator.ensure_available()
 
-    def tearDown(self):
-        BaseClass.tearDown(self)
+    @classmethod
+    def tearDownClass(cls):
+        BaseClass.tearDownClass()
         Emulator.stop_emulators()
-        Folder.cleanup(self.app_name)
+        Folder.cleanup(cls.app_name)
 
     def test_001_device_list_applications_and_run_android(self):
         device_id = Device.get_id(platform="android")
@@ -35,12 +37,10 @@ class DeviceAndroidTests(BaseClass):
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })
-        output = Tns.run_tns_command("deploy android", attributes={"--path": self.app_name,
-                                                                   "--justlaunch": ""
-                                                                   })
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier" in output
+        output = Tns.deploy_android(attributes={"--path": self.app_name,
+                                                "--justlaunch": ""
+                                                })
+
         for device_id in device_ids:
             assert device_id in output
         sleep(10)
@@ -85,7 +85,6 @@ class DeviceAndroidTests(BaseClass):
         output = Tns.run_tns_command("device log", attributes={"--device": "invaliddevice_id"})
         assert "Cannot resolve the specified connected device" in output
 
-    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/1912")
     def test_402_device_run_invalid_device_id(self):
         output = Tns.run_tns_command("device run android", attributes={"--device": "invaliddevice_id"})
         assert "Cannot resolve the specified connected device" in output

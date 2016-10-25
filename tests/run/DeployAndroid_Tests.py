@@ -39,9 +39,8 @@ class DeployAndroidTests(BaseClass):
         output = Tns.run_tns_command("deploy android", attributes={"--path": self.app_name,
                                                                    "--justlaunch": ""},
                                      timeout=180)
+        # This is the first time we build the project -> we need a prepare
         assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier" in output
 
         device_ids = Device.get_ids(platform="android")
         for device_id in device_ids:
@@ -60,6 +59,8 @@ class DeployAndroidTests(BaseClass):
                                                 },
                                     timeout=180)
 
+        # We executed build once, but this is first time we call build --release -> we need a prepare
+        assert "Project successfully prepared" in output
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
             assert device_id in output
@@ -68,6 +69,9 @@ class DeployAndroidTests(BaseClass):
         output = Tns.deploy_android(
             attributes={"--path": self.app_name, "--device": "emulator-5554", "--justlaunch": ""},
             timeout=180)
+
+        # We executed build once, but this is first time we call build --release -> we need a prepare
+        assert "Project successfully prepared" in output
         assert "Successfully deployed on device with identifier 'emulator-5554'" in output
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
@@ -78,8 +82,11 @@ class DeployAndroidTests(BaseClass):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
         output = Tns.deploy_android(attributes={"--path": self.app_name, "--justlaunch": ""},
-                                    tns_path=os.path.join("..", TNS_PATH), timeout=180)
+                                    tns_path=os.path.join("..", TNS_PATH), timeout=180, assert_success=False)
         os.chdir(current_dir)
+
+        # Now we do not need prepare, because previous test also did build in debug mode
+        assert "Project successfully prepared" not in output
 
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
@@ -88,8 +95,11 @@ class DeployAndroidTests(BaseClass):
     def test_300_deploy_android_platform_not_added(self):
         Tns.create_app(app_name=self.app_name_noplatform)
         output = Tns.deploy_android(attributes={"--path": self.app_name_noplatform, "--justlaunch": ""}, timeout=180)
+
+        # It is brand new project and we need a prepare for first run
         assert "Copying template files..." in output
         assert "Installing tns-android" in output
+        assert "Project successfully prepared" in output
 
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
@@ -106,7 +116,5 @@ class DeployAndroidTests(BaseClass):
                                                                    "--justlaunch": "",
                                                                    "--device": "invaliddevice_id"
                                                                    })
-        assert "Project successfully prepared" not in output
         assert "Cannot resolve the specified connected device" in output
         assert "To list currently connected devices" in output
-        assert "tns device" in output

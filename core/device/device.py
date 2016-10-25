@@ -53,7 +53,7 @@ class Device(object):
         if platform == "android":
             device_ids = Device.get_ids(platform)
             for device_id in device_ids:
-                output = run(ADB_PATH + " -s {0} shell pm list packages".format(device_id), timeout=120)
+                output = run(ADB_PATH + " -s {0} shell pm list packages -3".format(device_id), timeout=120)
                 lines = output.splitlines()
                 for line in lines:
                     if app_prefix in line:

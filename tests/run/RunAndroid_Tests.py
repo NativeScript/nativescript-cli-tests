@@ -42,9 +42,10 @@ class RuniOSTests(BaseClass):
                                              "--justlaunch": ""
                                              },
                                  assert_success=False)
+
+        # This is the first time we build the project -> we need a prepare
         assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier" in output
+
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
             assert device_id in output
@@ -60,9 +61,10 @@ class RuniOSTests(BaseClass):
                                              "--justlaunch": ""
                                              },
                                  assert_success=False)
+
+        # This is the first time we build in release -> we need a prepare
         assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier" in output
+
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
             assert device_id in output
@@ -70,20 +72,23 @@ class RuniOSTests(BaseClass):
 
     def test_003_run_android_default(self):
         output = Tns.run_android(attributes={"--path": self.app_name}, timeout=60)
+
+        # When previously build in release and back to debug build -> we need a prepare
         assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier" in output
-        assert "I/ActivityManager" not in output  # We do not show full adb logs (only those from app)
+        # We do not show full adb logs (only those from app)
+        assert "I/ActivityManager" not in output
 
     def test_200_run_android_inside_project(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
-        output = Tns.run_tns_command("run android", attributes={"--path": self.app_name,
-                                                                "--justlaunch": ""
-                                                                },
-                                     tns_path=os.path.join("..", TNS_PATH))
+        output = Tns.run_android(attributes={"--path": self.app_name,
+                                             "--justlaunch": ""
+                                             },
+                                 tns_path=os.path.join("..", TNS_PATH), assert_success=False)
         os.chdir(current_dir)
-        assert "Project successfully prepared" in output
+
+        # We should not prepare because previous test already prepared in debug mode
+        assert "Project successfully prepared" not in output
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier" in output
 
@@ -94,7 +99,10 @@ class RuniOSTests(BaseClass):
                                              "--justlaunch": ""
                                              },
                                  assert_success=False)
-        assert "Project successfully prepared" in output
+
+        # We should not prepare because previous test already prepared in debug mode
+        assert "Project successfully prepared" not in output
+
         assert "Project successfully built" in output
         assert "Successfully deployed on device with identifier 'emulator-5554'" in output
 
@@ -105,9 +113,9 @@ class RuniOSTests(BaseClass):
                                              })
         assert "Copying template files..." in output
         assert "Installing tns-android" in output
-        assert "Project successfully created." in output
+
+        # This is the first time we build the project -> we need a prepare
         assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
 
     def test_302_run_android_device_not_connected(self):
         output = Tns.run_android(attributes={"--path": self.app_name_noplatform,

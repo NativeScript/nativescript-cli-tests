@@ -34,6 +34,9 @@ class DeployiOSTests(BaseClass):
                                          })
         output = Tns.deploy_ios(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=180)
 
+        # This is the first time we build the project -> we need a prepare
+        assert "Project successfully prepared" in output
+
         device_ids = Device.get_ids(platform="ios")
         for device_id in device_ids:
             assert device_id in output
@@ -43,3 +46,5 @@ class DeployiOSTests(BaseClass):
         output = Tns.deploy_ios(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=180)
         assert "Copying template files..." in output
         assert "Installing tns-ios" in output
+        # This is the first time we build the project -> we need a prepare
+        assert "Project successfully prepared" in output

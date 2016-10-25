@@ -31,9 +31,10 @@ class DeviceiOSTests(BaseClass):
                                             "--justlaunch": ""
                                             },
                                 timeout=180)
+
+        # This is the first time we build the project -> we need a prepare
         assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier" in output
+
         for device_id in device_ids:
             assert device_id in output
         sleep(10)
