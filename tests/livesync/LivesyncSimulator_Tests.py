@@ -180,7 +180,7 @@ class LivesyncSimulatorTests(Watcher):
         self.terminate_watcher()
         Folder.cleanup(self.app_name_appTest)
         Simulator.stop_simulators()
-        Tns.create_app(self.app_name_appTest)
+        Tns.create_app(self.app_name_appTest, attributes={"--copy-from": "data/apps/livesync-hello-world"})
         Tns.platform_add_ios(attributes={"--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
                                          "--path": self.app_name_appTest,
                                          "--symlink": ""
@@ -197,6 +197,7 @@ class LivesyncSimulatorTests(Watcher):
 
         output = Tns.livesync(platform="ios", attributes={"--emulator": "",
                                                           "--path": self.app_name_appTest,
+                                                          "--syncAllFiles": "",
                                                           "--justlaunch": ""})
         time.sleep(10)
         assert "Successfully synced application org.nativescript.appTest" in output

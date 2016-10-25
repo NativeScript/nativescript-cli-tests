@@ -39,9 +39,10 @@ def replace_all(app_name):
     replace(app_name, FILE_CHANGE_TNS_MODULES)
 
 
-def verify_all_replaced(device_type, app_name):
+def verify_all_replaced(device_type, app_name, syncAllFiles=False):
     verify_replaced(device_type, app_name, FILE_CHANGE_XML)
     verify_replaced(device_type, app_name, FILE_CHANGE_JS)
     verify_replaced(device_type, app_name, FILE_CHANGE_CSS)
-    verify_replaced(device_type, app_name, FILE_CHANGE_LICENSE)
-    verify_replaced(device_type, app_name, FILE_CHANGE_TNS_MODULES)
+    if syncAllFiles:
+        verify_replaced(device_type, app_name, FILE_CHANGE_LICENSE)
+        verify_replaced(device_type, app_name, FILE_CHANGE_TNS_MODULES)
