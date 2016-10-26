@@ -16,6 +16,7 @@ class DeviceiOSTests(BaseClass):
         Folder.cleanup(self.app_name)
         Device.ensure_available(platform="ios")
 
+    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2154")
     def test_001_device_log_list_applications_and_run_ios(self):
         device_id = Device.get_id(platform="ios")
         device_ids = Device.get_ids("ios")

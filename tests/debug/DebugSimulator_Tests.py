@@ -18,9 +18,7 @@ class DebugSimulatorTests(BaseClass):
         BaseClass.setUpClass(logfile)
         Emulator.stop_emulators()
         Tns.create_app(cls.app_name)
-        Tns.platform_add_ios(attributes={"--path": cls.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
-                                         })
+        Tns.platform_add_ios(attributes={"--path": cls.app_name})
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -63,7 +61,7 @@ class DebugSimulatorTests(BaseClass):
         File.cat(self.app_name + "/package.json")
         output = Tns.run_tns_command("emulate ios", attributes={"--path": self.app_name,
                                                                 "--justlaunch": ""})
-        assert "Project successfully built" in output
+        assert "deployed on device" in output
         time.sleep(5)
 
         output = Tns.run_tns_command("debug ios", attributes={"--start": "",
