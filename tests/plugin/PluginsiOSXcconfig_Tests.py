@@ -41,15 +41,16 @@ class PluginsiOSXcconfigTests(BaseClass):
 
         output = run("cat " + self.app_name + "/platforms/ios/plugins-debug.xcconfig")
         assert "OTHER_LDFLAGS = $(inherited) -l\"sqlite3\"" in output
-        output = run("cat " + self.app_name + "/platforms/ios/plugins-release.xcconfig")
-        assert "OTHER_LDFLAGS = $(inherited) -l\"sqlite3\"" in output
+
+        # output = run("cat " + self.app_name + "/platforms/ios/plugins-release.xcconfig")
+        # assert "OTHER_LDFLAGS = $(inherited) -l\"sqlite3\"" in output
 
         output = run(
                 "cat " + self.app_name + "/platforms/ios/TNSApp/build-debug.xcconfig")
         assert "#include \"../plugins-debug.xcconfig\"" in output
-        output = run(
-                "cat " + self.app_name + "/platforms/ios/TNSApp/build-release.xcconfig")
-        assert "#include \"../plugins-release.xcconfig\"" in output
+        # output = run(
+        #         "cat " + self.app_name + "/platforms/ios/TNSApp/build-release.xcconfig")
+        # assert "#include \"../plugins-release.xcconfig\"" in output
 
         Tns.build_ios(attributes={"--path": self.app_name})
 
@@ -76,12 +77,12 @@ class PluginsiOSXcconfigTests(BaseClass):
 
         output = run("cat " + self.app_name + "/platforms/ios/plugins-debug.xcconfig")
         assert "OTHER_LDFLAGS = $(inherited) -l\"sqlite3\"" in output
-        output = run("cat " + self.app_name + "/platforms/ios/plugins-release.xcconfig")
-        assert "OTHER_LDFLAGS = $(inherited) -l\"sqlite3\"" in output
+        # output = run("cat " + self.app_name + "/platforms/ios/plugins-release.xcconfig")
+        # assert "OTHER_LDFLAGS = $(inherited) -l\"sqlite3\"" in output
 
         output = run(
                 "cat " + self.app_name + "/platforms/ios/TNSApp/build-debug.xcconfig")
         assert "#include \"../plugins-debug.xcconfig\"" in output
-        output = run(
-                "cat " + self.app_name + "/platforms/ios/TNSApp/build-release.xcconfig")
-        assert "#include \"../plugins-release.xcconfig\"" in output
+        # output = run(
+        #         "cat " + self.app_name + "/platforms/ios/TNSApp/build-release.xcconfig")
+        # assert "#include \"../plugins-release.xcconfig\"" in output

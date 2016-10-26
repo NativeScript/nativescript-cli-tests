@@ -1,6 +1,8 @@
 """
 Test for device command in context of iOS
 """
+import unittest
+
 from time import sleep
 
 from core.base_class.BaseClass import BaseClass

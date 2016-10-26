@@ -8,10 +8,9 @@ import threading
 
 from core.base_class.BaseClass import BaseClass
 from core.tns.tns import Tns
-from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.device.emulator import Emulator
-from core.settings.settings import ANDROID_RUNTIME_PATH, ADB_PATH
+from core.settings.settings import ADB_PATH
 
 
 class StaticBindingGenerator(BaseClass):
