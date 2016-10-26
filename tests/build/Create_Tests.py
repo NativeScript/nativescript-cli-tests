@@ -43,11 +43,15 @@ class CreateTests(BaseClass):
         assert not Folder.exists(self.app_name + "/app/tns_modules")
 
         output = File.read(self.app_name + os.sep + "package.json")
+        print "~~~~~~~~~~~~~~PACKAGE.JSON~~~~~~~~~~~~~~~~~"
+        File.cat(self.app_name + os.sep + "package.json")
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
         assert "\"tns-core-modules\": " in output
 
         if "release" in CLI_PATH.lower():
             version = Tns.run_tns_command("", attributes={"--version": ""})
+            print "~~~~~~~~~~~~~~OUTPUT~~~~~~~~~~~~~~~~~"
+            print output
             assert version in output
 
         assert File.exists(self.app_name + "/node_modules/tns-core-modules/package.json")
