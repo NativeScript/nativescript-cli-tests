@@ -122,7 +122,9 @@ class RuniOS(BaseClass):
 
         # Second build in debug should not require prepare
         assert "Project successfully prepared" not in output
-        assert "CONFIGURATION Debug" in output
+        assert "Successfully deployed on device" in output
+        assert "Successfully run application org.nativescript." in output
+
 
     def test_301_run_ios_platform_not_added(self):
         Tns.create_app(self.app_name_noplatform)
