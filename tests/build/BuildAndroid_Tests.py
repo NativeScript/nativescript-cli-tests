@@ -182,11 +182,6 @@ class BuildAndroidTests(BaseClass):
         Tns.build_android(attributes={"--compileSdk": "23", "--path": self.app_name})
         assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
 
-    def test_312_build_android_with_sdk19(self):
-        output = Tns.build_android(attributes={"--compileSdk": "19", "--path": self.app_name}, assert_success=False)
-        assert "Project successfully prepared" in output
-        assert "BUILD FAILED" in output
-
     def test_313_build_android_with_sdk99(self):
         output = Tns.build_android(attributes={"--compileSdk": "99", "--path": self.app_name, "--log trace": ""},
                                    assert_success=False)
