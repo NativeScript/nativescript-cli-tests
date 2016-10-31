@@ -11,6 +11,7 @@ from core.osutils.folder import Folder
 from core.osutils.process import Process
 from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, TNS_PATH, DEVELOPMENT_TEAM
 from core.tns.tns import Tns
+from core.xcode.xcode import Xcode
 
 
 class RuniOS(BaseClass):
@@ -18,6 +19,7 @@ class RuniOS(BaseClass):
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
+        Xcode.cleanup_cache()
         Device.ensure_available(platform="ios")
         Device.uninstall_app(app_prefix="org.nativescript.", platform="ios", fail=False)
         Simulator.stop_simulators()

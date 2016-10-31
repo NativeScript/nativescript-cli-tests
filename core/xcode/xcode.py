@@ -10,7 +10,7 @@ class Xcode(object):
     @staticmethod
     def cleanup_cache():
         """Cleanup Xcode cache and derived data"""
-        run("rm -rf ~/Library/Developer/Xcode/DerivedData/", COMMAND_TIMEOUT)
+        run("rm -rf ~/Library/Developer/Xcode/DerivedData/*", COMMAND_TIMEOUT)
 
     @staticmethod
     def get_version():
