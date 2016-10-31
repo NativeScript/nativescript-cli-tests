@@ -120,6 +120,7 @@ class PrepareAndroidTests(BaseClass):
         assert not File.exists(self.app_name + '/platforms/android/src/main/assets/app/app.ios.css')
         assert not File.exists(self.app_name + '/platforms/android/src/main/assets/app/app.android.css')
 
+    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2177")
     def test_310_prepare_should_flatten_scoped_dependencies(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_android(attributes={"--path": self.app_name,
