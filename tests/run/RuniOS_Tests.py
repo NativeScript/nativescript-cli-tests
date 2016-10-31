@@ -19,6 +19,7 @@ class RuniOS(BaseClass):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
         Device.ensure_available(platform="ios")
+        Device.uninstall_app(app_prefix="org.nativescript.", platform="ios", fail=False)
         Simulator.stop_simulators()
 
         Tns.create_app(cls.app_name_space)
