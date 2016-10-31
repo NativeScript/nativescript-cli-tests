@@ -35,17 +35,8 @@ class RuniOS(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
 
-        # Stoping simulators is required because of issue
-        # https://github.com/NativeScript/nativescript-cli/issues/1904
-        # TODO: Remove this after issue is fixed
-        # Simulator.stop_simulators()
-
     def tearDown(self):
         BaseClass.tearDown(self)
-        # Stoping simulators is required because of issue
-        # https://github.com/NativeScript/nativescript-cli/issues/1904
-        # TODO: Remove this after issue is fixed
-        # Simulator.stop_simulators()
 
     @classmethod
     def tearDownClass(cls):
@@ -54,19 +45,7 @@ class RuniOS(BaseClass):
         Folder.cleanup('./' + cls.app_name_noplatform)
         Simulator.stop_simulators()
 
-    def test_001_run_ios_justlaunch(self):
-        output = Tns.run_ios(attributes={"--path": self.app_name,
-                                         "--justlaunch": ""},
-                             timeout=180, assert_success=False)
-
-        # First build require prepare
-        assert "Project successfully prepared" in output
-        assert "CONFIGURATION Debug" in output
-        device_ids = Device.get_ids("ios")
-        for device_id in device_ids:
-            assert device_id in output
-
-    def test_002_run_ios_release(self):
+    def test_001_run_ios_release(self):
         output = Tns.run_ios(attributes={"--path": self.app_name,
                                          "--justlaunch": "",
                                          "--release": ""
@@ -79,14 +58,26 @@ class RuniOS(BaseClass):
         for device_id in device_ids:
             assert device_id in output
 
-    def test_003_run_ios_simulator(self):
+    def test_002_run_ios_debug(self):
+        output = Tns.run_ios(attributes={"--path": self.app_name,
+                                         "--justlaunch": ""},
+                             timeout=180, assert_success=False)
+
+        # First build in debug require prepare
+        assert "Project successfully prepared" in output
+        assert "CONFIGURATION Debug" in output
+        device_ids = Device.get_ids("ios")
+        for device_id in device_ids:
+            assert device_id in output
+
+    def test_003_run_ios_debug_simulator(self):
         output = Tns.run_ios(attributes={"--path": "\"" + self.app_name_space + "\"",
                                          "--justlaunch": "",
                                          "--emulator": ""
                                          },
                              timeout=180, assert_success=False)
 
-        # First build for simulator for first time, so require prepare
+        # Prepare because this is new project
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output
         assert Process.wait_until_running("Simulator", 60)
@@ -98,16 +89,16 @@ class RuniOS(BaseClass):
                                          "--justlaunch": ""
                                          },
                              assert_success=False, timeout=180)
+
         # First build for simulator in release for first time, so require prepare
         assert "Project successfully prepared" in output
-
         assert "CONFIGURATION Release" in output
         assert Process.wait_until_running("Simulator", 60)
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
 
     def test_005_run_ios_default(self):
-        output = Tns.run_ios(attributes={"--path": self.app_name}, timeout=60)
+        output = Tns.run_ios(attributes={"--path": self.app_name}, timeout=180)
         # Back to debug build, so require prepare
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Debug" in output

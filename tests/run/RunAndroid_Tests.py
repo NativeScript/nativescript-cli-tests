@@ -39,8 +39,13 @@ class RuniOSTests(BaseClass):
         Folder.cleanup(cls.app_name)
         Folder.cleanup(cls.app_name_noplatform)
 
-    def test_001_run_android_justlaunch(self):
+    def test_001_run_android_release(self):
         output = Tns.run_android(attributes={"--path": self.app_name,
+                                             "--keyStorePath": ANDROID_KEYSTORE_PATH,
+                                             "--keyStorePassword": ANDROID_KEYSTORE_PASS,
+                                             "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
+                                             "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
+                                             "--release": "",
                                              "--justlaunch": ""
                                              },
                                  assert_success=False)
@@ -53,18 +58,13 @@ class RuniOSTests(BaseClass):
             assert device_id in output
             assert Device.is_running(app_id="org.nativescript.TNSApp", device_id=device_id)
 
-    def test_002_run_android_release(self):
+    def test_002_run_android_debug(self):
         output = Tns.run_android(attributes={"--path": self.app_name,
-                                             "--keyStorePath": ANDROID_KEYSTORE_PATH,
-                                             "--keyStorePassword": ANDROID_KEYSTORE_PASS,
-                                             "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
-                                             "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
-                                             "--release": "",
                                              "--justlaunch": ""
                                              },
                                  assert_success=False)
 
-        # This is the first time we build in release -> we need a prepare
+        # This is the first time we build in debug -> we need a prepare
         assert "Project successfully prepared" in output
 
         device_ids = Device.get_ids("android")
@@ -74,10 +74,9 @@ class RuniOSTests(BaseClass):
 
     def test_003_run_android_default(self):
         output = Tns.run_android(attributes={"--path": self.app_name}, timeout=60)
-
-        # When previously build in release and back to debug build -> we need a prepare
-        assert "Project successfully prepared" in output
-        # We do not show full adb logs (only those from app)
+        # When previously build in debug and now we build in debug we do not need a prepare
+        assert "Project successfully prepared" not in output
+         # We do not show full adb logs (only those from app)
         assert "I/ActivityManager" not in output
 
     def test_200_run_android_inside_project(self):

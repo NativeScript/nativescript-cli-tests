@@ -178,7 +178,6 @@ class Tns(object):
         output = Tns.run_tns_command("run android", attributes=attributes, log_trace=log_trace, timeout=timeout,
                                      tns_path=tns_path)
         if assert_success:
-            assert "Project successfully prepared" in output
             assert "Project successfully built" in output
             assert "Successfully deployed on device with identifier" in output
         return output
