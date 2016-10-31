@@ -37,6 +37,7 @@ class RuniOS(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
+        Xcode.cleanup_cache()
 
     def tearDown(self):
         BaseClass.tearDown(self)

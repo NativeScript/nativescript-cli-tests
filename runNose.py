@@ -36,8 +36,8 @@ def clean_npm():
     if CURRENT_OS == OSType.WINDOWS:
         run("npm cache clean", COMMAND_TIMEOUT)
     else:
-        run("rm -rf ~/.npm/tns/*", COMMAND_TIMEOUT)
-
+        run("npm cache clean", COMMAND_TIMEOUT)
+        run("rm -rf ~/.npm/tns*", COMMAND_TIMEOUT)
 
 def clean_gradle():
     if CURRENT_OS == OSType.WINDOWS:
