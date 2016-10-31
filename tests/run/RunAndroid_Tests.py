@@ -3,6 +3,7 @@ Tests for run command in context of Android
 """
 
 import os
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -15,6 +16,7 @@ from core.tns.tns import Tns
 
 
 class RuniOSTests(BaseClass):
+
     @classmethod
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
