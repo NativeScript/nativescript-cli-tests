@@ -2,7 +2,6 @@
 Test for plugin* commands in context of Android
 """
 
-
 # C0103 - Invalid %s name "%s"
 # C0111 - Missing docstring
 # R0201 - Method could be a function
@@ -17,7 +16,6 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
-
 
 
 class PluginsAndroidTests(BaseClass):
@@ -85,13 +83,14 @@ class PluginsAndroidTests(BaseClass):
         assert File.exists(plugin_manifest_path)
         plugin_manifest_file = ET.parse(plugin_manifest_path)
         root = plugin_manifest_file.getroot()
-        assert File.find_text('<manifest xmlns:android="http://schemas.android.com/apk/res/android">', plugin_manifest_path)
+        assert File.find_text('<manifest xmlns:android="http://schemas.android.com/apk/res/android">',
+                              plugin_manifest_path)
         assert File.find_text('<?xml version="1.0" encoding="UTF-8"?>', plugin_manifest_path)
         Tns.prepare_android(attributes={"--path": self.app_name})
         assert File.exists(src_manifest)
         Tns.build_android(attributes={"--path": self.app_name})
         assert File.pattern_exists(res_manifest, "AndroidManifest.xml")
-        merged_manifest_file = ET.parse(os.path.join(res_manifest, "full","F0F1", "debug","AndroidManifest.xml"))
+        merged_manifest_file = ET.parse(os.path.join(res_manifest, "full", "F0F1", "debug", "AndroidManifest.xml"))
         root2 = merged_manifest_file.getroot()
         res = False
         for child in root:

@@ -8,13 +8,13 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, SUT_ROOT_FOLDER
 from core.tns.tns import Tns
+from core.xcode.xcode import Xcode
 
 
 class PluginsiOSXcconfigTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
-        # Delete derived data
-        run("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
+        Xcode.cleanup_cache()
         Folder.cleanup('./' + self.app_name)
 
     def test_001_plugin_add_xcconfig_before_platform_add_ios(self):
@@ -46,7 +46,7 @@ class PluginsiOSXcconfigTests(BaseClass):
         # assert "OTHER_LDFLAGS = $(inherited) -l\"sqlite3\"" in output
 
         output = run(
-                "cat " + self.app_name + "/platforms/ios/TNSApp/build-debug.xcconfig")
+            "cat " + self.app_name + "/platforms/ios/TNSApp/build-debug.xcconfig")
         assert "#include \"../plugins-debug.xcconfig\"" in output
         # output = run(
         #         "cat " + self.app_name + "/platforms/ios/TNSApp/build-release.xcconfig")
@@ -81,7 +81,7 @@ class PluginsiOSXcconfigTests(BaseClass):
         # assert "OTHER_LDFLAGS = $(inherited) -l\"sqlite3\"" in output
 
         output = run(
-                "cat " + self.app_name + "/platforms/ios/TNSApp/build-debug.xcconfig")
+            "cat " + self.app_name + "/platforms/ios/TNSApp/build-debug.xcconfig")
         assert "#include \"../plugins-debug.xcconfig\"" in output
         # output = run(
         #         "cat " + self.app_name + "/platforms/ios/TNSApp/build-release.xcconfig")

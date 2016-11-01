@@ -8,14 +8,13 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, SUT_ROOT_FOLDER
 from core.tns.tns import Tns
+from core.xcode.xcode import Xcode
 
 
 class PluginsiOSLibsTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
-
-        # Delete derived data
-        run("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
+        Xcode.cleanup_cache()
         Folder.cleanup('./' + self.app_name)
 
     def test_201_plugin_add_static_lib_universal_before_platform_add_ios(self):

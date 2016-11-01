@@ -11,14 +11,13 @@ from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, IOS_RUNTIME_SYMLINK_PATH, CURRENT_OS, OSType, IOS_RUNTIME_PATH, \
     ANDROID_RUNTIME_SYMLINK_PATH, ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
+from core.xcode.xcode import Xcode
 
 
 class PluginsiOSTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
-
-        # Delete derived data
-        run("rm -rf ~/Library/Developer/Xcode/DerivedData/*")
+        Xcode.cleanup_cache()
         Folder.cleanup('./' + self.app_name)
 
     def tearDown(self):
