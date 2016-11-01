@@ -94,8 +94,9 @@ def get_ios_runtime():
         extract_archive(IOS_RUNTIME_PATH, os.path.splitext(IOS_RUNTIME_PATH)[0])
 
     # Copy inspector package
-    location = os.path.join(IOS_INSPECTOR_PATH, "tns-ios-inspector.tgz")
-    shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-ios-inspector.tgz"))
+    if IOS_INSPECTOR_PATH is not None:
+        location = os.path.join(IOS_INSPECTOR_PATH, "tns-ios-inspector.tgz")
+        shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-ios-inspector.tgz"))
 
 
 def get_repos():

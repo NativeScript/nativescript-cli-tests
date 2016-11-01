@@ -37,12 +37,8 @@ CLI_PATH = os.environ["CLI_PATH"]
 ANDROID_PATH = os.environ["ANDROID_PATH"]
 TNS_MODULES_PATH = os.environ["TNS_MODULES_PATH"]
 TNS_MODULES_WIDGETS_PATH = os.environ["TNS_MODULES_WIDGETS_PATH"]
-if "IOS_PATH" in os.environ:
-    IOS_PATH = os.environ["IOS_PATH"]
-    IOS_INSPECTOR_PATH = os.environ["IOS_INSPECTOR_PATH"]
-else:
-    IOS_PATH = None
-    IOS_INSPECTOR_PATH = None
+IOS_PATH = os.getenv("IOS_PATH", None)
+IOS_INSPECTOR_PATH = os.getenv('IOS_INSPECTOR_PATH', None)
 
 # Local packages path
 TNS_PATH = os.path.join("node_modules", ".bin", "tns")
