@@ -54,7 +54,7 @@ class LiveSynciOS(BaseClass):
         Tns.livesync(platform="ios", attributes={"--path": self.app_name,
                                                  "--syncAllFiles": "",
                                                  "--justlaunch": ""})
-        time.sleep(5)
+        time.sleep(10)
         Device.file_contains("ios", "TNSApp", "app/main-page.xml", text="TEST")
         Device.file_contains("ios", "TNSApp", "app/main-view-model.js", text="clicks left")
         Device.file_contains("ios", "TNSApp", "app/app.css", text="font-size: 20;")

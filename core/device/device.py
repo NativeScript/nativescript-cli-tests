@@ -5,6 +5,8 @@ import os
 import time
 
 from core.osutils.command import run
+from core.osutils.file import File
+from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH
 
 ADB_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'platform-tools', 'adb')
@@ -115,17 +117,25 @@ class Device(object):
     @staticmethod
     def cat_app_file(platform, app_name, file_path):
         """Return content of file on device"""
+        device_id = Device.get_id("ios")
         app_name = app_name.replace("_", "")
-        app_name = app_name.replace(" ","")
-        command = ""
+        app_name = app_name.replace(" ", "")
+        output = ""
         if platform is "android":
             device_id = Device.get_id(platform="android")
-            command = ADB_PATH + " -s {0} shell run-as org.nativescript.{1} cat files/{2}"\
+            command = ADB_PATH + " -s {0} shell run-as org.nativescript.{1} cat files/{2}" \
                 .format(device_id, app_name, file_path)
+            output = run(command)
         if platform is "ios":
-            command = "ddb device get-file \"Library/Application Support/LiveSync/{0}\" --app org.nativescript.{1}"\
-                .format(file_path, app_name)
-        output = run(command)
+            temp_folder = "temp_" + device_id
+            Folder.cleanup(temp_folder)
+            Folder.create(temp_folder)
+            get_files = "ios-deploy -i {0} --bundle_id org.nativescript.{1} --download {2} --to {3}".format(device_id,
+                                                                                                            app_name,
+                                                                                                            device_id,
+                                                                                                            temp_folder)
+            run(get_files, timeout=30)
+            output = File.read(temp_folder + "/Library/Application Support/LiveSync/{0}".format(file_path))
         return output
 
     @staticmethod
