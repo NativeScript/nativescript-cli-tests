@@ -144,7 +144,7 @@ class LivesyncSimulatorTests(Watcher):
     def test_123_livesync_ios_simulator_watch_delete_css_file(self):
         File.remove(self.app_name + "/app/test/test.css")
         self.wait_for_text_in_output("app/test/test.css")
-        time.sleep(5)
+        time.sleep(10)
         Simulator.file_contains("TNSApp", "app/test/test.css", text="No such file or directory")
 
     # Add files to a new folder
@@ -153,7 +153,7 @@ class LivesyncSimulatorTests(Watcher):
         self.wait_for_text_in_output(self.app_name + "/app/folder/")
         shutil.copyfile(self.app_name + "/app/main-page.xml", self.app_name + "/app/folder/test.xml")
         self.wait_for_text_in_output("app/folder/test.xml file with")
-        time.sleep(5)
+        time.sleep(10)
         Simulator.file_contains("TNSApp", "app/folder/test.xml", text="WATCH")
     #         remove(self.app_name + "/app/folder")
     #         self.wait_for_text_in_output("app/folder/")
@@ -180,6 +180,7 @@ class LivesyncSimulatorTests(Watcher):
         self.terminate_watcher()
         Folder.cleanup(self.app_name_appTest)
         Simulator.stop_simulators()
+        Simulator.start(SIMULATOR_NAME, '9.1')
         Tns.create_app(self.app_name_appTest, attributes={"--copy-from": "data/apps/livesync-hello-world"})
         Tns.platform_add_ios(attributes={"--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
                                          "--path": self.app_name_appTest,
