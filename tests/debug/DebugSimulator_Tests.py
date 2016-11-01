@@ -1,13 +1,14 @@
-import time
 import os.path
+import time
 
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
+from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
-from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH
+from core.settings.settings import IOS_RUNTIME_PATH, IOS_INSPECTOR_PACKAGE
 from core.tns.tns import Tns
 
 
@@ -17,8 +18,11 @@ class DebugSimulatorTests(BaseClass):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
         Emulator.stop_emulators()
+        run("rm -rf ~/.npm/node_modules/tns-ios-inspector")
         Tns.create_app(cls.app_name)
-        Tns.platform_add_ios(attributes={"--path": cls.app_name})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name,
+                                         "--frameworkPath": IOS_RUNTIME_PATH
+                                         })
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -42,10 +46,9 @@ class DebugSimulatorTests(BaseClass):
         output = Tns.run_tns_command("debug ios", attributes={"--debug-brk": "",
                                                               "--emulator": "",
                                                               "--path": self.app_name,
-                                                              "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                                              "--frameworkPath": IOS_INSPECTOR_PACKAGE,
                                                               "--timeout": "200"
-                                                              },
-                                     timeout=200)
+                                                              }, timeout=200)
 
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
@@ -62,15 +65,14 @@ class DebugSimulatorTests(BaseClass):
         output = Tns.run_tns_command("emulate ios", attributes={"--path": self.app_name,
                                                                 "--justlaunch": ""})
         assert "deployed on device" in output
-        time.sleep(5)
+        time.sleep(15)
 
         output = Tns.run_tns_command("debug ios", attributes={"--start": "",
                                                               "--emulator": "",
                                                               "--path": self.app_name,
-                                                              "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                                              "--frameworkPath": IOS_INSPECTOR_PACKAGE,
                                                               "--timeout": "150"
-                                                              },
-                                     timeout=150)
+                                                              }, timeout=150)
         assert "Frontend client connected" in output
         assert "closed" not in output
         assert "detached" not in output

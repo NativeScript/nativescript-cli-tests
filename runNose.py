@@ -14,7 +14,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
     COMMAND_TIMEOUT, ANDROID_PATH, IOS_PATH, SUT_ROOT_FOLDER, TEST_RUN, CLI_PATH, ANDROID_RUNTIME_PATH, \
-    IOS_RUNTIME_PATH, TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH
+    IOS_RUNTIME_PATH, TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH, IOS_INSPECTOR_PATH
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
@@ -38,6 +38,7 @@ def clean_npm():
     else:
         run("npm cache clean", COMMAND_TIMEOUT)
         run("rm -rf ~/.npm/tns*", COMMAND_TIMEOUT)
+
 
 def clean_gradle():
     if CURRENT_OS == OSType.WINDOWS:
@@ -91,6 +92,10 @@ def get_ios_runtime():
     shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-ios.tgz"))
     if File.exists(os.path.join(os.getcwd(), IOS_RUNTIME_PATH)):
         extract_archive(IOS_RUNTIME_PATH, os.path.splitext(IOS_RUNTIME_PATH)[0])
+
+    # Copy inspector package
+    location = os.path.join(IOS_INSPECTOR_PATH, "tns-ios-inspector.tgz")
+    shutil.copy2(location.strip(), os.path.join(os.getcwd(), SUT_ROOT_FOLDER, "tns-ios-inspector.tgz"))
 
 
 def get_repos():

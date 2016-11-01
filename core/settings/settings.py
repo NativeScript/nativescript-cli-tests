@@ -39,8 +39,10 @@ TNS_MODULES_PATH = os.environ["TNS_MODULES_PATH"]
 TNS_MODULES_WIDGETS_PATH = os.environ["TNS_MODULES_WIDGETS_PATH"]
 if "IOS_PATH" in os.environ:
     IOS_PATH = os.environ["IOS_PATH"]
+    IOS_INSPECTOR_PATH = os.environ["IOS_INSPECTOR_PATH"]
 else:
     IOS_PATH = None
+    IOS_INSPECTOR_PATH = None
 
 # Local packages path
 TNS_PATH = os.path.join("node_modules", ".bin", "tns")
@@ -49,6 +51,7 @@ ANDROID_RUNTIME_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-android.tgz")
 ANDROID_RUNTIME_SYMLINK_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-android", "package")
 IOS_RUNTIME_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-ios.tgz")
 IOS_RUNTIME_SYMLINK_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-ios", "package")
+IOS_INSPECTOR_PACKAGE = os.path.join(SUT_ROOT_FOLDER, "tns-ios-inspector.tgz")
 
 # Output settigns
 OUTPUT_FOLDER = TEST_RUN_HOME + os.path.sep + "out"
