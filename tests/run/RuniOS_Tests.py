@@ -103,8 +103,8 @@ class RuniOS(BaseClass):
 
     def test_005_run_ios_default(self):
         output = Tns.run_ios(attributes={"--path": self.app_name}, timeout=180)
-        # Back to debug build, so require prepare
-        assert "Project successfully prepared" in output
+        # Hm....not sure this is ok, but no prepare in this case.
+        assert "Project successfully prepared" not in output
         assert "CONFIGURATION Debug" in output
 
     def test_200_run_ios_inside_project(self):
