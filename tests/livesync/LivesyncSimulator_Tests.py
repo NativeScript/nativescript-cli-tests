@@ -13,7 +13,6 @@ from core.osutils.watcher import Watcher
 from core.settings.settings import SIMULATOR_NAME, IOS_RUNTIME_SYMLINK_PATH, TNS_PATH, DeviceType
 from core.tns.tns import Tns
 
-
 #########################################
 # test_001
 #   -> first run the app and then run full sync with xml, css and js
@@ -32,7 +31,6 @@ class LivesyncSimulatorTests(Watcher):
 
     @classmethod
     def setUpClass(cls):
-
         # setup simulator
         Emulator.stop_emulators()
         Simulator.stop_simulators()
@@ -54,10 +52,8 @@ class LivesyncSimulatorTests(Watcher):
                                          })
         output = Tns.run_ios(attributes={"--emulator": "",
                                          "--path": cls.app_name,
-                                         "--justlaunch": ""},
-                             assert_success=False)
-        assert "Starting iOS Simulator" not in output
-
+                                         "--justlaunch": ""}, assert_success=False)
+        assert "Successfully deployed on device" in output
         # replace
         replace_all(app_name=cls.app_name)
 
@@ -155,6 +151,7 @@ class LivesyncSimulatorTests(Watcher):
         self.wait_for_text_in_output("app/folder/test.xml file with")
         time.sleep(10)
         Simulator.file_contains("TNSApp", "app/folder/test.xml", text="WATCH")
+
     #         remove(self.app_name + "/app/folder")
     #         self.wait_for_text_in_output("app/folder/")
     #
@@ -174,7 +171,6 @@ class LivesyncSimulatorTests(Watcher):
         Simulator.file_contains("TNSApp", "app/folder/test.css", text="color: green;")
 
     def test_301_livesync_ios_simulator_before_run(self):
-
         # TODO: Add test for https://github.com/NativeScript/nativescript-cli/issues/1548 after it is fixed
 
         self.terminate_watcher()
@@ -191,22 +187,15 @@ class LivesyncSimulatorTests(Watcher):
         File.replace(self.app_name_appTest + "/app/main-page.xml", "TAP", "MYTAP")
         File.replace(self.app_name_appTest + "/app/main-view-model.js", "taps", "clicks")
         File.replace(self.app_name_appTest + "/app/app.css", "30", "20")
-
-        File.replace(self.app_name_appTest + "/node_modules/tns-core-modules/LICENSE", "Copyright", "MyCopyright")
         File.replace(self.app_name_appTest + "/node_modules/tns-core-modules/application/application-common.js",
                      "(\"globals\");", "(\"globals\"); // test")
 
         output = Tns.livesync(platform="ios", attributes={"--emulator": "",
                                                           "--path": self.app_name_appTest,
-                                                          "--syncAllFiles": "",
-                                                          "--justlaunch": ""})
+                                                          "--justlaunch": ""}, log_trace=False)
         time.sleep(10)
         assert "Successfully synced application org.nativescript.appTest" in output
-
 
         Simulator.file_contains(self.app_name_appTest, "app/main-page.xml", text="MYTAP")
         Simulator.file_contains(self.app_name_appTest, "app/main-view-model.js", text="clicks left")
         Simulator.file_contains(self.app_name_appTest, "app/app.css", text="font-size: 20;")
-        Simulator.file_contains(self.app_name_appTest, "app/tns_modules/LICENSE", text="MyCopyright")
-        Simulator.file_contains(self.app_name_appTest, "app/tns_modules/application/application-common.js",
-                                text="require(\"globals\"); // test")
