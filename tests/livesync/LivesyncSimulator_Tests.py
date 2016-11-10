@@ -77,6 +77,8 @@ class LivesyncSimulatorTests(Watcher):
     @classmethod
     def tearDownClass(cls):
         cls.terminate_watcher()
+        Simulator.uninstall_app(cls.app_name)
+        Simulator.uninstall_app(cls.app_name_appTest)
         Simulator.stop_simulators()
 
         Folder.cleanup(cls.app_name)
@@ -177,6 +179,7 @@ class LivesyncSimulatorTests(Watcher):
         Folder.cleanup(self.app_name_appTest)
         Simulator.stop_simulators()
         Simulator.start(SIMULATOR_NAME, '9.1')
+        Simulator.uninstall_app(self.app_name_appTest)
         Tns.create_app(self.app_name_appTest, attributes={"--copy-from": "data/apps/livesync-hello-world"})
         Tns.platform_add_ios(attributes={"--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
                                          "--path": self.app_name_appTest,
