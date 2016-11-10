@@ -33,7 +33,10 @@ class Tns(object):
         if " " in path:
             path = "\"" + path + "\""
         if "release" in CLI_PATH.lower():
-            return ""  # In release branches we relay on Sinopia
+            version = Tns.run_tns_command("", attributes={"--version": ""})
+            Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False)
+            output = Tns.plugin_add("tns-core-modules@" + version, attributes={"--path": path}, assert_success=False)
+            return output
         else:
             Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False)
             output = Tns.plugin_add("tns-core-modules@next", attributes={"--path": path})

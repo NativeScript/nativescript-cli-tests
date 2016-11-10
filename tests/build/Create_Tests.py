@@ -38,7 +38,7 @@ class CreateTests(BaseClass):
         Folder.cleanup(cls.app_name_space)
 
     def test_001_create_app(self):
-        Tns.create_app(self.app_name, update_modules=False)
+        Tns.create_app(self.app_name, update_modules=True)
         assert Folder.is_empty(self.app_name + "/platforms")
         assert not Folder.exists(self.app_name + "/app/tns_modules")
 
