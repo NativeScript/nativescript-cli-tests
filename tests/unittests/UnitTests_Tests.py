@@ -6,6 +6,12 @@ from core.tns.tns import Tns
 
 
 class UnitTests(BaseClass):
+
+    @classmethod
+    def setUpClass(cls):
+        logfile = os.path.join("out", cls.__name__ + ".txt")
+        BaseClass.setUpClass(logfile)
+
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
@@ -13,6 +19,10 @@ class UnitTests(BaseClass):
     def tearDown(self):
         BaseClass.tearDown(self)
         Folder.cleanup(self.app_name)
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
 
     def test_101_test_init_jasmine(self):
         Tns.create_app(app_name=self.app_name)

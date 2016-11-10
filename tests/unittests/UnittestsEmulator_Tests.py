@@ -1,8 +1,9 @@
 import os.path
+from core.osutils.command import run
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH
+from core.settings.settings import ANDROID_RUNTIME_PATH, TEST_RUN_HOME
 from core.tns.tns import Tns
 from nose.tools import timed
 
@@ -37,16 +38,16 @@ class UnittestsEmulator(BaseClass):
         Tns.run_tns_command("test init", attributes={"--framework": "mocha",
                                                      "--path": self.app_name})
 
-        # Next lines are required because of https://github.com/NativeScript/nativescript-cli/issues/1636
-        Tns.run_tns_command("test android", attributes={"--emulator": "",
-                                                        "--justlaunch": "",
-                                                        "--path": self.app_name},
-                            timeout=90)
+        # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/2212
+        Folder.navigate_to(self.app_name)
+        output = run("npm install --save-dev mocha")
+        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
         output = Tns.run_tns_command("test android", attributes={"--emulator": "",
                                                                  "--justlaunch": "",
                                                                  "--path": self.app_name,
-                                                                 "--timeout": "90"})
+                                                                 "--timeout": "120"})
+
         assert "Successfully prepared plugin nativescript-unit-test-runner for android." in output
         assert "Project successfully prepared" in output
         assert "server started" in output

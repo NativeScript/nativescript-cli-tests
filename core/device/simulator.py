@@ -90,6 +90,12 @@ class Simulator(object):
             return "ValueError!"
 
     @staticmethod
+    def uninstall_app(app_name):
+        app_name = app_name.replace("_", "")
+        app_name = app_name.replace(" ","")
+        run("xcrun simctl uninstall booted org.nativescript.{0}".format(app_name))
+
+    @staticmethod
     def cat_app_file(app_name, file_path):
         """Return content of file on booted simulator"""
         app_name = app_name.replace("_", "")
