@@ -1,3 +1,4 @@
+import os.path
 from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
