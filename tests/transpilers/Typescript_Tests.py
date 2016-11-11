@@ -6,7 +6,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, CURRENT_OS, IOS_RUNTIME_SYMLINK_PATH, OSType, \
     TEST_RUN_HOME, TNS_PATH, SUT_ROOT_FOLDER, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, \
-    ANDROID_KEYSTORE_ALIAS_PASS
+    ANDROID_KEYSTORE_ALIAS_PASS, CLI_PATH
 from core.tns.tns import Tns
 
 
@@ -22,20 +22,12 @@ class TypescriptTests(BaseClass):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
 
-        output = Tns.create_app(TypescriptTests.app_name, attributes={"--tsc": ""})
-        assert "nativescript-dev-typescript@" in output
-        assert "nativescript-hook@" in output
+        Tns.create_app_ts(TypescriptTests.app_name)
 
-        assert File.extension_exists(TypescriptTests.node_modules_folder + "/tns-core-modules", ".d.ts")
-        assert File.exists(TypescriptTests.app_name + "/tsconfig.json")
         assert File.exists(TypescriptTests.node_modules_folder + "/typescript/bin/tsc")
         assert not Folder.is_empty(TypescriptTests.node_modules_folder + "/nativescript-dev-typescript")
         assert File.exists(TypescriptTests.hooks_folder + "/before-prepare/nativescript-dev-typescript.js")
         assert File.exists(TypescriptTests.hooks_folder + "/before-watch/nativescript-dev-typescript.js")
-
-        output = run("cat " + TypescriptTests.app_name + "/package.json")
-        assert "devDependencies" in output
-        assert "nativescript-dev-typescript" in output
 
         Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH,
                                              "--path": TypescriptTests.app_name
@@ -48,7 +40,6 @@ class TypescriptTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-        Folder.cleanup(TypescriptTests.platforms_folder)
 
     def tearDown(self):
         BaseClass.setUp(self)
@@ -56,7 +47,7 @@ class TypescriptTests(BaseClass):
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
-        Folder.cleanup('./' + cls.app_name)
+        Folder.cleanup('./' + TypescriptTests.app_name)
 
     def test_001_prepare(self):
 
@@ -146,10 +137,18 @@ class TypescriptTests(BaseClass):
         assert File.extension_exists(self.assets_folder + "/app", ".js")
         assert not File.extension_exists(self.assets_folder + "/app", ".map")
         assert not File.extension_exists(self.assets_folder + "/app", ".ts")
-        assert File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".js")
-        assert not File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".ts")
+
+        if "release" in CLI_PATH.lower():  # TODO: Use Settings.BRANCH
+            # In this case we have a snapshot, tns-core-modules should not be available in platforms folder
+            assert not File.exists(self.assets_folder + "/app/tns_modules/application")
+        else:
+            assert File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".js")
+            assert not File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".ts")
 
         if CURRENT_OS == OSType.OSX:
+            self.assets_folder = os.path.join(self.app_name, "platforms", "ios",
+                                              self.app_name.replace("_", "").replace(" ", ""))
+
             # prepare in release => .ts should NOT go to the platforms folder
             output = Tns.prepare_ios(attributes={"--path": self.app_name,
                                                  "--release": ""
@@ -165,6 +164,7 @@ class TypescriptTests(BaseClass):
             assert File.extension_exists(self.assets_folder + "/app", ".js")
             assert not File.extension_exists(self.assets_folder + "/app", ".map")
             assert not File.extension_exists(self.assets_folder + "/app", ".ts")
+
             assert File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".js")
             assert not File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".ts")
 

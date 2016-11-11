@@ -40,6 +40,9 @@ TNS_MODULES_WIDGETS_PATH = os.environ["TNS_MODULES_WIDGETS_PATH"]
 IOS_PATH = os.getenv("IOS_PATH", None)
 IOS_INSPECTOR_PATH = os.getenv('IOS_INSPECTOR_PATH', None)
 
+# Get branch
+BRANCH = os.getenv('BRANCH', "master")
+
 # Local packages path
 TNS_PATH = os.path.join("node_modules", ".bin", "tns")
 SUT_ROOT_FOLDER = TEST_RUN_HOME + os.path.sep + "sut"
