@@ -8,7 +8,6 @@ deviceLog.txt
 output.txt
 pylint*
 QA*
-temp*
 Report*
 setup*
 TestApp*

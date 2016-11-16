@@ -58,7 +58,6 @@ class CreateTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/tns-core-modules/LICENSE")
         assert File.exists(self.app_name + "/node_modules/tns-core-modules/xml/xml.js")
 
-
     def test_002_create_project_with_path(self):
         Tns.create_app(self.app_name, attributes={"--path": "folder/subfolder/"},
                        assert_success=False, update_modules=False)
@@ -135,6 +134,24 @@ class CreateTests(BaseClass):
         assert not Folder.exists(self.app_name + "/app/tns_modules")
         output = File.read(self.app_name + os.sep + "package.json")
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
+
+    def test_101_create_project_with_local_directory_template(self):
+        Tns.create_app(self.app_name, attributes={"--template": "./data/templates/myCustomTemplate/"},
+                       assert_success=False, update_modules=False)
+        assert File.exists(self.app_name + "/app/index.js")
+        assert File.exists(self.app_name + "/app/package.json")
+        assert not Folder.is_empty(self.app_name + "/app/App_Resources/Android")
+        assert not Folder.is_empty(self.app_name + "/app/App_Resources/iOS")
+        assert not Folder.is_empty(self.app_name + "/node_modules/lodash")
+        assert not Folder.is_empty(self.app_name + "/node_modules/minimist")
+        assert not Folder.is_empty(self.app_name + "/node_modules/tns-core-modules")
+        assert not Folder.is_empty(self.app_name + "/node_modules/tns-core-modules-widgets")
+        assert Folder.is_empty(self.app_name + "/platforms")
+
+        output = File.read(self.app_name + os.sep + "package.json")
+        assert "\"tns-core-modules\":" in output
+        assert "\"lodash\": \"3.10.1\"" in output
+        assert "\"minimist\": \"1.2.0\"" in output
 
     def test_400_create_project_with_copyfrom_wrong_path(self):
         output = Tns.create_app(self.app_name, attributes={"--copy-from": "invalidFolder"},
