@@ -140,8 +140,6 @@ class CreateTests(BaseClass):
                        assert_success=False, update_modules=False)
         assert File.exists(self.app_name + "/app/index.js")
         assert File.exists(self.app_name + "/app/package.json")
-        assert not Folder.is_empty(self.app_name + "/app/App_Resources/Android")
-        assert not Folder.is_empty(self.app_name + "/app/App_Resources/iOS")
         assert not Folder.is_empty(self.app_name + "/node_modules/lodash")
         assert not Folder.is_empty(self.app_name + "/node_modules/minimist")
         assert not Folder.is_empty(self.app_name + "/node_modules/tns-core-modules")
