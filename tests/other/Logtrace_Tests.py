@@ -19,7 +19,6 @@ class LogtraceTests(BaseClass):
         print "and id org.nativescript.{0} at location".format(self.app_name.replace("_", ""))
         assert "and id org.nativescript.{0} at location".format(self.app_name.replace("_", "")) in output
 
-        assert "Using NativeScript verified template:" in output
         assert "tns-template-hello-world with version undefined." in output
 
         assert "Using custom app from" in output
