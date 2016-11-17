@@ -32,13 +32,6 @@ class BuildAndroidTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-        Folder.cleanup(self.app_no_platform)
-        Folder.cleanup(self.platforms_android + '/build/outputs')
-        Folder.cleanup(self.platforms_android + '/build/intermediates/exploded-aar')
-        # TODO: Do not delete exploder-aar after https://github.com/NativeScript/android-runtime/issues/339 is fixed
-        # Notes:
-        # Issue above looks fixed, but test test_303_build_project_with_gz_file
-        # cause failures in next tests if exploded-aar is not deleted
 
     def tearDown(self):
         BaseClass.tearDown(self)
@@ -188,7 +181,11 @@ class BuildAndroidTests(BaseClass):
         assert "You have specified '99' for compile sdk, but it is not installed on your system." in output
 
     def test_320_build_release_with_copyto_option(self):
+        Tns.platform_remove(platform="android", attributes={"--path": BaseClass.app_name}, assert_success=False)
         Folder.cleanup(self.app_name + '/platforms')
+        Tns.platform_add_android(attributes={"--path": BaseClass.app_name,
+                                             "--frameworkPath": ANDROID_RUNTIME_PATH
+                                             })
         Tns.build_android(attributes={"--path": self.app_name,
                                       "--keyStorePath": ANDROID_KEYSTORE_PATH,
                                       "--keyStorePassword": ANDROID_KEYSTORE_PASS,
