@@ -146,7 +146,7 @@ class PlatformAndroidTests(BaseClass):
                                                       "--frameworkPath": "invalidFile.tgz"
                                                       },
                                           assert_success=False)
-        assert "Error: no such package available" in output
+        assert "no such package available" in output
         assert "invalidFile.tgz" in output
 
     def test_423_platform_add_android_wrong_framework_path_option(self):
