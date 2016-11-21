@@ -22,7 +22,8 @@ class CreateNGTests(BaseClass):
         assert Folder.exists(self.app_name + "/node_modules/tns-core-modules")
 
         assert Folder.exists(self.app_name + "/hooks")
-        assert Folder.exists(self.app_name + "/app/App_Resources")
+        #TODO: plamen5kov: return check when we publish 2.5 templates that include App_Resources folder
+        # assert Folder.exists(self.app_name + "/app/App_Resources")
 
     def test_101_create_ng_project(self):
         output = Tns.create_app(self.app_name, attributes={"--ng": ""}, update_modules=False)
