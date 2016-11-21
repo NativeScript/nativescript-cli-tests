@@ -36,7 +36,7 @@ class UnitTests(BaseClass):
 
         output = run("cat " + self.app_name + "/package.json")
         assert "karma-jasmine" in output
-        assert "jasmine-core" in output
+        # assert "jasmine-core" in output //no such package is being installed (we install karma, karma-jasmine, karma-nativescript-launcher none of which install jasmine-core)
 
         output = run("cat " + self.app_name + "/karma.conf.js")
         assert "frameworks: ['jasmine']" in output
