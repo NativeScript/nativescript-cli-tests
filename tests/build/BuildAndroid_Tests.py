@@ -11,7 +11,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS, \
-    OSType, ANDROID_RUNTIME_SYMLINK_PATH, TEST_RUN_HOME
+    OSType, TEST_RUN_HOME
 from core.tns.tns import Tns
 
 
@@ -44,7 +44,6 @@ class BuildAndroidTests(BaseClass):
         File.remove("TNSApp-release.apk")
         Folder.cleanup(cls.app_name_dash)
         Folder.cleanup(cls.app_name_space)
-        Folder.cleanup(cls.app_name_symlink)
         Folder.cleanup('temp')
 
     def test_001_build_android(self):
@@ -68,21 +67,6 @@ class BuildAndroidTests(BaseClass):
                                       "--release": ""
                                       })
         assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-release.apk")
-
-    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS,
-                     "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282")
-    def test_100_build_android_symlink(self):
-        Tns.create_app(self.app_name_symlink)
-        Tns.platform_add_android(attributes={"--path": self.app_name_symlink,
-                                             "--frameworkPath": ANDROID_RUNTIME_SYMLINK_PATH,
-                                             "--symlink": ""
-                                             })
-        Tns.build_android(attributes={"--path": self.app_name_symlink})
-
-        # Verify build does not modify original manifest
-        output = File.read(ANDROID_RUNTIME_SYMLINK_PATH + "/framework/src/main/AndroidManifest.xml")
-        assert "__PACKAGE__" in output, "Build modify original AndroidManifest.xml, this is a problem!"
-        assert "__APILEVEL__" in output, "Build modify original AndroidManifest.xml, this is a problem!"
 
     def test_200_build_android_inside_project_folder(self):
         Folder.navigate_to(self.app_name)
@@ -239,25 +223,11 @@ class BuildAndroidTests(BaseClass):
                                      attributes={"--frameworkPath": "../../../sut/tns-android/package",
                                                  "--profile-dir": "../",
                                                  "--no-hooks": "",
-                                                 "--ignore-scripts": "",
-                                                 "--symlink": ""
+                                                 "--ignore-scripts": ""
                                                  },
                                      tns_path="../../../node_modules/.bin/tns")
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         assert "Project successfully created" in output
-
-        # Prepare
-        Folder.navigate_to("temp/appbuilderProject/appbuilderProject")
-        output = Tns.run_tns_command("prepare android", attributes={"--profile-dir": "../",
-                                                                    "--no-hooks": "",
-                                                                    "--ignore-scripts": "",
-                                                                    "--sdk": "22"
-                                                                    },
-                                     tns_path="../../../node_modules/.bin/tns")
-        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert "Successfully prepared plugin tns-core-modules for android" in output
-        assert "Successfully prepared plugin tns-core-modules-widgets for android" in output
-        assert "Project successfully prepared" in output
 
         # Build
         Folder.navigate_to("temp/appbuilderProject/appbuilderProject")

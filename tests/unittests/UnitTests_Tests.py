@@ -36,7 +36,6 @@ class UnitTests(BaseClass):
 
         output = run("cat " + self.app_name + "/package.json")
         assert "karma-jasmine" in output
-        assert "jasmine-core" in output
 
         output = run("cat " + self.app_name + "/karma.conf.js")
         assert "frameworks: ['jasmine']" in output

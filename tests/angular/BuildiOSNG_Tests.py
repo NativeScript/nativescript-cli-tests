@@ -3,7 +3,7 @@ import os
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH
+from core.settings.settings import IOS_RUNTIME_PATH
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
@@ -18,8 +18,7 @@ class BuildiOSNGTests(BaseClass):
 
         Tns.create_app(app_name=cls.app_name, attributes={"--ng": ""})
         Tns.platform_add_ios(attributes={"--path": cls.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
 
     @classmethod

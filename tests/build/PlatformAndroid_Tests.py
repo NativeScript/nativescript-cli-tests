@@ -7,8 +7,7 @@ import unittest
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME_PATH, ANDROID_RUNTIME_SYMLINK_PATH, \
-    TEST_RUN_HOME
+from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME_PATH, TEST_RUN_HOME
 from core.tns.tns import Tns
 
 
@@ -35,15 +34,6 @@ class PlatformAndroidTests(BaseClass):
         Tns.create_app(self.app_name, update_modules=False)
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
-                                             })
-
-    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS,
-                     "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/282")
-    def test_004_platform_add_android_symlink_and_frameworkPath(self):
-        Tns.create_app(self.app_name, update_modules=False)
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_SYMLINK_PATH,
-                                             "--symlink": ""
                                              })
 
     def test_200_platform_list_inside_empty_project(self):
@@ -156,15 +146,6 @@ class PlatformAndroidTests(BaseClass):
                                                       },
                                           assert_success=False)
         assert "The option 'frameworkpath' is not supported." in output
-
-    def test_424_platform_add_android_wrong_symlink_option(self):
-        Tns.create_app(self.app_name, update_modules=False)
-        output = Tns.platform_add_android(attributes={"--path": self.app_name,
-                                                      "--frameworkPath": "invalidFile.tgz",
-                                                      "--simlink": ""
-                                                      },
-                                          assert_success=False)
-        assert "The option 'simlink' is not supported." in output
 
     def test_425_platform_add_empty_platform(self):
         Tns.create_app(self.app_name, update_modules=False)

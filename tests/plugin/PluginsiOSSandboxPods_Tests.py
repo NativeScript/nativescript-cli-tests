@@ -6,7 +6,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, SUT_ROOT_FOLDER
+from core.settings.settings import IOS_RUNTIME_PATH, SUT_ROOT_FOLDER
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
@@ -20,8 +20,7 @@ class PluginsiOSSandboxPodsTests(BaseClass):
     def test_001_plugin_add_sandbox_pod_can_write_in_app_folder(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""})
+                                         "--frameworkPath": IOS_RUNTIME_PATH})
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/nativescript-ios-working-with-sandbox-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
@@ -41,8 +40,7 @@ class PluginsiOSSandboxPodsTests(BaseClass):
     def test_400_plugin_add_sandbox_pod_can_write_outside_app_folder_by_default(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""})
+                                         "--frameworkPath": IOS_RUNTIME_PATH})
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/nativescript-ios-fail-with-sandbox-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
@@ -63,8 +61,7 @@ class PluginsiOSSandboxPodsTests(BaseClass):
                      '"USE_POD_SANDBOX": true')
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""})
+                                         "--frameworkPath": IOS_RUNTIME_PATH})
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/nativescript-ios-fail-with-sandbox-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)

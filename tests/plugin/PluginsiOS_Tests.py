@@ -8,8 +8,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, IOS_RUNTIME_SYMLINK_PATH, CURRENT_OS, OSType, IOS_RUNTIME_PATH, \
-    ANDROID_RUNTIME_SYMLINK_PATH, ANDROID_RUNTIME_PATH
+from core.settings.settings import TNS_PATH, IOS_RUNTIME_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
@@ -39,8 +38,7 @@ class PluginsiOSTests(BaseClass):
     def test_002_plugin_add_after_platform_add_ios(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         output = Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name})
         assert self.app_name + "/node_modules/tns-plugin" in output
@@ -67,15 +65,13 @@ class PluginsiOSTests(BaseClass):
         assert "dependencies" in output
         assert "nativescript-telerik-ui" in output
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""})
+                                         "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.build_ios(attributes={"--path": self.app_name})
 
     def test_202_plugin_add_after_platform_add_ios(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         output = Tns.plugin_add("nativescript-telerik-ui", attributes={"--ignore-scripts": "",
                                                                        "--path": self.app_name
@@ -113,8 +109,7 @@ class PluginsiOSTests(BaseClass):
     def test_204_build_app_with_plugin_inside_project(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""})
+                                         "--frameworkPath": IOS_RUNTIME_PATH})
 
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
@@ -131,8 +126,7 @@ class PluginsiOSTests(BaseClass):
     def test_300_build_app_with_plugin_outside(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
 
         output = Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name})
@@ -147,12 +141,10 @@ class PluginsiOSTests(BaseClass):
     def test_301_build_app_for_both_platforms(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_SYMLINK_PATH,
-                                             "--symlink": ""
+                                             "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })
 
         output = Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name})
@@ -248,12 +240,10 @@ class PluginsiOSTests(BaseClass):
     def test_403_plugin_add_PluginNotSupportedOnSpecificPlatform(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH,
-                                             "--symlink": ""
+                                             "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })
         output = Tns.plugin_add("tns-plugin@1.0.2", attributes={"--path": self.app_name}, assert_success=False)
         assert "tns-plugin is not supported for android" in output
