@@ -74,8 +74,7 @@ class BuildAndroidTests(BaseClass):
     def test_100_build_android_symlink(self):
         Tns.create_app(self.app_name_symlink)
         Tns.platform_add_android(attributes={"--path": self.app_name_symlink,
-                                             "--frameworkPath": ANDROID_RUNTIME_SYMLINK_PATH,
-                                             "--symlink": ""
+                                             "--frameworkPath": ANDROID_RUNTIME_SYMLINK_PATH
                                              })
         Tns.build_android(attributes={"--path": self.app_name_symlink})
 
@@ -239,8 +238,7 @@ class BuildAndroidTests(BaseClass):
                                      attributes={"--frameworkPath": "../../../sut/tns-android/package",
                                                  "--profile-dir": "../",
                                                  "--no-hooks": "",
-                                                 "--ignore-scripts": "",
-                                                 "--symlink": ""
+                                                 "--ignore-scripts": ""
                                                  },
                                      tns_path="../../../node_modules/.bin/tns")
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)

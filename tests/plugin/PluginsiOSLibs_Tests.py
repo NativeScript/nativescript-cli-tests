@@ -34,8 +34,7 @@ class PluginsiOSLibsTests(BaseClass):
         assert "static-lib/hello-plugin" in output
 
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
                                          })
         Tns.build_ios(attributes={"--path": self.app_name})
         # It targets 8.0 since a dynamic framework was added to the widgets.
@@ -49,8 +48,7 @@ class PluginsiOSLibsTests(BaseClass):
     def test_202_plugin_add_static_lib_universal_after_platform_add_ios(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
                                          })
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/static-lib/hello-plugin"
@@ -77,8 +75,7 @@ class PluginsiOSLibsTests(BaseClass):
     def test_401_plugin_add_static_lib_non_universal(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
                                          })
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/static-lib/bye-plugin"

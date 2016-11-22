@@ -28,8 +28,7 @@ class PrepareiOSTests(BaseClass):
     def test_001_prepare_ios(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""})
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH})
 
         Tns.prepare_ios(attributes={"--path": self.app_name})
 
@@ -51,8 +50,7 @@ class PrepareiOSTests(BaseClass):
     def test_200_prepare_additional_appresources(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
                                          })
 
         # Create new files in AppResources
@@ -84,8 +82,7 @@ class PrepareiOSTests(BaseClass):
     def test_300_prepare_ios_preserve_case(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
                                          })
         run("cp " + self.app_name + "/node_modules/tns-core-modules/application/application-common.js" +
             " " + self.app_name + "/node_modules/tns-core-modules/application/New-application-common.js")
@@ -112,8 +109,7 @@ class PrepareiOSTests(BaseClass):
     def test_301_prepare_android_does_not_prepare_ios(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
                                          })
 
         Tns.plugin_add("nativescript-social-share", attributes={"--path": self.app_name})

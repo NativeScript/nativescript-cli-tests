@@ -18,8 +18,7 @@ class BuildiOSNGTests(BaseClass):
 
         Tns.create_app(app_name=cls.app_name, attributes={"--ng": ""})
         Tns.platform_add_ios(attributes={"--path": cls.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
                                          })
 
     @classmethod

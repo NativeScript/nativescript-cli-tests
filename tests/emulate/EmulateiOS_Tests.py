@@ -22,8 +22,7 @@ class EmulateiOSTests(BaseClass):
 
         Tns.create_app(cls.app_name)
         Tns.platform_add_ios(attributes={"--path": cls.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
                                          })
 
     def setUp(self):

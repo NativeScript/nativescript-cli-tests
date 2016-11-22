@@ -22,8 +22,7 @@ class PluginsiOSPodsTests(BaseClass):
     def test_001_plugin_add_multiple_pods(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
                                          })
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/carousel"
@@ -87,8 +86,7 @@ class PluginsiOSPodsTests(BaseClass):
         assert "googlesdk" in output
 
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
                                          })
         output = Tns.prepare_ios(attributes={"--path": self.app_name}, log_trace=True)
         
@@ -123,8 +121,7 @@ class PluginsiOSPodsTests(BaseClass):
     def test_202_plugin_add_pod_google_maps_after_platform_add_ios(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
                                          })
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/googlesdk"
@@ -198,8 +195,7 @@ class PluginsiOSPodsTests(BaseClass):
     def test_401_plugin_add_invalid_pod(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
                                          })
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/invalidpod"
