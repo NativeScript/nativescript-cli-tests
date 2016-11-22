@@ -7,8 +7,7 @@ import unittest
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME_PATH, ANDROID_RUNTIME_SYMLINK_PATH, \
-    TEST_RUN_HOME
+from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME_PATH, TEST_RUN_HOME
 from core.tns.tns import Tns
 
 

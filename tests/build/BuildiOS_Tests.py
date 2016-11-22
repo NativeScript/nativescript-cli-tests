@@ -7,7 +7,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, TNS_PATH, TEST_RUN_HOME
+from core.settings.settings import IOS_RUNTIME_PATH, TNS_PATH, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
@@ -33,7 +33,6 @@ class BuildiOSTests(BaseClass):
         Folder.cleanup(self.app_name_noplatform + '/platforms/ios/build')
 
         Folder.cleanup(self.app_name)
-        Folder.cleanup(self.app_name_nosym)
 
     @classmethod
     def tearDownClass(cls):
@@ -48,7 +47,7 @@ class BuildiOSTests(BaseClass):
     def test_001_build_ios(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         output = Tns.build_ios(attributes={"--path": self.app_name})
         assert "build/emulator/TNSApp.app" in output
@@ -59,7 +58,7 @@ class BuildiOSTests(BaseClass):
     def test_002_build_ios_release_fordevice(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         output = Tns.build_ios(attributes={"--path": self.app_name,
                                            "--forDevice": "",
@@ -80,7 +79,7 @@ class BuildiOSTests(BaseClass):
     def test_200_build_ios_release(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         output = Tns.build_ios(attributes={"--path": self.app_name,
                                            "--release": ""
@@ -92,7 +91,7 @@ class BuildiOSTests(BaseClass):
     def test_201_build_ios_fordevice(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         output = Tns.build_ios(attributes={"--path": self.app_name,
                                            "--forDevice": ""
@@ -102,24 +101,10 @@ class BuildiOSTests(BaseClass):
         assert "build/device/TNSApp.app" in output
         assert File.exists(self.app_name + "/platforms/ios/build/device/TNSApp.ipa")
 
-    def test_210_build_ios_non_symlink(self):
-        Tns.create_app(self.app_name_nosym)
-        Tns.platform_add_ios(attributes={"--path": self.app_name_nosym,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
-                                         })
-        output = Tns.build_ios(attributes={"--path": self.app_name_nosym,
-                                           "--forDevice": "",
-                                           "--release": ""
-                                           })
-        assert "CONFIGURATION Release" in output
-        assert "CodeSign" in output
-        assert "build/device/TNSAppNoSym.app" in output
-        assert File.exists(self.app_name_nosym + "/platforms/ios/build/device/TNSAppNoSym.ipa")
-
     def test_211_build_ios_inside_project(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         Folder.navigate_to(self.app_name)
         output = Tns.build_ios(tns_path=os.path.join("..", TNS_PATH), attributes={"--path": self.app_name},
@@ -131,7 +116,7 @@ class BuildiOSTests(BaseClass):
     def test_212_build_ios_with_prepare(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         Tns.prepare_ios(attributes={"--path": self.app_name})
 
@@ -161,7 +146,7 @@ class BuildiOSTests(BaseClass):
     def test_300_build_ios_with_dash(self):
         Tns.create_app(self.app_name_dash)
         Tns.platform_add_ios(attributes={"--path": self.app_name_dash,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
 
         # Verify project builds
@@ -176,7 +161,7 @@ class BuildiOSTests(BaseClass):
     def test_301_build_ios_with_space(self):
         Tns.create_app(self.app_name_space)
         Tns.platform_add_ios(attributes={"--path": "\"" + self.app_name_space + "\"",
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
 
         # Verify project builds
@@ -187,7 +172,7 @@ class BuildiOSTests(BaseClass):
     def test_302_build_ios_with_ios_in_path(self):
         Tns.create_app(self.app_name_ios)
         Tns.platform_add_ios(attributes={"--path": self.app_name_ios,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
 
         # Verify project builds
@@ -199,7 +184,7 @@ class BuildiOSTests(BaseClass):
     def test_310_build_ios_with_copy_to(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         output = Tns.build_ios(attributes={"--path": self.app_name, "--copy-to": "./"})
         assert "build/emulator/TNSApp.app" in output
@@ -209,7 +194,7 @@ class BuildiOSTests(BaseClass):
     def test_311_build_ios_release_with_copy_to(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         output = Tns.build_ios(attributes={"--path": self.app_name,
                                            "--forDevice": "",

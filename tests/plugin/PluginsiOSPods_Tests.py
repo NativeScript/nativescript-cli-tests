@@ -8,7 +8,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, SUT_ROOT_FOLDER
+from core.settings.settings import IOS_RUNTIME_PATH, SUT_ROOT_FOLDER
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
@@ -22,7 +22,7 @@ class PluginsiOSPodsTests(BaseClass):
     def test_001_plugin_add_multiple_pods(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/carousel"
@@ -86,10 +86,10 @@ class PluginsiOSPodsTests(BaseClass):
         assert "googlesdk" in output
 
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         output = Tns.prepare_ios(attributes={"--path": self.app_name}, log_trace=True)
-        
+
         assert "Successfully prepared plugin googlesdk for ios." in output
         assert "Installing pods..." in output
 
@@ -121,7 +121,7 @@ class PluginsiOSPodsTests(BaseClass):
     def test_202_plugin_add_pod_google_maps_after_platform_add_ios(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/googlesdk"
@@ -137,7 +137,7 @@ class PluginsiOSPodsTests(BaseClass):
         assert "googlesdk" in output
 
         output = Tns.build_ios(attributes={"--path": self.app_name})
-        
+
         assert "Successfully prepared plugin googlesdk for ios." in output
         assert "Installing pods..." in output
 
@@ -173,7 +173,7 @@ class PluginsiOSPodsTests(BaseClass):
     def test_400_prepare_install_pods(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
+                                         "--frameworkPath": IOS_RUNTIME_PATH,
                                          "symlink": ""
                                          })
 
@@ -195,7 +195,7 @@ class PluginsiOSPodsTests(BaseClass):
     def test_401_plugin_add_invalid_pod(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/invalidpod"

@@ -7,7 +7,7 @@ from core.base_class.BaseClass import BaseClass
 from core.device.simulator import Simulator
 from core.osutils.folder import Folder
 from core.osutils.process import Process
-from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, SIMULATOR_NAME
+from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME
 from core.tns.tns import Tns
 
 
@@ -22,7 +22,7 @@ class EmulateiOSTests(BaseClass):
 
         Tns.create_app(cls.app_name)
         Tns.platform_add_ios(attributes={"--path": cls.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
 
     def setUp(self):

@@ -7,7 +7,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH, \
+from core.settings.settings import ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH, \
     CURRENT_OS, OSType
 from core.tns.tns import Tns
 
@@ -27,7 +27,7 @@ class PlatformiOSTests(BaseClass):
     def test_001_platform_list_ios_project(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         output = Tns.run_tns_command("platform list", attributes={"--path": self.app_name})
         assert "The project is not prepared for any platform" in output
@@ -53,16 +53,6 @@ class PlatformiOSTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name})
 
-    def test_003_platform_add_ios_symlink_and_framework_path(self):
-        Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
-                                         })
-
-        # Verify Runtime is symlink
-        output = run("ls -la " + self.app_name + "/platforms/ios/")
-        assert "package/framework/internal" in output
-
     def test_200_platform_add_ios_framework_path(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
@@ -85,7 +75,7 @@ class PlatformiOSTests(BaseClass):
     def test_202_platform_remove_ios_symlink(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
 
         Tns.platform_remove(platform="ios", attributes={"--path": self.app_name})
@@ -125,7 +115,7 @@ class PlatformiOSTests(BaseClass):
 
         # Add iOS platform
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
 
         # Verify plist file in native project (after prepare)
