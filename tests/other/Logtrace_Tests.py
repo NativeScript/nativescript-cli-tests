@@ -6,7 +6,7 @@ import os
 from core.tns.tns import Tns
 from core.base_class.BaseClass import BaseClass
 from core.osutils.folder import Folder
-
+from core.settings.settings import CURRENT_OS, OSType
 
 class LogtraceTests(BaseClass):
     def setUp(self):
@@ -23,7 +23,10 @@ class LogtraceTests(BaseClass):
 
         assert "Using custom app from" in output
         assert "Copying custom app into" in output
-        assert 'spawn: npm "install" "tns-core-modules" "--save" "--save-exact"' in output
+        if CURRENT_OS == OSType.WINDOWS:
+            assert 'spawn: npm.cmd "install" "tns-core-modules" "--save" "--save-exact"' in output
+        else:
+            assert 'spawn: npm "install" "tns-core-modules" "--save" "--save-exact"' in output
         assert "Project " + self.app_name + " was successfully created" in output
 
     def test_002_platform_add_log_trace(self):
