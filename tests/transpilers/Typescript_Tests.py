@@ -4,7 +4,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, CURRENT_OS, IOS_RUNTIME_SYMLINK_PATH, OSType, \
+from core.settings.settings import ANDROID_RUNTIME_PATH, CURRENT_OS, IOS_RUNTIME_PATH, OSType, \
     TEST_RUN_HOME, TNS_PATH, SUT_ROOT_FOLDER, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, \
     ANDROID_KEYSTORE_ALIAS_PASS, CLI_PATH
 from core.tns.tns import Tns
@@ -33,9 +33,8 @@ class TypescriptTests(BaseClass):
                                              "--path": TypescriptTests.app_name
                                              })
         if CURRENT_OS == OSType.OSX:
-            Tns.platform_add_ios(attributes={"--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                             "--path": TypescriptTests.app_name,
-                                             "--symlink": ""
+            Tns.platform_add_ios(attributes={"--frameworkPath": IOS_RUNTIME_PATH,
+                                             "--path": TypescriptTests.app_name
                                              })
 
     def setUp(self):
