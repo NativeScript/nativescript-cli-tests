@@ -23,8 +23,7 @@ class LogtraceTests(BaseClass):
 
         assert "Using custom app from" in output
         assert "Copying custom app into" in output
-        assert "Exec npm install tns-core-modules --save --save-exact" in output
-        assert "Updating AppResources values" in output
+        assert 'spawn: npm "install" "tns-core-modules" "--save" "--save-exact"' in output
         assert "Project " + self.app_name + " was successfully created" in output
 
     def test_002_platform_add_log_trace(self):
