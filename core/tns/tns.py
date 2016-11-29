@@ -97,12 +97,18 @@ class Tns(object):
             assert File.exists(dts)
             assert "./node_modules/tns-core-modules/tns-core-modules.d.ts" in File.read(ref_dts)
 
+        return output
+
     @staticmethod
     def create_app_ng(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True):
         attr = {"--template": "https://github.com/NativeScript/template-hello-world-ng.git#" + BRANCH}
         attributes.update(attr)
-        Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace, assert_success=assert_success,
+        output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace, assert_success=assert_success,
                        update_modules=update_modules)
+        if assert_success:
+            assert "nativescript-angular" in output
+
+        return output
 
     @staticmethod
     def platform_add(platform="", version=None, attributes={}, assert_success=True, log_trace=False, tns_path=None):

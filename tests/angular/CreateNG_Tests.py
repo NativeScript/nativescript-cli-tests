@@ -25,10 +25,9 @@ class CreateNGTests(BaseClass):
         assert Folder.exists(self.app_name + "/app/App_Resources")
 
     def test_101_create_ng_project(self):
-        output = Tns.create_app_ng(self.app_name, update_modules=False)
-        assert "successfully created" in output
+        Tns.create_app_ng(self.app_name, update_modules=False)
         self.assert_angular_project()
-        assert not File.exists("TNS_App/app/LICENSE")
+        assert File.exists("TNS_App/app/LICENSE")
 
     @parameterized.expand([
         "tns-template-hello-world-ng",
