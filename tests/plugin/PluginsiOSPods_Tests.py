@@ -27,19 +27,15 @@ class PluginsiOSPodsTests(BaseClass):
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/carousel"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
-
-        assert self.app_name + "/node_modules/carousel" in output
         assert "Successfully installed plugin carousel." in output
         assert File.exists(self.app_name + "/node_modules/carousel/package.json")
         assert File.exists(self.app_name + "/node_modules/carousel/platforms/ios/Podfile")
 
-        output = run("cat " + self.app_name + "/package.json")
+        output = File.read(self.app_name + "/package.json")
         assert "carousel" in output
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/keychain"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
-
-        assert self.app_name + "/node_modules/keychain" in output
         assert "Successfully installed plugin keychain." in output
         assert File.exists(self.app_name + "/node_modules/keychain/package.json")
         assert File.exists(self.app_name + "/node_modules/keychain/platforms/ios/Podfile")
@@ -58,8 +54,7 @@ class PluginsiOSPodsTests(BaseClass):
         assert "pod 'AFNetworking'" in output
         assert "pod 'UICKeyChainStore'" in output
 
-        output = run(
-                "cat " + self.app_name + "/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
+        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
         assert "location = \"group:TNSApp.xcodeproj\">" in output
         assert "location = \"group:Pods/Pods.xcodeproj\">" in output
         assert File.exists(self.app_name + "/platforms/ios/Pods/Pods.xcodeproj")
@@ -74,13 +69,11 @@ class PluginsiOSPodsTests(BaseClass):
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/googlesdk"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
-
-        assert self.app_name + "/node_modules/googlesdk" in output
         assert "Successfully installed plugin googlesdk." in output
         assert File.exists(self.app_name + "/node_modules/googlesdk/package.json")
         assert File.exists(self.app_name + "/node_modules/googlesdk/platforms/ios/Podfile")
 
-        output = run("cat " + self.app_name + "/package.json")
+        output = File.read(self.app_name + "/package.json")
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
         assert "googlesdk" in output
@@ -93,14 +86,13 @@ class PluginsiOSPodsTests(BaseClass):
         assert "Successfully prepared plugin googlesdk for ios." in output
         assert "Installing pods..." in output
 
-        output = run("cat " + self.app_name + "/platforms/ios/Podfile")
+        output = File.read(self.app_name + "/platforms/ios/Podfile")
         assert "source 'https://github.com/CocoaPods/Specs.git'" in output
         assert "platform :ios, '8.1'" in output
         assert "pod 'GoogleMaps'" in output
         assert "use_frameworks!" in output
 
-        output = run(
-                "cat " + self.app_name + "/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
+        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
         assert "location = \"group:TNSApp.xcodeproj\">" in output
         assert "location = \"group:Pods/Pods.xcodeproj\">" in output
 
@@ -109,9 +101,7 @@ class PluginsiOSPodsTests(BaseClass):
                 "cat " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
         assert "IPHONEOS_DEPLOYMENT_TARGET = 8.0;" in output
         # This deployment target comes from the Podfile - platform :ios, '8.1'
-        # output = run(
-        #         "cat " + self.app_name + "/platforms/ios/Pods/Pods.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
-        # assert "IPHONEOS_DEPLOYMENT_TARGET = 8.1;" in output
+
         Tns.build_ios(attributes={"--path": self.app_name})
         Tns.build_ios(attributes={"--path": self.app_name,
                                   "--release": "",
@@ -126,29 +116,26 @@ class PluginsiOSPodsTests(BaseClass):
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/googlesdk"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
-        assert self.app_name + "/node_modules/googlesdk" in output
         assert "Successfully installed plugin googlesdk." in output
         assert File.exists(self.app_name + "/node_modules/googlesdk/package.json")
         assert File.exists(self.app_name + "/node_modules/googlesdk/platforms/ios/Podfile")
 
-        output = run("cat " + self.app_name + "/package.json")
+        output = File.read(self.app_name + "/package.json")
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
         assert "googlesdk" in output
 
         output = Tns.build_ios(attributes={"--path": self.app_name})
-
         assert "Successfully prepared plugin googlesdk for ios." in output
         assert "Installing pods..." in output
 
-        output = run("cat " + self.app_name + "/platforms/ios/Podfile")
+        output = File.read(self.app_name + "/platforms/ios/Podfile")
         assert "source 'https://github.com/CocoaPods/Specs.git'" in output
         assert "platform :ios, '8.1'" in output
         assert "pod 'GoogleMaps'" in output
         assert "use_frameworks!" in output
 
-        output = run(
-                "cat " + self.app_name + "/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
+        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
         assert "location = \"group:TNSApp.xcodeproj\">" in output
         assert "location = \"group:Pods/Pods.xcodeproj\">" in output
         assert File.exists(self.app_name + "/platforms/ios/Pods/Pods.xcodeproj")
@@ -158,39 +145,11 @@ class PluginsiOSPodsTests(BaseClass):
                 "cat " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
         assert "IPHONEOS_DEPLOYMENT_TARGET = 8.0;" in output
         # This deployment target comes from the Podfile - platform :ios, '8.1'
-        # output = run(
-        #         "cat " + self.app_name + "/platforms/ios/Pods/Pods.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
-        # assert "IPHONEOS_DEPLOYMENT_TARGET = 8.1;" in output
 
         Tns.build_ios(attributes={"--path": self.app_name,
                                   "--release": "",
                                   "--for-device": ""
                                   })
-
-    @unittest.skip(
-            "This is not a valid scenario anymore. " +
-            "It fails because DEPLOYMENT_TARGET=7.0 which is updated during plugin add command.")
-    def test_400_prepare_install_pods(self):
-        Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH,
-                                         "symlink": ""
-                                         })
-
-        run("cp QA-TestApps/CocoaPods/carousel/platforms/ios/Podfile " + self.app_name + "/platforms/ios")
-        output = Tns.build_ios(attributes={"--path": self.app_name})
-        assert "Creating project scheme..." in output
-        assert "Installing pods..." in output
-
-        output = run("cat " + self.app_name + "/platforms/ios/Podfile")
-        assert "pod 'iCarousel'" in output
-        assert "pod 'AFNetworking'" in output
-
-        output = run(
-                "cat " + self.app_name + "/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
-        assert "location = \"group:TNSApp.xcodeproj\">" in output
-        assert "location = \"group:Pods/Pods.xcodeproj\">" in output
-        assert File.exists(self.app_name + "/platforms/ios/Pods/Pods.xcodeproj")
 
     def test_401_plugin_add_invalid_pod(self):
         Tns.create_app(self.app_name)
@@ -200,12 +159,11 @@ class PluginsiOSPodsTests(BaseClass):
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/invalidpod"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
-        assert self.app_name + "/node_modules/invalidpod" in output
         assert "Successfully installed plugin invalidpod." in output
         assert File.exists(self.app_name + "/node_modules/invalidpod/package.json")
         assert File.exists(self.app_name + "/node_modules/invalidpod/platforms/ios/Podfile")
 
-        output = run("cat " + self.app_name + "/package.json")
+        output = File.read(self.app_name + "/package.json")
         assert "invalidpod" in output
 
         output = Tns.prepare_ios(attributes={"--path": self.app_name}, assert_success=False)

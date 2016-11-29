@@ -22,46 +22,44 @@ class PluginsiOSLibsTests(BaseClass):
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/static-lib/hello-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
-        assert self.app_name + "/node_modules/hello" in output
         assert "Successfully installed plugin hello." in output
+
         assert File.exists(self.app_name + "/node_modules/hello/package.json")
         assert File.exists(self.app_name + "/node_modules/hello/hello-plugin.ios.js")
         assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/HelloLib.a")
         assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/include/HelloLib/Bye.h")
         assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/include/HelloLib/Hello.h")
 
-        output = run("cat " + self.app_name + "/package.json")
+        output = File.read(self.app_name + "/package.json")
         assert "static-lib/hello-plugin" in output
 
         Tns.platform_add_ios(attributes={"--path": self.app_name,
                                          "--frameworkPath": IOS_RUNTIME_PATH
                                          })
+
         Tns.build_ios(attributes={"--path": self.app_name})
-        # It targets 8.0 since a dynamic framework was added to the widgets.
-        
+
         assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
         assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/hello/hello-plugin.js")
         output = run(
-                "cat " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
+            "cat " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
         assert "HelloLib.a in Frameworks" in output
 
     def test_202_plugin_add_static_lib_universal_after_platform_add_ios(self):
         Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH
-                                         })
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/static-lib/hello-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
-        assert self.app_name + "/node_modules/hello" in output
         assert "Successfully installed plugin hello." in output
+
         assert File.exists(self.app_name + "/node_modules/hello/package.json")
         assert File.exists(self.app_name + "/node_modules/hello/hello-plugin.ios.js")
         assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/HelloLib.a")
         assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/include/HelloLib/Bye.h")
         assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/include/HelloLib/Hello.h")
 
-        output = run("cat " + self.app_name + "/package.json")
+        output = File.read(self.app_name + "/package.json")
         assert "static-lib/hello-plugin" in output
 
         Tns.build_ios(attributes={"--path": self.app_name})
@@ -69,19 +67,17 @@ class PluginsiOSLibsTests(BaseClass):
         assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
         assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/hello/hello-plugin.js")
         output = run(
-                "cat " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
+            "cat " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
         assert "HelloLib.a in Frameworks" in output
 
     def test_401_plugin_add_static_lib_non_universal(self):
         Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH
-                                         })
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
         plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/static-lib/bye-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
-        assert self.app_name + "/node_modules/bye" in output
-
+        assert "Successfully installed plugin bye" in output
+        
         output = Tns.prepare_ios(attributes={"--path": self.app_name}, assert_success=False)
         assert "The static library at" in output
         assert "ByeLib.a is not built for one or more of " + \
