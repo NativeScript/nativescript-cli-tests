@@ -23,18 +23,15 @@ class VerboseLogEmulator(BaseClass):
 
     def test_101_verbose_log_android(self):
         Tns.create_app(self.app_name, attributes={"--copy-from": os.path.join("data", "apps", "verbose-hello-world")})
-        Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH,
-                                             "--path": self.app_name
-                                             })
+        Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH, "--path": self.app_name})
 
         output = File.cat(os.path.join(self.app_name, "app", "app.js"))
         assert "__enableVerboseLogging()" in output, "Verbose logging not enabled in app.js"
 
-        output = Tns.run_android(attributes={"--emulator": "",
-                                             "--justlaunch": "",
+        output = Tns.run_android(attributes={"--emulator": "", "--justlaunch": "",
                                              "--path": self.app_name,
-                                             },
-                                 timeout=180)
+                                             }, timeout=180)
+
         assert "Project successfully built" in output
         lines = output.split('\n')
         count = len(lines)

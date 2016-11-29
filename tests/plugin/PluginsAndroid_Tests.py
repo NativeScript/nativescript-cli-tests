@@ -19,6 +19,7 @@ from core.tns.tns import Tns
 
 
 class PluginsAndroidTests(BaseClass):
+
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)

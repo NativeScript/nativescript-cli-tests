@@ -5,9 +5,10 @@ A wrapper of the tns commands.
 import os
 import time
 
-from core.osutils.file import File
 from core.osutils.command import run
-from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, DEVELOPMENT_TEAM, CLI_PATH, BRANCH
+from core.osutils.file import File
+from core.osutils.folder import Folder
+from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, DEVELOPMENT_TEAM, CLI_PATH, BRANCH, TEST_RUN_HOME
 from core.xcode.xcode import Xcode
 
 
@@ -44,6 +45,17 @@ class Tns(object):
             return output
 
     @staticmethod
+    def ensure_app_resources(path):
+        app_resources_path = os.path.join(path, "app", "App_Resources")
+        if File.exists(app_resources_path):
+            pass
+        else:
+            print "AppResources not found. Will copy from default template..."
+            src = os.path.join(TEST_RUN_HOME, "sut", "template-hello-world", "App_Resources")
+            dest = os.path.join(TEST_RUN_HOME, path, "app", "App_Resources")
+            Folder.copy(src, dest)
+
+    @staticmethod
     def create_app(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True):
         path = app_name
         attributes_to_string = ""
@@ -65,6 +77,7 @@ class Tns(object):
             assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
         if update_modules:
             Tns.update_modules(path)
+        Tns.ensure_app_resources(path)
         return output
 
     @staticmethod
@@ -86,7 +99,7 @@ class Tns(object):
 
     @staticmethod
     def create_app_ng(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True):
-        attr = {"--template": "https://github.com/NativeScript/template-hello-world-ng.git#" + Settings.BRANCH}
+        attr = {"--template": "https://github.com/NativeScript/template-hello-world-ng.git#" + BRANCH}
         attributes.update(attr)
         Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace, assert_success=assert_success,
                        update_modules=update_modules)

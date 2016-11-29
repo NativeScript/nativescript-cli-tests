@@ -197,7 +197,7 @@ class PluginsiOSTests(BaseClass):
         assert "Verify that the plugin package.json file " + \
                "contains a nativescript key and try again" in output
 
-    def test_403_plugin_add_PluginNotSupportedOnSpecificPlatform(self):
+    def test_403_plugin_add_plugin_not_supported_on_specific_platform(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
