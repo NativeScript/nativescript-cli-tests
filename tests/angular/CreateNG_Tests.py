@@ -1,7 +1,7 @@
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
-from core.osutils.command import run
+from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.tns.tns import Tns
 
@@ -12,7 +12,7 @@ class CreateNGTests(BaseClass):
         Folder.cleanup(self.app_name)
 
     def assert_angular_project(self):
-        output = run("cat " + self.app_name + "/package.json")
+        output = File.read(self.app_name + "/package.json")
         assert "nativescript-angular" in output
         assert "tns-core-modules" in output
         assert "nativescript-dev-typescript" in output
@@ -25,11 +25,10 @@ class CreateNGTests(BaseClass):
         assert Folder.exists(self.app_name + "/app/App_Resources")
 
     def test_101_create_ng_project(self):
-        output = Tns.create_app(self.app_name, attributes={"--ng": ""}, update_modules=False)
+        output = Tns.create_app_ng(self.app_name, update_modules=False)
         assert "successfully created" in output
         self.assert_angular_project()
-        # assert not File.exists("TNS_App/app/LICENSE")
-        # Ignore this check because last time we published wrong package
+        assert not File.exists("TNS_App/app/LICENSE")
 
     @parameterized.expand([
         "tns-template-hello-world-ng",

@@ -16,10 +16,8 @@ class BuildiOSNGTests(BaseClass):
 
         Xcode.cleanup_cache()
 
-        Tns.create_app(app_name=cls.app_name, attributes={"--ng": ""})
-        Tns.platform_add_ios(attributes={"--path": cls.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH
-                                         })
+        Tns.create_app_ng(app_name=cls.app_name)
+        Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
     @classmethod
     def tearDownClass(cls):
