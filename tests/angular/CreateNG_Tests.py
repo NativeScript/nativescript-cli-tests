@@ -27,7 +27,6 @@ class CreateNGTests(BaseClass):
     def test_101_create_ng_project(self):
         Tns.create_app_ng(self.app_name, update_modules=False)
         self.assert_angular_project()
-        assert File.exists("TNS_App/app/LICENSE")
 
     @parameterized.expand([
         "tns-template-hello-world-ng",

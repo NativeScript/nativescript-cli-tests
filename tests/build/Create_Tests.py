@@ -37,8 +37,17 @@ class CreateTests(BaseClass):
         Folder.cleanup(cls.app_name_dash)
         Folder.cleanup(cls.app_name_space)
 
+    def test_000_create_app_like_real_user(self):
+        output = Tns.run_tns_command("create " + self.app_name)
+        assert "nativescript-theme-core" in output
+        assert "nativescript-dev-android-snapshot" in output
+        assert "Project " + self.app_name + " was successfully created." in output
+        # Verify LICENSE from template is stripped
+        assert not File.exists(self.app_name + "/app/LICENSE")
+
     def test_001_create_app(self):
         Tns.create_app(self.app_name, update_modules=True)
+
         assert Folder.is_empty(self.app_name + "/platforms")
         assert not Folder.exists(self.app_name + "/app/tns_modules")
 
