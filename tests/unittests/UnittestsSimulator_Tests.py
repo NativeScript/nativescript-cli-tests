@@ -2,6 +2,7 @@ import os.path
 
 from nose.tools import timed
 
+from core.osutils.command import run
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
