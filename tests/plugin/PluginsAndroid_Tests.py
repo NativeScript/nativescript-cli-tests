@@ -16,12 +16,14 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
+import time
 
 
 class PluginsAndroidTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
+        print ("########### CLEAR FOLDER ##############")
         Folder.cleanup(self.app_name)
 
     def test_001_plugin_add_before_platform_add_android(self):
@@ -196,6 +198,8 @@ class PluginsAndroidTests(BaseClass):
         assert "Verify that the plugin package.json file contains a nativescript key and try again" in output
 
     def test_403_plugin_add_plugin_not_supported_on_specific_platform(self):
+        time.sleep(2)
+        Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH})
