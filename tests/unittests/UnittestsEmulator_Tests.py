@@ -41,6 +41,8 @@ class UnittestsEmulator(BaseClass):
         # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/2212
         Folder.navigate_to(self.app_name)
         output = run("npm install --save-dev mocha")
+        output = run("npm install --save-dev chai")
+
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
         output = Tns.run_tns_command("test android", attributes={"--emulator": "",

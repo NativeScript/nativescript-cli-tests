@@ -77,7 +77,6 @@ class UnitTests(BaseClass):
 
         output = run("cat " + self.app_name + "/package.json")
         assert "karma-qunit" in output
-        assert "qunitjs" in output
 
         output = run("cat " + self.app_name + "/karma.conf.js")
         assert "frameworks: ['qunit']" in output

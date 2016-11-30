@@ -6,7 +6,7 @@ from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME
+from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME, TEST_RUN_HOME
 from core.tns.tns import Tns
 
 
@@ -41,6 +41,11 @@ class UnittestsSimulator(BaseClass):
         Tns.run_tns_command("test init", attributes={"--framework": "jasmine",
                                                      "--path": self.app_name
                                                      })
+        # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/2212
+        Folder.navigate_to(self.app_name)
+        output = run("npm install --save-dev jasmine-core")
+
+        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
         Tns.run_tns_command("test ios", attributes={"--emulator": "",
                                                     "--justlaunch": "",
