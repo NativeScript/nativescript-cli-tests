@@ -24,7 +24,7 @@ class PlatformiOSTests(BaseClass):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
 
-    def test_001_platform_list_ios_project(self):
+    def test_101_platform_list_ios_project(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
                                          "--frameworkPath": IOS_RUNTIME_PATH
@@ -49,7 +49,7 @@ class PlatformiOSTests(BaseClass):
         assert "The project is prepared for:  ios and android" in output
         assert "Installed platforms:  android and ios" in output
 
-    def test_002_platform_add_ios(self):
+    def test_102_platform_add_ios(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name})
 

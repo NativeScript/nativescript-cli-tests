@@ -17,7 +17,7 @@ class PrepareAndroidTests(BaseClass):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
 
-    def test_001_prepare_android(self):
+    def test_101_prepare_android(self):
         Tns.create_app(self.app_name, update_modules=False)
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
@@ -34,7 +34,7 @@ class PrepareAndroidTests(BaseClass):
         assert not File.exists(self.app_name + '/platforms/android/src/main/assets/app/tns_modules/'
                                                'application/application.ios.js')
 
-    def test_002_prepare_android_inside_project(self):
+    def test_102_prepare_android_inside_project(self):
         Tns.create_app(self.app_name, update_modules=False)
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH

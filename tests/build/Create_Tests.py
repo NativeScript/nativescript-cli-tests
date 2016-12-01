@@ -136,7 +136,7 @@ class CreateTests(BaseClass):
         "typescript",
         "tsc",
     ])
-    def test_100_create_project_with_template(self, template_source):
+    def test_200_create_project_with_template(self, template_source):
         Tns.create_app(self.app_name, attributes={"--template": template_source}, update_modules=False)
         assert Folder.is_empty(self.app_name + "/platforms")
         assert not Folder.is_empty(self.app_name + "/app")
@@ -144,7 +144,7 @@ class CreateTests(BaseClass):
         output = File.read(self.app_name + os.sep + "package.json")
         assert "\"id\": \"org.nativescript.TNSApp\"" in output
 
-    def test_101_create_project_with_local_directory_template(self):
+    def test_201_create_project_with_local_directory_template(self):
         Tns.create_app(self.app_name, attributes={"--template": "./data/templates/myCustomTemplate/"},
                        assert_success=False, update_modules=False)
         assert File.exists(self.app_name + "/app/index.js")

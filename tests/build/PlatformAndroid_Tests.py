@@ -16,7 +16,7 @@ class PlatformAndroidTests(BaseClass):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
 
-    def test_001_platform_list_empty_project(self):
+    def test_101_platform_list_empty_project(self):
         Tns.create_app(self.app_name, update_modules=False)
         output = Tns.run_tns_command("platform list", attributes={"--path": self.app_name})
 
@@ -26,11 +26,11 @@ class PlatformAndroidTests(BaseClass):
         else:
             assert "Available platforms for this OS:  android" in output
 
-    def test_002_platform_add_android(self):
+    def test_102_platform_add_android(self):
         Tns.create_app(self.app_name, update_modules=False)
         Tns.platform_add_android(attributes={"--path": self.app_name})
 
-    def test_003_platform_add_android_framework_path(self):
+    def test_103_platform_add_android_framework_path(self):
         Tns.create_app(self.app_name, update_modules=False)
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH

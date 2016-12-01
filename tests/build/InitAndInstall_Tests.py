@@ -22,7 +22,7 @@ class InitAndInstallTests(BaseClass):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
 
-    def test_001_init_defaults(self):
+    def test_201_init_defaults(self):
         Folder.create(BaseClass.app_name)
         Folder.navigate_to(BaseClass.app_name)
         output = Tns.init(attributes={"--force": ""}, tns_path=os.path.join("..", TNS_PATH), assert_success=False)
@@ -40,7 +40,7 @@ class InitAndInstallTests(BaseClass):
         if CURRENT_OS == OSType.OSX:
             assert "tns-ios" in output
 
-    def test_002_init_path(self):
+    def test_202_init_path(self):
         Tns.init(attributes={"--path": self.app_name, "--force": ""})
         assert File.exists(self.app_name + "/package.json")
         assert not File.exists(self.app_name + "/app")
@@ -52,8 +52,8 @@ class InitAndInstallTests(BaseClass):
         if CURRENT_OS == OSType.OSX:
             assert "tns-ios" in output
 
-    def test_003_init_update_existing_file(self):
-        self.test_002_init_path()
+    def test_203_init_update_existing_file(self):
+        self.test_202_init_path()
         # Modify existing file
         for line in fileinput.input(self.app_name + "/package.json", inplace=1):
             print line.replace("org.nativescript.TNSApp", "org.nativescript.TestApp"),
@@ -61,18 +61,18 @@ class InitAndInstallTests(BaseClass):
         assert "org.nativescript.TestApp" in output
 
         # Overwrite changes
-        self.test_002_init_path()
+        self.test_202_init_path()
 
-    def test_004_install_defaults(self):
-        self.test_002_init_path()
+    def test_204_install_defaults(self):
+        self.test_202_init_path()
         Tns.install(attributes={"--path": self.app_name})
         assert File.exists(self.app_name + "/platforms/android/build.gradle")
 
         if CURRENT_OS == OSType.OSX:
             assert File.exists(self.app_name + "/platforms/ios/TNSApp.xcodeproj")
 
-    def test_005_install_node_modules(self):
-        self.test_002_init_path()
+    def test_205_install_node_modules(self):
+        self.test_202_init_path()
         Folder.navigate_to(BaseClass.app_name)
         run("npm i gulp --save-dev")
         run("npm i lodash --save")
@@ -95,7 +95,7 @@ class InitAndInstallTests(BaseClass):
             assert File.exists(self.app_name + "/platforms/ios/TNSApp.xcodeproj")
 
     def test_300_install_node_modules_if_node_modules_folder_exists(self):
-        self.test_002_init_path()
+        self.test_202_init_path()
         Folder.navigate_to(BaseClass.app_name)
         run("npm i gulp --save-dev")
         run("npm i lodash --save")
@@ -114,7 +114,7 @@ class InitAndInstallTests(BaseClass):
             assert File.exists(self.app_name + "/platforms/ios/TNSApp.xcodeproj")
 
     def test_301_install_and_prepare(self):
-        self.test_002_init_path()
+        self.test_202_init_path()
 
         Folder.navigate_to(BaseClass.app_name)
         run("npm i gulp --save-dev")

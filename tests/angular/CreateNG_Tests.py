@@ -24,17 +24,13 @@ class CreateNGTests(BaseClass):
         assert Folder.exists(self.app_name + "/hooks")
         assert Folder.exists(self.app_name + "/app/App_Resources")
 
-    def test_101_create_ng_project(self):
-        Tns.create_app_ng(self.app_name, update_modules=False)
-        self.assert_angular_project()
-
     @parameterized.expand([
         "tns-template-hello-world-ng",
         "https://github.com/NativeScript/template-hello-world-ng.git",
         "angular",
         "ng",
     ])
-    def test_102_create_project_with_template_ng(self, template_source):
+    def test_100_create_project_with_template_ng(self, template_source):
         Tns.create_app(self.app_name, attributes={"--template": template_source}, assert_success=False,
                        update_modules=False)
         self.assert_angular_project()

@@ -13,7 +13,7 @@ class LogtraceTests(BaseClass):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
 
-    def test_001_create_project_log_trace(self):
+    def test_101_create_project_log_trace(self):
         output = Tns.create_app(self.app_name, log_trace=True, update_modules=False)
         assert "Creating a new NativeScript project with name " + self.app_name in output
         print "and id org.nativescript.{0} at location".format(self.app_name.replace("_", ""))
@@ -29,7 +29,7 @@ class LogtraceTests(BaseClass):
             assert 'spawn: npm "install" "tns-core-modules" "--save" "--save-exact"' in output
         assert "Project " + self.app_name + " was successfully created" in output
 
-    def test_002_platform_add_log_trace(self):
+    def test_102_platform_add_log_trace(self):
         Tns.create_app(self.app_name, update_modules=False)
         output = Tns.platform_add_android(attributes={"--path":self.app_name}, log_trace=True)
         assert "Looking for project in" in output

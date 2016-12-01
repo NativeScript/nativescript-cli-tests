@@ -24,12 +24,12 @@ class BuildiOSNGTests(BaseClass):
         BaseClass.tearDownClass()
         Folder.cleanup(cls.app_name)
 
-    def test_010_build_ios_ng_project(self):
+    def test_100_build_ios_ng_project(self):
         output = Tns.build_ios(attributes={"--path": self.app_name})
         assert "build/emulator/TNSApp.app" in output
         assert File.exists(self.app_name + "/platforms/ios/build/emulator/TNSApp.app")
 
-    def test_210_build_ios_ng_project_release_fordevice(self):
+    def test_200_build_ios_ng_project_release_fordevice(self):
         output = Tns.build_ios(attributes={"--path": self.app_name,
                                            "--for-device": "",
                                            "--release": ""})

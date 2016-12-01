@@ -6,10 +6,10 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS
 from core.tns.tns import Tns
+from tests.angular.CreateNG_Tests import CreateNGTests
 
 
 class BuildAndroidNGTests(BaseClass):
-
     @classmethod
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
@@ -23,11 +23,12 @@ class BuildAndroidNGTests(BaseClass):
         BaseClass.tearDownClass()
         Folder.cleanup(cls.app_name)
 
-    def test_010_build_android_ng_project(self):
+    def test_001_build_android_ng_project(self):
+        CreateNGTests.assert_angular_project()
         Tns.build_android(attributes={"--path": self.app_name})
         assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
-    def test_210_build_android_ng_project_release(self):
+    def test_200_build_android_ng_project_release(self):
         output = Tns.build_android(attributes={"--keyStorePath": ANDROID_KEYSTORE_PATH,
                                                " --keyStorePassword": ANDROID_KEYSTORE_PASS,
                                                " --keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
