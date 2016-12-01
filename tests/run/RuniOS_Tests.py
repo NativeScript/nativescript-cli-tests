@@ -9,7 +9,7 @@ from core.device.device import Device
 from core.device.simulator import Simulator
 from core.osutils.folder import Folder
 from core.osutils.process import Process
-from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, TNS_PATH, DEVELOPMENT_TEAM
+from core.settings.settings import IOS_RUNTIME_PATH, TNS_PATH
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
@@ -26,13 +26,11 @@ class RuniOS(BaseClass):
 
         Tns.create_app(cls.app_name_space)
         Tns.platform_add_ios(attributes={"--path": "\"" + cls.app_name_space + "\"",
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
         Tns.create_app(cls.app_name)
         Tns.platform_add_ios(attributes={"--path": cls.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
 
     def setUp(self):
