@@ -6,7 +6,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS
 from core.tns.tns import Tns
-from tests.angular.CreateNG_Tests import CreateNGTests
+from core.tns import angular_helper as angular
 
 
 class BuildAndroidNGTests(BaseClass):
@@ -24,7 +24,7 @@ class BuildAndroidNGTests(BaseClass):
         Folder.cleanup(cls.app_name)
 
     def test_001_build_android_ng_project(self):
-        CreateNGTests.assert_angular_project()
+        angular.assert_angular_project(self.app_name)
         Tns.build_android(attributes={"--path": self.app_name})
         assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
