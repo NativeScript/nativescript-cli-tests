@@ -8,7 +8,7 @@ from time import sleep
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH
+from core.settings.settings import IOS_RUNTIME_PATH
 from core.tns.tns import Tns
 
 
@@ -26,8 +26,7 @@ class DeviceiOSTests(BaseClass):
         # Deploy TNS_App on device
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_SYMLINK_PATH,
-                                         "--symlink": ""
+                                         "--frameworkPath": IOS_RUNTIME_PATH
                                          })
 
         output = Tns.deploy_ios(attributes={"--path": self.app_name,

@@ -6,7 +6,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_SYMLINK_PATH, SUT_ROOT_FOLDER, IOS_RUNTIME_PATH
+from core.settings.settings import SUT_ROOT_FOLDER, IOS_RUNTIME_PATH
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 

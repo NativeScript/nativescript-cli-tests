@@ -72,17 +72,6 @@ class PlatformiOSTests(BaseClass):
         output = File.read(self.app_name + os.sep + "package.json")
         assert "tns-ios" not in output
 
-    def test_202_platform_remove_ios_symlink(self):
-        Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH
-                                         })
-
-        Tns.platform_remove(platform="ios", attributes={"--path": self.app_name})
-        assert Folder.is_empty(self.app_name + '/platforms')
-        output = File.read(self.app_name + os.sep + "package.json")
-        assert "tns-ios" not in output
-
     def test_300_platform_add_ios_custom_version(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(version="2.1.0", attributes={"--path": self.app_name})
