@@ -126,7 +126,7 @@ class PlatformAndroidTests(BaseClass):
         assert "and neither was a --path specified." in output
 
     def test_420_platform_add_existing_platform(self):
-        self.test_002_platform_add_android()
+        self.test_102_platform_add_android()
         output = Tns.platform_add_android(attributes={"--path ": self.app_name}, assert_success=False)
         assert "Platform android already added" in output
 
