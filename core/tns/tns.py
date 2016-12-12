@@ -183,7 +183,6 @@ class Tns(object):
     def build_android(attributes={}, assert_success=True, tns_path=None):
         output = Tns.run_tns_command("build android", attributes=attributes, tns_path=tns_path)
         if assert_success:
-            assert "Project successfully prepared" in output  # Build command should alwas call prepare
             assert "BUILD SUCCESSFUL" in output
             assert "Project successfully built" in output
         return output
@@ -195,7 +194,6 @@ class Tns(object):
             attributes.update(attr)
         output = Tns.run_tns_command("build ios", attributes=attributes, tns_path=tns_path)
         if assert_success:
-            assert "Project successfully prepared" in output  # Build command should alwas call prepare
             assert "BUILD SUCCEEDED" in output
             assert "Project successfully built" in output
             assert "ERROR" not in output
