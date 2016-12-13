@@ -4,13 +4,16 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, CURRENT_OS, IOS_RUNTIME_PATH, OSType, \
+from core.settings.settings import CURRENT_OS, ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH, OSType, \
     TEST_RUN_HOME, TNS_PATH, SUT_ROOT_FOLDER, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, \
-    ANDROID_KEYSTORE_ALIAS_PASS, CLI_PATH
+    ANDROID_KEYSTORE_ALIAS_PASS, CLI_PATH, ADB_PATH
 from core.tns.tns import Tns
-
+from time import sleep
+import subprocess
+import threading
 
 class TypescriptTests(BaseClass):
+
     app_folder = os.path.join(BaseClass.app_name, "app")
     node_modules_folder = os.path.join(BaseClass.app_name, "node_modules")
     platforms_folder = os.path.join(BaseClass.app_name, "platforms")
@@ -22,9 +25,9 @@ class TypescriptTests(BaseClass):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
 
-        Tns.create_app_ts(TypescriptTests.app_name)
+        Tns.create_app_ts(cls.app_name)
 
-        assert File.exists(TypescriptTests.node_modules_folder + "/typescript/bin/tsc")
+        assert File.exists(cls.node_modules_folder + "/typescript/bin/tsc")
         assert not Folder.is_empty(TypescriptTests.node_modules_folder + "/nativescript-dev-typescript")
         assert File.exists(TypescriptTests.hooks_folder + "/before-prepare/nativescript-dev-typescript.js")
         assert File.exists(TypescriptTests.hooks_folder + "/before-watch/nativescript-dev-typescript.js")
@@ -196,3 +199,30 @@ class TypescriptTests(BaseClass):
         #     File.append(self.app_name + os.sep + "references.d.ts", ios_ref)
         #     output = Tns.build_ios(attributes={"--path": self.app_name})
         #     assert "error TS" not in output
+
+    def test_303_check_ts_compatibility(self):
+        Folder.navigate_to(self.app_name)
+        version = run("npm show typescript version ")
+        print ("Latest npm version is " + version)
+        run("npm remove typescript --save-dev")
+        assert File.exists(os.path.join(os.getcwd(), "node_modules", "typescript")) == False
+        run("npm install typescript@" + version)
+        assert File.exists(os.path.join(os.getcwd(), "node_modules", "typescript"))
+        output = run("npm list")
+        assert "typescript@" + version in output
+        Folder.navigate_to(TEST_RUN_HOME)
+        run("copy  /Y " + os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "AndroidManifest.xml") +
+            " " + os.path.join(self.app_name, "app", "App_Resources", "Android"))
+        run("copy  /Y " + os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "myCustomActivity.android.ts") +
+            " " + os.path.join(self.app_name, "app"))
+        run("copy  /Y " + os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "typings.d.ts") +
+            " " + self.app_name)
+        subprocess.Popen([ADB_PATH, "-e", "logcat", "-c"])
+        output = Tns.run_android(attributes={"--path": self.app_name, "--justlaunch": ""})
+        assert "Successfully deployed on device with identifier" in output
+        process = subprocess.Popen([ADB_PATH, "-e", "logcat"], stdout=subprocess.PIPE)
+        threading.Timer(10, process.terminate).start()
+        output = process.communicate()[0]
+        sleep(2)
+        assert "java.lang.ClassNotFoundException: Didn't find class \"org.nativescript.a.MyCustomActivity\"" \
+               not in output
