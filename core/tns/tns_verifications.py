@@ -23,6 +23,7 @@ class TnsVerifications(object):
         return modules_path
 
     @staticmethod
+    def prepared_android(app_name):
         assert File.exists(app_name + PLATFORM_ANDROID_APP_PATH + 'main-view-model.js')
         assert File.exists(app_name + PLATFORM_ANDROID_TNS_MODULES_PATH + 'application/application.js')
         assert File.exists(app_name + PLATFORM_ANDROID_TNS_MODULES_PATH + 'xml/xml.js')
@@ -30,6 +31,7 @@ class TnsVerifications(object):
         assert not File.exists(app_name + PLATFORM_ANDROID_TNS_MODULES_PATH + 'application/application.ios.js')
 
     @staticmethod
+    def prepared_ios(app_name):
         app_path = TnsVerifications.get_ios_app_path(app_name)
         modules_path = TnsVerifications.get_ios_modules_path(app_name)
         assert File.exists(app_path + 'main-view-model.js')
