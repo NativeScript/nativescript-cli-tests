@@ -2,8 +2,8 @@
 Tests for prepare command in context of iOS
 """
 
-import re
 import os.path
+import re
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
@@ -11,6 +11,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH, CURRENT_OS, OSType
 from core.tns.tns import Tns
+from core.tns.tns_verifications import TnsVerifications
 
 
 class PrepareiOSTests(BaseClass):
@@ -31,13 +32,7 @@ class PrepareiOSTests(BaseClass):
                                          "--frameworkPath": IOS_RUNTIME_PATH})
 
         Tns.prepare_ios(attributes={"--path": self.app_name})
-
-        # Verify app and modules are processed and available in platform folder
-        assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/main-view-model.js')
-        assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.js')
-        assert not File.exists(self.app_name +
-                               '/platforms/ios/TNSApp/app/tns_modules/application/application.android.js')
-        assert not File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.ios.js')
+        TnsVerifications.prepared_ios(self.app_name)
 
         # Verify Xcode Schemes
         output = run("xcodebuild -project " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/ -list")
@@ -59,13 +54,7 @@ class PrepareiOSTests(BaseClass):
 
         # prepare project
         Tns.prepare_ios(attributes={"--path": self.app_name})
-
-        # Verify app and modules are processed and available in platform folder
-        assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/main-view-model.js')
-        assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.js')
-        assert not File.exists(self.app_name +
-                               '/platforms/ios/TNSApp/app/tns_modules/application/application.android.js')
-        assert not File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.ios.js')
+        TnsVerifications.prepared_ios(self.app_name)
 
         # Verify XCode Project include files from App Resources folder
         output = run(
@@ -75,9 +64,7 @@ class PrepareiOSTests(BaseClass):
     def test_201_prepare_ios_platform_not_added(self):
         Tns.create_app(self.app_name)
         Tns.prepare_ios(attributes={"--path": self.app_name})
-
-        assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/main-view-model.js')
-        assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.js')
+        TnsVerifications.prepared_ios(self.app_name)
 
     def test_300_prepare_ios_preserve_case(self):
         Tns.create_app(self.app_name)
@@ -92,19 +79,13 @@ class PrepareiOSTests(BaseClass):
             " " + self.app_name + "/node_modules/tns-core-modules/application/New-application.ios.js")
 
         Tns.prepare_ios(attributes={"--path": self.app_name})
-
-        # Verify app and modules are processed and available in platform folder
-        assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.js')
-        assert not File.exists(self.app_name +
-                               '/platforms/ios/TNSApp/app/tns_modules/application/application.android.js')
-        assert not File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/application.ios.js')
+        TnsVerifications.prepared_ios(self.app_name)
 
         # Verify case is preserved
-        assert File.exists(self.app_name +
-                           '/platforms/ios/TNSApp/app/tns_modules/application/New-application-common.js')
-        assert File.exists(self.app_name + '/platforms/ios/TNSApp/app/tns_modules/application/New-application.js')
-        assert not File.exists(self.app_name +
-                               '/platforms/ios/TNSApp/app/tns_modules/application/New-application.ios.js')
+        path = TnsVerifications.get_ios_modules_path(self.app_name)
+        assert File.exists(path + 'application/New-application-common.js')
+        assert File.exists(path + 'application/New-application.js')
+        assert not File.exists(path + 'application/New-application.ios.js')
 
     def test_301_prepare_android_does_not_prepare_ios(self):
         Tns.create_app(self.app_name)
