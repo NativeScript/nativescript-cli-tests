@@ -223,5 +223,4 @@ class TypescriptTests(BaseClass):
         threading.Timer(10, process.terminate).start()
         output = process.communicate()[0]
         sleep(2)
-        assert "java.lang.ClassNotFoundException: Didn't find class \"org.nativescript.a.MyCustomActivity\"" \
-               not in output
+        assert "java.lang.ClassNotFoundException: Didn't find class \"org.nativescript.a.MyCustomActivity\"" not in output, "Exception in output"
