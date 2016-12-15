@@ -104,7 +104,7 @@ class PrepareAndroidTests(BaseClass):
         # Verify new files are in available in platforms folder
         app_path = self.app_name + TnsVerifications.PLATFORM_ANDROID_APP_PATH
         assert File.exists(app_path + 'app.css')
-        assert File.exists(app_path + 'pp.js')
+        assert File.exists(app_path + 'app.js')
         assert File.exists(app_path + 'appandroid.js')
         assert File.exists(app_path + 'appios.js')
         assert File.exists(app_path + 'android.js')
