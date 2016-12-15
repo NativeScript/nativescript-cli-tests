@@ -15,7 +15,8 @@ class TypescriptTests(BaseClass):
     node_modules_folder = os.path.join(BaseClass.app_name, "node_modules")
     platforms_folder = os.path.join(BaseClass.app_name, "platforms")
     hooks_folder = os.path.join(BaseClass.app_name, "hooks")
-    assets_folder = os.path.join(BaseClass.app_name, "platforms", "android", "src", "main", "assets")
+    assets_folder = os.path.join(platforms_folder, "android", "src", "main", "assets")
+    modules_folder = os.path.join(assets_folder, "app", "tns_modules", "tns-core-modules")
 
     @classmethod
     def setUpClass(cls):
@@ -71,8 +72,8 @@ class TypescriptTests(BaseClass):
         assert File.extension_exists(self.assets_folder + "/app", ".js")
         assert File.extension_exists(self.assets_folder + "/app", ".map")
         assert File.extension_exists(self.assets_folder + "/app", ".ts")
-        assert File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".js")
-        assert not File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".ts")
+        assert File.extension_exists(self.modules_folder + "/application", ".js")
+        assert not File.extension_exists(self.modules_folder + "/application", ".ts")
 
         # Verify source map in native android app
         output = run("cat ./" + self.assets_folder + "/app/app.js")
@@ -96,8 +97,8 @@ class TypescriptTests(BaseClass):
             assert File.extension_exists(self.assets_folder + "/app", ".js")
             assert File.extension_exists(self.assets_folder + "/app", ".map")
             assert File.extension_exists(self.assets_folder + "/app", ".ts")
-            assert File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".js")
-            assert not File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".ts")
+            assert File.extension_exists(self.modules_folder + "/application", ".js")
+            assert not File.extension_exists(self.modules_folder + "/application", ".ts")
 
             # Verify source map in native iOS app
             output = run("cat ./" + self.app_name + "/platforms/ios/TNSApp/app/app.js")
@@ -139,10 +140,10 @@ class TypescriptTests(BaseClass):
 
         if "release" in CLI_PATH.lower():  # TODO: Use Settings.BRANCH
             # In this case we have a snapshot, tns-core-modules should not be available in platforms folder
-            assert not File.exists(self.assets_folder + "/app/tns_modules/application")
+            assert not File.exists(self.modules_folder + "/application")
         else:
-            assert File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".js")
-            assert not File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".ts")
+            assert File.extension_exists(self.modules_folder + "/application", ".js")
+            assert not File.extension_exists(self.modules_folder + "/application", ".ts")
 
         if CURRENT_OS == OSType.OSX:
             self.assets_folder = os.path.join(self.app_name, "platforms", "ios",
@@ -164,8 +165,8 @@ class TypescriptTests(BaseClass):
             assert not File.extension_exists(self.assets_folder + "/app", ".map")
             assert not File.extension_exists(self.assets_folder + "/app", ".ts")
 
-            assert File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".js")
-            assert not File.extension_exists(self.assets_folder + "/app/tns_modules/application", ".ts")
+            assert File.extension_exists(self.modules_folder + "/application", ".js")
+            assert not File.extension_exists(self.modules_folder + "/application", ".ts")
 
     def test_301_prepare_after_node_modules_deleted(self):
         Folder.cleanup(self.node_modules_folder)
