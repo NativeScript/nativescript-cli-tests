@@ -211,12 +211,11 @@ class TypescriptTests(BaseClass):
         output = run("npm list")
         assert "typescript@" + version in output
         Folder.navigate_to(TEST_RUN_HOME)
-        run("copy  /Y " + os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "AndroidManifest.xml") +
-            " " + os.path.join(self.app_name, "app", "App_Resources", "Android"))
-        run("copy  /Y " + os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "myCustomActivity.android.ts") +
-            " " + os.path.join(self.app_name, "app"))
-        run("copy  /Y " + os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "typings.d.ts") +
-            " " + self.app_name)
+        File.copy(os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "AndroidManifest.xml"),
+                  os.path.join(self.app_name, "app", "App_Resources", "Android"))
+        File.copy(os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "myCustomActivity.android.ts"),
+                  os.path.join(self.app_name, "app"))
+        File.copy(os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "typings.d.ts"),self.app_name)
         subprocess.Popen([ADB_PATH, "-e", "logcat", "-c"])
         output = Tns.run_android(attributes={"--path": self.app_name, "--justlaunch": ""})
         assert "Successfully deployed on device with identifier" in output
