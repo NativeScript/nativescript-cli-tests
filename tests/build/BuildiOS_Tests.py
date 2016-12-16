@@ -2,6 +2,7 @@
 Test for building projects with iOS platform
 """
 import os
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
@@ -181,6 +182,7 @@ class BuildiOSTests(BaseClass):
         assert File.exists(self.app_name_ios + "/platforms/ios/build/emulator/myiosapp.app")
         assert File.exists(self.app_name_ios + "/platforms/ios/myiosapp/myiosapp-Prefix.pch")
 
+    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2357")
     def test_310_build_ios_with_copy_to(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
