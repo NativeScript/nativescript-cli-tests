@@ -2,6 +2,7 @@
 Verifications for NativeScript projects.
 """
 
+from core.osutils.command import run
 from core.osutils.file import File
 
 
@@ -24,6 +25,8 @@ class TnsVerifications(object):
 
     @staticmethod
     def prepared_android(app_name):
+        run("ls " + app_name + TnsVerifications.PLATFORM_ANDROID_APP_PATH)
+        run("ls " + app_name + TnsVerifications.PLATFORM_ANDROID_TNS_MODULES_PATH)
         assert File.exists(app_name + TnsVerifications.PLATFORM_ANDROID_APP_PATH + 'main-view-model.js')
         assert File.exists(app_name + TnsVerifications.PLATFORM_ANDROID_TNS_MODULES_PATH + 'application/application.js')
         assert File.exists(app_name + TnsVerifications.PLATFORM_ANDROID_TNS_MODULES_PATH + 'xml/xml.js')
@@ -36,6 +39,8 @@ class TnsVerifications(object):
     def prepared_ios(app_name):
         app_path = TnsVerifications.get_ios_app_path(app_name)
         modules_path = TnsVerifications.get_ios_modules_path(app_name)
+        run("ls " + app_path)
+        run("ls " + modules_path)
         assert File.exists(app_path + 'main-view-model.js')
         assert File.exists(modules_path + 'application/application.js')
         assert not File.exists(modules_path + 'application/application.android.js')
