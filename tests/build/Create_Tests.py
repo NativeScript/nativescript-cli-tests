@@ -87,16 +87,6 @@ class CreateTests(BaseClass):
         output = File.read(self.app_name + os.sep + "package.json")
         assert "\"id\": \"org.nativescript.MyApp\"" in output
 
-    def test_004_create_project_with_copyfrom(self):
-        Tns.create_app(self.app_template, update_modules=False)
-        File.replace(self.app_template + "/app/LICENSE", "Telerik", "T3l3r1k")
-        Tns.create_app(self.app_name, attributes={"--copy-from": self.app_template + "/app"}, update_modules=False)
-        output = File.read(self.app_name + os.sep + "package.json")
-        assert "\"id\": \"org.nativescript.TNSApp\"" in output
-        output = File.read(self.app_name + os.sep + "/app/LICENSE")
-        assert "Telerik" not in output
-        assert "T3l3r1k" in output
-
     def test_005_create_project_with_space(self):
         Tns.create_app(self.app_name_space, update_modules=False)
         output = File.read(self.app_name_space + os.sep + "package.json")
