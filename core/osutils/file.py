@@ -12,6 +12,7 @@ import fileinput
 import fnmatch
 import os
 import time
+import shutil
 
 from core import osutils
 from core.settings.settings import TEST_LOG
@@ -158,3 +159,7 @@ class File(object):
             if text in line:
                 found = True
         return found
+
+    @staticmethod
+    def copy(src, dest):
+        shutil.copy(src, dest)
