@@ -12,6 +12,7 @@ from time import sleep
 import subprocess
 import threading
 
+
 class TypescriptTests(BaseClass):
 
     app_folder = os.path.join(BaseClass.app_name, "app")
@@ -216,12 +217,15 @@ class TypescriptTests(BaseClass):
                   os.path.join(self.app_name, "app", "App_Resources", "Android"))
         File.copy(os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "myCustomActivity.android.ts"),
                   os.path.join(self.app_name, "app"))
-        File.copy(os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "typings.d.ts"),self.app_name)
+        File.copy(os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "typings.d.ts"), self.app_name)
         subprocess.Popen([ADB_PATH, "-e", "logcat", "-c"])
-        output = Tns.run_android(attributes={"--path": self.app_name, "--justlaunch": ""})
+        output = Tns.run_android(attributes={"--path": self.app_name,
+                                             "--justlaunch": "",
+                                             "--timeout": "200"})
         assert "Successfully deployed on device with identifier" in output
         process = subprocess.Popen([ADB_PATH, "-e", "logcat"], stdout=subprocess.PIPE)
         threading.Timer(10, process.terminate).start()
         output = process.communicate()[0]
         sleep(2)
-        assert "java.lang.ClassNotFoundException: Didn't find class \"org.nativescript.a.MyCustomActivity\"" not in output, "Exception in output"
+        assert "java.lang.ClassNotFoundException: Didn't find class \"org.nativescript.a.MyCustomActivity\"" \
+               not in output, "Exception in output"
