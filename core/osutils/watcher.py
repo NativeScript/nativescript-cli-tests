@@ -32,21 +32,10 @@ class Watcher(unittest.TestCase):
             while not found:
                 if count == 0:
                     line = self.process.stdout.readline()
+                    print line
                     if text in line:
                         print " + Text \"{0}\" found in: ".format(text) + line.rstrip(),
                         print '\n'
-                        count = 1
-                        continue
-                    else:
-                        print (" - " + line),
-                if count == 1:
-                    line = self.process.stdout.readline()
-                    if text in line:
-                        print " + Text \"{0}\" found in: ".format(text) + line.rstrip(),
-                        raise Exception("The console.log() message duplicates.")
-                    else:
-                        found = True
-                        print (" - " + line),
                         break
 
         self.run_with_timeout(timeout, read_loop)
