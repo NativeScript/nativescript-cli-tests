@@ -42,10 +42,10 @@ class LivesyncEmulatorTests(BaseClass):
                                     "--path": self.app_name,
                                     "--justlaunch": ""})
         replace_all(app_name=self.app_name)
-        Tns.livesync(platform="android", attributes={"--emulator": "",
-                                                     "--device": "emulator-5554",
-                                                     "--path": self.app_name,
-                                                     "--justlaunch": ""})
+        Tns.livesync(platform="android", log_trace=False, attributes={"--emulator": "",
+                                                                      "--device": "emulator-5554",
+                                                                      "--path": self.app_name,
+                                                                      "--justlaunch": ""})
         time.sleep(5)
         verify_all_replaced(device_type=DeviceType.EMULATOR, app_name="TNSApp")
 
@@ -60,9 +60,9 @@ class LivesyncEmulatorTests(BaseClass):
 
         os.makedirs(self.app_name + "/app/newfolder")
         shutil.copyfile(self.app_name + "/app/main-view-model.js", self.app_name + "/app/newfolder/main-view-model.js")
-        Tns.livesync(platform="android", attributes={"--device": "emulator-5554",
-                                                     "--path": self.app_name,
-                                                     "--justlaunch": ""})
+        Tns.livesync(platform="android", log_trace=False, attributes={"--device": "emulator-5554",
+                                                                      "--path": self.app_name,
+                                                                      "--justlaunch": ""})
         time.sleep(5)
         Emulator.file_contains("TNSApp", "app/test.xml", text="TAP")
         Emulator.file_contains("TNSApp", "app/test.js", text="page.bindingContext = ")
@@ -71,9 +71,9 @@ class LivesyncEmulatorTests(BaseClass):
 
     def test_301_livesync_before_run(self):
         replace_all(app_name=self.app_name)
-        Tns.livesync(platform="android", attributes={"--emulator": "",
-                                                     "--device": "emulator-5554",
-                                                     "--path": self.app_name,
-                                                     "--justlaunch": ""})
+        Tns.livesync(platform="android", log_trace=False, attributes={"--emulator": "",
+                                                                      "--device": "emulator-5554",
+                                                                      "--path": self.app_name,
+                                                                      "--justlaunch": ""})
         time.sleep(5)
         verify_all_replaced(device_type=DeviceType.EMULATOR, app_name="TNSApp")
