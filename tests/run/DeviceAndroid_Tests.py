@@ -51,15 +51,6 @@ class DeviceAndroidTests(BaseClass):
             assert "com.android." in output
             assert "org.nativescript.TNSApp" in output
 
-        # Verify app is running
-        Device.wait_until_app_is_running(app_id="org.nativescript.TNSApp", device_id=device_id, timeout=60)
-
-        # Get logs
-        output = Tns.run_tns_command("device log", attributes={"--device": device_id}, timeout=120)
-        assert ("ActivityManager" in output) or ("AndroidRuntime" in output) or \
-               ("Wifi" in output) or ("WIFI" in output) or ("Netlink" in output) or \
-               ("beginning of system" in output) or ("beginning of main" in output)
-
         # Kill the app
         Device.stop_application(app_id="org.nativescript.TNSApp", device_id=device_id)
         # Start via emulate command and verify it is running
@@ -69,6 +60,14 @@ class DeviceAndroidTests(BaseClass):
                             timeout=60)
         # Verify app is running
         Device.wait_until_app_is_running(app_id="org.nativescript.TNSApp", device_id=device_id, timeout=60)
+
+        # Get logs
+        output = Tns.run_tns_command("device log", attributes={"--device": device_id}, timeout=120)
+        print "$$$$$$$$$$ OUTPUT $$$$$$"
+        print output
+        assert ("ActivityManager" in output) or ("AndroidRuntime" in output) or \
+               ("Wifi" in output) or ("WIFI" in output) or ("Netlink" in output) or \
+               ("beginning of system" in output) or ("beginning of main" in output)
 
     def test_300_device_log_android_two_devices(self):
         a_count = Device.get_count(platform="android")
