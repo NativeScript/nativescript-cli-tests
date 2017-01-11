@@ -55,7 +55,7 @@ class EmulateAndroidTests(BaseClass):
                                      timeout=660)
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier 'emulator-5554'" in output
+        assert "Successfully installed on device with identifier 'emulator-5554'" in output
         assert "Starting Android emulator with image" not in output
 
         # TODO: Get device id and verify files are deployed and process is
@@ -77,7 +77,7 @@ class EmulateAndroidTests(BaseClass):
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
         assert "Starting Android emulator with image" in output
-        assert "installing" in output
+        assert "Installing" in output
         assert "running" in output
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
