@@ -62,30 +62,22 @@ class TypescriptTests(BaseClass):
         assert "error" not in output
 
         assert File.extension_exists(self.app_folder, ".js")
-        assert File.extension_exists(self.app_folder, ".map")
+        assert not File.extension_exists(self.app_folder, ".map")
         assert File.extension_exists(self.app_folder, ".ts")
 
-        # Verify source map in app
+        # Verify inline source map in app
         output = run("cat ./" + self.app_folder + "/app.js")
-        assert "//# sourceMappingURL=app.js.map" in output
-
-        output = run("cat ./" + self.app_folder + "/app.js.map")
-        assert "\"file\":\"app.js\"" in output
-        assert "\"sources\":[\"app.ts\"]" in output
+        assert "//# sourceMappingURL=data:application/json;base64" in output
 
         assert File.extension_exists(self.assets_folder + "/app", ".js")
-        assert File.extension_exists(self.assets_folder + "/app", ".map")
+        assert not File.extension_exists(self.assets_folder + "/app", ".map")
         assert File.extension_exists(self.assets_folder + "/app", ".ts")
         assert File.extension_exists(self.modules_folder + "/application", ".js")
         assert not File.extension_exists(self.modules_folder + "/application", ".ts")
 
-        # Verify source map in native android app
+        # Verify inline source map in native android app
         output = run("cat ./" + self.assets_folder + "/app/app.js")
-        assert "//# sourceMappingURL=app.js.map" in output
-
-        output = run("cat ./" + self.assets_folder + "/app/app.js.map")
-        assert "\"file\":\"app.js\"" in output
-        assert "\"sources\":[\"app.ts\"]" in output
+        assert "//# sourceMappingURL=data:application/json;base64" in output
 
         if CURRENT_OS == OSType.OSX:
             # prepare in debug => .ts should go to the platforms folder
@@ -95,22 +87,18 @@ class TypescriptTests(BaseClass):
             assert "error" not in output
 
             assert File.extension_exists(self.app_folder, ".js")
-            assert File.extension_exists(self.app_folder, ".map")
+            assert not File.extension_exists(self.app_folder, ".map")
             assert File.extension_exists(self.app_folder, ".ts")
 
             assert File.extension_exists(self.assets_folder + "/app", ".js")
-            assert File.extension_exists(self.assets_folder + "/app", ".map")
+            assert not File.extension_exists(self.assets_folder + "/app", ".map")
             assert File.extension_exists(self.assets_folder + "/app", ".ts")
             assert File.extension_exists(self.modules_folder + "/application", ".js")
             assert not File.extension_exists(self.modules_folder + "/application", ".ts")
 
-            # Verify source map in native iOS app
+            # Verify inline source map in native iOS app
             output = run("cat ./" + self.app_name + "/platforms/ios/TNSApp/app/app.js")
-            assert "//# sourceMappingURL=app.js.map" in output
-
-            output = run("cat ./" + self.app_name + "/platforms/ios/TNSApp/app/app.js.map")
-            assert "\"file\":\"app.js\"" in output
-            assert "\"sources\":[\"app.ts\"]" in output
+            assert "//# sourceMappingURL=data:application/json;base64" in output
 
     def test_002_build(self):
         output = Tns.build_android(attributes={"--path": self.app_name})
@@ -135,8 +123,12 @@ class TypescriptTests(BaseClass):
         assert "error" not in output
 
         assert File.extension_exists(self.app_folder, ".js")
-        assert File.extension_exists(self.app_folder, ".map")
+        assert not File.extension_exists(self.app_folder, ".map")
         assert File.extension_exists(self.app_folder, ".ts")
+
+        # Verify inline source map in app
+        output = run("cat ./" + self.app_folder + "/app.js")
+        assert "//# sourceMappingURL=data:application/json;base64" not in output
 
         assert File.extension_exists(self.assets_folder + "/app", ".js")
         assert not File.extension_exists(self.assets_folder + "/app", ".map")
@@ -162,7 +154,7 @@ class TypescriptTests(BaseClass):
             assert "error" not in output
 
             assert File.extension_exists(self.app_folder, ".js")
-            assert File.extension_exists(self.app_folder, ".map")
+            assert not File.extension_exists(self.app_folder, ".map")
             assert File.extension_exists(self.app_folder, ".ts")
 
             assert File.extension_exists(self.assets_folder + "/app", ".js")
