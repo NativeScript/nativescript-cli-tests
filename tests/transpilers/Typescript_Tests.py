@@ -102,8 +102,19 @@ class TypescriptTests(BaseClass):
 
     def test_002_build(self):
         output = Tns.build_android(attributes={"--path": self.app_name})
-        assert "Skipping prepare." in output
-        assert "Building project..." in output
+        if CURRENT_OS == OSType.OSX:
+            # Tests workflow:
+            # prepare android
+            # prepare ios
+            # build android
+            assert "Executing before-prepare hook" in output
+            assert "Found peer TypeScript" in output
+        else:
+            # Tests workflow:
+            # prepare android
+            # build android
+            assert "Skipping prepare." in output
+            assert "Building project..." in output
         assert "error TS" not in output
         assert "error" not in output
 
