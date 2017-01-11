@@ -13,6 +13,7 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS, \
     OSType, TEST_RUN_HOME
 from core.tns.tns import Tns
+from core.tns.tns_verifications import TnsVerifications
 
 
 class BuildAndroidTests(BaseClass):
@@ -79,7 +80,10 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
 
     def test_201_build_android_with_additional_prepare(self):
-        Tns.prepare_android(attributes={"--path": self.app_name})
+        output = Tns.prepare_android(attributes={"--path": self.app_name}, assert_success=False)
+        assert "Skipping prepare." in output
+        TnsVerifications.prepared_android(self.app_name)
+
         Tns.build_android(attributes={"--path": self.app_name})
         assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
 
