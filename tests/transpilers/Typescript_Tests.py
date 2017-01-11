@@ -114,7 +114,7 @@ class TypescriptTests(BaseClass):
 
     def test_002_build(self):
         output = Tns.build_android(attributes={"--path": self.app_name})
-        assert "Executing before-prepare hook" in output
+        assert "Skipping prepare." in output
         assert "Found peer TypeScript" in output
         assert "error TS" not in output
         assert "error" not in output
@@ -222,7 +222,7 @@ class TypescriptTests(BaseClass):
         output = Tns.run_android(attributes={"--path": self.app_name,
                                              "--justlaunch": "",
                                              "--timeout": "200"})
-        assert "Successfully deployed on device with identifier" in output
+        assert "Successfully installed on device with identifier" in output
         process = subprocess.Popen([ADB_PATH, "-e", "logcat"], stdout=subprocess.PIPE)
         threading.Timer(10, process.terminate).start()
         output = process.communicate()[0]
