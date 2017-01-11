@@ -103,7 +103,7 @@ class TypescriptTests(BaseClass):
     def test_002_build(self):
         output = Tns.build_android(attributes={"--path": self.app_name})
         assert "Skipping prepare." in output
-        assert "Found peer TypeScript" in output
+        assert "Building project..." in output
         assert "error TS" not in output
         assert "error" not in output
 
