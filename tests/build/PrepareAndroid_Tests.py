@@ -65,6 +65,7 @@ class PrepareAndroidTests(BaseClass):
         Tns.prepare_android(attributes={"--path": self.app_name})
         TnsVerifications.prepared_android(self.app_name)
 
+        time.sleep(1)
         File.copy(self.app_name + "/app/app.js", self.app_name + "/app/app-new.js")
         File.copy(self.app_name + "/app/app.css", self.app_name + "/app/app-new.css")
         File.copy(self.app_name + "/app/main-page.xml", self.app_name + "/app/main-page-new.xml")

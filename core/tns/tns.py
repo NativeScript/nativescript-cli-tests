@@ -238,11 +238,12 @@ class Tns(object):
                                      tns_path=tns_path)
         if assert_success:
             assert "Project successfully built" in output
-            if "emulator" in attributes.iteritems():
-                assert "Starting iOS Simulator" in output
-            else:
-                assert "Successfully deployed on device" in output
-                assert "Successfully run application org.nativescript." in output
+            # if "emulator" in attributes.iteritems():
+            #     assert "Starting iOS Simulator" in output
+            # else:
+            assert "Successfully installed on device with identifier" in output
+            assert "Successfully run application org.nativescript." in output
+            assert "Successfully started on device with identifier" in output
         return output
 
     @staticmethod

@@ -17,6 +17,7 @@ from core.xcode.xcode import Xcode
 class RuniOS(BaseClass):
     @classmethod
     def setUpClass(cls):
+        Xcode.cleanup_cache()
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
         Xcode.cleanup_cache()
@@ -35,7 +36,6 @@ class RuniOS(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-        Xcode.cleanup_cache()
 
     def tearDown(self):
         BaseClass.tearDown(self)
@@ -52,7 +52,8 @@ class RuniOS(BaseClass):
                                          "--justlaunch": "",
                                          "--release": ""
                                          },
-                             assert_success=False, timeout=180)
+                             timeout=180)
+
         # First build in release require prepare
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
@@ -63,7 +64,7 @@ class RuniOS(BaseClass):
     def test_002_run_ios_debug(self):
         output = Tns.run_ios(attributes={"--path": self.app_name,
                                          "--justlaunch": ""},
-                             timeout=180, assert_success=False)
+                             timeout=180)
 
         # First build in debug require prepare
         assert "Project successfully prepared" in output
@@ -77,7 +78,7 @@ class RuniOS(BaseClass):
                                          "--justlaunch": "",
                                          "--emulator": ""
                                          },
-                             timeout=180, assert_success=False)
+                             timeout=180)
 
         # Prepare because this is new project
         assert "Project successfully prepared" in output
@@ -90,7 +91,7 @@ class RuniOS(BaseClass):
                                          "--release": "",
                                          "--justlaunch": ""
                                          },
-                             assert_success=False, timeout=180)
+                             timeout=180)
 
         # First build for simulator in release for first time, so require prepare
         assert "Project successfully prepared" in output
@@ -100,10 +101,18 @@ class RuniOS(BaseClass):
         # running on this device
 
     def test_005_run_ios_default(self):
-        output = Tns.run_ios(attributes={"--path": self.app_name}, timeout=180)
-        # Hm....not sure this is ok, but no prepare in this case.
-        assert "Project successfully prepared" not in output
-        assert "CONFIGURATION Debug" in output
+        output = Tns.run_ios(attributes={"--path": self.app_name},
+                             assert_success=False,
+                             timeout=180)
+
+        # Dimitar: Hm....not sure this is ok, but no prepare in this case.
+        # Vasil: It's ok as there are no changes in this app since test_002
+        # and we build again in debug configuration.
+        assert "Skipping prepare." in output
+        assert "Searching for devices..." in output
+        assert "Skipping package build." in output
+        assert "Refreshing application..." in output
+        assert "Successfully synced application org.nativescript." in output
 
     def test_200_run_ios_inside_project(self):
         current_dir = os.getcwd()
@@ -113,20 +122,24 @@ class RuniOS(BaseClass):
                              tns_path=os.path.join("..", TNS_PATH), timeout=180, assert_success=False)
         os.chdir(current_dir)
 
-        # Second build in debug should not require prepare
-        assert "Project successfully prepared" not in output
-        assert "Successfully deployed on device" in output
-        assert "Successfully run application org.nativescript." in output
+        # Second build in debug should not prepare
+        assert "Skipping prepare." in output
+        assert "Searching for devices..." in output
+        assert "Skipping package build." in output
+        assert "Refreshing application..." in output
 
+        assert "Successfully synced application org.nativescript." not in output
+        assert "Project successfully prepared" not in output
 
     def test_301_run_ios_platform_not_added(self):
         Tns.create_app(self.app_name_noplatform)
         output = Tns.run_ios(attributes={"--path": self.app_name_noplatform,
                                          "--justlaunch": ""},
-                             timeout=180)
+                             timeout=180, assert_success=False)
         assert "Copying template files..." in output
         assert "Installing tns-ios" in output
         assert "Project successfully prepared" in output
+        assert "Successfully installed on device with identifier" in output
 
     def test_302_run_ios_device_not_connected(self):
         output = Tns.run_ios(attributes={"--path": self.app_name_noplatform,
