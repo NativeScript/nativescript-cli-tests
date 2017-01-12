@@ -128,7 +128,7 @@ class PrepareAndroidTests(BaseClass):
     def test_400_prepare_missing_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
         output = Tns.run_tns_command("prepare", attributes={"--path": self.app_name})
-        assert "You need to provide all the required parameters." in output
+        assert "No platform specified." in output
 
     def test_401_prepare_invalid_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
