@@ -223,6 +223,7 @@ class TypescriptTests(BaseClass):
         File.copy(os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "typings.d.ts"), self.app_name)
         subprocess.Popen([ADB_PATH, "-e", "logcat", "-c"])
         output = Tns.run_android(attributes={"--path": self.app_name,
+                                             "--avd": "Emulator-Api23-Default",
                                              "--justlaunch": "",
                                              "--timeout": "200"})
         assert "Successfully installed on device with identifier" in output
