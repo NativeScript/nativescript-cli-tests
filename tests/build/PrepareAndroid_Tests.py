@@ -4,6 +4,8 @@ Tests for prepare command in context of Android
 import os
 import unittest
 
+import time
+
 from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
@@ -91,6 +93,7 @@ class PrepareAndroidTests(BaseClass):
         Tns.prepare_android(attributes={"--path": self.app_name})
         assert File.exists(self.app_name + '/platforms/android/src/main/assets/app/app.css')
 
+        time.sleep(1)
         run("cp " + self.app_name + "/app/app.js " + self.app_name + "/app/app.ios.js")
         run("cp " + self.app_name + "/app/app.js " + self.app_name + "/app/app.android.js")
         run("cp " + self.app_name + "/app/app.js " + self.app_name + "/app/appios.js")
