@@ -63,9 +63,12 @@ class PrepareAndroidTests(BaseClass):
         Tns.prepare_android(attributes={"--path": self.app_name})
         TnsVerifications.prepared_android(self.app_name)
 
-        run("mv " + self.app_name + "/app/app.js " + self.app_name + "/app/app-new.js")
-        run("mv " + self.app_name + "/app/app.css " + self.app_name + "/app/app-new.css")
-        run("mv " + self.app_name + "/app/main-page.xml " + self.app_name + "/app/main-page-new.xml")
+        File.copy(self.app_name + "/app/app.js", self.app_name + "/app/app-new.js")
+        File.copy(self.app_name + "/app/app.css", self.app_name + "/app/app-new.css")
+        File.copy(self.app_name + "/app/main-page.xml", self.app_name + "/app/main-page-new.xml")
+        File.remove(self.app_name + "/app/app.js")
+        File.remove(self.app_name + "/app/app.css")
+        File.remove(self.app_name + "/app/main-page.xml")
 
         Tns.prepare_android(attributes={"--path": self.app_name})
 
