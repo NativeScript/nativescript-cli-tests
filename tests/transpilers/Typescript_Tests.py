@@ -215,6 +215,7 @@ class TypescriptTests(BaseClass):
         assert File.exists(os.path.join(os.getcwd(), "node_modules", "typescript"))
         output = run("npm list")
         assert "typescript@" + version in output
+
         Folder.navigate_to(TEST_RUN_HOME)
         File.copy(os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "AndroidManifest.xml"),
                   os.path.join(self.app_name, "app", "App_Resources", "Android"))
@@ -226,7 +227,7 @@ class TypescriptTests(BaseClass):
                                              "--avd": "Emulator-Api23-Default",
                                              "--justlaunch": "",
                                              "--timeout": "200"})
-        assert "Successfully installed on device with identifier" in output
+
         process = subprocess.Popen([ADB_PATH, "-e", "logcat"], stdout=subprocess.PIPE)
         threading.Timer(10, process.terminate).start()
         output = process.communicate()[0]

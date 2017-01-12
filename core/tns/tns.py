@@ -226,7 +226,7 @@ class Tns(object):
                                      tns_path=tns_path)
         if assert_success:
             assert "Project successfully built" in output
-            assert "Successfully deployed on device with identifier" in output
+            assert "Successfully installed on device with identifier" in output
         return output
 
     @staticmethod
