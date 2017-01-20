@@ -64,7 +64,7 @@ class DebugSimulatorTests(BaseClass):
         File.cat(self.app_name + "/package.json")
         output = Tns.run_tns_command("emulate ios", attributes={"--path": self.app_name,
                                                                 "--justlaunch": ""})
-        assert "deployed on device" in output
+        assert "started on device" in output
         time.sleep(15)
 
         output = Tns.run_tns_command("debug ios", attributes={"--start": "",
