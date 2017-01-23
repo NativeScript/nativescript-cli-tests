@@ -91,7 +91,7 @@ class RuniOSTests(BaseClass):
         # We should not prepare because previous test already prepared in debug mode
         assert "Project successfully prepared" not in output
         assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier" in output
+        assert "Successfully installed on device with identifier" in output
 
     def test_201_run_android_device_id_renamed_proj_dir(self):
         run("mv " + self.app_name + " " + self.app_name_appTest)
@@ -105,7 +105,7 @@ class RuniOSTests(BaseClass):
         assert "Project successfully prepared" not in output
 
         assert "Project successfully built" in output
-        assert "Successfully deployed on device with identifier 'emulator-5554'" in output
+        assert "Successfully installed on device with identifier 'emulator-5554'" in output
 
     def test_301_run_android_patform_not_added(self):
         Tns.create_app(self.app_name_noplatform)

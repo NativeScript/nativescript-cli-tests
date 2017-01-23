@@ -72,7 +72,7 @@ class DeployAndroidTests(BaseClass):
 
         # We executed build once, but this is first time we call build --release -> we need a prepare
         assert "Project successfully prepared" in output
-        assert "Successfully deployed on device with identifier 'emulator-5554'" in output
+        assert "Successfully installed on device with identifier 'emulator-5554'" in output
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
             if "emulator" not in device_id:
