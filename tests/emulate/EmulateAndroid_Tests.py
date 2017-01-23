@@ -146,13 +146,3 @@ class EmulateAndroidTests(BaseClass):
         assert "Cannot find device with name: invaliddevice_id" in output
         assert "Usage" in output
 
-    def test_402_emulate_invalid_avd(self):
-        output = Tns.run_tns_command("emulate android", attributes={"--path": self.app_name,
-                                                                    "--avd": "invaliddevice_id",
-                                                                    "--timeout": "600",
-                                                                    "--justlaunch": ""
-                                                                    },
-                                     timeout=660)
-        assert "Option --avd is no longer supported. Please use --device isntead!"
-        assert "Cannot find device with name: invaliddevice_id" in output
-        assert "Usage" in output

@@ -48,7 +48,7 @@ class EmulateiOSTests(BaseClass):
                                                                 })
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
-        assert "Starting iOS Simulator" in output
+        assert "Successfully started on device with identifier" in output
         assert Process.is_running("Simulator")
 
     def test_003_emulate_ios_release(self):
@@ -61,7 +61,7 @@ class EmulateiOSTests(BaseClass):
         assert "Project successfully prepared" in output
         assert "CONFIGURATION Release" in output
         assert "Project successfully built" in output
-        assert "Starting iOS Simulator" in output
+        assert "Successfully started on device with identifier" in output
         assert Process.is_running("Simulator")
 
     def test_210_emulate_ios_patform_not_added(self):
@@ -74,7 +74,7 @@ class EmulateiOSTests(BaseClass):
         assert "Project successfully created." in output
         assert "Project successfully prepared" in output
         assert "Project successfully built" in output
-        assert "Starting iOS Simulator" in output
+        assert "Successfully started on device with identifier" in output
         assert Process.is_running("Simulator")
 
     def test_400_emulate_invalid_device(self):
