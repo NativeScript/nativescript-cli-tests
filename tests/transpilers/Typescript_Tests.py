@@ -147,7 +147,7 @@ class TypescriptTests(BaseClass):
 
         if "release" in CLI_PATH.lower():  # TODO: Use Settings.BRANCH
             # In this case we have a snapshot, tns-core-modules should not be available in platforms folder
-            assert not File.exists(self.modules_folder + "/application")
+            assert not Folder.exists(self.modules_folder + "/application")
         else:
             assert File.extension_exists(self.modules_folder + "/application", ".js")
             assert not File.extension_exists(self.modules_folder + "/application", ".ts")
@@ -173,10 +173,10 @@ class TypescriptTests(BaseClass):
             assert not File.extension_exists(self.assets_folder + "/app", ".ts")
 
             if "release" in CLI_PATH.lower():  # TODO: Use Settings.BRANCH
-                assert not File.extension_exists(self.modules_folder + "/application", ".js")
+                assert not Folder.exists(self.modules_folder + "/application")
             else:
                 assert File.extension_exists(self.modules_folder + "/application", ".js")
-            assert not File.extension_exists(self.modules_folder + "/application", ".ts")
+                assert not File.extension_exists(self.modules_folder + "/application", ".ts")
 
     def test_301_prepare_after_node_modules_deleted(self):
         Folder.cleanup(self.node_modules_folder)
