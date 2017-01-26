@@ -174,7 +174,7 @@ class TypescriptTests(BaseClass):
 
             if "release" in CLI_PATH.lower():  # TODO: Use Settings.BRANCH
                 assert not File.extension_exists(self.modules_folder + "/application", ".js")
-            else
+            else:
                 assert File.extension_exists(self.modules_folder + "/application", ".js")
             assert not File.extension_exists(self.modules_folder + "/application", ".ts")
 
@@ -226,10 +226,10 @@ class TypescriptTests(BaseClass):
                   os.path.join(self.app_name, "app"))
         File.copy(os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "typings.d.ts"), self.app_name)
         subprocess.Popen([ADB_PATH, "-e", "logcat", "-c"])
-        output = Tns.run_android(attributes={"--path": self.app_name,
+        Tns.run_android(attributes={"--path": self.app_name,
                                              "--avd": "Emulator-Api23-Default",
                                              "--justlaunch": "",
-                                             "--timeout": "200"})
+                                             "--timeout": "320"})
 
         process = subprocess.Popen([ADB_PATH, "-e", "logcat"], stdout=subprocess.PIPE)
         threading.Timer(10, process.terminate).start()
