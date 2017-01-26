@@ -46,7 +46,7 @@ class TypescriptTests(BaseClass):
         BaseClass.setUp(self)
 
     def tearDown(self):
-        BaseClass.setUp(self)
+        BaseClass.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
@@ -172,7 +172,10 @@ class TypescriptTests(BaseClass):
             assert not File.extension_exists(self.assets_folder + "/app", ".map")
             assert not File.extension_exists(self.assets_folder + "/app", ".ts")
 
-            assert File.extension_exists(self.modules_folder + "/application", ".js")
+            if "release" in CLI_PATH.lower():  # TODO: Use Settings.BRANCH
+                assert not File.extension_exists(self.modules_folder + "/application", ".js")
+            else
+                assert File.extension_exists(self.modules_folder + "/application", ".js")
             assert not File.extension_exists(self.modules_folder + "/application", ".ts")
 
     def test_301_prepare_after_node_modules_deleted(self):
