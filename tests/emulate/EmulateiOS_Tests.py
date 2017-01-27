@@ -84,4 +84,4 @@ class EmulateiOSTests(BaseClass):
                                                                 })
         # https://github.com/NativeScript/nativescript-cli/issues/2446
         # assert "Cannot find device with name: invalidDevice." in output
-        assert "Cannot resolve the specified connected device by the provided index or identifier." in output
+        assert "Cannot resolve the specified connected device by the provided index or identifier." in output

@@ -190,6 +190,7 @@ class Tns(object):
     @staticmethod
     def build_ios(attributes={}, assert_success=True, tns_path=None):
         if "8." in Xcode.get_version():
+            # TODO: Use "--provision" instead.
             attr = {"--teamId": DEVELOPMENT_TEAM}
             attributes.update(attr)
         output = Tns.run_tns_command("build ios", attributes=attributes, tns_path=tns_path)
