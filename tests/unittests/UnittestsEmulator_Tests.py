@@ -6,6 +6,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TEST_RUN_HOME
 from core.tns.tns import Tns
 from nose.tools import timed
+from  core.settings.strings import *
 
 
 class UnittestsEmulator(BaseClass):
@@ -40,8 +41,8 @@ class UnittestsEmulator(BaseClass):
 
         # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/2212
         Folder.navigate_to(self.app_name)
-        output = run("npm install --save-dev mocha")
-        output = run("npm install --save-dev chai")
+        run("npm install --save-dev mocha")
+        run("npm install --save-dev chai")
 
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
@@ -50,9 +51,9 @@ class UnittestsEmulator(BaseClass):
                                                                  "--path": self.app_name,
                                                                  "--timeout": "120"})
 
-        assert "Successfully prepared plugin nativescript-unit-test-runner for android." in output
-        assert "Project successfully prepared" in output
-        assert "server started" in output
-        assert "Starting browser NativeScript Unit Test Runner" in output
+        assert installed_plugin + " " + nativescript_unit_test_runner in output
+        assert successfully_prepared in output
+        assert server_started in output
+        assert starting_ut_runner in output
 
-        assert "Executed 1 of 1 SUCCESS" in output
+        assert executed_tests in output

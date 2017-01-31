@@ -24,17 +24,28 @@ disabled = "{0} is {1}disabled."
 available_platforms = "Available platforms for this OS:"
 updates_available = "Updates available"
 no_issues = "No issues were detected."
-
+before_prepare = "Executing before-prepare hook"
+peer_typeScript = "Found peer TypeScript"
+skipping_prepare = "Skipping prepare."
+building = "Building project..."
+installed_plugin = "Successfully installed plugin "
 # Project
 successfully_created = "Project successfully created"
-
+test_file_created = "Example test file created in app/tests/"
+run_tests_using = "Run your tests using the \"$ tns test <platform>\" command."
+successfully_prepared = "Project successfully prepared"
+server_started = "server started"
+executed_tests = "Executed 1 of 1 SUCCESS"
+starting_ut_runner = "Starting browser NativeScript Unit Test Runner"
 
 # Pods
 carousel = "carousel"
 
-
+# Plugins
+nativescript_unit_test_runner = "nativescript-unit-test-runner"
 
 # Errors
+error = "error"
 invalid_input = "The input is not valid sub-command for '{0}' command"
 invalid_option = "The option '{0}' is not supported."
 invalid_value = "The value '{0}' is not valid."
