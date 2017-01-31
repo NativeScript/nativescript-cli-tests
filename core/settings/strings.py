@@ -11,9 +11,10 @@ config_release = "CONFIGURATION Release"
 # Commands
 autocomplete = "autocomplete"
 autocompletion = "Autocompletion"
+emulate = "emulate"
 errorreporting = "error-reporting"
 error_reporting = "Error reporting"
-"Usage reporting"
+usage_reporting = "Usage reporting"
 restart_shell = "Restart your shell to {0} command auto-completion."
 
 
@@ -35,11 +36,14 @@ carousel = "carousel"
 
 # Errors
 invalid_input = "The input is not valid sub-command for '{0}' command"
-no_platform = "1mNo platform specified. Please specify platforms to update"
+invalid_option = "The option '{0}' is not supported."
+invalid_value = "The value '{0}' is not valid."
+no_platform = "No platform specified. Please specify platforms to update"
 "and neither was a --path specified."
 no_such_device = "Cannot find device with name: "
 cannot_resolve_device = "Cannot resolve the specified connected device"
-invalid_value = "The value '{0}' is not valid."
+invalid_version = "{0} is not a valid version."
+
 
 " is not a valid device platform."
 " is not a valid NativeScript plugin"
