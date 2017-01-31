@@ -9,6 +9,7 @@ from core.device.simulator import Simulator
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME, TEST_RUN_HOME
 from core.tns.tns import Tns
+from core.settings.strings import *
 
 
 class UnittestsSimulator(BaseClass):
@@ -44,7 +45,7 @@ class UnittestsSimulator(BaseClass):
                                                      })
         # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/2212
         Folder.navigate_to(self.app_name)
-        output = run("npm install --save-dev jasmine-core")
+        run("npm install --save-dev jasmine-core")
 
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
@@ -58,8 +59,8 @@ class UnittestsSimulator(BaseClass):
                                                              "--path": self.app_name,
                                                              "--timeout": "60"})
 
-        assert "Project successfully prepared" in output
-        assert "server started" in output
-        assert "Starting browser NativeScript Unit Test Runner" in output
+        assert successfully_prepared in output
+        assert server_started in output
+        assert starting_ut_runner in output
 
-        assert "Executed 1 of 1 SUCCESS" in output
+        assert executed_tests in output

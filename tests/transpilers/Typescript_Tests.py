@@ -11,6 +11,7 @@ from core.tns.tns import Tns
 from time import sleep
 import subprocess
 import threading
+from core.settings.strings import *
 
 
 class TypescriptTests(BaseClass):
@@ -57,9 +58,9 @@ class TypescriptTests(BaseClass):
 
         # prepare in debug => .ts should go to the platforms folder
         output = Tns.prepare_android(attributes={"--path": self.app_name})
-        assert "Executing before-prepare hook" in output
-        assert "Found peer TypeScript" in output
-        assert "error" not in output
+        assert before_prepare in output
+        assert peer_typeScript in output
+        assert error not in output.lower()
 
         assert File.extension_exists(self.app_folder, ".js")
         assert not File.extension_exists(self.app_folder, ".map")
@@ -82,9 +83,9 @@ class TypescriptTests(BaseClass):
         if CURRENT_OS == OSType.OSX:
             # prepare in debug => .ts should go to the platforms folder
             output = Tns.prepare_ios(attributes={"--path": self.app_name})
-            assert "Executing before-prepare hook" in output
-            assert "Found peer TypeScript" in output
-            assert "error" not in output
+            assert before_prepare in output
+            assert peer_typeScript in output
+            assert error not in output.lower()
 
             assert File.extension_exists(self.app_folder, ".js")
             assert not File.extension_exists(self.app_folder, ".map")
@@ -107,16 +108,15 @@ class TypescriptTests(BaseClass):
             # prepare android
             # prepare ios
             # build android
-            assert "Executing before-prepare hook" in output
-            assert "Found peer TypeScript" in output
+            assert before_prepare in output
+            assert peer_typeScript in output
         else:
             # Tests workflow:
             # prepare android
             # build android
-            assert "Skipping prepare." in output
-            assert "Building project..." in output
-        assert "error TS" not in output
-        assert "error" not in output
+            assert skipping_prepare in output
+            assert building in output
+        assert error not in output.lower()
 
     def test_201_prepare_release(self):
         # prepare in release => .ts should NOT go to the platforms folder
@@ -128,10 +128,10 @@ class TypescriptTests(BaseClass):
                                                  "--copy-to": "./",
                                                  "--release": ""
                                                  })
-        assert "Executing before-prepare hook" in output
+        assert before_prepare in output
 
-        assert "Found peer TypeScript" in output
-        assert "error" not in output
+        assert peer_typeScript in output
+        assert error not in output.lower()
 
         assert File.extension_exists(self.app_folder, ".js")
         assert not File.extension_exists(self.app_folder, ".map")
@@ -160,9 +160,9 @@ class TypescriptTests(BaseClass):
             output = Tns.prepare_ios(attributes={"--path": self.app_name,
                                                  "--release": ""
                                                  })
-            assert "Executing before-prepare hook" in output
-            assert "Found peer TypeScript" in output
-            assert "error" not in output
+            assert before_prepare in output
+            assert peer_typeScript in output
+            assert error not in output.lower()
 
             assert File.extension_exists(self.app_folder, ".js")
             assert not File.extension_exists(self.app_folder, ".map")
@@ -198,7 +198,7 @@ class TypescriptTests(BaseClass):
         andr_ref = "/// <reference path=\"./node_modules/tns-platform-declarations/tns-core-modules/android17.d.ts\" />"
         File.append(self.app_name + os.sep + "references.d.ts", andr_ref)
         output = Tns.build_android(attributes={"--path": self.app_name})
-        assert "error TS" not in output
+        assert error not in output.lower()
 
         # TODO: Un commend when https://github.com/NativeScript/NativeScript/issues/2724 is fixed
         # if CURRENT_OS == OSType.OSX:
@@ -226,7 +226,6 @@ class TypescriptTests(BaseClass):
                   os.path.join(self.app_name, "app"))
         File.copy(os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "typings.d.ts"), self.app_name)
         subprocess.Popen([ADB_PATH, "-e", "logcat", "-c"])
-
         if CURRENT_OS != OSType.WINDOWS:
             Tns.run_android(attributes={"--path": self.app_name,
                                              "--avd": "Emulator-Api23-Default",
