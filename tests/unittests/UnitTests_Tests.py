@@ -31,7 +31,7 @@ class UnitTests(BaseClass):
         output = Tns.run_tns_command("test init", attributes={"--framework": "jasmine",
                                                               "--path ": self.app_name})
 
-        assert installed_plugin + " " + nativescript_unit_test_runner in output
+        assert installed_plugin.format(nativescript_unit_test_runner) in output
         assert test_file_created in output
         assert run_tests_using in output
 
@@ -51,7 +51,7 @@ class UnitTests(BaseClass):
         output = Tns.run_tns_command("test init", attributes={"--framework": "mocha",
                                                               "--path": self.app_name})
 
-        assert installed_plugin + " " + nativescript_unit_test_runner in output
+        assert installed_plugin.format(nativescript_unit_test_runner) in output
         assert test_file_created in output
         assert run_tests_using in output
 
@@ -72,7 +72,7 @@ class UnitTests(BaseClass):
         output = Tns.run_tns_command("test init", attributes={"--framework": "qunit",
                                                               "--path": self.app_name})
 
-        assert installed_plugin + " " + nativescript_unit_test_runner in output
+        assert installed_plugin.format(nativescript_unit_test_runner) in output
         assert test_file_created in output
         assert run_tests_using in output
 
