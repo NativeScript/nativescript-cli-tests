@@ -6,6 +6,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, VERBOSE_LOG
 from core.tns.tns import Tns
+from core.settings.strings import *
 
 
 class VerboseLogEmulator(BaseClass):
@@ -32,7 +33,7 @@ class VerboseLogEmulator(BaseClass):
                                              "--path": self.app_name,
                                              }, timeout=180)
 
-        assert "Project successfully built" in output
+        assert successfully_built in output
         lines = output.split('\n')
         count = len(lines)
 
