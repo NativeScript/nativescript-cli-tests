@@ -13,6 +13,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_PATH, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS
 from core.tns.tns import Tns
+from core.settings.strings import *
 
 
 class RuniOSTests(BaseClass):
@@ -51,7 +52,7 @@ class RuniOSTests(BaseClass):
                                  assert_success=False)
 
         # This is the first time we build the project -> we need a prepare
-        assert "Project successfully prepared" in output
+        assert successfully_prepared in output
 
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
@@ -65,7 +66,7 @@ class RuniOSTests(BaseClass):
                                  assert_success=False)
 
         # This is the first time we build in debug -> we need a prepare
-        assert "Project successfully prepared" in output
+        assert successfully_prepared in output
 
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
@@ -75,7 +76,7 @@ class RuniOSTests(BaseClass):
     def test_003_run_android_default(self):
         output = Tns.run_android(attributes={"--path": self.app_name}, timeout=60)
         # When previously build in debug and now we build in debug we do not need a prepare
-        assert "Project successfully prepared" not in output
+        assert successfully_prepared not in output
          # We do not show full adb logs (only those from app)
         assert "I/ActivityManager" not in output
 
@@ -89,9 +90,9 @@ class RuniOSTests(BaseClass):
         os.chdir(current_dir)
 
         # We should not prepare because previous test already prepared in debug mode
-        assert "Project successfully prepared" not in output
-        assert "Project successfully built" in output
-        assert "Successfully installed on device with identifier" in output
+        assert successfully_prepared not in output
+        assert successfully_built in output
+        assert installed_on_device.format() in output
 
     def test_201_run_android_device_id_renamed_proj_dir(self):
         run("mv " + self.app_name + " " + self.app_name_appTest)
@@ -102,21 +103,21 @@ class RuniOSTests(BaseClass):
                                  assert_success=False)
 
         # We should not prepare because previous test already prepared in debug mode
-        assert "Project successfully prepared" not in output
+        assert successfully_prepared not in output
 
-        assert "Project successfully built" in output
-        assert "Successfully installed on device with identifier 'emulator-5554'" in output
+        assert successfully_built in output
+        assert installed_on_device.format(emulator) in output
 
     def test_301_run_android_patform_not_added(self):
         Tns.create_app(self.app_name_noplatform)
         output = Tns.run_android(attributes={"--path": self.app_name_noplatform,
                                              "--justlaunch": "",
                                              })
-        assert "Copying template files..." in output
+        assert copy_template_files in output
         assert "Installing tns-android" in output
 
         # This is the first time we build the project -> we need a prepare
-        assert "Project successfully prepared" in output
+        assert successfully_prepared in output
 
     def test_302_run_android_device_not_connected(self):
         output = Tns.run_android(attributes={"--path": self.app_name_noplatform,
@@ -124,7 +125,7 @@ class RuniOSTests(BaseClass):
                                              "--justlaunch": ""
                                              },
                                  assert_success=False)
-        assert "Cannot resolve the specified connected device" in output
-        assert "Project successfully prepared" not in output
-        assert "Project successfully built" not in output
-        assert "Successfully deployed on device" not in output
+        assert cannot_resolve_device in output
+        assert successfully_prepared not in output
+        assert successfully_built not in output
+        assert deployed_on_device not in output

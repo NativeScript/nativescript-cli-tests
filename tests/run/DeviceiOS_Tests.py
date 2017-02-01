@@ -10,6 +10,7 @@ from core.device.device import Device
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH
 from core.tns.tns import Tns
+from core.settings.strings import *
 
 
 class DeviceiOSTests(BaseClass):
@@ -35,7 +36,7 @@ class DeviceiOSTests(BaseClass):
                                 timeout=180)
 
         # This is the first time we build the project -> we need a prepare
-        assert "Project successfully prepared" in output
+        assert successfully_prepared in output
 
         for device_id in device_ids:
             assert device_id in output
