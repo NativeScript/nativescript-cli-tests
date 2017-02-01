@@ -10,6 +10,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_PATH, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS
 from core.tns.tns import Tns
+from core.settings.strings import *
 
 
 class DeployAndroidTests(BaseClass):
@@ -40,7 +41,7 @@ class DeployAndroidTests(BaseClass):
                                                                    "--justlaunch": ""},
                                      timeout=180)
         # This is the first time we build the project -> we need a prepare
-        assert "Project successfully prepared" in output
+        assert successfully_prepared in output
 
         device_ids = Device.get_ids(platform="android")
         for device_id in device_ids:
@@ -60,19 +61,19 @@ class DeployAndroidTests(BaseClass):
                                     timeout=180)
 
         # We executed build once, but this is first time we call build --release -> we need a prepare
-        assert "Project successfully prepared" in output
+        assert successfully_prepared in output
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
             assert device_id in output
 
     def test_200_deploy_android_deviceid(self):
         output = Tns.deploy_android(
-            attributes={"--path": self.app_name, "--device": "emulator-5554", "--justlaunch": ""},
+            attributes={"--path": self.app_name, "--device": emulator, "--justlaunch": ""},
             timeout=180)
 
         # We executed build once, but this is first time we call build --release -> we need a prepare
-        assert "Project successfully prepared" in output
-        assert "Successfully installed on device with identifier 'emulator-5554'" in output
+        assert successfully_prepared in output
+        assert installed_on_device.format(emulator) in output
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
             if "emulator" not in device_id:
@@ -86,7 +87,7 @@ class DeployAndroidTests(BaseClass):
         os.chdir(current_dir)
 
         # Now we do not need prepare, because previous test also did build in debug mode
-        assert "Project successfully prepared" not in output
+        assert successfully_prepared not in output
 
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
@@ -97,16 +98,16 @@ class DeployAndroidTests(BaseClass):
         output = Tns.deploy_android(attributes={"--path": self.app_name_noplatform, "--justlaunch": ""}, timeout=180)
 
         # It is brand new project and we need a prepare for first run
-        assert "Copying template files..." in output
+        assert copy_template_files in output
         assert "Installing tns-android" in output
-        assert "Project successfully prepared" in output
+        assert successfully_prepared in output
 
         device_ids = Device.get_ids("android")
         for device_id in device_ids:
             assert device_id in output
 
     def test_401_deploy_invalid_platform(self):
-        output = Tns.run_tns_command("deploy invalidPlatform", attributes={"--path": self.app_name,
+        output = Tns.run_tns_command("deploy " + invalid, attributes={"--path": self.app_name,
                                                                            "--justlaunch": ""
                                                                            })
         assert "Invalid platform invalidplatform. Valid platforms are ios or android." in output

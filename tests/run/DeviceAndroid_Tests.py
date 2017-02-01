@@ -10,6 +10,7 @@ from core.device.emulator import Emulator
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
+from core.settings.strings import *
 
 
 class DeviceAndroidTests(BaseClass):
@@ -77,17 +78,17 @@ class DeviceAndroidTests(BaseClass):
             assert "More than one device found. Specify device explicitly." in output
 
     def test_400_device_invalid_platform(self):
-        output = Tns.run_tns_command("device windows")
-        assert "'windows' is not a valid device platform." in output
+        output = Tns.run_tns_command("device " + invalid)
+        assert invalid + " is not a valid device platform." in output
 
     def test_401_device_log_invalid_device_id(self):
         output = Tns.run_tns_command("device log", attributes={"--device": "invaliddevice_id"})
-        assert "Cannot resolve the specified connected device" in output
+        assert cannot_resolve_device in output
 
     def test_402_device_run_invalid_device_id(self):
         output = Tns.run_tns_command("device run android", attributes={"--device": "invaliddevice_id"})
-        assert "Cannot resolve the specified connected device" in output
+        assert cannot_resolve_device in output
 
     def test_403_device_list_applications_invalid_device_id(self):
         output = Tns.run_tns_command("device list-applications", attributes={"--device": "invaliddevice_id"})
-        assert "Cannot resolve the specified connected device" in output
+        assert cannot_resolve_device in output

@@ -12,6 +12,7 @@ from core.osutils.process import Process
 from core.settings.settings import IOS_RUNTIME_PATH, TNS_PATH
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
+from core.settings.strings import *
 
 
 class RuniOS(BaseClass):
@@ -55,8 +56,8 @@ class RuniOS(BaseClass):
                              timeout=180)
 
         # First build in release require prepare
-        assert "Project successfully prepared" in output
-        assert "CONFIGURATION Release" in output
+        assert successfully_prepared in output
+        assert config_release in output
 
         assert "Successfully run application org.nativescript." in output
         assert "Successfully started on device with identifier" in output
@@ -71,7 +72,7 @@ class RuniOS(BaseClass):
                              timeout=180)
 
         # First build in debug require prepare
-        assert "Project successfully prepared" in output
+        assert successfully_prepared in output
         assert "CONFIGURATION Debug" in output
 
         assert "Successfully transferred all files." in output
@@ -88,8 +89,8 @@ class RuniOS(BaseClass):
                                          },
                              timeout=180)
 
-        assert "Skipping prepare." in output  # As it is prepared from test_002
-        assert "CONFIGURATION Debug" in output  # New build for emulator, as previously built only for device
+        assert skipping_prepare in output  # As it is prepared from test_002
+        assert config_debug in output  # New build for emulator, as previously built only for device
 
         assert "Successfully transferred all files." in output
         assert "Successfully synced application org.nativescript." in output
@@ -104,8 +105,8 @@ class RuniOS(BaseClass):
                              timeout=180)
 
         # Prepare because this is new project
-        assert "Project successfully prepared" in output
-        assert "CONFIGURATION Debug" in output
+        assert successfully_prepared in output
+        assert config_debug in output
 
         assert "Successfully transferred all files." in output
         assert "Successfully synced application org.nativescript." in output
@@ -121,8 +122,8 @@ class RuniOS(BaseClass):
                              timeout=180)
 
         # First build for simulator in release for first time, so require prepare
-        assert "Project successfully prepared" in output
-        assert "CONFIGURATION Release" in output
+        assert successfully_prepared in output
+        assert config_release in output
 
         assert "Successfully started on device with identifier" in output
 
@@ -138,14 +139,14 @@ class RuniOS(BaseClass):
         # Dimitar: Hm....not sure this is ok, but no prepare in this case.
         # Vasil: It's ok as there are no changes in this app since test_002
         # and we build again in debug configuration.
-        assert "Skipping prepare." in output
+        assert skipping_prepare in output
         assert "Searching for devices..." in output
         assert "Skipping package build." in output
         assert "Skipping install." in output
         assert "Refreshing application..." in output
         assert "Successfully synced application org.nativescript." in output
 
-        assert "Project successfully prepared" not in output
+        assert successfully_prepared not in output
 
     def test_200_run_ios_inside_project(self):
         current_dir = os.getcwd()
@@ -158,14 +159,14 @@ class RuniOS(BaseClass):
         os.chdir(current_dir)
 
         # Second build in debug should not prepare
-        assert "Skipping prepare." in output
+        assert skipping_prepare in output
         assert "Searching for devices..." in output
         assert "Skipping package build." in output
         assert "Skipping install." in output
         assert "Refreshing application..." in output
         assert "Successfully synced application org.nativescript." in output
 
-        assert "Project successfully prepared" not in output
+        assert successfully_prepared not in output
 
     def test_301_run_ios_platform_not_added(self):
         Tns.create_app(self.app_name_noplatform)
@@ -173,12 +174,12 @@ class RuniOS(BaseClass):
                                          "--justlaunch": ""},
                              assert_success=False,
                              timeout=180)
-        assert "Copying template files..." in output
+        assert copy_template_files in output
         assert "Installing tns-ios" in output
-        assert "Project successfully created." in output
+        assert successfully_created in output
 
-        assert "Project successfully prepared" in output
-        assert "Project successfully built." in output
+        assert successfully_prepared in output
+        assert successfully_built in output
         assert "Successfully installed on device with identifier" in output
         assert "Successfully synced application org.nativescript." in output
 
@@ -188,9 +189,9 @@ class RuniOS(BaseClass):
                                          "--justlaunch": ""},
                              assert_success=False,
                              timeout=60)
-        assert "Skipping prepare." in output
-        assert "Cannot resolve the specified connected device" in output
+        assert skipping_prepare in output
+        assert cannot_resolve_device in output
 
-        assert "Project successfully prepared" not in output
-        assert "Project successfully built" not in output
+        assert successfully_prepared not in output
+        assert successfully_built not in output
         assert "Successfully deployed on device" not in output
