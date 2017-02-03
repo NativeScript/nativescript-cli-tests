@@ -22,7 +22,7 @@ class VerboseLogEmulator(BaseClass):
         Emulator.stop_emulators()
 
     def test_101_verbose_log_android(self):
-        Tns.create_app(self.app_name, attributes={"--copy-from": os.path.join("data", "apps", "verbose-hello-world")})
+        Tns.create_app(self.app_name, attributes={"--template": os.path.join("data", "apps", "verbose-hello-world")})
         Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH, "--path": self.app_name})
 
         output = File.cat(os.path.join(self.app_name, "app", "app.js"))

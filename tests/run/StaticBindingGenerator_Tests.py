@@ -25,7 +25,7 @@ class StaticBindingGenerator(BaseClass):
         BaseClass.setUpClass(logfile)
         Emulator.stop_emulators()
         Emulator.ensure_available()
-        Tns.create_app(cls.app_name, attributes={"--copy-from": os.path.join("data", "apps", "sbg-test-app")})
+        Tns.create_app(cls.app_name, attributes={"--template": os.path.join("data", "apps", "sbg-test-app")})
 
     @classmethod
     def tearDownClass(cls):

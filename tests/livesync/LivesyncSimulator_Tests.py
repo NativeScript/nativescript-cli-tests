@@ -45,7 +45,7 @@ class LivesyncSimulatorTests(Watcher):
         Folder.cleanup(cls.app_name_appTest)
 
         # setup app
-        Tns.create_app(cls.app_name, attributes={"--copy-from": "data/apps/livesync-hello-world"})
+        Tns.create_app(cls.app_name, attributes={"--template": "data/apps/livesync-hello-world"})
         Tns.platform_add_ios(attributes={"--path": cls.app_name,
                                          "--frameworkPath": IOS_RUNTIME_PATH
                                          })
@@ -179,7 +179,7 @@ class LivesyncSimulatorTests(Watcher):
         Simulator.stop_simulators()
         Simulator.start(SIMULATOR_NAME, '9.1')
         Simulator.uninstall_app(self.app_name_appTest)
-        Tns.create_app(self.app_name_appTest, attributes={"--copy-from": "data/apps/livesync-hello-world"})
+        Tns.create_app(self.app_name_appTest, attributes={"--template": "data/apps/livesync-hello-world"})
         Tns.platform_add_ios(attributes={"--frameworkPath": IOS_RUNTIME_PATH,
                                          "--path": self.app_name_appTest
                                          })

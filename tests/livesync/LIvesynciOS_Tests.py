@@ -30,7 +30,7 @@ class LiveSynciOS(BaseClass):
         Folder.cleanup('./' + self.app_name)
         Device.ensure_available(platform="ios")
         Device.uninstall_app("org.nativescript.", platform="ios", fail=False)
-        Tns.create_app(self.app_name, attributes={"--copy-from": os.path.join("data", "apps", "livesync-hello-world")})
+        Tns.create_app(self.app_name, attributes={"--template": os.path.join("data", "apps", "livesync-hello-world")})
         Tns.platform_add_ios(attributes={"--path": self.app_name,
                                          "--frameworkPath": IOS_RUNTIME_PATH
                                          })

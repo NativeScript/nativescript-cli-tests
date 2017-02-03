@@ -26,7 +26,7 @@ class LivesyncEmulatorWatchTests(Watcher):
         Folder.cleanup(cls.app_name_appTest)
 
         # setup app
-        Tns.create_app(cls.app_name, attributes={"--copy-from": "data/apps/livesync-hello-world"})
+        Tns.create_app(cls.app_name, attributes={"--template": "data/apps/livesync-hello-world"})
         Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH,
                                              "--path": cls.app_name
                                              })

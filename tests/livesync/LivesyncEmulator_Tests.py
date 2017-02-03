@@ -23,7 +23,7 @@ class LivesyncEmulatorTests(BaseClass):
         BaseClass.setUp(self)
         Emulator.ensure_available()
         Folder.cleanup(self.app_name)
-        Tns.create_app(self.app_name, attributes={"--copy-from": os.path.join("data", "apps", "livesync-hello-world")})
+        Tns.create_app(self.app_name, attributes={"--template": os.path.join("data", "apps", "livesync-hello-world")})
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })

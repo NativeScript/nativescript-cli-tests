@@ -151,7 +151,7 @@ class CreateTests(BaseClass):
         assert "\"minimist\": \"1.2.0\"" in output
 
     def test_400_create_project_with_copyfrom_wrong_path(self):
-        output = Tns.create_app(self.app_name, attributes={"--copy-from": "invalidFolder"},
+        output = Tns.create_app(self.app_name, attributes={"--template": "invalidFolder"},
                                 assert_success=False, update_modules=False)
         assert "successfully created" not in output
         assert "The specified path" in output

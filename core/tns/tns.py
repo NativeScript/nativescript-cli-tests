@@ -65,7 +65,7 @@ class Tns(object):
             attributes_to_string = "".join("{0} {1}".format(k, v))
         attr = {}
         if not any(s in attributes_to_string for s in ("--ng", "--template", "--tsc")):
-            attr = {"--copy-from": SUT_ROOT_FOLDER + os.path.sep + "template-hello-world"}
+            attr = {"--template": SUT_ROOT_FOLDER + os.path.sep + "template-hello-world"}
         attr.update(attributes)
         if app_name is None:
             output = Tns.run_tns_command("create ", attributes=attr, log_trace=log_trace)
