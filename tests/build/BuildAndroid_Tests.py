@@ -14,6 +14,7 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, \
     OSType, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsVerifications
+from core.settings.strings import *
 
 
 class BuildAndroidTests(BaseClass):
@@ -74,14 +75,14 @@ class BuildAndroidTests(BaseClass):
         output = Tns.build_android(tns_path=os.path.join("..", TNS_PATH), attributes={"--path": self.app_name},
                                    assert_success=False)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert "Project successfully prepared" in output
-        assert "BUILD SUCCESSFUL" in output
-        assert "Project successfully built" in output
+        assert successfully_prepared in output
+        assert build_successful in output
+        assert successfully_built in output
         assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
 
     def test_201_build_android_with_additional_prepare(self):
         output = Tns.prepare_android(attributes={"--path": self.app_name}, assert_success=False)
-        assert "Skipping prepare." in output
+        assert skipping_prepare in output
         TnsVerifications.prepared_android(self.app_name)
 
         Tns.build_android(attributes={"--path": self.app_name})
@@ -210,7 +211,7 @@ class BuildAndroidTests(BaseClass):
                                                          },
                                      tns_path="../../node_modules/.bin/tns")
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert "Project successfully initialized." in output
+        assert successfully_initialized in output
 
         # Update modules
         Folder.navigate_to("temp/appbuilderProject/appbuilderProject")
@@ -218,7 +219,7 @@ class BuildAndroidTests(BaseClass):
         run(uninstall_command)
         output = Tns.run_tns_command("plugin add tns-core-modules", tns_path="../../../node_modules/.bin/tns")
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert "Successfully installed plugin tns-core-modules" in output
+        assert installed_plugin.format(tns_core_modules) in output
 
         # Platform Add
         Folder.navigate_to("temp/appbuilderProject/appbuilderProject")
@@ -231,7 +232,7 @@ class BuildAndroidTests(BaseClass):
                                                  },
                                      tns_path="../../../node_modules/.bin/tns")
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert "Project successfully created" in output
+        assert successfully_created in output
 
         # Build
         Folder.navigate_to("temp/appbuilderProject/appbuilderProject")
@@ -249,12 +250,12 @@ class BuildAndroidTests(BaseClass):
                                                                   },
                                      tns_path="../../../node_modules/.bin/tns")
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert "Project successfully built" in output
+        assert successfully_built in output
         assert File.exists("temp/appbuilderProject/appbuilderProject-debug.apk")
 
     def test_400_build_with_no_platform(self):
         output = Tns.run_tns_command("build")
-        assert "The input is not valid sub-command for 'build' command" in output
+        assert invalid_input("build") in output
         assert "# build" in output
 
         if CURRENT_OS == OSType.OSX:
@@ -264,7 +265,7 @@ class BuildAndroidTests(BaseClass):
 
     def test_401_build_invalid_platform(self):
         output = Tns.run_tns_command("build invalidCommand")
-        assert "The input is not valid sub-command for 'build' command" in output
+        assert invalid_input("build") in output
 
     def test_402_build_no_path(self):
         output = Tns.run_tns_command("build android")
@@ -277,8 +278,8 @@ class BuildAndroidTests(BaseClass):
         assert "and neither was a --path specified." in output
 
     def test_404_build_invalid_option(self):
-        output = Tns.build_android(attributes={"--invalidOption": "", "--path": self.app_name}, assert_success=False)
-        assert "The option 'invalidOption' is not supported" in output
+        output = Tns.build_android(attributes={"--" + invalid: "", "--path": self.app_name}, assert_success=False)
+        assert invalid_option.format(invalid) in output
 
     @unittest.skipIf(CURRENT_OS == OSType.OSX, "Skip on OSX")
     def test_405_build_ios_on_linux_machine(self):

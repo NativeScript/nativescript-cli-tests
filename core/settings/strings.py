@@ -29,12 +29,19 @@ peer_typeScript = "Found peer TypeScript"
 skipping_prepare = "Skipping prepare."
 building = "Building project..."
 installed_plugin = "Successfully installed plugin "
+build_successful = "BUILD SUCCESSFUL"
+installed_platforms = "Installed platforms:  {0}"
+starting_simulator = "Starting iOS Simulator"
+frontend_connected = "Frontend client connected"
+
+
 # Project
 successfully_created = "Project successfully created"
 test_file_created = "Example test file created in app/tests/"
 run_tests_using = "Run your tests using the \"$ tns test <platform>\" command."
 successfully_prepared = "Project successfully prepared"
 successfully_built = "Project successfully built"
+successfully_initialized = "Project successfully initialized."
 server_started = "server started"
 executed_tests = "Executed 1 of 1 SUCCESS"
 starting_ut_runner = "Starting browser NativeScript Unit Test Runner"
@@ -46,23 +53,29 @@ cannot_resolve_device = "Cannot resolve the specified connected device"
 deployed_on_device ="Successfully deployed on device"
 installed_plugin = "Successfully installed plugin {0}"
 tns_plugin = "tns-plugin"
+codesign = "CodeSign"
+nativescript_theme_core = "nativescript-theme-core"
+devDependencies = "devDependencies"
+started_on_device = "Successfully started on device with identifier"
 
 # Pods
 carousel = "carousel"
 
 # Plugins
 nativescript_unit_test_runner = "nativescript-unit-test-runner"
+tns_core_modules = "tns-core-modules"
 
 # Errors
 error = "error"
 invalid_input = "The input is not valid sub-command for '{0}' command"
 invalid_option = "The option '{0}' is not supported."
 invalid_value = "The value '{0}' is not valid."
-no_platform = "No platform specified. Please specify platforms to update"
+no_platform = "No platform specified. Please specify platforms to"
 "and neither was a --path specified."
 no_such_device = "Cannot find device with name: "
 cannot_resolve_device = "Cannot resolve the specified connected device"
 invalid_version = "{0} is not a valid version."
+no_platform_installed = "No installed platforms found. Use $ tns platform add"
 
 
 " is not a valid device platform."

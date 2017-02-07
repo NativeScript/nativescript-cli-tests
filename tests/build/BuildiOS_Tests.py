@@ -11,6 +11,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH, TNS_PATH, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
+from core.settings.strings import *
 
 
 class BuildiOSTests(BaseClass):
@@ -65,8 +66,8 @@ class BuildiOSTests(BaseClass):
                                            "--forDevice": "",
                                            "--release": ""
                                            })
-        assert "CONFIGURATION Release" in output
-        assert "CodeSign" in output
+        assert config_release in output
+        assert codesign in output
         assert "build/device/TNSApp.app" in output
         assert File.exists(self.app_name + "/platforms/ios/build/device/TNSApp.ipa")
 
@@ -85,7 +86,7 @@ class BuildiOSTests(BaseClass):
         output = Tns.build_ios(attributes={"--path": self.app_name,
                                            "--release": ""
                                            })
-        assert "CONFIGURATION Release" in output
+        assert config_release in output
         assert "build/emulator/TNSApp.app" in output
         assert File.exists(self.app_name + "/platforms/ios/build/emulator/TNSApp.app")
 
@@ -97,8 +98,8 @@ class BuildiOSTests(BaseClass):
         output = Tns.build_ios(attributes={"--path": self.app_name,
                                            "--forDevice": ""
                                            })
-        assert "CONFIGURATION Debug" in output
-        assert "CodeSign" in output
+        assert config_debug in output
+        assert codesign in output
         assert "build/device/TNSApp.app" in output
         assert File.exists(self.app_name + "/platforms/ios/build/device/TNSApp.ipa")
 
@@ -203,15 +204,15 @@ class BuildiOSTests(BaseClass):
                                            "--release": "",
                                            "--copy-to": "./"
                                            })
-        assert "CONFIGURATION Release" in output
-        assert "CodeSign" in output
+        assert config_release in output
+        assert codesign in output
         assert "build/device/TNSApp.app" in output
         assert File.exists(self.app_name + "/platforms/ios/build/device/TNSApp.ipa")
         assert File.exists("TNSApp.ipa")
 
     def test_400_build_ios_with_wrong_param(self):
         Tns.create_app(self.app_name_noplatform)
-        output = Tns.build_ios(attributes={"--path": self.app_name_noplatform, "--wrongParam": ""},
+        output = Tns.build_ios(attributes={"--path": self.app_name_noplatform, "--" + invalid: ""},
                                assert_success=False)
-        assert "The option 'wrongParam' is not supported." in output
-        assert "error" not in output
+        assert invalid_option(invalid) in output
+        assert error not in output.lower()

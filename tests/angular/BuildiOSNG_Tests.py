@@ -6,6 +6,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
+from core.settings.strings import *
 
 
 class BuildiOSNGTests(BaseClass):
@@ -33,7 +34,7 @@ class BuildiOSNGTests(BaseClass):
         output = Tns.build_ios(attributes={"--path": self.app_name,
                                            "--for-device": "",
                                            "--release": ""})
-        assert "CONFIGURATION Release" in output
-        assert "CodeSign" in output
+        assert config_release in output
+        assert codesign in output
         assert "build/device/TNSApp.app" in output
         assert File.exists(self.app_name + "/platforms/ios/build/device/TNSApp.ipa")

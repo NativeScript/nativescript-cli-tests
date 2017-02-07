@@ -15,6 +15,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, DeviceType
 from core.tns.tns import Tns
 from tests.livesync.livesync_helper import replace_all, verify_all_replaced
+from core.settings.strings import *
 
 
 class LivesyncAndroidTests(BaseClass):
@@ -102,7 +103,7 @@ class LivesyncAndroidTests(BaseClass):
             print ios_id
             output = Tns.livesync(attributes={"--path": self.app_name, "--justlaunch": ""})
             assert "Successfully prepared plugin tns-core-modules-widgets for ios" not in output
-            assert "Project successfully prepared (ios)" not in output
+            assert successfully_prepared not in output
             verify_all_replaced(device_type=DeviceType.ANDROID, app_name="TNSApp")
         else:
             Tns.livesync(platform="android", attributes={"--path": self.app_name, "--justlaunch": ""}, log_trace=False)

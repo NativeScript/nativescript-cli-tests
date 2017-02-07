@@ -13,6 +13,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsVerifications
+from core.settings.strings import *
 
 
 class PrepareAndroidTests(BaseClass):
@@ -37,23 +38,23 @@ class PrepareAndroidTests(BaseClass):
         Folder.navigate_to(self.app_name)
         output = Tns.prepare_android(tns_path=os.path.join("..", TNS_PATH), assert_success=False)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert "Project successfully prepared" in output
+        assert successfully_prepared in output
 
         TnsVerifications.prepared_android(self.app_name)
 
     def test_200_prepare_android_patform_not_added(self):
         Tns.create_app(self.app_name, update_modules=False)
         output = Tns.prepare_android(attributes={"--path": self.app_name})
-        assert "Copying template files..." in output
-        assert "Project successfully created." in output
+        assert copy_template_files in output
+        assert successfully_created in output
         TnsVerifications.prepared_android(self.app_name)
 
     def test_201_prepare_xml_error(self):
         Tns.create_app(self.app_name, update_modules=False)
         File.replace(self.app_name + "/app/main-page.xml", "</Page>", "</Page")
         output = Tns.prepare_android(attributes={"--path": self.app_name})
-        assert "Copying template files..." in output
-        assert "Project successfully created." in output
+        assert copy_template_files in output
+        assert successfully_created in output
         assert "main-page.xml has syntax errors." in output
         assert "unclosed xml attribute" in output
 

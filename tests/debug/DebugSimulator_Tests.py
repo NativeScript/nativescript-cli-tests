@@ -10,6 +10,7 @@ from core.osutils.folder import Folder
 from core.osutils.process import Process
 from core.settings.settings import IOS_RUNTIME_PATH, IOS_INSPECTOR_PACKAGE
 from core.tns.tns import Tns
+from core.settings.strings import *
 
 
 class DebugSimulatorTests(BaseClass):
@@ -50,11 +51,11 @@ class DebugSimulatorTests(BaseClass):
                                                               "--timeout": "200"
                                                               }, timeout=200)
 
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
+        assert successfully_prepared in output
+        assert successfully_built in output
         assert "Setting up proxy" in output
-        assert "Starting iOS Simulator" in output
-        assert "Frontend client connected" in output
+        assert starting_simulator in output
+        assert frontend_connected in output
 
         assert "closed" not in output
         assert "detached" not in output
@@ -73,7 +74,7 @@ class DebugSimulatorTests(BaseClass):
                                                               "--frameworkPath": IOS_INSPECTOR_PACKAGE,
                                                               "--timeout": "150"
                                                               }, timeout=150)
-        assert "Frontend client connected" in output
+        assert frontend_connected in output
         assert "closed" not in output
         assert "detached" not in output
         assert "disconnected" not in output
