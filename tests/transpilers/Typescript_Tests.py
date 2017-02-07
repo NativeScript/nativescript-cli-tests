@@ -209,7 +209,7 @@ class TypescriptTests(BaseClass):
         #     output = Tns.build_ios(attributes={"--path": self.app_name})
         #     assert "error TS" not in output
 
-    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS)
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Emulator is too slow on win vm")
     def test_303_check_ts_compatibility(self):
         Folder.navigate_to(self.app_name)
         version = run("npm show typescript version ")
