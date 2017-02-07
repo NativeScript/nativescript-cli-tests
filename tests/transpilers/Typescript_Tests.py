@@ -1,4 +1,5 @@
 import os
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
@@ -193,9 +194,9 @@ class TypescriptTests(BaseClass):
         Folder.navigate_to(self.app_name)
         run("npm install " + SUT_ROOT_FOLDER + os.sep + "tns-platform-declarations.tgz --save-dev")
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        File.exists(self.app_name + "/node_modules/tns-platform-declarations/tns-core-modules/android17.d.ts")
-        File.exists(self.app_name + "/node_modules/tns-platform-declarations/tns-core-modules/ios/ios.d.ts")
-        andr_ref = "/// <reference path=\"./node_modules/tns-platform-declarations/tns-core-modules/android17.d.ts\" />"
+        File.exists(self.app_name + "/node_modules/tns-platform-declarations/android/android17.d.ts")
+        File.exists(self.app_name + "/node_modules/tns-platform-declarations/ios/ios.d.ts")
+        andr_ref = "/// <reference path=\"./node_modules/tns-platform-declarations/android/android17.d.ts\" />"
         File.append(self.app_name + os.sep + "references.d.ts", andr_ref)
         output = Tns.build_android(attributes={"--path": self.app_name})
         assert error not in output.lower()
@@ -208,6 +209,7 @@ class TypescriptTests(BaseClass):
         #     output = Tns.build_ios(attributes={"--path": self.app_name})
         #     assert "error TS" not in output
 
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS)
     def test_303_check_ts_compatibility(self):
         Folder.navigate_to(self.app_name)
         version = run("npm show typescript version ")
@@ -226,15 +228,14 @@ class TypescriptTests(BaseClass):
                   os.path.join(self.app_name, "app"))
         File.copy(os.path.join(os.getcwd(), "data", "apps", "ts_compatibility", "typings.d.ts"), self.app_name)
         subprocess.Popen([ADB_PATH, "-e", "logcat", "-c"])
-        if CURRENT_OS != OSType.WINDOWS:
-            Tns.run_android(attributes={"--path": self.app_name,
+        Tns.run_android(attributes={"--path": self.app_name,
                                              "--avd": "Emulator-Api23-Default",
                                              "--justlaunch": "",
                                              "--timeout": "320"})
 
-            process = subprocess.Popen([ADB_PATH, "-e", "logcat"], stdout=subprocess.PIPE)
-            threading.Timer(10, process.terminate).start()
-            output = process.communicate()[0]
-            sleep(2)
-            assert "java.lang.ClassNotFoundException: Didn't find class \"org.nativescript.a.MyCustomActivity\"" \
-                   not in output, "Exception in output"
+        process = subprocess.Popen([ADB_PATH, "-e", "logcat"], stdout=subprocess.PIPE)
+        threading.Timer(10, process.terminate).start()
+        output = process.communicate()[0]
+        sleep(2)
+        assert "java.lang.ClassNotFoundException: Didn't find class \"org.nativescript.a.MyCustomActivity\"" \
+                not in output, "Exception in output"
