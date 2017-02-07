@@ -83,10 +83,5 @@ class EmulateiOSTests(BaseClass):
                                                                 "--path": self.app_name,
                                                                 "--justlaunch": ""
                                                                 })
-<<<<<<< bf8d1a9f5f95e979bdc49dbd6dc9487c3dce6ba8
-        # https://github.com/NativeScript/nativescript-cli/issues/2446
-        # assert "Cannot find device with name: invalidDevice." in output
         assert "Cannot resolve the specified connected device by the provided index or identifier." in output
-=======
         assert "Cannot find device with name: " + invalid in output
->>>>>>> Updated debug/build/angular/livesync suites to use strings
