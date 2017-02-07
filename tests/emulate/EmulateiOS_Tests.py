@@ -9,6 +9,7 @@ from core.osutils.folder import Folder
 from core.osutils.process import Process
 from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME
 from core.tns.tns import Tns
+from core.settings.strings import *
 
 
 class EmulateiOSTests(BaseClass):
@@ -46,9 +47,9 @@ class EmulateiOSTests(BaseClass):
                                                                 "--device": SIMULATOR_NAME,
                                                                 "--justlaunch": ""
                                                                 })
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully started on device with identifier" in output
+        assert successfully_prepared in output
+        assert successfully_built in output
+        assert started_on_device in output
         assert Process.is_running("Simulator")
 
     def test_003_emulate_ios_release(self):
@@ -58,10 +59,10 @@ class EmulateiOSTests(BaseClass):
                                                                 "--justlaunch": "",
                                                                 "--release": ""
                                                                 })
-        assert "Project successfully prepared" in output
-        assert "CONFIGURATION Release" in output
-        assert "Project successfully built" in output
-        assert "Successfully started on device with identifier" in output
+        assert successfully_prepared in output
+        assert config_release in output
+        assert successfully_built in output
+        assert started_on_device in output
         assert Process.is_running("Simulator")
 
     def test_210_emulate_ios_patform_not_added(self):
@@ -70,18 +71,22 @@ class EmulateiOSTests(BaseClass):
                                                                 "--path": self.app_name_noplatform,
                                                                 "--justlaunch": ""
                                                                 })
-        assert "Copying template files..." in output
-        assert "Project successfully created." in output
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully started on device with identifier" in output
+        assert copy_template_files in output
+        assert successfully_created in output
+        assert successfully_prepared in output
+        assert successfully_built in output
+        assert started_on_device in output
         assert Process.is_running("Simulator")
 
     def test_400_emulate_invalid_device(self):
-        output = Tns.run_tns_command("emulate ios", attributes={"--device": "invalidDevice",
+        output = Tns.run_tns_command("emulate ios", attributes={"--device": invalid,
                                                                 "--path": self.app_name,
                                                                 "--justlaunch": ""
                                                                 })
+<<<<<<< bf8d1a9f5f95e979bdc49dbd6dc9487c3dce6ba8
         # https://github.com/NativeScript/nativescript-cli/issues/2446
         # assert "Cannot find device with name: invalidDevice." in output
         assert "Cannot resolve the specified connected device by the provided index or identifier." in output
+=======
+        assert "Cannot find device with name: " + invalid in output
+>>>>>>> Updated debug/build/angular/livesync suites to use strings

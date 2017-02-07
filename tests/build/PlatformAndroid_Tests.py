@@ -9,6 +9,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME_PATH, TEST_RUN_HOME
 from core.tns.tns import Tns
+from core.settings.strings import *
 
 
 class PlatformAndroidTests(BaseClass):
@@ -20,7 +21,7 @@ class PlatformAndroidTests(BaseClass):
         Tns.create_app(self.app_name, update_modules=False)
         output = Tns.run_tns_command("platform list", attributes={"--path": self.app_name})
 
-        assert "No installed platforms found. Use $ tns platform add" in output
+        assert no_platform_installed in output
         if CURRENT_OS == OSType.OSX:
             assert "Available platforms for this OS:  ios and android" in output
         else:
@@ -41,7 +42,7 @@ class PlatformAndroidTests(BaseClass):
         Folder.navigate_to(self.app_name)
         output = Tns.run_tns_command("platform list", tns_path=os.path.join("..", TNS_PATH))
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert "No installed platforms found. Use $ tns platform add" in output
+        assert no_platform_installed in output
         if CURRENT_OS == OSType.OSX:
             assert "Available platforms for this OS:  ios and android" in output
         else:
@@ -52,7 +53,7 @@ class PlatformAndroidTests(BaseClass):
         Folder.navigate_to(self.app_name)
         output = Tns.platform_add_android(tns_path=os.path.join("..", TNS_PATH), assert_success=False)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert "Project successfully created" in output
+        assert successfully_created in output
 
     def test_202_platform_remove_android(self):
         Tns.create_app(self.app_name, update_modules=False)
@@ -84,8 +85,8 @@ class PlatformAndroidTests(BaseClass):
     def test_210_platform_update_android_patform_not_added(self):
         Tns.create_app(self.app_name, update_modules=False)
         output = Tns.platform_update("android", attributes={"--path": self.app_name}, assert_success=False)
-        assert "Copying template files..." in output
-        assert "Project successfully created." in output
+        assert copy_template_files in output
+        assert successfully_created in output
         assert not Folder.is_empty(self.app_name + "/platforms/android/build-tools/android-static-binding-generator")
 
     def test_220_set_sdk(self):
@@ -142,15 +143,15 @@ class PlatformAndroidTests(BaseClass):
     def test_423_platform_add_android_wrong_framework_path_option(self):
         Tns.create_app(self.app_name, update_modules=False)
         output = Tns.platform_add_android(attributes={"--path": self.app_name,
-                                                      "--frameworkpath": "tns-android.tgz"
+                                                      "--" + invalid: "tns-android.tgz"
                                                       },
                                           assert_success=False)
-        assert "The option 'frameworkpath' is not supported." in output
+        assert invalid_option.format(invalid) in output
 
     def test_425_platform_add_empty_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
         output = Tns.platform_add(attributes={"--path": self.app_name}, assert_success=False)
-        assert "No platform specified. Please specify a platform to add" in output
+        assert no_platform in output
         assert "Usage" in output
 
     def test_430_platform_remove_missing_platform(self):
@@ -168,7 +169,7 @@ class PlatformAndroidTests(BaseClass):
     def test_432_platform_remove_empty_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
         output = Tns.platform_remove(attributes={"--path": self.app_name}, assert_success=False)
-        assert "No platform specified. Please specify a platform to remove" in output
+        assert no_platform in output
         assert "Usage" in output
 
     def test_441_platform_update_invalid_platform(self):
@@ -181,5 +182,5 @@ class PlatformAndroidTests(BaseClass):
     def test_442_platform_update_empty_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
         output = Tns.platform_update(attributes={"--path": self.app_name}, assert_success=False)
-        assert "1mNo platform specified. Please specify platforms to update" in output
+        assert no_platform in output
         assert "Usage" in output

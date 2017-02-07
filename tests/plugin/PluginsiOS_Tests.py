@@ -12,6 +12,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, IOS_RUNTIME_PATH, ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
+from core.settings.strings import *
 
 
 
@@ -27,19 +28,19 @@ class PluginsiOSTests(BaseClass):
 
     def test_001_plugin_add_before_platform_add_ios(self):
         Tns.create_app(self.app_name)
-        output = Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name})
+        output = Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})
         assert "Successfully installed plugin tns-plugin" in output
         assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
         assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
         output = run("cat " + self.app_name + "/package.json")
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
-        assert "tns-plugin" in output
+        assert tns_plugin in output
 
     def test_002_plugin_add_after_platform_add_ios(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
-        Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name})
+        Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})
 
         assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
         assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
@@ -47,7 +48,7 @@ class PluginsiOSTests(BaseClass):
         output = File.read(self.app_name + "/package.json")
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
-        assert "tns-plugin" in output
+        assert tns_plugin in output
 
     def test_201_plugin_add_before_platform_add_ios(self):
         Tns.create_app(self.app_name)
@@ -89,13 +90,13 @@ class PluginsiOSTests(BaseClass):
         os.chdir(os.path.join(current_dir, self.app_name))
         output = Tns.run_tns_command("plugin add tns-plugin", tns_path=os.path.join("..", TNS_PATH))
         os.chdir(current_dir)
-        assert "Successfully installed plugin tns-plugin" in output
+        assert installed_plugin.format(tns_plugin) in output
         assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
         assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
         output = File.read(self.app_name + "/package.json")
         assert "org.nativescript.TNSApp" in output
         assert "dependencies" in output
-        assert "tns-plugin" in output
+        assert tns_plugin in output
 
     def test_204_build_app_with_plugin_inside_project(self):
         Tns.create_app(self.app_name)
@@ -108,22 +109,22 @@ class PluginsiOSTests(BaseClass):
         assert "Successfully installed plugin tns-plugin" in output
 
         output = Tns.build_ios(attributes={"--path": self.app_name})
-        assert "Project successfully prepared" in output
+        assert successfully_prepared in output
         assert "** BUILD SUCCEEDED **" in output
-        assert "ERROR" not in output
+        assert error not in output.lower()
         assert "malformed" not in output
 
     def test_300_build_app_with_plugin_outside(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
-        Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name})
+        Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})
         Tns.build_ios(attributes={"--path": self.app_name})
 
     def test_301_build_app_for_both_platforms(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
-        Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name})
+        Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})
 
         # Verify files of the plugin
         assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")

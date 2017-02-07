@@ -10,6 +10,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.tns.tns import Tns
 from core.settings.settings import CLI_PATH
+from core.settings.strings import *
 
 
 class CreateTests(BaseClass):
@@ -39,7 +40,7 @@ class CreateTests(BaseClass):
 
     def test_000_create_app_like_real_user(self):
         output = Tns.run_tns_command("create " + self.app_name)
-        assert "nativescript-theme-core" in output
+        assert nativescript_theme_core in output
         assert "nativescript-dev-android-snapshot" in output
         assert "Project " + self.app_name + " was successfully created." in output
         # Verify LICENSE from template is stripped

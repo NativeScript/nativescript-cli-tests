@@ -10,6 +10,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH, \
     CURRENT_OS, OSType
 from core.tns.tns import Tns
+from core.settings.strings import *
 
 
 class PlatformiOSTests(BaseClass):
@@ -31,23 +32,23 @@ class PlatformiOSTests(BaseClass):
                                          })
         output = Tns.run_tns_command("platform list", attributes={"--path": self.app_name})
         assert "The project is not prepared for any platform" in output
-        assert "Installed platforms:  ios" in output
+        assert installed_platforms.format("ios") in output
 
         Tns.prepare_ios(attributes={"--path": self.app_name})
         output = Tns.run_tns_command("platform list", attributes={"--path": self.app_name})
         assert "The project is prepared for:  ios" in output
-        assert "Installed platforms:  ios" in output
+        assert installed_platforms.format("ios") in output
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })
         output = Tns.run_tns_command("platform list", attributes={"--path": self.app_name})
         assert "The project is prepared for:  ios" in output
-        assert "Installed platforms:  android" in output
+        assert installed_platforms.format("android") in output
 
         Tns.prepare_android(attributes={"--path": self.app_name})
         output = Tns.run_tns_command("platform list", attributes={"--path": self.app_name})
         assert "The project is prepared for:  ios and android" in output
-        assert "Installed platforms:  android and ios" in output
+        assert installed_platforms.format("android and ios") in output
 
     def test_102_platform_add_ios(self):
         Tns.create_app(self.app_name)
@@ -115,5 +116,5 @@ class PlatformiOSTests(BaseClass):
     def test_330_platform_update_ios_patform_not_added(self):
         Tns.create_app(self.app_name)
         output = Tns.platform_update(platform="ios", attributes={"--path": self.app_name}, assert_success=False)
-        assert "Project successfully created." in output
+        assert successfully_created in output
         assert not Folder.is_empty(self.app_name + "/platforms/ios/internal/metadata-generator")

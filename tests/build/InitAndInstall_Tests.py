@@ -15,6 +15,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, SUT_ROOT_FOLDER
 from core.tns.tns import Tns
+from core.settings.strings import *
 
 
 class InitAndInstallTests(BaseClass):
@@ -27,7 +28,7 @@ class InitAndInstallTests(BaseClass):
         Folder.navigate_to(BaseClass.app_name)
         output = Tns.init(attributes={"--force": ""}, tns_path=os.path.join("..", TNS_PATH), assert_success=False)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert "Project successfully initialized" in output
+        assert successfully_initialized in output
 
         assert File.exists(self.app_name + "/package.json")
         assert not File.exists(self.app_name + "/app")
@@ -36,7 +37,7 @@ class InitAndInstallTests(BaseClass):
         output = File.read(self.app_name + "/package.json")
         assert "org.nativescript.TNSApp" in output
         assert "tns-android" in output
-        assert "tns-core-modules" in output
+        assert tns_core_modules in output
         if CURRENT_OS == OSType.OSX:
             assert "tns-ios" in output
 
@@ -78,7 +79,7 @@ class InitAndInstallTests(BaseClass):
         run("npm i lodash --save")
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         output = File.read(self.app_name + "/package.json")
-        assert "devDependencies" in output
+        assert devDependencies in output
         assert "gulp" in output
         assert "lodash" in output
 
@@ -102,7 +103,7 @@ class InitAndInstallTests(BaseClass):
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
         output = File.read(self.app_name + "/package.json")
-        assert "devDependencies" in output
+        assert devDependencies in output
         assert "gulp" in output
         assert "lodash" in output
 
@@ -123,7 +124,7 @@ class InitAndInstallTests(BaseClass):
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         run("cp -R " + SUT_ROOT_FOLDER + os.path.sep + "template-hello-world " + self.app_name + os.path.sep + "app")
         output = File.read(self.app_name + "/package.json")
-        assert "devDependencies" in output
+        assert devDependencies in output
         assert "gulp" in output
         assert "lodash" in output
 

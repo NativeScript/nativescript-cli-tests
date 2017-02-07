@@ -17,6 +17,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_NAME
 from core.tns.tns import Tns
+from core.settings.strings import *
 
 
 class EmulateAndroidTests(BaseClass):
@@ -53,9 +54,9 @@ class EmulateAndroidTests(BaseClass):
                                                                     "--justlaunch": ""
                                                                     },
                                      timeout=660)
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
-        assert "Successfully installed on device with identifier 'emulator-5554'" in output
+        assert successfully_prepared in output
+        assert successfully_built in output
+        assert installed_on_device.format("emulator-5554") in output
         assert "Starting Android emulator with image" not in output
 
         # TODO: Get device id and verify files are deployed and process is
@@ -74,11 +75,11 @@ class EmulateAndroidTests(BaseClass):
                                                                     "--justlaunch": ""
                                                                     },
                                      timeout=660)
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
+        assert successfully_prepared in output
+        assert successfully_built in output
         assert "Starting Android emulator with image" in output
-        assert "Successfully installed on device with identifier" in output
-        assert "Successfully started on device with identifier" in output
+        assert installed_on_device.format("") in output
+        assert started_on_device in output
 
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
@@ -98,11 +99,11 @@ class EmulateAndroidTests(BaseClass):
                                                                     },
                                      tns_path=os.path.join("..", TNS_PATH), timeout=660)
         os.chdir(current_dir)
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
+        assert successfully_prepared in output
+        assert successfully_built in output
         assert "Starting Android emulator with image " + EMULATOR_NAME in output
-        assert "Successfully installed on device with identifier" in output
-        assert "Successfully started on device with identifier" in output
+        assert installed_on_device in output
+        assert started_on_device in output
 
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
@@ -115,13 +116,13 @@ class EmulateAndroidTests(BaseClass):
                                                                     "--path": self.app_name_noplatform
                                                                     },
                                      timeout=750)
-        assert "Copying template files..." in output
-        assert "Project successfully created." in output
-        assert "Project successfully prepared" in output
-        assert "Project successfully built" in output
+        assert copy_template_files in output
+        assert successfully_created in output
+        assert successfully_prepared in output
+        assert successfully_built in output
         assert "Starting Android emulator with image " + EMULATOR_NAME in output
-        assert "Successfully installed on device with identifier" in output
-        assert "Successfully started on device with identifier" in output
+        assert installed_on_device in output
+        assert started_on_device in output
 
         # TODO: Get device id and verify files are deployed and process is
         # running on this device
@@ -132,17 +133,17 @@ class EmulateAndroidTests(BaseClass):
                                                                             "--justlaunch": ""
                                                                             },
                                      timeout=660)
-        assert "The input is not valid sub-command for 'emulate' command" in output
+        assert invalid_input.format("emulate") in output
         assert "Usage" in output
 
     def test_401_emulate_invalid_avd(self):
         output = Tns.run_tns_command("emulate android", attributes={"--path": self.app_name,
-                                                                    "--device": "invaliddevice_id",
+                                                                    "--device": invalid,
                                                                     "--timeout": "600",
                                                                     "--justlaunch": ""
                                                                     },
                                      timeout=660)
         assert "Option --avd is no longer supported. Please use --device isntead!" not in output
-        assert "Cannot find device with name: invaliddevice_id" in output
+        assert "Cannot find device with name: " + invalid in output
         assert "Usage" in output
 

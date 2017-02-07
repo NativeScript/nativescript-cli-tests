@@ -7,6 +7,7 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS
 from core.tns.tns import Tns
 from core.tns import angular_helper as angular
+from core.settings.strings import *
 
 
 class BuildAndroidNGTests(BaseClass):
@@ -36,8 +37,8 @@ class BuildAndroidNGTests(BaseClass):
                                                " --release": "",
                                                "--path": self.app_name
                                                })
-        assert "Project successfully prepared" in output
-        assert "BUILD SUCCESSFUL" in output
+        assert successfully_prepared in output
+        assert build_successful in output
 
-        assert "Project successfully built" in output
+        assert successfully_built in output
         assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TNSApp-release.apk")

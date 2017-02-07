@@ -17,6 +17,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
 import time
+from core.settings.strings import *
 
 
 class PluginsAndroidTests(BaseClass):
@@ -123,11 +124,11 @@ class PluginsAndroidTests(BaseClass):
         assert "Successfully installed plugin tns-plugin" in output
 
         output = Tns.build_android(attributes={"--path": self.app_name})
-        assert "Project successfully prepared" in output
+        assert successfully_prepared in output
 
-        assert "BUILD SUCCESSFUL" in output
-        assert "Project successfully built" in output
-        assert "ERROR" not in output
+        assert build_successful in output
+        assert successfully_built in output
+        assert error not in output.lower()
         assert "FAILURE" not in output
 
         assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TNSApp-debug.apk")
@@ -135,7 +136,7 @@ class PluginsAndroidTests(BaseClass):
 
     def test_200_plugin_add_before_platform_add_android_and_build(self):
         Tns.create_app(self.app_name)
-        output = Tns.plugin_add("nativescript-telerik-ui", attributes={"--ignore-scripts": "",
+        Tns.plugin_add("nativescript-telerik-ui", attributes={"--ignore-scripts": "",
                                                                        "--path": self.app_name})
 
         assert File.exists(self.app_name + "/node_modules/nativescript-telerik-ui/package.json")
@@ -183,13 +184,13 @@ class PluginsAndroidTests(BaseClass):
 
         # Verify plugin commmand list used plugins
         output = Tns.run_tns_command("plugin", attributes={"--path": self.app_name})
-        assert "tns-plugin" in output
+        assert tns_plugin in output
 
     @unittest.skip("This test breaks the xml parser.")
     def test_400_plugin_add_not_existing_plugin(self):
         Tns.create_app(self.app_name)
         output = Tns.plugin_add("fakePlugin", attributes={"--path": self.app_name}, assert_success=False)
-        assert "no such package available" in output
+        assert "no such package available" in output
 
     def test_401_plugin_add_invalid_plugin(self):
         Tns.create_app(self.app_name)
@@ -204,5 +205,5 @@ class PluginsAndroidTests(BaseClass):
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH})
         output = Tns.plugin_add("tns-plugin@1.0.2", attributes={"--path": self.app_name}, assert_success=False)
-        assert "tns-plugin is not supported for android" in output
-        assert "Successfully installed plugin tns-plugin" in output
+        assert tns_plugin + " is not supported for android" in output
+        assert installed_plugin.format(tns_plugin) in output
