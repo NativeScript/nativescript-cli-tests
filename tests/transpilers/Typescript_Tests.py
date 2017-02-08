@@ -179,16 +179,16 @@ class TypescriptTests(BaseClass):
     #             assert File.extension_exists(self.modules_folder + "/application", ".js")
     #             assert not File.extension_exists(self.modules_folder + "/application", ".ts")
     #
-    # def test_301_prepare_after_node_modules_deleted(self):
-    #     Folder.cleanup(self.node_modules_folder)
-    #     # Next line is because prepare does not work if you npm install packages with relative path before that
-    #     Folder.navigate_to(self.app_name)
-    #     Tns.run_tns_command("prepare android", tns_path=".." + os.path.sep + TNS_PATH)
-    #     Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-    #     # Verify that the `prepare` command installs correct dependencies.
-    #     assert File.exists(self.node_modules_folder + "/nativescript-dev-typescript")
-    #     assert File.exists(self.node_modules_folder + "/tns-core-modules")
-    #     assert File.exists(self.node_modules_folder + "/typescript")
+    def test_301_prepare_after_node_modules_deleted(self):
+        Folder.cleanup(self.node_modules_folder)
+        # Next line is because prepare does not work if you npm install packages with relative path before that
+        Folder.navigate_to(self.app_name)
+        Tns.run_tns_command("prepare android", tns_path=".." + os.path.sep + TNS_PATH)
+        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
+        # Verify that the `prepare` command installs correct dependencies.
+        assert File.exists(self.node_modules_folder + "/nativescript-dev-typescript")
+        assert File.exists(self.node_modules_folder + "/tns-core-modules")
+        assert File.exists(self.node_modules_folder + "/typescript")
 
     def test_302_build_with_platform_dts(self):
         Folder.navigate_to(self.app_name)
