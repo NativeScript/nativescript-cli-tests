@@ -102,23 +102,23 @@ class TypescriptTests(BaseClass):
     #         output = run("cat ./" + self.app_name + "/platforms/ios/TNSApp/app/app.js")
     #         assert "//# sourceMappingURL=data:application/json;base64" in output
     #
-    # def test_002_build(self):
-    #     output = Tns.build_android(attributes={"--path": self.app_name})
-    #     if CURRENT_OS == OSType.OSX:
-    #         # Tests workflow:
-    #         # prepare android
-    #         # prepare ios
-    #         # build android
-    #         assert before_prepare in output
-    #         assert peer_typeScript in output
-    #     else:
-    #         # Tests workflow:
-    #         # prepare android
-    #         # build android
-    #         assert skipping_prepare in output
-    #         assert building in output
-    #     assert error not in output.lower()
-    #
+    def test_002_build(self):
+        output = Tns.build_android(attributes={"--path": self.app_name})
+        if CURRENT_OS == OSType.OSX:
+            # Tests workflow:
+            # prepare android
+            # prepare ios
+            # build android
+            assert before_prepare in output
+            assert peer_typeScript in output
+        else:
+            # Tests workflow:
+            # prepare android
+            # build android
+            assert skipping_prepare in output
+            assert building in output
+        assert error not in output.lower()
+
     def test_201_prepare_release(self):
         # prepare in release => .ts should NOT go to the platforms folder
         output = Tns.prepare_android(attributes={"--path": self.app_name,
