@@ -17,13 +17,10 @@ class LogtraceTests(BaseClass):
     def test_101_create_project_log_trace(self):
         output = Tns.create_app(self.app_name, log_trace=True, update_modules=False)
         assert "Creating a new NativeScript project with name " + self.app_name in output
-        print "and id org.nativescript.{0} at location".format(self.app_name.replace("_", ""))
         assert "and id org.nativescript.{0} at location".format(self.app_name.replace("_", "")) in output
 
-        assert "tns-template-hello-world with version undefined." in output
+        assert "template-hello-world with version undefined." in output
 
-        assert "Using custom app from" in output
-        assert "Copying custom app into" in output
         if CURRENT_OS == OSType.WINDOWS:
             assert 'spawn: npm.cmd "install" "tns-core-modules" "--save" "--save-exact"' in output
         else:
