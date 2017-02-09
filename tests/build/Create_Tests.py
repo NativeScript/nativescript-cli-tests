@@ -152,11 +152,10 @@ class CreateTests(BaseClass):
         assert "\"minimist\": \"1.2.0\"" in output
 
     def test_400_create_project_with_copyfrom_wrong_path(self):
-        output = Tns.create_app(self.app_name, attributes={"--template": "invalidFolder"},
+        output = Tns.create_app(self.app_name, attributes={"--template": invalid},
                                 assert_success=False, update_modules=False)
         assert "successfully created" not in output
-        assert "The specified path" in output
-        assert "Check that you specified the path correctly and try again" in output
+        assert "npm ERR! 404 no such package available : " + invalid in output
 
     def test_401_create_project_in_folder_with_existing_project(self):
         Tns.create_app(self.app_name, assert_success=False, update_modules=False)

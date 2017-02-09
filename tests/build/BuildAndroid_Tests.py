@@ -255,7 +255,7 @@ class BuildAndroidTests(BaseClass):
 
     def test_400_build_with_no_platform(self):
         output = Tns.run_tns_command("build")
-        assert invalid_input("build") in output
+        assert invalid_input.format("build") in output
         assert "# build" in output
 
         if CURRENT_OS == OSType.OSX:
@@ -265,7 +265,7 @@ class BuildAndroidTests(BaseClass):
 
     def test_401_build_invalid_platform(self):
         output = Tns.run_tns_command("build invalidCommand")
-        assert invalid_input("build") in output
+        assert invalid_input.format("build") in output
 
     def test_402_build_no_path(self):
         output = Tns.run_tns_command("build android")
