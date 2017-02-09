@@ -12,7 +12,7 @@ from tests.livesync.livesync_helper import verify_all_replaced, replace_all
 
 
 class LivesyncEmulatorWatchTests(Watcher):
-    app_name = "TNS_App"
+    app_name = "TestApp"
     app_name_appTest = "appTest"
     # TODO: Add a test for #942.
 

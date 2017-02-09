@@ -9,14 +9,14 @@ from core.osutils.folder import Folder
 
 
 class BaseClass(unittest.TestCase):
-    app_name = "TNS_App"
+    app_name = "TestApp"
     app_name_appTest = "appTest"
-    app_name_dash = "tns-app"
-    app_name_space = "TNS App"
+    app_name_dash = "test-app"
+    app_name_space = "Test App"
 
-    app_no_platform = "TNSAppNoPlatform"
+    app_no_platform = "TestAppNoPlatform"
     app_name_ios = "my-ios-app"
-    app_name_noplatform = "TNS_AppNoPlatform"
+    app_name_noplatform = "Test_AppNoPlatform"
     app_template = "template"
 
     app_name_123 = "123"

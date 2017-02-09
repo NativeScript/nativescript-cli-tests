@@ -26,7 +26,7 @@ from tests.livesync.livesync_helper import replace_all, verify_all_replaced
 
 
 class LivesyncSimulatorTests(Watcher):
-    app_name = "TNS_App"
+    app_name = "TestApp"
     app_name_appTest = "appTest"
 
     @classmethod

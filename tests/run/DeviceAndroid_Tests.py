@@ -33,7 +33,7 @@ class DeviceAndroidTests(BaseClass):
         device_id = Device.get_id(platform="android")
         device_ids = Device.get_ids("android")
 
-        # Deploy TNS_App on device
+        # Deploy app on device
         Tns.create_app(self.app_name)
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
