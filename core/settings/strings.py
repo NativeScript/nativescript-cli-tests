@@ -3,7 +3,7 @@
 # Core
 ios = "ios"
 android = "android"
-invalid = "invalid"
+invalid = "invalidEntry"
 config_debug = "CONFIGURATION Debug"
 config_release = "CONFIGURATION Release"
 "Wifi"
