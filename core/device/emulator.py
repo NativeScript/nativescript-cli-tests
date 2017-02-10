@@ -8,7 +8,8 @@ import time
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.process import Process
-from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ADB_PATH, EMULATOR_PATH, EMULATOR_NAME
+from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ADB_PATH, EMULATOR_PATH, EMULATOR_NAME, EMULATOR_PORT, \
+    EMULATOR_ID
 
 
 class Emulator(object):
@@ -90,15 +91,19 @@ class Emulator(object):
         for line in lines:
             if ('emulator' in line) and ("Connected" in line):
                 found = True
-                # Make sure sdcard is not read-only
-                run("adb shell mount -o rw,remount rootfs /", log_level=CommandLogLevel.SILENT)
-                run("adb shell chmod 777 /mnt/sdcard", log_level=CommandLogLevel.SILENT)
                 break
         if found:
+            time.slep(10)   # Adb returns device is available before it is booted. Wait a bit more...
             print "Emulator already running."
+            # Make sure sdcard is not read-only
+            run("adb " + EMULATOR_ID + " shell mount -o rw,remount rootfs /", log_level=CommandLogLevel.SILENT)
+            run("adb " + EMULATOR_ID + " shell chmod 777 /mnt/sdcard", log_level=CommandLogLevel.SILENT)
+            # Set screen timeout
+            run("adb " + EMULATOR_ID + " shell rm -f /data/system/locksettings.db*", log_level=CommandLogLevel.SILENT)
+            print "Emulator configuration complete!"
         else:
             Emulator.stop_emulators()
-            Emulator.start_emulator(emulator_name=EMULATOR_NAME, port="5554", wait_for=True)
+            Emulator.start_emulator(emulator_name=EMULATOR_NAME, port=EMULATOR_PORT, wait_for=True)
         return found
 
     @staticmethod

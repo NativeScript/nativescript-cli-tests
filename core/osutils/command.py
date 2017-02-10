@@ -52,7 +52,7 @@ def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=Comm
         out_file = OUTPUT_FILE_ASYNC.replace('.', time_string + '.')
         command = command + " > " + out_file
         if CURRENT_OS is not OSType.WINDOWS:
-            command = command + " &"
+            command += " &"
 
     # remove output.txt
     try:
@@ -63,7 +63,7 @@ def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=Comm
         File.remove(out_file)
 
     # log command that is executed (and append to TEST_LOG file)
-    if log_level.value > CommandLogLevel.SILENT.value:
+    if log_level is not CommandLogLevel.SILENT:
         File.append(TEST_LOG, command)
         print "##### {0} Executing command : {1}\n".format(time.strftime("%X"), command)
 
@@ -77,7 +77,7 @@ def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=Comm
     # kill thread
     if thread.is_alive():
         if wait:
-            if log_level.value > CommandLogLevel.SILENT.value:
+            if log_level is not CommandLogLevel.SILENT:
                 print '##### ERROR: Process has timed out at ', time.strftime("%X")
             Process.kill('node')
             thread.join()
@@ -87,7 +87,7 @@ def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=Comm
     if output:
         pipe_output = File.read(out_file)
 
-    if log_level is CommandLogLevel.FULL and wait:
+    if (log_level is CommandLogLevel.FULL) and wait:
         print "##### OUTPUT BEGIN #####\n"
         print pipe_output
         print "##### OUTPUT END #####\n"

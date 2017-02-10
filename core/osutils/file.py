@@ -104,11 +104,10 @@ class File(object):
         for line in fileinput.input(file_path, inplace=1):
             print line.replace(str1, str2)
         time.sleep(1)
-        print "~~~ Replace ~~~"
+        print "##### REPLACE FILE CONTENT #####"
         print "File: {0}".format(file_path)
         print "Old String: {0}".format(str1)
         print "New String: {0}".format(str2)
-        print "~~~ Replace ~~~"
 
     @staticmethod
     def list_of_files_exists(root_folder, files_list, ignore_file_count=True):

@@ -17,7 +17,6 @@ ADB_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'platform-tools', 'adb')
 
 
 class Device(object):
-
     @staticmethod
     def __get_screen(device_type, device_id, file_name):
         """
@@ -27,12 +26,20 @@ class Device(object):
         file_path = os.path.join("data", "temp", "{0}.png".format(file_name))
         File.remove(file_path)
         if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
+            # Get current screen of mobile device
             run(command="{0} -s {1} shell screencap -p /sdcard/{2}.png".format(ADB_PATH, device_id, file_name),
                 log_level=CommandLogLevel.SILENT)
-            run(command="{0} -s {1} pull /sdcard/{2}.png {3}".format(ADB_PATH, device_id, file_name, file_path),
+
+            # Transfer image from device to localhost
+            output = run(
+                command="{0} -s {1} pull /sdcard/{2}.png {3}".format(ADB_PATH, device_id, file_name, file_path),
                 log_level=CommandLogLevel.SILENT)
+            assert "100%" in output, "Failed to get {0}. Log: {1}".format(file_name, output)
+
+            # Cleanup sdcard
             run(command="{0} -s {1} shell rm /sdcard/{2}.png".format(ADB_PATH, device_id, file_name),
                 log_level=CommandLogLevel.SILENT)
+
         if device_type == DeviceType.SIMULATOR:
             run(command="xcrun simctl io booted screenshot {0}".format(file_path),
                 log_level=CommandLogLevel.SILENT)
@@ -57,7 +64,7 @@ class Device(object):
         match = False
         diff_image = actual_image.copy()
         for x in range(0, width):
-            for y in range(25, height):
+            for y in range(40, height):
                 if actual_pixels[x, y] != expected_pixels[x, y]:
                     diff_pixels += 1
                     diff_image.load()[x, y] = (255, 0, 0)

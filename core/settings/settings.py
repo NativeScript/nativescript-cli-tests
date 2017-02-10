@@ -47,7 +47,7 @@ VERBOSE_LOG = os.path.join(OUTPUT_FOLDER, 'verboseLog.txt')
 # Default Simulator and Emulator settings
 EMULATOR_NAME = "Emulator-Api19-Default"
 EMULATOR_PORT = "5554"
-EMULATOR_ID = "emulator-{0}".format(EMULATOR_NAME)
+EMULATOR_ID = "emulator-{0}".format(EMULATOR_PORT)
 SIMULATOR_NAME = "iPhone7100"
 
 # Android SDK

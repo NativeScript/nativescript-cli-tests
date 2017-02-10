@@ -33,15 +33,17 @@ class Tns(object):
     def update_modules(path):
         if " " in path:
             path = "\"" + path + "\""
+        output = ''
         if "release" in CLI_PATH.lower():  # TODO: Use Settings.BRANCH
             version = Tns.run_tns_command("", attributes={"--version": ""})
             Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False)
             output = Tns.plugin_add("tns-core-modules@" + version, attributes={"--path": path}, assert_success=False)
-            return output
         else:
             Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False)
             output = Tns.plugin_add("tns-core-modules@next", attributes={"--path": path})
-            return output
+        assert "undefined" not in output, "Something went wrong when modules are installed."
+        return output
+
 
     @staticmethod
     def ensure_app_resources(path):

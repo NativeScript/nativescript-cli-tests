@@ -200,7 +200,7 @@ class RunAndroidEmulatorTests(BaseClass):
         ReplaceHelper.replace(self.app_name, ReplaceHelper.FILE_CHANGE_CSS)
         ReplaceHelper.replace(self.app_name, ReplaceHelper.FILE_CHANGE_XML)
         output = Tns.run_android(attributes={"--path": self.app_name, "--justlaunch": ""}, assert_success=False)
-        assert "Project successfully prepared" not in output
+        assert "Project successfully prepared" in output
 
         # Verify app looks is update after changes in js, css and xml
         Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
