@@ -1,11 +1,13 @@
 .settings
 .idea
 *.pyc
+.DS_Store
+/*.tgz
+TNS*
+/*.png
 /*.tgz
 node_modules
-commands.txt
 deviceLog.txt
-output.txt
 pylint*
 QA*
 Report*
@@ -14,5 +16,5 @@ TestApp*
 TNS_App*
 template-hello*
 sut/
-out/*.txt
+out/
 nosetests.xml

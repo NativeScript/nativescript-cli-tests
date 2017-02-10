@@ -5,7 +5,6 @@ import tarfile
 
 import nose
 
-from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.installer.cli import Cli
@@ -13,17 +12,19 @@ from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
-    COMMAND_TIMEOUT, ANDROID_PATH, IOS_PATH, SUT_ROOT_FOLDER, TEST_RUN, CLI_PATH, ANDROID_RUNTIME_PATH, \
+    COMMAND_TIMEOUT, ANDROID_PATH, IOS_PATH, SUT_ROOT_FOLDER, CLI_PATH, ANDROID_RUNTIME_PATH, \
     IOS_RUNTIME_PATH, TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH, IOS_INSPECTOR_PATH
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
 reload(sys)
 
-sys.setdefaultencoding('UTF8')
-
 
 def clone_git_repo(repo_url, local_folder):
+    """Clone GitHub repo to local folder
+    :param repo_url: GitHub repo URL
+    :param local_folder: Local folder
+    """
     branch = 'master'
     if 'release' in TNS_MODULES_PATH.lower():
         branch = 'release'
@@ -33,6 +34,7 @@ def clone_git_repo(repo_url, local_folder):
 
 
 def clean_npm():
+    """Clean npm cache"""
     if CURRENT_OS == OSType.WINDOWS:
         run("npm cache clean", COMMAND_TIMEOUT)
     else:
@@ -41,6 +43,7 @@ def clean_npm():
 
 
 def clean_gradle():
+    """Clean gradle cache"""
     if CURRENT_OS == OSType.WINDOWS:
         run("rmdir /s /q {USERPROFILE}\\.gradle".format(**os.environ), COMMAND_TIMEOUT)
     else:
@@ -54,7 +57,10 @@ def get_cli():
 
 
 def extract_archive(file_name, folder):
-    """Extract archive"""
+    """Extract archive
+    :param file_name: Archive file name.
+    :param folder: Target folder.
+    """
     if file_name.endswith(".tgz"):
         tar = tarfile.open(file_name)
         tar.extractall(path=os.path.join(os.getcwd(), folder))

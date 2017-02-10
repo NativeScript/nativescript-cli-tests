@@ -4,22 +4,9 @@ Settings
 import os
 import platform
 
+from core.osutils.os_type import OSType
 
-class OSType(object):
-    WINDOWS = 0
-    LINUX = 1
-    OSX = 2
-
-
-class DeviceType(object):
-    ANDROID = 0
-    IOS = 1
-    EMULATOR = 2
-    SIMULATOR = 3
-
-
-# Timeout settings (in seconds)
-COMMAND_TIMEOUT = 600
+COMMAND_TIMEOUT = 600   # Timeout settings (in seconds).
 
 # Current OS
 CURRENT_OS = OSType.LINUX
@@ -28,9 +15,7 @@ if "Windows" in platform.platform():
 if "Darwin" in platform.platform():
     CURRENT_OS = OSType.OSX
 
-# Test run type
-TEST_RUN = os.environ.get("TEST_RUN")
-TEST_RUN_HOME = os.getcwd()
+TEST_RUN_HOME = os.getcwd()     # Get test run root folder.
 
 # Test packages location
 CLI_PATH = os.environ["CLI_PATH"]
@@ -52,15 +37,18 @@ IOS_RUNTIME_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-ios.tgz")
 IOS_RUNTIME_SYMLINK_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-ios", "package")
 IOS_INSPECTOR_PACKAGE = os.path.join(SUT_ROOT_FOLDER, "tns-ios-inspector.tgz")
 
-# Output settigns
+# Output settings
 OUTPUT_FOLDER = TEST_RUN_HOME + os.path.sep + "out"
 OUTPUT_FILE = os.path.join(OUTPUT_FOLDER, 'output.txt')
+OUTPUT_FILE_ASYNC = os.path.join(OUTPUT_FOLDER, 'output_async.txt')
 TEST_LOG = os.path.join(OUTPUT_FOLDER, 'testLog.txt')
 VERBOSE_LOG = os.path.join(OUTPUT_FOLDER, 'verboseLog.txt')
 
-# Default Simulator and Emulator
+# Default Simulator and Emulator settings
 EMULATOR_NAME = "Emulator-Api19-Default"
-SIMULATOR_NAME = "iPhone691"
+EMULATOR_PORT = "5554"
+EMULATOR_ID = "emulator-{0}".format(EMULATOR_NAME)
+SIMULATOR_NAME = "iPhone7100"
 
 # Android SDK
 ADB_PATH = os.path.join(os.environ.get("ANDROID_HOME"), "platform-tools", "adb")
@@ -74,6 +62,3 @@ ANDROID_KEYSTORE_ALIAS_PASS = os.environ.get("ANDROID_KEYSTORE_ALIAS_PASS")
 
 # iOS Build Settings
 DEVELOPMENT_TEAM = os.environ.get("DEVELOPMENT_TEAM")
-
-# Unknown
-DEBUG = 0

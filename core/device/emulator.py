@@ -6,6 +6,7 @@ import platform
 import time
 
 from core.osutils.command import run
+from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.process import Process
 from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ADB_PATH, EMULATOR_PATH, EMULATOR_NAME
 
@@ -31,13 +32,18 @@ class Emulator(object):
         Process.kill("qemu-system-i386")
         Process.kill("qemu-system-i38")  # Linux
 
-        output = run(ADB_PATH + " devices")  # Run `adb devices` for debug purposes.
+        output = run(ADB_PATH + " devices", log_level=CommandLogLevel.SILENT)  # Run `adb devices` for debug purposes.
         if "offline" in output:
             Emulator.restart_adb()
 
     @staticmethod
     def start_emulator(emulator_name, port="5554", timeout=300, wait_for=True):
-        """Start Android Emulator"""
+        """Start Android Emulator
+        :param emulator_name:
+        :param port:
+        :param timeout:
+        :param wait_for:
+        """
         print "Starting emulator on {0}".format(platform.platform())
 
         start_command = EMULATOR_PATH + " -avd " + emulator_name + " -port " + port + " -wipe-data"
@@ -57,17 +63,19 @@ class Emulator(object):
 
     @staticmethod
     def wait_for_device(device_name, timeout=600):
-        """Wait for device"""
+        """Wait for device
+        :param device_name: Device name
+        :param timeout:
+        :return:
+        """
         found = False
         start_time = time.time()
         end_time = start_time + timeout
         while not found:
             time.sleep(5)
-            output = run(TNS_PATH + " device")
+            output = run(TNS_PATH + " device", log_level=CommandLogLevel.SILENT)
             if device_name in output:
                 found = True
-            if time.time() > start_time + 120:
-                Emulator.restart_adb()
             if (found is True) or (time.time() > end_time):
                 break
 
@@ -76,19 +84,21 @@ class Emulator(object):
     @staticmethod
     def ensure_available():
         """Ensure Android Emulator is running"""
-        output = run(TNS_PATH + " device")
+        output = run(TNS_PATH + " device android", log_level=CommandLogLevel.SILENT)
         lines = output.splitlines()
         found = False
         for line in lines:
             if ('emulator' in line) and ("Connected" in line):
                 found = True
+                # Make sure sdcard is not read-only
+                run("adb shell mount -o rw,remount rootfs /", log_level=CommandLogLevel.SILENT)
+                run("adb shell chmod 777 /mnt/sdcard", log_level=CommandLogLevel.SILENT)
                 break
         if found:
             print "Emulator already running."
         else:
             Emulator.stop_emulators()
             Emulator.start_emulator(emulator_name=EMULATOR_NAME, port="5554", wait_for=True)
-        run(ADB_PATH + " devices")
         return found
 
     @staticmethod

@@ -11,8 +11,8 @@ import errno
 import fileinput
 import fnmatch
 import os
-import time
 import shutil
+import time
 
 from core import osutils
 from core.settings.settings import TEST_LOG
@@ -86,25 +86,29 @@ class File(object):
         return result
 
     @staticmethod
-    def remove(file_path):
+    def remove(file_path, fail=True):
         if os.path.exists(file_path):
             try:
                 os.remove(file_path)
             except OSError as err:
-                if err.errno != errno.ENOENT:  # errno.ENOENT = no such file or directory
-                    raise
+                if fail:
+                    if err.errno != errno.ENOENT:  # errno.ENOENT = no such file or directory
+                        raise
+                else:
+                    print "Failed to delete {0}".format(file_path)
 
     @staticmethod
     def replace(file_path, str1, str2):
-        """Replace strings in file
-        :rtype: object
-        """
+        """Replace strings in file"""
+
         for line in fileinput.input(file_path, inplace=1):
             print line.replace(str1, str2)
         time.sleep(1)
         print "~~~ Replace ~~~"
-        # output = emulate("cat " + file_path)
-        # assert str2 in output
+        print "File: {0}".format(file_path)
+        print "Old String: {0}".format(str1)
+        print "New String: {0}".format(str2)
+        print "~~~ Replace ~~~"
 
     @staticmethod
     def list_of_files_exists(root_folder, files_list, ignore_file_count=True):

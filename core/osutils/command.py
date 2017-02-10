@@ -5,15 +5,24 @@ This file contains all the commons.
 import os
 import threading
 import time
+from datetime import datetime
 
+from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
+from core.osutils.os_type import OSType
 from core.osutils.process import Process
-from core.settings.settings import OUTPUT_FILE, COMMAND_TIMEOUT, DEBUG, TEST_LOG
+from core.settings.settings import OUTPUT_FILE, COMMAND_TIMEOUT, TEST_LOG, OUTPUT_FILE_ASYNC, CURRENT_OS
 
 
-def run(command, timeout=None, output=True, file_name=None, wait=True):
+def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=CommandLogLevel.FULL):
     """
-    Execute command in subshell.
+    Execute command in shell.
+    :param command: Command to be executed.
+    :param timeout: Timeout for command execution.
+    :param output:
+    :param wait: Specify if method should wait until command execution complete.
+    :param log_level: CommandLogLevel value (SILENT, COMMAND_ONLY, FULL).
+    :return: If wait=True return output of the command, else return path to file where command writes log.
     """
 
     def fork_it():
@@ -32,52 +41,58 @@ def run(command, timeout=None, output=True, file_name=None, wait=True):
         # execute command
         # print "Thread started"
         if output:
-            os.system(command + ' 1> ' + OUTPUT_FILE + ' 2>&1')
+            os.system(command + ' 1> ' + out_file + ' 2>&1')
         else:
             os.system(command)
 
+    # If wait=False log should be writen
+    out_file = OUTPUT_FILE
+    if not wait:
+        time_string = "_" + datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+        out_file = OUTPUT_FILE_ASYNC.replace('.', time_string + '.')
+        command = command + " > " + out_file
+        if CURRENT_OS is not OSType.WINDOWS:
+            command = command + " &"
+
     # remove output.txt
     try:
-        File.remove(OUTPUT_FILE)
-    except OSError as err:
-        print "Failed to delete " + OUTPUT_FILE
+        File.remove(out_file)
+    except OSError:
+        print "Failed to delete " + out_file
         time.sleep(1)
-        File.remove(OUTPUT_FILE)
+        File.remove(out_file)
 
-    # append to commads.txt
-    File.append(TEST_LOG, command)
+    # log command that is executed (and append to TEST_LOG file)
+    if log_level.value > CommandLogLevel.SILENT.value:
+        File.append(TEST_LOG, command)
+        print "##### {0} Executing command : {1}\n".format(time.strftime("%X"), command)
 
     # prepare command line
-    print "##### {0} Executing command : {1}\n".format(time.strftime("%X"), command)
     thread = threading.Thread(target=fork_it)
     thread.start()
 
     # wait for thread to finish or timeout
-    if timeout is None:
-        thread.join(COMMAND_TIMEOUT)
-    else:
-        thread.join(timeout)
+    thread.join(timeout)
 
     # kill thread
     if thread.is_alive():
         if wait:
-            print '##### ERROR: Process has timed out at ', time.strftime("%X")
+            if log_level.value > CommandLogLevel.SILENT.value:
+                print '##### ERROR: Process has timed out at ', time.strftime("%X")
             Process.kill('node')
             thread.join()
 
     # get whenever exist in the pipe ?
     pipe_output = 'NOT_COLLECTED'
     if output:
-        pipe_output = File.read(OUTPUT_FILE)
-    if DEBUG == 1:
+        pipe_output = File.read(out_file)
+
+    if log_level is CommandLogLevel.FULL and wait:
+        print "##### OUTPUT BEGIN #####\n"
         print pipe_output
-        print 'Thread finished. Returning ', pipe_output
+        print "##### OUTPUT END #####\n"
 
-    print "##### OUTPUT BEGIN #####\n"
-    print pipe_output
-    print "##### OUTPUT END #####\n"
-
-    if file_name is not None:
-        File.write(file_name, pipe_output)
-
-    return pipe_output.strip('\r\n')
+    if wait:
+        return pipe_output.strip('\r\n')
+    else:
+        return out_file
