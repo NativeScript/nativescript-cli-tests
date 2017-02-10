@@ -214,5 +214,5 @@ class BuildiOSTests(BaseClass):
         Tns.create_app(self.app_name_noplatform)
         output = Tns.build_ios(attributes={"--path": self.app_name_noplatform, "--" + invalid: ""},
                                assert_success=False)
-        assert invalid_option(invalid) in output
+        assert invalid_option.format(invalid) in output
         assert error not in output.lower()
