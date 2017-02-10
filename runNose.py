@@ -19,6 +19,8 @@ from core.xcode.xcode import Xcode
 
 reload(sys)
 
+sys.setdefaultencoding('UTF8')
+
 
 def clone_git_repo(repo_url, local_folder):
     """Clone GitHub repo to local folder
