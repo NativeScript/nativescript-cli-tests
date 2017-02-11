@@ -1,5 +1,5 @@
 """
-Device type enum.
+Device types enumeration.
 """
 from enum import Enum
 

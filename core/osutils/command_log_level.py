@@ -1,5 +1,5 @@
 """
-Device type enum.
+Commands log level enumeration.
 """
 from enum import Enum
 
