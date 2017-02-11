@@ -67,7 +67,7 @@ class EmulateAndroidTests(BaseClass):
         "Application is not running on {0}".format(EMULATOR_ID)
 
     def test_002_emulate_android_release(self):
-        output = Tns.run_tns_command("emulate android", attributes={"--device": EMULATOR_NAME,
+        output = Tns.run_tns_command("emulate android", attributes={# "--device": EMULATOR_NAME,
                                                                     "--keyStorePath": ANDROID_KEYSTORE_PATH,
                                                                     "--keyStorePassword": ANDROID_KEYSTORE_PASS,
                                                                     "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
@@ -88,7 +88,7 @@ class EmulateAndroidTests(BaseClass):
     def test_200_emulate_android_inside_project_and_specify_emulator_name(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
-        output = Tns.run_tns_command("emulate android", attributes={"--device": EMULATOR_NAME,
+        output = Tns.run_tns_command("emulate android", attributes={# "--device": EMULATOR_NAME,
                                                                     "--timeout": "600",
                                                                     "--justlaunch": ""
                                                                     },
@@ -102,7 +102,7 @@ class EmulateAndroidTests(BaseClass):
 
     def test_300_emulate_android_platform_not_added(self):
         Tns.create_app(self.app_name_noplatform)
-        output = Tns.run_tns_command("emulate android", attributes={"--device": EMULATOR_NAME,
+        output = Tns.run_tns_command("emulate android", attributes={# "--device": EMULATOR_NAME,
                                                                     "--timeout": "720",
                                                                     "--justlaunch": "",
                                                                     "--path": self.app_name_noplatform
@@ -115,27 +115,6 @@ class EmulateAndroidTests(BaseClass):
         assert "Starting Android emulator with image " + EMULATOR_NAME in output
         assert installed_on_device in output
         assert started_on_device in output
-
-    def test_330_verbose_log_android(self):
-        Folder.cleanup('./' + self.app_name)
-        Tns.create_app(self.app_name, attributes={"--template": os.path.join("data", "apps", "verbose-hello-world")})
-        Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH, "--path": self.app_name})
-
-        output = File.cat(os.path.join(self.app_name, "app", "app.js"))
-        assert "__enableVerboseLogging()" in output, "Verbose logging not enabled in app.js"
-
-        output = Tns.run_android(attributes={"--emulator": "", "--justlaunch": "",
-                                             "--path": self.app_name,
-                                             }, timeout=180)
-
-        assert successfully_built in output
-        lines = output.split('\n')
-        count = len(lines)
-
-        print "The verbose log contains {} lines.".format(str(count))
-        assert count < 1000, \
-            "The verbose log contains more than 1000 lines. It contains {} lines.".format(str(count))
-        assert "***" not in output, "The verbose log contains an exception."
 
     def test_400_emulate_invalid_platform(self):
         output = Tns.run_tns_command("emulate invalidPlatform", attributes={"--path": self.app_name,
