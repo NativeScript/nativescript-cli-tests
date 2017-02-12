@@ -127,4 +127,4 @@ class Emulator(object):
 
     @staticmethod
     def unlock_sdcard():
-        run(ADB_PATH + " - " + EMULATOR_ID + " shell mount -o remount rw /sdcard", log_level=CommandLogLevel.FULL)
+        run(ADB_PATH + " -s " + EMULATOR_ID + " shell mount -o remount rw /sdcard", log_level=CommandLogLevel.FULL)
