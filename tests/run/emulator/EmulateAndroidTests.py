@@ -12,10 +12,9 @@ import os
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
-from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
-    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_NAME, EMULATOR_ID
+    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID
 from core.tns.tns import Tns
 from core.settings.strings import *
 
@@ -67,53 +66,53 @@ class EmulateAndroidTests(BaseClass):
         "Application is not running on {0}".format(EMULATOR_ID)
 
     def test_002_emulate_android_release(self):
-        output = Tns.run_tns_command("emulate android", attributes={# "--device": EMULATOR_NAME,
-                                                                    "--keyStorePath": ANDROID_KEYSTORE_PATH,
-                                                                    "--keyStorePassword": ANDROID_KEYSTORE_PASS,
-                                                                    "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
-                                                                    "--keyStoreAliasPassword":
-                                                                        ANDROID_KEYSTORE_ALIAS_PASS,
-                                                                    "--release": "",
-                                                                    "--path": self.app_name,
-                                                                    "--timeout": "600",
-                                                                    "--justlaunch": ""
-                                                                    },
+        output = Tns.run_tns_command("emulate android", attributes={  # "--device": EMULATOR_NAME,
+            "--keyStorePath": ANDROID_KEYSTORE_PATH,
+            "--keyStorePassword": ANDROID_KEYSTORE_PASS,
+            "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
+            "--keyStoreAliasPassword":
+                ANDROID_KEYSTORE_ALIAS_PASS,
+            "--release": "",
+            "--path": self.app_name,
+            "--timeout": "600",
+            "--justlaunch": ""
+        },
                                      timeout=660)
         assert successfully_prepared in output
         assert successfully_built in output
         assert "Starting Android emulator with image" not in output
-        assert installed_on_device.format("") in output
+        assert installed_on_device.format(EMULATOR_ID) in output
         assert started_on_device in output
 
     def test_200_emulate_android_inside_project_and_specify_emulator_name(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
-        output = Tns.run_tns_command("emulate android", attributes={# "--device": EMULATOR_NAME,
-                                                                    "--timeout": "600",
-                                                                    "--justlaunch": ""
-                                                                    },
+        output = Tns.run_tns_command("emulate android", attributes={  # "--device": EMULATOR_NAME,
+            "--timeout": "600",
+            "--justlaunch": ""
+        },
                                      tns_path=os.path.join("..", TNS_PATH), timeout=660)
         os.chdir(current_dir)
         assert successfully_prepared in output
         assert successfully_built in output
         assert "Starting Android emulator with image" not in output
-        assert installed_on_device in output
+        assert installed_on_device.format(EMULATOR_ID) in output
         assert started_on_device in output
 
     def test_300_emulate_android_platform_not_added(self):
         Tns.create_app(self.app_name_noplatform)
-        output = Tns.run_tns_command("emulate android", attributes={# "--device": EMULATOR_NAME,
-                                                                    "--timeout": "720",
-                                                                    "--justlaunch": "",
-                                                                    "--path": self.app_name_noplatform
-                                                                    },
+        output = Tns.run_tns_command("emulate android", attributes={  # "--device": EMULATOR_NAME,
+            "--timeout": "720",
+            "--justlaunch": "",
+            "--path": self.app_name_noplatform
+        },
                                      timeout=750)
         assert copy_template_files in output
         assert successfully_created in output
         assert successfully_prepared in output
         assert successfully_built in output
         assert "Starting Android emulator with image" not in output
-        assert installed_on_device in output
+        assert installed_on_device.format(EMULATOR_ID) in output
         assert started_on_device in output
 
     def test_400_emulate_invalid_platform(self):
