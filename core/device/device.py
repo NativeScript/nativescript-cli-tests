@@ -28,7 +28,7 @@ class Device(object):
         if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
             # Get current screen of mobile device
             run(command="{0} -s {1} shell screencap -p /sdcard/{2}.png".format(ADB_PATH, device_id, file_name),
-                log_level=CommandLogLevel.SILENT)
+                log_level=CommandLogLevel.FULL)
 
             # Transfer image from device to localhost
             output = run(

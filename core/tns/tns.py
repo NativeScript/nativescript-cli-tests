@@ -9,6 +9,7 @@ from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
+from core.osutils.process import Process
 from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, DEVELOPMENT_TEAM, CLI_PATH, BRANCH, TEST_RUN_HOME, \
     COMMAND_TIMEOUT, OUTPUT_FILE, CURRENT_OS
 from core.xcode.xcode import Xcode
@@ -44,7 +45,6 @@ class Tns(object):
         assert "undefined" not in output, "Something went wrong when modules are installed."
         return output
 
-
     @staticmethod
     def ensure_app_resources(path):
         app_resources_path = os.path.join(path, "app", "App_Resources")
@@ -57,7 +57,17 @@ class Tns(object):
             Folder.copy(src, dest)
 
     @staticmethod
-    def create_app(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True):
+    def create_app(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True,
+                   force_clean=True):
+
+        if force_clean:
+            if File.exists(app_name):
+                # Hack for Windows OS (kill processes that keep folder in use)
+                if CURRENT_OS == OSType.WINDOWS:
+                    Process.kill('node')
+                    Process.kill('aapt')
+                    Process.kill('java')
+                Folder.cleanup(app_name)
         path = app_name
         attributes_to_string = ""
         for k, v in attributes.iteritems():
