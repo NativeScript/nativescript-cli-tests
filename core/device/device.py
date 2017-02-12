@@ -28,8 +28,13 @@ class Device(object):
         File.remove(file_path)
         if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
             # Cleanup sdcard
-            run(command="{0} -s {1} shell rm /sdcard/*.png".format(ADB_PATH, device_id, file_name),
-                log_level=CommandLogLevel.FULL)
+            output = run(command="{0} -s {1} shell rm /sdcard/*.png".format(ADB_PATH, device_id, file_name),
+                         log_level=CommandLogLevel.FULL)
+            if "Read-only file system" in output:
+                Emulator.unlock_sdcard()
+                output = run(command="{0} -s {1} shell rm /sdcard/*.png".format(ADB_PATH, device_id, file_name),
+                             log_level=CommandLogLevel.FULL)
+                assert "error" not in output.lower(), "Screencap failed with: " + output
 
             # Get current screen of mobile device
             output = run(command="{0} -s {1} shell screencap -p /sdcard/{2}.png".format(ADB_PATH, device_id, file_name),
@@ -87,7 +92,7 @@ class Device(object):
         return match, diff_percent, diff_image
 
     @staticmethod
-    def screen_match(device_type, device_name, device_id, expected_image, timeout=30):
+    def screen_match(device_type, device_name, device_id, expected_image, timeout=60):
         print "Verify {0} looks correct...".format(expected_image)
         expected_image_path = os.path.join("data", "images", device_name, "{0}.png".format(expected_image))
         if File.exists(expected_image_path):
