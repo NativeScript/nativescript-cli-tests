@@ -27,20 +27,24 @@ class Device(object):
         file_path = os.path.join("data", "temp", "{0}.png".format(file_name))
         File.remove(file_path)
         if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
+            # Cleanup sdcard
+            run(command="{0} -s {1} shell rm /sdcard/*.png".format(ADB_PATH, device_id, file_name),
+                log_level=CommandLogLevel.FULL)
+
             # Get current screen of mobile device
             output = run(command="{0} -s {1} shell screencap -p /sdcard/{2}.png".format(ADB_PATH, device_id, file_name),
-                         log_level=CommandLogLevel.SILENT)
+                         log_level=CommandLogLevel.FULL)
             if "Read-only file system" in output:
                 Emulator.unlock_sdcard()
                 output = run(
-                    command="{0} -s {1} shell screencap -p /sdcard/{2}.png".format(ADB_PATH, device_id, file_name),
-                    log_level=CommandLogLevel.FULL)
+                        command="{0} -s {1} shell screencap -p /sdcard/{2}.png".format(ADB_PATH, device_id, file_name),
+                        log_level=CommandLogLevel.FULL)
                 assert "error" not in output.lower(), "Screencap failed with: " + output
 
             # Transfer image from device to localhost
             output = run(
                     command="{0} -s {1} pull /sdcard/{2}.png {3}".format(ADB_PATH, device_id, file_name, file_path),
-                    log_level=CommandLogLevel.SILENT)
+                    log_level=CommandLogLevel.FULL)
             assert "100%" in output, "Failed to get {0}. Log: {1}".format(file_name, output)
 
             # Cleanup sdcard
