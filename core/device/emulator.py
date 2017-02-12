@@ -93,13 +93,16 @@ class Emulator(object):
                 found = True
                 break
         if found:
-            time.slep(10)   # Adb returns device is available before it is booted. Wait a bit more...
+            time.slep(10)  # Adb returns device is available before it is booted. Wait a bit more...
             print "Emulator already running."
             # Make sure sdcard is not read-only
-            run("adb " + EMULATOR_ID + " shell mount -o rw,remount rootfs /", log_level=CommandLogLevel.SILENT)
-            run("adb " + EMULATOR_ID + " shell chmod 777 /mnt/sdcard", log_level=CommandLogLevel.SILENT)
+            run(ADB_PATH + " " + EMULATOR_ID + " shell mount -o rw,remount /system", log_level=CommandLogLevel.FULL)
+            run(ADB_PATH + " " + EMULATOR_ID + " shell mount -o rw,remount rootfs /", log_level=CommandLogLevel.FULL)
+            run(ADB_PATH + " " + EMULATOR_ID + " shell chmod 777 /mnt/sdcard", log_level=CommandLogLevel.FULL)
+
             # Set screen timeout
-            run("adb " + EMULATOR_ID + " shell rm -f /data/system/locksettings.db*", log_level=CommandLogLevel.SILENT)
+            run(ADB_PATH + " " + EMULATOR_ID + " shell rm -f /data/system/locksettings.db*",
+                log_level=CommandLogLevel.FULL)
             print "Emulator configuration complete!"
         else:
             Emulator.stop_emulators()
@@ -110,7 +113,7 @@ class Emulator(object):
     def cat_app_file(app_name, file_path):
         """Return content of file on emulator"""
         app_name = app_name.replace("_", "")
-        app_name = app_name.replace(" ","")
+        app_name = app_name.replace(" ", "")
         output = run(ADB_PATH + " -s emulator-5554 shell run-as org.nativescript." +
                      app_name + " cat files/" + file_path)
         return output
