@@ -7,6 +7,7 @@ import time
 from PIL import Image
 
 from core.device.devide_type import DeviceType
+from core.device.emulator import Emulator
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
@@ -27,13 +28,19 @@ class Device(object):
         File.remove(file_path)
         if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
             # Get current screen of mobile device
-            run(command="{0} -s {1} shell screencap -p /sdcard/{2}.png".format(ADB_PATH, device_id, file_name),
-                log_level=CommandLogLevel.FULL)
+            output = run(command="{0} -s {1} shell screencap -p /sdcard/{2}.png".format(ADB_PATH, device_id, file_name),
+                         log_level=CommandLogLevel.SILENT)
+            if "Read-only file system" in output:
+                Emulator.unlock_sdcard()
+                output = run(
+                    command="{0} -s {1} shell screencap -p /sdcard/{2}.png".format(ADB_PATH, device_id, file_name),
+                    log_level=CommandLogLevel.FULL)
+                assert "error" not in output.lower(), "Screencap failed with: " + output
 
             # Transfer image from device to localhost
             output = run(
-                command="{0} -s {1} pull /sdcard/{2}.png {3}".format(ADB_PATH, device_id, file_name, file_path),
-                log_level=CommandLogLevel.SILENT)
+                    command="{0} -s {1} pull /sdcard/{2}.png {3}".format(ADB_PATH, device_id, file_name, file_path),
+                    log_level=CommandLogLevel.SILENT)
             assert "100%" in output, "Failed to get {0}. Log: {1}".format(file_name, output)
 
             # Cleanup sdcard

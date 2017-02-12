@@ -96,10 +96,7 @@ class Emulator(object):
             time.slep(10)  # Adb returns device is available before it is booted. Wait a bit more...
             print "Emulator already running."
             # Make sure sdcard is not read-only
-            run(ADB_PATH + " " + EMULATOR_ID + " shell mount -o rw,remount /system", log_level=CommandLogLevel.FULL)
-            run(ADB_PATH + " " + EMULATOR_ID + " shell mount -o rw,remount rootfs /", log_level=CommandLogLevel.FULL)
-            run(ADB_PATH + " " + EMULATOR_ID + " shell chmod 777 /mnt/sdcard", log_level=CommandLogLevel.FULL)
-
+            Emulator.unlock_sdcard()
             # Set screen timeout
             run(ADB_PATH + " " + EMULATOR_ID + " shell rm -f /data/system/locksettings.db*",
                 log_level=CommandLogLevel.FULL)
@@ -127,3 +124,9 @@ class Emulator(object):
         else:
             print("{0} does not exists in {1}".format(text, file_path))
         assert text in output
+
+    @staticmethod
+    def unlock_sdcard():
+        run(ADB_PATH + " " + EMULATOR_ID + " shell mount -o rw,remount /system", log_level=CommandLogLevel.FULL)
+        run(ADB_PATH + " " + EMULATOR_ID + " shell mount -o rw,remount rootfs /", log_level=CommandLogLevel.FULL)
+        run(ADB_PATH + " " + EMULATOR_ID + " shell chmod 777 /mnt/sdcard", log_level=CommandLogLevel.FULL)
