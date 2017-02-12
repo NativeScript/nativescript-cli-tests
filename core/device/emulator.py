@@ -111,7 +111,7 @@ class Emulator(object):
         """Return content of file on emulator"""
         app_name = app_name.replace("_", "")
         app_name = app_name.replace(" ", "")
-        output = run(ADB_PATH + " -s emulator-5554 shell run-as org.nativescript." +
+        output = run(ADB_PATH + " -s " + EMULATOR_ID + " shell run-as org.nativescript." +
                      app_name + " cat files/" + file_path)
         return output
 
@@ -126,5 +126,16 @@ class Emulator(object):
         assert text in output
 
     @staticmethod
-    def unlock_sdcard():
-        run(ADB_PATH + " -s " + EMULATOR_ID + " shell mount -o remount rw /sdcard", log_level=CommandLogLevel.FULL)
+    def unlock_sdcard(timeout=60):
+        t_end = time.time() + timeout
+        unlocked = False
+        while time.time() < t_end:
+            output = run(ADB_PATH + " -s " + EMULATOR_ID + " shell mount -o remount rw /sdcard",
+                         log_level=CommandLogLevel.FULL)
+            if "mount" not in output:
+                unlocked = True
+                break
+            else:
+                print "Failed to unlock sdcard. Retry..."
+                time.sleep(10)
+        assert unlocked, "Failed to unlock sdcard!"
