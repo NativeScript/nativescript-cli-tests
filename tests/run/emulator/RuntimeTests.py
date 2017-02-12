@@ -15,7 +15,7 @@ from core.settings.strings import successfully_built
 from core.tns.tns import Tns
 
 
-class StaticBindingGenerator(BaseClass):
+class RuntimeTests(BaseClass):
     custom_js_file = os.path.join(BaseClass.app_name, "app", "my-custom-class.js")
     tns_folder = os.path.join(BaseClass.app_name, "platforms", "android", "src", "main", "java", "com", "tns")
     gen_folder = os.path.join(tns_folder, "gen")

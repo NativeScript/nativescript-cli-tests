@@ -81,7 +81,7 @@ class EmulateAndroidTests(BaseClass):
                                      timeout=660)
         assert successfully_prepared in output
         assert successfully_built in output
-        assert "Starting Android emulator with image" in output
+        assert "Starting Android emulator with image" not in output
         assert installed_on_device.format("") in output
         assert started_on_device in output
 
@@ -96,7 +96,7 @@ class EmulateAndroidTests(BaseClass):
         os.chdir(current_dir)
         assert successfully_prepared in output
         assert successfully_built in output
-        assert "Starting Android emulator with image " + EMULATOR_NAME in output
+        assert "Starting Android emulator with image" not in output
         assert installed_on_device in output
         assert started_on_device in output
 
@@ -112,7 +112,7 @@ class EmulateAndroidTests(BaseClass):
         assert successfully_created in output
         assert successfully_prepared in output
         assert successfully_built in output
-        assert "Starting Android emulator with image " + EMULATOR_NAME in output
+        assert "Starting Android emulator with image" not in output
         assert installed_on_device in output
         assert started_on_device in output
 

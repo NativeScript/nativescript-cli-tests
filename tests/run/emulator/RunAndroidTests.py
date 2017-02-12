@@ -17,7 +17,7 @@ from core.tns.tns import Tns
 from tests.run.ReplaceHelper import ReplaceHelper
 
 
-class RunAndroidEmulatorTests(BaseClass):
+class RunAndroidTests(BaseClass):
     @classmethod
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
