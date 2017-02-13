@@ -8,10 +8,13 @@ Install dependencies
 ```
 pip install psutil 
 pip install nose 
+pip install enum34
+pip install Pillow
 ```
 iOS Only: Install ideviceinstaller
 ```
-brew install ideviceinstaller
+brew install ideviceinstaller --HEAD
+brew install libimobiledevice --HEAD
 ```
 
 ##Requirements

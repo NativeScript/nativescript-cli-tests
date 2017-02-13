@@ -8,9 +8,9 @@ from nose_parameterized import parameterized
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.tns.tns import Tns
 from core.settings.settings import CLI_PATH
 from core.settings.strings import *
+from core.tns.tns import Tns
 
 
 class CreateTests(BaseClass):
@@ -159,7 +159,7 @@ class CreateTests(BaseClass):
 
     def test_401_create_project_in_folder_with_existing_project(self):
         Tns.create_app(self.app_name, assert_success=False, update_modules=False)
-        output = Tns.create_app(app_name=self.app_name, assert_success=False, update_modules=False)
+        output = Tns.create_app(app_name=self.app_name, assert_success=False, update_modules=False, force_clean=False)
         assert "successfully created" not in output
         assert "Path already exists and is not empty" in output
 

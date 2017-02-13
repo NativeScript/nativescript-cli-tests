@@ -1,19 +1,21 @@
 """
 Tests for static binding generator
 """
-import unittest
 import os
 import subprocess
 import threading
+import unittest
 
 from core.base_class.BaseClass import BaseClass
-from core.tns.tns import Tns
-from core.osutils.folder import Folder
 from core.device.emulator import Emulator
-from core.settings.settings import ADB_PATH
+from core.osutils.file import File
+from core.osutils.folder import Folder
+from core.settings.settings import ADB_PATH, ANDROID_RUNTIME_PATH
+from core.settings.strings import successfully_built
+from core.tns.tns import Tns
 
 
-class StaticBindingGenerator(BaseClass):
+class RuntimeTests(BaseClass):
     custom_js_file = os.path.join(BaseClass.app_name, "app", "my-custom-class.js")
     tns_folder = os.path.join(BaseClass.app_name, "platforms", "android", "src", "main", "java", "com", "tns")
     gen_folder = os.path.join(tns_folder, "gen")
@@ -25,7 +27,7 @@ class StaticBindingGenerator(BaseClass):
         BaseClass.setUpClass(logfile)
         Emulator.stop_emulators()
         Emulator.ensure_available()
-        Tns.create_app(cls.app_name, attributes={"--template": os.path.join("data", "apps", "sbg-test-app")})
+        Folder.cleanup('./' + cls.app_name)
 
     @classmethod
     def tearDownClass(cls):
@@ -34,7 +36,10 @@ class StaticBindingGenerator(BaseClass):
         Folder.cleanup(cls.app_name)
 
     @unittest.skip("Fails due to known issue in SBG")
-    def test_003_calling_custom_generated_classes_declared_in_manifest(self):
+    def test_200_calling_custom_generated_classes_declared_in_manifest(self):
+        Tns.create_app(self.app_name, attributes={"--template": os.path.join("data", "apps", "sbg-test-app")})
+        Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH, "--path": self.app_name})
+
         print ("Running app for android")
         if Emulator.ensure_available():
             subprocess.Popen([ADB_PATH, "-e", "logcat", "-c"])
@@ -58,3 +63,23 @@ class StaticBindingGenerator(BaseClass):
 
         # make sure we called custom activity declared in manifest
         assert "we got called from onCreate of my-custom-class.js" in output, "Expected output not found"
+
+    def test_300_verbose_log_android(self):
+        Tns.create_app(self.app_name, attributes={"--template": os.path.join("data", "apps", "verbose-hello-world")})
+        Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH, "--path": self.app_name})
+
+        output = File.cat(os.path.join(self.app_name, "app", "app.js"))
+        assert "__enableVerboseLogging()" in output, "Verbose logging not enabled in app.js"
+
+        output = Tns.run_android(attributes={"--emulator": "", "--justlaunch": "",
+                                             "--path": self.app_name,
+                                             }, timeout=180)
+
+        assert successfully_built in output
+        lines = output.split('\n')
+        count = len(lines)
+
+        print "The verbose log contains {} lines.".format(str(count))
+        assert count < 1000, \
+            "The verbose log contains more than 1000 lines. It contains {} lines.".format(str(count))
+        assert "***" not in output, "The verbose log contains an exception."
