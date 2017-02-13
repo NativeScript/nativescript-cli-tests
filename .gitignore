@@ -3,6 +3,8 @@
 *.pyc
 .DS_Store
 /*.tgz
+123
+app
 TNS*
 /*.png
 /*.tgz

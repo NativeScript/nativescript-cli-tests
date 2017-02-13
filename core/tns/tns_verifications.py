@@ -3,6 +3,7 @@ Verifications for NativeScript projects.
 """
 
 from core.osutils.file import File
+from core.osutils.folder import Folder
 from core.tns.tns_installed_platforms import Platforms
 from core.tns.tns_prepare_type import Prepare
 
@@ -23,6 +24,35 @@ class TnsAsserts(object):
     def __get_ios_modules_path(app_name):
         modules_path = TnsAsserts.__get_ios_app_path(app_name) + 'tns_modules/tns-core-modules/'
         return modules_path
+
+    @staticmethod
+    def created(app_name, output=None):
+        if output is not None:
+            assert "nativescript-theme-core" in output
+            assert "nativescript-dev-android-snapshot" in output
+            assert "Project {0} was successfully created".format(app_name.rsplit('/')[-1]) in output
+        assert File.exists(app_name)
+        assert File.exists(app_name + "/node_modules/tns-core-modules/package.json")
+        assert File.exists(app_name + "/node_modules/tns-core-modules/LICENSE")
+        assert File.exists(app_name + "/node_modules/tns-core-modules/xml/xml.js")
+        assert Folder.is_empty(app_name + "/platforms")
+
+        app_id = app_name.replace(" ", "").replace("_", "").replace("-", "").rsplit('/')[-1]
+        strings = ["org.nativescript.{0}".format(app_id), "tns-core-modules", "nativescript-theme-core",
+                   "nativescript-dev-android-snapshot"]
+        TnsAsserts.package_json_contains(app_name, string_list=strings)
+
+    @staticmethod
+    def package_json_contains(app_name, string_list=None):
+        package_json_path = app_name + "/package.json"
+        output = File.read(package_json_path)
+        for item in string_list:
+            if item in output:
+                print "{0} found in {1}.".format(item, package_json_path)
+            else:
+                print "pacakge.json:"
+                print output
+                assert False, "{0} NOT found in {1}.".format(item, package_json_path)
 
     @staticmethod
     def prepared(app_name, platform=Platforms.BOTH, output=None, prepare_type=Prepare.FULL):

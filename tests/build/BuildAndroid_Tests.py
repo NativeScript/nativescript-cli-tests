@@ -12,9 +12,12 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS, \
     OSType, TEST_RUN_HOME
-from core.tns.tns import Tns
-from core.tns.tns_verifications import TnsAsserts
 from core.settings.strings import *
+from core.tns.replace_helper import ReplaceHelper
+from core.tns.tns import Tns
+from core.tns.tns_installed_platforms import Platforms
+from core.tns.tns_prepare_type import Prepare
+from core.tns.tns_verifications import TnsAsserts
 
 
 class BuildAndroidTests(BaseClass):
@@ -37,15 +40,13 @@ class BuildAndroidTests(BaseClass):
 
     def tearDown(self):
         BaseClass.tearDown(self)
-        # Folder.cleanup(self.platforms_android + '/build/outputs')
+        Folder.cleanup(self.platforms_android + '/build/outputs')
 
     @classmethod
     def tearDownClass(cls):
-        # File.remove("TNSApp-debug.apk")
-        # File.remove("TNSApp-release.apk")
-        # Folder.cleanup(cls.app_name_dash)
-        # Folder.cleanup(cls.app_name_space)
-        # Folder.cleanup('temp')
+        File.remove("TNSApp-debug.apk")
+        File.remove("TNSApp-release.apk")
+        Folder.cleanup('temp')
         pass
 
     def test_001_build_android(self):
@@ -81,36 +82,29 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
 
     def test_201_build_android_with_additional_prepare(self):
+        """Verify that manually running prepare does not break next build command."""
+        ReplaceHelper.replace(self.app_name, file_change=ReplaceHelper.CHANGE_JS)
         output = Tns.prepare_android(attributes={"--path": self.app_name}, assert_success=False)
-        assert skipping_prepare in output
-        TnsAsserts.prepared_android(self.app_name)
-
+        TnsAsserts.prepared(self.app_name, platform=Platforms.ANDROID, output=output, prepare_type=Prepare.INCREMENTAL)
         Tns.build_android(attributes={"--path": self.app_name})
         assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
 
-    def test_202_build_android_platform_not_added(self):
+    def test_202_build_android_with_log_trace_and_platform_not_added_or_empty(self):
+        """'tns build android' with log trace options should output more logs."""
         Tns.create_app(self.app_no_platform)
-        output = Tns.build_android(attributes={"--path": self.app_no_platform,
-                                               "--log trace": ""
-                                               })
-        # Assert log trace show gradle logs
-        assert "[DEBUG]" in output
-        assert "FAILURE" not in output
-        assert File.exists(self.app_no_platform + "/platforms/android/build/outputs/apk/TNSAppNoPlatform-debug.apk")
-
-    def test_203_build_android_platform_when_platform_folder_is_empty(self):
-        Tns.create_app(self.app_no_platform)
-        Folder.cleanup(self.app_no_platform + '/platforms')
         output = Tns.build_android(attributes={"--path": self.app_no_platform, "--log trace": ""})
 
         # Assert log trace show gradle logs
         assert "[DEBUG]" in output
         assert "FAILURE" not in output
-        assert File.exists(self.app_no_platform + "/platforms/android"
-                                                  "/build/outputs/apk/TNSAppNoPlatform-debug.apk")
+        assert File.exists(self.app_no_platform + "/platforms/android/build/outputs/apk/TNSAppNoPlatform-debug.apk")
+
+        # TODO: Write test for https://github.com/NativeScript/nativescript-cli/issues/2528
+        # Test should do `tns platform remove android` and build again
 
     def test_300_build_android_with_additional_styles_xml(self):
-        # This is test for issue 644
+        """Test for issues #644"""
+
         run("mkdir -p TestApp/app/App_Resources/Android/values")
         run("cp data/data/styles.xml TestApp/app/App_Resources/Android/values")
         Tns.build_android(attributes={"--path": self.app_name})
@@ -146,14 +140,6 @@ class BuildAndroidTests(BaseClass):
         output = File.read(self.app_name_space + "/platforms/android/src/main/AndroidManifest.xml")
         assert "org.nativescript.TNSApp" in output
 
-    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows, because tar is not available")
-    def test_303_build_project_with_gz_file(self):
-        # Create zip
-        run("tar -czf " + self.app_name + "/app/app.tar.gz " + self.app_name + "/app/app.js")
-        assert File.exists(self.app_name + "/app/app.tar.gz")
-        # Build the project
-        Tns.build_android(attributes={"--path": self.app_name})
-
     def test_310_build_android_with_sdk22(self):
         Folder.cleanup(self.app_name + '/platforms')
         Tns.build_android(attributes={"--compileSdk": "22", "--path": self.app_name})
@@ -168,24 +154,6 @@ class BuildAndroidTests(BaseClass):
         output = Tns.build_android(attributes={"--compileSdk": "99", "--path": self.app_name, "--log trace": ""},
                                    assert_success=False)
         assert "You have specified '99' for compile sdk, but it is not installed on your system." in output
-
-    def test_320_build_release_with_copyto_option(self):
-        Tns.platform_remove(platform="android", attributes={"--path": BaseClass.app_name}, assert_success=False)
-        Folder.cleanup(self.app_name + '/platforms')
-        Tns.platform_add_android(attributes={"--path": BaseClass.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH
-                                             })
-        Tns.build_android(attributes={"--path": self.app_name,
-                                      "--keyStorePath": ANDROID_KEYSTORE_PATH,
-                                      "--keyStorePassword": ANDROID_KEYSTORE_PASS,
-                                      "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
-                                      "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
-                                      "--copy-to": "./",
-                                      "--release": ""
-                                      })
-        assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-release.apk")
-        assert File.exists("TNSApp-release.apk")
-        File.remove("TNSApp-release.apk")
 
     def test_321_build_with_copyto_option(self):
         Tns.build_android(attributes={"--path": self.app_name, "--copy-to": "./"})
@@ -252,6 +220,14 @@ class BuildAndroidTests(BaseClass):
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         assert successfully_built in output
         assert File.exists("temp/appbuilderProject/appbuilderProject-debug.apk")
+
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows, because tar is not available")
+    def test_399_build_project_with_gz_file(self):
+        # Create zip
+        run("tar -czf " + self.app_name + "/app/app.tar.gz " + self.app_name + "/app/app.js")
+        assert File.exists(self.app_name + "/app/app.tar.gz")
+        # Build the project
+        Tns.build_android(attributes={"--path": self.app_name})
 
     def test_400_build_with_no_platform(self):
         output = Tns.run_tns_command("build")
