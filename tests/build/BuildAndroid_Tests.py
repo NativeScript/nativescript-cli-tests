@@ -13,7 +13,7 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS, \
     OSType, TEST_RUN_HOME
 from core.tns.tns import Tns
-from core.tns.tns_verifications import TnsVerifications
+from core.tns.tns_verifications import TnsAsserts
 from core.settings.strings import *
 
 
@@ -37,16 +37,16 @@ class BuildAndroidTests(BaseClass):
 
     def tearDown(self):
         BaseClass.tearDown(self)
-        Folder.cleanup(self.app_no_platform)
-        Folder.cleanup(self.platforms_android + '/build/outputs')
+        # Folder.cleanup(self.platforms_android + '/build/outputs')
 
     @classmethod
     def tearDownClass(cls):
-        File.remove("TNSApp-debug.apk")
-        File.remove("TNSApp-release.apk")
-        Folder.cleanup(cls.app_name_dash)
-        Folder.cleanup(cls.app_name_space)
-        Folder.cleanup('temp')
+        # File.remove("TNSApp-debug.apk")
+        # File.remove("TNSApp-release.apk")
+        # Folder.cleanup(cls.app_name_dash)
+        # Folder.cleanup(cls.app_name_space)
+        # Folder.cleanup('temp')
+        pass
 
     def test_001_build_android(self):
         Tns.build_android(attributes={"--path": self.app_name})
@@ -55,9 +55,9 @@ class BuildAndroidTests(BaseClass):
         assert File.pattern_exists(self.platforms_android, "*.aar")
         assert not File.pattern_exists(self.platforms_android, "*.plist")
 
+        # Verify apk does not contain
         archive = ZipFile(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
         archive.extractall(self.app_name + "/temp")
-
         assert not File.pattern_exists(self.app_name + "/temp", "*.aar")
 
     def test_002_build_android_release(self):
@@ -83,7 +83,7 @@ class BuildAndroidTests(BaseClass):
     def test_201_build_android_with_additional_prepare(self):
         output = Tns.prepare_android(attributes={"--path": self.app_name}, assert_success=False)
         assert skipping_prepare in output
-        TnsVerifications.prepared_android(self.app_name)
+        TnsAsserts.prepared_android(self.app_name)
 
         Tns.build_android(attributes={"--path": self.app_name})
         assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
