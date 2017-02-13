@@ -66,7 +66,7 @@ class Tns(object):
                 if CURRENT_OS == OSType.WINDOWS:
                     Process.kill('node')
                     Process.kill('aapt')
-                    Process.kill('java')
+                    # Process.kill('java') This will break the CI.
                 Folder.cleanup(app_name)
         path = app_name
         attributes_to_string = ""
