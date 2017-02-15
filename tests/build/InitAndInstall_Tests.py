@@ -21,7 +21,6 @@ from core.settings.strings import *
 class InitAndInstallTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
-        Folder.cleanup(self.app_name)
 
     def test_201_init_defaults(self):
         Folder.create(BaseClass.app_name)
