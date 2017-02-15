@@ -7,9 +7,8 @@ import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
-from core.device.devide_type import DeviceType
+from core.device.device_type import DeviceType
 from core.device.emulator import Emulator
-from core.osutils.folder import Folder
 from core.osutils.process import Process
 from core.settings.settings import ANDROID_RUNTIME_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, EMULATOR_NAME
