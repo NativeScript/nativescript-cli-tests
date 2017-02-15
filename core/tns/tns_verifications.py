@@ -4,12 +4,16 @@ Verifications for NativeScript projects.
 
 from core.osutils.file import File
 from core.osutils.folder import Folder
+from core.osutils.os_type import OSType
+from core.settings.settings import CURRENT_OS
 from core.tns.tns_installed_platforms import Platforms
 from core.tns.tns_prepare_type import Prepare
 
 
 class TnsAsserts(object):
-    PLATFORM_ANDROID_APP_PATH = "/platforms/android/src/main/assets/app/"
+    PLATFORM_IOS = "/platforms/ios/"
+    PLATFORM_ANDROID = "/platforms/android/"
+    PLATFORM_ANDROID_APP_PATH = PLATFORM_ANDROID + "src/main/assets/app/"
     PLATFORM_ANDROID_NPM_MODULES_PATH = PLATFORM_ANDROID_APP_PATH + "tns_modules/"
     PLATFORM_ANDROID_TNS_MODULES_PATH = PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-core-modules/"
 
@@ -18,7 +22,7 @@ class TnsAsserts(object):
         normalized_app_name = app_name.replace(' ', '')
         normalized_app_name = normalized_app_name.replace('-', '')
         normalized_app_name = normalized_app_name.replace('_', '')
-        return app_name + '/platforms/ios/' + normalized_app_name + '/app/'
+        return app_name + TnsAsserts.PLATFORM_IOS + normalized_app_name + '/app/'
 
     @staticmethod
     def __get_ios_modules_path(app_name):
@@ -41,6 +45,74 @@ class TnsAsserts(object):
         strings = ["org.nativescript.{0}".format(app_id), "tns-core-modules", "nativescript-theme-core",
                    "nativescript-dev-android-snapshot"]
         TnsAsserts.package_json_contains(app_name, string_list=strings)
+
+    @staticmethod
+    def platform_added(app_name, platform=Platforms.NONE, output=None):
+        """
+        Assert platform is added.
+        :param app_name: Application name (folder where app is located).
+        :param platform: Platforms that should be available.
+        :param output: output of `tns platform add` command
+        """
+
+        # Verify console output is correct
+        if output is not None:
+            if platform is Platforms.ANDROID:
+                assert "tns-android" in output
+            if platform is Platforms.IOS:
+                assert "tns-ios" in output
+            assert "Copying template files..." in output
+            assert "Project successfully created." in output
+
+        # This is to handle test for app with space.
+        # In this case we put app name inside "".
+        app_name = app_name.replace("\"", "")
+
+        # Verify file and folder content
+        if platform is Platforms.NONE:
+            assert not File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
+            assert not File.exists(app_name + TnsAsserts.PLATFORM_IOS)
+        if platform is Platforms.ANDROID:
+            assert not File.exists(app_name + TnsAsserts.PLATFORM_IOS)
+            assert File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
+            assert not Folder.is_empty(
+                    app_name + TnsAsserts.PLATFORM_ANDROID + "/build-tools/android-static-binding-generator")
+        if platform is Platforms.IOS:
+            assert not File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
+            assert File.exists(app_name + TnsAsserts.PLATFORM_IOS)
+        if platform is Platforms.BOTH:
+            assert File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
+            assert File.exists(app_name + TnsAsserts.PLATFORM_IOS)
+
+    @staticmethod
+    def platform_list_status(app_name, output=None, prepared=Platforms.NONE, added=Platforms.NONE):
+        if output is not None:
+            # Assert prepare status
+            if prepared is Platforms.NONE:
+                if added is Platforms.NONE:
+                    assert "The project is not prepared for" not in output
+                else:
+                    assert "The project is not prepared for any platform" in output
+            if prepared is Platforms.ANDROID:
+                assert "The project is prepared for:  android" in output
+            if prepared is Platforms.IOS:
+                assert "The project is prepared for:  ios" in output
+            if prepared is Platforms.BOTH:
+                assert "The project is prepared for:  ios and android" in output
+
+            # Assert platform added status
+            if added is Platforms.NONE:
+                assert "No installed platforms found. Use $ tns platform add" in output
+                if CURRENT_OS is OSType.OSX:
+                    assert "Available platforms for this OS:  ios and android" in output
+                else:
+                    assert "Available platforms for this OS:  android" in output
+            if added is Platforms.ANDROID:
+                assert "Installed platforms:  android" in output
+            if added is Platforms.IOS:
+                assert "Installed platforms:  ios" in output
+            if added is Platforms.BOTH:
+                assert "Installed platforms:  android and ios" in output
 
     @staticmethod
     def package_json_contains(app_name, string_list=None):

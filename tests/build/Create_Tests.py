@@ -139,7 +139,7 @@ class CreateTests(BaseClass):
         assert not Folder.is_empty(self.app_name + "/node_modules/tns-core-modules-widgets")
 
         strings = ["\"tns-core-modules\":", "\"lodash\": \"3.10.1\"", "\"minimist\": \"1.2.0\""]
-        TnsAsserts.package_json_contains(self.app_name_123, string_list=strings)
+        TnsAsserts.package_json_contains(self.app_name, string_list=strings)
 
     def test_400_create_project_with_copyfrom_wrong_path(self):
         """--template should not create project if value is no npm installable"""

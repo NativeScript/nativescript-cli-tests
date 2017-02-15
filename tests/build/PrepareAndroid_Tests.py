@@ -22,9 +22,7 @@ class PrepareAndroidTests(BaseClass):
 
     def test_101_prepare_android(self):
         Tns.create_app(self.app_name, update_modules=False)
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH
-                                             })
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
 
         # Initial prepare should be full.
         output = Tns.prepare_android(attributes={"--path": self.app_name})
