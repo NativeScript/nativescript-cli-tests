@@ -20,11 +20,13 @@ from core.xcode.xcode import Xcode
 class Tns(object):
     @staticmethod
     def __get_platform_string(platform=Platforms.NONE):
+        if platform is Platforms.NONE:
+            return ""
         if platform is Platforms.ANDROID:
             return "android"
         if platform is Platforms.IOS:
             return "ios"
-        return ""
+        return platform
 
     @staticmethod
     def __get_app_id_from_app_name(app_name):
@@ -180,18 +182,21 @@ class Tns(object):
             assert "Platform {0} successfully removed".format(platform_string) in output
             assert "error" not in output
             if platform is Platforms.ANDROID:
-                assert Folder.is_empty(app_name + TnsAsserts.PLATFORM_ANDROID)
+                assert not File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
             if platform is Platforms.IOS:
-                assert Folder.is_empty(app_name + TnsAsserts.IOS)
+                assert not File.exists(app_name + TnsAsserts.IOS)
         return output
 
     @staticmethod
-    def platform_update(platform=Platforms.NONE, attributes={}, assert_success=True, log_trace=False, tns_path=None):
+    def platform_update(platform=Platforms.NONE, version=None, attributes={}, assert_success=True, log_trace=False,
+                        tns_path=None):
         platform_string = Tns.__get_platform_string(platform)
+        if version is not None:
+            platform_string = platform_string + "@" + version
         output = Tns.run_tns_command("platform update " + platform_string, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
         if assert_success:
-            assert "Successfully updated to version" in output
+            assert "Successfully updated to version" in output, "Failed to update platform. Log: " + output
         return output
 
     @staticmethod

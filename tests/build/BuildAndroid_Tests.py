@@ -128,7 +128,6 @@ class BuildAndroidTests(BaseClass):
 
         # Verify project builds
         Tns.build_android(attributes={"--path": "\"" + self.app_name_space + "\""})
-        assert File.exists(self.app_name_space + "/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
         output = File.read(self.app_name_space + os.sep + "package.json")
         assert "org.nativescript.TNSApp" in output
@@ -137,25 +136,22 @@ class BuildAndroidTests(BaseClass):
         assert "org.nativescript.TNSApp" in output
 
     def test_310_build_android_with_sdk22(self):
-        Folder.cleanup(self.app_name + '/platforms')    # This is required when build with different SDK
+        Folder.cleanup(self.app_name + '/platforms')  # This is required when build with different SDK
         Tns.build_android(attributes={"--compileSdk": "22", "--path": self.app_name})
-        assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TNSApp-debug.apk")
 
     def test_311_build_android_with_sdk23(self):
-        Folder.cleanup(self.app_name + '/platforms')    # This is required when build with different SDK
+        Folder.cleanup(self.app_name + '/platforms')  # This is required when build with different SDK
         Tns.build_android(attributes={"--compileSdk": "23", "--path": self.app_name})
-        assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
 
     def test_313_build_android_with_sdk99(self):
-        Folder.cleanup(self.app_name + '/platforms')    # This is required when build with different SDK
+        Folder.cleanup(self.app_name + '/platforms')  # This is required when build with different SDK
         output = Tns.build_android(attributes={"--compileSdk": "99", "--path": self.app_name, "--log trace": ""},
                                    assert_success=False)
         assert "You have specified '99' for compile sdk, but it is not installed on your system." in output
 
     def test_321_build_with_copyto_option(self):
-        Folder.cleanup(self.app_name + '/platforms')    # This is required when build with different SDK
+        File.remove("TNSApp-debug.apk")
         Tns.build_android(attributes={"--path": self.app_name, "--copy-to": "./"})
-        assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
         assert File.exists("TNSApp-debug.apk")
         File.remove("TNSApp-debug.apk")
 

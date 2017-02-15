@@ -61,13 +61,13 @@ class PlatformAndroidTests(BaseClass):
         TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.4.0\""])
 
         # Update platform to 2.5.0
-        Tns.platform_update("android@2.5.0", attributes={"--path": self.app_name})
+        Tns.platform_update(platform=Platforms.ANDROID, version="2.5.0", attributes={"--path": self.app_name})
         TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.5.0\""])
 
     def test_210_platform_update_android_when_platform_not_added(self):
         """`platform update` should work even if platform is not added"""
         Tns.create_app(self.app_name, update_modules=False)
-        output = Tns.platform_update("android", attributes={"--path": self.app_name}, assert_success=False)
+        output = Tns.platform_update(platform=Platforms.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         TnsAsserts.platform_added(self.app_name, platform=Platforms.ANDROID, output=output)
 
     def test_300_set_sdk(self):
@@ -148,11 +148,11 @@ class PlatformAndroidTests(BaseClass):
     def test_430_platform_remove_missing_invalid_or_empty_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
 
-        output = Tns.platform_remove(platform="android", attributes={"--path": self.app_name}, assert_success=False)
+        output = Tns.platform_remove(platform=Platforms.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         assert "The platform android is not added to this project"
         assert "Usage" in output
 
-        output = Tns.platform_remove("invalidPlatform", attributes={"--path": self.app_name}, assert_success=False)
+        output = Tns.platform_remove(platform="invalidPlatform", attributes={"--path": self.app_name}, assert_success=False)
         assert "Invalid platform invalidplatform. Valid platforms are ios or android." in output
         assert "Usage" in output
 
@@ -160,13 +160,8 @@ class PlatformAndroidTests(BaseClass):
         assert no_platform in output
         assert "Usage" in output
 
-    def test_440_platform_update_invalid_or_empty_platform(self):
+    def test_440_platform_update_empty_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
-        Tns.platform_add_android(attributes={"--path": self.app_name})
-        output = Tns.platform_update("invalidPlatform", attributes={"--path": self.app_name}, assert_success=False)
-        assert "Invalid platform invalidplatform. Valid platforms are ios or android." in output
-        assert "Usage" in output
-
         output = Tns.platform_update(attributes={"--path": self.app_name}, assert_success=False)
         assert no_platform in output
         assert "Usage" in output
