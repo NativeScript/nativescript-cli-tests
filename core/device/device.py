@@ -6,7 +6,7 @@ import time
 
 from PIL import Image
 
-from core.device.device_type import DeviceType
+from core.device.devide_type import DeviceType
 from core.device.emulator import Emulator
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel

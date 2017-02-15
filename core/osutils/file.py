@@ -12,6 +12,7 @@ import fileinput
 import fnmatch
 import os
 import shutil
+import time
 
 from core import osutils
 from core.settings.settings import TEST_LOG
@@ -102,6 +103,7 @@ class File(object):
 
         for line in fileinput.input(file_path, inplace=1):
             print line.replace(str1, str2)
+        time.sleep(10)
         print "##### REPLACE FILE CONTENT #####"
         print "File: {0}".format(file_path)
         print "Old String: {0}".format(str1)

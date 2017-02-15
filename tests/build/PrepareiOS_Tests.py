@@ -11,7 +11,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH, CURRENT_OS, OSType
 from core.tns.tns import Tns
-from core.tns.tns_verifications import TnsAsserts
+from core.tns.tns_verifications import TnsVerifications
 
 
 class PrepareiOSTests(BaseClass):
@@ -32,7 +32,7 @@ class PrepareiOSTests(BaseClass):
                                          "--frameworkPath": IOS_RUNTIME_PATH})
 
         Tns.prepare_ios(attributes={"--path": self.app_name})
-        TnsAsserts.prepared_ios(self.app_name)
+        TnsVerifications.prepared_ios(self.app_name)
 
         # Verify Xcode Schemes
         output = run("xcodebuild -project " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/ -list")
@@ -54,7 +54,7 @@ class PrepareiOSTests(BaseClass):
 
         # prepare project
         Tns.prepare_ios(attributes={"--path": self.app_name})
-        TnsAsserts.prepared_ios(self.app_name)
+        TnsVerifications.prepared_ios(self.app_name)
 
         # Verify XCode Project include files from App Resources folder
         output = run(
@@ -64,7 +64,7 @@ class PrepareiOSTests(BaseClass):
     def test_201_prepare_ios_platform_not_added(self):
         Tns.create_app(self.app_name)
         Tns.prepare_ios(attributes={"--path": self.app_name})
-        TnsAsserts.prepared_ios(self.app_name)
+        TnsVerifications.prepared_ios(self.app_name)
 
     def test_300_prepare_ios_preserve_case(self):
         Tns.create_app(self.app_name)
@@ -79,10 +79,10 @@ class PrepareiOSTests(BaseClass):
             " " + self.app_name + "/node_modules/tns-core-modules/application/New-application.ios.js")
 
         Tns.prepare_ios(attributes={"--path": self.app_name})
-        TnsAsserts.prepared_ios(self.app_name)
+        TnsVerifications.prepared_ios(self.app_name)
 
         # Verify case is preserved
-        path = TnsAsserts.get_ios_modules_path(self.app_name)
+        path = TnsVerifications.get_ios_modules_path(self.app_name)
         assert File.exists(path + 'application/New-application-common.js')
         assert File.exists(path + 'application/New-application.js')
         assert not File.exists(path + 'application/New-application.ios.js')
