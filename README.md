@@ -8,6 +8,7 @@ Install dependencies
 ```
 pip install psutil 
 pip install nose 
+pip install nose_parameterized
 pip install enum34
 pip install Pillow
 ```
