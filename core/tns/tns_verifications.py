@@ -20,15 +20,15 @@ class TnsAsserts(object):
     PLATFORM_ANDROID_TNS_MODULES_PATH = PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-core-modules/"
 
     @staticmethod
-    def __get_ios_app_path(app_name):
+    def _get_ios_app_path(app_name):
         normalized_app_name = app_name.replace(' ', '')
         normalized_app_name = normalized_app_name.replace('-', '')
         normalized_app_name = normalized_app_name.replace('_', '')
         return app_name + TnsAsserts.PLATFORM_IOS + normalized_app_name + '/app/'
 
     @staticmethod
-    def __get_ios_modules_path(app_name):
-        modules_path = TnsAsserts.__get_ios_app_path(app_name) + 'tns_modules/tns-core-modules/'
+    def _get_ios_modules_path(app_name):
+        modules_path = TnsAsserts._get_ios_app_path(app_name) + 'tns_modules/tns-core-modules/'
         return modules_path
 
     @staticmethod
@@ -184,8 +184,8 @@ class TnsAsserts(object):
                 "Prepare does not skip 'ios' specific js files."
 
         if platform is Platforms.IOS or platform is Platforms.BOTH:
-            app_path = TnsAsserts.__get_ios_app_path(app_name)
-            modules_path = TnsAsserts.__get_ios_modules_path(app_name)
+            app_path = TnsAsserts._get_ios_app_path(app_name)
+            modules_path = TnsAsserts._get_ios_modules_path(app_name)
             assert File.exists(app_path + 'main-view-model.js'), \
                 "Application files does not exists in platforms folder."
             assert File.exists(modules_path + 'application/application.js'), \
