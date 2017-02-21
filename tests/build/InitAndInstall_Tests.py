@@ -21,8 +21,10 @@ from core.settings.strings import *
 class InitAndInstallTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
+        Folder.cleanup(self.app_name)
 
     def test_201_init_defaults(self):
+        Folder.cleanup(BaseClass.app_name)
         Folder.create(BaseClass.app_name)
         Folder.navigate_to(BaseClass.app_name)
         output = Tns.init(attributes={"--force": ""}, tns_path=os.path.join("..", TNS_PATH), assert_success=False)
@@ -82,6 +84,8 @@ class InitAndInstallTests(BaseClass):
         assert "gulp" in output
         assert "lodash" in output
 
+        Folder.cleanup(self.app_name + '/platforms')
+        assert not File.exists(self.app_name + "/platforms")
         Folder.cleanup(self.app_name + '/node_modules')
         assert not File.exists(self.app_name + "/node_modules")
 

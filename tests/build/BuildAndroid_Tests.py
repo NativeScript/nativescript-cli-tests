@@ -37,6 +37,14 @@ class BuildAndroidTests(BaseClass):
         BaseClass.setUp(self)
 
     def tearDown(self):
+        # Verify application state at the end of the test is correct
+        if File.exists(self.app_name):
+            data = TnsAsserts.get_package_json(self.app_name)
+            assert "tns-android" in data[
+                "nativescript"], "'tns-android' not found under `nativescript` inside package.json"
+            assert "tns-android" not in data[
+                "dependencies"], "'tns-android' found under `dependencies` inside package.json"
+
         BaseClass.tearDown(self)
         Folder.cleanup(self.platforms_android + '/build/outputs')
 
@@ -83,7 +91,6 @@ class BuildAndroidTests(BaseClass):
         output = Tns.prepare_android(attributes={"--path": self.app_name}, assert_success=False)
         TnsAsserts.prepared(self.app_name, platform=Platforms.ANDROID, output=output, prepare_type=Prepare.INCREMENTAL)
         Tns.build_android(attributes={"--path": self.app_name})
-        assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
 
     def test_202_build_android_with_log_trace_and_platform_not_added_or_empty(self):
         """'tns build android' with log trace options should output more logs."""
@@ -93,10 +100,6 @@ class BuildAndroidTests(BaseClass):
         # Assert log trace show gradle logs
         assert "[DEBUG]" in output
         assert "FAILURE" not in output
-        assert File.exists(self.app_no_platform + "/platforms/android/build/outputs/apk/TNSAppNoPlatform-debug.apk")
-
-        # TODO: Write test for https://github.com/NativeScript/nativescript-cli/issues/2528
-        # Test should do `tns platform remove android` and build again
 
     def test_300_build_android_with_additional_styles_xml(self):
         """Test for issues #644"""
@@ -104,14 +107,12 @@ class BuildAndroidTests(BaseClass):
         run("mkdir -p TestApp/app/App_Resources/Android/values")
         run("cp data/data/styles.xml TestApp/app/App_Resources/Android/values")
         Tns.build_android(attributes={"--path": self.app_name})
-        assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
 
     def test_301_build_project_with_dash(self):
         Tns.create_app(self.app_name_dash)
         Tns.platform_add_android(attributes={"--path": self.app_name_dash,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.build_android(attributes={"--path": self.app_name_dash})
-        assert File.exists(self.app_name_dash + "/platforms/android/build/outputs/apk/tnsapp-debug.apk")
 
         # Verify project id
         output = File.read(self.app_name_dash + "/package.json")
@@ -145,11 +146,19 @@ class BuildAndroidTests(BaseClass):
 
     def test_313_build_android_with_sdk99(self):
         Folder.cleanup(self.app_name + '/platforms')  # This is required when build with different SDK
-        output = Tns.build_android(attributes={"--compileSdk": "99", "--path": self.app_name, "--log trace": ""},
+        output = Tns.build_android(attributes={"--compileSdk": "99", "--path": self.app_name},
                                    assert_success=False)
         assert "You have specified '99' for compile sdk, but it is not installed on your system." in output
 
+        # Due to https://github.com/NativeScript/nativescript-cli/issues/2547
+        # we should delete the project and recreate it.
+        # TODO: Remove those lines after https://github.com/NativeScript/nativescript-cli/issues/2547 is fixed.
+        Folder.cleanup(self.app_name)
+        Tns.create_app(BaseClass.app_name)
+        Tns.platform_add_android(attributes={"--path": BaseClass.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+
     def test_321_build_with_copyto_option(self):
+        Folder.cleanup(self.app_name + '/platforms')  # This is required when build with different SDK
         File.remove("TNSApp-debug.apk")
         Tns.build_android(attributes={"--path": self.app_name, "--copy-to": "./"})
         assert File.exists("TNSApp-debug.apk")
@@ -217,6 +226,7 @@ class BuildAndroidTests(BaseClass):
 
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows, because tar is not available")
     def test_399_build_project_with_gz_file(self):
+        Folder.cleanup(self.app_name + '/platforms')  # This is required when build with different SDK
         # Create zip
         run("tar -czf " + self.app_name + "/app/app.tar.gz " + self.app_name + "/app/app.js")
         assert File.exists(self.app_name + "/app/app.tar.gz")
