@@ -1,7 +1,6 @@
 """
 A wrapper of the tns commands.
 """
-
 import os
 import time
 
@@ -12,6 +11,7 @@ from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, DEVELOPMENT_TEAM, CLI_PATH, BRANCH, TEST_RUN_HOME, \
     COMMAND_TIMEOUT, OUTPUT_FILE, CURRENT_OS
+from core.settings.strings import config_release, codesign, config_debug
 from core.tns.tns_installed_platforms import Platforms
 from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
@@ -30,7 +30,7 @@ class Tns(object):
 
     @staticmethod
     def __get_app_id_from_app_name(app_name):
-        return app_name.replace(" ", "").replace("-", "").replace("_", "")
+        return app_name.replace(" ", "").replace("-", "").replace("_", "").replace("\"", "")
 
     @staticmethod
     def __get_app_name_from_attributes(attributes={}):
@@ -59,7 +59,7 @@ class Tns(object):
         if " " in path:
             path = "\"" + path + "\""
         output = ''
-        if "release" in CLI_PATH.lower():  # TODO: Use Settings.BRANCH
+        if "release" in BRANCH.lower():
             version = Tns.run_tns_command("", attributes={"--version": ""})
             Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False)
             output = Tns.plugin_add("tns-core-modules@" + version, attributes={"--path": path}, assert_success=False)
@@ -248,19 +248,17 @@ class Tns(object):
     def build_android(attributes={}, assert_success=True, tns_path=None):
         output = Tns.run_tns_command("build android", attributes=attributes, tns_path=tns_path)
         if assert_success:
-            # Assert output of hte command is correct
             assert "BUILD SUCCESSFUL" in output, "Build failed!"
             assert "Project successfully built" in output, "Build failed!"
-
-            # Assert apk files exists
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
-            app_name = app_name.replace("\"", "")  # Handle cases when app_name is passed with " (app with space)
             app_id = Tns.__get_app_id_from_app_name(app_name)
             base_app_path = app_name + TnsAsserts.PLATFORM_ANDROID + "build/outputs/apk/" + app_id
             if "--release" in attributes.keys():
-                assert File.exists(base_app_path + "-release.apk"), "Release apk file does not exist."
+                apk_path = base_app_path + "-release.apk"
             else:
-                assert File.exists(base_app_path + "-debug.apk"), "Debug apk file does not exist."
+                apk_path = base_app_path + "-debug.apk"
+            apk_path = apk_path.replace("\"", "")  # Handle projects with space
+            assert File.exists(apk_path), "Apk file does not exist at " + apk_path
         return output
 
     @staticmethod
@@ -274,6 +272,25 @@ class Tns(object):
             assert "BUILD SUCCEEDED" in output
             assert "Project successfully built" in output
             assert "ERROR" not in output
+            assert codesign in output
+            app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
+            app_id = Tns.__get_app_id_from_app_name(app_name)
+            app_name = app_name.replace("\"", "")  # Handle projects with space
+
+            # Verify release/debug builds
+            if "--release" in attributes.keys():
+                assert config_release in output
+            else:
+                assert config_debug in output
+
+            # Verify simulator/device builds
+            if "--forDevice" in attributes.keys():
+                assert "build/device/" + app_id + ".app" in output
+                assert File.exists(app_name + "/platforms/ios/build/device/" + app_id + ".ipa")
+            else:
+                assert "build/emulator/" + app_id + ".app" in output
+                assert File.exists(app_name + "/platforms/ios/build/emulator/" + app_id + ".app")
+                assert File.exists(app_name + "/platforms/ios/" + app_id + "/" + app_id + "-Prefix.pch")
         return output
 
     @staticmethod

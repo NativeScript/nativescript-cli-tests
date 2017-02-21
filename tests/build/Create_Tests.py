@@ -6,9 +6,8 @@ import os
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
-from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import CLI_PATH
+from core.settings.settings import CLI_PATH, BRANCH
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
@@ -55,7 +54,7 @@ class CreateTests(BaseClass):
         output = Tns.create_app(self.app_name, update_modules=True)
         TnsAsserts.created(self.app_name, output=output)
 
-        if "release" in CLI_PATH.lower():
+        if "release" in BRANCH.lower():
             tns_core_modules_version = os.environ.get('MODULES_VERSION')
             strings = [tns_core_modules_version]
             TnsAsserts.package_json_contains(self.app_name, string_list=strings)

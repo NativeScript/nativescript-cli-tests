@@ -7,7 +7,8 @@ Install [Python](https://www.python.org/downloads/) 2.7.*
 Install dependencies
 ```
 pip install psutil 
-pip install nose 
+pip install nose
+pip install nose_parameterized
 pip install enum34
 pip install Pillow
 ```

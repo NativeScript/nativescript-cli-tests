@@ -1,6 +1,8 @@
 """
 Verifications for NativeScript projects.
 """
+import json
+import os
 
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -72,16 +74,11 @@ class TnsAsserts(object):
         if platform is Platforms.NONE:
             assert not File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
             assert not File.exists(app_name + TnsAsserts.PLATFORM_IOS)
-        if platform is Platforms.ANDROID:
-            assert not File.exists(app_name + TnsAsserts.PLATFORM_IOS)
+        if platform is Platforms.ANDROID or platform is Platforms.BOTH:
             assert File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
             assert not Folder.is_empty(
                     app_name + TnsAsserts.PLATFORM_ANDROID + "/build-tools/android-static-binding-generator")
-        if platform is Platforms.IOS:
-            assert not File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
-            assert File.exists(app_name + TnsAsserts.PLATFORM_IOS)
-        if platform is Platforms.BOTH:
-            assert File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
+        if platform is Platforms.IOS or platform is Platforms.BOTH:
             assert File.exists(app_name + TnsAsserts.PLATFORM_IOS)
 
     @staticmethod
@@ -125,6 +122,12 @@ class TnsAsserts(object):
                 print "pacakge.json:"
                 print output
                 assert False, "{0} NOT found in {1}.".format(item, package_json_path)
+
+    @staticmethod
+    def get_package_json(app_name):
+        with open(os.path.join(app_name, "package.json")) as json_file:
+            data = json.load(json_file)
+        return data
 
     @staticmethod
     def prepared(app_name, platform=Platforms.BOTH, output=None, prepare_type=Prepare.FULL):
