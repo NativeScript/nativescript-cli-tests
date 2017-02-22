@@ -67,7 +67,8 @@ class PlatformAndroidTests(BaseClass):
     def test_210_platform_update_android_when_platform_not_added(self):
         """`platform update` should work even if platform is not added"""
         Tns.create_app(self.app_name, update_modules=False)
-        output = Tns.platform_update(platform=Platforms.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        output = Tns.platform_update(platform=Platforms.ANDROID, attributes={"--path": self.app_name},
+                                     assert_success=False)
         TnsAsserts.platform_added(self.app_name, platform=Platforms.ANDROID, output=output)
 
     def test_300_set_sdk(self):
@@ -99,18 +100,17 @@ class PlatformAndroidTests(BaseClass):
 
         # `tns platform list` on brand new project
         output = Tns.platform_list(attributes={"--path": self.app_name})
-        TnsAsserts.platform_list_status(self.app_name, output=output, prepared=Platforms.NONE, added=Platforms.NONE)
+        TnsAsserts.platform_list_status(output=output, prepared=Platforms.NONE, added=Platforms.NONE)
 
         # `tns platform list` when android is added
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         output = Tns.platform_list(attributes={"--path": self.app_name})
-        TnsAsserts.platform_list_status(self.app_name, output=output, prepared=Platforms.NONE, added=Platforms.ANDROID)
+        TnsAsserts.platform_list_status(output=output, prepared=Platforms.NONE, added=Platforms.ANDROID)
 
         # `tns platform list` when android is prepared
         Tns.prepare_android(attributes={"--path": self.app_name})
         output = Tns.platform_list(attributes={"--path": self.app_name})
-        TnsAsserts.platform_list_status(self.app_name, output=output, prepared=Platforms.ANDROID,
-                                        added=Platforms.ANDROID)
+        TnsAsserts.platform_list_status(output=output, prepared=Platforms.ANDROID, added=Platforms.ANDROID)
 
     def test_400_platform_list_wrong_path(self):
         output = Tns.run_tns_command("platform list")
@@ -148,11 +148,13 @@ class PlatformAndroidTests(BaseClass):
     def test_430_platform_remove_missing_invalid_or_empty_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
 
-        output = Tns.platform_remove(platform=Platforms.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        output = Tns.platform_remove(platform=Platforms.ANDROID, attributes={"--path": self.app_name},
+                                     assert_success=False)
         assert "The platform android is not added to this project"
         assert "Usage" in output
 
-        output = Tns.platform_remove(platform="invalidPlatform", attributes={"--path": self.app_name}, assert_success=False)
+        output = Tns.platform_remove(platform="invalidPlatform", attributes={"--path": self.app_name},
+                                     assert_success=False)
         assert "Invalid platform invalidplatform. Valid platforms are ios or android." in output
         assert "Usage" in output
 
