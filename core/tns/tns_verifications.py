@@ -13,6 +13,9 @@ from core.tns.tns_prepare_type import Prepare
 
 
 class TnsAsserts(object):
+    NODE_MODULES = "/node_modules/"
+    TNS_MODULES = NODE_MODULES + "tns-core-modules/"
+    HOOKS = "/hooks/"
     PLATFORM_IOS = "/platforms/ios/"
     PLATFORM_ANDROID = "/platforms/android/"
     PLATFORM_ANDROID_APP_PATH = PLATFORM_ANDROID + "src/main/assets/app/"
@@ -32,21 +35,62 @@ class TnsAsserts(object):
         return modules_path
 
     @staticmethod
-    def created(app_name, output=None):
+    def created(app_name, output=None, full_check=True):
+        """
+        Assert application is created properly.
+        :param app_name: App name
+        :param output: Outout of `tns create command`
+        :param full_check: If true everything will be checked. If false only console output will be checked.
+        """
+
+        # Assert console output is ok
         if output is not None:
+            app = app_name.rsplit('/')[-1]
             assert "nativescript-theme-core" in output
             assert "nativescript-dev-android-snapshot" in output
-            assert "Project {0} was successfully created".format(app_name.rsplit('/')[-1]) in output
-        assert File.exists(app_name)
-        assert File.exists(app_name + "/node_modules/tns-core-modules/package.json")
-        assert File.exists(app_name + "/node_modules/tns-core-modules/LICENSE")
-        assert File.exists(app_name + "/node_modules/tns-core-modules/xml/xml.js")
-        assert Folder.is_empty(app_name + "/platforms")
+            assert "Project {0} was successfully created".format(app) in output, "Failed to create {0}".format(app)
 
-        app_id = app_name.replace(" ", "").replace("_", "").replace("-", "").rsplit('/')[-1]
-        strings = ["org.nativescript.{0}".format(app_id), "tns-core-modules", "nativescript-theme-core",
-                   "nativescript-dev-android-snapshot"]
-        TnsAsserts.package_json_contains(app_name, string_list=strings)
+        if full_check:
+            # Assert files are ok
+            assert File.exists(app_name)
+            assert File.exists(app_name + "/node_modules/tns-core-modules/package.json")
+            assert File.exists(app_name + "/node_modules/tns-core-modules/LICENSE")
+            assert File.exists(app_name + "/node_modules/tns-core-modules/xml/xml.js")
+            assert Folder.is_empty(app_name + "/platforms")
+
+            # Assert content of package.json
+            app_id = app_name.replace(" ", "").replace("_", "").replace("-", "").rsplit('/')[-1]
+            strings = ["org.nativescript.{0}".format(app_id), "tns-core-modules", "nativescript-theme-core",
+                       "nativescript-dev-android-snapshot"]
+            TnsAsserts.package_json_contains(app_name, string_list=strings)
+
+    @staticmethod
+    def created_ts(app_name, output=None):
+        """
+        Assert TypeScript application is created properly.
+        :param app_name: App name
+        :param output: Outout of `tns create command`
+        """
+
+        # First make sure base app is created
+        TnsAsserts.created(app_name=app_name, output=output)
+
+        # Assert output contains TypeScript plugin
+        assert "nativescript-dev-typescript" in output
+
+        # Assert files added with TypeScript plugin
+        ts_config = os.path.join(app_name, "tsconfig.json")
+        ref_dts = os.path.join(app_name, "references.d.ts")
+        dts = os.path.join(app_name, TnsAsserts.TNS_MODULES, "tns-core-modules.d.ts")
+
+        File.exists(ts_config)
+        File.exists(ref_dts)
+        File.exists(dts)
+        assert "./node_modules/tns-core-modules/tns-core-modules.d.ts" in File.read(ref_dts)
+        assert not Folder.is_empty(app_name + TnsAsserts.NODE_MODULES + "/nativescript-dev-typescript")
+        assert File.exists(app_name + TnsAsserts.HOOKS + "before-prepare/nativescript-dev-typescript.js")
+        assert File.exists(app_name + TnsAsserts.HOOKS + "before-watch/nativescript-dev-typescript.js")
+        assert File.exists(app_name + TnsAsserts.NODE_MODULES + "typescript/bin/tsc")
 
     @staticmethod
     def platform_added(app_name, platform=Platforms.NONE, output=None):
@@ -77,12 +121,18 @@ class TnsAsserts(object):
         if platform is Platforms.ANDROID or platform is Platforms.BOTH:
             assert File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
             assert not Folder.is_empty(
-                    app_name + TnsAsserts.PLATFORM_ANDROID + "/build-tools/android-static-binding-generator")
+                app_name + TnsAsserts.PLATFORM_ANDROID + "/build-tools/android-static-binding-generator")
         if platform is Platforms.IOS or platform is Platforms.BOTH:
             assert File.exists(app_name + TnsAsserts.PLATFORM_IOS)
 
     @staticmethod
-    def platform_list_status(app_name, output=None, prepared=Platforms.NONE, added=Platforms.NONE):
+    def platform_list_status(output=None, prepared=Platforms.NONE, added=Platforms.NONE):
+        """
+        Assert platform list status
+        :param output: Outout of `tns platform list` command
+        :param prepared: Prepared platform.
+        :param added: Added platform.
+        """
         if output is not None:
             # Assert prepare status
             if prepared is Platforms.NONE:
@@ -113,6 +163,11 @@ class TnsAsserts(object):
 
     @staticmethod
     def package_json_contains(app_name, string_list=None):
+        """
+        Assert package.json contains list of strings.
+        :param app_name: Application name.
+        :param string_list: List of strings.
+        """
         package_json_path = app_name + "/package.json"
         output = File.read(package_json_path)
         for item in string_list:
@@ -125,12 +180,24 @@ class TnsAsserts(object):
 
     @staticmethod
     def get_package_json(app_name):
+        """
+        Return content of package.json as json object.
+        :param app_name: Application name.
+        :return: package.json as json object.
+        """
         with open(os.path.join(app_name, "package.json")) as json_file:
             data = json.load(json_file)
         return data
 
     @staticmethod
     def prepared(app_name, platform=Platforms.BOTH, output=None, prepare_type=Prepare.FULL):
+        """
+        Assert project is prepared properly.
+        :param app_name: Application name.
+        :param platform: Platform that should be prepared.
+        :param output: Output of `tns prepare` platform.
+        :param prepare_type: Prepare type (SKIP, INCREMENTAL, FULL, FIRST_TIME)
+        """
 
         def _incremental_prepare():
             assert "Skipping prepare." not in output

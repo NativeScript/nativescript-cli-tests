@@ -18,6 +18,7 @@ from core.xcode.xcode import Xcode
 
 
 class Tns(object):
+
     @staticmethod
     def __get_platform_string(platform=Platforms.NONE):
         if platform is Platforms.NONE:
@@ -58,7 +59,6 @@ class Tns(object):
     def update_modules(path):
         if " " in path:
             path = "\"" + path + "\""
-        output = ''
         if "release" in BRANCH.lower():
             version = Tns.run_tns_command("", attributes={"--version": ""})
             Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False)
@@ -107,9 +107,7 @@ class Tns(object):
         else:
             output = Tns.run_tns_command("create \"" + app_name + "\"", attributes=attr, log_trace=log_trace)
         if assert_success:
-            assert "nativescript-theme-core" in output
-            assert "nativescript-dev-android-snapshot" in output
-            assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
+            TnsAsserts.created(app_name=app_name, output=output)
         if update_modules:
             Tns.update_modules(path)
         Tns.ensure_app_resources(path)
@@ -117,26 +115,41 @@ class Tns(object):
 
     @staticmethod
     def create_app_ts(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True):
-        attr = {"--template": "https://github.com/NativeScript/template-hello-world-ts.git#" + BRANCH}
+        """
+        Create TypeScript application based on hello-world-ts template in GitHub (branch is respected)
+        :param app_name: Application name.
+        :param attributes: Additional attributes for `tns create` command.
+        :param log_trace: If true runs with `--log trace`.
+        :param assert_success: If true application is verified once it is created.
+        :param update_modules: If true update modules (branch is respected).
+        :return: output of `tns create command`
+        """
+
+        # TODO: Remove this hacks once we have proper structure on shares (or rework how we set branch is settings)
+        if "release" in BRANCH.lower():
+            branch = "release"
+        else:
+            branch = "master"
+
+        attr = {"--template": "https://github.com/NativeScript/template-hello-world-ts.git#" + branch}
         attributes.update(attr)
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,
                                 update_modules=update_modules)
         if assert_success:
-            assert "nativescript-dev-typescript" in output
-
-            ts_config = os.path.join(app_name, "tsconfig.json")
-            ref_dts = os.path.join(app_name, "references.d.ts")
-            dts = os.path.join(app_name, "node_modules", "tns-core-modules", "tns-core-modules.d.ts")
-            assert File.exists(ts_config)
-            assert File.exists(dts)
-            assert "./node_modules/tns-core-modules/tns-core-modules.d.ts" in File.read(ref_dts)
-
+            TnsAsserts.created_ts(app_name=app_name, output=output)
         return output
 
     @staticmethod
     def create_app_ng(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True):
-        attr = {"--template": "https://github.com/NativeScript/template-hello-world-ng.git#" + BRANCH}
+
+        # TODO: Remove this hacks once we have proper structure on shares (or rework how we set branch is settings)
+        if "release" in BRANCH.lower():
+            branch = "release"
+        else:
+            branch = "master"
+
+        attr = {"--template": "https://github.com/NativeScript/template-hello-world-ng.git#" + branch}
         attributes.update(attr)
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,
