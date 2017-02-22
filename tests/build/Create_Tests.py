@@ -19,6 +19,7 @@ class CreateTests(BaseClass):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
         Folder.cleanup('folder')
+        Folder.cleanup(cls.app_name)
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -70,7 +71,9 @@ class CreateTests(BaseClass):
     def test_003_create_project_with_appid(self):
         """Create project with --appid option"""
 
-        Tns.create_app(self.app_name, attributes={"--appid": "org.nativescript.MyApp"}, update_modules=False)
+        output = Tns.create_app(self.app_name, attributes={"--appid": "org.nativescript.MyApp"}, update_modules=False,
+                                assert_success=False)
+        TnsAsserts.created(app_name=self.app_name, output=output, full_check=False)
         strings = ["\"id\": \"org.nativescript.MyApp\""]
         TnsAsserts.package_json_contains(self.app_name, string_list=strings)
 
@@ -90,7 +93,9 @@ class CreateTests(BaseClass):
         """Create app starting with digits should not be possible without --force option"""
 
         # --force will allow user to create app named '123', but packageID will be 'org.nativescript.the123'
-        Tns.create_app(self.app_name_123, attributes={"--force": ""}, update_modules=False)
+        output = Tns.create_app(self.app_name_123, attributes={"--force": ""}, update_modules=False,
+                                assert_success=False)
+        TnsAsserts.created(app_name=self.app_name_123, output=output, full_check=False)
         strings = ["\"id\": \"org.nativescript.the123\""]
         TnsAsserts.package_json_contains(self.app_name_123, string_list=strings)
 

@@ -1,0 +1,72 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/Cellar/node@6/6.9.5/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'view',
+1 verbose cli   'invalidEntry',
+1 verbose cli   '--json',
+1 verbose cli   'dist-tags' ]
+2 info using npm@3.10.10
+3 info using node@v6.9.5
+4 silly mapToRegistry name invalidEntry
+5 silly mapToRegistry using default registry
+6 silly mapToRegistry registry http://nsbuildlin01.bedford.progress.com:4874/
+7 silly mapToRegistry data Result {
+7 silly mapToRegistry   raw: 'invalidEntry',
+7 silly mapToRegistry   scope: null,
+7 silly mapToRegistry   escapedName: 'invalidEntry',
+7 silly mapToRegistry   name: 'invalidEntry',
+7 silly mapToRegistry   rawSpec: '',
+7 silly mapToRegistry   spec: 'latest',
+7 silly mapToRegistry   type: 'tag' }
+8 silly mapToRegistry uri http://nsbuildlin01.bedford.progress.com:4874/invalidEntry
+9 verbose request uri http://nsbuildlin01.bedford.progress.com:4874/invalidEntry
+10 verbose request no auth needed
+11 info attempt registry request try #1 at 1:07:46 PM
+12 verbose request using bearer token for auth
+13 verbose request id 31c7b631a80b6464
+14 http request GET http://nsbuildlin01.bedford.progress.com:4874/invalidEntry
+15 http 404 http://nsbuildlin01.bedford.progress.com:4874/invalidEntry
+16 verbose headers { 'x-powered-by': 'Sinopia/2.0.2',
+16 verbose headers   'content-type': 'application/json; charset=utf-8',
+16 verbose headers   'content-length': '43',
+16 verbose headers   etag: 'W/"2b-7YjXxxHAGzhwn4RodAjZew"',
+16 verbose headers   vary: 'Accept-Encoding',
+16 verbose headers   'x-status-cat': 'http://flic.kr/p/aV6juR',
+16 verbose headers   date: 'Wed, 22 Feb 2017 11:08:28 GMT',
+16 verbose headers   connection: 'keep-alive' }
+17 silly get cb [ 404,
+17 silly get   { 'x-powered-by': 'Sinopia/2.0.2',
+17 silly get     'content-type': 'application/json; charset=utf-8',
+17 silly get     'content-length': '43',
+17 silly get     etag: 'W/"2b-7YjXxxHAGzhwn4RodAjZew"',
+17 silly get     vary: 'Accept-Encoding',
+17 silly get     'x-status-cat': 'http://flic.kr/p/aV6juR',
+17 silly get     date: 'Wed, 22 Feb 2017 11:08:28 GMT',
+17 silly get     connection: 'keep-alive' } ]
+18 verbose stack Error: no such package available : invalidEntry
+18 verbose stack     at makeError (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:302:12)
+18 verbose stack     at CachingRegistryClient.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:290:14)
+18 verbose stack     at Request._callback (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:210:14)
+18 verbose stack     at Request.self.callback (/usr/local/lib/node_modules/npm/node_modules/request/request.js:187:22)
+18 verbose stack     at emitTwo (events.js:106:13)
+18 verbose stack     at Request.emit (events.js:191:7)
+18 verbose stack     at Request.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1048:10)
+18 verbose stack     at emitOne (events.js:96:13)
+18 verbose stack     at Request.emit (events.js:188:7)
+18 verbose stack     at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:969:12)
+19 verbose statusCode 404
+20 verbose pkgid invalidEntry
+21 verbose cwd /Users/topuzov/Git/nativescript-cli-tests
+22 error Darwin 16.1.0
+23 error argv "/usr/local/Cellar/node@6/6.9.5/bin/node" "/usr/local/bin/npm" "view" "invalidEntry" "--json" "dist-tags"
+24 error node v6.9.5
+25 error npm  v3.10.10
+26 error code E404
+27 error 404 no such package available : invalidEntry
+28 error 404
+29 error 404 'invalidEntry' is not in the npm registry.
+30 error 404 Your package name is not valid, because
+31 error 404 1. name can no longer contain capital letters
+32 error 404 Note that you can also install from a
+33 error 404 tarball, folder, http url, or git url.
+34 verbose exit [ 1, true ]

@@ -4,22 +4,19 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import CURRENT_OS, ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH, OSType, \
-    TEST_RUN_HOME, TNS_PATH, SUT_ROOT_FOLDER, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, \
-    ANDROID_KEYSTORE_ALIAS_PASS, CLI_PATH, ADB_PATH
-from core.tns.tns import Tns
-from time import sleep
-import subprocess
-import threading
+from core.settings.settings import CURRENT_OS, ANDROID_RUNTIME_PATH, OSType
 from core.settings.strings import *
+from core.tns.tns import Tns
+from core.tns.tns_installed_platforms import Platforms
+from core.tns.tns_prepare_type import Prepare
+from core.tns.tns_verifications import TnsAsserts
 
 
-class TypescriptTests(BaseClass):
+class TypescriptAndroidTests(BaseClass):
 
-    app_folder = os.path.join(BaseClass.app_name, "app")
-    node_modules_folder = os.path.join(BaseClass.app_name, "node_modules")
+    app_folder = TnsAsserts.PLATFORM_ANDROID_APP_PATH
+    node_modules_folder = TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH
     platforms_folder = os.path.join(BaseClass.app_name, "platforms")
-    hooks_folder = os.path.join(BaseClass.app_name, "hooks")
     assets_folder = os.path.join(platforms_folder, "android", "src", "main", "assets")
     modules_folder = os.path.join(assets_folder, "app", "tns_modules", "tns-core-modules")
 
@@ -27,21 +24,8 @@ class TypescriptTests(BaseClass):
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
-
         Tns.create_app_ts(cls.app_name)
-
-        assert File.exists(cls.node_modules_folder + "/typescript/bin/tsc")
-        assert not Folder.is_empty(TypescriptTests.node_modules_folder + "/nativescript-dev-typescript")
-        assert File.exists(TypescriptTests.hooks_folder + "/before-prepare/nativescript-dev-typescript.js")
-        assert File.exists(TypescriptTests.hooks_folder + "/before-watch/nativescript-dev-typescript.js")
-
-        Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH,
-                                             "--path": TypescriptTests.app_name
-                                             })
-        if CURRENT_OS == OSType.OSX:
-            Tns.platform_add_ios(attributes={"--frameworkPath": IOS_RUNTIME_PATH,
-                                             "--path": TypescriptTests.app_name
-                                             })
+        Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH, "--path": cls.app_name})
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -52,55 +36,48 @@ class TypescriptTests(BaseClass):
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
-        Folder.cleanup('./' + TypescriptTests.app_name)
+        Folder.cleanup('./' + cls.app_name)
 
     def test_001_prepare(self):
+        """
+        Assert prepare of TypeScript project works properly.
+        - Prepare executes TypeScript plugin hooks
+        - Prepare in debug should move .ts files to the platforms folder
+        - Prepare in release should remove all .ts files to the platforms folder
+        """
 
-        # prepare in debug => .ts should go to the platforms folder
+        # Assert initial prepare is full
         output = Tns.prepare_android(attributes={"--path": self.app_name})
+        TnsAsserts.prepared(app_name=self.app_name, prepare_type=Prepare.FULL, output=output,
+                            platform=Platforms.ANDROID)
+
+        # prepare should execute TypeScript plugin hooks
         assert before_prepare in output
         assert peer_typeScript in output
         assert error not in output.lower()
 
-        assert File.extension_exists(self.app_folder, ".js")
-        assert not File.extension_exists(self.app_folder, ".map")
-        assert File.extension_exists(self.app_folder, ".ts")
+        '''
+        # prepare in debug => .ts should go to the platforms folder
+        assert File.extension_exists(self.assets_folder, ".js")
+        assert not File.extension_exists(self.assets_folder, ".map")
+        assert File.extension_exists(self.assets_folder, ".ts")
 
         # Verify inline source map in app
-        output = run("cat ./" + self.app_folder + "/app.js")
+        output = File.read(self.assets_folder + "app.js")
         assert "//# sourceMappingURL=data:application/json;base64" in output
 
-        assert File.extension_exists(self.assets_folder + "/app", ".js")
-        assert not File.extension_exists(self.assets_folder + "/app", ".map")
-        assert File.extension_exists(self.assets_folder + "/app", ".ts")
-        assert File.extension_exists(self.modules_folder + "/application", ".js")
-        assert not File.extension_exists(self.modules_folder + "/application", ".ts")
+        assert File.extension_exists(self.assets_folder + "app", ".js")
+        assert not File.extension_exists(self.assets_folder + "app", ".map")
+        assert File.extension_exists(self.assets_folder + "app", ".ts")
+        assert File.extension_exists(self.modules_folder + "application", ".js")
+        assert not File.extension_exists(self.modules_folder + "application", ".ts")
 
         # Verify inline source map in native android app
         output = run("cat ./" + self.assets_folder + "/app/app.js")
         assert "//# sourceMappingURL=data:application/json;base64" in output
+        '''
 
-        if CURRENT_OS == OSType.OSX:
-            # prepare in debug => .ts should go to the platforms folder
-            output = Tns.prepare_ios(attributes={"--path": self.app_name})
-            assert before_prepare in output
-            assert peer_typeScript in output
-            assert error not in output.lower()
-
-            assert File.extension_exists(self.app_folder, ".js")
-            assert not File.extension_exists(self.app_folder, ".map")
-            assert File.extension_exists(self.app_folder, ".ts")
-
-            assert File.extension_exists(self.assets_folder + "/app", ".js")
-            assert not File.extension_exists(self.assets_folder + "/app", ".map")
-            assert File.extension_exists(self.assets_folder + "/app", ".ts")
-            assert File.extension_exists(self.modules_folder + "/application", ".js")
-            assert not File.extension_exists(self.modules_folder + "/application", ".ts")
-
-            # Verify inline source map in native iOS app
-            output = run("cat ./" + self.app_name + "/platforms/ios/TNSApp/app/app.js")
-            assert "//# sourceMappingURL=data:application/json;base64" in output
-
+    '''
     def test_002_build(self):
         output = Tns.build_android(attributes={"--path": self.app_name})
         if CURRENT_OS == OSType.OSX:
@@ -228,9 +205,9 @@ class TypescriptTests(BaseClass):
         subprocess.Popen([ADB_PATH, "-e", "logcat", "-c"])
         if CURRENT_OS != OSType.WINDOWS:
             Tns.run_android(attributes={"--path": self.app_name,
-                                             "--avd": "Emulator-Api23-Default",
-                                             "--justlaunch": "",
-                                             "--timeout": "320"})
+                                        "--avd": "Emulator-Api23-Default",
+                                        "--justlaunch": "",
+                                        "--timeout": "320"})
 
             process = subprocess.Popen([ADB_PATH, "-e", "logcat"], stdout=subprocess.PIPE)
             threading.Timer(10, process.terminate).start()
@@ -238,3 +215,4 @@ class TypescriptTests(BaseClass):
             sleep(2)
             assert "java.lang.ClassNotFoundException: Didn't find class \"org.nativescript.a.MyCustomActivity\"" \
                    not in output, "Exception in output"
+    '''
