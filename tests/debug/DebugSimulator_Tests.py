@@ -43,7 +43,7 @@ class DebugSimulatorTests(BaseClass):
         Folder.cleanup('./' + cls.app_name)
 
     def test_001_debug_ios_simulator_debug_brk(self):
-        File.cat(self.app_name + "/package.json")
+        print File.read(self.app_name + "/package.json")
         output = Tns.run_tns_command("debug ios", attributes={"--debug-brk": "",
                                                               "--emulator": "",
                                                               "--path": self.app_name,
