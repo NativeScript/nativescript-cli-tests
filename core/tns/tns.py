@@ -9,7 +9,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
-from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, DEVELOPMENT_TEAM, CLI_PATH, BRANCH, TEST_RUN_HOME, \
+from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, DEVELOPMENT_TEAM, BRANCH, TEST_RUN_HOME, \
     COMMAND_TIMEOUT, OUTPUT_FILE, CURRENT_OS
 from core.settings.strings import config_release, codesign, config_debug
 from core.tns.tns_installed_platforms import Platforms
@@ -18,7 +18,6 @@ from core.xcode.xcode import Xcode
 
 
 class Tns(object):
-
     @staticmethod
     def __get_platform_string(platform=Platforms.NONE):
         if platform is Platforms.NONE:
@@ -124,14 +123,7 @@ class Tns(object):
         :param update_modules: If true update modules (branch is respected).
         :return: output of `tns create command`
         """
-
-        # TODO: Remove this hacks once we have proper structure on shares (or rework how we set branch is settings)
-        if "release" in BRANCH.lower():
-            branch = "release"
-        else:
-            branch = "master"
-
-        attr = {"--template": "https://github.com/NativeScript/template-hello-world-ts.git#" + branch}
+        attr = {"--template": "https://github.com/NativeScript/template-hello-world-ts.git#" + BRANCH}
         attributes.update(attr)
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,
@@ -142,14 +134,7 @@ class Tns(object):
 
     @staticmethod
     def create_app_ng(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True):
-
-        # TODO: Remove this hacks once we have proper structure on shares (or rework how we set branch is settings)
-        if "release" in BRANCH.lower():
-            branch = "release"
-        else:
-            branch = "master"
-
-        attr = {"--template": "https://github.com/NativeScript/template-hello-world-ng.git#" + branch}
+        attr = {"--template": "https://github.com/NativeScript/template-hello-world-ng.git#" + BRANCH}
         attributes.update(attr)
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,

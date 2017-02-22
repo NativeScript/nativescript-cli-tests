@@ -19,21 +19,26 @@ TEST_RUN_HOME = os.getcwd()  # Get test run root folder.
 
 # Test packages location from env. variables
 BASE_PACKAGE_PATH = os.environ.get("BASE_PACKAGE_PATH", "/tns-dist")
-BRANCH = os.environ.get("BRANCH", "Stable")
+BRANCH = os.environ.get("BRANCH", "master")
+SHARE_BRANCH = BRANCH
+if "release" in BRANCH.lower():
+    SHARE_BRANCH = "Release"
+else:
+    SHARE_BRANCH = "Stable"
 
 # Set source location of separate package based on base path
-CLI_PATH = os.environ.get("CLI_PATH", os.path.join(BASE_PACKAGE_PATH, "CLI", BRANCH, "nativescript.tgz"))
-ANDROID_PATH = os.environ.get("ANDROID_PATH", os.path.join(BASE_PACKAGE_PATH, "tns-android", BRANCH, "tns-android.tgz"))
-IOS_PATH = os.environ.get("IOS_PATH", os.path.join(BASE_PACKAGE_PATH, "tns-ios", BRANCH, "tns-ios.tgz"))
+CLI_PATH = os.environ.get("CLI_PATH", os.path.join(BASE_PACKAGE_PATH, "CLI", SHARE_BRANCH, "nativescript.tgz"))
+ANDROID_PATH = os.environ.get("ANDROID_PATH", os.path.join(BASE_PACKAGE_PATH, "tns-android", SHARE_BRANCH, "tns-android.tgz"))
+IOS_PATH = os.environ.get("IOS_PATH", os.path.join(BASE_PACKAGE_PATH, "tns-ios", SHARE_BRANCH, "tns-ios.tgz"))
 TNS_MODULES_PATH = os.environ.get("TNS_MODULES_PATH",
-                                  os.path.join(BASE_PACKAGE_PATH, "tns-modules", BRANCH, "tns-core-modules.tgz"))
+                                  os.path.join(BASE_PACKAGE_PATH, "tns-modules", SHARE_BRANCH, "tns-core-modules.tgz"))
 TNS_MODULES_WIDGETS_PATH = os.environ.get("TNS_MODULES_WIDGETS_PATH",
-                                          os.path.join(BASE_PACKAGE_PATH, "android-widgets", BRANCH,
+                                          os.path.join(BASE_PACKAGE_PATH, "android-widgets", SHARE_BRANCH,
                                                        "tns-core-modules-widgets.tgz"))
 TNS_PLATFORM_DECLARATIONS_PATH = os.environ.get("TNS_PLATFORM_DECLARATIONS_PATH",
-                                                os.path.join(BASE_PACKAGE_PATH, "tns-modules", BRANCH,
+                                                os.path.join(BASE_PACKAGE_PATH, "tns-modules", SHARE_BRANCH,
                                                              "tns-platform-declarations.tgz"))
-IOS_INSPECTOR_PATH = os.environ.get("IOS_INSPECTOR_PATH", os.path.join(BASE_PACKAGE_PATH, "tns-ios-inspector", BRANCH,
+IOS_INSPECTOR_PATH = os.environ.get("IOS_INSPECTOR_PATH", os.path.join(BASE_PACKAGE_PATH, "tns-ios-inspector", SHARE_BRANCH,
                                                                        "tns-ios-inspector.tgz"))
 
 # Set local location of test packages

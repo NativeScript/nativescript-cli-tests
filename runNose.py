@@ -13,7 +13,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
     COMMAND_TIMEOUT, ANDROID_PATH, IOS_PATH, SUT_ROOT_FOLDER, CLI_PATH, ANDROID_RUNTIME_PATH, \
-    IOS_RUNTIME_PATH, TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH, IOS_INSPECTOR_PATH, BRANCH, TEST_RUN_HOME, \
+    IOS_RUNTIME_PATH, TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH, IOS_INSPECTOR_PATH, BRANCH, \
     TNS_PLATFORM_DECLARATIONS_PATH
 from core.tns.tns import Tns
 from core.tns.tns_installed_platforms import Platforms
@@ -37,15 +37,13 @@ def __extract_archive(file_name, folder):
     else:
         print "Failed to extract {0}".format(file_name)
 
+
 def __clone_git_repo(repo_url, local_folder):
     """Clone GitHub repo to local folder
     :param repo_url: GitHub repo URL
     :param local_folder: Local folder
     """
-    branch = "master"
-    if 'release' in BRANCH.lower():
-        branch = 'release'
-    output = run('git clone -b ' + branch + ' ' + repo_url + ' ' + local_folder)
+    output = run('git clone -b ' + BRANCH + ' ' + repo_url + ' ' + local_folder)
     assert not ("fatal" in output), \
         "Failed to clone {0}".format(repo_url)
 
@@ -84,11 +82,12 @@ def get_test_packages(platform=Platforms.BOTH):
         if File.exists(os.path.join(os.getcwd(), IOS_RUNTIME_PATH)):
             __extract_archive(IOS_RUNTIME_PATH, os.path.splitext(IOS_RUNTIME_PATH)[0])
 
+
 def get_repos():
     # Clone template-hello-world repos (both js and ts)
     __clone_git_repo("git@github.com:NativeScript/template-hello-world.git", SUT_ROOT_FOLDER + "/template-hello-world")
     __clone_git_repo("git@github.com:NativeScript/template-hello-world-ts.git",
-                   SUT_ROOT_FOLDER + "/template-hello-world-ts")
+                     SUT_ROOT_FOLDER + "/template-hello-world-ts")
 
     # Clone QA-TestApps repo
     __clone_git_repo("git@github.com:NativeScript/QA-TestApps.git", SUT_ROOT_FOLDER + "/QA-TestApps")
