@@ -10,6 +10,10 @@ Created on Dec 14, 2015
 import psutil
 import time
 
+from core.osutils.os_type import OSType
+from core.settings.settings import CURRENT_OS
+
+
 class Process(object):
 
     @staticmethod
@@ -39,10 +43,11 @@ class Process(object):
 
     @staticmethod
     def kill(proc_name):
-        """Kill process"""
+        if CURRENT_OS is OSType.WINDOWS:
+            proc_name += ".exe"
         result = False
         for proc in psutil.process_iter():
-            if proc_name in str(proc):
+            if proc_name == str(proc.name()):
                 try:
                     proc.kill()
                     print "Process {0} has been killed.".format(proc_name)
