@@ -4,18 +4,17 @@ Created on Dec 14, 2015
 @author: vchimev
 '''
 
-
 # C0111 - Missing docstring
 # pylint: disable=C0111
-import psutil
 import time
+
+import psutil
 
 from core.osutils.os_type import OSType
 from core.settings.settings import CURRENT_OS
 
 
 class Process(object):
-
     @staticmethod
     def is_running(proc_name):
         """Check if process is running"""
@@ -54,4 +53,6 @@ class Process(object):
                     result = True
                 except psutil.NoSuchProcess:
                     continue
+                except psutil.ZombieProcess:
+                    print "Zombie found! {0} process still exists but it's a zombie".format(proc_name)
         return result
