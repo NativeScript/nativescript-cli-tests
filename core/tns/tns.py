@@ -1,7 +1,6 @@
 """
 A wrapper of the tns commands.
 """
-
 import os
 import time
 
@@ -10,12 +9,37 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
-from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, DEVELOPMENT_TEAM, CLI_PATH, BRANCH, TEST_RUN_HOME, \
+from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, DEVELOPMENT_TEAM, BRANCH, TEST_RUN_HOME, \
     COMMAND_TIMEOUT, OUTPUT_FILE, CURRENT_OS
+from core.settings.strings import config_release, codesign, config_debug
+from core.tns.tns_installed_platforms import Platforms
+from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
 
 
 class Tns(object):
+    @staticmethod
+    def __get_platform_string(platform=Platforms.NONE):
+        if platform is Platforms.NONE:
+            return ""
+        if platform is Platforms.ANDROID:
+            return "android"
+        if platform is Platforms.IOS:
+            return "ios"
+        return platform
+
+    @staticmethod
+    def __get_app_id_from_app_name(app_name):
+        return app_name.replace(" ", "").replace("-", "").replace("_", "").replace("\"", "")
+
+    @staticmethod
+    def __get_app_name_from_attributes(attributes={}):
+        app_name = ""
+        for k, v in attributes.iteritems():
+            if k == "--path":
+                app_name = v
+        return app_name
+
     @staticmethod
     def run_tns_command(command, tns_path=None, attributes={}, log_trace=False, timeout=COMMAND_TIMEOUT, wait=True):
         cmd = TNS_PATH + " " + command
@@ -34,8 +58,7 @@ class Tns(object):
     def update_modules(path):
         if " " in path:
             path = "\"" + path + "\""
-        output = ''
-        if "release" in CLI_PATH.lower():  # TODO: Use Settings.BRANCH
+        if "release" in BRANCH.lower():
             version = Tns.run_tns_command("", attributes={"--version": ""})
             Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False)
             output = Tns.plugin_add("tns-core-modules@" + version, attributes={"--path": path}, assert_success=False)
@@ -66,7 +89,7 @@ class Tns(object):
                 if CURRENT_OS == OSType.WINDOWS:
                     Process.kill('node')
                     Process.kill('aapt')
-                    # Process.kill('java') This will break the CI.
+                    Process.kill('java')  # This will break the CI.
                 Folder.cleanup(app_name)
         path = app_name
         attributes_to_string = ""
@@ -83,9 +106,7 @@ class Tns(object):
         else:
             output = Tns.run_tns_command("create \"" + app_name + "\"", attributes=attr, log_trace=log_trace)
         if assert_success:
-            assert "nativescript-theme-core" in output
-            assert "nativescript-dev-android-snapshot" in output
-            assert "Project {0} was successfully created".format(app_name.replace("\"", "")) in output
+            TnsAsserts.created(app_name=app_name, output=output)
         if update_modules:
             Tns.update_modules(path)
         Tns.ensure_app_resources(path)
@@ -93,21 +114,22 @@ class Tns(object):
 
     @staticmethod
     def create_app_ts(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True):
+        """
+        Create TypeScript application based on hello-world-ts template in GitHub (branch is respected)
+        :param app_name: Application name.
+        :param attributes: Additional attributes for `tns create` command.
+        :param log_trace: If true runs with `--log trace`.
+        :param assert_success: If true application is verified once it is created.
+        :param update_modules: If true update modules (branch is respected).
+        :return: output of `tns create command`
+        """
         attr = {"--template": "https://github.com/NativeScript/template-hello-world-ts.git#" + BRANCH}
         attributes.update(attr)
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,
                                 update_modules=update_modules)
         if assert_success:
-            assert "nativescript-dev-typescript" in output
-
-            ts_config = os.path.join(app_name, "tsconfig.json")
-            ref_dts = os.path.join(app_name, "references.d.ts")
-            dts = os.path.join(app_name, "node_modules", "tns-core-modules", "tns-core-modules.d.ts")
-            assert File.exists(ts_config)
-            assert File.exists(dts)
-            assert "./node_modules/tns-core-modules/tns-core-modules.d.ts" in File.read(ref_dts)
-
+            TnsAsserts.created_ts(app_name=app_name, output=output)
         return output
 
     @staticmethod
@@ -123,45 +145,74 @@ class Tns(object):
         return output
 
     @staticmethod
-    def platform_add(platform="", version=None, attributes={}, assert_success=True, log_trace=False, tns_path=None):
+    def platform_add(platform=Platforms.NONE, version=None, attributes={}, assert_success=True, log_trace=False,
+                     tns_path=None):
+
+        #######################################################################################
+        # Add platforms
+        #######################################################################################
+
+        platform_string = Tns.__get_platform_string(platform)
+
         if version is not None:
-            platform += "@" + version
-        output = Tns.run_tns_command("platform add " + platform, attributes=attributes, log_trace=log_trace,
+            platform_string = platform_string + "@" + version
+
+        output = Tns.run_tns_command("platform add " + platform_string, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
+
+        #######################################################################################
+        # Verify platforms added (if assert_success=True)
+        #######################################################################################
+
+        app_name = Tns.__get_app_name_from_attributes(attributes)
         if assert_success:
-            assert "Copying template files..." in output
-            assert "Project successfully created." in output
+            TnsAsserts.platform_added(app_name=app_name, platform=platform, output=output)
         return output
 
     @staticmethod
-    def platform_remove(platform="", attributes={}, assert_success=True, log_trace=False, tns_path=None):
-        output = Tns.run_tns_command("platform remove " + platform, attributes=attributes, log_trace=log_trace,
+    def platform_remove(platform=Platforms.NONE, attributes={}, assert_success=True, log_trace=False, tns_path=None):
+        platform_string = Tns.__get_platform_string(platform)
+        output = Tns.run_tns_command("platform remove " + platform_string, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
+
+        app_name = Tns.__get_app_name_from_attributes(attributes)
         if assert_success:
-            assert "Platform {0} successfully removed".format(platform) in output
+            assert "Platform {0} successfully removed".format(platform_string) in output
             assert "error" not in output
+            if platform is Platforms.ANDROID:
+                assert not File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
+            if platform is Platforms.IOS:
+                assert not File.exists(app_name + TnsAsserts.IOS)
         return output
 
     @staticmethod
-    def platform_update(platform="", attributes={}, assert_success=True, log_trace=False, tns_path=None):
-        output = Tns.run_tns_command("platform update " + platform, attributes=attributes, log_trace=log_trace,
+    def platform_update(platform=Platforms.NONE, version=None, attributes={}, assert_success=True, log_trace=False,
+                        tns_path=None):
+        platform_string = Tns.__get_platform_string(platform)
+        if version is not None:
+            platform_string = platform_string + "@" + version
+        output = Tns.run_tns_command("platform update " + platform_string, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
         if assert_success:
-            assert "Successfully updated to version" in output
+            assert "Successfully updated to version" in output, "Failed to update platform. Log: " + output
         return output
 
     @staticmethod
     def platform_add_android(version=None, attributes={}, assert_success=True, log_trace=False, tns_path=None):
-        return Tns.platform_add(platform="android", version=version, attributes=attributes,
+        return Tns.platform_add(platform=Platforms.ANDROID, version=version, attributes=attributes,
                                 assert_success=assert_success,
                                 log_trace=log_trace,
                                 tns_path=tns_path)
 
     @staticmethod
     def platform_add_ios(version=None, attributes={}, assert_success=True, log_trace=False, tns_path=None):
-        return Tns.platform_add(platform="ios", version=version, attributes=attributes, assert_success=assert_success,
+        return Tns.platform_add(Platforms.IOS, version=version, attributes=attributes, assert_success=assert_success,
                                 log_trace=log_trace,
                                 tns_path=tns_path)
+
+    @staticmethod
+    def platform_list(attributes={}, assert_success=True, log_trace=False, tns_path=None):
+        return Tns.run_tns_command("platform list", attributes=attributes, log_trace=log_trace, tns_path=tns_path)
 
     @staticmethod
     def plugin_add(name, attributes={}, log_trace=False, assert_success=True):
@@ -195,8 +246,17 @@ class Tns(object):
     def build_android(attributes={}, assert_success=True, tns_path=None):
         output = Tns.run_tns_command("build android", attributes=attributes, tns_path=tns_path)
         if assert_success:
-            assert "BUILD SUCCESSFUL" in output
-            assert "Project successfully built" in output
+            assert "BUILD SUCCESSFUL" in output, "Build failed!"
+            assert "Project successfully built" in output, "Build failed!"
+            app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
+            app_id = Tns.__get_app_id_from_app_name(app_name)
+            base_app_path = app_name + TnsAsserts.PLATFORM_ANDROID + "build/outputs/apk/" + app_id
+            if "--release" in attributes.keys():
+                apk_path = base_app_path + "-release.apk"
+            else:
+                apk_path = base_app_path + "-debug.apk"
+            apk_path = apk_path.replace("\"", "")  # Handle projects with space
+            assert File.exists(apk_path), "Apk file does not exist at " + apk_path
         return output
 
     @staticmethod
@@ -210,6 +270,25 @@ class Tns(object):
             assert "BUILD SUCCEEDED" in output
             assert "Project successfully built" in output
             assert "ERROR" not in output
+            assert codesign in output
+            app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
+            app_id = Tns.__get_app_id_from_app_name(app_name)
+            app_name = app_name.replace("\"", "")  # Handle projects with space
+
+            # Verify release/debug builds
+            if "--release" in attributes.keys():
+                assert config_release in output
+            else:
+                assert config_debug in output
+
+            # Verify simulator/device builds
+            if "--forDevice" in attributes.keys():
+                assert "build/device/" + app_id + ".app" in output
+                assert File.exists(app_name + "/platforms/ios/build/device/" + app_id + ".ipa")
+            else:
+                assert "build/emulator/" + app_id + ".app" in output
+                assert File.exists(app_name + "/platforms/ios/build/emulator/" + app_id + ".app")
+                assert File.exists(app_name + "/platforms/ios/" + app_id + "/" + app_id + "-Prefix.pch")
         return output
 
     @staticmethod

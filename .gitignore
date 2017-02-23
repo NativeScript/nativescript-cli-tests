@@ -3,7 +3,6 @@
 *.pyc
 .DS_Store
 /*.tgz
-TNS*
 /*.png
 /*.tgz
 node_modules

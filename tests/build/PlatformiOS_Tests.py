@@ -4,13 +4,14 @@ Test platform add (ios)
 import os
 
 from core.base_class.BaseClass import BaseClass
-from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, IOS_RUNTIME_PATH, \
-    CURRENT_OS, OSType
-from core.tns.tns import Tns
+from core.settings.settings import IOS_RUNTIME_PATH, \
+    CURRENT_OS, OSType, ANDROID_RUNTIME_PATH
 from core.settings.strings import *
+from core.tns.tns import Tns
+from core.tns.tns_installed_platforms import Platforms
+from core.tns.tns_verifications import TnsAsserts
 
 
 class PlatformiOSTests(BaseClass):
@@ -24,31 +25,6 @@ class PlatformiOSTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
-
-    def test_101_platform_list_ios_project(self):
-        Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH
-                                         })
-        output = Tns.run_tns_command("platform list", attributes={"--path": self.app_name})
-        assert "The project is not prepared for any platform" in output
-        assert installed_platforms.format("ios") in output
-
-        Tns.prepare_ios(attributes={"--path": self.app_name})
-        output = Tns.run_tns_command("platform list", attributes={"--path": self.app_name})
-        assert "The project is prepared for:  ios" in output
-        assert installed_platforms.format("ios") in output
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH
-                                             })
-        output = Tns.run_tns_command("platform list", attributes={"--path": self.app_name})
-        assert "The project is prepared for:  ios" in output
-        assert installed_platforms.format("android") in output
-
-        Tns.prepare_android(attributes={"--path": self.app_name})
-        output = Tns.run_tns_command("platform list", attributes={"--path": self.app_name})
-        assert "The project is prepared for:  ios and android" in output
-        assert installed_platforms.format("android and ios") in output
 
     def test_102_platform_add_ios(self):
         Tns.create_app(self.app_name)
@@ -99,14 +75,14 @@ class PlatformiOSTests(BaseClass):
 
     def test_320_platform_add_ios_custom_bundle_id(self):
         # Create project with different appId
-        Tns.create_app(self.app_name, attributes={"--appid": "org.nativescript.MyApp"})
+        output = Tns.create_app(self.app_name, attributes={"--appid": "org.nativescript.MyApp"}, assert_success=False)
+        TnsAsserts.created(self.app_name, output=output, full_check=False)
+
         output = File.read(self.app_name + os.sep + "package.json")
         assert "\"id\": \"org.nativescript.MyApp\"" in output
 
         # Add iOS platform
-        Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH
-                                         })
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
         # Verify plist file in native project (after prepare)
         Tns.prepare_ios(attributes={"--path": self.app_name})
@@ -118,3 +94,32 @@ class PlatformiOSTests(BaseClass):
         output = Tns.platform_update(platform="ios", attributes={"--path": self.app_name}, assert_success=False)
         assert successfully_created in output
         assert not Folder.is_empty(self.app_name + "/platforms/ios/internal/metadata-generator")
+
+    def test_390_platform_list(self):
+        """Platform list command should list installed platforms and if app is prepared for those platforms"""
+
+        Tns.create_app(self.app_name, update_modules=False)
+
+        # `tns platform list` on brand new project
+        output = Tns.platform_list(attributes={"--path": self.app_name})
+        TnsAsserts.platform_list_status(output=output, prepared=Platforms.NONE, added=Platforms.NONE)
+
+        # `tns platform list` when iOS is added
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        output = Tns.platform_list(attributes={"--path": self.app_name})
+        TnsAsserts.platform_list_status(output=output, prepared=Platforms.NONE, added=Platforms.IOS)
+
+        # `tns platform list` when iOS is prepared
+        Tns.prepare_ios(attributes={"--path": self.app_name})
+        output = Tns.platform_list(attributes={"--path": self.app_name})
+        TnsAsserts.platform_list_status(output=output, prepared=Platforms.IOS, added=Platforms.IOS)
+
+        # `tns platform list` when android is added (iOS already prepared)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        output = Tns.platform_list(attributes={"--path": self.app_name})
+        TnsAsserts.platform_list_status(output=output, prepared=Platforms.IOS, added=Platforms.BOTH)
+
+        # `tns platform list` when android is prepared (iOS already prepared)
+        Tns.prepare_android(attributes={"--path": self.app_name})
+        output = Tns.platform_list(attributes={"--path": self.app_name})
+        TnsAsserts.platform_list_status(output=output, prepared=Platforms.BOTH, added=Platforms.BOTH)
