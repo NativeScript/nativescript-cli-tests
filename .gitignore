@@ -17,3 +17,4 @@ template-hello*
 sut/
 out/
 nosetests.xml
+Payload

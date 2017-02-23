@@ -53,17 +53,17 @@ class RunAndroidTests(BaseClass):
                             device_id=EMULATOR_ID, expected_image="livesync-hello-world_home")
 
         # Change JS and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.FILE_CHANGE_JS)
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS)
         strings = ['Successfully transferred main-view-model.js', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Change CSS and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.FILE_CHANGE_CSS)
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS)
         strings = ['Successfully transferred app.css', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Change XML and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.FILE_CHANGE_XML)
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML)
         strings = ['Successfully transferred main-page.xml', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
@@ -72,15 +72,15 @@ class RunAndroidTests(BaseClass):
                             device_id=EMULATOR_ID, expected_image="livesync-hello-world_js_css_xml")
 
         # Rollback all the changes
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.FILE_CHANGE_JS)
+        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS)
         strings = ['Successfully transferred main-view-model.js', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.FILE_CHANGE_CSS)
+        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_CSS)
         strings = ['Successfully transferred app.css', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.FILE_CHANGE_XML)
+        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML)
         strings = ['Successfully transferred main-page.xml', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
@@ -113,9 +113,9 @@ class RunAndroidTests(BaseClass):
         Process.kill('node')
 
         # Replace files
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.FILE_CHANGE_JS)
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.FILE_CHANGE_CSS)
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.FILE_CHANGE_XML)
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS)
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS)
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML)
 
         # Run `tns run android --release` again and make sure changes above are applied
         log = Tns.run_android(attributes={"--path": self.app_name,
@@ -194,9 +194,9 @@ class RunAndroidTests(BaseClass):
                 "Application is not running on {0}".format(device_id)
 
         # Repalce files and run `tns run android --release` again.
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.FILE_CHANGE_JS)
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.FILE_CHANGE_CSS)
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.FILE_CHANGE_XML)
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS)
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS)
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML)
         output = Tns.run_android(attributes={"--path": self.app_name, "--justlaunch": ""}, assert_success=False)
         assert "Project successfully prepared" in output
 
