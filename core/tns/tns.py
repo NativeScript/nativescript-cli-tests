@@ -56,12 +56,24 @@ class Tns(object):
 
     @staticmethod
     def update_modules(path):
+        """
+        Update modules for {N} project
+        :param path: Path to {N} project
+        :return: Output of command that update tns-core-modules plugin.
+        """
+
+        # Escape path with spaces
         if " " in path:
             path = "\"" + path + "\""
+
+        # In release branch we get modules versions from MODULES_VERSION variable.
+        # To prevent errors in local testing when it is not specified default value is set to be same as CLI version.
         if "release" in BRANCH.lower():
-            version = Tns.run_tns_command("", attributes={"--version": ""})
+            cli_version = Tns.run_tns_command("", attributes={"--version": ""})
+            version = os.environ.get("MODULES_VERSION", cli_version)
             Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False)
             output = Tns.plugin_add("tns-core-modules@" + version, attributes={"--path": path}, assert_success=False)
+        # In master branch we use @next packages.
         else:
             Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False)
             output = Tns.plugin_add("tns-core-modules@next", attributes={"--path": path})
