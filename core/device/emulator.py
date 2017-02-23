@@ -93,7 +93,7 @@ class Emulator(object):
                 found = True
                 break
         if found:
-            time.slep(10)  # Adb returns device is available before it is booted. Wait a bit more...
+            time.sleep(10)  # Adb returns device is available before it is booted. Wait a bit more...
             print "Emulator already running."
             # Make sure sdcard is not read-only
             Emulator.unlock_sdcard()

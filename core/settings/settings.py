@@ -19,9 +19,9 @@ TEST_RUN_HOME = os.getcwd()  # Get test run root folder.
 
 # Test packages location from env. variables
 BASE_PACKAGE_PATH = os.environ.get("BASE_PACKAGE_PATH", "/tns-dist")
-BRANCH = os.environ.get("BRANCH", "master")
+BRANCH = os.environ.get("BRANCH", "master").lower()
 SHARE_BRANCH = BRANCH
-if "release" in BRANCH.lower():
+if "release" in BRANCH:
     SHARE_BRANCH = "Release"
 else:
     SHARE_BRANCH = "Stable"
