@@ -27,7 +27,11 @@ class Process(object):
 
     @staticmethod
     def wait_until_running(proc_name, timeout):
-        """Wait until process is running"""
+        """Wait until process is running
+        :param proc_name: Process name.
+        :param timeout: Timeout in seconds.
+        :return: True if running, false if not running.
+        """
         running = False
         end_time = time.time() + timeout
         while not running:
@@ -41,16 +45,24 @@ class Process(object):
         return running
 
     @staticmethod
-    def kill(proc_name):
+    def kill(proc_name, proc_cmdline=None):
         if CURRENT_OS is OSType.WINDOWS:
             proc_name += ".exe"
         result = False
         for proc in psutil.process_iter():
-            if proc_name == str(proc.name()):
-                try:
-                    proc.kill()
-                    print "Process {0} has been killed.".format(proc_name)
-                    result = True
-                except:
-                    print "Failed to kill {0} with pid {1}".format(proc.name(), proc.pid())
+            name = ""
+            cmdline = ""
+            try:
+                name = str(proc.name())
+                cmdline = str(proc.cmdline())
+            except:
+                continue
+            if proc_name == name:
+                if (proc_cmdline is None) or (proc_cmdline is not None and proc_cmdline == cmdline):
+                    try:
+                        proc.kill()
+                        print "Process {0} has been killed.".format(proc_name)
+                        result = True
+                    except psutil.NoSuchProcess:
+                        continue
         return result
