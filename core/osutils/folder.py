@@ -2,13 +2,13 @@
 Wrapper around Folders
 """
 
+import errno
 import os
 import platform
 import shutil
 
-import errno
-
 from core.osutils.command import run
+from core.osutils.process import Process
 
 
 class Folder(object):
@@ -28,7 +28,14 @@ class Folder(object):
             except:
                 if os.path.exists(folder):
                     if 'Windows' in platform.platform():
-                        run('rmdir /s /q \"{0}\"'.format(folder))
+                        output = run('rmdir /s /q \"{0}\"'.format(folder))
+                        if ("another process" in output) or ("gradle" in output.lower()):
+                            Process.kill(proc_name='node')
+                            Process.kill(proc_name='aapt')
+                            Process.kill_gradle()
+                            output = run('rmdir /s /q \"{0}\"'.format(folder))
+                            assert 'another process' not in output, "Failed to delete {0}".format(folder)
+                            assert 'gradle' not in output.lower(), "Failed to delete {0}".format(folder)
                     else:
                         run('rm -rf ' + folder)
 

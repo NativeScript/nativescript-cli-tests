@@ -27,7 +27,7 @@ class BaseClass(unittest.TestCase):
     def setUpClass(cls, logfile=""):
         if logfile == "":
             logfile = os.path.join("out", cls.__name__ + ".txt")
-        File.remove(logfile, fail=False)
+        File.remove(logfile)
         sys.stdout = sys.stderr = Logger.Logger(logfile)
 
         Folder.cleanup(cls.app_name)

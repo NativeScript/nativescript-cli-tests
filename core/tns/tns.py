@@ -97,10 +97,6 @@ class Tns(object):
 
         if force_clean:
             if File.exists(app_name):
-                # Hack for Windows OS (kill processes that keep folder in use)
-                if CURRENT_OS == OSType.WINDOWS:
-                    Process.kill('node')
-                    Process.kill('aapt')
                 Folder.cleanup(app_name)
 
         path = app_name

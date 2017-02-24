@@ -6,7 +6,9 @@ Created on Dec 14, 2015
 
 # C0111 - Missing docstring
 # pylint: disable=C0111
+import os
 import time
+from os.path import expanduser
 
 import psutil
 
@@ -58,7 +60,7 @@ class Process(object):
             except:
                 continue
             if proc_name == name:
-                if (proc_cmdline is None) or (proc_cmdline is not None and proc_cmdline == cmdline):
+                if (proc_cmdline is None) or (proc_cmdline is not None and proc_cmdline in cmdline):
                     try:
                         proc.kill()
                         print "Process {0} has been killed.".format(proc_name)
@@ -66,3 +68,31 @@ class Process(object):
                     except psutil.NoSuchProcess:
                         continue
         return result
+
+    @staticmethod
+    def kill_gradle():
+        if CURRENT_OS is OSType.WINDOWS:
+            print "Kill gradle daemon!"
+            gradle_file_path = None
+            user_home = expanduser("~")
+            for root, dirs, files in os.walk(user_home):
+                for current_file in files:
+                    if (current_file == 'gradle.bat') and ('3.' in root):
+                        gradle_file_path = os.path.join(root, current_file)
+            print gradle_file_path
+            os.system(gradle_file_path + " --stop")
+        else:
+            print "No need to kill gradle daemon on OSX."
+            pass
+
+    @staticmethod
+    def list():
+        for proc in psutil.process_iter():
+            name = ""
+            cmdline = ""
+            try:
+                name = str(proc.name())
+                cmdline = str(proc.cmdline())
+            except:
+                continue
+            print "{0}  {1}".format(name, cmdline)
