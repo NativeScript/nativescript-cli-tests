@@ -51,8 +51,6 @@ class Process(object):
                     proc.kill()
                     print "Process {0} has been killed.".format(proc_name)
                     result = True
-                except psutil.NoSuchProcess:
-                    continue
-                except psutil.ZombieProcess:
-                    print "Zombie found! {0} process still exists but it's a zombie".format(proc_name)
+                except:
+                    print "Failed to kill {0} with pid {1}".format(proc.name(), proc.pid())
         return result
