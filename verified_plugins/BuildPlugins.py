@@ -83,6 +83,8 @@ class BuildPlugins_Tests(BaseClass):
                 Tns.plugin_add(plugin, attributes={"--path": plugin_name}, tns_path=tns)
 
         # Add platform and build it
+        out_file_path = os.path.join(VERIFIED_PLUGINS_OUT, plugin_name)
+        Folder.create(out_file_path)
         if "android" in platforms or "cross" in platforms:
             Tns.platform_add_android(attributes={"--path": plugin_name, "--frameworkPath": ANDROID_RUNTIME_PATH},
                                      tns_path=tns)
@@ -92,13 +94,13 @@ class BuildPlugins_Tests(BaseClass):
                                           "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
                                           "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
                                           "--release": "",
-                                          "--copy-to": VERIFIED_PLUGINS_OUT},
+                                          "--copy-to": out_file_path},
                               tns_path=tns)
 
-        if ("ios" in platforms or "cross" in platforms) and CURRENT_OS is not OSType.WINDOWS:
-            Tns.platform_add_ios(attributes={"--path": plugin_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        if ("ios" in platforms or "cross" in platforms) and CURRENT_OS is OSType.OSX:
+            Tns.platform_add_ios(attributes={"--path": plugin_name, "--frameworkPath": IOS_RUNTIME_PATH}, tns_path=tns)
             Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": "",
-                                      "--copy-to": VERIFIED_PLUGINS_OUT})
+                                      "--copy-to": out_file_path}, tns_path=tns)
 
         # If everything is OK, clean plugin folder
         Folder.cleanup(plugin_name)
