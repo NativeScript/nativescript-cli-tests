@@ -7,14 +7,15 @@ import nose
 
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
+from core.git.GitHub import GitHub
 from core.installer.cli import Cli
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
     COMMAND_TIMEOUT, ANDROID_PATH, IOS_PATH, SUT_ROOT_FOLDER, CLI_PATH, ANDROID_RUNTIME_PATH, \
-    IOS_RUNTIME_PATH, TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH, IOS_INSPECTOR_PATH, BRANCH, \
-    TNS_PLATFORM_DECLARATIONS_PATH
+    IOS_RUNTIME_PATH, TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH, IOS_INSPECTOR_PATH, TNS_PLATFORM_DECLARATIONS_PATH, \
+    BRANCH
 from core.tns.tns import Tns
 from core.tns.tns_installed_platforms import Platforms
 from core.xcode.xcode import Xcode
@@ -36,16 +37,6 @@ def __extract_archive(file_name, folder):
         print "{0} extracted in {1}".format(file_name, folder)
     else:
         print "Failed to extract {0}".format(file_name)
-
-
-def __clone_git_repo(repo_url, local_folder):
-    """Clone GitHub repo to local folder
-    :param repo_url: GitHub repo URL
-    :param local_folder: Local folder
-    """
-    output = run('git clone -b ' + BRANCH + ' ' + repo_url + ' ' + local_folder)
-    assert not ("fatal" in output), \
-        "Failed to clone {0}".format(repo_url)
 
 
 def clean_npm():
@@ -85,13 +76,15 @@ def get_test_packages(platform=Platforms.BOTH):
 
 def get_repos():
     # Clone template-hello-world repos (both js and ts)
-    __clone_git_repo("git@github.com:NativeScript/template-hello-world.git", SUT_ROOT_FOLDER + "/template-hello-world")
-    __clone_git_repo("git@github.com:NativeScript/template-hello-world-ts.git",
-                     SUT_ROOT_FOLDER + "/template-hello-world-ts")
+    GitHub.clone_repo(repo_url="git@github.com:NativeScript/template-hello-world.git",
+                      local_folder=SUT_ROOT_FOLDER + "/template-hello-world", branch=BRANCH)
+    GitHub.clone_repo(repo_url="git@github.com:NativeScript/template-hello-world-ts.git",
+                      local_folder=SUT_ROOT_FOLDER + "/template-hello-world-ts", branch=BRANCH)
 
     # Clone QA-TestApps repo
-    __clone_git_repo("git@github.com:NativeScript/QA-TestApps.git", SUT_ROOT_FOLDER + "/QA-TestApps")
-    # TODO: QA-TestApps is privite, we should make it public or move all test data to data folder#
+    # TODO: QA-TestApps is privite, we should make it public or move all test data to data folder.
+    GitHub.clone_repo(repo_url="git@github.com:NativeScript/QA-TestApps.git",
+                      local_folder=SUT_ROOT_FOLDER + "/QA-TestApps", branch=BRANCH)
 
 
 if __name__ == '__main__':

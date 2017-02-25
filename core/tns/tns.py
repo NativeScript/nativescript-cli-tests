@@ -8,7 +8,6 @@ from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
-from core.osutils.process import Process
 from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, DEVELOPMENT_TEAM, BRANCH, TEST_RUN_HOME, \
     COMMAND_TIMEOUT, OUTPUT_FILE, CURRENT_OS
 from core.settings.strings import config_release, codesign, config_debug
@@ -30,7 +29,8 @@ class Tns(object):
 
     @staticmethod
     def __get_app_id_from_app_name(app_name):
-        return app_name.replace(" ", "").replace("-", "").replace("_", "").replace("\"", "")
+        json = TnsAsserts.get_package_json(app_name)
+        return json.get('nativescript').get('id')
 
     @staticmethod
     def __get_app_name_from_attributes(attributes={}):
@@ -55,10 +55,11 @@ class Tns(object):
         return output
 
     @staticmethod
-    def update_modules(path):
+    def update_modules(path, tns_path=None):
         """
         Update modules for {N} project
         :param path: Path to {N} project
+        :param tns_path: Path to tns executable
         :return: Output of command that update tns-core-modules plugin.
         """
 
@@ -71,12 +72,13 @@ class Tns(object):
         if "release" in BRANCH.lower():
             cli_version = Tns.run_tns_command("", attributes={"--version": ""})
             version = os.environ.get("MODULES_VERSION", cli_version)
-            Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False)
-            output = Tns.plugin_add("tns-core-modules@" + version, attributes={"--path": path}, assert_success=False)
+            Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False, tns_path=tns_path)
+            output = Tns.plugin_add("tns-core-modules@" + version, attributes={"--path": path}, assert_success=False,
+                                    tns_path=tns_path)
         # In master branch we use @next packages.
         else:
-            Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False)
-            output = Tns.plugin_add("tns-core-modules@next", attributes={"--path": path})
+            Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False, tns_path=tns_path)
+            output = Tns.plugin_add("tns-core-modules@next", attributes={"--path": path}, tns_path=tns_path)
         assert "undefined" not in output, "Something went wrong when modules are installed."
         return output
 
@@ -223,15 +225,17 @@ class Tns(object):
         return Tns.run_tns_command("platform list", attributes=attributes, log_trace=log_trace, tns_path=tns_path)
 
     @staticmethod
-    def plugin_add(name, attributes={}, log_trace=False, assert_success=True):
-        output = Tns.run_tns_command("plugin add " + name, attributes=attributes, log_trace=log_trace)
+    def plugin_add(name, attributes={}, log_trace=False, assert_success=True, tns_path=None):
+        output = Tns.run_tns_command("plugin add " + name, attributes=attributes, log_trace=log_trace,
+                                     tns_path=tns_path)
         if assert_success:
             assert "Successfully installed plugin {0}".format(name.replace("@next", "")) in output
         return output
 
     @staticmethod
-    def plugin_remove(name, attributes={}, log_trace=False, assert_success=True):
-        output = Tns.run_tns_command("plugin remove " + name, attributes=attributes, log_trace=log_trace)
+    def plugin_remove(name, attributes={}, log_trace=False, assert_success=True, tns_path=None):
+        output = Tns.run_tns_command("plugin remove " + name, attributes=attributes, log_trace=log_trace,
+                                     tns_path=tns_path)
         if assert_success:
             assert "Successfully removed plugin {0}".format(name.replace("@next", "")) in output
         return output
@@ -257,8 +261,8 @@ class Tns(object):
             assert "BUILD SUCCESSFUL" in output, "Build failed!"
             assert "Project successfully built" in output, "Build failed!"
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
-            app_id = Tns.__get_app_id_from_app_name(app_name)
-            base_app_path = app_name + TnsAsserts.PLATFORM_ANDROID + "build/outputs/apk/" + app_id
+            apk_base_name = Tns.__get_app_id_from_app_name(app_name).split('.')[-1]
+            base_app_path = app_name + TnsAsserts.PLATFORM_ANDROID + "build/outputs/apk/" + apk_base_name
             if "--release" in attributes.keys():
                 apk_path = base_app_path + "-release.apk"
             else:
