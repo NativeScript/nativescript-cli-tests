@@ -99,7 +99,8 @@ class BuildPlugins_Tests(BaseClass):
 
         if ("ios" in platforms or "cross" in platforms) and CURRENT_OS is OSType.OSX:
             Tns.platform_add_ios(attributes={"--path": plugin_name, "--frameworkPath": IOS_RUNTIME_PATH}, tns_path=tns)
-            Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": "",
+            Tns.build_ios(attributes={"--path": plugin_name, "--release": "", "--copy-to": out_file_path}, tns_path=tns)
+            Tns.build_ios(attributes={"--path": plugin_name, "--forDevice": "", "--release": "",
                                       "--copy-to": out_file_path}, tns_path=tns)
 
         # If everything is OK, clean plugin folder
