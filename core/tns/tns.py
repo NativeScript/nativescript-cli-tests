@@ -40,7 +40,7 @@ class Tns(object):
     @staticmethod
     def __get_final_package_name(app_name, platform=Platforms.NONE):
         """
-        Get name of final package, based on app_name and platform.
+        Get base name of final package (without extension and `-debug`, `-release` strings).
         :param app_name: Folder where application is located.
         :param platform: Platform (ANDROID or IOS)
         :return:
@@ -52,7 +52,10 @@ class Tns(object):
 
         if platform is Platforms.ANDROID:
             app_id = Tns.__get_app_id(app_name)
-            return app_id.split('.')[-1]
+            # We can't get last with [-1] because some apps have wrong format of id.
+            # For example: `org.nativescript.demo.barcodescanner`
+            # In this case we should retrun `demo` as final package name.
+            return app_id.split('.')[2]
         elif platform is Platforms.IOS:
             return app_name.replace(" ", "").replace("-", "").replace("_", "").replace("\"", "")
         else:
