@@ -28,9 +28,35 @@ class Tns(object):
         return platform
 
     @staticmethod
-    def __get_app_id_from_app_name(app_name):
+    def __get_app_id(app_name):
+        """
+        Get application id from package.json
+        :param app_name: Folder where application is located.
+        :return: Application id.
+        """
         json = TnsAsserts.get_package_json(app_name)
         return json.get('nativescript').get('id')
+
+    @staticmethod
+    def __get_final_package_name(app_name, platform=Platforms.NONE):
+        """
+        Get name of final package, based on app_name and platform.
+        :param app_name: Folder where application is located.
+        :param platform: Platform (ANDROID or IOS)
+        :return:
+        """
+
+        # Android respect id in package.json
+        # iOS respect folder name
+        # See https://github.com/NativeScript/nativescript-cli/issues/2575
+
+        if platform is Platforms.ANDROID:
+            app_id = Tns.__get_app_id(app_name)
+            return app_id.split('.')[-1]
+        elif platform is Platforms.IOS:
+            return app_name.replace(" ", "").replace("-", "").replace("_", "").replace("\"", "")
+        else:
+            raise "Invalid platform!"
 
     @staticmethod
     def __get_app_name_from_attributes(attributes={}):
@@ -261,7 +287,7 @@ class Tns(object):
             assert "BUILD SUCCESSFUL" in output, "Build failed!"
             assert "Project successfully built" in output, "Build failed!"
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
-            apk_base_name = Tns.__get_app_id_from_app_name(app_name).split('.')[-1]
+            apk_base_name = Tns.__get_final_package_name(app_name, platform=Platforms.ANDROID)
             base_app_path = app_name + TnsAsserts.PLATFORM_ANDROID + "build/outputs/apk/" + apk_base_name
             if "--release" in attributes.keys():
                 apk_path = base_app_path + "-release.apk"
@@ -284,7 +310,7 @@ class Tns(object):
             assert "ERROR" not in output
             assert codesign in output
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
-            app_id = Tns.__get_app_id_from_app_name(app_name)
+            app_id = Tns.__get_final_package_name(app_name, platform=Platforms.IOS)
             app_name = app_name.replace("\"", "")  # Handle projects with space
 
             # Verify release/debug builds
