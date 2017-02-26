@@ -47,7 +47,7 @@ class BuildPlugins_Tests(BaseClass):
              plugins_to_update, custom_script, comments):
 
         if 'deprecated' in status:
-            raise SkipTest("Test skipped, plugin '{0}' is deprecated!".format())
+            raise SkipTest("Test skipped, plugin '{0}' is deprecated!".format(plugin_name))
 
         # Navigate to so called `workspace` folder
         Folder.navigate_to(WORKSPACE)

@@ -3,7 +3,7 @@ nativescript-toast,cross,active,TobiasHennig,https://github.com/TobiasHennig/nat
 nativescript-admob,cross,active,EddyVerbruggen,https://github.com/EddyVerbruggen/nativescript-admob,,https://github.com/EddyVerbruggen/nativescript-admob-demo;AdMob,,,
 nativescript-barcodescanner,cross,active,EddyVerbruggen,https://github.com/EddyVerbruggen/nativescript-barcodescanner,,https://github.com/EddyVerbruggen/nativescript-barcodescanner;demo,nativescript-dev-typescript,,
 nativescript-camera,cross,active,NativeScript,https://github.com/NativeScript/nativescript-camera,,https://github.com/NativeScript/nativescript-camera;examples/CameraTest,,,
-nativescript-geolocation,cross,active,NativeScript,https://github.com/NativeScript/nativescript-geolocation,,nativescript-geolocation-demo;demo,,,
+nativescript-geolocation,cross,active,NativeScript,https://github.com/NativeScript/nativescript-geolocation,,https://github.com/NativeScript/nativescript-geolocation-demo;demo,,,
 nativescript-camera,cross,active,NativeScript,https://github.com/NativeScript/nativescript-camera,,https://github.com/NativeScript/nativescript-camera;examples/CameraTest,,,
 nativescript-dialog,cross,active,enchev,https://github.com/enchev/nativescript-dialog,,https://github.com/enchev/nativescript-dialog;demo,,,
 nativescript-drop-down,cross,active,PeterStaev,https://github.com/PeterStaev/NativeScript-Drop-Down,,https://github.com/PeterStaev/NativeScript-Drop-Down;demo,,,
