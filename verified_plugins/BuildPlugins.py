@@ -70,9 +70,6 @@ class BuildPlugins_Tests(BaseClass):
             Folder.copy(demo_folder, plugin_name)
             Folder.cleanup(plugin_name_original)
 
-        # Update tns-core-modules
-        Tns.update_modules(plugin_name, tns_path=tns)
-
         # Update plugins
         plugins_to_update = (plugin_name + ';' + plugins_to_update).rstrip(';')
         plugins_list = plugins_to_update.split(';')
@@ -85,6 +82,9 @@ class BuildPlugins_Tests(BaseClass):
             else:
                 Tns.plugin_remove(plugin, attributes={"--path": plugin_name}, assert_success=False, tns_path=tns)
                 Tns.plugin_add(plugin, attributes={"--path": plugin_name}, tns_path=tns)
+
+        # Update tns-core-modules
+        Tns.update_modules(plugin_name, tns_path=tns)
 
         # Add platform and build it
         out_file_path = os.path.join(VERIFIED_PLUGINS_OUT, plugin_name)
