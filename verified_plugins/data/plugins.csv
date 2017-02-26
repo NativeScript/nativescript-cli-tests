@@ -1,4 +1,13 @@
-plugin-name,platforms,plugin-repo,plugin-location,plugin-demo-repo,plugins-to-update,custom-script
-nativescript-toast,cross,https://github.com/TobiasHennig/nativescript-toast,,https://github.com/TobiasHennig/nativescript-toast-example,,
-nativescript-barcodescanner,cross,https://github.com/EddyVerbruggen/nativescript-barcodescanner,,https://github.com/EddyVerbruggen/nativescript-barcodescanner;demo,nativescript-dev-typescript,
-nativescript-camera,cross,https://github.com/NativeScript/nativescript-camera,,https://github.com/NativeScript/nativescript-camera;examples/CameraTest,,
+plugin-name,platforms,status,author,plugin-repo,plugin-location,plugin-demo-repo,plugins-to-update,custom-script,comments
+nativescript-toast,cross,active,TobiasHennig,https://github.com/TobiasHennig/nativescript-toast,,https://github.com/TobiasHennig/nativescript-toast-example,,,
+nativescript-admob,cross,active,EddyVerbruggen,https://github.com/EddyVerbruggen/nativescript-admob,,https://github.com/EddyVerbruggen/nativescript-admob-demo;AdMob,,,
+nativescript-barcodescanner,cross,active,EddyVerbruggen,https://github.com/EddyVerbruggen/nativescript-barcodescanner,,https://github.com/EddyVerbruggen/nativescript-barcodescanner;demo,nativescript-dev-typescript,,
+nativescript-camera,cross,active,NativeScript,https://github.com/NativeScript/nativescript-camera,,https://github.com/NativeScript/nativescript-camera;examples/CameraTest,,,
+nativescript-geolocation,cross,active,NativeScript,https://github.com/NativeScript/nativescript-geolocation,,nativescript-geolocation-demo;demo,,,
+nativescript-camera,cross,active,NativeScript,https://github.com/NativeScript/nativescript-camera,,https://github.com/NativeScript/nativescript-camera;examples/CameraTest,,,
+nativescript-dialog,cross,active,enchev,https://github.com/enchev/nativescript-dialog,,https://github.com/enchev/nativescript-dialog;demo,,,
+nativescript-drop-down,cross,active,PeterStaev,https://github.com/PeterStaev/NativeScript-Drop-Down,,https://github.com/PeterStaev/NativeScript-Drop-Down;demo,,,
+nativescript-grid-view,cross,active,PeterStaev,https://github.com/PeterStaev/NativeScript-Grid-View,,https://github.com/PeterStaev/NativeScript-Grid-View;demo,,,
+nativescript-social-share,cross,active,tjvantoll,https://github.com/tjvantoll/nativescript-social-share,,https://github.com/tjvantoll/nativescript-social-share;demo,,,
+nativescript-sqlite,cross,active,NathanaelA,https://github.com/nathanaela/nativescript-sqlite,,https://github.com/nathanaela/nativescript-sqlite;demo,,,
+nativescript-touchid,ios,deprecated,EddyVerbruggen,https://github.com/EddyVerbruggen/nativescript-fingerprint-auth,,https://github.com/EddyVerbruggen/nativescript-fingerprint-auth-demo,,,depricated in flavor of nativescript-fingerprint-auth-demo

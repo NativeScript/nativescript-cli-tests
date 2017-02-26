@@ -1,5 +1,6 @@
 import csv
 import os
+from unittest import SkipTest
 
 from nose_parameterized import parameterized
 
@@ -42,8 +43,10 @@ class BuildPlugins_Tests(BaseClass):
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
     @parameterized.expand(read_data())
-    def test(self, plugin_name, platforms, plugin_repo, plugin_location, plugin_demo_repo,
-             plugins_to_update, custom_script):
+    def test(self, plugin_name, platforms, status, author, plugin_repo, plugin_location, plugin_demo_repo,
+             plugins_to_update, custom_script, comments):
+
+        if 'deprecated' in status:
 
         # Navigate to so called `workspace` folder
         Folder.navigate_to(WORKSPACE)
