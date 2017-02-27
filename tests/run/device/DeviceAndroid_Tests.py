@@ -79,7 +79,7 @@ class DeviceAndroidTests(BaseClass):
 
     def test_400_device_invalid_platform(self):
         output = Tns.run_tns_command("device " + invalid)
-        assert invalid + " is not a valid device platform." in output
+        assert "'{0}' is not a valid device platform.".format(invalid) in output
 
     def test_401_device_log_invalid_device_id(self):
         output = Tns.run_tns_command("device log", attributes={"--device": "invaliddevice_id"})
