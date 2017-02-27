@@ -185,7 +185,11 @@ class TnsAsserts(object):
         :param app_name: Application name.
         :return: package.json as json object.
         """
-        with open(os.path.join(app_name, "package.json")) as json_file:
+        path = os.path.join(app_name, "package.json")
+        # This is to handle test for app with space.
+        # In this case we put app name inside "".
+        path = path.replace("\"", "")
+        with open(path) as json_file:
             data = json.load(json_file)
         return data
 
