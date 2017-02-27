@@ -26,7 +26,7 @@ class DeviceAndroidTests(BaseClass):
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
-        Emulator.stop_emulators()
+        Emulator.stop()
         Folder.cleanup(cls.app_name)
 
     def test_001_device_list_applications_and_run_android(self):

@@ -6,6 +6,7 @@ import time
 
 from PIL import Image
 
+from core.device.adb import Adb, ADB_PATH
 from core.device.device_type import DeviceType
 from core.device.emulator import Emulator
 from core.osutils.command import run
@@ -13,8 +14,6 @@ from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH
-
-ADB_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'platform-tools', 'adb')
 
 
 class Device(object):
@@ -28,33 +27,25 @@ class Device(object):
         File.remove(file_path)
         if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
             # Cleanup sdcard
-            output = run(command="{0} -s {1} shell rm /sdcard/*.png".format(ADB_PATH, device_id, file_name),
-                         log_level=CommandLogLevel.FULL)
+            output = Adb.run(command="shell rm /sdcard/*.png", device_id=device_id)
             if "Read-only file system" in output:
                 Emulator.unlock_sdcard()
-                output = run(command="{0} -s {1} shell rm /sdcard/*.png".format(ADB_PATH, device_id, file_name),
-                             log_level=CommandLogLevel.FULL)
+                output = Adb.run(command="shell rm /sdcard/*.png", device_id=device_id)
                 assert "error" not in output.lower(), "Screencap failed with: " + output
 
             # Get current screen of mobile device
-            output = run(command="{0} -s {1} shell screencap -p /sdcard/{2}.png".format(ADB_PATH, device_id, file_name),
-                         log_level=CommandLogLevel.FULL)
+            output = Adb.run(command="shell screencap -p /sdcard/{0}.png".format(file_name), device_id=device_id)
             if "Read-only file system" in output:
                 Emulator.unlock_sdcard()
-                output = run(
-                        command="{0} -s {1} shell screencap -p /sdcard/{2}.png".format(ADB_PATH, device_id, file_name),
-                        log_level=CommandLogLevel.FULL)
+                output = Adb.run(command="shell screencap -p /sdcard/{0}.png".format(file_name), device_id=device_id)
                 assert "error" not in output.lower(), "Screencap failed with: " + output
 
             # Transfer image from device to localhost
-            output = run(
-                    command="{0} -s {1} pull /sdcard/{2}.png {3}".format(ADB_PATH, device_id, file_name, file_path),
-                    log_level=CommandLogLevel.FULL)
+            output = Adb.run(command="pull /sdcard/{0}.png {1}".format(file_name, file_path), device_id=device_id)
             assert "100%" in output, "Failed to get {0}. Log: {1}".format(file_name, output)
 
             # Cleanup sdcard
-            run(command="{0} -s {1} shell rm /sdcard/{2}.png".format(ADB_PATH, device_id, file_name),
-                log_level=CommandLogLevel.SILENT)
+            Adb.run(command="shell rm /sdcard/{0}.png".format(file_name), device_id=device_id)
 
         if device_type == DeviceType.SIMULATOR:
             run(command="xcrun simctl io booted screenshot {0}".format(file_path),

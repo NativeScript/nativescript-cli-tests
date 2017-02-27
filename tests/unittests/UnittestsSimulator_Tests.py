@@ -17,7 +17,7 @@ class UnittestsSimulator(BaseClass):
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
-        Emulator.stop_emulators()
+        Emulator.stop()
         Simulator.stop_simulators()
         Simulator.start(SIMULATOR_NAME, '9.1')
 

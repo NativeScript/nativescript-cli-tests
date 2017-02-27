@@ -25,14 +25,14 @@ class RuntimeTests(BaseClass):
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
-        Emulator.stop_emulators()
+        Emulator.stop()
         Emulator.ensure_available()
         Folder.cleanup('./' + cls.app_name)
 
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
-        Emulator.stop_emulators()
+        Emulator.stop()
         Folder.cleanup(cls.app_name)
 
     @unittest.skip("Fails due to known issue in SBG")

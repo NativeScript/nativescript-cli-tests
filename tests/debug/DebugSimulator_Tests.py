@@ -18,7 +18,7 @@ class DebugSimulatorTests(BaseClass):
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
-        Emulator.stop_emulators()
+        Emulator.stop()
         run("rm -rf ~/.npm/node_modules/tns-ios-inspector")
         Tns.create_app(cls.app_name)
         Tns.platform_add_ios(attributes={"--path": cls.app_name,

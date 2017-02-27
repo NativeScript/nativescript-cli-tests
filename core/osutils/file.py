@@ -52,6 +52,28 @@ class File(object):
             return False
 
     @staticmethod
+    def find(base_path, file_name, exact_match=False, match_index=0):
+        """
+        Find file in path.
+        :param base_path: Base path.
+        :param file_name: File/folder name.
+        :param exact_match: If True it will match exact file/folder name
+        :param match_index: Index of match (all matches are sorted by path len, 0 will return closest to root)
+        :return: Path to file.
+        """
+        matches = []
+        for root, dirs, files in os.walk(base_path, followlinks=True):
+            for current_file in files:
+                if exact_match:
+                    if file_name == current_file:
+                        matches.append(os.path.join(root, current_file))
+                else:
+                    if file_name in current_file:
+                        matches.append(os.path.join(root, current_file))
+        matches.sort(key=lambda s: len(s))
+        return matches[match_index]
+
+    @staticmethod
     def pattern_exists(directory, pattern):
         found = False
         for root, dirs, files in os.walk(directory):
@@ -93,6 +115,7 @@ class File(object):
                 print "Failed to delete {0}".format(file_path)
                 Process.kill(proc_name='node')
                 Process.kill(proc_name='aapt')
+                Process.kill(proc_name='adb')
                 Process.kill_gradle()
                 os.remove(file_path)
 

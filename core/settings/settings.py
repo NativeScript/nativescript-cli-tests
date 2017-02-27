@@ -28,7 +28,8 @@ else:
 
 # Set source location of separate package based on base path
 CLI_PATH = os.environ.get("CLI_PATH", os.path.join(BASE_PACKAGE_PATH, "CLI", SHARE_BRANCH, "nativescript.tgz"))
-ANDROID_PATH = os.environ.get("ANDROID_PATH", os.path.join(BASE_PACKAGE_PATH, "tns-android", SHARE_BRANCH, "tns-android.tgz"))
+ANDROID_PATH = os.environ.get("ANDROID_PATH",
+                              os.path.join(BASE_PACKAGE_PATH, "tns-android", SHARE_BRANCH, "tns-android.tgz"))
 IOS_PATH = os.environ.get("IOS_PATH", os.path.join(BASE_PACKAGE_PATH, "tns-ios", SHARE_BRANCH, "tns-ios.tgz"))
 TNS_MODULES_PATH = os.environ.get("TNS_MODULES_PATH",
                                   os.path.join(BASE_PACKAGE_PATH, "tns-modules", SHARE_BRANCH, "tns-core-modules.tgz"))
@@ -38,8 +39,9 @@ TNS_MODULES_WIDGETS_PATH = os.environ.get("TNS_MODULES_WIDGETS_PATH",
 TNS_PLATFORM_DECLARATIONS_PATH = os.environ.get("TNS_PLATFORM_DECLARATIONS_PATH",
                                                 os.path.join(BASE_PACKAGE_PATH, "tns-modules", SHARE_BRANCH,
                                                              "tns-platform-declarations.tgz"))
-IOS_INSPECTOR_PATH = os.environ.get("IOS_INSPECTOR_PATH", os.path.join(BASE_PACKAGE_PATH, "tns-ios-inspector", SHARE_BRANCH,
-                                                                       "tns-ios-inspector.tgz"))
+IOS_INSPECTOR_PATH = os.environ.get("IOS_INSPECTOR_PATH",
+                                    os.path.join(BASE_PACKAGE_PATH, "tns-ios-inspector", SHARE_BRANCH,
+                                                 "tns-ios-inspector.tgz"))
 
 # Set local location of test packages
 TNS_PATH = os.path.join("node_modules", ".bin", "tns")
@@ -62,10 +64,6 @@ EMULATOR_NAME = "Emulator-Api19-Default"
 EMULATOR_PORT = "5554"
 EMULATOR_ID = "emulator-{0}".format(EMULATOR_PORT)
 SIMULATOR_NAME = "iPhone7100"
-
-# Android SDK
-ADB_PATH = os.path.join(os.environ.get("ANDROID_HOME"), "platform-tools", "adb")
-EMULATOR_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'emulator')
 
 # Android Build Settings
 ANDROID_KEYSTORE_PATH = os.environ.get("ANDROID_KEYSTORE_PATH")

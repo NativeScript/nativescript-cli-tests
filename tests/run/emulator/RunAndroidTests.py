@@ -22,7 +22,7 @@ class RunAndroidTests(BaseClass):
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
-        Emulator.stop_emulators()
+        Emulator.stop()
         Emulator.ensure_available()
         Folder.cleanup(cls.app_name)
 
