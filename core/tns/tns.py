@@ -17,6 +17,10 @@ from core.xcode.xcode import Xcode
 
 
 class Tns(object):
+    # npm tag used when we publish master branch of https://github.com/NativeScript/NativeScript
+    # Please see https://github.com/NativeScript/NativeScript/blob/master/.travis.yml
+    NEXT_TAG = 'internal-preview'
+
     @staticmethod
     def __get_platform_string(platform=Platforms.NONE):
         if platform is Platforms.NONE:
@@ -107,7 +111,7 @@ class Tns(object):
         # In master branch we use @next packages.
         else:
             Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False, tns_path=tns_path)
-            output = Tns.plugin_add("tns-core-modules@next", attributes={"--path": path}, tns_path=tns_path)
+            output = Tns.plugin_add("tns-core-modules@" + Tns.NEXT_TAG, attributes={"--path": path}, tns_path=tns_path)
         assert "undefined" not in output, "Something went wrong when modules are installed."
         assert "ERR" not in output, "Something went wrong when modules are installed."
         return output
@@ -259,7 +263,7 @@ class Tns(object):
         output = Tns.run_tns_command("plugin add " + name, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
         if assert_success:
-            assert "Successfully installed plugin {0}".format(name.replace("@next", "")) in output
+            assert "Successfully installed plugin {0}".format(name.replace("@" + Tns.NEXT_TAG, "")) in output
         return output
 
     @staticmethod
@@ -267,7 +271,7 @@ class Tns(object):
         output = Tns.run_tns_command("plugin remove " + name, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
         if assert_success:
-            assert "Successfully removed plugin {0}".format(name.replace("@next", "")) in output
+            assert "Successfully removed plugin {0}".format(name.replace("@" + Tns.NEXT_TAG, "")) in output
         return output
 
     @staticmethod
