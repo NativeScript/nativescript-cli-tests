@@ -10,7 +10,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_RUNTIME_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
-    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, TEST_RUN_HOME, IOS_RUNTIME_PATH, CURRENT_OS, TNS_PATH
+    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, TEST_RUN_HOME, IOS_RUNTIME_PATH, CURRENT_OS, TNS_PATH, BRANCH
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 from verified_plugins.data.update_data import csv_writer
@@ -117,7 +117,12 @@ class BuildPluginDemos(BaseClass):
                 Folder.navigate_to(name)
                 run("npm uninstall nativescript-dev-typescript --save-dev")
                 run("npm uninstall typescript --save-dev")
-                output = run("npm install nativescript-dev-typescript@0.3 --save-dev")
+                if 'release' in BRANCH:
+                    run("npm install typescript@2.1 --save-dev")
+                    output = run("npm install nativescript-dev-typescript@0.3 --save-dev")
+                else:
+                    run("npm install typescript --save-dev")
+                    output = run("npm install nativescript-dev-typescript --save-dev")
             elif '-dev-' in plugin:
                 Folder.navigate_to(name)
                 run("npm uninstall " + plugin + " --save-dev")
