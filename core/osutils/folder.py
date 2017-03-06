@@ -32,6 +32,7 @@ class Folder(object):
                         if ("another process" in output) or ("gradle" in output.lower()):
                             Process.kill(proc_name='node')
                             Process.kill(proc_name='aapt')
+                            Process.kill(proc_name='adb')
                             Process.kill_gradle()
                             output = run('rmdir /s /q \"{0}\"'.format(folder))
                             assert 'another process' not in output, "Failed to delete {0}".format(folder)

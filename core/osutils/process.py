@@ -80,7 +80,8 @@ class Process(object):
                     if (current_file == 'gradle.bat') and ('3.' in root):
                         gradle_file_path = os.path.join(root, current_file)
             print gradle_file_path
-            os.system(gradle_file_path + " --stop")
+            if gradle_file_path is not None:
+                os.system(gradle_file_path + " --stop")
         else:
             print "No need to kill gradle daemon on OSX."
             pass

@@ -97,7 +97,7 @@ if __name__ == '__main__':
     clean_npm()  # Clean NPM cache
     clean_gradle()  # Clean Gradle
     get_repos()  # Clone test repos
-    Emulator.stop_emulators()  # Stop running emulators
+    Emulator.stop()  # Stop running emulators
 
     # Copy test packages and cleanup
     if CURRENT_OS == OSType.OSX:

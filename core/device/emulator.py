@@ -1,141 +1,116 @@
 """
 Helper for working with emulator
 """
-
-import platform
+import os
 import time
 
+from core.device.adb import Adb
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.process import Process
-from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ADB_PATH, EMULATOR_PATH, EMULATOR_NAME, EMULATOR_PORT, \
-    EMULATOR_ID
+from core.settings.settings import CURRENT_OS, OSType, EMULATOR_NAME, EMULATOR_PORT, EMULATOR_ID
+
+EMULATOR_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'emulator')
 
 
 class Emulator(object):
     @staticmethod
-    def restart_adb():
-        """Restart Adb"""
-        run(ADB_PATH + " kill-server")
-        run(ADB_PATH + " start-server")
-        run(ADB_PATH + " devices")
-
-    @staticmethod
-    def stop_emulators():
-        """Stop running emulators"""
-        print "Stop all emulators"
-        Process.kill("emulator")
-        Process.kill("emulator64-arm")
-        Process.kill("emulator64-x86")
-        Process.kill("emulator-arm")
-        Process.kill("emulator-x86")
-        Process.kill("qemu-system-arm")
-        Process.kill("qemu-system-i386")
-        Process.kill("qemu-system-i38")  # Linux
-
-        output = run(ADB_PATH + " devices", log_level=CommandLogLevel.SILENT)  # Run `adb devices` for debug purposes.
-        if "offline" in output:
-            Emulator.restart_adb()
-
-    @staticmethod
-    def start_emulator(emulator_name, port="5554", timeout=300, wait_for=True):
-        """Start Android Emulator
-        :param emulator_name:
-        :param port:
-        :param timeout:
-        :param wait_for:
+    def stop():
         """
-        print "Starting emulator on {0}".format(platform.platform())
+        Stop running emulators.
+        """
+        print 'Stop all emulators'
+        Process.kill('emulator')
+        Process.kill('emulator64-arm')
+        Process.kill('emulator64-x86')
+        Process.kill('emulator-arm')
+        Process.kill('emulator-x86')
+        Process.kill('qemu-system-arm')
+        Process.kill('qemu-system-i386')
+        Process.kill('qemu-system-i38')  # Linux
 
-        start_command = EMULATOR_PATH + " -avd " + emulator_name + " -port " + port + " -wipe-data"
-
+    @staticmethod
+    def start(emulator_name=EMULATOR_NAME, port=EMULATOR_PORT, timeout=300):
+        """
+        Start emulator.
+        :param emulator_name: Name of android emulator image (avd).
+        :param port: Port for Android emulator.
+        :param timeout: Time to wait until emulator boot.
+        """
+        print 'Starting emulator {0}'.format(emulator_name)
+        start_command = EMULATOR_PATH + ' -avd ' + emulator_name + ' -port ' + port + ' -wipe-data'
         if CURRENT_OS == OSType.WINDOWS:
-            run(start_command, timeout=10, output=False, wait=False)
+            run(start_command, timeout=10, output=False, wait=False, log_level=CommandLogLevel.COMMAND_ONLY)
         else:
-            run(start_command + " &", timeout=timeout, output=False)
+            run(start_command + ' &', timeout=timeout, output=False, log_level=CommandLogLevel.COMMAND_ONLY)
 
-        if wait_for:
-            # Check if emulator is running
-            device_name = "emulator-" + port
-            if Emulator.wait_for_device(device_name, timeout):
-                print "Emulator started successfully."
-            else:
-                raise NameError("Wait for emulator failed!")
+        # Check if emulator is running
+        device_name = 'emulator-' + port
+        if Emulator.wait(device_name, timeout):
+            print 'Emulator started successfully.'
+        else:
+            raise Exception('Wait for emulator failed!')
 
     @staticmethod
-    def wait_for_device(device_name, timeout=600):
-        """Wait for device
-        :param device_name: Device name
-        :param timeout:
-        :return:
+    def __is_available(device_id):
         """
-        found = False
+        Check if device is is currently available.
+        :param device_id: Device id.
+        :return: True if running, False if not running.
+        """
+        command = "shell dumpsys window windows | grep -E 'mFocusedApp'"
+        output = Adb.run(command=command, device_id=device_id, log_level=CommandLogLevel.SILENT)
+        if 'ActivityRecord' in output:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def wait(device_id, timeout=300):
+        """
+        Wait until emulator is up and running.
+        :param device_id: Device name
+        :param timeout: Timeout until device is ready (in seconds).
+        :return: True if device is ready before timeout, otherwise - False.
+        """
+        booted = False
         start_time = time.time()
         end_time = start_time + timeout
-        while not found:
+        while not booted:
             time.sleep(5)
-            output = run(TNS_PATH + " device", log_level=CommandLogLevel.SILENT)
-            if device_name in output:
-                found = True
-            if (found is True) or (time.time() > end_time):
+            booted = Emulator.__is_available(device_id=device_id)
+            if (booted is True) or (time.time() > end_time):
                 break
 
-        return found
+        return booted
 
     @staticmethod
     def ensure_available():
-        """Ensure Android Emulator is running"""
-        output = run(TNS_PATH + " device android", log_level=CommandLogLevel.SILENT)
-        lines = output.splitlines()
-        found = False
-        for line in lines:
-            if ('emulator' in line) and ("Connected" in line):
-                found = True
-                break
+        """
+        Ensure Android Emulator is running.
+        """
+        found = Emulator.__is_available(device_id=EMULATOR_ID)
         if found:
-            time.sleep(10)  # Adb returns device is available before it is booted. Wait a bit more...
-            print "Emulator already running."
-            # Make sure sdcard is not read-only
-            Emulator.unlock_sdcard()
-            # Set screen timeout
-            run(ADB_PATH + " " + EMULATOR_ID + " shell rm -f /data/system/locksettings.db*",
-                log_level=CommandLogLevel.FULL)
-            print "Emulator configuration complete!"
+            print 'Emulator already running.'
         else:
-            Emulator.stop_emulators()
-            Emulator.start_emulator(emulator_name=EMULATOR_NAME, port=EMULATOR_PORT, wait_for=True)
+            Emulator.stop()
+            Emulator.start(emulator_name=EMULATOR_NAME, port=EMULATOR_PORT)
         return found
 
     @staticmethod
-    def cat_app_file(app_name, file_path):
-        """Return content of file on emulator"""
-        app_name = app_name.replace("_", "")
-        app_name = app_name.replace(" ", "")
-        output = run(ADB_PATH + " -s " + EMULATOR_ID + " shell run-as org.nativescript." +
-                     app_name + " cat files/" + file_path)
-        return output
-
-    @staticmethod
-    def file_contains(app_name, file_path, text):
-        """Assert file on emulator contains text"""
-        output = Emulator.cat_app_file(app_name, file_path)
-        if text in output:
-            print("{0} exists in {1}".format(text, file_path))
-        else:
-            print("{0} does not exists in {1}".format(text, file_path))
-        assert text in output
-
-    @staticmethod
     def unlock_sdcard(timeout=60):
+        """
+        Unlock sdcard of default emulator.
+        :param timeout: Timeout in seconds.
+        """
         t_end = time.time() + timeout
         unlocked = False
         while time.time() < t_end:
-            output = run(ADB_PATH + " -s " + EMULATOR_ID + " shell mount -o remount rw /sdcard",
-                         log_level=CommandLogLevel.FULL)
-            if "mount" not in output:
+            output = Adb.run('shell mount -o remount rw /sdcard', device_id=EMULATOR_ID, log_level=CommandLogLevel.FULL)
+            if 'mount' not in output:
                 unlocked = True
                 break
             else:
-                print "Failed to unlock sdcard. Retry..."
+                print 'Failed to unlock sdcard. Retry...'
                 time.sleep(10)
-        assert unlocked, "Failed to unlock sdcard!"
+        assert unlocked, 'Failed to unlock sdcard!'

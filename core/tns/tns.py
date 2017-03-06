@@ -99,7 +99,7 @@ class Tns(object):
         # In release branch we get modules versions from MODULES_VERSION variable.
         # To prevent errors in local testing when it is not specified default value is set to be same as CLI version.
         if "release" in BRANCH.lower():
-            cli_version = Tns.run_tns_command("", attributes={"--version": ""})
+            cli_version = Tns.run_tns_command("", attributes={"--version": ""}, tns_path=tns_path)
             version = os.environ.get("MODULES_VERSION", cli_version)
             Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False, tns_path=tns_path)
             output = Tns.plugin_add("tns-core-modules@" + version, attributes={"--path": path}, assert_success=False,
@@ -109,6 +109,7 @@ class Tns(object):
             Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False, tns_path=tns_path)
             output = Tns.plugin_add("tns-core-modules@next", attributes={"--path": path}, tns_path=tns_path)
         assert "undefined" not in output, "Something went wrong when modules are installed."
+        assert "ERR" not in output, "Something went wrong when modules are installed."
         return output
 
     @staticmethod

@@ -16,7 +16,7 @@ class UnittestsEmulator(BaseClass):
         BaseClass.setUpClass(logfile)
         # It is important to auto start emulator, because otherwise it start random.
         # Latest SDK 23 emulators show some error dialogs on startup and tests fail.
-        Emulator.stop_emulators()
+        Emulator.stop()
         Emulator.ensure_available()
 
     def setUp(self):
@@ -29,7 +29,7 @@ class UnittestsEmulator(BaseClass):
 
     @classmethod
     def tearDownClass(cls):
-        Emulator.stop_emulators()
+        Emulator.stop()
 
     @timed(360)
     def test_010_test_mocha_android_emulator(self):

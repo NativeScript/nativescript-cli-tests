@@ -20,4 +20,5 @@ nosetests.xml
 Payload
 /out/*
 /workspace/*
+verified_plugins/data/*.csv
 nativescript-*
