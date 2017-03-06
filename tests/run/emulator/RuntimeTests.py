@@ -7,10 +7,11 @@ import threading
 import unittest
 
 from core.base_class.BaseClass import BaseClass
+from core.device.adb import ADB_PATH
 from core.device.emulator import Emulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ADB_PATH, ANDROID_RUNTIME_PATH
+from core.settings.settings import ANDROID_RUNTIME_PATH
 from core.settings.strings import successfully_built
 from core.tns.tns import Tns
 
