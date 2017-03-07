@@ -7,7 +7,7 @@ from core.base_class.BaseClass import BaseClass
 from core.device.simulator import Simulator
 from core.osutils.folder import Folder
 from core.osutils.process import Process
-from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME
+from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK
 from core.tns.tns import Tns
 from core.settings.strings import *
 
@@ -17,9 +17,9 @@ class EmulateiOSTests(BaseClass):
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
-        Simulator.stop_simulators()
+        Simulator.stop()
         Simulator.delete(SIMULATOR_NAME)
-        Simulator.create(SIMULATOR_NAME, 'iPhone 6', '9.1')
+        Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
 
         Tns.create_app(cls.app_name)
         Tns.platform_add_ios(attributes={"--path": cls.app_name,
@@ -36,13 +36,21 @@ class EmulateiOSTests(BaseClass):
         Folder.cleanup('./' + cls.app_name)
 
     def test_001_emulate_list_devices(self):
+        """
+        `tns emulate ios --availableDevices` should list all available iOS Simulators.
+        """
         output = Tns.run_tns_command("emulate ios", attributes={"--availableDevices": "",
                                                                 "--path": self.app_name,
                                                                 "--justlaunch": ""
                                                                 })
+        assert "Available emulators" in output
         assert SIMULATOR_NAME in output
 
     def test_002_emulate_ios(self):
+        """
+        `tns emulate ios` should build the project and run it in simulator.
+        If simulator is not running `tns` should start it.
+        """
         output = Tns.run_tns_command("emulate ios", attributes={"--path": self.app_name,
                                                                 "--device": SIMULATOR_NAME,
                                                                 "--justlaunch": ""
@@ -84,4 +92,3 @@ class EmulateiOSTests(BaseClass):
                                                                 "--justlaunch": ""
                                                                 })
         assert "Cannot resolve the specified connected device by the provided index or identifier." in output
-        assert "Cannot find device with name: " + invalid in output

@@ -17,7 +17,7 @@ class DebugiOS(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         Emulator.stop()
-        Simulator.stop_simulators()
+        Simulator.stop()
         Folder.cleanup('./TNS_App')
         Tns.create_app_platform_add(app_name="TNS_App", platform="ios", framework_path=IOS_RUNTIME_SYMLINK_PATH)
 

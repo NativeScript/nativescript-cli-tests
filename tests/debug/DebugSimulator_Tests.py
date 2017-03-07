@@ -27,13 +27,13 @@ class DebugSimulatorTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-        Simulator.stop_simulators()
+        Simulator.stop()
         Process.kill("Safari")
         Process.kill("Inspector")
 
     def tearDown(self):
         BaseClass.tearDown(self)
-        Simulator.stop_simulators()
+        Simulator.stop()
         Process.kill("Safari")
         Process.kill("Inspector")
 

@@ -102,7 +102,7 @@ if __name__ == '__main__':
     # Copy test packages and cleanup
     if CURRENT_OS == OSType.OSX:
         get_test_packages(platform=Platforms.BOTH)
-        Simulator.stop_simulators()  # Stop running simulators
+        Simulator.stop()  # Stop running simulators
         Xcode.cleanup_cache()  # Clean Xcode cache folders
     else:
         get_test_packages(platform=Platforms.ANDROID)

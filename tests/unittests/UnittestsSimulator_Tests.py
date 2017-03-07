@@ -18,7 +18,7 @@ class UnittestsSimulator(BaseClass):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
         Emulator.stop()
-        Simulator.stop_simulators()
+        Simulator.stop()
         Simulator.start(SIMULATOR_NAME, '9.1')
 
     def setUp(self):
@@ -32,7 +32,7 @@ class UnittestsSimulator(BaseClass):
 
     @classmethod
     def tearDownClass(cls):
-        Simulator.stop_simulators()
+        Simulator.stop()
 
     @timed(360)
     def test_010_test_jasmine_ios_simulator(self):
