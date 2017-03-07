@@ -2,6 +2,7 @@
 Test platform add (android)
 """
 import os
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
@@ -145,6 +146,7 @@ class PlatformAndroidTests(BaseClass):
         assert no_platform in output
         assert "Usage" in output
 
+    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2587")
     def test_430_platform_remove_missing_invalid_or_empty_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
 

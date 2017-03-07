@@ -3,6 +3,7 @@ Tests for prepare command in context of Android
 """
 import os
 import time
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
@@ -134,6 +135,7 @@ class PrepareAndroidTests(BaseClass):
         ng_path_in_platforms_folder = self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + '@angular/core'
         assert File.exists(ng_path_in_platforms_folder), "Scoped dependencies are flattened, please see #1783!"
 
+    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2587")
     def test_400_prepare_missing_or_missing_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
 
