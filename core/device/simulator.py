@@ -97,6 +97,7 @@ class Simulator(object):
         Delete simulator.
         :param name: Simulator name.
         """
+        delete_output = ""
         output = run(command='xcrun simctl list | grep \'{0}\''.format(name), log_level=CommandLogLevel.SILENT)
         while (SIMULATOR_NAME in output) and ('Invalid' not in output):
             if 'Booted' in output:
