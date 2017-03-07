@@ -8,6 +8,7 @@ import os
 # R0201 - Method could be a function
 # R0904 - Too many public methods
 # pylint: disable=C0103, C0111, R0201, R0904
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -65,6 +66,7 @@ class EmulateAndroidTests(BaseClass):
         Device.is_running(app_id="org.nativescript.TNSApp", device_id=EMULATOR_ID), \
         "Application is not running on {0}".format(EMULATOR_ID)
 
+    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2589")
     def test_002_emulate_android_release(self):
         output = Tns.run_tns_command("emulate android", attributes={  # "--device": EMULATOR_NAME,
             "--keyStorePath": ANDROID_KEYSTORE_PATH,
