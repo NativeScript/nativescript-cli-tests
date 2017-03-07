@@ -328,7 +328,7 @@ class Tns(object):
                 assert config_debug in output
 
             # Verify simulator/device builds
-            if "--forDevice" in attributes.keys():
+            if "--forDevice" in attributes.keys() or "--for-device" in attributes.keys():
                 assert "build/device/" + app_id + ".app" in output
                 assert File.exists(app_name + "/platforms/ios/build/device/" + app_id + ".ipa")
             else:

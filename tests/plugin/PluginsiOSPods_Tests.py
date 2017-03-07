@@ -2,8 +2,6 @@
 Test for plugin* commands in context of iOS
 """
 
-import unittest
-
 from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
@@ -40,7 +38,7 @@ class PluginsiOSPodsTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/keychain/package.json")
         assert File.exists(self.app_name + "/node_modules/keychain/platforms/ios/Podfile")
 
-        output = run("cat " + self.app_name + "/package.json")
+        output = File.read(self.app_name + "/package.json")
         assert "keychain" in output
 
         output = Tns.build_ios(attributes={"--path": self.app_name})
@@ -48,7 +46,7 @@ class PluginsiOSPodsTests(BaseClass):
         assert "Successfully prepared plugin carousel for ios." in output
         assert "Successfully prepared plugin keychain for ios." in output
 
-        output = run("cat " + self.app_name + "/platforms/ios/Podfile")
+        output = File.read(self.app_name + "/platforms/ios/Podfile")
         assert "use_frameworks!" in output
         assert "pod 'iCarousel'" in output
         assert "pod 'AFNetworking'" in output
@@ -59,10 +57,7 @@ class PluginsiOSPodsTests(BaseClass):
         assert "location = \"group:Pods/Pods.xcodeproj\">" in output
         assert File.exists(self.app_name + "/platforms/ios/Pods/Pods.xcodeproj")
 
-        Tns.build_ios(attributes={"--path": self.app_name,
-                                  "--release": "",
-                                  "--for-device": ""
-                                  })
+        Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": ""})
 
     def test_201_plugin_add_pod_google_maps_before_platform_add_ios(self):
         Tns.create_app(self.app_name)
@@ -97,8 +92,7 @@ class PluginsiOSPodsTests(BaseClass):
         assert "location = \"group:Pods/Pods.xcodeproj\">" in output
 
         # This deployment target comes from the CLI
-        output = run(
-                "cat " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
+        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
         assert "IPHONEOS_DEPLOYMENT_TARGET = 8.0;" in output
         # This deployment target comes from the Podfile - platform :ios, '8.1'
 
@@ -141,15 +135,11 @@ class PluginsiOSPodsTests(BaseClass):
         assert File.exists(self.app_name + "/platforms/ios/Pods/Pods.xcodeproj")
 
         # This deployment target comes from the CLI
-        output = run(
-                "cat " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
+        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
         assert "IPHONEOS_DEPLOYMENT_TARGET = 8.0;" in output
         # This deployment target comes from the Podfile - platform :ios, '8.1'
 
-        Tns.build_ios(attributes={"--path": self.app_name,
-                                  "--release": "",
-                                  "--for-device": ""
-                                  })
+        Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": ""})
 
     def test_401_plugin_add_invalid_pod(self):
         Tns.create_app(self.app_name)
@@ -170,7 +160,7 @@ class PluginsiOSPodsTests(BaseClass):
         assert "Installing pods..." in output
         assert "Processing node_modules failed. Error:" in output
 
-        output = run("cat " + self.app_name + "/platforms/ios/Podfile")
+        output = File.read(self.app_name + "/platforms/ios/Podfile")
         assert "pod 'InvalidPod'" in output
 
         assert not File.exists(self.app_name + "/platforms/ios/TNSApp.xcworkspace")
