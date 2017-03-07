@@ -17,6 +17,7 @@ from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 
 
+@unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2590")
 class RunAndroidTests(BaseClass):
     @classmethod
     def setUpClass(cls):
