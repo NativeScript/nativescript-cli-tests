@@ -104,15 +104,11 @@ class PluginsiOSTests(BaseClass):
 
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
-        output = Tns.run_tns_command("plugin add tns-plugin", tns_path=os.path.join("..", TNS_PATH))
+        output = Tns.plugin_add(name="tns-plugin", tns_path=os.path.join("..", TNS_PATH), assert_success=False)
         os.chdir(current_dir)
         assert "Successfully installed plugin tns-plugin" in output
 
-        output = Tns.build_ios(attributes={"--path": self.app_name})
-        assert successfully_prepared in output
-        assert "** BUILD SUCCEEDED **" in output
-        assert error not in output.lower()
-        assert "malformed" not in output
+        Tns.build_ios(attributes={"--path": self.app_name})
 
     def test_300_build_app_with_plugin_outside(self):
         Tns.create_app(self.app_name)
@@ -135,7 +131,7 @@ class PluginsiOSTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/tns-plugin/test2.ios.xml")
 
         Tns.build_ios(attributes={"--path": self.app_name})
-        Tns.build_android(attributes={"--path ": self.app_name})
+        Tns.build_android(attributes={"--path": self.app_name})
 
         assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TNSApp-debug.apk")
         assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")

@@ -316,6 +316,7 @@ class Tns(object):
             assert "BUILD SUCCEEDED" in output
             assert "Project successfully built" in output
             assert "ERROR" not in output
+            assert "malformed" not in output
             assert codesign in output
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
             app_id = Tns.__get_final_package_name(app_name, platform=Platforms.IOS)
