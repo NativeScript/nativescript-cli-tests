@@ -102,10 +102,10 @@ class Simulator(object):
             if 'Booted' in output:
                 run('xcrun simctl shutdown \'{0}\''.format(name), log_level=CommandLogLevel.SILENT)
                 Simulator.stop()
-            output = run('xcrun simctl delete \'{0}\''.format(name), log_level=CommandLogLevel.SILENT)
-            assert "Unable to delete" not in output, "Failed to delete simulator {0}".format(name)
-            print 'Simulator \'{0}\' deleted.'.format(name)
+            delete_output = run('xcrun simctl delete \'{0}\''.format(name), log_level=CommandLogLevel.SILENT)
             output = run('xcrun simctl list | grep \'{0}\''.format(name), log_level=CommandLogLevel.SILENT)
+        assert "Unable to delete" not in delete_output, "Failed to delete simulator {0}".format(name)
+        print 'Simulator \'{0}\' deleted.'.format(name)
 
     @staticmethod
     def uninstall_app(app_name):
