@@ -113,6 +113,7 @@ class TnsAsserts(object):
         # This is to handle test for app with space.
         # In this case we put app name inside ''.
         app_name = app_name.replace('\'', '')
+        app_name = app_name.replace('\"', '')
 
         # Verify file and folder content
         if platform is Platforms.NONE:
@@ -186,9 +187,11 @@ class TnsAsserts(object):
         :return: package.json as json object.
         '''
         path = os.path.join(app_name, 'package.json')
+
         # This is to handle test for app with space.
         # In this case we put app name inside ''.
         path = path.replace('\'', '')
+        path = path.replace('\"', '')
 
         # Check if file exists
         assert File.exists(path), 'Failed to find package.json at ' + path
