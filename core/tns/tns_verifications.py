@@ -1,6 +1,6 @@
-'''
+"""
 Verifications for NativeScript projects.
-'''
+"""
 import json
 import os
 import re
@@ -67,12 +67,12 @@ class TnsAsserts(object):
 
     @staticmethod
     def created(app_name, output=None, full_check=True):
-        '''
+        """
         Assert application is created properly.
         :param app_name: App name
         :param output: Outout of `tns create command`
         :param full_check: If true everything will be checked. If false only console output will be checked.
-        '''
+        """
 
         # Assert console output is ok
         if output is not None:
@@ -97,11 +97,11 @@ class TnsAsserts(object):
 
     @staticmethod
     def created_ts(app_name, output=None):
-        '''
+        """
         Assert TypeScript application is created properly.
         :param app_name: App name
         :param output: Outout of `tns create command`
-        '''
+        """
 
         # First make sure base app is created
         TnsAsserts.created(app_name=app_name, output=output)
@@ -139,12 +139,12 @@ class TnsAsserts(object):
 
     @staticmethod
     def platform_added(app_name, platform=Platforms.NONE, output=None):
-        '''
+        """
         Assert platform is added.
         :param app_name: Application name (folder where app is located).
         :param platform: Platforms that should be available.
         :param output: output of `tns platform add` command
-        '''
+        """
 
         # Verify console output is correct
         if output is not None:
@@ -173,12 +173,12 @@ class TnsAsserts(object):
 
     @staticmethod
     def platform_list_status(output=None, prepared=Platforms.NONE, added=Platforms.NONE):
-        '''
+        """
         Assert platform list status
         :param output: Outout of `tns platform list` command
         :param prepared: Prepared platform.
         :param added: Added platform.
-        '''
+        """
         if output is not None:
             # Assert prepare status
             if prepared is Platforms.NONE:
@@ -246,13 +246,13 @@ class TnsAsserts(object):
 
     @staticmethod
     def prepared(app_name, platform=Platforms.BOTH, output=None, prepare_type=Prepare.FULL):
-        '''
+        """
         Assert project is prepared properly.
         :param app_name: Application name.
         :param platform: Platform that should be prepared.
         :param output: Output of `tns prepare` platform.
         :param prepare_type: Prepare type (SKIP, INCREMENTAL, FULL, FIRST_TIME)
-        '''
+        """
 
         def _incremental_prepare():
             assert 'Skipping prepare.' not in output
@@ -292,28 +292,26 @@ class TnsAsserts(object):
                 if platform is Platforms.IOS or platform is Platforms.BOTH:
                     assert 'tns-ios' in output
 
-                    # Ignore because of https://github.com/NativeScript/nativescript-cli/issues/2586
-                    # if platform is Platforms.ANDROID or platform is Platforms.BOTH:
-                    #     app_path = app_name + TnsAsserts.PLATFORM_ANDROID_APP_PATH
-                    #     modules_path = app_name + TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH
-                    #     assert File.exists(app_path + 'main-view-model.js'), \
-                    #         'Application files does not exists in platforms folder.'
-                    #     assert File.exists(modules_path + 'application/application.js'), \
-                    #         'Modules does not exists in platforms folder.'
-                    #     assert File.exists(modules_path + 'xml/xml.js'), 'TNS Modules does not exists in platforms folder.'
-                    #     assert not File.exists(modules_path + 'application/application.android.js'), \
-                    #         'Prepare does not strip \'android\' from name of js files.'
-                    #     assert not File.exists(modules_path + 'application/application.ios.js'), \
-                    #         'Prepare does not skip \'ios\' specific js files.'
-                    #
-                    # if platform is Platforms.IOS or platform is Platforms.BOTH:
-                    #     app_path = TnsAsserts._get_ios_app_path(app_name)
-                    #     modules_path = TnsAsserts._get_ios_modules_path(app_name)
-                    #     assert File.exists(app_path + 'main-view-model.js'), \
-                    #         'Application files does not exists in platforms folder.'
-                    #     assert File.exists(modules_path + 'application/application.js'), \
-                    #         'Modules does not exists in platforms folder.'
-                    #     assert not File.exists(modules_path + 'application/application.android.js'), \
-                    #         'Prepare does not skip \'ios\' specific js files.'
-                    #     assert not File.exists(modules_path + 'application/application.ios.js'), \
-                    #         'Prepare does not strip \'ios\' from name of js files.'
+            if platform is Platforms.ANDROID or platform is Platforms.BOTH:
+                app_path = app_name + TnsAsserts.PLATFORM_ANDROID_APP_PATH
+                modules_path = app_name + TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH
+                assert File.exists(app_path + 'main-view-model.js'), \
+                    'Application files does not exists in platforms folder.'
+                assert File.exists(modules_path + 'application/application.js'), \
+                    'Modules does not exists in platforms folder.'
+                assert File.exists(modules_path + 'xml/xml.js'), 'TNS Modules does not exists in platforms folder.'
+                assert not File.exists(modules_path + 'application/application.android.js'), \
+                    'Prepare does not strip \'android\' from name of js files.'
+                assert not File.exists(modules_path + 'application/application.ios.js'), \
+                    'Prepare does not skip \'ios\' specific js files.'
+            if platform is Platforms.IOS or platform is Platforms.BOTH:
+                app_path = TnsAsserts._get_ios_app_path(app_name)
+                modules_path = TnsAsserts._get_ios_modules_path(app_name)
+                assert File.exists(app_path + 'main-view-model.js'), \
+                    'Application files does not exists in platforms folder.'
+                assert File.exists(modules_path + 'application/application.js'), \
+                    'Modules does not exists in platforms folder.'
+                assert not File.exists(modules_path + 'application/application.android.js'), \
+                    'Prepare does not skip \'ios\' specific js files.'
+                assert not File.exists(modules_path + 'application/application.ios.js'), \
+                    'Prepare does not strip \'ios\' from name of js files.'

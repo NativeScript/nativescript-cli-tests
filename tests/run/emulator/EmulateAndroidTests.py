@@ -3,21 +3,14 @@ Test for emulate command in context of Android
 """
 import os
 
-# C0103 - Invalid %s name "%s"
-# C0111 - Missing docstring
-# R0201 - Method could be a function
-# R0904 - Too many public methods
-# pylint: disable=C0103, C0111, R0201, R0904
-import unittest
-
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID
-from core.tns.tns import Tns
 from core.settings.strings import *
+from core.tns.tns import Tns
 
 
 class EmulateAndroidTests(BaseClass):
@@ -66,7 +59,6 @@ class EmulateAndroidTests(BaseClass):
         Device.is_running(app_id="org.nativescript.TNSApp", device_id=EMULATOR_ID), \
         "Application is not running on {0}".format(EMULATOR_ID)
 
-    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2589")
     def test_002_emulate_android_release(self):
         output = Tns.run_tns_command("emulate android", attributes={  # "--device": EMULATOR_NAME,
             "--keyStorePath": ANDROID_KEYSTORE_PATH,
@@ -95,7 +87,7 @@ class EmulateAndroidTests(BaseClass):
         },
                                      tns_path=os.path.join("..", TNS_PATH), timeout=660)
         os.chdir(current_dir)
-        # assert successfully_prepared in output (remove the comment after test_002_emulate_android_release is enabled)
+        assert successfully_prepared in output
         assert successfully_built in output
         assert "Starting Android emulator with image" not in output
         assert installed_on_device.format(EMULATOR_ID) in output

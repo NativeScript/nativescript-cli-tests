@@ -2,7 +2,6 @@
 Test platform add (android)
 """
 import os
-import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
@@ -72,7 +71,6 @@ class PlatformAndroidTests(BaseClass):
                                      assert_success=False)
         TnsAsserts.platform_added(self.app_name, platform=Platforms.ANDROID, output=output)
 
-    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2588")
     def test_300_set_sdk(self):
         """Platform add android should be able to specify target sdk with `--sdk` option"""
         Tns.create_app(self.app_name, update_modules=False)
@@ -83,7 +81,6 @@ class PlatformAndroidTests(BaseClass):
         assert "android:minSdkVersion=\"17\"" in output
         assert "android:targetSdkVersion=\"19\"" in output
 
-    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2588")
     def test_310_set_sdk_not_installed(self):
         Tns.create_app(self.app_name, update_modules=False)
         output = Tns.platform_add_android(attributes={"--path": self.app_name,
@@ -148,7 +145,6 @@ class PlatformAndroidTests(BaseClass):
         assert no_platform in output
         assert "Usage" in output
 
-    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2587")
     def test_430_platform_remove_missing_invalid_or_empty_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
 
