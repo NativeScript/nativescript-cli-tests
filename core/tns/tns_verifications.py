@@ -3,6 +3,7 @@ Verifications for NativeScript projects.
 '''
 import json
 import os
+import re
 
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -21,6 +22,36 @@ class TnsAsserts(object):
     PLATFORM_ANDROID_APP_PATH = PLATFORM_ANDROID + 'src/main/assets/app/'
     PLATFORM_ANDROID_NPM_MODULES_PATH = PLATFORM_ANDROID_APP_PATH + 'tns_modules/'
     PLATFORM_ANDROID_TNS_MODULES_PATH = PLATFORM_ANDROID_NPM_MODULES_PATH + 'tns-core-modules/'
+
+    @staticmethod
+    def __read_json(path):
+        """
+        Read content of json file.
+        :param path: Path to file.
+        :return: Content of file as json object.
+        """
+
+        # This is to handle test for app with space.
+        # In this case we put app name inside ''.
+        path = path.replace('\'', '')
+        path = path.replace('\"', '')
+
+        # Check if file exists
+        assert File.exists(path), 'Failed to find file: ' + path
+
+        # Read it...
+        with open(path) as json_file:
+            data = json.load(json_file)
+        return data
+
+    @staticmethod
+    def _get_modules_version(app_name):
+        """
+        Get version of `tns-core-modules` inside project
+        :param app_name: Project name (path relative to TEST_RUN_HOME).
+        :return: Value of `tns-core-modules`
+        """
+        return TnsAsserts.get_package_json(app_name=app_name).get('dependencies').get('tns-core-modules')
 
     @staticmethod
     def _get_ios_app_path(app_name):
@@ -83,10 +114,24 @@ class TnsAsserts(object):
         ref_dts = os.path.join(app_name, 'references.d.ts')
         dts = os.path.join(app_name, TnsAsserts.TNS_MODULES, 'tns-core-modules.d.ts')
 
+        # Assert content of files added with TypeScript plugin.
+        modules_version = TnsAsserts._get_modules_version(app_name=app_name)
+        modules_version = re.sub("\D", "", modules_version)
+
         File.exists(ts_config)
         File.exists(ref_dts)
         File.exists(dts)
-        assert './node_modules/tns-core-modules/tns-core-modules.d.ts' in File.read(ref_dts)
+        red_tds_content = File.read(ref_dts)
+        if modules_version[0] < 3:
+            assert './node_modules/tns-core-modules/tns-core-modules.d.ts' in red_tds_content
+        else:
+            assert './node_modules/tns-core-modules/tns-core-modules.d.ts' not in red_tds_content
+            ts_config_json = TnsAsserts.get_tsconfig_json(app_name=app_name)
+            paths = ts_config_json.get('compilerOptions').get('paths')
+            assert paths is not None, 'Paths missing in tsconfig.json'
+            assert '/node_modules/tns-core-modules/' in str(paths), \
+                '"/node_modules/tns-core-modules/" not found in paths section iof tsconfig.json'
+
         assert not Folder.is_empty(app_name + TnsAsserts.NODE_MODULES + '/nativescript-dev-typescript')
         assert File.exists(app_name + TnsAsserts.HOOKS + 'before-prepare/nativescript-dev-typescript.js')
         assert File.exists(app_name + TnsAsserts.HOOKS + 'before-watch/nativescript-dev-typescript.js')
@@ -164,42 +209,40 @@ class TnsAsserts(object):
 
     @staticmethod
     def package_json_contains(app_name, string_list=None):
-        '''
+        """
         Assert package.json contains list of strings.
         :param app_name: Application name.
         :param string_list: List of strings.
-        '''
+        """
         package_json_path = app_name + '/package.json'
         output = File.read(package_json_path)
         for item in string_list:
             if item in output:
                 print '{0} found in {1}.'.format(item, package_json_path)
             else:
-                print 'pacakge.json:'
+                print 'package.json:'
                 print output
                 assert False, '{0} NOT found in {1}.'.format(item, package_json_path)
 
     @staticmethod
     def get_package_json(app_name):
-        '''
+        """
         Return content of package.json as json object.
         :param app_name: Application name.
         :return: package.json as json object.
-        '''
+        """
         path = os.path.join(app_name, 'package.json')
+        return TnsAsserts.__read_json(path=path)
 
-        # This is to handle test for app with space.
-        # In this case we put app name inside ''.
-        path = path.replace('\'', '')
-        path = path.replace('\"', '')
-
-        # Check if file exists
-        assert File.exists(path), 'Failed to find package.json at ' + path
-
-        # Read it...
-        with open(path) as json_file:
-            data = json.load(json_file)
-        return data
+    @staticmethod
+    def get_tsconfig_json(app_name):
+        """
+        Return content of package.json as json object.
+        :param app_name: Application name.
+        :return: package.json as json object.
+        """
+        path = os.path.join(app_name, 'tsconfig.json')
+        return TnsAsserts.__read_json(path=path)
 
     @staticmethod
     def prepared(app_name, platform=Platforms.BOTH, output=None, prepare_type=Prepare.FULL):
@@ -249,28 +292,28 @@ class TnsAsserts(object):
                 if platform is Platforms.IOS or platform is Platforms.BOTH:
                     assert 'tns-ios' in output
 
-        # Ignore because of https://github.com/NativeScript/nativescript-cli/issues/2586
-        # if platform is Platforms.ANDROID or platform is Platforms.BOTH:
-        #     app_path = app_name + TnsAsserts.PLATFORM_ANDROID_APP_PATH
-        #     modules_path = app_name + TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH
-        #     assert File.exists(app_path + 'main-view-model.js'), \
-        #         'Application files does not exists in platforms folder.'
-        #     assert File.exists(modules_path + 'application/application.js'), \
-        #         'Modules does not exists in platforms folder.'
-        #     assert File.exists(modules_path + 'xml/xml.js'), 'TNS Modules does not exists in platforms folder.'
-        #     assert not File.exists(modules_path + 'application/application.android.js'), \
-        #         'Prepare does not strip \'android\' from name of js files.'
-        #     assert not File.exists(modules_path + 'application/application.ios.js'), \
-        #         'Prepare does not skip \'ios\' specific js files.'
-        #
-        # if platform is Platforms.IOS or platform is Platforms.BOTH:
-        #     app_path = TnsAsserts._get_ios_app_path(app_name)
-        #     modules_path = TnsAsserts._get_ios_modules_path(app_name)
-        #     assert File.exists(app_path + 'main-view-model.js'), \
-        #         'Application files does not exists in platforms folder.'
-        #     assert File.exists(modules_path + 'application/application.js'), \
-        #         'Modules does not exists in platforms folder.'
-        #     assert not File.exists(modules_path + 'application/application.android.js'), \
-        #         'Prepare does not skip \'ios\' specific js files.'
-        #     assert not File.exists(modules_path + 'application/application.ios.js'), \
-        #         'Prepare does not strip \'ios\' from name of js files.'
+                    # Ignore because of https://github.com/NativeScript/nativescript-cli/issues/2586
+                    # if platform is Platforms.ANDROID or platform is Platforms.BOTH:
+                    #     app_path = app_name + TnsAsserts.PLATFORM_ANDROID_APP_PATH
+                    #     modules_path = app_name + TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH
+                    #     assert File.exists(app_path + 'main-view-model.js'), \
+                    #         'Application files does not exists in platforms folder.'
+                    #     assert File.exists(modules_path + 'application/application.js'), \
+                    #         'Modules does not exists in platforms folder.'
+                    #     assert File.exists(modules_path + 'xml/xml.js'), 'TNS Modules does not exists in platforms folder.'
+                    #     assert not File.exists(modules_path + 'application/application.android.js'), \
+                    #         'Prepare does not strip \'android\' from name of js files.'
+                    #     assert not File.exists(modules_path + 'application/application.ios.js'), \
+                    #         'Prepare does not skip \'ios\' specific js files.'
+                    #
+                    # if platform is Platforms.IOS or platform is Platforms.BOTH:
+                    #     app_path = TnsAsserts._get_ios_app_path(app_name)
+                    #     modules_path = TnsAsserts._get_ios_modules_path(app_name)
+                    #     assert File.exists(app_path + 'main-view-model.js'), \
+                    #         'Application files does not exists in platforms folder.'
+                    #     assert File.exists(modules_path + 'application/application.js'), \
+                    #         'Modules does not exists in platforms folder.'
+                    #     assert not File.exists(modules_path + 'application/application.android.js'), \
+                    #         'Prepare does not skip \'ios\' specific js files.'
+                    #     assert not File.exists(modules_path + 'application/application.ios.js'), \
+                    #         'Prepare does not strip \'ios\' from name of js files.'
