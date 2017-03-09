@@ -110,7 +110,7 @@ class DeployAndroidTests(BaseClass):
         output = Tns.run_tns_command("deploy " + invalid.lower(), attributes={"--path": self.app_name,
                                                                               "--justlaunch": ""
                                                                               })
-        assert "Invalid platform {0}. Valid platforms are ios or android.".format(invalid) in output
+        assert "Invalid platform {0}. Valid platforms are ios or android.".format(invalid.lower()) in output
 
     def test_402_deploy_invalid_device(self):
         output = Tns.run_tns_command("deploy android", attributes={"--path": self.app_name,
