@@ -2,14 +2,14 @@ import os.path
 
 from nose.tools import timed
 
-from core.osutils.command import run
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
+from core.osutils.command import run
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME, TEST_RUN_HOME
-from core.tns.tns import Tns
 from core.settings.strings import *
+from core.tns.tns import Tns
 
 
 class UnittestsSimulator(BaseClass):
@@ -19,7 +19,7 @@ class UnittestsSimulator(BaseClass):
         BaseClass.setUpClass(logfile)
         Emulator.stop()
         Simulator.stop()
-        Simulator.start(SIMULATOR_NAME, '9.1')
+        Simulator.start(name=SIMULATOR_NAME)
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -37,12 +37,9 @@ class UnittestsSimulator(BaseClass):
     @timed(360)
     def test_010_test_jasmine_ios_simulator(self):
         Tns.create_app(self.app_name, attributes={})
-        Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH
-                                         })
-        Tns.run_tns_command("test init", attributes={"--framework": "jasmine",
-                                                     "--path": self.app_name
-                                                     })
+        Tns.platform_add_ios(attributes={"--path": self.app_name,"--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.run_tns_command("test init", attributes={"--framework": "jasmine","--path": self.app_name})
+
         # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/2212
         Folder.navigate_to(self.app_name)
         run("npm install --save-dev jasmine-core")

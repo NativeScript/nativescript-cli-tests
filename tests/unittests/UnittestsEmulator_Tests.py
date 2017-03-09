@@ -1,12 +1,14 @@
 import os.path
-from core.osutils.command import run
+
+from nose.tools import timed
+
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
+from core.osutils.command import run
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TEST_RUN_HOME
-from core.tns.tns import Tns
-from nose.tools import timed
 from  core.settings.strings import *
+from core.tns.tns import Tns
 
 
 class UnittestsEmulator(BaseClass):
@@ -34,10 +36,8 @@ class UnittestsEmulator(BaseClass):
     @timed(360)
     def test_010_test_mocha_android_emulator(self):
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH})
-        Tns.run_tns_command("test init", attributes={"--framework": "mocha",
-                                                     "--path": self.app_name})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.run_tns_command("test init", attributes={"--framework": "mocha", "--path": self.app_name})
 
         # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/2212
         Folder.navigate_to(self.app_name)
