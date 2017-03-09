@@ -31,10 +31,10 @@ class BuildAndroidNGTests(BaseClass):
 
     def test_200_build_android_ng_project_release(self):
         output = Tns.build_android(attributes={"--keyStorePath": ANDROID_KEYSTORE_PATH,
-                                               " --keyStorePassword": ANDROID_KEYSTORE_PASS,
-                                               " --keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
-                                               " --keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
-                                               " --release": "",
+                                               "--keyStorePassword": ANDROID_KEYSTORE_PASS,
+                                               "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
+                                               "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
+                                               "--release": "",
                                                "--path": self.app_name
                                                })
         assert successfully_prepared in output
