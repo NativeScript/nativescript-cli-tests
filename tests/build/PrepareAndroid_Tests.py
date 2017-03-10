@@ -5,7 +5,6 @@ import os
 import time
 
 from core.base_class.BaseClass import BaseClass
-from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, TEST_RUN_HOME
@@ -97,16 +96,18 @@ class PrepareAndroidTests(BaseClass):
         Tns.prepare_android(attributes={"--path": self.app_name})
 
         # Add set of platform specific files
-        run("cp " + self.app_name + "/app/app.js " + self.app_name + "/app/app.ios.js")
-        run("cp " + self.app_name + "/app/app.js " + self.app_name + "/app/app.android.js")
-        run("cp " + self.app_name + "/app/app.js " + self.app_name + "/app/appios.js")
-        run("cp " + self.app_name + "/app/app.js " + self.app_name + "/app/appandroid.js")
-        run("cp " + self.app_name + "/app/app.js " + self.app_name + "/app/ios.js")
-        run("cp " + self.app_name + "/app/app.js " + self.app_name + "/app/android.js")
-        run("cp " + self.app_name + "/app/app.css " + self.app_name + "/app/app.ios.css")
-        run("cp " + self.app_name + "/app/app.css " + self.app_name + "/app/app.android.css")
-        run("mv " + self.app_name + "/app/app.js " + self.app_name + "/app/appNew.js")
-        run("mv " + self.app_name + "/app/app.css " + self.app_name + "/app/appNew.css")
+        File.copy(self.app_name + "/app/app.js", self.app_name + "/app/app.ios.js")
+        File.copy(self.app_name + "/app/app.js", self.app_name + "/app/app.android.js")
+        File.copy(self.app_name + "/app/app.js", self.app_name + "/app/appios.js")
+        File.copy(self.app_name + "/app/app.js", self.app_name + "/app/ios.js")
+        File.copy(self.app_name + "/app/app.js", self.app_name + "/app/android.js")
+
+        File.copy(self.app_name + "/app/app.css", self.app_name + "/app/app.ios.css")
+        File.copy(self.app_name + "/app/app.css", self.app_name + "/app/app.android.css")
+        File.copy(self.app_name + "/app/app.js", self.app_name + "/app/appNew.js")
+        File.copy(self.app_name + "/app/app.css", self.app_name + "/app/appNew.css")
+        File.remove(self.app_name + "/app/app.js")
+        File.remove(self.app_name + "/app/app.css")
 
         Tns.prepare_android(attributes={"--path": self.app_name})
 
