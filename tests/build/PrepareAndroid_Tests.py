@@ -99,6 +99,7 @@ class PrepareAndroidTests(BaseClass):
         File.copy(self.app_name + "/app/app.js", self.app_name + "/app/app.ios.js")
         File.copy(self.app_name + "/app/app.js", self.app_name + "/app/app.android.js")
         File.copy(self.app_name + "/app/app.js", self.app_name + "/app/appios.js")
+        File.copy(self.app_name + "/app/app.js", self.app_name + "/app/appandroid.js")
         File.copy(self.app_name + "/app/app.js", self.app_name + "/app/ios.js")
         File.copy(self.app_name + "/app/app.js", self.app_name + "/app/android.js")
 
