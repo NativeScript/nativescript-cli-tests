@@ -51,7 +51,6 @@ class UnittestsEmulator(BaseClass):
                                                                  "--path": self.app_name,
                                                                  "--timeout": "120"})
 
-        assert installed_plugin + " " + nativescript_unit_test_runner in output
         assert successfully_prepared in output
         assert server_started in output
         assert starting_ut_runner in output

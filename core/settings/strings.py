@@ -28,7 +28,6 @@ before_prepare = "Executing before-prepare hook"
 peer_typeScript = "Found peer TypeScript"
 skipping_prepare = "Skipping prepare."
 building = "Building project..."
-installed_plugin = "Successfully installed plugin "
 build_successful = "BUILD SUCCESSFUL"
 installed_platforms = "Installed platforms:  {0}"
 starting_simulator = "Starting iOS Simulator"
@@ -62,6 +61,7 @@ started_on_device = "Successfully started on device with identifier"
 carousel = "carousel"
 
 # Plugins
+
 nativescript_unit_test_runner = "nativescript-unit-test-runner"
 tns_core_modules = "tns-core-modules"
 
