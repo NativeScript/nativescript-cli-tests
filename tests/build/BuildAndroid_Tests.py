@@ -137,15 +137,27 @@ class BuildAndroidTests(BaseClass):
         assert "org.nativescript.TNSApp" in output
 
     def test_310_build_android_with_sdk22(self):
-        Folder.cleanup(self.app_name + '/platforms')  # This is required when build with different SDK
+        # This is required when build with different SDK
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+
         Tns.build_android(attributes={"--compileSdk": "22", "--path": self.app_name})
 
     def test_311_build_android_with_sdk23(self):
-        Folder.cleanup(self.app_name + '/platforms')  # This is required when build with different SDK
+        # This is required when build with different SDK
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+
         Tns.build_android(attributes={"--compileSdk": "23", "--path": self.app_name})
 
     def test_313_build_android_with_sdk99(self):
-        Folder.cleanup(self.app_name + '/platforms')  # This is required when build with different SDK
+        # This is required when build with different SDK
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+
         output = Tns.build_android(attributes={"--compileSdk": "99", "--path": self.app_name},
                                    assert_success=False)
         assert "You have specified '99' for compile sdk, but it is not installed on your system." in output
@@ -154,12 +166,13 @@ class BuildAndroidTests(BaseClass):
         # we should delete the project and recreate it.
         # TODO: Remove those lines after https://github.com/NativeScript/nativescript-cli/issues/2547 is fixed.
         Folder.cleanup(self.app_name)
-        Tns.create_app(BaseClass.app_name)
-        Tns.platform_add_android(attributes={"--path": BaseClass.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
 
     def test_321_build_with_copyto_option(self):
         Folder.cleanup(self.app_name + '/platforms')  # This is required when build with different SDK
         File.remove("TNSApp-debug.apk")
+        Tns.build_android(attributes={"--path": self.app_name, "--copy-to": "./"})
         Tns.build_android(attributes={"--path": self.app_name, "--copy-to": "./"})
         assert File.exists("TNSApp-debug.apk")
         File.remove("TNSApp-debug.apk")
