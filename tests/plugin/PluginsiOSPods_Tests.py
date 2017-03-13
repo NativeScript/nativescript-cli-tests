@@ -92,7 +92,7 @@ class PluginsiOSPodsTests(BaseClass):
         assert "location = \"group:Pods/Pods.xcodeproj\">" in output
 
         # This deployment target comes from the CLI
-        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
+        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj")
         assert "IPHONEOS_DEPLOYMENT_TARGET = 8.0;" in output
         # This deployment target comes from the Podfile - platform :ios, '8.1'
 
@@ -135,7 +135,7 @@ class PluginsiOSPodsTests(BaseClass):
         assert File.exists(self.app_name + "/platforms/ios/Pods/Pods.xcodeproj")
 
         # This deployment target comes from the CLI
-        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"DEPLOYMENT\"")
+        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj")
         assert "IPHONEOS_DEPLOYMENT_TARGET = 8.0;" in output
         # This deployment target comes from the Podfile - platform :ios, '8.1'
 
