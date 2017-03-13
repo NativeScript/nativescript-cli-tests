@@ -39,26 +39,3 @@ class ReplaceHelper(object):
         ReplaceHelper.rollback(app_name, ReplaceHelper.CHANGE_CSS)
         ReplaceHelper.rollback(app_name, ReplaceHelper.CHANGE_LICENSE)
         ReplaceHelper.rollback(app_name, ReplaceHelper.CHANGE_TNS_MODULES)
-
-        # @staticmethod
-        # def verify_replaced(device_type, app_name, file_change):
-        #     file = file_change[0]
-        #     file = file.replace("node_modules/tns-core-modules", "app/tns_modules")
-        #     text = file_change[2]
-        #     if device_type == DeviceType.EMULATOR:
-        #         Emulator.file_contains(app_name, file, text)
-        #     if device_type == DeviceType.SIMULATOR:
-        #         Simulator.file_contains(app_name, file, text)
-        #     if device_type == DeviceType.ANDROID:
-        #         Device.file_contains(platform="android", app_name=app_name, file_path=file, text=text)
-        #     if device_type == DeviceType.IOS:
-        #         Device.file_contains(platform="ios", app_name=app_name, file_path=file, text=text)
-        #
-        # @staticmethod
-        # def verify_all_replaced(device_type, app_name, syncAllFiles=False):
-        #     ReplaceHelper.verify_replaced(device_type, app_name, ReplaceHelper.FILE_CHANGE_XML)
-        #     ReplaceHelper.verify_replaced(device_type, app_name, ReplaceHelper.FILE_CHANGE_JS)
-        #     ReplaceHelper.verify_replaced(device_type, app_name, ReplaceHelper.FILE_CHANGE_CSS)
-        #     if syncAllFiles:
-        #         ReplaceHelper.verify_replaced(device_type, app_name, ReplaceHelper.FILE_CHANGE_LICENSE)
-        #         ReplaceHelper.verify_replaced(device_type, app_name, ReplaceHelper.FILE_CHANGE_TNS_MODULES)

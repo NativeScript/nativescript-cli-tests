@@ -17,11 +17,15 @@ from core.settings.settings import TNS_PATH
 
 
 class Device(object):
+
     @staticmethod
     def __get_screen(device_type, device_id, file_name):
         """
         Get screenshot of mobile device and save it to file (inside data/temp folder).
-        Returns path where image is saved.
+        :param device_type: DeviceType enum value.
+        :param device_id: Device identifier (example: `emulator-5554`).
+        :param file_name: Name of image that will be saved.
+        :return: Fill file path where image is saved.
         """
         file_path = os.path.join("data", "temp", "{0}.png".format(file_name))
         File.remove(file_path)
@@ -60,6 +64,12 @@ class Device(object):
 
     @staticmethod
     def __image_match(actual_image_path, expected_image_path):
+        """
+        Compare two images.
+        :param actual_image_path: Path to actual image.
+        :param expected_image_path: Path to expected image.
+        :return: match (boolean value), diff_percent (diff %), diff_image (diff image)
+        """
         actual_image = Image.open(actual_image_path)
         actual_pixels = actual_image.load()
         expected_image = Image.open(expected_image_path)
@@ -84,6 +94,14 @@ class Device(object):
 
     @staticmethod
     def screen_match(device_type, device_name, device_id, expected_image, timeout=60):
+        """
+        Verify screen match expected image.
+        :param device_type: DeviceType value.
+        :param device_name: Name of device (name of Android avd image, or name or iOS Simulator).
+        :param device_id: Device identifier (example: `emulator-5554`).
+        :param expected_image: Name of expected image.
+        :param timeout: Timeout in secconds.
+        """
         print "Verify {0} looks correct...".format(expected_image)
         expected_image_path = os.path.join("data", "images", device_name, "{0}.png".format(expected_image))
         if File.exists(expected_image_path):
@@ -124,18 +142,15 @@ class Device(object):
 
     @staticmethod
     def ensure_available(platform):
-        """Ensure real device is running"""
+        """
+        Ensure device is available.
+        :param platform:
+        """
         count = Device.get_count(platform)
         if count > 0:
             print "{0} {1} devices are running".format(count, platform)
         else:
             raise TypeError("No real devices attached to this host.")
-
-    @staticmethod
-    def get_id(platform):
-        """Get Id of first connected physical device"""
-        device_list = Device.get_ids(platform)
-        return device_list.pop(0)
 
     @staticmethod
     def get_id(platform):
@@ -228,40 +243,3 @@ class Device(object):
                 break
             if (running is False) and (time.time() > end_time):
                 raise NameError(app_id + " failed to start on " + device_id + " in " + str(timeout) + " seconds.")
-
-    @staticmethod
-    def cat_app_file(platform, app_name, file_path):
-        """Return content of file on device"""
-        device_id = Device.get_id("ios")
-        app_name = app_name.replace("_", "")
-        app_name = app_name.replace(" ", "")
-        output = ""
-        if platform is "android":
-            device_id = Device.get_id(platform="android")
-            command = ADB_PATH + " -s {0} shell run-as org.nativescript.{1} cat files/{2}" \
-                .format(device_id, app_name, file_path)
-            output = run(command)
-        if platform is "ios":
-            temp_folder = "temp_" + device_id
-            Folder.cleanup(temp_folder)
-            Folder.create(temp_folder)
-            get_files = "ios-deploy -i {0} --bundle_id org.nativescript.{1} --download {2} --to {3}".format(device_id,
-                                                                                                            app_name,
-                                                                                                            device_id,
-                                                                                                            temp_folder)
-            run(get_files, timeout=30)
-            output = File.read(temp_folder + "/Library/Application Support/LiveSync/{0}".format(file_path))
-        return output
-
-    @staticmethod
-    def file_contains(platform, app_name, file_path, text):
-        """Assert file on device contains text"""
-        output = Device.cat_app_file(platform, app_name, file_path)
-        if text in output:
-            print("{0} exists in {1}".format(text, file_path))
-        else:
-            print("{0} does not exists in {1}".format(text, file_path))
-            print "----------------------------------------------------"
-            print output
-            print "----------------------------------------------------"
-        assert text in output

@@ -113,21 +113,3 @@ class Simulator(object):
         app_name = app_name.replace('_', '')
         app_name = app_name.replace(' ', '')
         run('xcrun simctl uninstall booted org.nativescript.{0}'.format(app_name))
-
-    @staticmethod
-    def cat_app_file(app_name, file_path):
-        app_name = app_name.replace('_', '')
-        app_name = app_name.replace(' ', '')
-        app_path = run('xcrun simctl get_app_container booted org.nativescript.{0}'.format(app_name))
-        print 'Get content of: ' + app_path
-        output = run('cat {0}/{1}'.format(app_path, file_path))
-        return output
-
-    @staticmethod
-    def file_contains(app_name, file_path, text):
-        output = Simulator.cat_app_file(app_name, file_path)
-        if text in output:
-            print('{0} exists in {1}'.format(text, file_path))
-        else:
-            print('{0} does not exists in {1}'.format(text, file_path))
-        assert text in output
