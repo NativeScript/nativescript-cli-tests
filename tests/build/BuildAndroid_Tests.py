@@ -170,9 +170,12 @@ class BuildAndroidTests(BaseClass):
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
 
     def test_321_build_with_copyto_option(self):
-        Folder.cleanup(self.app_name + '/platforms')  # This is required when build with different SDK
+        # This is required when build with different SDK
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+
         File.remove("TNSApp-debug.apk")
-        Tns.build_android(attributes={"--path": self.app_name, "--copy-to": "./"})
         Tns.build_android(attributes={"--path": self.app_name, "--copy-to": "./"})
         assert File.exists("TNSApp-debug.apk")
         File.remove("TNSApp-debug.apk")
@@ -239,7 +242,11 @@ class BuildAndroidTests(BaseClass):
 
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows, because tar is not available")
     def test_399_build_project_with_gz_file(self):
-        Folder.cleanup(self.app_name + '/platforms')  # This is required when build with different SDK
+        # This is required when build with different SDK
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+
         # Create zip
         run("tar -czf " + self.app_name + "/app/app.tar.gz " + self.app_name + "/app/app.js")
         assert File.exists(self.app_name + "/app/app.tar.gz")
