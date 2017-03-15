@@ -1,3 +1,6 @@
+"""
+Run mocha tests on Android emulator.
+"""
 import os.path
 
 from nose.tools import timed
@@ -16,8 +19,6 @@ class UnittestsEmulator(BaseClass):
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
-        # It is important to auto start emulator, because otherwise it start random.
-        # Latest SDK 23 emulators show some error dialogs on startup and tests fail.
         Emulator.stop()
         Emulator.ensure_available()
 
@@ -35,7 +36,7 @@ class UnittestsEmulator(BaseClass):
 
     @timed(360)
     def test_010_test_mocha_android_emulator(self):
-        Tns.create_app(self.app_name)
+        Tns.create_app(self.app_name, update_modules=True)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.run_tns_command("test init", attributes={"--framework": "mocha", "--path": self.app_name})
 
@@ -46,10 +47,12 @@ class UnittestsEmulator(BaseClass):
 
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
+        # --timeout is hack to workaround https://github.com/NativeScript/karma-nativescript-launcher/issues/26
+        # Please remove --timeout after issue is fixed.
         output = Tns.run_tns_command("test android", attributes={"--emulator": "",
                                                                  "--justlaunch": "",
                                                                  "--path": self.app_name,
-                                                                 "--timeout": "120"})
+                                                                 "--timeout": "120"}, timeout=130)
 
         assert successfully_prepared in output
         assert server_started in output

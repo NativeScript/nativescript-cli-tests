@@ -1,6 +1,6 @@
-'''
+"""
 Helper for working with simulator
-'''
+"""
 
 import time
 
@@ -107,9 +107,3 @@ class Simulator(object):
             output = run('xcrun simctl list | grep \'{0}\''.format(name), log_level=CommandLogLevel.SILENT)
         assert "Unable to delete" not in delete_output, "Failed to delete simulator {0}".format(name)
         print 'Simulator \'{0}\' deleted.'.format(name)
-
-    @staticmethod
-    def uninstall_app(app_name):
-        app_name = app_name.replace('_', '')
-        app_name = app_name.replace(' ', '')
-        run('xcrun simctl uninstall booted org.nativescript.{0}'.format(app_name))

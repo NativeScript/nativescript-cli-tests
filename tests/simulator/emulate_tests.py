@@ -17,14 +17,9 @@ class EmulateiOSTests(BaseClass):
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
-        Simulator.stop()
-        Simulator.delete(SIMULATOR_NAME)
-        Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
 
         Tns.create_app(cls.app_name)
-        Tns.platform_add_ios(attributes={"--path": cls.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH
-                                         })
+        Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -61,7 +56,6 @@ class EmulateiOSTests(BaseClass):
         assert Process.is_running("Simulator")
 
     def test_003_emulate_ios_release(self):
-        Folder.cleanup(self.app_name + '/platforms')
         output = Tns.run_tns_command("emulate ios", attributes={"--device": SIMULATOR_NAME,
                                                                 "--path": self.app_name,
                                                                 "--justlaunch": "",

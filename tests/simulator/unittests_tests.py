@@ -1,3 +1,6 @@
+"""
+Run jasmine tests on iOS Simulator.
+"""
 import os.path
 
 from nose.tools import timed
@@ -24,11 +27,9 @@ class UnittestsSimulator(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
-        Simulator.uninstall_app(self.app_name)
 
     def tearDown(self):
         BaseClass.tearDown(self)
-        Folder.cleanup(self.app_name)
 
     @classmethod
     def tearDownClass(cls):
@@ -36,25 +37,21 @@ class UnittestsSimulator(BaseClass):
 
     @timed(360)
     def test_010_test_jasmine_ios_simulator(self):
-        Tns.create_app(self.app_name, attributes={})
-        Tns.platform_add_ios(attributes={"--path": self.app_name,"--frameworkPath": IOS_RUNTIME_PATH})
-        Tns.run_tns_command("test init", attributes={"--framework": "jasmine","--path": self.app_name})
+        Tns.create_app(self.app_name, update_modules=True)
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.run_tns_command("test init", attributes={"--framework": "jasmine", "--path": self.app_name})
 
         # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/2212
         Folder.navigate_to(self.app_name)
         run("npm install --save-dev jasmine-core")
-
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
-        Tns.run_tns_command("test ios", attributes={"--emulator": "",
-                                                    "--justlaunch": "",
-                                                    "--path": self.app_name,
-                                                    "--timeout": "180"})
-
+        # `timeout=130` is hack to workaround https://github.com/NativeScript/karma-nativescript-launcher/issues/26
+        # Please remove `timeout=130` after issue is fixed.
         output = Tns.run_tns_command("test ios", attributes={"--emulator": "",
                                                              "--justlaunch": "",
                                                              "--path": self.app_name,
-                                                             "--timeout": "60"})
+                                                             "--timeout": "120"}, timeout=130)
 
         assert successfully_prepared in output
         assert server_started in output

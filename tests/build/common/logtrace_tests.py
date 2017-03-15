@@ -1,5 +1,5 @@
 """
-log_trace tests
+Tests for --log trace option.
 """
 import os
 
@@ -33,6 +33,6 @@ class LogtraceTests(BaseClass):
         assert "Looking for project in" in output
         assert "Project directory is" in output
         assert "Package: " + self.app_id in output
-        assert "Available Android targets" in output
+        assert "Installed Android Targets" in output
         assert "Using Android SDK" in output
         assert "Project successfully created" in output

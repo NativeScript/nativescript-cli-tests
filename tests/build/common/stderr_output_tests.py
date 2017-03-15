@@ -1,5 +1,5 @@
 """
-Tests redirecting error log
+Tests redirecting error log and command options validations.
 """
 
 from core.osutils.file import File

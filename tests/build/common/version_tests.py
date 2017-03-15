@@ -1,7 +1,6 @@
 """
-Test for version command
+Test for `tns --version` command
 """
-
 import re
 
 from core.tns.tns import Tns

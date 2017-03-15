@@ -15,7 +15,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
     COMMAND_TIMEOUT, ANDROID_PATH, IOS_PATH, SUT_ROOT_FOLDER, CLI_PATH, ANDROID_RUNTIME_PATH, \
     IOS_RUNTIME_PATH, TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH, IOS_INSPECTOR_PATH, TNS_PLATFORM_DECLARATIONS_PATH, \
-    BRANCH
+    BRANCH, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK
 from core.tns.tns import Tns
 from core.tns.tns_installed_platforms import Platforms
 from core.xcode.xcode import Xcode
@@ -102,7 +102,9 @@ if __name__ == '__main__':
     # Copy test packages and cleanup
     if CURRENT_OS == OSType.OSX:
         get_test_packages(platform=Platforms.BOTH)
-        Simulator.stop()  # Stop running simulators
+        Simulator.stop()
+        Simulator.delete(SIMULATOR_NAME)
+        Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
         Xcode.cleanup_cache()  # Clean Xcode cache folders
     else:
         get_test_packages(platform=Platforms.ANDROID)
