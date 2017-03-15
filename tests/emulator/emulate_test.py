@@ -1,5 +1,5 @@
 """
-Test for emulate command in context of Android
+Test for `tns emulate android` command
 """
 import os
 
@@ -29,7 +29,7 @@ class EmulateAndroidTests(BaseClass):
         Emulator.stop()
         Emulator.ensure_available()
         Folder.cleanup('./' + cls.app_name)
-        Tns.create_app(cls.app_name)
+        Tns.create_app(cls.app_name, update_modules=True)
         Tns.platform_add_android(attributes={"--path": cls.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH
                                              })
@@ -95,12 +95,8 @@ class EmulateAndroidTests(BaseClass):
 
     def test_300_emulate_android_platform_not_added(self):
         Tns.create_app(self.app_name_noplatform)
-        output = Tns.run_tns_command("emulate android", attributes={  # "--device": EMULATOR_NAME,
-            "--timeout": "720",
-            "--justlaunch": "",
-            "--path": self.app_name_noplatform
-        },
-                                     timeout=750)
+        output = Tns.run_tns_command("emulate android", attributes={"--timeout": "720", "--justlaunch": "",
+                                                                    "--path": self.app_name_noplatform}, timeout=750)
         assert copy_template_files in output
         assert successfully_created in output
         assert successfully_prepared in output
@@ -123,6 +119,5 @@ class EmulateAndroidTests(BaseClass):
                                                                     "--timeout": "30",
                                                                     "--justlaunch": ""
                                                                     })
-        assert "Option --avd is no longer supported. Please use --device isntead!" not in output
-        assert "Cannot find device with name: " + invalid in output
+        assert "Cannot resolve the specified connected device by the provided index or identifier" in output
         assert "Usage" in output
