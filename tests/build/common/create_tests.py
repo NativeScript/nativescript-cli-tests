@@ -117,19 +117,24 @@ class CreateTests(BaseClass):
 
     @parameterized.expand([
         "tns-template-hello-world",
-        "tns-template-hello-world-ts",
+        "https://github.com/NativeScript/template-hello-world.git",
         "https://github.com/NativeScript/template-hello-world-ts/tarball/master",
-        "https://github.com/NativeScript/template-hello-world-ts.git",
         "https://github.com/NativeScript/template-hello-world-ts.git#master",
+        "https://github.com/NativeScript/template-hello-world-ng.git#master",
         "typescript",
         "tsc",
         "ng",
+        "angular",
     ])
     def test_200_create_project_with_template(self, template_source):
         """Create app should be possible with --template and npm packages, git repos and aliases"""
 
-        output = Tns.create_app(self.app_name, attributes={"--template": template_source}, update_modules=False)
+        output = Tns.create_app(self.app_name, attributes={"--template": template_source})
         TnsAsserts.created(self.app_name, output=output)
+        if 'ts' in template_source and '#master' in template_source:
+            TnsAsserts.created_ts(self.app_name, output=output)
+        if 'ng' in template_source and '#master' in template_source:
+            TnsAsserts.created_ng(self.app_name, output=output)
 
     def test_201_create_project_with_local_directory_template(self):
         """--template should install all packages from package.json"""
@@ -145,7 +150,7 @@ class CreateTests(BaseClass):
         strings = ["\"tns-core-modules\":", "\"lodash\": \"3.10.1\"", "\"minimist\": \"1.2.0\""]
         TnsAsserts.package_json_contains(self.app_name, string_list=strings)
 
-    def test_400_create_project_with_copyfrom_wrong_path(self):
+    def test_400_create_project_with_wrong_template_path(self):
         """--template should not create project if value is no npm installable"""
 
         output = Tns.create_app(self.app_name, attributes={"--template": invalid},
@@ -153,7 +158,13 @@ class CreateTests(BaseClass):
         assert "successfully created" not in output
         assert "npm ERR! 404 no such package available : " + invalid in output
 
-    def test_401_create_project_in_folder_with_existing_project(self):
+    def test_401_create_project_with_empty_template_path(self):
+        output = Tns.create_app(self.app_name, attributes={"--template": ""}, assert_success=False,
+                                update_modules=False)
+        assert "successfully created" not in output
+        assert "requires non-empty value" in output
+
+    def test_402_create_project_in_folder_with_existing_project(self):
         """Create project with name that already exist should show friendly error message"""
 
         Tns.create_app(self.app_name, update_modules=False)
@@ -161,9 +172,15 @@ class CreateTests(BaseClass):
         assert "successfully created" not in output
         assert "Path already exists and is not empty" in output
 
-    def test_402_create_project_with_no_name(self):
+    def test_403_create_project_with_no_name(self):
         """Create project without name should show friendly error message"""
 
         output = Tns.run_tns_command("create ")
         assert "You need to provide all the required parameters." in output
         assert "# create" in output
+
+    def test_404_create_project_with_template_and_ng(self):
+        output = Tns.create_app(self.app_name, attributes={"--template": "--ng"}, assert_success=False,
+                                update_modules=False)
+        assert "successfully created" not in output
+        assert "requires non-empty value" in output

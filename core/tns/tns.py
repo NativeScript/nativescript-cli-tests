@@ -1,5 +1,5 @@
 """
-A wrapper of the tns commands.
+A wrapper of tns commands.
 """
 import os
 import time
