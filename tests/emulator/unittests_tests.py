@@ -7,6 +7,7 @@ from nose.tools import timed
 
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
+from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TEST_RUN_HOME
@@ -41,11 +42,8 @@ class UnittestsEmulator(BaseClass):
         Tns.run_tns_command("test init", attributes={"--framework": "mocha", "--path": self.app_name})
 
         # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/2212
-        Folder.navigate_to(self.app_name)
-        run("npm install --save-dev mocha")
-        run("npm install --save-dev chai")
-
-        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
+        Npm.install(package='mocha', folder=self.app_name, option='--save-dev')
+        Npm.install(package='chai', folder=self.app_name, option='--save-dev')
 
         # --timeout is hack to workaround https://github.com/NativeScript/karma-nativescript-launcher/issues/26
         # Please remove --timeout after issue is fixed.

@@ -1,14 +1,13 @@
 """
 Tests for `tns debug ios` executed on iOS Simulator.
 """
-import os.path
+import os
 import time
 
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.npm.npm import Npm
-from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
@@ -18,14 +17,19 @@ from core.settings.strings import *
 
 
 class DebugSimulatorTests(BaseClass):
+
+    INSPECTOR_GLOBAL_PATH = os.path.join(os.path.expanduser('~'), '.npm/tns-ios-inspector')
+
     @classmethod
     def setUpClass(cls):
         logfile = os.path.join('out', cls.__name__ + '.txt')
         BaseClass.setUpClass(logfile)
+        Process.kill('Safari')
+        Process.kill('NativeScript Inspector')
         Emulator.stop()
         Simulator.stop()
         Simulator.start(name=SIMULATOR_NAME)
-        run('rm -rf ~/.npm/node_modules/tns-ios-inspector')
+        Folder.cleanup(cls.INSPECTOR_GLOBAL_PATH)
         Tns.create_app(cls.app_name, update_modules=True)
         Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
         Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--save-dev', folder=cls.app_name)
@@ -33,12 +37,12 @@ class DebugSimulatorTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
         Process.kill('Safari')
-        Process.kill('Inspector')
+        Process.kill('NativeScript Inspector')
 
     def tearDown(self):
         BaseClass.tearDown(self)
         Process.kill('Safari')
-        Process.kill('Inspector')
+        Process.kill('NativeScript Inspector')
 
     @classmethod
     def tearDownClass(cls):
@@ -48,14 +52,12 @@ class DebugSimulatorTests(BaseClass):
     """
     Spec:
 
-    ┌───────────────────────────────────────────────────────────────────────────────────┬───────────────────────────────────────────────────────────────────────────┐
-    │ Usage                                                                             │ Synopsis                                                                  │
-    │ Deploy on device, run the app, start Safari Web Inspector and attach the debugger │ $ tns debug ios                                                           │
-    │ Deploy on device, run the app and stop at the first code statement                │ $ tns debug ios --debug-brk [--device <Device ID>] [--no-client]          │
-    │    Deploy in the iOS Simulator, run the app and stop at the first code statement  │ $ tns debug ios --debug-brk --emulator [<Emulator Options>] [--no-client] │
-    │ Attach the debug tools to a running app on device                                 │ $ tns debug ios --start [--device <Device ID>] [--no-client]              │
-    │ Attach the debug tools to a running app in the iOS Simulator                      │ $ tns debug ios --start --emulator [<Emulator Options>] [--no-client]     │
-    └───────────────────────────────────────────────────────────────────────────────────┴───────────────────────────────────────────────────────────────────────────┘
+    | Usage                                                                             | Synopsis                                                                  |
+    | Deploy on device, run the app, start Safari Web Inspector and attach the debugger | $ tns debug ios                                                           |
+    | Deploy on device, run the app and stop at the first code statement                | $ tns debug ios --debug-brk [--device <Device ID>] [--no-client]          |
+    |    Deploy in the iOS Simulator, run the app and stop at the first code statement  | $ tns debug ios --debug-brk --emulator [<Emulator Options>] [--no-client] |
+    | Attach the debug tools to a running app on device                                 | $ tns debug ios --start [--device <Device ID>] [--no-client]              |
+    | Attach the debug tools to a running app in the iOS Simulator                      | $ tns debug ios --start --emulator [<Emulator Options>] [--no-client]     |
 
     Prepares, builds and deploys the project when necessary. Debugs your project on a connected device or in the iOS Simulator.
     While debugging, prints the output from the application in the console and watches for changes in your code. Once a change is detected, it synchronizes the change with all selected devices and restarts/refreshes the application.

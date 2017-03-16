@@ -119,6 +119,5 @@ class EmulateAndroidTests(BaseClass):
                                                                     "--timeout": "30",
                                                                     "--justlaunch": ""
                                                                     })
-        assert "Option --avd is no longer supported. Please use --device isntead!" not in output
-        assert "Cannot find device with name: " + invalid in output
+        assert "Cannot resolve the specified connected device by the provided index or identifier" + invalid in output
         assert "Usage" in output
