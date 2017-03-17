@@ -1,7 +1,8 @@
 """
-Tests for static binding generator
+Test for specific needs of Android runtime.
 """
 import os
+
 import subprocess
 import threading
 import unittest

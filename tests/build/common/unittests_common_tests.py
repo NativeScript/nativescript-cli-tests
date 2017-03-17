@@ -1,3 +1,6 @@
+"""
+Test for `tns test init` command.
+"""
 import os.path
 
 from core.base_class.BaseClass import BaseClass
@@ -27,8 +30,7 @@ class UnitTests(BaseClass):
 
     def test_101_test_init_jasmine(self):
         Tns.create_app(app_name=self.app_name)
-        output = Tns.run_tns_command("test init", attributes={"--framework": "jasmine",
-                                                              "--path ": self.app_name})
+        output = Tns.run_tns_command("test init", attributes={"--framework": "jasmine", "--path ": self.app_name})
         assert installed_plugin.format(nativescript_unit_test_runner) in output
         assert test_file_created in output
         assert run_tests_using in output
@@ -61,8 +63,7 @@ class UnitTests(BaseClass):
 
     def test_301_test_init_qunit(self):
         Tns.create_app(app_name=self.app_name)
-        output = Tns.run_tns_command("test init", attributes={"--framework": "qunit",
-                                                              "--path": self.app_name})
+        output = Tns.run_tns_command("test init", attributes={"--framework": "qunit", "--path": self.app_name})
 
         assert installed_plugin.format(nativescript_unit_test_runner) in output
         assert test_file_created in output

@@ -100,7 +100,7 @@ class TnsAsserts(object):
         """
         Assert TypeScript application is created properly.
         :param app_name: App name
-        :param output: Outout of `tns create command`
+        :param output: Output of `tns create command`
         """
 
         # First make sure base app is created
@@ -136,6 +136,18 @@ class TnsAsserts(object):
         assert File.exists(app_name + TnsAsserts.HOOKS + 'before-prepare/nativescript-dev-typescript.js')
         assert File.exists(app_name + TnsAsserts.HOOKS + 'before-watch/nativescript-dev-typescript.js')
         assert File.exists(app_name + TnsAsserts.NODE_MODULES + 'typescript/bin/tsc')
+
+    @staticmethod
+    def created_ng(app_name, output=None):
+        """
+        Assert TypeScript application is created properly.
+        :param app_name: App name
+        :param output: Output of `tns create command`
+        """
+
+        # First make sure base typescript app is created
+        TnsAsserts.created_ts(app_name=app_name, output=output)
+
 
     @staticmethod
     def platform_added(app_name, platform=Platforms.NONE, output=None):
