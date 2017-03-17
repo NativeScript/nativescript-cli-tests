@@ -60,12 +60,12 @@ class RunAndroidTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Change CSS and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=10)
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
         strings = ['Successfully transferred app.css', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Change XML and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=10)
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
         strings = ['Successfully transferred main-page.xml', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
@@ -78,11 +78,11 @@ class RunAndroidTests(BaseClass):
         strings = ['Successfully transferred main-view-model.js', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=10)
+        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
         strings = ['Successfully transferred app.css', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML, sleep=10)
+        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
         strings = ['Successfully transferred main-page.xml', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 

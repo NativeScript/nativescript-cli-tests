@@ -119,5 +119,6 @@ class EmulateAndroidTests(BaseClass):
                                                                     "--timeout": "30",
                                                                     "--justlaunch": ""
                                                                     })
-        assert "Cannot resolve the specified connected device by the provided index or identifier" in output
+        assert 'Cannot resolve the specified connected device by the provided index or identifier' or \
+               'Cannot find device with name' in output
         assert "Usage" in output
