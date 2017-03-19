@@ -121,10 +121,16 @@ class File(object):
 
     @staticmethod
     def replace(file_path, str1, str2):
-        """Replace strings in file"""
+        """
+        Replace strings in file
+        :param file_path: File path
+        :param str1: Old string.
+        :param str2: New string.
+        """
 
         for line in fileinput.input(file_path, inplace=1):
             print line.replace(str1, str2)
+
         print "##### REPLACE FILE CONTENT #####"
         print "File: {0}".format(file_path)
         print "Old String: {0}".format(str1)

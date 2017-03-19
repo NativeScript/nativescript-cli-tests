@@ -420,7 +420,7 @@ class Tns(object):
         Tns.run_tns_command("error-reporting disable")
 
     @staticmethod
-    def wait_for_log(log_file, string_list, timeout=10, check_interval=3, clean_log=True):
+    def wait_for_log(log_file, string_list, timeout=30, check_interval=3, clean_log=True):
         """
         Wait until log file contains list of string.
         :param log_file: Path to log file.
