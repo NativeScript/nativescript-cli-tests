@@ -1,7 +1,0 @@
-TNSApp/build-debug.xcconfig
-TNSApp/build-release.xcconfig
-TNSApp/build.xcconfig
-TNSApp/en.lproj/InfoPlist.strings
-TNSApp/en.lproj/LaunchScreen.xib
-TNSApp/TNSApp-Prefix.pch
-TNSApp.xcodeproj/project.pbxproj

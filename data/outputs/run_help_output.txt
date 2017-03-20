@@ -1,8 +1,0 @@
-Usage:
-    $ tns run <Command>
-
-You must run the run command with a related command.
-
-<Command> is a related command that sets a target platform for the run command. You can run the following related commands:
-    android - Runs your project on a connected Android device or in a native Android emulator, if configured.
-    ios - Runs your project on a connected iOS device or in the iOS Simulator, if configured.
