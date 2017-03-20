@@ -7,8 +7,9 @@ import time
 from core.device.adb import Adb
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
+from core.osutils.file import File
 from core.osutils.process import Process
-from core.settings.settings import CURRENT_OS, OSType, EMULATOR_NAME, EMULATOR_PORT, EMULATOR_ID
+from core.settings.settings import EMULATOR_NAME, EMULATOR_PORT, EMULATOR_ID
 
 EMULATOR_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'emulator')
 
@@ -39,16 +40,15 @@ class Emulator(object):
         """
         print 'Starting emulator {0}'.format(emulator_name)
         start_command = EMULATOR_PATH + ' -avd ' + emulator_name + ' -port ' + port + ' -wipe-data'
-        if CURRENT_OS == OSType.WINDOWS:
-            run(start_command, timeout=10, output=False, wait=False, log_level=CommandLogLevel.COMMAND_ONLY)
-        else:
-            run(start_command + ' &', timeout=timeout, output=False, log_level=CommandLogLevel.COMMAND_ONLY)
+        log_file = run(start_command, timeout=timeout, wait=False, log_level=CommandLogLevel.COMMAND_ONLY)
 
         # Check if emulator is running
         device_name = 'emulator-' + port
         if Emulator.wait(device_name, timeout):
             print 'Emulator started successfully.'
         else:
+            print 'Emulator failed to boot!'
+            print File.read(log_file)
             raise Exception('Wait for emulator failed!')
 
     @staticmethod

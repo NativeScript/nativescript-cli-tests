@@ -1,4 +1,5 @@
 import os
+import time
 
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
@@ -108,3 +109,38 @@ class Adb(object):
         """
         kill_command = "shell ps | awk '/com\.android\.commands\.monkey/ { system(\"adb shell kill \" $2) }'"
         Adb.run(command=kill_command, device_id=device_id, log_level=CommandLogLevel.SILENT)
+
+    @staticmethod
+    def __list_path(device_id, package_id, path):
+        """
+        List file of application.
+        :param device_id: Device identifier.
+        :param package_id: Package identifier.
+        :param path: Path relative to root folder of the package.
+        :return: List of files and folders
+        """
+        command = 'shell ls /data/data/{0}/files/{1}'.format(package_id, path)
+        output = Adb.run(command=command, device_id=device_id, log_level=CommandLogLevel.SILENT)
+        return output
+
+    @staticmethod
+    def file_exists(device_id, package_id, path, timeout=10):
+        t_end = time.time() + timeout
+        found = False
+        while time.time() < t_end:
+            files = Adb.__list_path(device_id=device_id, package_id=package_id, path=path)
+            if path in files:
+                found = True
+                break
+        return found
+
+    @staticmethod
+    def path_does_not_exist(device_id, package_id, path, timeout=10):
+        t_end = time.time() + timeout
+        found = True
+        while time.time() < t_end:
+            files = Adb.__list_path(device_id=device_id, package_id=package_id, path=path)
+            if path not in files:
+                found = False
+                break
+        return found
