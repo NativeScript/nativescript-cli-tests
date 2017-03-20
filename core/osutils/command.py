@@ -67,6 +67,11 @@ def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=Comm
         File.append(TEST_LOG, command)
         print "##### {0} Executing command : {1}\n".format(time.strftime("%X"), command)
 
+    # Hack for async commands on Windows
+    if CURRENT_OS is OSType.WINDOWS:
+        if not wait:
+            timeout = 10
+
     # prepare command line
     thread = threading.Thread(target=fork_it)
     thread.start()

@@ -32,16 +32,6 @@ class Tns(object):
         return platform
 
     @staticmethod
-    def __get_app_id(app_name):
-        """
-        Get application id from package.json
-        :param app_name: Folder where application is located.
-        :return: Application id.
-        """
-        json = TnsAsserts.get_package_json(app_name)
-        return json.get('nativescript').get('id')
-
-    @staticmethod
     def __get_final_package_name(app_name, platform=Platforms.NONE):
         """
         Get base name of final package (without extension and `-debug`, `-release` strings).
@@ -55,7 +45,7 @@ class Tns(object):
         # See https://github.com/NativeScript/nativescript-cli/issues/2575
 
         if platform is Platforms.ANDROID:
-            app_id = Tns.__get_app_id(app_name)
+            app_id = Tns.get_app_id(app_name)
             # We can't get last with [-1] because some apps have wrong format of id.
             # For example: `org.nativescript.demo.barcodescanner`
             # In this case we should retrun `demo` as final package name.
@@ -72,6 +62,16 @@ class Tns(object):
             if k == "--path":
                 app_name = v
         return app_name
+
+    @staticmethod
+    def get_app_id(app_name):
+        """
+        Get application id from package.json
+        :param app_name: Folder where application is located.
+        :return: Application id.
+        """
+        json = TnsAsserts.get_package_json(app_name)
+        return json.get('nativescript').get('id')
 
     @staticmethod
     def run_tns_command(command, tns_path=None, attributes={}, log_trace=False, timeout=COMMAND_TIMEOUT, wait=True):

@@ -13,6 +13,7 @@ Run should sync all the changes correctly:
 """
 
 import os
+import time
 import unittest
 
 from core.base_class.BaseClass import BaseClass
@@ -197,57 +198,50 @@ class RunAndroidTests(BaseClass):
                             device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
 
         # Add new files
+        new_file_name = 'main-page2.xml'
         source_file = os.path.join(self.app_name, 'app', 'main-page.xml')
-        destination_file = os.path.join(self.app_name, 'app', 'main-page2.xml')
+        destination_file = os.path.join(self.app_name, 'app', new_file_name)
         File.copy(source_file, destination_file)
-        strings = ['Successfully transferred main-page2.xml','Successfully synced application', EMULATOR_ID]
+        strings = ['Successfully transferred main-page2.xml', 'Successfully synced application', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        # Verify new files are there
-        # TODO: Write it to work for all kind of devices and move it to core/device
-        command = 'shell ls /data/data/org.nativescript.TNSApp/files/app'
-        output = Adb.run(command=command, device_id=EMULATOR_ID)
-        assert 'main-page.xml' in output
-        assert 'main-page2.xml' in output
+        # Verify new file is sysched and available on device.
+        error_message = 'Newly created file {0} not found on {1}'.format(new_file_name, EMULATOR_ID)
+        app_id = Tns.get_app_id(app_name=self.app_name)
+        path = 'app/{0}'.format(new_file_name)
+        assert Adb.file_exists(device_id=EMULATOR_ID, package_id=app_id, path=path), error_message
 
         # Revert changes(rename file and delete file)
         File.copy(destination_file, source_file)
         File.remove(destination_file)
-        strings = ['Successfully transferred main-page.xml','Successfully synced application', EMULATOR_ID]
+        strings = ['Successfully transferred main-page.xml', 'Successfully synced application', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        # Verify new files are there
-        # TODO: Write it to work for all kind of devices and move it to core/device
-        command = 'shell ls /data/data/org.nativescript.TNSApp/files/app'
-        output = Adb.run(command=command, device_id=EMULATOR_ID)
-        assert 'main-page.xml' in output
-        assert 'main-page2.xml' not in output
+        # Verify new file is sysched and available on device.
+        error_message = '{0} was deleted, but still available on {1}'.format(new_file_name, EMULATOR_ID)
+        assert Adb.path_does_not_exist(device_id=EMULATOR_ID, package_id=app_id, path=path), error_message
 
         # Add folder
+        new_folder_name = 'test2'
         source_file = os.path.join(self.app_name, 'app', 'test')
-        destination_file = os.path.join(self.app_name, 'app', 'test2')
+        destination_file = os.path.join(self.app_name, 'app', new_folder_name)
         Folder.copy(source_file, destination_file)
-        strings = ['Successfully transferred test2','Successfully transferred test.txt', EMULATOR_ID]
+        strings = ['Successfully transferred test2', 'Successfully transferred test.txt', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        # Verify new files are there
-        # TODO: Write it to work for all kind of devices and move it to core/device
-        command = 'shell ls /data/data/org.nativescript.TNSApp/files/app'
-        output = Adb.run(command=command, device_id=EMULATOR_ID)
-        assert 'test' in output
-        assert 'test2' in output
+        # Verify new folder is sysched and available on device.
+        error_message = 'Newly created folder {0} not found on {1}'.format(new_folder_name, EMULATOR_ID)
+        path = 'app/{0}'.format(new_folder_name)
+        assert Adb.file_exists(device_id=EMULATOR_ID, package_id=app_id, path=path), error_message
 
         # Delete folder
         Folder.cleanup(destination_file)
-        strings = ['Successfully syncedx application', EMULATOR_ID]
+        strings = ['Successfully synced application', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        # Verify new files are there
-        # TODO: Write it to work for all kind of devices and move it to core/device
-        command = 'shell ls /data/data/org.nativescript.TNSApp/files/app'
-        output = Adb.run(command=command, device_id=EMULATOR_ID)
-        assert 'test' in output
-        assert 'test2' not in output
+        # Verify new folder is sysched and available on device.
+        error_message = 'Deleted folder {0} is still available on {1}'.format(new_folder_name, EMULATOR_ID)
+        assert Adb.path_does_not_exist(device_id=EMULATOR_ID, package_id=app_id, path=path), error_message
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
@@ -335,15 +329,15 @@ class RunAndroidTests(BaseClass):
         source_file = os.path.join(self.app_name, 'app', 'main-page.xml')
         destination_file = os.path.join(self.app_name, 'app', '.tempfile')
         File.copy(source_file, destination_file)
+        time.sleep(10)
         strings = ['Successfully synced application', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        # Verify file does not exists on file level
-        # TODO: Write it to work for all kind of devices and move it to core/device
-        command = 'shell ls /data/data/org.nativescript.TNSApp/files/app'
-        output = Adb.run(command=command, device_id=EMULATOR_ID)
-        assert 'main-page.xml' in output
-        assert '.tempfile' not in output
+        # Verify hidden file does not exists on mobile device.
+        path = 'app/{0}'.format('.tempfile')
+        app_id = Tns.get_app_id(self.app_name)
+        error_message = 'Hidden file {0} is transferred to {1}'.format(path, EMULATOR_ID)
+        assert Adb.path_does_not_exist(device_id=EMULATOR_ID, package_id=app_id, path=path), error_message
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
