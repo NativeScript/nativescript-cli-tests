@@ -11,7 +11,7 @@ from core.osutils.os_type import OSType
 from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, DEVELOPMENT_TEAM, BRANCH, TEST_RUN_HOME, \
     COMMAND_TIMEOUT, OUTPUT_FILE, CURRENT_OS
 from core.settings.strings import config_release, codesign, config_debug
-from core.tns.tns_installed_platforms import Platforms
+from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
 
@@ -22,17 +22,17 @@ class Tns(object):
     NEXT_TAG = 'internal-preview'
 
     @staticmethod
-    def __get_platform_string(platform=Platforms.NONE):
-        if platform is Platforms.NONE:
+    def __get_platform_string(platform=Platform.NONE):
+        if platform is Platform.NONE:
             return ""
-        if platform is Platforms.ANDROID:
+        if platform is Platform.ANDROID:
             return "android"
-        if platform is Platforms.IOS:
+        if platform is Platform.IOS:
             return "ios"
         return platform
 
     @staticmethod
-    def __get_final_package_name(app_name, platform=Platforms.NONE):
+    def __get_final_package_name(app_name, platform=Platform.NONE):
         """
         Get base name of final package (without extension and `-debug`, `-release` strings).
         :param app_name: Folder where application is located.
@@ -44,13 +44,13 @@ class Tns(object):
         # iOS respect folder name
         # See https://github.com/NativeScript/nativescript-cli/issues/2575
 
-        if platform is Platforms.ANDROID:
+        if platform is Platform.ANDROID:
             app_id = Tns.get_app_id(app_name)
             # We can't get last with [-1] because some apps have wrong format of id.
             # For example: `org.nativescript.demo.barcodescanner`
             # In this case we should retrun `demo` as final package name.
             return app_id.split('.')[2]
-        elif platform is Platforms.IOS:
+        elif platform is Platform.IOS:
             return app_name.replace(" ", "").replace("-", "").replace("_", "").replace("\"", "")
         else:
             raise "Invalid platform!"
@@ -189,7 +189,7 @@ class Tns(object):
         return output
 
     @staticmethod
-    def platform_add(platform=Platforms.NONE, version=None, attributes={}, assert_success=True, log_trace=False,
+    def platform_add(platform=Platform.NONE, version=None, attributes={}, assert_success=True, log_trace=False,
                      tns_path=None):
 
         #######################################################################################
@@ -214,7 +214,7 @@ class Tns(object):
         return output
 
     @staticmethod
-    def platform_remove(platform=Platforms.NONE, attributes={}, assert_success=True, log_trace=False, tns_path=None):
+    def platform_remove(platform=Platform.NONE, attributes={}, assert_success=True, log_trace=False, tns_path=None):
         platform_string = Tns.__get_platform_string(platform)
         output = Tns.run_tns_command("platform remove " + platform_string, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
@@ -223,14 +223,14 @@ class Tns(object):
         if assert_success:
             assert "Platform {0} successfully removed".format(platform_string) in output
             assert "error" not in output
-            if platform is Platforms.ANDROID:
+            if platform is Platform.ANDROID:
                 assert not File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
-            if platform is Platforms.IOS:
+            if platform is Platform.IOS:
                 assert not File.exists(app_name + TnsAsserts.IOS)
         return output
 
     @staticmethod
-    def platform_update(platform=Platforms.NONE, version=None, attributes={}, assert_success=True, log_trace=False,
+    def platform_update(platform=Platform.NONE, version=None, attributes={}, assert_success=True, log_trace=False,
                         tns_path=None):
         platform_string = Tns.__get_platform_string(platform)
         if version is not None:
@@ -243,14 +243,14 @@ class Tns(object):
 
     @staticmethod
     def platform_add_android(version=None, attributes={}, assert_success=True, log_trace=False, tns_path=None):
-        return Tns.platform_add(platform=Platforms.ANDROID, version=version, attributes=attributes,
+        return Tns.platform_add(platform=Platform.ANDROID, version=version, attributes=attributes,
                                 assert_success=assert_success,
                                 log_trace=log_trace,
                                 tns_path=tns_path)
 
     @staticmethod
     def platform_add_ios(version=None, attributes={}, assert_success=True, log_trace=False, tns_path=None):
-        return Tns.platform_add(Platforms.IOS, version=version, attributes=attributes, assert_success=assert_success,
+        return Tns.platform_add(Platform.IOS, version=version, attributes=attributes, assert_success=assert_success,
                                 log_trace=log_trace,
                                 tns_path=tns_path)
 
@@ -295,7 +295,7 @@ class Tns(object):
             assert "BUILD SUCCESSFUL" in output, "Build failed!"
             assert "Project successfully built" in output, "Build failed!"
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
-            apk_base_name = Tns.__get_final_package_name(app_name, platform=Platforms.ANDROID)
+            apk_base_name = Tns.__get_final_package_name(app_name, platform=Platform.ANDROID)
             base_app_path = app_name + TnsAsserts.PLATFORM_ANDROID + "build/outputs/apk/" + apk_base_name
             if "--release" in attributes.keys():
                 apk_path = base_app_path + "-release.apk"
@@ -319,7 +319,7 @@ class Tns(object):
             assert "malformed" not in output
             assert codesign in output
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
-            app_id = Tns.__get_final_package_name(app_name, platform=Platforms.IOS)
+            app_id = Tns.__get_final_package_name(app_name, platform=Platform.IOS)
             app_name = app_name.replace("\"", "")  # Handle projects with space
 
             # Verify release/debug builds
@@ -370,34 +370,15 @@ class Tns(object):
         return output
 
     @staticmethod
-    def run_ios(attributes={}, assert_success=True, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None):
+    def run_ios(attributes={}, assert_success=True, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None, wait=True):
         if "8." in Xcode.get_version():
             attr = {"--teamId": DEVELOPMENT_TEAM}
             attributes.update(attr)
         output = Tns.run_tns_command("run ios", attributes=attributes, log_trace=log_trace, timeout=timeout,
-                                     tns_path=tns_path)
+                                     tns_path=tns_path, wait=wait)
         if assert_success:
             assert "Project successfully built" in output
             assert "Successfully installed on device with identifier" in output
-        return output
-
-    @staticmethod
-    def livesync(platform=None, attributes={}, log_trace=True, assert_success=True):
-        command = "livesync "
-        if platform is not None:
-            command += platform
-        attributes.update({"--justlaunch": ""})
-        output = Tns.run_tns_command(command, attributes=attributes, log_trace=log_trace)
-
-        if assert_success:
-            assert "Project successfully prepared" in output
-            if platform is "android":
-                assert "Transferring project files..." in output
-                assert "Applying changes..." in output
-                assert "Successfully synced application" in output
-                time.sleep(10)
-            elif platform is "ios":
-                assert "Project successfully prepared" in output
         return output
 
     @staticmethod
@@ -431,24 +412,28 @@ class Tns(object):
         """
         t_end = time.time() + timeout
         all_items_found = False
+        not_found_list = []
         log = ""
         while time.time() < t_end:
+            not_found_list = []
             log = File.read(log_file)
             for item in string_list:
-                not_found_item = None
                 if item in log:
                     print "'{0}' found.".format(item)
                 else:
-                    not_found_item = item
-            if not_found_item is None:
+                    not_found_list.append(item)
+            if not_found_list == []:
                 all_items_found = True
                 print "Log contains: {0}".format(string_list)
                 break
             else:
-                print "'{0}' NOT found. Wait...".format(item)
+                print "'{0}' NOT found. Wait...".format(not_found_list)
                 time.sleep(check_interval)
-            if "BUILD FAILED" in log:
-                print "BUILD FAILED. No need to wait more time!"
+            if 'BUILD FAILED' in log:
+                print 'BUILD FAILED. No need to wait more time!'
+                break
+            if 'Unable to sync files' in log:
+                print 'Sync process failed. No need to wait more time!'
                 break
 
         if clean_log and CURRENT_OS is not OSType.WINDOWS:
@@ -461,4 +446,4 @@ class Tns(object):
             print log
             print "##### OUTPUT END #####\n"
             print ""
-            assert False, "Output does not contain {0}".format(string_list)
+            assert False, "Output does not contain {0}".format(not_found_list)

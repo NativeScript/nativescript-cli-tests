@@ -9,7 +9,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.settings.settings import CURRENT_OS
-from core.tns.tns_installed_platforms import Platforms
+from core.tns.tns_platform_type import Platform
 from core.tns.tns_prepare_type import Prepare
 
 
@@ -150,7 +150,7 @@ class TnsAsserts(object):
 
 
     @staticmethod
-    def platform_added(app_name, platform=Platforms.NONE, output=None):
+    def platform_added(app_name, platform=Platform.NONE, output=None):
         """
         Assert platform is added.
         :param app_name: Application name (folder where app is located).
@@ -160,9 +160,9 @@ class TnsAsserts(object):
 
         # Verify console output is correct
         if output is not None:
-            if platform is Platforms.ANDROID:
+            if platform is Platform.ANDROID:
                 assert 'tns-android' in output
-            if platform is Platforms.IOS:
+            if platform is Platform.IOS:
                 assert 'tns-ios' in output
             assert 'Copying template files...' in output
             assert 'Project successfully created.' in output
@@ -173,18 +173,18 @@ class TnsAsserts(object):
         app_name = app_name.replace('\"', '')
 
         # Verify file and folder content
-        if platform is Platforms.NONE:
+        if platform is Platform.NONE:
             assert not File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
             assert not File.exists(app_name + TnsAsserts.PLATFORM_IOS)
-        if platform is Platforms.ANDROID or platform is Platforms.BOTH:
+        if platform is Platform.ANDROID or platform is Platform.BOTH:
             assert File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
             assert not Folder.is_empty(
                 app_name + TnsAsserts.PLATFORM_ANDROID + '/build-tools/android-static-binding-generator')
-        if platform is Platforms.IOS or platform is Platforms.BOTH:
+        if platform is Platform.IOS or platform is Platform.BOTH:
             assert File.exists(app_name + TnsAsserts.PLATFORM_IOS)
 
     @staticmethod
-    def platform_list_status(output=None, prepared=Platforms.NONE, added=Platforms.NONE):
+    def platform_list_status(output=None, prepared=Platform.NONE, added=Platform.NONE):
         """
         Assert platform list status
         :param output: Outout of `tns platform list` command
@@ -193,30 +193,30 @@ class TnsAsserts(object):
         """
         if output is not None:
             # Assert prepare status
-            if prepared is Platforms.NONE:
-                if added is Platforms.NONE:
+            if prepared is Platform.NONE:
+                if added is Platform.NONE:
                     assert 'The project is not prepared for' not in output
                 else:
                     assert 'The project is not prepared for any platform' in output
-            if prepared is Platforms.ANDROID:
+            if prepared is Platform.ANDROID:
                 assert 'The project is prepared for:  android' in output
-            if prepared is Platforms.IOS:
+            if prepared is Platform.IOS:
                 assert 'The project is prepared for:  ios' in output
-            if prepared is Platforms.BOTH:
+            if prepared is Platform.BOTH:
                 assert 'The project is prepared for:  ios and android' in output
 
             # Assert platform added status
-            if added is Platforms.NONE:
+            if added is Platform.NONE:
                 assert 'No installed platforms found. Use $ tns platform add' in output
                 if CURRENT_OS is OSType.OSX:
                     assert 'Available platforms for this OS:  ios and android' in output
                 else:
                     assert 'Available platforms for this OS:  android' in output
-            if added is Platforms.ANDROID:
+            if added is Platform.ANDROID:
                 assert 'Installed platforms:  android' in output
-            if added is Platforms.IOS:
+            if added is Platform.IOS:
                 assert 'Installed platforms:  ios' in output
-            if added is Platforms.BOTH:
+            if added is Platform.BOTH:
                 assert 'Installed platforms:  android and ios' in output
 
     @staticmethod
@@ -257,54 +257,54 @@ class TnsAsserts(object):
         return TnsAsserts.__read_json(path=path)
 
     @staticmethod
-    def prepared(app_name, platform=Platforms.BOTH, output=None, prepare_type=Prepare.FULL):
+    def prepared(app_name, platform=Platform.BOTH, output=None, prepare=Prepare.FULL):
         """
         Assert project is prepared properly.
         :param app_name: Application name.
         :param platform: Platform that should be prepared.
         :param output: Output of `tns prepare` platform.
-        :param prepare_type: Prepare type (SKIP, INCREMENTAL, FULL, FIRST_TIME)
+        :param prepare: Prepare type (SKIP, INCREMENTAL, FULL, FIRST_TIME)
         """
 
         def _incremental_prepare():
             assert 'Skipping prepare.' not in output
             assert 'Preparing project...' in output
-            if platform is Platforms.ANDROID or platform is Platforms.BOTH:
+            if platform is Platform.ANDROID or platform is Platform.BOTH:
                 assert 'Project successfully prepared (android)' in output
-            if platform is Platforms.IOS or platform is Platforms.BOTH:
+            if platform is Platform.IOS or platform is Platform.BOTH:
                 assert 'Project successfully prepared (ios)' in output
 
         def _full_prepare():
             _incremental_prepare()
-            if platform is Platforms.ANDROID or platform is Platforms.BOTH:
+            if platform is Platform.ANDROID or platform is Platform.BOTH:
                 assert 'Successfully prepared plugin tns-core-modules for android.' in output
                 assert 'Successfully prepared plugin tns-core-modules-widgets for android.' in output
-            if platform is Platforms.IOS or platform is Platforms.BOTH:
+            if platform is Platform.IOS or platform is Platform.BOTH:
                 assert 'Successfully prepared plugin tns-core-modules for ios.' in output
                 assert 'Successfully prepared plugin tns-core-modules-widgets for ios.' in output
 
         if output is not None:
-            if prepare_type is Prepare.SKIP:
+            if prepare is Prepare.SKIP:
                 assert 'Skipping prepare.' in output
                 assert 'Preparing project...' not in output
-            if prepare_type is Prepare.INCREMENTAL:
+            if prepare is Prepare.INCREMENTAL:
                 _incremental_prepare()
                 assert 'Successfully prepared plugin tns-core-modules for' not in output
                 assert 'Successfully prepared plugin tns-core-modules-widgets for' not in output
-            if prepare_type is Prepare.FULL:
+            if prepare is Prepare.FULL:
                 _full_prepare()
                 assert 'Installing' not in output
                 assert 'Project successfully created' not in output
-            if prepare_type is Prepare.FIRST_TIME:
+            if prepare is Prepare.FIRST_TIME:
                 _full_prepare()
                 assert 'Installing' in output
                 assert 'Project successfully created' in output
-                if platform is Platforms.ANDROID or platform is Platforms.BOTH:
+                if platform is Platform.ANDROID or platform is Platform.BOTH:
                     assert 'tns-android' in output
-                if platform is Platforms.IOS or platform is Platforms.BOTH:
+                if platform is Platform.IOS or platform is Platform.BOTH:
                     assert 'tns-ios' in output
 
-        if platform is Platforms.ANDROID or platform is Platforms.BOTH:
+        if platform is Platform.ANDROID or platform is Platform.BOTH:
             app_path = app_name + TnsAsserts.PLATFORM_ANDROID_APP_PATH
             modules_path = app_name + TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH
             assert File.exists(app_path + 'main-view-model.js'), \
@@ -316,7 +316,7 @@ class TnsAsserts(object):
                 'Prepare does not strip \'android\' from name of js files.'
             assert not File.exists(modules_path + 'application/application.ios.js'), \
                 'Prepare does not skip \'ios\' specific js files.'
-        if platform is Platforms.IOS or platform is Platforms.BOTH:
+        if platform is Platform.IOS or platform is Platform.BOTH:
             app_path = TnsAsserts._get_ios_app_path(app_name)
             modules_path = TnsAsserts._get_ios_modules_path(app_name)
             assert File.exists(app_path + 'main-view-model.js'), \

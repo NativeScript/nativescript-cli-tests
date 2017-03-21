@@ -10,7 +10,7 @@ from core.settings.settings import IOS_RUNTIME_PATH, \
     CURRENT_OS, OSType, ANDROID_RUNTIME_PATH
 from core.settings.strings import *
 from core.tns.tns import Tns
-from core.tns.tns_installed_platforms import Platforms
+from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 
 
@@ -89,7 +89,7 @@ class PlatformiOSTests(BaseClass):
         output = File.read(self.app_name + "/platforms/ios/TNSApp/TNSApp-Info.plist")
         assert "org.nativescript.MyApp" in output
 
-    def test_330_platform_update_ios_patform_not_added(self):
+    def test_330_platform_update_ios_platform_not_added(self):
         Tns.create_app(self.app_name)
         output = Tns.platform_update(platform="ios", attributes={"--path": self.app_name}, assert_success=False)
         assert successfully_created in output
@@ -102,24 +102,24 @@ class PlatformiOSTests(BaseClass):
 
         # `tns platform list` on brand new project
         output = Tns.platform_list(attributes={"--path": self.app_name})
-        TnsAsserts.platform_list_status(output=output, prepared=Platforms.NONE, added=Platforms.NONE)
+        TnsAsserts.platform_list_status(output=output, prepared=Platform.NONE, added=Platform.NONE)
 
         # `tns platform list` when iOS is added
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         output = Tns.platform_list(attributes={"--path": self.app_name})
-        TnsAsserts.platform_list_status(output=output, prepared=Platforms.NONE, added=Platforms.IOS)
+        TnsAsserts.platform_list_status(output=output, prepared=Platform.NONE, added=Platform.IOS)
 
         # `tns platform list` when iOS is prepared
         Tns.prepare_ios(attributes={"--path": self.app_name})
         output = Tns.platform_list(attributes={"--path": self.app_name})
-        TnsAsserts.platform_list_status(output=output, prepared=Platforms.IOS, added=Platforms.IOS)
+        TnsAsserts.platform_list_status(output=output, prepared=Platform.IOS, added=Platform.IOS)
 
         # `tns platform list` when android is added (iOS already prepared)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         output = Tns.platform_list(attributes={"--path": self.app_name})
-        TnsAsserts.platform_list_status(output=output, prepared=Platforms.IOS, added=Platforms.BOTH)
+        TnsAsserts.platform_list_status(output=output, prepared=Platform.IOS, added=Platform.BOTH)
 
         # `tns platform list` when android is prepared (iOS already prepared)
         Tns.prepare_android(attributes={"--path": self.app_name})
         output = Tns.platform_list(attributes={"--path": self.app_name})
-        TnsAsserts.platform_list_status(output=output, prepared=Platforms.BOTH, added=Platforms.BOTH)
+        TnsAsserts.platform_list_status(output=output, prepared=Platform.BOTH, added=Platform.BOTH)

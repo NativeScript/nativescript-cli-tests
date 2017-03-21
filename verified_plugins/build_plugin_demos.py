@@ -4,7 +4,7 @@ import os
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
-from core.git.GitHub import GitHub
+from core.git.git import Git
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -80,7 +80,7 @@ class BuildPluginDemos(BaseClass):
         if '/tree/master/' in demo_repo_url:
             demo_repo_url = demo_repo.split('tree/master')[0].strip('/')
             demo_repo_subfolder = demo_repo.split('tree/master')[1].strip('/')
-        GitHub.clone_repo(repo_url=demo_repo_url, local_folder=name)
+        Git.clone_repo(repo_url=demo_repo_url, local_folder=name)
         if demo_repo_subfolder is not None:
             plugin_name_original = name + '_original'
             Folder.cleanup(plugin_name_original)

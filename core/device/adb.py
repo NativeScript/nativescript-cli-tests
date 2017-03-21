@@ -119,28 +119,83 @@ class Adb(object):
         :param path: Path relative to root folder of the package.
         :return: List of files and folders
         """
-        command = 'shell ls /data/data/{0}/files/{1}'.format(package_id, path)
-        output = Adb.run(command=command, device_id=device_id, log_level=CommandLogLevel.SILENT)
+        if 'emu' in device_id:
+            command = 'shell ls -la /data/data/{0}/files/{1}'.format(package_id, path)
+        else:
+            command = 'shell run-as {0} ls -la /data/data/{1}/files/{2}'.format(package_id, package_id, path)
+        output = Adb.run(command=command, device_id=device_id, log_level=CommandLogLevel.FULL)
         return output
 
     @staticmethod
-    def file_exists(device_id, package_id, path, timeout=10):
+    def path_exists(device_id, package_id, path, timeout=20):
+        """
+        Wait until path exists (relative based on folder where package is deployed) on emulator/android device.
+        :param device_id: Device identifier.
+        :param package_id: Package identifier.
+        :param path: Relative path (based on folder where pacakge is deployed).
+        :param timeout: Timeout in seconds.
+        :return: True if path exists, false if path does not exists
+        """
         t_end = time.time() + timeout
         found = False
         while time.time() < t_end:
             files = Adb.__list_path(device_id=device_id, package_id=package_id, path=path)
-            if path in files:
+            if 'No such file or directory' not in files:
                 found = True
                 break
         return found
 
     @staticmethod
-    def path_does_not_exist(device_id, package_id, path, timeout=10):
+    def path_does_not_exist(device_id, package_id, path, timeout=20):
+        """
+        Wait until path does not exist (relative based on folder where package is deployed) on emulator/android device.
+        :param device_id: Device identifier.
+        :param package_id: Package identifier.
+        :param path: Relative path (based on folder where pacakge is deployed).
+        :param timeout: Timeout in seconds.
+        :return: True if path does not exist, false if path exists
+        """
         t_end = time.time() + timeout
         found = True
         while time.time() < t_end:
             files = Adb.__list_path(device_id=device_id, package_id=package_id, path=path)
-            if path not in files:
+            if 'No such file or directory' in files:
                 found = False
                 break
+        return not found
+
+    @staticmethod
+    def get_page_source(device_id):
+        """
+        Get UI Tree as XML document
+        :param device_id: Device identifier.
+        :return: XML document with UI tree.
+        """
+        remove_command = 'shell rm -rf /sdcard/view.xml'
+        get_source_command = 'shell uiautomator dump /sdcard/view.xml'
+        read_source_command = 'shell cat /sdcard/view.xml'
+        Adb.run(command=remove_command, device_id=device_id, log_level=CommandLogLevel.SILENT)
+        Adb.run(command=get_source_command, device_id=device_id, log_level=CommandLogLevel.SILENT)
+        output = Adb.run(command=read_source_command, device_id=device_id, log_level=CommandLogLevel.SILENT)
+        return output
+
+    @staticmethod
+    def wait_for_text(device_id, text, timeout=20):
+        """
+        WAit until text is available on the screen of device.
+        :param device_id: Device identifier.
+        :param text: Desired text.
+        :param timeout: Timeout in seconds.
+        :return: True if text exists, false if text does not exists.
+        """
+        t_end = time.time() + timeout
+        found = False
+        while time.time() < t_end:
+            source = Adb.get_page_source(device_id=device_id)
+            if text in source:
+                print '{0} found on current screen of {1}'.format(text, device_id)
+                found = True
+                break
+        if not found:
+            print '{0} NOT found on current screen of {1}'.format(text, device_id)
         return found

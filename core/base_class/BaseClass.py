@@ -6,6 +6,7 @@ import unittest
 from core.logger import Logger
 from core.osutils.file import File
 from core.osutils.folder import Folder
+from core.osutils.process import Process
 
 
 class BaseClass(unittest.TestCase):
@@ -25,6 +26,9 @@ class BaseClass(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls, logfile=""):
+
+        Process.kill(proc_name='node', proc_cmdline='tns')
+
         if logfile == "":
             logfile = os.path.join("out", cls.__name__ + ".txt")
         File.remove(logfile)

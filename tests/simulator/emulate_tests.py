@@ -67,7 +67,7 @@ class EmulateiOSTests(BaseClass):
         assert started_on_device in output
         assert Process.is_running("Simulator")
 
-    def test_210_emulate_ios_patform_not_added(self):
+    def test_210_emulate_ios_platform_not_added(self):
         Tns.create_app(self.app_name_noplatform)
         output = Tns.run_tns_command("emulate ios", attributes={"--device": SIMULATOR_NAME,
                                                                 "--path": self.app_name_noplatform,
