@@ -25,6 +25,7 @@ if "release" in BRANCH:
     SHARE_BRANCH = "Release"
 else:
     SHARE_BRANCH = "Stable"
+SHARE_BRANCH = os.environ.get("SHARE_BRANCH", SHARE_BRANCH)
 
 # Set source location of separate package based on base path
 CLI_PATH = os.environ.get("CLI_PATH", os.path.join(BASE_PACKAGE_PATH, "CLI", SHARE_BRANCH, "nativescript.tgz"))
