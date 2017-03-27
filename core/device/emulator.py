@@ -52,7 +52,7 @@ class Emulator(object):
             raise Exception('Wait for emulator failed!')
 
     @staticmethod
-    def __is_available(device_id):
+    def is_running(device_id):
         """
         Check if device is is currently available.
         :param device_id: Device id.
@@ -78,7 +78,7 @@ class Emulator(object):
         end_time = start_time + timeout
         while not booted:
             time.sleep(5)
-            booted = Emulator.__is_available(device_id=device_id)
+            booted = Emulator.is_running(device_id=device_id)
             if (booted is True) or (time.time() > end_time):
                 break
 
@@ -89,7 +89,7 @@ class Emulator(object):
         """
         Ensure Android Emulator is running.
         """
-        found = Emulator.__is_available(device_id=EMULATOR_ID)
+        found = Emulator.is_running(device_id=EMULATOR_ID)
         if found:
             print 'Emulator already running.'
         else:

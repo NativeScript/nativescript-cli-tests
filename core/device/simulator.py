@@ -34,7 +34,8 @@ class Simulator(object):
         Start iOS Simulator
         :param name: Simulator name.
         :param sdk: iOS Version, example '10.0'
-        :param timeout: Timeout for starting simulator.
+        :param timeout: Timeout in seconds.
+        :return: Identifier of booted iOS Simulator.
         """
 
         # Generate simulator name based on version
@@ -49,10 +50,25 @@ class Simulator(object):
         print 'Simulator {0} is booting now...'.format(name)
 
         # Wait until simulator boot
-        if Simulator.wait_for_simulator(timeout):
-            print 'Simulator {0} is up and running!'.format(name)
+        found, simulator_id = Simulator.wait_for_simulator(timeout)
+        if found:
+            print 'Simulator {0} with id {1} is up and running!'.format(name, simulator_id)
+            return simulator_id
         else:
             raise NameError('Failed to boot {0}!'.format(name))
+
+    @staticmethod
+    def is_running():
+        running = False
+        simulator_id = None
+        output = run(command='xcrun simctl list devices', log_level=CommandLogLevel.SILENT)
+        if 'Booted' in output:
+            running = True
+            for line in output.splitlines():
+                # Line looks like this: 'iPhone7N (A63FC6CE-7954-438A-905D-8C03438AC3FD) (Booted)'
+                if 'Booted' in line:
+                    simulator_id = line.split('(')[1].split(')')[0]
+        return running, simulator_id
 
     @staticmethod
     def wait_for_simulator(timeout=300):
@@ -60,19 +76,18 @@ class Simulator(object):
         Wait until simulator boot.
         :param timeout: Timeout in seconds.
         :return: True if booted, False if it fails to boot.
+        :return: Identifier of booted simulator (None if simulator fails to boot).
         """
         found = False
+        simulator_id = None
         start_time = time.time()
         end_time = start_time + timeout
         while not found:
-            output = run(command='xcrun simctl list devices', log_level=CommandLogLevel.SILENT)
-            if 'Booted' in output:
-                found = True
-                break
-            if time.time() > end_time:
+            found, simulator_id = Simulator.is_running()
+            if time.time() > end_time or found:
                 break
             time.sleep(5)
-        return found
+        return found, simulator_id
 
     @staticmethod
     def stop():
@@ -107,3 +122,68 @@ class Simulator(object):
             output = run('xcrun simctl list | grep \'{0}\''.format(name), log_level=CommandLogLevel.SILENT)
         assert "Unable to delete" not in delete_output, "Failed to delete simulator {0}".format(name)
         print 'Simulator \'{0}\' deleted.'.format(name)
+
+    @staticmethod
+    def __get_bundle_path(package_id):
+        """
+        Get path of application deployed on Simulator
+        :param package_id: Application (bundle) identifier.
+        :return: Path to package deployed inside simulator.
+        """
+        command = 'xcrun simctl get_app_container booted {0}'.format(package_id)
+        base_path = run(command=command, log_level=CommandLogLevel.SILENT)
+        if 'No such file or directory' in base_path:
+            raise NameError('Failed to get app container of {0}'.format(package_id))
+        else:
+            return base_path
+
+    @staticmethod
+    def __list_path(package_id, path):
+        """
+        List file of application.
+        :param device_id: Device identifier.
+        :param package_id: Package identifier.
+        :param path: Path relative to root folder of the package.
+        :return: List of files and folders
+        """
+        base_path = Simulator.__get_bundle_path(package_id=package_id)
+        output = run(command='ls -la {0}/{1}'.format(base_path, path), log_level=CommandLogLevel.FULL)
+        return output
+
+    @staticmethod
+    def path_exists(package_id, path, timeout=20):
+        """
+        Wait until path exists (relative based on folder where package is deployed) on iOS Simulator.
+        :param device_id: Device identifier.
+        :param package_id: Package identifier.
+        :param path: Relative path (based on folder where pacakge is deployed).
+        :param timeout: Timeout in seconds.
+        :return: True if path exists, false if path does not exists
+        """
+        t_end = time.time() + timeout
+        found = False
+        while time.time() < t_end:
+            files = Simulator.__list_path(package_id=package_id, path=path)
+            if 'No such file or directory' not in files:
+                found = True
+                break
+        return found
+
+    @staticmethod
+    def path_does_not_exist(package_id, path, timeout=20):
+        """
+        Wait until path does not exist (relative based on folder where package is deployed) on iOS Simulator.
+        :param device_id: Device identifier.
+        :param package_id: Package identifier.
+        :param path: Relative path (based on folder where pacakge is deployed).
+        :param timeout: Timeout in seconds.
+        :return: True if path does not exist, false if path exists
+        """
+        t_end = time.time() + timeout
+        found = True
+        while time.time() < t_end:
+            files = Simulator.__list_path(package_id=package_id, path=path)
+            if 'No such file or directory' in files:
+                found = False
+                break
+        return not found

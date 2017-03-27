@@ -2,7 +2,7 @@ from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 
 
-class GitHub(object):
+class Git(object):
     @staticmethod
     def clone_repo(repo_url, local_folder, branch=None):
         """Clone GitHub repo to local folder

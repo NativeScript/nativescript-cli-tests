@@ -7,7 +7,7 @@ import nose
 
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
-from core.git.GitHub import GitHub
+from core.git.git import Git
 from core.installer.cli import Cli
 from core.osutils.command import run
 from core.osutils.file import File
@@ -17,7 +17,7 @@ from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
     IOS_RUNTIME_PATH, TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH, IOS_INSPECTOR_PATH, TNS_PLATFORM_DECLARATIONS_PATH, \
     BRANCH, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK
 from core.tns.tns import Tns
-from core.tns.tns_installed_platforms import Platforms
+from core.tns.tns_platform_type import Platform
 from core.xcode.xcode import Xcode
 
 reload(sys)
@@ -56,7 +56,7 @@ def clean_gradle():
         run("rm -rf ~/.gradle", 600)
 
 
-def get_test_packages(platform=Platforms.BOTH):
+def get_test_packages(platform=Platform.BOTH):
     """Copy {N} CLI form CLI_PATH to local folder"""
     shutil.copy2(CLI_PATH.strip(), SUT_ROOT_FOLDER)
     shutil.copy2(TNS_MODULES_PATH.strip(), SUT_ROOT_FOLDER)
@@ -67,7 +67,7 @@ def get_test_packages(platform=Platforms.BOTH):
     if File.exists(os.path.join(os.getcwd(), ANDROID_RUNTIME_PATH)):
         __extract_archive(ANDROID_RUNTIME_PATH, os.path.splitext(ANDROID_RUNTIME_PATH)[0])
 
-    if platform is Platforms.BOTH or platform is Platforms.IOS:
+    if platform is Platform.BOTH or platform is Platform.IOS:
         shutil.copy2(IOS_PATH.strip(), SUT_ROOT_FOLDER)
         shutil.copy2(IOS_INSPECTOR_PATH.strip(), SUT_ROOT_FOLDER)
         if File.exists(os.path.join(os.getcwd(), IOS_RUNTIME_PATH)):
@@ -76,15 +76,15 @@ def get_test_packages(platform=Platforms.BOTH):
 
 def get_repos():
     # Clone template-hello-world repos (both js and ts)
-    GitHub.clone_repo(repo_url="git@github.com:NativeScript/template-hello-world.git",
-                      local_folder=SUT_ROOT_FOLDER + "/template-hello-world", branch=BRANCH)
-    GitHub.clone_repo(repo_url="git@github.com:NativeScript/template-hello-world-ts.git",
-                      local_folder=SUT_ROOT_FOLDER + "/template-hello-world-ts", branch=BRANCH)
+    Git.clone_repo(repo_url="git@github.com:NativeScript/template-hello-world.git",
+                   local_folder=SUT_ROOT_FOLDER + "/template-hello-world", branch=BRANCH)
+    Git.clone_repo(repo_url="git@github.com:NativeScript/template-hello-world-ts.git",
+                   local_folder=SUT_ROOT_FOLDER + "/template-hello-world-ts", branch=BRANCH)
 
     # Clone QA-TestApps repo
     # TODO: QA-TestApps is privite, we should make it public or move all test data to data folder.
-    GitHub.clone_repo(repo_url="git@github.com:NativeScript/QA-TestApps.git",
-                      local_folder=SUT_ROOT_FOLDER + "/QA-TestApps", branch=BRANCH)
+    Git.clone_repo(repo_url="git@github.com:NativeScript/QA-TestApps.git",
+                   local_folder=SUT_ROOT_FOLDER + "/QA-TestApps", branch=BRANCH)
 
 
 if __name__ == '__main__':
@@ -101,13 +101,13 @@ if __name__ == '__main__':
 
     # Copy test packages and cleanup
     if CURRENT_OS == OSType.OSX:
-        get_test_packages(platform=Platforms.BOTH)
+        get_test_packages(platform=Platform.BOTH)
         Simulator.stop()
         Simulator.delete(SIMULATOR_NAME)
         Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
         Xcode.cleanup_cache()  # Clean Xcode cache folders
     else:
-        get_test_packages(platform=Platforms.ANDROID)
+        get_test_packages(platform=Platform.ANDROID)
 
     # Install CLI
     Cli.install()

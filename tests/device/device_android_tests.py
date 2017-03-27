@@ -60,7 +60,7 @@ class DeviceAndroidTests(BaseClass):
                                                                               },
                             timeout=60)
         # Verify app is running
-        Device.wait_until_app_is_running(app_id="org.nativescript.TNSApp", device_id=device_id, timeout=60)
+        Device.wait_until_app_is_running(app_id="org.nativescript.TNSApp", device_id=device_id, timeout=20)
 
         # Get logs
         output = Tns.run_tns_command("device log", attributes={"--device": device_id}, timeout=120)

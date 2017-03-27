@@ -15,7 +15,7 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, \
 from core.settings.strings import *
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
-from core.tns.tns_installed_platforms import Platforms
+from core.tns.tns_platform_type import Platform
 from core.tns.tns_prepare_type import Prepare
 from core.tns.tns_verifications import TnsAsserts
 
@@ -89,7 +89,7 @@ class BuildAndroidTests(BaseClass):
         """Verify that manually running prepare does not break next build command."""
         ReplaceHelper.replace(self.app_name, file_change=ReplaceHelper.CHANGE_JS)
         output = Tns.prepare_android(attributes={"--path": self.app_name}, assert_success=False)
-        TnsAsserts.prepared(self.app_name, platform=Platforms.ANDROID, output=output, prepare_type=Prepare.INCREMENTAL)
+        TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.INCREMENTAL)
         Tns.build_android(attributes={"--path": self.app_name})
 
     def test_202_build_android_with_log_trace_and_platform_not_added_or_empty(self):
@@ -110,8 +110,7 @@ class BuildAndroidTests(BaseClass):
 
     def test_301_build_project_with_dash(self):
         Tns.create_app(self.app_name_dash)
-        Tns.platform_add_android(attributes={"--path": self.app_name_dash,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name_dash, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.build_android(attributes={"--path": self.app_name_dash})
 
         # Verify project id

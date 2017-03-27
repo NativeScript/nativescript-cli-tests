@@ -63,7 +63,7 @@ class Device(object):
         return file_path
 
     @staticmethod
-    def __image_match(actual_image_path, expected_image_path):
+    def __image_match(actual_image_path, expected_image_path, tolerance=0.05):
         """
         Compare two images.
         :param actual_image_path: Path to actual image.
@@ -87,13 +87,13 @@ class Device(object):
                     diff_image.load()[x, y] = (255, 0, 0)
 
         diff_percent = 100 * float(diff_pixels) / total_pixels
-        if diff_percent < 0.05:
+        if diff_percent < tolerance:
             match = True
 
         return match, diff_percent, diff_image
 
     @staticmethod
-    def screen_match(device_type, device_name, device_id, expected_image, timeout=60):
+    def screen_match(device_type, device_name, device_id, expected_image, tolerance=0.05, timeout=60):
         """
         Verify screen match expected image.
         :param device_type: DeviceType value.
@@ -113,7 +113,7 @@ class Device(object):
                 actual_image_name = expected_image
                 actual_image_path = Device.__get_screen(device_type, device_id, actual_image_name)
                 if File.exists(actual_image_path):
-                    comparison_result = Device.__image_match(actual_image_path, expected_image_path)
+                    comparison_result = Device.__image_match(actual_image_path, expected_image_path, tolerance)
                     are_equal = comparison_result[0]
                     diff = comparison_result[1]
                     if are_equal:
@@ -233,13 +233,19 @@ class Device(object):
 
     @staticmethod
     def wait_until_app_is_running(app_id, device_id, timeout=60):
-        """Wait until app is running"""
+        """
+        Wait until app is running.
+        :param app_id: Bundle identifier, for example: org.nativescript.TNSApp
+        :param device_id: Device identifier.
+        :param timeout: Timeout in seconds.
+        """
         running = False
         end_time = time.time() + timeout
         while not running:
             time.sleep(5)
             running = Device.is_running(app_id, device_id)
             if running:
+                print '{0} is running on {1}'.format(app_id, device_id)
                 break
             if (running is False) and (time.time() > end_time):
-                raise NameError(app_id + " failed to start on " + device_id + " in " + str(timeout) + " seconds.")
+                raise NameError('{0} is NOT running on {1}'.format(app_id, device_id))

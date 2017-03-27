@@ -13,7 +13,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH, CURRENT_OS, OSType
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
-from core.tns.tns_installed_platforms import Platforms
+from core.tns.tns_platform_type import Platform
 from core.tns.tns_prepare_type import Prepare
 from core.tns.tns_verifications import TnsAsserts
 
@@ -36,16 +36,16 @@ class PrepareiOSTests(BaseClass):
 
         # Initial prepare should be full.
         output = Tns.prepare_ios(attributes={"--path": self.app_name})
-        TnsAsserts.prepared(self.app_name, platform=Platforms.IOS, output=output, prepare_type=Prepare.FULL)
+        TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.FULL)
 
         # If no file is touched next time prepare should be skipped at all.
         output = Tns.prepare_ios(attributes={"--path": self.app_name}, assert_success=False)
-        TnsAsserts.prepared(self.app_name, platform=Platforms.IOS, output=output, prepare_type=Prepare.SKIP)
+        TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.SKIP)
 
         # If some JS/CSS/XML is changed incremental prepare should be done.
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS)
         output = Tns.prepare_ios(attributes={"--path": self.app_name})
-        TnsAsserts.prepared(self.app_name, platform=Platforms.IOS, output=output, prepare_type=Prepare.INCREMENTAL)
+        TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.INCREMENTAL)
 
         # Verify Xcode Schemes
         output = run("xcodebuild -project " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/ -list")
@@ -62,7 +62,7 @@ class PrepareiOSTests(BaseClass):
 
         # prepare project
         output = Tns.prepare_ios(attributes={"--path": self.app_name})
-        TnsAsserts.prepared(self.app_name, platform=Platforms.IOS, output=output, prepare_type=Prepare.FULL)
+        TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.FULL)
 
         # Create new files in AppResources
         File.copy(self.app_name + "/app/App_Resources/iOS/Assets.xcassets/AppIcon.appiconset/icon-50.png",
@@ -70,7 +70,7 @@ class PrepareiOSTests(BaseClass):
 
         # prepare project
         output = Tns.prepare_ios(attributes={"--path": self.app_name})
-        TnsAsserts.prepared(self.app_name, platform=Platforms.IOS, output=output, prepare_type=Prepare.INCREMENTAL)
+        TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.INCREMENTAL)
 
         # Verify XCode Project include files from App Resources folder
         output = File.read(self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep newDefault.png")
@@ -79,7 +79,7 @@ class PrepareiOSTests(BaseClass):
     def test_201_prepare_ios_platform_not_added(self):
         Tns.create_app(self.app_name)
         output = Tns.prepare_ios(attributes={"--path": self.app_name})
-        TnsAsserts.prepared(self.app_name, platform=Platforms.IOS, output=output, prepare_type=Prepare.FIRST_TIME)
+        TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.FIRST_TIME)
 
     def test_300_prepare_ios_preserve_case(self):
         Tns.create_app(self.app_name)
@@ -92,7 +92,7 @@ class PrepareiOSTests(BaseClass):
                   self.app_name + "/node_modules/tns-core-modules/application/New-application.ios.js")
 
         output = Tns.prepare_ios(attributes={"--path": self.app_name})
-        TnsAsserts.prepared(self.app_name, platform=Platforms.IOS, output=output, prepare_type=Prepare.FULL)
+        TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.FULL)
 
         # Verify case is preserved
         path = TnsAsserts._get_ios_modules_path(self.app_name)

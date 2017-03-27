@@ -10,7 +10,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, TEST_RUN_HOME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
-from core.tns.tns_installed_platforms import Platforms
+from core.tns.tns_platform_type import Platform
 from core.tns.tns_prepare_type import Prepare
 from core.tns.tns_verifications import TnsAsserts
 
@@ -25,16 +25,16 @@ class PrepareAndroidTests(BaseClass):
 
         # Initial prepare should be full.
         output = Tns.prepare_android(attributes={"--path": self.app_name})
-        TnsAsserts.prepared(self.app_name, platform=Platforms.ANDROID, output=output, prepare_type=Prepare.FULL)
+        TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.FULL)
 
         # If no file is touched next time prepare should be skipped at all.
         output = Tns.prepare_android(attributes={"--path": self.app_name}, assert_success=False)
-        TnsAsserts.prepared(self.app_name, platform=Platforms.ANDROID, output=output, prepare_type=Prepare.SKIP)
+        TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.SKIP)
 
         # If some JS/CSS/XML is changed incremental prepare should be done.
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS)
         output = Tns.prepare_android(attributes={"--path": self.app_name})
-        TnsAsserts.prepared(self.app_name, platform=Platforms.ANDROID, output=output, prepare_type=Prepare.INCREMENTAL)
+        TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.INCREMENTAL)
 
     def test_102_prepare_android_inside_project(self):
         Tns.create_app(self.app_name, update_modules=False)
@@ -44,18 +44,18 @@ class PrepareAndroidTests(BaseClass):
         Folder.navigate_to(self.app_name)
         output = Tns.prepare_android(tns_path=os.path.join("..", TNS_PATH), assert_success=False)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        TnsAsserts.prepared(self.app_name, platform=Platforms.ANDROID, output=output, prepare_type=Prepare.FULL)
+        TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.FULL)
 
-    def test_200_prepare_android_patform_not_added(self):
+    def test_200_prepare_android_platform_not_added(self):
         Tns.create_app(self.app_name, update_modules=False)
         output = Tns.prepare_android(attributes={"--path": self.app_name})
-        TnsAsserts.prepared(self.app_name, platform=Platforms.ANDROID, output=output, prepare_type=Prepare.FIRST_TIME)
+        TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.FIRST_TIME)
 
     def test_201_prepare_xml_error(self):
         Tns.create_app(self.app_name, update_modules=False)
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML_INVALID_SYNTAX)
         output = Tns.prepare_android(attributes={"--path": self.app_name})
-        TnsAsserts.prepared(self.app_name, platform=Platforms.ANDROID, output=output, prepare_type=Prepare.FIRST_TIME)
+        TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.FIRST_TIME)
         assert "main-page.xml has syntax errors." in output
         assert "unclosed xml attribute" in output
 
