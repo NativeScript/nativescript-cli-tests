@@ -13,7 +13,6 @@ If simulator is not started and device is not connected `tns run ios` should sta
 
 import os
 import time
-import unittest
 
 import nose
 
