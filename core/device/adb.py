@@ -119,10 +119,7 @@ class Adb(object):
         :param path: Path relative to root folder of the package.
         :return: List of files and folders
         """
-        if 'emu' in device_id:
-            command = 'shell ls -la /data/data/{0}/files/{1}'.format(package_id, path)
-        else:
-            command = 'shell run-as {0} ls -la /data/data/{1}/files/{2}'.format(package_id, package_id, path)
+        command = 'shell run-as {0} ls -la /data/data/{1}/files/{2}'.format(package_id, package_id, path)
         output = Adb.run(command=command, device_id=device_id, log_level=CommandLogLevel.FULL)
         return output
 
