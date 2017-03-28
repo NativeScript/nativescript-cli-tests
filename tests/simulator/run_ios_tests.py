@@ -261,7 +261,6 @@ class RunIOSSimulatorTests(BaseClass):
         Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
-    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2642")
     def test_340_tns_run_should_not_sync_hidden_files(self):
         """
         Adding hidden files should not break run and they should not be transferred.
