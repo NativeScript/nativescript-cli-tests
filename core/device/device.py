@@ -160,17 +160,19 @@ class Device(object):
 
     @staticmethod
     def get_ids(platform):
-        """Get IDs of all connected physical devices"""
+        """
+        Get IDs of all connected physical devices
+        :param platform: 
+        :return:
+        """
         device_ids = list()
-        output = run(TNS_PATH + " device " + platform, log_level=CommandLogLevel.SILENT)
+        output = run(TNS_PATH + " device", log_level=CommandLogLevel.SILENT)
         lines = output.splitlines()
         for line in lines:
-            if (platform.lower() in line.lower()) and ("status" not in line.lower()):
+            if (platform.lower() in line.lower()) and ('Emulator' not in line):
                 device_id = line.split("\xe2\x94\x82")[4].replace(" ", "")
                 print "{0} device with id {1} found.".format(platform, device_id)
-                if "Emulator" not in line:
-                    device_ids.append(device_id)
-
+                device_ids.append(device_id)
         return device_ids
 
     @staticmethod
