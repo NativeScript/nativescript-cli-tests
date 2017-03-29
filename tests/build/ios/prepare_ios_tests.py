@@ -71,7 +71,7 @@ class PrepareiOSTests(BaseClass):
         TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.INCREMENTAL)
 
         # Verify XCode Project include files from App Resources folder
-        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep newDefault.png")
+        output = run("cat " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep newDefault.png")
         assert "newDefault.png" in output
 
     def test_201_prepare_ios_platform_not_added(self):
