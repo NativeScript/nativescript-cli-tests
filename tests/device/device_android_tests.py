@@ -63,12 +63,8 @@ class DeviceAndroidTests(BaseClass):
         Device.wait_until_app_is_running(app_id="org.nativescript.TNSApp", device_id=device_id, timeout=20)
 
         # Get logs
-        output = Tns.run_tns_command("device log", attributes={"--device": device_id}, timeout=120)
-        print "$$$$$$$$$$ OUTPUT $$$$$$"
-        print output
-        assert ("ActivityManager" in output) or ("AndroidRuntime" in output) or \
-               ("Wifi" in output) or ("WIFI" in output) or ("Netlink" in output) or \
-               ("beginning of system" in output) or ("beginning of main" in output)
+        log = Tns.run_tns_command("device log", attributes={"--device": device_id}, wait=False)
+        Tns.wait_for_log(log_file=log, string_list=['ActivityManager'], timeout=120)
 
     def test_300_device_log_android_two_devices(self):
         a_count = Device.get_count(platform="android")
@@ -79,7 +75,9 @@ class DeviceAndroidTests(BaseClass):
 
     def test_400_device_invalid_platform(self):
         output = Tns.run_tns_command("device " + invalid)
-        assert "'{0}' is not a valid device platform.".format(invalid) in output
+        message1 = "'{0}' is not a valid device platform.".format(invalid)
+        message2 = "Unable to detect platform for which to start emulator"
+        assert message1 in output or message2 in output
 
     def test_401_device_log_invalid_device_id(self):
         output = Tns.run_tns_command("device log", attributes={"--device": "invaliddevice_id"})

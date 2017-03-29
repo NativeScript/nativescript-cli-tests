@@ -117,5 +117,5 @@ class DeployAndroidTests(BaseClass):
                                                                    "--justlaunch": "",
                                                                    "--device": "invaliddevice_id"
                                                                    })
-        assert "Cannot resolve the specified connected device" in output
-        assert "To list currently connected devices" in output
+        assert "Could not find an emulator image or identifier to run your project" in output
+        assert "tns device <platform> --available-devices" in output

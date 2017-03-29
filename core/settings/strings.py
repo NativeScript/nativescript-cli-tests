@@ -73,7 +73,7 @@ invalid_value = "The value '{0}' is not valid."
 no_platform = "No platform specified"
 "and neither was a --path specified."
 no_such_device = "Cannot find device with name: "
-cannot_resolve_device = "Cannot resolve the specified connected device"
+cannot_resolve_device = "Could not find device by specified identifier"
 invalid_version = "{0} is not a valid version."
 no_platform_installed = "No installed platforms found. Use $ tns platform add"
 
