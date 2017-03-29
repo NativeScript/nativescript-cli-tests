@@ -19,7 +19,7 @@ from core.xcode.xcode import Xcode
 class Tns(object):
     # npm tag used when we publish master branch of https://github.com/NativeScript/NativeScript
     # Please see https://github.com/NativeScript/NativeScript/blob/master/.travis.yml
-    NEXT_TAG = 'internal-preview'
+    NEXT_TAG = 'rc'
 
     @staticmethod
     def __get_platform_string(platform=Platform.NONE):
