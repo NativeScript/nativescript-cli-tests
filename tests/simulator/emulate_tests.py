@@ -85,4 +85,5 @@ class EmulateiOSTests(BaseClass):
                                                                 "--path": self.app_name,
                                                                 "--justlaunch": ""
                                                                 })
-        assert "Cannot resolve the specified connected device by the provided index or identifier." in output
+        assert "Could not find device by specified identifier" in output
+        assert "To list currently connected devices" in output
