@@ -79,13 +79,12 @@ def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=Comm
     # wait for thread to finish or timeout
     thread.join(timeout)
 
-    # kill thread
+    # kill thread if it exceed the timeout
     if thread.is_alive():
         if wait:
-            if log_level is not CommandLogLevel.SILENT:
-                print '##### ERROR: Process has timed out at ', time.strftime("%X")
             Process.kill('node')
             thread.join()
+            raise NameError('Process has timed out at ' + time.strftime("%X"))
 
     # get whenever exist in the pipe ?
     pipe_output = 'NOT_COLLECTED'

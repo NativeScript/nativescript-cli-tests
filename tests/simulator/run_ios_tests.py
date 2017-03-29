@@ -13,7 +13,6 @@ If simulator is not started and device is not connected `tns run ios` should sta
 
 import os
 import time
-import unittest
 
 import nose
 
@@ -139,7 +138,6 @@ class RunIOSSimulatorTests(BaseClass):
         Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
-    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2653")
     def test_210_tns_run_ios_add_remove_files_and_folders(self):
         """
         New files and folders should be synced properly.
@@ -205,7 +203,6 @@ class RunIOSSimulatorTests(BaseClass):
         Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
-    @unittest.skip('Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2654')
     def test_300_tns_run_ios_just_launch_and_incremental_builds(self):
         """
         This test verify following things:
@@ -235,7 +232,7 @@ class RunIOSSimulatorTests(BaseClass):
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML)
 
         # Run `tns run android` after file changes (this should trigger incremental prepare).
-        output = Tns.run_ios(attributes={'--path': self.app_name, '--justlaunch': ''}, assert_success=False, timeout=30)
+        output = Tns.run_ios(attributes={'--path': self.app_name, '--justlaunch': ''}, assert_success=False, timeout=60)
         TnsAsserts.prepared(app_name=self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.INCREMENTAL)
 
         # Verify app looks is update after changes in js, css and xml
@@ -263,7 +260,6 @@ class RunIOSSimulatorTests(BaseClass):
         Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
-    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2642")
     def test_340_tns_run_should_not_sync_hidden_files(self):
         """
         Adding hidden files should not break run and they should not be transferred.
