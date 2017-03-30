@@ -304,7 +304,6 @@ class RunAndroidEmulatorTests(BaseClass):
         # TODO: Write tests when we know what is desired behaviour
         pass
 
-    @unittest.skip('Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2635')
     def test_320_tns_run_android_no_watch(self):
         """
          * --no-watch - If set, changes in your code will not be reflected during the execution of this command.
