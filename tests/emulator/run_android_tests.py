@@ -295,14 +295,42 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
                             device_id=EMULATOR_ID, expected_image='livesync-hello-world_js_css_xml')
 
-    @unittest.skip('Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2636')
     def test_310_tns_run_android_clean_builds(self):
         """
         * --clean - If set, forces rebuilding the native application.
         """
 
-        # TODO: Write tests when we know what is desired behaviour
-        pass
+        Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--justlaunch': ''})
+
+        # Verify `--clean` without any changes skip prepare and rebuild native project (and runs properly)
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID,
+                                          '--justlaunch': '', '--clean': ''})
+        assert 'Skipping prepare' in log, "Prepare NOT skipped when no files are changed and `tns run android --clean`"
+        assert 'Building project...' in log, "Full rebuild not triggered when --clean is used"
+        assert 'BUILD SUCCESSFUL' in log, "Full rebuild not triggered when --clean is used"
+
+        Adb.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
+
+        # Verify if changes are applied and then build with `--clean` it will apply changes on attached device
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS)
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID,
+                                          '--justlaunch': '', '--clean': ''})
+        assert 'Skipping prepare' not in log, "Prepare skipped when change files and run `tns run android --clean`"
+        assert 'Building project...' in log, "Full rebuild not triggered when --clean is used"
+        assert 'BUILD SUCCESSFUL' in log, "Full rebuild not triggered when --clean is used"
+
+        Adb.wait_for_text(device_id=EMULATOR_ID, text='52 taps left')
+
+        # Verify if changes are applied and then build with `--clean` it will apply changes on attached device
+        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS)
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID,
+                                          '--justlaunch': '', '--clean': ''})
+        assert 'Skipping prepare' not in log
+        assert 'Building project...' in log
+        assert 'BUILD SUCCESSFUL' in log
+
+        Adb.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
+
 
     def test_320_tns_run_android_no_watch(self):
         """
