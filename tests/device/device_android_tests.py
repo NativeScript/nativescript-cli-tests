@@ -64,7 +64,7 @@ class DeviceAndroidTests(BaseClass):
 
         # Get logs
         log = Tns.run_tns_command("device log", attributes={"--device": device_id}, wait=False)
-        Tns.wait_for_log(log_file=log, string_list=['beginning of main', ' D ', ' I '], timeout=120)
+        Tns.wait_for_log(log_file=log, string_list=['beginning of', 'D', 'I'], timeout=120)
 
     def test_300_device_log_android_two_devices(self):
         a_count = Device.get_count(platform="android")
