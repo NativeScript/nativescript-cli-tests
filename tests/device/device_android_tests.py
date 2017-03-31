@@ -7,6 +7,7 @@ from time import sleep
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
+from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
@@ -64,7 +65,8 @@ class DeviceAndroidTests(BaseClass):
 
         # Get logs
         log = Tns.run_tns_command("device log", attributes={"--device": device_id}, wait=False)
-        Tns.wait_for_log(log_file=log, string_list=['beginning of', 'D', 'I'], timeout=120)
+        Tns.wait_for_log(log_file=log, string_list=['beginning of'], timeout=120, clean_log=False)
+        assert 'I' or 'D' or 'W' in File.read(log), "Console log does not contain INFO, DEBUG or WARN messages"
 
     def test_300_device_log_android_two_devices(self):
         a_count = Device.get_count(platform="android")

@@ -72,7 +72,7 @@ class RunAndroidDeviceTests(BaseClass):
         output = File.read(log)
         for device_id in self.DEVICES:
             assert device_id in output, 'Application is not deployed on {0}'.format(device_id)
-            Device.wait_until_app_is_running(app_id=Tns.get_app_id(self.app_name), device_id=device_id, timeout=10)
+            Device.wait_until_app_is_running(app_id=Tns.get_app_id(self.app_name), device_id=device_id, timeout=30)
 
         # Verify emulator is not started
         assert not Emulator.is_running(EMULATOR_ID), \
