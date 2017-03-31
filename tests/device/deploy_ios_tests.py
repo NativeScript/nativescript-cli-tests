@@ -5,6 +5,7 @@ import os.path
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
+from core.device.simulator import Simulator
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH
 from core.tns.tns import Tns
@@ -17,6 +18,7 @@ class DeployiOSTests(BaseClass):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
         Device.ensure_available(platform="ios")
+        Simulator.stop()
 
     def setUp(self):
         BaseClass.setUp(self)
