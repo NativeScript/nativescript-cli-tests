@@ -284,10 +284,10 @@ class RunIOSSimulatorTests(BaseClass):
         # Give it 10 sec and check no messages are available in log files
         time.sleep(10)
         output = File.read(log)
-        assert 'Successfully' not in output, "Sync is triggered after adding hidden file."
-        assert 'synced' not in output, "Sync is triggered after adding hidden file."
-        assert 'tempfile' not in output, "Sync is triggered after adding hidden file."
-        assert self.SIMULATOR_ID not in output, "Sync is triggered after adding hidden file."
+        assert 'Successfully' not in output, 'Sync is triggered after adding hidden file.'
+        assert 'synced' not in output, 'Sync is triggered after adding hidden file.'
+        assert 'tempfile' not in output, 'Sync is triggered after adding hidden file.'
+        assert self.SIMULATOR_ID not in output, 'Sync is triggered after adding hidden file.'
 
         # Verify hidden file does not exists on mobile device.
         path = 'app/{0}'.format('.tempfile')

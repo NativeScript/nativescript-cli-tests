@@ -178,7 +178,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify console notify user for broken xml
         strings = ['main-page.xml has syntax errors', 'unclosed xml attribute',
-                   'Successfully installed on device with identifier', EMULATOR_ID]
+                   'Successfully synced application', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Revert changes
@@ -399,9 +399,14 @@ class RunAndroidEmulatorTests(BaseClass):
         source_file = os.path.join(self.app_name, 'app', 'main-page.xml')
         destination_file = os.path.join(self.app_name, 'app', '.tempfile')
         File.copy(source_file, destination_file)
+
+        # Give it 10 sec and check no messages are available in log files
         time.sleep(10)
-        strings = ['Successfully synced application', EMULATOR_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings)
+        output = File.read(log)
+        assert 'Successfully' not in output, 'Sync is triggered after adding hidden file.'
+        assert 'synced' not in output, 'Sync is triggered after adding hidden file.'
+        assert 'tempfile' not in output, 'Sync is triggered after adding hidden file.'
+        assert EMULATOR_ID not in output, 'Sync is triggered after adding hidden file.'
 
         # Verify hidden file does not exists on mobile device.
         path = 'app/{0}'.format('.tempfile')
