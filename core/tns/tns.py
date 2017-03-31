@@ -437,7 +437,7 @@ class Tns(object):
                 break
 
         if clean_log and CURRENT_OS is not OSType.WINDOWS:
-            File.write(file_path=OUTPUT_FILE, text="")
+            File.write(file_path=log_file, text="")
 
         if all_items_found:
             pass
