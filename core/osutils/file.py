@@ -7,7 +7,6 @@ Created on Dec 14, 2015
 # C0111 - Missing docstring
 # pylint: disable=C0111
 
-import fileinput
 import fnmatch
 import os
 import shutil
@@ -128,8 +127,9 @@ class File(object):
         :param str2: New string.
         """
 
-        for line in fileinput.input(file_path, inplace=1):
-            print line.replace(str1, str2)
+        content = File.read(file_path=file_path)
+        new_content = content.replace(str1, str2)
+        File.write(file_path=file_path, text=new_content)
 
         print "##### REPLACE FILE CONTENT #####"
         print "File: {0}".format(file_path)
