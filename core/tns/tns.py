@@ -8,8 +8,8 @@ from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
-from core.settings.settings import TNS_PATH, SUT_ROOT_FOLDER, DEVELOPMENT_TEAM, BRANCH, TEST_RUN_HOME, \
-    COMMAND_TIMEOUT, OUTPUT_FILE, CURRENT_OS
+from core.settings.settings import TNS_PATH, SUT_FOLDER, DEVELOPMENT_TEAM, BRANCH, TEST_RUN_HOME, \
+    COMMAND_TIMEOUT, CURRENT_OS
 from core.settings.strings import config_release, codesign, config_debug
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
@@ -143,7 +143,7 @@ class Tns(object):
             attributes_to_string = "".join("{0} {1}".format(k, v))
         attr = {}
         if not any(s in attributes_to_string for s in ("--ng", "--template", "--tsc")):
-            attr = {"--template": SUT_ROOT_FOLDER + os.path.sep + "template-hello-world"}
+            attr = {"--template": SUT_FOLDER + os.path.sep + "template-hello-world"}
         attr.update(attributes)
         if app_name is None:
             output = Tns.run_tns_command("create ", attributes=attr, log_trace=log_trace)
@@ -167,7 +167,7 @@ class Tns(object):
         :param update_modules: If true update modules (branch is respected).
         :return: output of `tns create command`
         """
-        attr = {"--template": "https://github.com/NativeScript/template-hello-world-ts.git#" + BRANCH}
+        attr = {"--template": SUT_FOLDER + os.path.sep + "template-hello-world-ts"}
         attributes.update(attr)
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,
@@ -178,7 +178,7 @@ class Tns(object):
 
     @staticmethod
     def create_app_ng(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True):
-        attr = {"--template": "https://github.com/NativeScript/template-hello-world-ng.git#" + BRANCH}
+        attr = {"--template": SUT_FOLDER + os.path.sep + "template-hello-world-ng"}
         attributes.update(attr)
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,

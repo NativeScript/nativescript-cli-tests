@@ -13,7 +13,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, SUT_ROOT_FOLDER
+from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, SUT_FOLDER
 from core.tns.tns import Tns
 from core.settings.strings import *
 
@@ -125,7 +125,7 @@ class InitAndInstallTests(BaseClass):
         run("npm i lodash --save")
 
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        run("cp -R " + SUT_ROOT_FOLDER + os.path.sep + "template-hello-world " + self.app_name + os.path.sep + "app")
+        run("cp -R " + SUT_FOLDER + os.path.sep + "template-hello-world " + self.app_name + os.path.sep + "app")
         output = File.read(self.app_name + "/package.json")
         assert devDependencies in output
         assert "gulp" in output

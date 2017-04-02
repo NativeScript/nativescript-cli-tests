@@ -46,12 +46,12 @@ IOS_INSPECTOR_PATH = os.environ.get("IOS_INSPECTOR_PATH",
 
 # Set local location of test packages
 TNS_PATH = os.path.join("node_modules", ".bin", "tns")
-SUT_ROOT_FOLDER = TEST_RUN_HOME + os.path.sep + "sut"
-ANDROID_RUNTIME_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-android.tgz")
-ANDROID_RUNTIME_SYMLINK_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-android", "package")
-IOS_RUNTIME_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-ios.tgz")
-IOS_RUNTIME_SYMLINK_PATH = os.path.join(SUT_ROOT_FOLDER, "tns-ios", "package")
-IOS_INSPECTOR_PACKAGE = os.path.join(SUT_ROOT_FOLDER, "tns-ios-inspector.tgz")
+SUT_FOLDER = TEST_RUN_HOME + os.path.sep + "sut"
+ANDROID_RUNTIME_PATH = os.path.join(SUT_FOLDER, "tns-android.tgz")
+ANDROID_RUNTIME_SYMLINK_PATH = os.path.join(SUT_FOLDER, "tns-android", "package")
+IOS_RUNTIME_PATH = os.path.join(SUT_FOLDER, "tns-ios.tgz")
+IOS_RUNTIME_SYMLINK_PATH = os.path.join(SUT_FOLDER, "tns-ios", "package")
+IOS_INSPECTOR_PACKAGE = os.path.join(SUT_FOLDER, "tns-ios-inspector.tgz")
 
 # Output settings
 OUTPUT_FOLDER = TEST_RUN_HOME + os.path.sep + "out"

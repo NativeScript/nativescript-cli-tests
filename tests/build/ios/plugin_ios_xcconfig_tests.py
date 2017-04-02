@@ -6,7 +6,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import SUT_ROOT_FOLDER, IOS_RUNTIME_PATH
+from core.settings.settings import SUT_FOLDER, IOS_RUNTIME_PATH
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
@@ -20,7 +20,7 @@ class PluginsiOSXcconfigTests(BaseClass):
     def test_001_plugin_add_xcconfig_before_platform_add_ios(self):
         Tns.create_app(self.app_name)
 
-        plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/xcconfig-plugin"
+        plugin_path = SUT_FOLDER + "/QA-TestApps/CocoaPods/xcconfig-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin xcconfig-plugin." in output
         assert File.exists(self.app_name + "/node_modules/xcconfig-plugin/package.json")
@@ -51,7 +51,7 @@ class PluginsiOSXcconfigTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = SUT_ROOT_FOLDER + "/QA-TestApps/CocoaPods/xcconfig-plugin"
+        plugin_path = SUT_FOLDER + "/QA-TestApps/CocoaPods/xcconfig-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin xcconfig-plugin." in output
         assert File.exists(self.app_name + "/node_modules/xcconfig-plugin/package.json")
