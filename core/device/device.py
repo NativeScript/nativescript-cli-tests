@@ -9,14 +9,31 @@ from PIL import Image
 from core.device.adb import Adb, ADB_PATH
 from core.device.device_type import DeviceType
 from core.device.emulator import Emulator
+from core.device.simulator import Simulator
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
-from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH
+from core.tns.tns_platform_type import Platform
 
 
 class Device(object):
+    @staticmethod
+    def __get_device_Type(device_id):
+        """
+        Get device type based on device id.
+        :param device_id: Device identifier.
+        :return: DeviceType enum value.
+        """
+        if len(device_id) < 30:
+            if 'emu' in device_id:
+                return DeviceType.EMULATOR
+            else:
+                return DeviceType.ANDROID
+        else:
+            if '-' in device_id:
+                return DeviceType.SIMULATOR
+            else:
+                return DeviceType.IOS
 
     @staticmethod
     def __get_screen(device_type, device_id, file_name):
@@ -154,38 +171,49 @@ class Device(object):
 
     @staticmethod
     def get_id(platform):
-        """Get Id of first connected physical device"""
-        device_list = Device.get_ids(platform)
-        return device_list.pop(0)
+        device_list = Device.get_ids(platform=platform)
+        if len(device_list) > 0:
+            return device_list.pop(0)
+        else:
+            error = 'No connected {0} real devices!'.format(platform)
+            raise NameError(error)
 
     @staticmethod
     def get_ids(platform):
         """
         Get IDs of all connected physical devices
-        :param platform: 
+        :param platform: `Platform.ANDROID` or `Platform.IOS`
         :return:
         """
         device_ids = list()
-        output = run(TNS_PATH + " device", log_level=CommandLogLevel.SILENT)
-        lines = output.splitlines()
-        for line in lines:
-            if (platform.lower() in line.lower()) and ('Emulator' not in line):
-                device_id = line.split("\xe2\x94\x82")[4].replace(" ", "")
-                print "{0} device with id {1} found.".format(platform, device_id)
-                device_ids.append(device_id)
+        if platform is Platform.IOS:
+            output = run(command='idevice_id --list', timeout=60, log_level=CommandLogLevel.SILENT)
+            for line in output.splitlines():
+                command = 'instruments -s | grep {0}'.format(line)
+                check_connected = run(command=command, timeout=30, log_level=CommandLogLevel.SILENT)
+                if 'null' not in check_connected:
+                    device_ids.append(line)
+                else:
+                    message = '{0} is not trusted!'.format(line)
+                    print message
+        elif platform is Platform.ANDROID:
+            device_ids = Adb.get_devices()
+        else:
+            raise NameError('Invalid platform')
+
         return device_ids
 
     @staticmethod
-    def get_count(platform=""):
+    def get_count(platform=Platform.BOTH):
         """Get physical device count"""
-        device_ids = Device.get_ids(platform)
+        device_ids = Device.get_ids(platform=platform)
         return len(device_ids)
 
     @staticmethod
     def uninstall_app(app_prefix, platform, fail=True):
         """Uninstall mobile app"""
-        if platform == "android":
-            device_ids = Device.get_ids(platform)
+        device_ids = Device.get_ids(platform=platform)
+        if platform == Platform.ANDROID:
             for device_id in device_ids:
                 output = run(ADB_PATH + " -s {0} shell pm list packages -3".format(device_id), timeout=120)
                 lines = output.splitlines()
@@ -200,8 +228,7 @@ class Device(object):
                         else:
                             if fail:
                                 raise NameError("{0} application failed to uninstall.".format(app_prefix))
-        else:
-            device_ids = Device.get_ids(platform)
+        elif platform == Platform.ANDROID:
             for device_id in device_ids:
                 output = run("ideviceinstaller -u {0} -l".format(device_id), timeout=120)
                 lines = output.splitlines()
@@ -219,25 +246,46 @@ class Device(object):
 
     @staticmethod
     def stop_application(device_id, app_id):
-        """Stop application"""
-        output = run(ADB_PATH + " -s " + device_id + " shell am force-stop " + app_id)
-        time.sleep(5)
-        assert app_id not in output, "Failed to stop " + app_id
+        """
+        Stop application
+        :param device_id: Device identifier
+        :param app_id: Bundle identifier (example: org.nativescript.TestApp)
+        """
+        device_type = Device.__get_device_Type(device_id=device_id)
+        if device_type is DeviceType.SIMULATOR:
+            Simulator.stop_application(app_id=app_id)
+        elif device_type is DeviceType.IOS:
+            raise NotImplementedError
+        else:
+            output = run(ADB_PATH + " -s " + device_id + " shell am force-stop " + app_id)
+            time.sleep(5)
+            assert app_id not in output, "Failed to stop " + app_id
 
     @staticmethod
     def is_running(app_id, device_id):
-        """Check if app is running"""
-        output = run(ADB_PATH + " -s " + device_id + " shell ps | grep " + app_id)
-        if app_id in output:
-            return True
+        """
+        Check if app is running.
+        :param app_id: Bundle identifier (example: org.nativescript.TestApp)
+        :param device_id: Device identifier
+        :return: True if application is running
+        """
+        device_type = Device.__get_device_Type(device_id=device_id)
+        if device_type is DeviceType.SIMULATOR:
+            raise NotImplementedError
+        elif device_type is DeviceType.IOS:
+            raise NotImplementedError
         else:
-            return False
+            output = run(ADB_PATH + " -s " + device_id + " shell ps | grep " + app_id)
+            if app_id in output:
+                return True
+            else:
+                return False
 
     @staticmethod
     def wait_until_app_is_running(app_id, device_id, timeout=60):
         """
         Wait until app is running.
-        :param app_id: Bundle identifier, for example: org.nativescript.TNSApp
+        :param app_id: Bundle identifier (example: org.nativescript.TestApp)
         :param device_id: Device identifier.
         :param timeout: Timeout in seconds.
         """

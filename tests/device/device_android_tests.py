@@ -12,6 +12,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
 from core.settings.strings import *
+from core.tns.tns_platform_type import Platform
 
 
 class DeviceAndroidTests(BaseClass):
@@ -20,8 +21,8 @@ class DeviceAndroidTests(BaseClass):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
         Folder.cleanup(cls.app_name)
-        Device.ensure_available(platform="android")
-        Device.uninstall_app(app_prefix="org.nativescript.", platform="android", fail=False)
+        Device.ensure_available(platform=Platform.ANDROID)
+        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID, fail=False)
         Emulator.ensure_available()
 
     @classmethod
@@ -31,17 +32,13 @@ class DeviceAndroidTests(BaseClass):
         Folder.cleanup(cls.app_name)
 
     def test_001_device_list_applications_and_run_android(self):
-        device_id = Device.get_id(platform="android")
-        device_ids = Device.get_ids("android")
+        device_id = Device.get_id(platform=Platform.ANDROID)
+        device_ids = Device.get_ids(Platform.ANDROID)
 
         # Deploy TNS_App on device
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH
-                                             })
-        output = Tns.deploy_android(attributes={"--path": self.app_name,
-                                                "--justlaunch": ""
-                                                })
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        output = Tns.deploy_android(attributes={"--path": self.app_name, "--justlaunch": ""})
 
         for device_id in device_ids:
             assert device_id in output
@@ -69,8 +66,8 @@ class DeviceAndroidTests(BaseClass):
         assert 'I' or 'D' or 'W' in File.read(log), "Console log does not contain INFO, DEBUG or WARN messages"
 
     def test_300_device_log_android_two_devices(self):
-        a_count = Device.get_count(platform="android")
-        i_count = Device.get_count(platform="ios")
+        a_count = Device.get_count(platform=Platform.ANDROID)
+        i_count = Device.get_count(platform=Platform.IOS)
         if a_count + i_count > 2:
             output = Tns.run_tns_command("device log")
             assert "More than one device found. Specify device explicitly." in output

@@ -432,11 +432,11 @@ class Tns(object):
             if 'BUILD FAILED' in log:
                 print 'BUILD FAILED. No need to wait more time!'
                 break
-            if 'Unable to sync files' in log:
-                print 'Sync process failed. No need to wait more time!'
-                break
+            # if 'Unable to sync files' in log:
+            #    print 'Sync process failed. No need to wait more time!'
+            #    break
 
-        if clean_log and CURRENT_OS is not OSType.WINDOWS:
+        if clean_log and (CURRENT_OS is not OSType.WINDOWS) and all_items_found:
             File.write(file_path=log_file, text="")
 
         if all_items_found:
