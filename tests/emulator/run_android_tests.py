@@ -422,7 +422,7 @@ class RunAndroidEmulatorTests(BaseClass):
         """
         `tns run android` should start emulator if device is not connected.
         """
-        count = Device.get_count(platform='android')
+        count = Device.get_count(platform=Platform.ANDROID)
         if count == 0:
             Emulator.stop()
             output = Tns.run_android(attributes={'--path': self.app_name, '--justlaunch': ''})
