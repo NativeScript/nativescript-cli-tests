@@ -303,7 +303,7 @@ class RunIOSSimulatorTests(BaseClass):
         """
         `tns run ios` should start iOS Simulator if device is not connected.
         """
-        count = Device.get_count(platform='ios')
+        count = Device.get_count(platform=Platform.IOS)
         if count == 0:
             Simulator.stop()
             Tns.run_ios(attributes={'--path': self.app_name, '--justlaunch': ''})
