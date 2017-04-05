@@ -10,6 +10,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH
 from core.tns.tns import Tns
 from core.settings.strings import *
+from core.tns.tns_platform_type import Platform
 
 
 class DeployiOSTests(BaseClass):
@@ -17,13 +18,13 @@ class DeployiOSTests(BaseClass):
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
-        Device.ensure_available(platform="ios")
+        Device.ensure_available(platform=Platform.IOS)
         Simulator.stop()
 
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup('./' + self.app_name)
-        Device.uninstall_app("org.nativescript.", platform="ios", fail=False)
+        Device.uninstall_app("org.nativescript.", platform=Platform.IOS, fail=False)
 
     def tearDown(self):
         BaseClass.tearDown(self)
@@ -39,7 +40,7 @@ class DeployiOSTests(BaseClass):
         # This is the first time we build the project -> we need a prepare
         assert successfully_prepared in output
 
-        device_ids = Device.get_ids(platform="ios")
+        device_ids = Device.get_ids(platform=Platform.IOS)
         for device_id in device_ids:
             assert device_id in output
 

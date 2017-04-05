@@ -33,15 +33,15 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class RunAndroidDeviceTests(BaseClass):
-    DEVICES = Device.get_ids(platform='android')
-    DEVICE_ID = Device.get_id(platform='android')
+    DEVICES = Device.get_ids(platform=Platform.ANDROID)
+    DEVICE_ID = Device.get_id(platform=Platform.ANDROID)
 
     @classmethod
     def setUpClass(cls):
         logfile = os.path.join('out', cls.__name__ + '.txt')
         BaseClass.setUpClass(logfile)
         Emulator.stop()
-        Device.ensure_available(platform='android')
+        Device.ensure_available(platform=Platform.ANDROID)
         Folder.cleanup(cls.app_name)
         Tns.create_app(cls.app_name, attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world')},
                        update_modules=True)

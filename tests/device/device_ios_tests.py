@@ -11,29 +11,24 @@ from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH
 from core.tns.tns import Tns
 from core.settings.strings import *
+from core.tns.tns_platform_type import Platform
 
 
 class DeviceiOSTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
-        Device.ensure_available(platform="ios")
+        Device.ensure_available(platform=Platform.IOS)
 
     @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2154")
     def test_001_device_log_list_applications_and_run_ios(self):
-        device_id = Device.get_id(platform="ios")
-        device_ids = Device.get_ids("ios")
+        device_id = Device.get_id(platform=Platform.IOS)
+        device_ids = Device.get_ids(platform=Platform.IOS)
 
         # Deploy TNS_App on device
         Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH
-                                         })
-
-        output = Tns.deploy_ios(attributes={"--path": self.app_name,
-                                            "--justlaunch": ""
-                                            },
-                                timeout=180)
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        output = Tns.deploy_ios(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=180)
 
         # This is the first time we build the project -> we need a prepare
         assert successfully_prepared in output

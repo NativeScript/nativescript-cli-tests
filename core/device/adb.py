@@ -41,6 +41,24 @@ class Adb(object):
         return app_id
 
     @staticmethod
+    def get_devices():
+        """
+        Get available android devices (only real devices).
+        """
+        devices = list()
+        output = run(ADB_PATH + ' devices -l')
+        '''
+        Example output:
+        emulator-5554          device product:sdk_x86 model:Android_SDK_built_for_x86 device:generic_x86
+        HT46BWM02644           device usb:336592896X product:m8_google model:HTC_One_M8 device:htc_m8
+        '''
+        for line in output.splitlines():
+            if 'usb' in line and ' device ' in line:
+                device_id = line.split(' ')[0]
+                devices.append(device_id)
+        return devices
+
+    @staticmethod
     def run(command, device_id, timeout=60, log_level=CommandLogLevel.COMMAND_ONLY):
         """
         Run adb command.
