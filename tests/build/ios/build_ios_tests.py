@@ -15,6 +15,10 @@ from core.settings.strings import *
 
 
 class BuildiOSTests(BaseClass):
+    app_name_dash = "tns-app"
+    app_name_space = "TNS App"
+    app_name_noplatform = "TNS_AppNoPlatform"
+
     @classmethod
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")

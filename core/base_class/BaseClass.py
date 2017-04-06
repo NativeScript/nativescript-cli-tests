@@ -2,27 +2,33 @@ import os
 import sys
 import time
 import unittest
+import shutil
 
 from core.logger import Logger
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
+from core.settings.settings import OUTPUT_FOLDER, TEST_RUN_HOME
 
 
 class BaseClass(unittest.TestCase):
-    app_name = "TNS_App"
-    app_name_appTest = "appTest"
-    app_name_dash = "tns-app"
-    app_name_space = "TNS App"
+    app_name = "TestApp"
 
-    app_no_platform = "TNSAppNoPlatform"
-    app_name_ios = "my-ios-app"
-    app_name_noplatform = "TNS_AppNoPlatform"
-    app_template = "template"
+    errors = 0
+    failures = 0
 
-    app_name_123 = "123"
-    app_name_app = "app"
-    platforms_android = os.path.join(app_name, "platforms", "android")
+    @classmethod
+    def IsFailed(cls, res):
+        is_failed = False
+
+        if len(res.failures) > cls.failures:
+            cls.failures = len(res.failures)
+            is_failed = True
+        if len(res.errors) > cls.errors:
+            cls.errors = len(res.errors)
+            is_failed = True
+
+        return is_failed
 
     @classmethod
     def setUpClass(cls, logfile=""):
@@ -30,22 +36,11 @@ class BaseClass(unittest.TestCase):
         Process.kill(proc_name='node', proc_cmdline='tns')
 
         if logfile == "":
-            logfile = os.path.join("out", cls.__name__ + ".txt")
+            logfile = os.path.join(OUTPUT_FOLDER, cls.__name__ + ".txt")
         File.remove(logfile)
         sys.stdout = sys.stderr = Logger.Logger(logfile)
 
         Folder.cleanup(cls.app_name)
-        Folder.cleanup(cls.app_name_appTest)
-        Folder.cleanup(cls.app_name_dash)
-        Folder.cleanup(cls.app_name_space)
-
-        Folder.cleanup(cls.app_no_platform)
-        Folder.cleanup(cls.app_name_ios)
-        Folder.cleanup(cls.app_name_noplatform)
-        Folder.cleanup(cls.app_template)
-
-        Folder.cleanup(cls.app_name_app)
-        Folder.cleanup(cls.app_name_123)
 
     def setUp(self):
         print ""
@@ -60,6 +55,12 @@ class BaseClass(unittest.TestCase):
         print "{0} ____________________________________TEST END____________________________________". \
             format(time.strftime("%X"))
         print ""
+        if self.IsFailed(self._resultForDoCleanups) is True:
+            src = os.path.join(TEST_RUN_HOME, self.app_name)
+            dest = os.path.join(OUTPUT_FOLDER, self.__class__.__name__ + "_" + self._testMethodName)
+            shutil.rmtree(os.path.join(src, "platforms"), ignore_errors=True)
+            shutil.rmtree(os.path.join(src, "node_modules"), ignore_errors=True)
+            shutil.copytree(src, dest)
 
     @classmethod
     def tearDownClass(cls):
