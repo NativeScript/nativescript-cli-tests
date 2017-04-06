@@ -89,32 +89,27 @@ class RunIOSDeviceTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Change XML and wait until app is synced
-        # time.sleep(10)
-        # ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
-        # strings = ['Successfully transferred', 'main-page.xml', 'Successfully synced application']
-        # Tns.wait_for_log(log_file=log, string_list=strings)
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
+        strings = ['Successfully transferred', 'main-page.xml', 'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Change CSS and wait until app is synced
-        time.sleep(10)
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
         strings = ['Successfully transferred', 'app.css', 'Refreshing application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Rollback all the changes and verify files are synced
-        time.sleep(10)
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
         strings = ['Successfully transferred', 'main-view-model.js', 'Refreshing application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        time.sleep(10)
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
         strings = ['Successfully transferred', 'app.css', 'Refreshing application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        # time.sleep(10)
-        # ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
-        # strings = ['Successfully transferred', 'main-page.xml', 'Refreshing application']
-        # Tns.wait_for_log(log_file=log, string_list=strings)
+        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
+        strings = ['Successfully transferred', 'main-page.xml', 'Refreshing application']
+        Tns.wait_for_log(log_file=log, string_list=strings)
 
     def test_210_tns_run_ios_add_remove_files_and_folders(self):
         """
@@ -135,10 +130,10 @@ class RunIOSDeviceTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Revert changes(rename file and delete file)
-        File.copy(destination_file, source_file)
-        File.remove(destination_file)
-        strings = ['Successfully transferred', new_file_name, 'Refreshing application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
+        # File.copy(destination_file, source_file)
+        # File.remove(destination_file)
+        # strings = ['Successfully transferred', new_file_name, 'Refreshing application']
+        # Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Add folder
         new_folder_name = 'test2'
@@ -153,9 +148,7 @@ class RunIOSDeviceTests(BaseClass):
         `tns run ios --emulator` should start emulator even if physical device is connected
         """
         Simulator.stop()
-        output = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
-                             assert_success=False)
-        TnsAsserts.prepared(app_name=self.app_name, output=output, platform=Platform.IOS, prepare=Prepare.SKIP)
+        Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''}, assert_success=False)
         assert Simulator.is_running()[0], 'iOS Simulator not started by `tns run ios`!'
 
     def test_310_tns_run_ios_emulator_should_run_only_on_emulator(self):
