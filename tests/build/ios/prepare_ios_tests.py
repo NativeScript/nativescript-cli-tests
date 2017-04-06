@@ -47,11 +47,11 @@ class PrepareiOSTests(BaseClass):
         TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.INCREMENTAL)
 
         # Verify Xcode Schemes
-        output = run("xcodebuild -project " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/ -list")
+        output = run("xcodebuild -project " + self.app_name + "/platforms/ios/TestApp.xcodeproj/ -list")
         assert "This project contains no schemes." not in output
-        result = re.search("Targets:\n\s*TNSApp", output)
+        result = re.search("Targets:\n\s*TestApp", output)
         assert result is not None
-        result = re.search("Schemes:\n\s*TNSApp", output)
+        result = re.search("Schemes:\n\s*TestApp", output)
         assert result is not None
 
     def test_200_prepare_additional_appresources(self):
@@ -71,7 +71,7 @@ class PrepareiOSTests(BaseClass):
         TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.INCREMENTAL)
 
         # Verify XCode Project include files from App Resources folder
-        output = run("cat " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep newDefault.png")
+        output = run("cat " + self.app_name + "/platforms/ios/TestApp.xcodeproj/project.pbxproj | grep newDefault.png")
         assert "newDefault.png" in output
 
     def test_201_prepare_ios_platform_not_added(self):

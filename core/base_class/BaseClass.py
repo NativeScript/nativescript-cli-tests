@@ -13,6 +13,7 @@ from core.settings.settings import OUTPUT_FOLDER, TEST_RUN_HOME
 
 class BaseClass(unittest.TestCase):
     app_name = "TestApp"
+    platforms_android = os.path.join(app_name, "platforms", "android")
 
     errors = 0
     failures = 0
@@ -58,9 +59,12 @@ class BaseClass(unittest.TestCase):
         if self.IsFailed(self._resultForDoCleanups) is True:
             src = os.path.join(TEST_RUN_HOME, self.app_name)
             dest = os.path.join(OUTPUT_FOLDER, self.__class__.__name__ + "_" + self._testMethodName)
-            shutil.rmtree(os.path.join(src, "platforms"), ignore_errors=True)
-            shutil.rmtree(os.path.join(src, "node_modules"), ignore_errors=True)
-            shutil.copytree(src, dest)
+            if os.path.isdir(src):
+                shutil.copytree(src, dest)
+                shutil.rmtree(os.path.join(dest, "platforms"), ignore_errors=True)
+                shutil.rmtree(os.path.join(dest, "node_modules"), ignore_errors=True)
+            else:
+                print "No project " + src
 
     @classmethod
     def tearDownClass(cls):

@@ -1,3 +1,4 @@
+from os import path
 # Folders
 # Console output
 # Core
@@ -6,7 +7,13 @@ android = "android"
 invalid = "invalidEntry"
 config_debug = "CONFIGURATION Debug"
 config_release = "CONFIGURATION Release"
-"Wifi"
+app_identifier = "org.nativescript.testapp"
+
+# Files
+debug_apk = "TestApp-debug.apk"
+release_apk = "TestApp-release.apk"
+debug_apk_path = path.join("platforms", "android", "build", "outputs", "apk", debug_apk)
+release_apk_path = path.join("platforms", "android", "build", "outputs", "apk", release_apk)
 
 # Commands
 autocomplete = "autocomplete"
@@ -49,7 +56,7 @@ emulator = "emulator-5554"
 copy_template_files = "Copying template files..."
 "Installing tns-android"
 cannot_resolve_device = "Cannot resolve the specified connected device"
-deployed_on_device ="Successfully deployed on device"
+deployed_on_device = "Successfully deployed on device"
 installed_plugin = "Successfully installed plugin {0}"
 tns_plugin = "tns-plugin"
 codesign = "CodeSign"
@@ -76,15 +83,6 @@ no_such_device = "Cannot find device with name: "
 cannot_resolve_device = "Could not find device by specified identifier"
 invalid_version = "{0} is not a valid version."
 no_platform_installed = "No installed platforms found. Use $ tns platform add"
-
-
-" is not a valid device platform."
-" is not a valid NativeScript plugin"
-"Verify that the plugin package.json file contains a nativescript key and try again"
-"When producing a release build, you need to specify all --key-store-* options."
-"You cannot build applications named '{0}' in Xcode"
-"You have specified '{0}' for compile sdk, but it is not installed on your system."
-"You need to provide all the required parameters."
 
 
 

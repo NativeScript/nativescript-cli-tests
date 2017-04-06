@@ -37,7 +37,7 @@ class PlatformiOSTests(BaseClass):
                                          })
 
         # If project.xcworkspace is there Xcode project name is wrong
-        assert not File.exists(self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.xcworkspace")
+        assert not File.exists(self.app_name + "/platforms/ios/TestApp.xcodeproj/project.xcworkspace")
 
     def test_201_platform_remove_ios(self):
         Tns.create_app(self.app_name)
@@ -86,7 +86,7 @@ class PlatformiOSTests(BaseClass):
 
         # Verify plist file in native project (after prepare)
         Tns.prepare_ios(attributes={"--path": self.app_name})
-        output = File.read(self.app_name + "/platforms/ios/TNSApp/TNSApp-Info.plist")
+        output = File.read(self.app_name + "/platforms/ios/TestApp/TestApp-Info.plist")
         assert "org.nativescript.MyApp" in output
 
     def test_330_platform_update_ios_platform_not_added(self):

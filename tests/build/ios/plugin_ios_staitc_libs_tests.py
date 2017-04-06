@@ -36,10 +36,10 @@ class PluginsiOSLibsTests(BaseClass):
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.build_ios(attributes={"--path": self.app_name})
 
-        assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
-        assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/hello/hello-plugin.js")
+        assert File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/hello/package.json")
+        assert File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/hello/hello-plugin.js")
         output = run(
-            "cat " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
+            "cat " + self.app_name + "/platforms/ios/TestApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
         assert "HelloLib.a in Frameworks" in output
 
     def test_202_plugin_add_static_lib_universal_after_platform_add_ios(self):
@@ -61,10 +61,10 @@ class PluginsiOSLibsTests(BaseClass):
 
         Tns.build_ios(attributes={"--path": self.app_name})
 
-        assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/hello/package.json")
-        assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/hello/hello-plugin.js")
+        assert File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/hello/package.json")
+        assert File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/hello/hello-plugin.js")
         output = run(
-            "cat " + self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
+            "cat " + self.app_name + "/platforms/ios/TestApp.xcodeproj/project.pbxproj | grep \"HelloLib.a\"")
         assert "HelloLib.a in Frameworks" in output
 
     def test_401_plugin_add_static_lib_non_universal(self):

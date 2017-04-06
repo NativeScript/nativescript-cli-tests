@@ -5,9 +5,16 @@ Test for usage-reporting command
 from core.tns.tns import Tns
 from core.base_class.BaseClass import BaseClass
 from core.settings.strings import *
+import time
 
 
 class UsageReportingTests(BaseClass):
+    def tearDown(self):
+        print ""
+        print "{0} ____________________________________TEST END____________________________________". \
+            format(time.strftime("%X"))
+        print ""
+
     def test_001_usage_reporting_enable(self):
         output = Tns.run_tns_command("usage-reporting enable")
         assert enabled.format(usage_reporting, "now ") in output

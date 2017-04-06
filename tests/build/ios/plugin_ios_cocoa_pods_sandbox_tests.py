@@ -34,7 +34,7 @@ class PluginsiOSSandboxPodsTests(BaseClass):
                "nativescript-ios-working-with-sandbox-plugin for ios." in output
 
         output = run(
-            "cat " + self.app_name + "/platforms/ios/TNSApp/app/I_MADE_THIS_FILE.txt")
+            "cat " + self.app_name + "/platforms/ios/TestApp/app/I_MADE_THIS_FILE.txt")
         assert "content" in output
 
     def test_400_plugin_add_sandbox_pod_can_write_outside_app_folder_by_default(self):

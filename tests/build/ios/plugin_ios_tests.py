@@ -33,7 +33,7 @@ class PluginsiOSTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
         assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
         output = run("cat " + self.app_name + "/package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert app_identifier in output.lower()
         assert "dependencies" in output
         assert tns_plugin in output
 
@@ -46,7 +46,7 @@ class PluginsiOSTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
 
         output = File.read(self.app_name + "/package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert app_identifier in output.lower()
         assert "dependencies" in output
         assert tns_plugin in output
 
@@ -60,7 +60,7 @@ class PluginsiOSTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/nativescript-telerik-ui/platforms/iOS")
 
         output = File.read(self.app_name + "/package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert app_identifier in output.lower()
         assert "dependencies" in output
         assert "nativescript-telerik-ui" in output
 
@@ -78,7 +78,7 @@ class PluginsiOSTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/nativescript-telerik-ui/platforms/Android")
         assert File.exists(self.app_name + "/node_modules/nativescript-telerik-ui/platforms/iOS")
         output = File.read(self.app_name + "/package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert app_identifier in output.lower()
         assert "dependencies" in output
         assert "nativescript-telerik-ui" in output
         Tns.build_ios(attributes={"--path": self.app_name})
@@ -94,7 +94,7 @@ class PluginsiOSTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
         assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
         output = File.read(self.app_name + "/package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert app_identifier in output.lower()
         assert "dependencies" in output
         assert tns_plugin in output
 
@@ -133,16 +133,16 @@ class PluginsiOSTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name})
         Tns.build_android(attributes={"--path": self.app_name})
 
-        assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+        assert File.exists(os.path.join(self.app_name, debug_apk_path))
         assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
 
         # Verify platform specific files
-        assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test.js")
-        assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test2.xml")
-        assert not File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test.ios.js")
-        assert not File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test2.ios.xml")
-        assert not File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test.android.js")
-        assert not File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/tns-plugin/test2.android.xml")
+        assert File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/tns-plugin/test.js")
+        assert File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/tns-plugin/test2.xml")
+        assert not File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/tns-plugin/test.ios.js")
+        assert not File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/tns-plugin/test2.ios.xml")
+        assert not File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/tns-plugin/test.android.js")
+        assert not File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/tns-plugin/test2.android.xml")
 
         assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test.js")
         assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test2.xml")

@@ -37,10 +37,10 @@ class DeviceiOSTests(BaseClass):
             assert device_id in output
         sleep(10)
 
-        # Verify list-applications command list org.nativescript.TNSApp
+        # Verify list-applications command list org.nativescript.TestApp
         for device_id in device_ids:
             output = Tns.run_tns_command("device list-applications", attributes={"--device": device_id})
-            assert "org.nativescript.TNSApp" in output
+            assert app_identifier in output
 
         # Get logs
         output = Tns.run_tns_command("device log", attributes={"--device": device_id}, timeout=30)

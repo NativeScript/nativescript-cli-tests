@@ -27,8 +27,8 @@ class BuildiOSNGTests(BaseClass):
 
     def test_100_build_ios_ng_project(self):
         output = Tns.build_ios(attributes={"--path": self.app_name})
-        assert "build/emulator/TNSApp.app" in output
-        assert File.exists(self.app_name + "/platforms/ios/build/emulator/TNSApp.app")
+        assert "build/emulator/TestApp.app" in output
+        assert File.exists(self.app_name + "/platforms/ios/build/emulator/TestApp.app")
 
     def test_200_build_ios_ng_project_release_fordevice(self):
         output = Tns.build_ios(attributes={"--path": self.app_name,
@@ -36,5 +36,5 @@ class BuildiOSNGTests(BaseClass):
                                            "--release": ""})
         assert config_release in output
         assert codesign in output
-        assert "build/device/TNSApp.app" in output
-        assert File.exists(self.app_name + "/platforms/ios/build/device/TNSApp.ipa")
+        assert "build/device/TestApp.app" in output
+        assert File.exists(self.app_name + "/platforms/ios/build/device/TestApp.ipa")
