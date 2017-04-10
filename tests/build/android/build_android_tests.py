@@ -68,7 +68,7 @@ class BuildAndroidTests(BaseClass):
         assert not File.pattern_exists(self.platforms_android, "*.plist")
 
         # Verify apk does not contain
-        archive = ZipFile(debug_apk_path)
+        archive = ZipFile(os.path.join(self.app_name, debug_apk_path))
         archive.extractall(self.app_name + "/temp")
         assert not File.pattern_exists(self.app_name + "/temp", "*.aar")
 
@@ -89,7 +89,7 @@ class BuildAndroidTests(BaseClass):
         assert successfully_prepared in output
         assert build_successful in output
         assert successfully_built in output
-        assert File.exists(debug_apk_path)
+        assert File.exists(os.path.join(self.app_name, debug_apk_path))
 
     def test_201_build_android_with_additional_prepare(self):
         """Verify that manually running prepare does not break next build command."""
