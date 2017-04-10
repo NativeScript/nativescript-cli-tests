@@ -36,7 +36,7 @@ class InitAndInstallTests(BaseClass):
         assert not File.exists(self.app_name + "/platform")
 
         output = File.read(self.app_name + "/package.json")
-        assert app_identifier in output
+        assert app_identifier in output.lower()
         assert "tns-android" in output
         assert tns_core_modules in output
         if CURRENT_OS == OSType.OSX:
@@ -49,7 +49,7 @@ class InitAndInstallTests(BaseClass):
         assert not File.exists(self.app_name + "/platform")
 
         output = File.read(self.app_name + "/package.json")
-        assert app_identifier in output
+        assert app_identifier in output.lower()
         assert "tns-android" in output
         if CURRENT_OS == OSType.OSX:
             assert "tns-ios" in output
