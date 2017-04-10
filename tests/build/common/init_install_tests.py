@@ -58,8 +58,9 @@ class InitAndInstallTests(BaseClass):
         self.test_202_init_path()
         # Modify existing file
         for line in fileinput.input(self.app_name + "/package.json", inplace=1):
-            print line.replace(app_identifier, "org.nativescript.TestApp12"),
+            print line.lower().replace(app_identifier, "org.nativescript.TestApp12"),
         output = File.read(self.app_name + "/package.json")
+        print output
         assert "org.nativescript.TestApp12" in output
 
         # Overwrite changes
