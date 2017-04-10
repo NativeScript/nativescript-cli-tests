@@ -44,21 +44,21 @@ class DeviceAndroidTests(BaseClass):
             assert device_id in output
         sleep(10)
 
-        # Verify list-applications command list org.nativescript.TNSApp
+        # Verify list-applications command list org.nativescript.TestApp
         for device_id in device_ids:
             output = Tns.run_tns_command("device list-applications", attributes={"--device": device_id})
             assert "com.android." in output
-            assert "org.nativescript.TNSApp" in output
+            assert "org.nativescript.TestApp" in output
 
         # Kill the app
-        Device.stop_application(app_id="org.nativescript.TNSApp", device_id=device_id)
+        Device.stop_application(app_id=app_identifier, device_id=device_id)
         # Start via emulate command and verify it is running
-        Tns.run_tns_command("device run org.nativescript.TNSApp", attributes={"--device": device_id,
+        Tns.run_tns_command("device run " + app_identifier, attributes={"--device": device_id,
                                                                               "--justlaunch": ""
                                                                               },
                             timeout=60)
         # Verify app is running
-        Device.wait_until_app_is_running(app_id="org.nativescript.TNSApp", device_id=device_id, timeout=20)
+        Device.wait_until_app_is_running(app_id=app_identifier, device_id=device_id, timeout=20)
 
         # Get logs
         log = Tns.run_tns_command("device log", attributes={"--device": device_id}, wait=False)

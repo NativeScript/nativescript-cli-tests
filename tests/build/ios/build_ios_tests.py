@@ -15,13 +15,18 @@ from core.settings.strings import *
 
 
 class BuildiOSTests(BaseClass):
+    app_name_dash = "test-app"
+    app_name_space = "Test App"
+    app_name_noplatform = "Test_AppNoPlatform"
+    app_name_ios = "testapp_ios"
+
     @classmethod
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
 
-        File.remove("TNSApp.app")
-        File.remove("TNSApp.ipa")
+        File.remove("TestApp.app")
+        File.remove("TestApp.ipa")
 
         Xcode.cleanup_cache()
 
@@ -38,8 +43,8 @@ class BuildiOSTests(BaseClass):
 
     @classmethod
     def tearDownClass(cls):
-        File.remove("TNSApp.app")
-        File.remove("TNSApp.ipa")
+        File.remove("TestApp.app")
+        File.remove("TestApp.ipa")
 
         Folder.cleanup(cls.app_name)
         Folder.cleanup(cls.app_name_noplatform)
@@ -59,12 +64,12 @@ class BuildiOSTests(BaseClass):
 
         # Verify no aar and frameworks in platforms folder
         assert not File.pattern_exists(self.app_name + "/platforms/ios", "*.aar")
-        assert not File.pattern_exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules", "*.framework")
+        assert not File.pattern_exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules", "*.framework")
 
         # Verify ipa has both armv7 and arm64 archs
-        run("mv " + self.app_name + "/platforms/ios/build/device/TNSApp.ipa TNSApp-ipa.tgz")
-        run("tar -xvf TNSApp-ipa.tgz")
-        output = run("lipo -info Payload/TNSApp.app/TNSApp")
+        run("mv " + self.app_name + "/platforms/ios/build/device/TestApp.ipa TestApp-ipa.tgz")
+        run("tar -xvf TestApp-ipa.tgz")
+        output = run("lipo -info Payload/TestApp.app/TestApp")
         assert "armv7" in output
         assert "arm64" in output
 
@@ -87,8 +92,8 @@ class BuildiOSTests(BaseClass):
         output = Tns.build_ios(tns_path=os.path.join("..", TNS_PATH), attributes={"--path": self.app_name},
                                assert_success=False)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert "build/emulator/TNSApp.app" in output
-        assert File.exists(self.app_name + "/platforms/ios/build/emulator/TNSApp.app")
+        assert "build/emulator/TestApp.app" in output
+        assert File.exists(self.app_name + "/platforms/ios/build/emulator/TestApp.app")
 
     def test_213_build_ios_platform_not_added_or_platforms_deleted(self):
         Tns.create_app(self.app_name_noplatform)
@@ -103,7 +108,7 @@ class BuildiOSTests(BaseClass):
 
         # Verify project id
         output = File.read(self.app_name_dash + os.sep + "package.json")
-        assert "org.nativescript.tnsapp" in output
+        assert app_identifier in output
 
     def test_301_build_ios_with_space(self):
         Tns.create_app(self.app_name_space)
@@ -119,18 +124,18 @@ class BuildiOSTests(BaseClass):
 
     @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2357")
     def test_310_build_ios_with_copy_to(self):
-        File.remove("TNSApp.app")
+        File.remove("TestApp.app")
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.build_ios(attributes={"--path": self.app_name, "--copy-to": "./"})
-        assert File.exists("TNSApp.app")
+        assert File.exists("TestApp.app")
 
     def test_311_build_ios_release_with_copy_to(self):
-        File.remove("TNSApp.ipa")
+        File.remove("TestApp.ipa")
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": "", "--copy-to": "./"})
-        assert File.exists("TNSApp.ipa")
+        assert File.exists("TestApp.ipa")
 
     def test_400_build_ios_with_wrong_param(self):
         Tns.create_app(self.app_name_noplatform)

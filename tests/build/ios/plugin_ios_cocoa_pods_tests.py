@@ -8,6 +8,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH, SUT_FOLDER
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
+from core.settings.strings import *
 
 
 class PluginsiOSPodsTests(BaseClass):
@@ -49,8 +50,8 @@ class PluginsiOSPodsTests(BaseClass):
         assert "pod 'AFNetworking'" in output
         assert "pod 'UICKeyChainStore'" in output
 
-        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
-        assert "location = \"group:TNSApp.xcodeproj\">" in output
+        output = File.read(self.app_name + "/platforms/ios/TestApp.xcworkspace/contents.xcworkspacedata")
+        assert "location = \"group:TestApp.xcodeproj\">" in output
         assert "location = \"group:Pods/Pods.xcodeproj\">" in output
         assert File.exists(self.app_name + "/platforms/ios/Pods/Pods.xcodeproj")
 
@@ -66,7 +67,7 @@ class PluginsiOSPodsTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/googlesdk/platforms/ios/Podfile")
 
         output = File.read(self.app_name + "/package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert app_identifier in output.lower()
         assert "dependencies" in output
         assert "googlesdk" in output
 
@@ -82,12 +83,12 @@ class PluginsiOSPodsTests(BaseClass):
         assert "pod 'GoogleMaps'" in output
         assert "use_frameworks!" in output
 
-        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
-        assert "location = \"group:TNSApp.xcodeproj\">" in output
+        output = File.read(self.app_name + "/platforms/ios/TestApp.xcworkspace/contents.xcworkspacedata")
+        assert "location = \"group:TestApp.xcodeproj\">" in output
         assert "location = \"group:Pods/Pods.xcodeproj\">" in output
 
         # This deployment target comes from the CLI
-        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj")
+        output = File.read(self.app_name + "/platforms/ios/TestApp.xcodeproj/project.pbxproj")
         assert "IPHONEOS_DEPLOYMENT_TARGET = 8.0;" in output
         # This deployment target comes from the Podfile - platform :ios, '8.1'
 
@@ -105,7 +106,7 @@ class PluginsiOSPodsTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/googlesdk/platforms/ios/Podfile")
 
         output = File.read(self.app_name + "/package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert app_identifier in output.lower()
         assert "dependencies" in output
         assert "googlesdk" in output
 
@@ -119,13 +120,13 @@ class PluginsiOSPodsTests(BaseClass):
         assert "pod 'GoogleMaps'" in output
         assert "use_frameworks!" in output
 
-        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcworkspace/contents.xcworkspacedata")
-        assert "location = \"group:TNSApp.xcodeproj\">" in output
+        output = File.read(self.app_name + "/platforms/ios/TestApp.xcworkspace/contents.xcworkspacedata")
+        assert "location = \"group:TestApp.xcodeproj\">" in output
         assert "location = \"group:Pods/Pods.xcodeproj\">" in output
         assert File.exists(self.app_name + "/platforms/ios/Pods/Pods.xcodeproj")
 
         # This deployment target comes from the CLI
-        output = File.read(self.app_name + "/platforms/ios/TNSApp.xcodeproj/project.pbxproj")
+        output = File.read(self.app_name + "/platforms/ios/TestApp.xcodeproj/project.pbxproj")
         assert "IPHONEOS_DEPLOYMENT_TARGET = 8.0;" in output
         # This deployment target comes from the Podfile - platform :ios, '8.1'
 
@@ -151,5 +152,5 @@ class PluginsiOSPodsTests(BaseClass):
         output = File.read(self.app_name + "/platforms/ios/Podfile")
         assert "pod 'InvalidPod'" in output
 
-        assert not File.exists(self.app_name + "/platforms/ios/TNSApp.xcworkspace")
+        assert not File.exists(self.app_name + "/platforms/ios/TestApp.xcworkspace")
         assert not File.exists(self.app_name + "/platforms/ios/Pods/Pods.xcodeproj")

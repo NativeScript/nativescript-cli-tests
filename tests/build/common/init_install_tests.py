@@ -36,7 +36,7 @@ class InitAndInstallTests(BaseClass):
         assert not File.exists(self.app_name + "/platform")
 
         output = File.read(self.app_name + "/package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert app_identifier in output
         assert "tns-android" in output
         assert tns_core_modules in output
         if CURRENT_OS == OSType.OSX:
@@ -49,7 +49,7 @@ class InitAndInstallTests(BaseClass):
         assert not File.exists(self.app_name + "/platform")
 
         output = File.read(self.app_name + "/package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert app_identifier in output
         assert "tns-android" in output
         if CURRENT_OS == OSType.OSX:
             assert "tns-ios" in output
@@ -58,9 +58,9 @@ class InitAndInstallTests(BaseClass):
         self.test_202_init_path()
         # Modify existing file
         for line in fileinput.input(self.app_name + "/package.json", inplace=1):
-            print line.replace("org.nativescript.TNSApp", "org.nativescript.TestApp"),
+            print line.replace(app_identifier, "org.nativescript.TestApp12"),
         output = File.read(self.app_name + "/package.json")
-        assert "org.nativescript.TestApp" in output
+        assert "org.nativescript.TestApp12" in output
 
         # Overwrite changes
         self.test_202_init_path()
@@ -71,7 +71,7 @@ class InitAndInstallTests(BaseClass):
         assert File.exists(self.app_name + "/platforms/android/build.gradle")
 
         if CURRENT_OS == OSType.OSX:
-            assert File.exists(self.app_name + "/platforms/ios/TNSApp.xcodeproj")
+            assert File.exists(self.app_name + "/platforms/ios/TestApp.xcodeproj")
 
     def test_205_install_node_modules(self):
         self.test_202_init_path()
@@ -96,7 +96,7 @@ class InitAndInstallTests(BaseClass):
         assert File.exists(self.app_name + "/platforms/android/build.gradle")
 
         if CURRENT_OS == OSType.OSX:
-            assert File.exists(self.app_name + "/platforms/ios/TNSApp.xcodeproj")
+            assert File.exists(self.app_name + "/platforms/ios/TestApp.xcodeproj")
 
     def test_300_install_node_modules_if_node_modules_folder_exists(self):
         self.test_202_init_path()
@@ -115,7 +115,7 @@ class InitAndInstallTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/gulp")
         assert File.exists(self.app_name + "/platforms/android/build.gradle")
         if CURRENT_OS == OSType.OSX:
-            assert File.exists(self.app_name + "/platforms/ios/TNSApp.xcodeproj")
+            assert File.exists(self.app_name + "/platforms/ios/TestApp.xcodeproj")
 
     def test_301_install_and_prepare(self):
         self.test_202_init_path()
@@ -141,10 +141,10 @@ class InitAndInstallTests(BaseClass):
         assert not File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/gulp")
 
         if CURRENT_OS == OSType.OSX:
-            assert File.exists(self.app_name + "/platforms/ios/TNSApp.xcodeproj")
+            assert File.exists(self.app_name + "/platforms/ios/TestApp.xcodeproj")
             Tns.prepare_ios(attributes={"--path": self.app_name})
-            assert File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/lodash")
-            assert not File.exists(self.app_name + "/platforms/ios/TNSApp/app/tns_modules/gulp")
+            assert File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/lodash")
+            assert not File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/gulp")
 
     def test_400_install_in_not_existing_folder(self):
         output = Tns.install(attributes={"--path": self.app_name}, assert_success=False)

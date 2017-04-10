@@ -13,6 +13,8 @@ from core.settings.strings import *
 
 
 class EmulateiOSTests(BaseClass):
+    app_name_noplatform = "Test_AppNoPlatform"
+
     @classmethod
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")

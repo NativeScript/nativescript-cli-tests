@@ -35,7 +35,7 @@ class PluginsAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
 
         output = File.read(self.app_name + "/package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert "org.nativescript.TestApp" in output
         assert "dependencies" in output
         assert "tns-plugin" in output
 
@@ -50,7 +50,7 @@ class PluginsAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
 
         output = File.read(self.app_name + "/package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert "org.nativescript.TestApp" in output
         assert "dependencies" in output
         assert "tns-plugin" in output
 
@@ -69,7 +69,7 @@ class PluginsAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
 
         output = File.read(self.app_name + "/package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert "org.nativescript.TestApp" in output
         assert "dependencies" in output
         assert "tns-plugin" in output
 
@@ -131,7 +131,7 @@ class PluginsAndroidTests(BaseClass):
         assert error not in output.lower()
         assert "FAILURE" not in output
 
-        assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+        assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TestApp-debug.apk")
         assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
 
     def test_200_plugin_add_before_platform_add_android_and_build(self):
@@ -143,7 +143,7 @@ class PluginsAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/nativescript-telerik-ui/platforms/android")
         assert File.exists(self.app_name + "/node_modules/nativescript-telerik-ui/platforms/ios")
         output = File.read(self.app_name + "/package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert "org.nativescript.TestApp" in output
         assert "dependencies" in output
         assert "nativescript-telerik-ui" in output
         Tns.platform_add_android(attributes={"--path": self.app_name,
@@ -165,7 +165,7 @@ class PluginsAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/nativescript-telerik-ui/platforms/ios")
 
         output = File.read(self.app_name + "/package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert "org.nativescript.TestApp" in output
         assert "dependencies" in output
         assert "nativescript-telerik-ui" in output
 
@@ -179,7 +179,7 @@ class PluginsAndroidTests(BaseClass):
         Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name}, assert_success=False)
 
         Tns.build_android(attributes={"--path": self.app_name})
-        assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+        assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TestApp-debug.apk")
         assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
 
         # Verify plugin commmand list used plugins

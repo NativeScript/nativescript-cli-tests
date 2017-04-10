@@ -21,17 +21,23 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class BuildAndroidTests(BaseClass):
+    app_name_dash = "test-app"
+    app_name_space = "Test App"
+    app_no_platform = "TestAppNoPlatform"
+
     @classmethod
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
         BaseClass.setUpClass(logfile)
 
-        File.remove("TNSApp-debug.apk")
-        File.remove("TNSApp-release.apk")
+        Folder.cleanup(cls.app_no_platform)
+
+        File.remove(debug_apk)
+        File.remove(release_apk)
         Folder.cleanup('temp')
 
-        Tns.create_app(BaseClass.app_name)
-        Tns.platform_add_android(attributes={"--path": BaseClass.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.create_app(cls.app_name)
+        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -50,8 +56,8 @@ class BuildAndroidTests(BaseClass):
 
     @classmethod
     def tearDownClass(cls):
-        File.remove("TNSApp-debug.apk")
-        File.remove("TNSApp-release.apk")
+        File.remove(debug_apk)
+        File.remove(release_apk)
         Folder.cleanup('temp')
         pass
 
@@ -62,7 +68,7 @@ class BuildAndroidTests(BaseClass):
         assert not File.pattern_exists(self.platforms_android, "*.plist")
 
         # Verify apk does not contain
-        archive = ZipFile(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
+        archive = ZipFile(debug_apk_path)
         archive.extractall(self.app_name + "/temp")
         assert not File.pattern_exists(self.app_name + "/temp", "*.aar")
 
@@ -83,7 +89,7 @@ class BuildAndroidTests(BaseClass):
         assert successfully_prepared in output
         assert build_successful in output
         assert successfully_built in output
-        assert File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-debug.apk")
+        assert File.exists(debug_apk_path)
 
     def test_201_build_android_with_additional_prepare(self):
         """Verify that manually running prepare does not break next build command."""
@@ -115,11 +121,11 @@ class BuildAndroidTests(BaseClass):
 
         # Verify project id
         output = File.read(self.app_name_dash + "/package.json")
-        assert "org.nativescript.tnsapp" in output
+        assert app_identifier in output.lower()
 
         # Verify AndroidManifest.xml
         output = File.read(self.app_name_dash + "/platforms/android/src/main/AndroidManifest.xml")
-        assert "org.nativescript.tnsapp" in output
+        assert app_identifier in output.lower()
 
     def test_302_build_project_with_space(self):
         Tns.create_app(self.app_name_space)
@@ -130,10 +136,10 @@ class BuildAndroidTests(BaseClass):
         Tns.build_android(attributes={"--path": "\"" + self.app_name_space + "\""})
 
         output = File.read(self.app_name_space + os.sep + "package.json")
-        assert "org.nativescript.TNSApp" in output
+        assert app_identifier in output.lower()
 
         output = File.read(self.app_name_space + "/platforms/android/src/main/AndroidManifest.xml")
-        assert "org.nativescript.TNSApp" in output
+        assert app_identifier in output.lower()
 
     def test_310_build_android_with_sdk22(self):
         # This is required when build with different SDK
@@ -161,23 +167,18 @@ class BuildAndroidTests(BaseClass):
                                    assert_success=False)
         assert "You have specified '99' for compile sdk, but it is not installed on your system." in output
 
-        # Due to https://github.com/NativeScript/nativescript-cli/issues/2547
-        # we should delete the project and recreate it.
-        # TODO: Remove those lines after https://github.com/NativeScript/nativescript-cli/issues/2547 is fixed.
-        Folder.cleanup(self.app_name)
-        Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
 
     def test_321_build_with_copyto_option(self):
+        # TODO: Remove those lines after https://github.com/NativeScript/nativescript-cli/issues/2547 is fixed.
         # This is required when build with different SDK
         Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
 
-        File.remove("TNSApp-debug.apk")
+        File.remove(debug_apk)
         Tns.build_android(attributes={"--path": self.app_name, "--copy-to": "./"})
-        assert File.exists("TNSApp-debug.apk")
-        File.remove("TNSApp-debug.apk")
+        assert File.exists(debug_apk)
+        File.remove(debug_apk)
 
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "AppBuilder does not use Windows machines")
     def test_330_build_like_appbuilder(self):
@@ -289,4 +290,4 @@ class BuildAndroidTests(BaseClass):
         output = Tns.build_android(attributes={"--release": "", "--path": self.app_name}, assert_success=False)
         assert "When producing a release build, you need to specify all --key-store-* options." in output
         assert "# build android" in output
-        assert not File.exists(self.platforms_android + "/build/outputs/apk/TNSApp-release.apk")
+        assert not File.exists(release_apk_path)

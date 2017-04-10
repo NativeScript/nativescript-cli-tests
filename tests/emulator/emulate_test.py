@@ -21,6 +21,7 @@ class EmulateAndroidTests(BaseClass):
     https://github.com/NativeScript/nativescript-cli/issues/2526
     Please write tests that ensure `tns emulate android --device <avd name>` works after issues are fixes.
     """
+    app_name_noplatform = "Test_AppNoPlatform"
 
     @classmethod
     def setUpClass(cls):
@@ -56,8 +57,8 @@ class EmulateAndroidTests(BaseClass):
         assert successfully_built in output
         assert installed_on_device.format(EMULATOR_ID) in output
         assert "Starting Android emulator with image" not in output
-        Device.is_running(app_id="org.nativescript.TNSApp", device_id=EMULATOR_ID), \
-        "Application is not running on {0}".format(EMULATOR_ID)
+        Device.is_running(app_id=app_identifier, device_id=EMULATOR_ID), \
+            "Application is not running on {0}".format(EMULATOR_ID)
 
     def test_002_emulate_android_release(self):
         output = Tns.run_tns_command("emulate android", attributes={  # "--device": EMULATOR_NAME,

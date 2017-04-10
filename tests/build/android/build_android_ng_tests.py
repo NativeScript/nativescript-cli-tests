@@ -27,9 +27,10 @@ class BuildAndroidNGTests(BaseClass):
     def test_001_build_android_ng_project(self):
         angular.assert_angular_project(self.app_name)
         Tns.build_android(attributes={"--path": self.app_name})
-        assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TNSApp-debug.apk")
+        assert File.exists(os.path.join(self.app_name, debug_apk_path))
 
     def test_200_build_android_ng_project_release(self):
+        print ANDROID_KEYSTORE_PATH
         output = Tns.build_android(attributes={"--keyStorePath": ANDROID_KEYSTORE_PATH,
                                                "--keyStorePassword": ANDROID_KEYSTORE_PASS,
                                                "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
@@ -41,4 +42,4 @@ class BuildAndroidNGTests(BaseClass):
         assert build_successful in output
 
         assert successfully_built in output
-        assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TNSApp-release.apk")
+        assert File.exists(os.path.join(self.app_name, release_apk_path))

@@ -14,6 +14,11 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class CreateTests(BaseClass):
+    app_name_dash = "tns-app"
+    app_name_space = "TNS App"
+    app_name_123 = "123"
+    app_name_app = "app"
+
     @classmethod
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
