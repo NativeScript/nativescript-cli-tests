@@ -148,7 +148,6 @@ class TnsAsserts(object):
         # First make sure base typescript app is created
         TnsAsserts.created_ts(app_name=app_name, output=output)
 
-
     @staticmethod
     def platform_added(app_name, platform=Platform.NONE, output=None):
         """

@@ -117,7 +117,8 @@ class Device(object):
         :param device_name: Name of device (name of Android avd image, or name or iOS Simulator).
         :param device_id: Device identifier (example: `emulator-5554`).
         :param expected_image: Name of expected image.
-        :param timeout: Timeout in secconds.
+        :param tolerance: Tolerance in percents.
+        :param timeout: Timeout in seconds.
         """
         print "Verify {0} looks correct...".format(expected_image)
         expected_image_path = os.path.join("data", "images", device_name, "{0}.png".format(expected_image))

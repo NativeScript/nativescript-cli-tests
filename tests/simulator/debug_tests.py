@@ -5,6 +5,8 @@ import os
 import time
 
 from core.base_class.BaseClass import BaseClass
+from core.device.device import Device
+from core.device.device_type import DeviceType
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.npm.npm import Npm
@@ -14,10 +16,13 @@ from core.osutils.process import Process
 from core.settings.settings import IOS_RUNTIME_PATH, IOS_INSPECTOR_PACKAGE, SIMULATOR_NAME
 from core.tns.tns import Tns
 from core.settings.strings import *
+from core.tns.tns_platform_type import Platform
+from core.tns.tns_prepare_type import Prepare
+from core.tns.tns_verifications import TnsAsserts
 
 
 class DebugSimulatorTests(BaseClass):
-
+    SIMULATOR_ID = ''
     INSPECTOR_GLOBAL_PATH = os.path.join(os.path.expanduser('~'), '.npm/tns-ios-inspector')
 
     @classmethod
@@ -28,9 +33,10 @@ class DebugSimulatorTests(BaseClass):
         Process.kill('NativeScript Inspector')
         Emulator.stop()
         Simulator.stop()
-        Simulator.start(name=SIMULATOR_NAME)
+        cls.SIMULATOR_ID = Simulator.start(name=SIMULATOR_NAME)
         Folder.cleanup(cls.INSPECTOR_GLOBAL_PATH)
-        Tns.create_app(cls.app_name, update_modules=True)
+        Tns.create_app(cls.app_name, attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world')},
+                       update_modules=True)
         Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
         Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--save-dev', folder=cls.app_name)
 
@@ -38,9 +44,11 @@ class DebugSimulatorTests(BaseClass):
         BaseClass.setUp(self)
         Process.kill('Safari')
         Process.kill('NativeScript Inspector')
+        Process.kill('node')  # Stop 'node' to kill the livesync after each test method.
 
     def tearDown(self):
         BaseClass.tearDown(self)
+        Process.kill('node')  # Stop 'node' to kill the livesync after each test method.
         Process.kill('Safari')
         Process.kill('NativeScript Inspector')
 
@@ -82,37 +90,63 @@ class DebugSimulatorTests(BaseClass):
 
     """
 
-    def test_001_debug_ios_simulator_debug_brk(self):
-        print File.read(self.app_name + '/package.json')
-        output = Tns.run_tns_command('debug ios', attributes={'--debug-brk': '',
-                                                              '--emulator': '',
-                                                              '--path': self.app_name,
-                                                              '--timeout': '200'
-                                                              }, timeout=200)
+    def __verify_debugger_start(self, log):
+        strings = [self.SIMULATOR_ID, "Frontend client connected", "Backend socket created",
+                   "NativeScript debugger attached"]
+        if Device.get_count(platform=Platform.IOS) > 0:
+            strings.append("Multiple devices found! Starting debugger on emulator")
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
+        output = File.read(log)
+        assert "Frontend socket closed" not in output
+        assert "Backend socket closed" not in output
+        assert "NativeScript debugger detached" not in output
 
-        assert successfully_prepared in output
-        assert successfully_built in output
-        assert 'Setting up proxy' in output
-        assert starting_simulator in output
-        assert frontend_connected in output
+    def __verify_debugger_attach(self, log):
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--start': ''})
+        strings = ["Frontend client connected", "Backend socket created"]
+        if Device.get_count(platform=Platform.IOS) > 0:
+            strings.append("Multiple devices found! Starting debugger on emulator")
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
+        output = File.read(log)
+        assert "NativeScript debugger attached" not in output # This is not in output when you attach to running app
+        assert "Frontend socket closed" not in output
+        assert "Backend socket closed" not in output
+        assert "NativeScript debugger detached" not in output
 
-        assert 'closed' not in output
-        assert 'detached' not in output
-        assert 'disconnected' not in output
+    def test_001_debug_ios_simulator(self):
+        """
+        Default `tns debug ios` starts debugger (do not stop at the first code statement)
+        """
+        log = Tns.debug_ios(attributes={'--path': self.app_name})
+        self.__verify_debugger_start(log)
 
-    def test_002_debug_ios_simulator_start(self):
-        print File.read(self.app_name + '/package.json')
-        output = Tns.run_tns_command('emulate ios', attributes={'--path': self.app_name,
-                                                                '--justlaunch': ''})
-        assert 'started on device' in output
-        time.sleep(15)
+        # Verify app starts and do not stop on first line of code
+        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
+                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
-        output = Tns.run_tns_command('debug ios', attributes={'--start': '',
-                                                              '--emulator': '',
-                                                              '--path': self.app_name,
-                                                              '--timeout': '150'
-                                                              }, timeout=150)
-        assert frontend_connected in output
-        assert 'closed' not in output
-        assert 'detached' not in output
-        assert 'disconnected' not in output
+    def test_002_debug_ios_simulator_debug_brk(self):
+        """
+        Starts debugger and stop at the first code statement.
+        """
+
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--debug-brk': ''})
+        self.__verify_debugger_start(log)
+
+        # Verify app starts and do not stop on first line of code
+        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME, tolerance=3.0,
+                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_debug_brk')
+
+    def test_003_debug_ios_simulator_start(self):
+        """
+        Attach the debug tools to a running app in the iOS Simulator
+        """
+
+        # Run the app and ensure it works
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
+                             assert_success=False, timeout=30)
+        TnsAsserts.prepared(app_name=self.app_name, platform=Platform.IOS, output=log, prepare=Prepare.SKIP)
+        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
+                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
+
+        # Attach debugger
+        self.__verify_debugger_attach(log=log)

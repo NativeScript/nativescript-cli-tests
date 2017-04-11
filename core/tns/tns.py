@@ -4,6 +4,7 @@ A wrapper of tns commands.
 import os
 import time
 
+from core.device.device import Device
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -382,6 +383,19 @@ class Tns(object):
         return output
 
     @staticmethod
+    def debug_android(attributes={}, assert_success=True, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None,
+                      wait=True):
+        log_file = Tns.run_tns_command("debug android", attributes=attributes, log_trace=log_trace, timeout=timeout,
+                                     tns_path=tns_path, wait=False)
+        return log_file
+
+    @staticmethod
+    def debug_ios(attributes={}, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None):
+        log_file = Tns.run_tns_command("debug ios", attributes=attributes, log_trace=log_trace, timeout=timeout,
+                                     tns_path=tns_path, wait=False)
+        return log_file
+
+    @staticmethod
     def init(attributes={}, assert_success=True, tns_path=None):
         output = Tns.run_tns_command("init", attributes=attributes, tns_path=tns_path)
         if assert_success:
@@ -433,8 +447,8 @@ class Tns(object):
                 print 'BUILD FAILED. No need to wait more time!'
                 break
             if 'Unable to sync files' in log:
-               print 'Sync process failed. No need to wait more time!'
-               break
+                print 'Sync process failed. No need to wait more time!'
+                break
 
         if clean_log and (CURRENT_OS is not OSType.WINDOWS) and all_items_found:
             File.write(file_path=log_file, text="")
