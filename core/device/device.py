@@ -275,7 +275,7 @@ class Device(object):
         elif device_type is DeviceType.IOS:
             raise NotImplementedError
         else:
-            output = run(ADB_PATH + " -s " + device_id + " shell ps | grep -i" + app_id)
+            output = run(ADB_PATH + " -s " + device_id + " shell ps | grep -i " + app_id)
             if app_id in output:
                 return True
             else:
