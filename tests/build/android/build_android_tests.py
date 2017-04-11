@@ -107,13 +107,6 @@ class BuildAndroidTests(BaseClass):
         assert "[DEBUG]" in output
         assert "FAILURE" not in output
 
-    def test_300_build_android_with_additional_styles_xml(self):
-        """Test for issues #644"""
-
-        run("mkdir -p TestApp/app/App_Resources/Android/values")
-        run("cp data/data/styles.xml TestApp/app/App_Resources/Android/values")
-        Tns.build_android(attributes={"--path": self.app_name})
-
     def test_301_build_project_with_dash(self):
         Tns.create_app(self.app_name_dash)
         Tns.platform_add_android(attributes={"--path": self.app_name_dash, "--frameworkPath": ANDROID_RUNTIME_PATH})
