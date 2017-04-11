@@ -87,7 +87,6 @@ class DebugSimulatorTests(BaseClass):
         output = Tns.run_tns_command('debug ios', attributes={'--debug-brk': '',
                                                               '--emulator': '',
                                                               '--path': self.app_name,
-                                                              '--frameworkPath': IOS_INSPECTOR_PACKAGE,
                                                               '--timeout': '200'
                                                               }, timeout=200)
 
@@ -111,7 +110,6 @@ class DebugSimulatorTests(BaseClass):
         output = Tns.run_tns_command('debug ios', attributes={'--start': '',
                                                               '--emulator': '',
                                                               '--path': self.app_name,
-                                                              '--frameworkPath': IOS_INSPECTOR_PACKAGE,
                                                               '--timeout': '150'
                                                               }, timeout=150)
         assert frontend_connected in output
