@@ -59,6 +59,8 @@ class BaseClass(unittest.TestCase):
         if self.IsFailed(self._resultForDoCleanups) is True:
             src = os.path.join(TEST_RUN_HOME, self.app_name)
             dest = os.path.join(OUTPUT_FOLDER, self.__class__.__name__ + "_" + self._testMethodName)
+            if Folder.exists(dest):
+                Folder.cleanup(dest)
             if os.path.isdir(src):
                 shutil.copytree(src, dest)
                 shutil.rmtree(os.path.join(dest, "platforms"), ignore_errors=True)

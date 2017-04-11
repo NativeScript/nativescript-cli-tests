@@ -16,6 +16,9 @@ from core.tns.tns_platform_type import Platform
 
 
 class DeviceAndroidTests(BaseClass):
+    
+    app_id = ''
+    
     @classmethod
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
@@ -24,6 +27,10 @@ class DeviceAndroidTests(BaseClass):
         Device.ensure_available(platform=Platform.ANDROID)
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID, fail=False)
         Emulator.ensure_available()
+
+        Tns.create_app(cls.app_name, update_modules=True)
+        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        cls.app_id = Tns.get_app_id(cls.app_name)
 
     @classmethod
     def tearDownClass(cls):
@@ -35,11 +42,8 @@ class DeviceAndroidTests(BaseClass):
         device_id = Device.get_id(platform=Platform.ANDROID)
         device_ids = Device.get_ids(Platform.ANDROID)
 
-        # Deploy TNS_App on device
-        Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        # `tns deploy android` should deploy on all android devices
         output = Tns.deploy_android(attributes={"--path": self.app_name, "--justlaunch": ""})
-
         for device_id in device_ids:
             assert device_id in output
         sleep(10)
@@ -48,17 +52,16 @@ class DeviceAndroidTests(BaseClass):
         for device_id in device_ids:
             output = Tns.run_tns_command("device list-applications", attributes={"--device": device_id})
             assert "com.android." in output
-            assert app_identifier in output.lower()
+            assert self.app_id in output
 
         # Kill the app
-        Device.stop_application(app_id=app_identifier, device_id=device_id)
+        Device.stop_application(app_id=self.app_id, device_id=device_id)
         # Start via emulate command and verify it is running
-        Tns.run_tns_command("device run " + app_identifier, attributes={"--device": device_id,
-                                                                              "--justlaunch": ""
-                                                                              },
+        Tns.run_tns_command("device run " + self.app_id, attributes={"--device": device_id, "--justlaunch": ""},
                             timeout=60)
+
         # Verify app is running
-        Device.wait_until_app_is_running(app_id=app_identifier, device_id=device_id, timeout=20)
+        Device.wait_until_app_is_running(app_id=self.app_id, device_id=device_id, timeout=20)
 
         # Get logs
         log = Tns.run_tns_command("device log", attributes={"--device": device_id}, wait=False)
