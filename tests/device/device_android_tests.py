@@ -48,7 +48,7 @@ class DeviceAndroidTests(BaseClass):
         for device_id in device_ids:
             output = Tns.run_tns_command("device list-applications", attributes={"--device": device_id})
             assert "com.android." in output
-            assert "org.nativescript.TestApp" in output
+            assert app_identifier in output.lower()
 
         # Kill the app
         Device.stop_application(app_id=app_identifier, device_id=device_id)
