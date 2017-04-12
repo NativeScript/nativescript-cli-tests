@@ -65,13 +65,13 @@ class RunAndroidDeviceTests(BaseClass):
 
         # `tns run android` and wait until app is deployed
         log = Tns.run_android(attributes={'--path': self.app_name}, wait=False, assert_success=False)
-        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.DEVICE_ID]
+        strings = ['Project successfully built', 'Successfully installed on device with identifier']
+        for device_id in self.DEVICES:
+            strings.append(device_id)
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
 
         # Verify app is deployed and running on all available android devices
-        output = File.read(log)
         for device_id in self.DEVICES:
-            assert device_id in output, 'Application is not deployed on {0}'.format(device_id)
             Device.wait_until_app_is_running(app_id=Tns.get_app_id(self.app_name), device_id=device_id, timeout=30)
 
         # Verify emulator is not started
