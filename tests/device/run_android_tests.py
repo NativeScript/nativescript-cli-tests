@@ -168,24 +168,9 @@ class RunAndroidDeviceTests(BaseClass):
         strings = ['Successfully synced application', self.DEVICE_ID]
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        # Verify new folder is synced and available on device.
+        # Verify new folder is deleted from device.
         error_message = 'Deleted folder {0} is still available on {1}'.format(new_folder_name, self.DEVICE_ID)
         assert Adb.path_does_not_exist(device_id=self.DEVICE_ID, package_id=app_id, path=path), error_message
-
-        # Add same folder again
-        new_folder_name = 'feature2'
-        source_file = os.path.join(self.app_name, 'app', 'feature1')
-        destination_file = os.path.join(self.app_name, 'app', new_folder_name)
-        Folder.copy(source_file, destination_file)
-        strings = ['Successfully transferred', 'Successfully transferred', 'feature2', self.DEVICE_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings)
-
-        # Verify new folder is synced and available on device.
-        error_message = 'Newly created folder {0} not found on {1}'.format(new_folder_name, self.DEVICE_ID)
-        path = 'app/{0}'.format(new_folder_name)
-        assert Adb.path_exists(device_id=self.DEVICE_ID, package_id=app_id, path=path, timeout=20), error_message
-        path = 'app/{0}/{1}'.format(new_folder_name, 'feature1.js')
-        assert Adb.path_exists(device_id=self.DEVICE_ID, package_id=app_id, path=path, timeout=20), error_message
 
     def test_300_tns_run_android_emulator_should_start_emulator_even_if_device_is_connected(self):
         """
