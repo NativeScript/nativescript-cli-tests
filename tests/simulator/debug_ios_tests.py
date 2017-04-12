@@ -2,7 +2,6 @@
 Tests for `tns debug ios` executed on iOS Simulator.
 """
 import os
-import time
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -15,13 +14,12 @@ from core.osutils.folder import Folder
 from core.osutils.process import Process
 from core.settings.settings import IOS_RUNTIME_PATH, IOS_INSPECTOR_PACKAGE, SIMULATOR_NAME
 from core.tns.tns import Tns
-from core.settings.strings import *
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_prepare_type import Prepare
 from core.tns.tns_verifications import TnsAsserts
 
 
-class DebugSimulatorTests(BaseClass):
+class DebugiOSSimulatorTests(BaseClass):
     SIMULATOR_ID = ''
     INSPECTOR_GLOBAL_PATH = os.path.join(os.path.expanduser('~'), '.npm/tns-ios-inspector')
 
@@ -100,6 +98,7 @@ class DebugSimulatorTests(BaseClass):
         assert "Frontend socket closed" not in output
         assert "Backend socket closed" not in output
         assert "NativeScript debugger detached" not in output
+        assert Process.is_running('NativeScript Inspector')
 
     def __verify_debugger_attach(self, log):
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--start': ''})
@@ -112,6 +111,7 @@ class DebugSimulatorTests(BaseClass):
         assert "Frontend socket closed" not in output
         assert "Backend socket closed" not in output
         assert "NativeScript debugger detached" not in output
+        assert Process.is_running('NativeScript Inspector')
 
     def test_001_debug_ios_simulator(self):
         """
@@ -149,4 +149,5 @@ class DebugSimulatorTests(BaseClass):
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
         # Attach debugger
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--start': ''})
         self.__verify_debugger_attach(log=log)

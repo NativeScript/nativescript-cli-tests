@@ -1,11 +1,7 @@
 """
-Created on Dec 14, 2015
-
-@author: vchimev
+File utils.
 """
 
-# C0111 - Missing docstring
-# pylint: disable=C0111
 
 import fnmatch
 import os
@@ -18,12 +14,14 @@ from core.settings.settings import TEST_LOG
 
 class File(object):
     @staticmethod
-    def read(file_path):
+    def read(file_path, print_content=False):
         file_path = file_path.replace("\\", os.path.sep)
         file_path = file_path.replace("/", os.path.sep)
         try:
             with open(file_path, 'r') as file_to_read:
                 output = file_to_read.read()
+            if print_content:
+                print output
             return output
         except IOError:
             return ""
