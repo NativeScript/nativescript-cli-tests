@@ -62,15 +62,33 @@ class BuildAndroidTests(BaseClass):
         pass
 
     def test_001_build_android(self):
+        # Default `tns run android`
         Tns.build_android(attributes={"--path": self.app_name})
-
         assert File.pattern_exists(self.platforms_android, "*.aar")
         assert not File.pattern_exists(self.platforms_android, "*.plist")
+        assert not File.pattern_exists(self.platforms_android, "*.android.js")
+        assert not File.pattern_exists(self.platforms_android, "*.ios.js")
 
-        # Verify apk does not contain
+        # And new platform specific file and verify next build is ok (test for issue #2697)
+        src = os.path.join(self.app_name, 'app', 'app.js')
+        dest_1 = os.path.join(self.app_name, 'app', 'new.android.js')
+        dest_2 = os.path.join(self.app_name, 'app', 'new.ios.js')
+        File.copy(src=src, dest=dest_1)
+        File.copy(src=src, dest=dest_2)
+
+        Tns.build_android(attributes={"--path": self.app_name})
+        assert File.pattern_exists(self.platforms_android, "*.aar")
+        assert not File.pattern_exists(self.platforms_android, "*.plist")
+        assert not File.pattern_exists(self.platforms_android, "*.android.js")
+        assert not File.pattern_exists(self.platforms_android, "*.ios.js")
+
+        # Verify apk does not contain aar files
         archive = ZipFile(os.path.join(self.app_name, debug_apk_path))
         archive.extractall(self.app_name + "/temp")
         assert not File.pattern_exists(self.app_name + "/temp", "*.aar")
+        assert not File.pattern_exists(self.app_name + "/temp", "*.plist")
+        assert not File.pattern_exists(self.app_name + "/temp", "*.android.*")
+        assert not File.pattern_exists(self.app_name + "/temp", "*.ios.*")
 
     def test_002_build_android_release(self):
         Tns.build_android(attributes={"--path": self.app_name,
@@ -160,8 +178,7 @@ class BuildAndroidTests(BaseClass):
                                    assert_success=False)
         assert "You have specified '99' for compile sdk, but it is not installed on your system." in output
 
-
-    def test_321_build_with_copyto_option(self):
+    def test_321_build_with_copy_to_option(self):
         # TODO: Remove those lines after https://github.com/NativeScript/nativescript-cli/issues/2547 is fixed.
         # This is required when build with different SDK
         Folder.cleanup(self.app_name)
