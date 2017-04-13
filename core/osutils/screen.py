@@ -9,11 +9,11 @@ class Screen(object):
         Save screen of host machine.
         :param path: Path where screen will be saved.
         """
-
+        print 'Save current host screen at {0}'.format(path)
         if CURRENT_OS is OSType.LINUX:
-            raise NotImplementedError
+            import os
+            os.system("import -window root {0}".format(path))
         else:
             from PIL import ImageGrab
-            print 'Save current host screen at {0}'.format(path)
             im = ImageGrab.grab()
             im.save(path)
