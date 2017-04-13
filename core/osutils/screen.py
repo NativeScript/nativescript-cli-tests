@@ -1,5 +1,3 @@
-from PIL import ImageGrab
-
 from core.osutils.os_type import OSType
 from core.settings.settings import CURRENT_OS
 
@@ -15,6 +13,7 @@ class Screen(object):
         if CURRENT_OS is OSType.LINUX:
             raise NotImplementedError
         else:
+            from PIL import ImageGrab
             print 'Save current host screen at {0}'.format(path)
             im = ImageGrab.grab()
             im.save(path)
