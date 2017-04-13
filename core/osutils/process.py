@@ -1,11 +1,7 @@
-'''
-Created on Dec 14, 2015
+"""
+Process utils.
+"""
 
-@author: vchimev
-'''
-
-# C0111 - Missing docstring
-# pylint: disable=C0111
 import os
 import time
 from os.path import expanduser

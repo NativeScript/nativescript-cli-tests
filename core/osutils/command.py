@@ -50,7 +50,7 @@ def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=Comm
     if not wait:
         time_string = "_" + datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
         out_file = OUTPUT_FILE_ASYNC.replace('.', time_string + '.')
-        command = command + " > " + out_file
+        command = command + " &> " + out_file
         if CURRENT_OS is not OSType.WINDOWS:
             command += " &"
 
