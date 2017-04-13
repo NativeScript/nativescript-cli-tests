@@ -4,7 +4,6 @@ A wrapper of tns commands.
 import os
 import time
 
-from core.device.device import Device
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -326,8 +325,12 @@ class Tns(object):
             # Verify release/debug builds
             if "--release" in attributes.keys():
                 assert config_release in output
+                assert not File.pattern_exists(directory=app_name + "/platforms/ios/build/", pattern="*TKLiveSync*"), \
+                    "TKLiveSync binaries available in release configuration."
             else:
                 assert config_debug in output
+                assert File.pattern_exists(directory=app_name + "/platforms/ios/build/", pattern="*TKLiveSync*"), \
+                    "TKLiveSync binaries not available in debug configuration."
 
             # Verify simulator/device builds
             if "--forDevice" in attributes.keys() or "--for-device" in attributes.keys():
@@ -386,13 +389,13 @@ class Tns(object):
     def debug_android(attributes={}, assert_success=True, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None,
                       wait=True):
         log_file = Tns.run_tns_command("debug android", attributes=attributes, log_trace=log_trace, timeout=timeout,
-                                     tns_path=tns_path, wait=False)
+                                       tns_path=tns_path, wait=False)
         return log_file
 
     @staticmethod
     def debug_ios(attributes={}, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None):
         log_file = Tns.run_tns_command("debug ios", attributes=attributes, log_trace=log_trace, timeout=timeout,
-                                     tns_path=tns_path, wait=False)
+                                       tns_path=tns_path, wait=False)
         return log_file
 
     @staticmethod
