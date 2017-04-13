@@ -36,6 +36,8 @@ class BaseClass(unittest.TestCase):
     def setUpClass(cls, logfile=""):
 
         Process.kill(proc_name='node', proc_cmdline='tns')
+        Process.kill('Safari')
+        Process.kill('NativeScript Inspector')
 
         if logfile == "":
             logfile = os.path.join(OUTPUT_FOLDER, cls.__name__ + ".txt")
@@ -80,4 +82,6 @@ class BaseClass(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        pass
+        Process.kill(proc_name='node', proc_cmdline='tns')
+        Process.kill('Safari')
+        Process.kill('NativeScript Inspector')
