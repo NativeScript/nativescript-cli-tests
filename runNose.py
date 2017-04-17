@@ -39,6 +39,10 @@ def __extract_archive(file_name, folder):
         print "Failed to extract {0}".format(file_name)
 
 
+def disable_crash_report():
+    if CURRENT_OS == OSType.OSX:
+        run("defaults write com.apple.CrashReporter DialogType none")
+
 def clean_npm():
     """Clean npm cache"""
     if CURRENT_OS == OSType.WINDOWS:
@@ -105,6 +109,7 @@ if __name__ == '__main__':
 
     # Copy test packages and cleanup
     if CURRENT_OS == OSType.OSX:
+        disable_crash_report()
         get_test_packages(platform=Platform.BOTH)
         Simulator.stop()
         Simulator.delete(SIMULATOR_NAME)

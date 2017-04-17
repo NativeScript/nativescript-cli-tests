@@ -28,9 +28,12 @@ class BaseClass(unittest.TestCase):
         src = os.path.join(TEST_RUN_HOME, cls.app_name)
         dest = os.path.join(artifacts_folder, cls.app_name)
         if os.path.isdir(src):
-            shutil.copytree(src, dest)
-            shutil.rmtree(os.path.join(dest, "platforms"), ignore_errors=True)
-            shutil.rmtree(os.path.join(dest, "node_modules"), ignore_errors=True)
+            try:
+                shutil.copytree(src, dest)
+                shutil.rmtree(os.path.join(dest, "platforms"), ignore_errors=True)
+                shutil.rmtree(os.path.join(dest, "node_modules"), ignore_errors=True)
+            except Error:
+                print "Failed to backup {0}".format(cls.app_name)
         else:
             print "No project " + src
 
@@ -75,8 +78,8 @@ class BaseClass(unittest.TestCase):
     def setUp(self):
         print ""
         print "_________________________________TEST START_______________________________________"
-        print "Test Method: ".format(self._testMethodName)
-        print "Start Time:  ".format(time.strftime("%X"))
+        print "Test Method: {0}".format(self._testMethodName)
+        print "Start Time:  {0}".format(time.strftime("%X"))
         print ""
 
     def tearDown(self):
@@ -98,9 +101,9 @@ class BaseClass(unittest.TestCase):
             self.__save_host_screen(artifacts_folder=artifacts_folder, test_method_name=test_name)
 
         print ""
-        print "Test Method: ".format(self._testMethodName)
-        print "End Time:    ".format(time.strftime("%X"))
-        print "Outcome:    ".format(outcome)
+        print "Test Method: {0}".format(self._testMethodName)
+        print "End Time:    {0}".format(time.strftime("%X"))
+        print "Outcome:     {0}".format(outcome)
         print "_________________________________TEST END_______________________________________"
         print ""
 
