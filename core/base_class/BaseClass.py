@@ -1,8 +1,8 @@
 import os
+import shutil
 import sys
 import time
 import unittest
-import shutil
 
 from core.logger import Logger
 from core.osutils.file import File
@@ -18,6 +18,31 @@ class BaseClass(unittest.TestCase):
 
     errors = 0
     failures = 0
+
+    @classmethod
+    def __copy_project_folder(cls, artifacts_folder):
+        """
+        Archive test app (without platforms and node_modules)
+        :param artifacts_folder: Base folder where artifacts from failed tests are stored.
+        """
+        src = os.path.join(TEST_RUN_HOME, cls.app_name)
+        dest = os.path.join(artifacts_folder, cls.app_name)
+        if os.path.isdir(src):
+            shutil.copytree(src, dest)
+            shutil.rmtree(os.path.join(dest, "platforms"), ignore_errors=True)
+            shutil.rmtree(os.path.join(dest, "node_modules"), ignore_errors=True)
+        else:
+            print "No project " + src
+
+    @classmethod
+    def __save_host_screen(cls, artifacts_folder, test_method_name):
+        """
+        Save screen of desktop host machine
+        :param artifacts_folder: Base folder where artifacts from failed tests are stored.
+        :param test_method_name: Test method name.
+        """
+        screen_path = os.path.join(artifacts_folder, "{0}.png".format(test_method_name))
+        Screen.save_screen(screen_path)
 
     @classmethod
     def IsFailed(cls, res):
@@ -48,37 +73,35 @@ class BaseClass(unittest.TestCase):
 
     def setUp(self):
         print ""
-        print "{0} _________________________________TEST START_______________________________________". \
-            format(time.strftime("%X"))
-        print ""
-        print self._testMethodName
+        print "_________________________________TEST START_______________________________________"
+        print "Test Method: ".format(self._testMethodName)
+        print "Start Time:  ".format(time.strftime("%X"))
         print ""
 
     def tearDown(self):
-        print ""
-        print "{0} ____________________________________TEST END____________________________________". \
-            format(time.strftime("%X"))
-        print ""
-
         # Logic executed only on test failure
+        test_name = self._testMethodName
+        artifacts_folder = os.path.join(OUTPUT_FOLDER, self.__class__.__name__ + "_" + test_name)
+        outcome = "PASSED"
         if self.IsFailed(self._resultForDoCleanups) is True:
+            outcome = "FAILED"
 
-            base_folder = self.__class__.__name__ + "_" + self._testMethodName
-            # Save current project to OUTPUT folder
-            src = os.path.join(TEST_RUN_HOME, self.app_name)
-            dest = os.path.join(OUTPUT_FOLDER, base_folder, self.app_name)
-            if Folder.exists(dest):
-                Folder.cleanup(dest)
-            if os.path.isdir(src):
-                shutil.copytree(src, dest)
-                shutil.rmtree(os.path.join(dest, "platforms"), ignore_errors=True)
-                shutil.rmtree(os.path.join(dest, "node_modules"), ignore_errors=True)
+            # Ensure `artifacts_folder` exists and it is clean
+            if File.exists(artifacts_folder):
+                Folder.cleanup(artifacts_folder)
             else:
-                print "No project " + src
+                Folder.create(artifacts_folder)
 
-            # Save screenshot of host machine
-            screen_path = os.path.join(OUTPUT_FOLDER, base_folder, "{0}.png".format(self._testMethodName))
-            Screen.save_screen(screen_path)
+            # Collect artifacts on test failure
+            self.__copy_project_folder(artifacts_folder=artifacts_folder)
+            self.__save_host_screen(artifacts_folder=artifacts_folder, test_method_name=test_name)
+
+        print ""
+        print "Test Method: ".format(self._testMethodName)
+        print "End Time:    ".format(time.strftime("%X"))
+        print "Outcome:    ".format(outcome)
+        print "_________________________________TEST END_______________________________________"
+        print ""
 
     @classmethod
     def tearDownClass(cls):

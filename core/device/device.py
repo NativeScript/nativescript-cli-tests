@@ -4,8 +4,6 @@ Helper for working with real devices
 import os
 import time
 
-from PIL import Image
-
 from core.device.adb import Adb, ADB_PATH
 from core.device.device_type import DeviceType
 from core.device.emulator import Emulator
@@ -13,12 +11,15 @@ from core.device.simulator import Simulator
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
+from core.osutils.folder import Folder
+from core.osutils.image_utils import ImageUtils
+from core.settings.settings import OUTPUT_FOLDER
 from core.tns.tns_platform_type import Platform
 
 
 class Device(object):
     @staticmethod
-    def __get_device_Type(device_id):
+    def __get_device_type(device_id):
         """
         Get device type based on device id.
         :param device_id: Device identifier.
@@ -36,16 +37,19 @@ class Device(object):
                 return DeviceType.IOS
 
     @staticmethod
-    def __get_screen(device_type, device_id, file_name):
+    def get_screen(device_type, device_id, file_path):
         """
-        Get screenshot of mobile device and save it to file (inside data/temp folder).
+        Save screen of mobile device.
         :param device_type: DeviceType enum value.
         :param device_id: Device identifier (example: `emulator-5554`).
-        :param file_name: Name of image that will be saved.
-        :return: Fill file path where image is saved.
+        :param file_path: Name of image that will be saved.
         """
-        file_path = os.path.join("data", "temp", "{0}.png".format(file_name))
+
         File.remove(file_path)
+        base_path, file_name = os.path.split(file_path)
+        file_name = file_name.rsplit('.', 1)[0]
+        Folder.create(base_path)
+
         if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
             # Cleanup sdcard
             output = Adb.run(command="shell rm /sdcard/*.png", device_id=device_id)
@@ -77,37 +81,6 @@ class Device(object):
             run(command="sips -s format png {0}.tiff --out {1}".format(file_name, file_path),
                 log_level=CommandLogLevel.SILENT)
             File.remove("{0}.tiff".format(file_name))
-        return file_path
-
-    @staticmethod
-    def __image_match(actual_image_path, expected_image_path, tolerance=0.05):
-        """
-        Compare two images.
-        :param actual_image_path: Path to actual image.
-        :param expected_image_path: Path to expected image.
-        :return: match (boolean value), diff_percent (diff %), diff_image (diff image)
-        """
-        actual_image = Image.open(actual_image_path)
-        actual_pixels = actual_image.load()
-        expected_image = Image.open(expected_image_path)
-        expected_pixels = expected_image.load()
-        width, height = expected_image.size
-
-        total_pixels = width * height
-        diff_pixels = 0
-        match = False
-        diff_image = actual_image.copy()
-        for x in range(0, width):
-            for y in range(40, height):
-                if actual_pixels[x, y] != expected_pixels[x, y]:
-                    diff_pixels += 1
-                    diff_image.load()[x, y] = (255, 0, 0)
-
-        diff_percent = 100 * float(diff_pixels) / total_pixels
-        if diff_percent < tolerance:
-            match = True
-
-        return match, diff_percent, diff_image
 
     @staticmethod
     def screen_match(device_type, device_name, device_id, expected_image, tolerance=0.05, timeout=60):
@@ -121,42 +94,51 @@ class Device(object):
         :param timeout: Timeout in seconds.
         """
         print "Verify {0} looks correct...".format(expected_image)
-        expected_image_path = os.path.join("data", "images", device_name, "{0}.png".format(expected_image))
-        if File.exists(expected_image_path):
+        expected_image_original_path = os.path.join("data", "images", device_name, "{0}.png".format(expected_image))
+        actual_image_path = os.path.join(OUTPUT_FOLDER, "images", device_name, "{0}_actual.png".format(expected_image))
+        diff_image_path = os.path.join(OUTPUT_FOLDER, "images", device_name, "{0}_diff.png".format(expected_image))
+        expected_image_path = os.path.join(OUTPUT_FOLDER, "images", device_name,
+                                           "{0}_expected.png".format(expected_image))
+
+        if File.exists(expected_image_original_path):
             t_end = time.time() + timeout
             diff = 100.0
             are_equal = False
             comparison_result = None
             while time.time() < t_end:
-                actual_image_name = expected_image
-                actual_image_path = Device.__get_screen(device_type, device_id, actual_image_name)
+                # Get actual screen
                 if File.exists(actual_image_path):
-                    comparison_result = Device.__image_match(actual_image_path, expected_image_path, tolerance)
+                    File.remove(actual_image_path)
+                Device.get_screen(device_type=device_type, device_id=device_id, file_path=actual_image_path)
+
+                # Compare with expected image
+                if File.exists(actual_image_path):
+                    comparison_result = ImageUtils.image_match(actual_image_path=actual_image_path,
+                                                               expected_image_path=expected_image_original_path,
+                                                               tolerance=tolerance)
                     are_equal = comparison_result[0]
                     diff = comparison_result[1]
                     if are_equal:
                         print "{0} looks OK.".format(expected_image)
-                        break
+                        break # Exist if images look OK.
                     else:
                         time.sleep(2)
                         print "{0} does not match. Diff is {1} %. Wait...".format(expected_image, diff)
+                else:
+                    print "Failed to get image from {0}".format(device_id)
+
+            # Report results after timeout is over
             if not are_equal:
-                base_file_name = actual_image_path.rsplit("/")[-1]
-                actual_file_name = "actual_{0}".format(base_file_name)
-                expected_file_name = "expected_{0}".format(base_file_name)
-                diff_file_name = "diff_{0}".format(base_file_name)
-                File.copy(actual_image_path, os.path.join("out", actual_file_name))
-                File.copy(expected_image_path, os.path.join("out", expected_file_name))
-                comparison_result[2].save(os.path.join("out", diff_file_name))
+                # Save expected and diff images (actual is already there)
+                File.copy(src=expected_image_original_path, dest=expected_image_path)
+                comparison_result[2].save(os.path.join("out", diff_image_path))
             assert are_equal, "Current image on {0} does not match expected image {1}. Diff is {2}%". \
                 format(device_name, expected_image, diff)
         else:
+            # If expected image is not found actual will be saved as expected.
             print "Expected image not found. Actual image will be saved as expected."
             time.sleep(timeout)
-            actual_image_name = expected_image
-            actual_image_path = Device.__get_screen(device_type, device_id, actual_image_name)
-            file_name = actual_image_path.rsplit("/")[-1]
-            File.copy(actual_image_path, os.path.join("data", "images", device_name, file_name))
+            Device.get_screen(device_type, device_id, expected_image_original_path)
 
     @staticmethod
     def ensure_available(platform):
@@ -252,7 +234,7 @@ class Device(object):
         :param device_id: Device identifier
         :param app_id: Bundle identifier (example: org.nativescript.TestApp)
         """
-        device_type = Device.__get_device_Type(device_id=device_id)
+        device_type = Device.__get_device_type(device_id=device_id)
         if device_type is DeviceType.SIMULATOR:
             Simulator.stop_application(app_id=app_id)
         elif device_type is DeviceType.IOS:
@@ -270,7 +252,7 @@ class Device(object):
         :param device_id: Device identifier
         :return: True if application is running
         """
-        device_type = Device.__get_device_Type(device_id=device_id)
+        device_type = Device.__get_device_type(device_id=device_id)
         if device_type is DeviceType.SIMULATOR:
             raise NotImplementedError
         elif device_type is DeviceType.IOS:
