@@ -61,6 +61,7 @@ class BaseClass(unittest.TestCase):
     def setUpClass(cls, logfile=""):
 
         Process.kill(proc_name='node', proc_cmdline='tns')
+        Process.kill('Xcode')
         Process.kill('Safari')
         Process.kill('NativeScript Inspector')
 
