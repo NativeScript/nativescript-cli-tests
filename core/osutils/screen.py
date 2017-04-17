@@ -14,6 +14,9 @@ class Screen(object):
             import os
             os.system("import -window root {0}".format(path))
         else:
-            from PIL import ImageGrab
-            im = ImageGrab.grab()
-            im.save(path)
+            try:
+                from PIL import ImageGrab
+                im = ImageGrab.grab()
+                im.save(path)
+            except IOError:
+                print 'Failed to take screen of host OS'
