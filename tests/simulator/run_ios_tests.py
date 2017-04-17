@@ -232,8 +232,9 @@ class RunIOSSimulatorTests(BaseClass):
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS)
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML)
 
-        # Run `tns run android` after file changes (this should trigger incremental prepare).
-        output = Tns.run_ios(attributes={'--path': self.app_name, '--justlaunch': ''}, assert_success=False, timeout=60)
+        # Run `tns run ios` after file changes (this should trigger incremental prepare).
+        output = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
+                             assert_success=False, timeout=60)
         TnsAsserts.prepared(app_name=self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.INCREMENTAL)
 
         # Verify app looks is update after changes in js, css and xml
