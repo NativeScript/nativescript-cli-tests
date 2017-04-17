@@ -20,3 +20,6 @@ class Screen(object):
                 im.save(path)
             except IOError:
                 print 'Failed to take screen of host OS'
+                if CURRENT_OS is OSType.OSX:
+                    print 'Retry...'
+                    run('screencapture ' + path, )

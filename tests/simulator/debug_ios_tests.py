@@ -2,6 +2,7 @@
 Tests for `tns debug ios` executed on iOS Simulator.
 """
 import os
+import time
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -42,13 +43,13 @@ class DebugiOSSimulatorTests(BaseClass):
         BaseClass.setUp(self)
         Process.kill('Safari')
         Process.kill('NativeScript Inspector')
-        Process.kill('node')  # Stop 'node' to kill the livesync after each test method.
+        Process.kill('node')
 
     def tearDown(self):
         BaseClass.tearDown(self)
-        Process.kill('node')  # Stop 'node' to kill the livesync after each test method.
         Process.kill('Safari')
         Process.kill('NativeScript Inspector')
+        Process.kill('node')
 
     @classmethod
     def tearDownClass(cls):
@@ -91,9 +92,8 @@ class DebugiOSSimulatorTests(BaseClass):
     def __verify_debugger_start(self, log):
         strings = [self.SIMULATOR_ID, "Frontend client connected", "Backend socket created",
                    "NativeScript debugger attached"]
-        if Device.get_count(platform=Platform.IOS) > 0:
-            strings.append("Multiple devices found! Starting debugger on emulator")
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
+        time.sleep(10)
         output = File.read(log)
         assert "Frontend socket closed" not in output
         assert "Backend socket closed" not in output
@@ -101,13 +101,11 @@ class DebugiOSSimulatorTests(BaseClass):
         assert Process.is_running('NativeScript Inspector')
 
     def __verify_debugger_attach(self, log):
-        log = Tns.debug_ios(attributes={'--path': self.app_name, '--start': ''})
         strings = ["Frontend client connected", "Backend socket created"]
-        if Device.get_count(platform=Platform.IOS) > 0:
-            strings.append("Multiple devices found! Starting debugger on emulator")
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
+        time.sleep(10)
         output = File.read(log)
-        assert "NativeScript debugger attached" not in output # This is not in output when you attach to running app
+        assert "NativeScript debugger attached" not in output  # This is not in output when you attach to running app
         assert "Frontend socket closed" not in output
         assert "Backend socket closed" not in output
         assert "NativeScript debugger detached" not in output
@@ -117,7 +115,7 @@ class DebugiOSSimulatorTests(BaseClass):
         """
         Default `tns debug ios` starts debugger (do not stop at the first code statement)
         """
-        log = Tns.debug_ios(attributes={'--path': self.app_name})
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': ''})
         self.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
@@ -129,7 +127,7 @@ class DebugiOSSimulatorTests(BaseClass):
         Starts debugger and stop at the first code statement.
         """
 
-        log = Tns.debug_ios(attributes={'--path': self.app_name, '--debug-brk': ''})
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--debug-brk': ''})
         self.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
@@ -143,11 +141,11 @@ class DebugiOSSimulatorTests(BaseClass):
 
         # Run the app and ensure it works
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
-                             assert_success=False, timeout=30)
+                          assert_success=False, timeout=30)
         TnsAsserts.prepared(app_name=self.app_name, platform=Platform.IOS, output=log, prepare=Prepare.SKIP)
         Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
         # Attach debugger
-        log = Tns.debug_ios(attributes={'--path': self.app_name, '--start': ''})
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--start': ''})
         self.__verify_debugger_attach(log=log)

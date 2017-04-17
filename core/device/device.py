@@ -110,6 +110,7 @@ class Device(object):
                 if File.exists(actual_image_path):
                     File.remove(actual_image_path)
                 Device.get_screen(device_type=device_type, device_id=device_id, file_path=actual_image_path)
+                time.sleep(1)
 
                 # Compare with expected image
                 if File.exists(actual_image_path):

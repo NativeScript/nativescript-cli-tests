@@ -42,6 +42,7 @@ def __extract_archive(file_name, folder):
 def disable_crash_report():
     if CURRENT_OS == OSType.OSX:
         run("defaults write com.apple.CrashReporter DialogType none")
+        run("defaults write -g ApplePersistence -bool no")
 
 def clean_npm():
     """Clean npm cache"""

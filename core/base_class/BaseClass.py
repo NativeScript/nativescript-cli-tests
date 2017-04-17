@@ -32,7 +32,7 @@ class BaseClass(unittest.TestCase):
                 shutil.copytree(src, dest)
                 shutil.rmtree(os.path.join(dest, "platforms"), ignore_errors=True)
                 shutil.rmtree(os.path.join(dest, "node_modules"), ignore_errors=True)
-            except Error:
+            except:
                 print "Failed to backup {0}".format(cls.app_name)
         else:
             print "No project " + src
@@ -62,11 +62,10 @@ class BaseClass(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls, logfile=""):
-
-        Process.kill(proc_name='node', proc_cmdline='tns')
-        Process.kill('Xcode')
-        Process.kill('Safari')
         Process.kill('NativeScript Inspector')
+        Process.kill('Safari')
+        Process.kill('Xcode')
+        Process.kill(proc_name='node', proc_cmdline='tns')
 
         if logfile == "":
             logfile = os.path.join(OUTPUT_FOLDER, cls.__name__ + ".txt")
@@ -109,6 +108,6 @@ class BaseClass(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        Process.kill(proc_name='node', proc_cmdline='tns')
-        Process.kill('Safari')
         Process.kill('NativeScript Inspector')
+        Process.kill('Safari')
+        Process.kill(proc_name='node', proc_cmdline='tns')
