@@ -7,9 +7,9 @@ from core.base_class.BaseClass import BaseClass
 from core.device.simulator import Simulator
 from core.osutils.folder import Folder
 from core.osutils.process import Process
-from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK
-from core.tns.tns import Tns
+from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME
 from core.settings.strings import *
+from core.tns.tns import Tns
 
 
 class EmulateiOSTests(BaseClass):
@@ -81,11 +81,3 @@ class EmulateiOSTests(BaseClass):
         assert successfully_built in output
         assert started_on_device in output
         assert Process.is_running("Simulator")
-
-    def test_400_emulate_invalid_device(self):
-        output = Tns.run_tns_command("emulate ios", attributes={"--device": invalid,
-                                                                "--path": self.app_name,
-                                                                "--justlaunch": ""
-                                                                })
-        assert "Could not find device by specified identifier" in output
-        assert "To list currently connected devices" in output
