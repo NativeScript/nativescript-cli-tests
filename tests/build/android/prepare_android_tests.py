@@ -124,12 +124,8 @@ class PrepareAndroidTests(BaseClass):
         assert not File.exists(app_path + 'app.android.css')
 
     def test_310_prepare_should_flatten_scoped_dependencies(self):
-        Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH
-                                             })
-
-        Tns.plugin_add("nativescript-angular", attributes={"--path": self.app_name})
+        Tns.create_app_ng(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.prepare_android(attributes={"--path": self.app_name})
 
         # Verify scoped dependencies are flattened (verify #1783 is fixed)
