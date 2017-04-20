@@ -13,7 +13,6 @@ If emulator is not started and device is not connected `tns run android` should 
 
 import os
 import time
-import unittest
 
 import nose
 
@@ -58,7 +57,7 @@ class RunAndroidEmulatorTests(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()
 
-    def test_001_tns_run_android_js_css_xml(self):
+    def test_001_tns_run_android_js_css_xml_manifest(self):
         """Make valid changes in JS,CSS and XML"""
 
         # `tns run android` and wait until app is deployed
@@ -108,6 +107,16 @@ class RunAndroidEmulatorTests(BaseClass):
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
         strings = ['Successfully transferred main-page.xml', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
+
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
+                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
+
+        # Changes in App_Resources should rebuild native project
+        res_path = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'AndroidManifest.xml')
+        File.replace(res_path, '17', '19')
+        strings = ['Preparing project', 'Building project', 'BUILD SUCCESSFUL', 'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=60)
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
@@ -330,7 +339,6 @@ class RunAndroidEmulatorTests(BaseClass):
         assert 'BUILD SUCCESSFUL' in log
 
         Adb.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
-
 
     def test_320_tns_run_android_no_watch(self):
         """

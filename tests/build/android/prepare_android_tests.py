@@ -38,9 +38,7 @@ class PrepareAndroidTests(BaseClass):
 
     def test_102_prepare_android_inside_project(self):
         Tns.create_app(self.app_name, update_modules=False)
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH
-                                             })
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Folder.navigate_to(self.app_name)
         output = Tns.prepare_android(tns_path=os.path.join("..", TNS_PATH), assert_success=False)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
@@ -61,9 +59,7 @@ class PrepareAndroidTests(BaseClass):
 
     def test_300_prepare_android_remove_old_files(self):
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH
-                                             })
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.prepare_android(attributes={"--path": self.app_name})
 
         # Add new files and delete old files
@@ -90,9 +86,7 @@ class PrepareAndroidTests(BaseClass):
 
     def test_301_prepare_android_platform_specific_files(self):
         Tns.create_app(self.app_name, update_modules=False)
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH
-                                             })
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.prepare_android(attributes={"--path": self.app_name})
 
         # Add set of platform specific files
