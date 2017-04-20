@@ -230,6 +230,23 @@ class Tns(object):
         return output
 
     @staticmethod
+    def platform_clean(platform=Platform.NONE, attributes={}, assert_success=True, log_trace=False, tns_path=None):
+        platform_string = Tns.__get_platform_string(platform)
+        output = Tns.run_tns_command("platform clean " + platform_string, attributes=attributes, log_trace=log_trace,
+                                     tns_path=tns_path)
+
+        app_name = Tns.__get_app_name_from_attributes(attributes)
+        if assert_success:
+            assert "Platform {0} successfully removed".format(platform_string) in output
+            assert "error" not in output
+            if platform is Platform.ANDROID:
+                assert File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
+            if platform is Platform.IOS:
+                assert File.exists(app_name + TnsAsserts.IOS)
+            assert "Project successfully created" in output
+        return output
+
+    @staticmethod
     def platform_update(platform=Platform.NONE, version=None, attributes={}, assert_success=True, log_trace=False,
                         tns_path=None):
         platform_string = Tns.__get_platform_string(platform)

@@ -71,6 +71,18 @@ class PlatformAndroidTests(BaseClass):
                                      assert_success=False)
         TnsAsserts.platform_added(self.app_name, platform=Platform.ANDROID, output=output)
 
+    def test_220_platform_clean_android(self):
+        """Prepare after `platform clean` should add the same version that was before clean"""
+
+        # Create project with tns-android@2.4.0
+        Tns.create_app(self.app_name, update_modules=False)
+        Tns.platform_add_android(version="2.4.0", attributes={"--path": self.app_name})
+        TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.4.0\""])
+
+        # Clean platform and verify platform is 2.4.0
+        Tns.platform_clean(platform=Platform.ANDROID, attributes={"--path": self.app_name})
+        TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.4.0\""])
+
     def test_300_set_sdk(self):
         """Platform add android should be able to specify target sdk with `--sdk` option"""
         Tns.create_app(self.app_name, update_modules=False)

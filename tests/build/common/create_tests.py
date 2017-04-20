@@ -6,6 +6,7 @@ import os
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
+from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import CLI_PATH, BRANCH
 from core.settings.strings import *
@@ -154,6 +155,14 @@ class CreateTests(BaseClass):
 
         strings = ["\"tns-core-modules\":", "\"lodash\": \"3.10.1\"", "\"minimist\": \"1.2.0\""]
         TnsAsserts.package_json_contains(self.app_name, string_list=strings)
+
+    def test_300_create_project_with_no_app_resoruces(self):
+        """--template should not create project if value is no npm installable"""
+
+        Tns.create_app(self.app_name, attributes={"--template": "tns-template-hello-world-ts@2.0.0"},
+                       assert_success=False)
+        res_path = os.path.join(self.app_name, 'app', 'App_Resources')
+        assert File.exists(res_path), "App Resouces not added by {N} CLI if missing in template"
 
     def test_400_create_project_with_wrong_template_path(self):
         """--template should not create project if value is no npm installable"""
