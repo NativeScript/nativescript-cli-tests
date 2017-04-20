@@ -114,7 +114,7 @@ class File(object):
                 Process.kill(proc_name='aapt')
                 Process.kill(proc_name='adb')
                 Process.kill_gradle()
-                os.remove(file_path)
+                shutil.rmtree(file_path)
 
     @staticmethod
     def replace(file_path, str1, str2):

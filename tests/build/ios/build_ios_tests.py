@@ -122,7 +122,6 @@ class BuildiOSTests(BaseClass):
         Tns.platform_add_ios(attributes={"--path": self.app_name_ios, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.build_ios(attributes={"--path": self.app_name_ios})
 
-    @unittest.skip("Ignored because of https://github.com/NativeScript/nativescript-cli/issues/2357")
     def test_310_build_ios_with_copy_to(self):
         File.remove("TestApp.app")
         Tns.create_app(self.app_name)
