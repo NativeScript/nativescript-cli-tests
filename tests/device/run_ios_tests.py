@@ -111,6 +111,9 @@ class RunIOSDeviceTests(BaseClass):
         strings = ['Successfully transferred', 'main-page.xml', 'Refreshing application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
+        # Verify Simulator is not started
+        assert not Simulator.is_running()[0], 'Device is attached, but emulator is also started after `tns run ios`!'
+
     def test_210_tns_run_ios_add_remove_files_and_folders(self):
         """
         New files and folders should be synced properly.
