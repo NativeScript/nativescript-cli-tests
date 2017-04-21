@@ -6,6 +6,7 @@ import unittest
 from zipfile import ZipFile
 
 from core.base_class.BaseClass import BaseClass
+from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -125,9 +126,14 @@ class BuildAndroidTests(BaseClass):
         assert "[DEBUG]" in output
         assert "FAILURE" not in output
 
-    def test_301_build_project_with_dash(self):
+    def test_301_build_project_with_dash_and_ios_inspector_added(self):
+        """
+        Verify we can build projects with dashes.
+        Verify we can build android when inspector is added (test for CLI issue 2467)
+        """
         Tns.create_app(self.app_name_dash)
         Tns.platform_add_android(attributes={"--path": self.app_name_dash, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Npm.install(package="tns-ios-inspector", option='--save-dev', folder=self.app_name_dash)
         Tns.build_android(attributes={"--path": self.app_name_dash})
 
         # Verify project id
