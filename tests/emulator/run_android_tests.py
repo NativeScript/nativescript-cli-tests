@@ -21,6 +21,7 @@ from core.device.adb import Adb
 from core.device.device import Device
 from core.device.device_type import DeviceType
 from core.device.emulator import Emulator
+from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
@@ -51,6 +52,7 @@ class RunAndroidEmulatorTests(BaseClass):
     def tearDown(self):
         Process.kill('node')  # Stop 'node' to kill the livesync after each test method.
         BaseClass.tearDown(self)
+        Folder.cleanup('TestApp2')
 
     @classmethod
     def tearDownClass(cls):
@@ -438,3 +440,25 @@ class RunAndroidEmulatorTests(BaseClass):
             assert Emulator.is_running(device_id=EMULATOR_ID), 'Emulator not started by `tns run android`!'
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
+
+    def test_400_tns_run_android_respect_adb_errors(self):
+        """
+        If disk is full adb error is thrown durring deploy, CLI should respect it
+        """
+
+        # Run the app to make sure we have something at /data/data/org.nativescript.TestApp
+        Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--justlaunch': ''})
+
+        # Use all the disk space on emulator
+        for index in range(1, 100):
+            command = "shell cp -r /data/data/org.nativescript.TestApp /data/data/org.nativescript.TestApp" + str(index)
+            Adb.run(device_id=EMULATOR_ID, command=command, log_level=CommandLogLevel.FULL)
+
+        # Create new app
+        Tns.create_app(app_name='TestApp2', update_modules=True)
+        Tns.platform_add_android(attributes={'--path': 'TestApp2', '--frameworkPath': ANDROID_RUNTIME_PATH})
+
+        # Run the app and verify there is appropriate error
+        output = Tns.run_android(attributes={'--path': 'TestApp2', '--device': EMULATOR_ID, '--justlaunch': ''},
+                                 assert_success=False)
+        assert 'No space left on device' in output  # Test for CLI issue 2170
