@@ -5,6 +5,7 @@ import os
 import time
 
 from core.base_class.BaseClass import BaseClass
+from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, TEST_RUN_HOME
@@ -134,3 +135,23 @@ class PrepareAndroidTests(BaseClass):
 
         output = Tns.run_tns_command("prepare windows", attributes={"--path": self.app_name})
         assert "Invalid platform windows. Valid platforms are ios or android." in output
+
+    def test_401_prepare_project_with_many_dependencies(self):
+        """
+        Test for https://github.com/NativeScript/nativescript-cli/issues/2561
+        """
+        Tns.create_app_ng(self.app_name)
+        Npm.install(package="lodash", option="--save", folder=self.app_name)
+        Npm.install(package="moment", option="--save", folder=self.app_name)
+        Npm.install(package="nativescript-cardview", option="--save", folder=self.app_name)
+        Npm.install(package="nativescript-sqlite", option="--save", folder=self.app_name)
+        Npm.install(package="nativescript-statusbar", option="--save", folder=self.app_name)
+        Npm.install(package="nativescript-websockets", option="--save", folder=self.app_name)
+        Npm.install(package="number-generator", option="--save", folder=self.app_name)
+        Npm.install(package="eslint", option="--save", folder=self.app_name)
+        Npm.install(package="eslint", option="--save", folder=self.app_name)
+        Npm.install(package="eslint-plugin-compat", option="--save", folder=self.app_name)
+        Npm.install(package="nativescript-camera", option="--save", folder=self.app_name)
+        Npm.install(package="nativescript-geolocation", option="--save", folder=self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.prepare_android(attributes={"--path": self.app_name})
