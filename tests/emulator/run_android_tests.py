@@ -57,7 +57,7 @@ class RunAndroidEmulatorTests(BaseClass):
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
-        Emulator.stop()
+        Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
 
     def test_001_tns_run_android_js_css_xml_manifest(self):
         """Make valid changes in JS,CSS and XML"""
@@ -258,7 +258,7 @@ class RunAndroidEmulatorTests(BaseClass):
         strings = ['Successfully synced application', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        # Un=comment following lines after https://github.com/NativeScript/nativescript-cli/issues/2657 is fixed.
+        # Uncomment following lines after https://github.com/NativeScript/nativescript-cli/issues/2657 is fixed.
 
         # Verify new folder is synced and available on device.
         # error_message = 'Deleted folder {0} is still available on {1}'.format(new_folder_name, EMULATOR_ID)
@@ -352,13 +352,14 @@ class RunAndroidEmulatorTests(BaseClass):
                               wait=False, assert_success=False)
         strings = ['Successfully installed on device with identifier',
                    'Successfully synced application',
-                   EMULATOR_ID,  # Verify device id
-                   'JS:']  # Verify console log messages are shown.
+                   EMULATOR_ID,     # Verify device id
+                   'JS:']           # Verify console log messages are shown.
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Add new files
         new_file_name = 'main-page3.xml'
-        source_file = os.path.join(self.app_name, 'app', 'main-page.xml')
+        old_file_name = 'main-page.xml'
+        source_file = os.path.join(self.app_name, 'app', old_file_name)
         destination_file = os.path.join(self.app_name, 'app', new_file_name)
         File.copy(source_file, destination_file)
         time.sleep(20)  # Give it some time to sync the changes
@@ -366,8 +367,11 @@ class RunAndroidEmulatorTests(BaseClass):
         # Verify new file is synced and available on device.
         error_message = 'Newly created file {0} found on {1}'.format(new_file_name, EMULATOR_ID)
         app_id = Tns.get_app_id(app_name=self.app_name)
-        path = 'app/{0}'.format(new_file_name)
-        assert Adb.path_does_not_exist(device_id=EMULATOR_ID, package_id=app_id, path=path), error_message
+        new_file_path = 'app/{0}'.format(new_file_name)
+        old_file_path = 'app/{0}'.format(old_file_name)
+        assert Adb.path_does_not_exist(device_id=EMULATOR_ID, package_id=app_id, path=new_file_path), error_message
+        assert not Adb.path_does_not_exist(device_id=EMULATOR_ID, package_id=app_id, path=old_file_path)
+        # Last line is just to be very sure we have no bug in Adb.path_does_not_exist()
 
     def test_330_tns_run_android_sync_all_files(self):
         """
