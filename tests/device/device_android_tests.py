@@ -9,16 +9,17 @@ from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH
+from core.settings.settings import ANDROID_RUNTIME_PATH, EMULATOR_ID
 from core.tns.tns import Tns
 from core.settings.strings import *
 from core.tns.tns_platform_type import Platform
 
 
 class DeviceAndroidTests(BaseClass):
-    
-    app_id = ''
-    
+
+    DEVICE_ID = Device.get_id(platform=Platform.ANDROID)
+    DEVICE_IDS = Device.get_ids(platform=Platform.ANDROID)
+
     @classmethod
     def setUpClass(cls):
         logfile = os.path.join("out", cls.__name__ + ".txt")
@@ -38,33 +39,37 @@ class DeviceAndroidTests(BaseClass):
         Emulator.stop()
         Folder.cleanup(cls.app_name)
 
-    def test_001_device_list_applications_and_run_android(self):
-        device_id = Device.get_id(platform=Platform.ANDROID)
-        device_ids = Device.get_ids(Platform.ANDROID)
+    def test_001_device_list(self):
+        output = Tns.run_tns_command("device android")
+        assert EMULATOR_ID in output
+        for device_id in self.DEVICE_IDS:
+            assert device_id in output
+
+    def test_100_device_list_applications_and_run_android(self):
 
         # `tns deploy android` should deploy on all android devices
         output = Tns.deploy_android(attributes={"--path": self.app_name, "--justlaunch": ""})
-        for device_id in device_ids:
+        for device_id in self.DEVICE_IDS:
             assert device_id in output
         sleep(10)
 
         # Verify list-applications command list org.nativescript.TestApp
-        for device_id in device_ids:
-            output = Tns.run_tns_command("device list-applications", attributes={"--device": device_id})
+        for device_id in self.DEVICE_IDS:
+            output = Tns.run_tns_command("device list-applications", attributes={"--device": self.DEVICE_ID})
             assert "com.android." in output
             assert self.app_id in output
 
         # Kill the app
-        Device.stop_application(app_id=self.app_id, device_id=device_id)
+        Device.stop_application(app_id=self.app_id, device_id=self.DEVICE_ID)
         # Start via emulate command and verify it is running
-        Tns.run_tns_command("device run " + self.app_id, attributes={"--device": device_id, "--justlaunch": ""},
+        Tns.run_tns_command("device run " + self.app_id, attributes={"--device": self.DEVICE_ID, "--justlaunch": ""},
                             timeout=60)
 
         # Verify app is running
-        Device.wait_until_app_is_running(app_id=self.app_id, device_id=device_id, timeout=20)
+        Device.wait_until_app_is_running(app_id=self.app_id, device_id=self.DEVICE_ID, timeout=20)
 
         # Get logs
-        log = Tns.run_tns_command("device log", attributes={"--device": device_id}, wait=False)
+        log = Tns.run_tns_command("device log", attributes={"--device": self.DEVICE_ID}, wait=False)
         Tns.wait_for_log(log_file=log, string_list=['beginning of'], timeout=120, clean_log=False)
         assert 'I' or 'D' or 'W' in File.read(log), "Console log does not contain INFO, DEBUG or WARN messages"
 

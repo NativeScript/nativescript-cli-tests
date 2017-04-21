@@ -1,3 +1,4 @@
+from core.osutils.command import run
 from core.osutils.os_type import OSType
 from core.settings.settings import CURRENT_OS
 
