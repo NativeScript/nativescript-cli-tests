@@ -54,6 +54,7 @@ class BuildAndroidTests(BaseClass):
 
         BaseClass.tearDown(self)
         Folder.cleanup(self.platforms_android + '/build/outputs')
+        Folder.cleanup("with space")
 
     @classmethod
     def tearDownClass(cls):
@@ -146,11 +147,23 @@ class BuildAndroidTests(BaseClass):
 
     def test_302_build_project_with_space(self):
         Tns.create_app(self.app_name_space)
-        Tns.platform_add_android(attributes={"--path": "\"" + self.app_name_space + "\"",
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(
+            attributes={"--path": "\"" + self.app_name_space + "\"", "--frameworkPath": ANDROID_RUNTIME_PATH})
+
+        # Ensure ANDROID_KEYSTORE_PATH contain spaces (verification for CLI issue 2650)
+        Folder.create("with space")
+        base_path, file_name = os.path.split(ANDROID_KEYSTORE_PATH)
+        cert_with_space_path = os.path.join("with space", file_name)
+        File.copy(src=ANDROID_KEYSTORE_PATH, dest=cert_with_space_path)
 
         # Verify project builds
-        Tns.build_android(attributes={"--path": "\"" + self.app_name_space + "\""})
+        Tns.build_android(attributes={"--path": "\"" + self.app_name_space + "\"",
+                                      "--keyStorePath": "\"" + cert_with_space_path + "\"",
+                                      "--keyStorePassword": ANDROID_KEYSTORE_PASS,
+                                      "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
+                                      "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
+                                      "--release": ""
+                                      })
 
         output = File.read(self.app_name_space + os.sep + "package.json")
         assert app_identifier in output.lower()
