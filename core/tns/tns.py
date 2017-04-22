@@ -177,8 +177,12 @@ class Tns(object):
         return output
 
     @staticmethod
-    def create_app_ng(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True):
-        attr = {"--template": SUT_FOLDER + os.path.sep + "template-hello-world-ng"}
+    def create_app_ng(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True,
+                      template_version=None):
+        template = "template-hello-world-ng"
+        if template_version is not None:
+            template = template + "@" + template_version
+        attr = {"--template": SUT_FOLDER + os.path.sep + template}
         attributes.update(attr)
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,
@@ -311,7 +315,7 @@ class Tns(object):
         if assert_success:
             assert "BUILD SUCCESSFUL" in output, "Build failed!"
             assert "Project successfully built" in output, "Build failed!"
-            assert "NOT FOUND" not in output    # Test for https://github.com/NativeScript/android-runtime/issues/390
+            assert "NOT FOUND" not in output  # Test for https://github.com/NativeScript/android-runtime/issues/390
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
             apk_base_name = Tns.__get_final_package_name(app_name, platform=Platform.ANDROID)
             base_app_path = app_name + TnsAsserts.PLATFORM_ANDROID + "build/outputs/apk/" + apk_base_name

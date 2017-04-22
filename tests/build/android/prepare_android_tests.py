@@ -140,7 +140,10 @@ class PrepareAndroidTests(BaseClass):
         """
         Test for https://github.com/NativeScript/nativescript-cli/issues/2561
         """
-        Tns.create_app_ng(self.app_name)
+        Tns.create_app_ng(app_name=self.app_name, template_version="2.5.0", update_modules=False)
+        Npm.uninstall(package="nativescript-dev-android-snapshot", option="--save-dev", folder=self.app_name)
+        Npm.uninstall(package="nativescript-dev-typescript", option="--save-dev", folder=self.app_name)
+        Npm.install(package="nativescript-dev-typescript@2.1", option="--save-dev", folder=self.app_name)
         Npm.install(package="lodash", option="--save", folder=self.app_name)
         Npm.install(package="moment", option="--save", folder=self.app_name)
         Npm.install(package="nativescript-cardview", option="--save", folder=self.app_name)
@@ -151,7 +154,5 @@ class PrepareAndroidTests(BaseClass):
         Npm.install(package="eslint", option="--save", folder=self.app_name)
         Npm.install(package="eslint", option="--save", folder=self.app_name)
         Npm.install(package="eslint-plugin-compat", option="--save", folder=self.app_name)
-        Npm.install(package="nativescript-camera", option="--save", folder=self.app_name)
-        Npm.install(package="nativescript-geolocation", option="--save", folder=self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(version="2.5.0", attributes={"--path": self.app_name})
         Tns.prepare_android(attributes={"--path": self.app_name})
