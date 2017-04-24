@@ -2,16 +2,15 @@
 Test for building projects with iOS platform
 """
 import os
-import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH, TNS_PATH, TEST_RUN_HOME, ANDROID_RUNTIME_PATH
+from core.settings.strings import *
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
-from core.settings.strings import *
 
 
 class BuildiOSTests(BaseClass):
@@ -138,6 +137,7 @@ class BuildiOSTests(BaseClass):
 
     def test_400_build_ios_with_wrong_param(self):
         Tns.create_app(self.app_name_noplatform)
-        output = Tns.build_ios(attributes={"--path": self.app_name_noplatform, "--" + invalid: ""}, assert_success=False)
+        output = Tns.build_ios(attributes={"--path": self.app_name_noplatform, "--" + invalid: ""},
+                               assert_success=False)
         assert invalid_option.format(invalid) in output
         assert error not in output.lower()
