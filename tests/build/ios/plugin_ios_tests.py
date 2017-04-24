@@ -20,11 +20,11 @@ class PluginsiOSTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
         Xcode.cleanup_cache()
-        Folder.cleanup('./' + self.app_name)
+        Folder.cleanup(self.app_name)
 
     def tearDown(self):
         BaseClass.tearDown(self)
-        Folder.cleanup('./' + self.app_name)
+        Folder.cleanup(self.app_name)
 
     def test_001_plugin_add_before_platform_add_ios(self):
         Tns.create_app(self.app_name)
