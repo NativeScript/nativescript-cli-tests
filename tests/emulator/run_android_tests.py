@@ -13,6 +13,7 @@ If emulator is not started and device is not connected `tns run android` should 
 
 import os
 import time
+import unittest
 
 import nose
 
@@ -24,9 +25,10 @@ from core.device.emulator import Emulator
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.folder import Folder
+from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import ANDROID_RUNTIME_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
-    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, EMULATOR_NAME
+    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, EMULATOR_NAME, CURRENT_OS
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -445,6 +447,7 @@ class RunAndroidEmulatorTests(BaseClass):
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
 
+    @unittest.skipIf(CURRENT_OS == OSType.LINUX, "`shell cp -r` fails for some reason on emulators on Linux.")
     def test_400_tns_run_android_respect_adb_errors(self):
         """
         If disk is full adb error is thrown durring deploy, CLI should respect it

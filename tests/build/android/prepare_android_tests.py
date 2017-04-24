@@ -155,4 +155,4 @@ class PrepareAndroidTests(BaseClass):
         Npm.install(package="eslint", option="--save", folder=self.app_name)
         Npm.install(package="eslint-plugin-compat", option="--save", folder=self.app_name)
         Tns.platform_add_android(version="2.5.0", attributes={"--path": self.app_name})
-        Tns.prepare_android(attributes={"--path": self.app_name})
+        Tns.prepare_android(attributes={"--path": self.app_name}, log_trace=True)
