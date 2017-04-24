@@ -32,18 +32,14 @@ class PlatformiOSTests(BaseClass):
 
     def test_200_platform_add_ios_framework_path(self):
         Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH
-                                         })
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
         # If project.xcworkspace is there Xcode project name is wrong
         assert not File.exists(self.app_name + "/platforms/ios/TestApp.xcodeproj/project.xcworkspace")
 
     def test_201_platform_remove_ios(self):
         Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH
-                                         })
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.platform_remove(platform="ios", attributes={"--path": self.app_name})
         assert Folder.is_empty(self.app_name + '/platforms')
         output = File.read(self.app_name + os.sep + "package.json")

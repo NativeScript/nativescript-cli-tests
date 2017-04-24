@@ -179,10 +179,11 @@ class Tns(object):
     @staticmethod
     def create_app_ng(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True,
                       template_version=None):
-        template = "template-hello-world-ng"
         if template_version is not None:
-            template = template + "@" + template_version
-        attr = {"--template": SUT_FOLDER + os.path.sep + template}
+            template = "tns-template-hello-world-ng@" + template_version
+            attr = {"--template": template}
+        else:
+            attr = {"--template": SUT_FOLDER + os.path.sep + "template-hello-world-ng"}
         attributes.update(attr)
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,
