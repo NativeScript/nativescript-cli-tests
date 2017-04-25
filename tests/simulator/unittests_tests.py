@@ -8,10 +8,8 @@ from nose.tools import timed
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
-from core.npm.npm import Npm
-from core.osutils.command import run
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME, TEST_RUN_HOME
+from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME
 from core.settings.strings import *
 from core.tns.tns import Tns
 
@@ -41,9 +39,6 @@ class UnittestsSimulator(BaseClass):
         Tns.create_app(self.app_name, update_modules=True)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.run_tns_command("test init", attributes={"--framework": "jasmine", "--path": self.app_name})
-
-        # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/2212
-        Npm.install(package='jasmine-core', folder=self.app_name, option='--save-dev')
 
         # `timeout=130` is hack to workaround https://github.com/NativeScript/karma-nativescript-launcher/issues/26
         # Please remove `timeout=130` after issue is fixed.

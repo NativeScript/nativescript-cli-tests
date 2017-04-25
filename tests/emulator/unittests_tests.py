@@ -41,9 +41,8 @@ class UnittestsEmulator(BaseClass):
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.run_tns_command("test init", attributes={"--framework": "mocha", "--path": self.app_name})
 
-        # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/2212
+        # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/2283
         Npm.install(package='mocha', folder=self.app_name, option='--save-dev')
-        Npm.install(package='chai', folder=self.app_name, option='--save-dev')
 
         # --timeout is hack to workaround https://github.com/NativeScript/karma-nativescript-launcher/issues/26
         # Please remove --timeout after issue is fixed.
