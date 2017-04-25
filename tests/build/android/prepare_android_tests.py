@@ -141,8 +141,10 @@ class PrepareAndroidTests(BaseClass):
         Test for https://github.com/NativeScript/nativescript-cli/issues/2561
         """
         Tns.create_app_ng(app_name=self.app_name, template_version="2.5.0", update_modules=False)
+        Npm.uninstall(package="tns-core-modules", option="--save-dev", folder=self.app_name)
         Npm.uninstall(package="nativescript-dev-android-snapshot", option="--save-dev", folder=self.app_name)
         Npm.uninstall(package="nativescript-dev-typescript", option="--save-dev", folder=self.app_name)
+        Npm.install(package="tns-core-modules@2.5.0", option="--save-dev", folder=self.app_name)
         Npm.install(package="nativescript-dev-typescript@0.3", option="--save-dev", folder=self.app_name)
         Npm.install(package="lodash", option="--save", folder=self.app_name)
         Npm.install(package="moment", option="--save", folder=self.app_name)
