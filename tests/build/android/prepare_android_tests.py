@@ -3,12 +3,14 @@ Tests for prepare command in context of Android
 """
 import os
 import time
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, TEST_RUN_HOME
+from core.osutils.os_type import OSType
+from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, TEST_RUN_HOME, CURRENT_OS
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -136,6 +138,7 @@ class PrepareAndroidTests(BaseClass):
         output = Tns.run_tns_command("prepare windows", attributes={"--path": self.app_name})
         assert "Invalid platform windows. Valid platforms are ios or android." in output
 
+    @unittest.skipIf(CURRENT_OS == OSType.OSX, "Skip because of 'Maximum call stack size exceeded' error.")
     def test_401_prepare_project_with_many_dependencies(self):
         """
         Test for https://github.com/NativeScript/nativescript-cli/issues/2561
@@ -156,4 +159,4 @@ class PrepareAndroidTests(BaseClass):
         Npm.install(package="eslint", option="--save", folder=self.app_name)
         Npm.install(package="eslint-plugin-compat", option="--save", folder=self.app_name)
         Tns.platform_add_android(version="2.5.0", attributes={"--path": self.app_name})
-        Tns.prepare_android(attributes={"--path": self.app_name}, log_trace=False)
+        Tns.prepare_android(attributes={"--path": self.app_name}, log_trace=True)
