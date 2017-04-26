@@ -21,6 +21,7 @@ class PluginsiOSTests(BaseClass):
         BaseClass.setUp(self)
         Xcode.cleanup_cache()
         Folder.cleanup(self.app_name)
+        run("rm -rf ~/.gradle")
 
     def tearDown(self):
         BaseClass.tearDown(self)
