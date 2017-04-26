@@ -78,7 +78,9 @@ class Simulator(object):
                     if ('Booted' in line) and (simulator_name in line):
                         running = True
                         simulator_id = line.split('(')[1].split(')')[0]
-        return running, simulator_id
+            return running, simulator_id
+        else:
+            return False, None
 
     @staticmethod
     def wait_for_simulator(simulator_name=None, timeout=300):

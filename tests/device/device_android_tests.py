@@ -45,6 +45,12 @@ class DeviceAndroidTests(BaseClass):
         for device_id in self.DEVICE_IDS:
             assert device_id in output
 
+    def test_002_device_list(self):
+        output = Tns.run_tns_command("device android --available-devices", attributes={"--path": self.app_name})
+        assert EMULATOR_ID in output
+        for device_id in self.DEVICE_IDS:
+            assert device_id in output
+
     def test_100_device_list_applications_and_run_android(self):
 
         # `tns deploy android` should deploy on all android devices

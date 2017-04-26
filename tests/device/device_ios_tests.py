@@ -7,7 +7,7 @@ from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.simulator import Simulator
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME
+from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 
@@ -21,6 +21,7 @@ class DeviceIOSTests(BaseClass):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
         Device.ensure_available(platform=Platform.IOS)
+        Simulator.stop()
 
     def test_001_device_list(self):
         # Ensure both simulator and real device are listed
@@ -37,6 +38,15 @@ class DeviceIOSTests(BaseClass):
         assert self.SIMULATOR_ID not in output
         for device_id in self.DEVICE_IDS:
             assert device_id in output
+
+    def test_002_device_list(self):
+        output = Tns.run_tns_command("device ios --available-devices", attributes={"--path": self.app_name})
+        assert SIMULATOR_NAME in output
+        assert SIMULATOR_TYPE in output
+        assert SIMULATOR_SDK in output
+        for device_id in self.DEVICE_IDS:
+            assert device_id in output
+        assert not Simulator.is_running()[0], 'Simulator is started after "tns device ios --available-devices"!'
 
     def test_100_device_log_list_applications_and_run_ios(self):
         """
