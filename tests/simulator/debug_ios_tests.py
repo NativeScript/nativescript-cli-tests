@@ -14,6 +14,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
 from core.settings.settings import IOS_RUNTIME_PATH, IOS_INSPECTOR_PACKAGE, SIMULATOR_NAME
+from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_prepare_type import Prepare
@@ -55,39 +56,6 @@ class DebugiOSSimulatorTests(BaseClass):
     def tearDownClass(cls):
         BaseClass.tearDownClass()
         Folder.cleanup(cls.app_name)
-
-    """
-    Spec:
-
-    | Usage                                                                             | Synopsis                                                                  |
-    | Deploy on device, run the app, start Safari Web Inspector and attach the debugger | $ tns debug ios                                                           |
-    | Deploy on device, run the app and stop at the first code statement                | $ tns debug ios --debug-brk [--device <Device ID>] [--no-client]          |
-    |    Deploy in the iOS Simulator, run the app and stop at the first code statement  | $ tns debug ios --debug-brk --emulator [<Emulator Options>] [--no-client] |
-    | Attach the debug tools to a running app on device                                 | $ tns debug ios --start [--device <Device ID>] [--no-client]              |
-    | Attach the debug tools to a running app in the iOS Simulator                      | $ tns debug ios --start --emulator [<Emulator Options>] [--no-client]     |
-
-    Prepares, builds and deploys the project when necessary. Debugs your project on a connected device or in the iOS Simulator.
-    While debugging, prints the output from the application in the console and watches for changes in your code. Once a change is detected, it synchronizes the change with all selected devices and restarts/refreshes the application.
-
-    IMPORTANT: Before building for iOS device, verify that you have configured a valid pair of certificate and provisioning profile on your OS X system.
-
-    ### Options
-
-        * --device - Specifies a connected device on which to run the app.
-        * --emulator - Indicates that you want to debug your app in the iOS simulator.
-        * --debug-brk - Prepares, builds and deploys the application package on a device or in an emulator, runs the app, launches the developer tools of your Safari browser and stops at the first code statement.
-        * --start - Attaches the debug tools to a deployed and running app and launches the developer tools of your Safari browser.
-        * --no-client - If set, the NativeScript CLI attaches the debug tools but does not launch the developer tools in Safari.
-        * --timeout - Sets the number of seconds that NativeScript CLI will wait for the debugger to boot. If not set, the default timeout is 90 seconds.
-        * --no-watch - If set, changes in your code will not be reflected during the execution of this command.
-        * --clean - If set, forces rebuilding the native application.
-
-    ### Attributes
-
-        * <Device ID> is the index or name of the target device as listed by $ tns device
-        * <Emulator Options> is any valid combination of options as listed by $ tns help emulate ios
-
-    """
 
     def __verify_debugger_start(self, log):
         strings = [self.SIMULATOR_ID, "Frontend client connected", "Backend socket created",
@@ -149,3 +117,39 @@ class DebugiOSSimulatorTests(BaseClass):
         # Attach debugger
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--start': ''})
         self.__verify_debugger_attach(log=log)
+
+    def test_100_debug_ios_simulator_with_livesync(self):
+        """
+        `tns debug ios` should be able to run with livesync
+        """
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': ''})
+        self.__verify_debugger_start(log)
+
+        # Verify app starts and do not stop on first line of code
+        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
+                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
+
+        # Change JS and wait until app is synced
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
+        strings = ['Successfully transferred', 'main-view-model.js', 'Successfully synced application', 'CONSOLE LOG',
+                   'Backend socket closed', 'Frontend socket closed', 'NativeScript debugger detached',
+                   'Frontend client connected', 'Backend socket created', 'NativeScript debugger attached']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+
+        # Change XML and wait until app is synced
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
+        strings = ['Successfully transferred', 'main-page.xml', 'Successfully synced application',
+                   'Backend socket created', 'NativeScript debugger attached', 'CONSOLE LOG']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+
+        # Change CSS and wait until app is synced
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
+        strings = ['Successfully transferred', 'app.css', 'Successfully synced application', 'Backend socket created',
+                   'NativeScript debugger attached', 'CONSOLE LOG']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+
+        # Verify application looks correct
+        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
+                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_js_css_xml')
+
+        assert Process.is_running('NativeScript Inspector')
