@@ -361,8 +361,9 @@ class Tns(object):
                     assert not File.pattern_exists(directory=device_folder, pattern="*TKLiveSync*"), \
                         "TKLiveSync binaries available in release configuration."
                 else:
-                    assert File.pattern_exists(directory=device_folder, pattern="*TKLiveSync*"), \
-                        "TKLiveSync binaries available in release configuration."
+                    pass
+                    # assert File.pattern_exists(directory=device_folder, pattern="*TKLiveSync*"), \
+                    #     "TKLiveSync binaries not available in debug configuration."
             else:
                 assert "build/emulator/" + app_id + ".app" in output
                 assert File.exists(app_name + "/platforms/ios/build/emulator/" + app_id + ".app")
@@ -371,8 +372,9 @@ class Tns(object):
                     assert not File.pattern_exists(directory=emu_folder, pattern="*TKLiveSync*"), \
                         "TKLiveSync binaries available in release configuration."
                 else:
-                    assert File.pattern_exists(directory=emu_folder, pattern="*TKLiveSync*"), \
-                        "TKLiveSync binaries available in release configuration."
+                    pass
+                    # assert File.pattern_exists(directory=emu_folder, pattern="*TKLiveSync*"), \
+                    # "TKLiveSync binaries not available in debug configuration."
         return output
 
     @staticmethod
