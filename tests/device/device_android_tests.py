@@ -45,6 +45,12 @@ class DeviceAndroidTests(BaseClass):
         for device_id in self.DEVICE_IDS:
             assert device_id in output
 
+        # Verify `devices` alias is available
+        output = Tns.run_tns_command("devices android")
+        assert EMULATOR_ID in output
+        for device_id in self.DEVICE_IDS:
+            assert device_id in output
+
     def test_002_device_list(self):
         output = Tns.run_tns_command("device android --available-devices", attributes={"--path": self.app_name})
         assert EMULATOR_ID in output

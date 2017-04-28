@@ -2,7 +2,6 @@
 File utils.
 """
 
-
 import fnmatch
 import os
 import shutil
@@ -72,6 +71,12 @@ class File(object):
 
     @staticmethod
     def pattern_exists(directory, pattern):
+        """
+        Check if file pattern exist at location.
+        :param directory: Base directory.
+        :param pattern: File pattern, for example: '*.aar' or '*.android.js'.
+        :return: True if exists, False if does not exist.
+        """
         found = False
         for root, dirs, files in os.walk(directory):
             for basename in files:
@@ -125,14 +130,17 @@ class File(object):
         :param str2: New string.
         """
 
-        content = File.read(file_path=file_path)
-        new_content = content.replace(str1, str2)
-        File.write(file_path=file_path, text=new_content)
+        if File.exists(file_path):
+            content = File.read(file_path=file_path)
+            new_content = content.replace(str1, str2)
+            File.write(file_path=file_path, text=new_content)
 
-        print "##### REPLACE FILE CONTENT #####"
-        print "File: {0}".format(file_path)
-        print "Old String: {0}".format(str1)
-        print "New String: {0}".format(str2)
+            print "##### REPLACE FILE CONTENT #####"
+            print "File: {0}".format(file_path)
+            print "Old String: {0}".format(str1)
+            print "New String: {0}".format(str2)
+        else:
+            raise IOError("{0} not found!".format(file_path))
 
     @staticmethod
     def find_text(text, f):

@@ -39,6 +39,12 @@ class DeviceIOSTests(BaseClass):
         for device_id in self.DEVICE_IDS:
             assert device_id in output
 
+        # Verify `devices` alias is available
+        output = Tns.run_tns_command("devices ios")
+        assert self.SIMULATOR_ID not in output
+        for device_id in self.DEVICE_IDS:
+            assert device_id in output
+
     def test_002_device_list(self):
         output = Tns.run_tns_command("device ios --available-devices", attributes={"--path": self.app_name})
         assert SIMULATOR_NAME in output

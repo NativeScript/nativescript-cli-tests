@@ -10,10 +10,12 @@ from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, IOS_RUNTIME_PATH, ANDROID_RUNTIME_PATH
-from core.tns.tns import Tns
-from core.xcode.xcode import Xcode
 from core.settings.strings import *
-
+from core.tns.tns import Tns
+from core.tns.tns_platform_type import Platform
+from core.tns.tns_prepare_type import Prepare
+from core.tns.tns_verifications import TnsAsserts
+from core.xcode.xcode import Xcode
 
 
 class PluginsiOSTests(BaseClass):
@@ -168,9 +170,7 @@ class PluginsiOSTests(BaseClass):
         assert "ERR!" not in output
         assert "nativescript-appversion@" in output
 
-        output = Tns.build_android(attributes={"--path": self.app_name})
-        assert "Project successfully prepared" in output
-        assert "BUILD SUCCESSFUL" in output
+        Tns.build_android(attributes={"--path": self.app_name}, assert_success=True)
 
         # Verify plugin and npm module files
         assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/" +
@@ -199,10 +199,25 @@ class PluginsiOSTests(BaseClass):
 
     def test_403_plugin_add_plugin_not_supported_on_specific_platform(self):
         time.sleep(2)
-        Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+
+        # Verify iOS only plugin
         output = Tns.plugin_add("tns-plugin@1.0.2", attributes={"--path": self.app_name}, assert_success=False)
         assert "tns-plugin is not supported for android" in output
         assert "Successfully installed plugin tns-plugin" in output
+
+        # Verify Android only plugin
+        output = Tns.plugin_add(" acra-telerik-analytics", attributes={"--path": self.app_name}, assert_success=False)
+        assert "acra-telerik-analytics is not supported for ios" in output
+        assert "Successfully installed plugin acra-telerik-analytics" in output
+
+        output = Tns.prepare_ios(attributes={"--path": self.app_name})
+        TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.FULL)
+        assert not File.pattern_exists(self.app_name + "/platforms/ios", pattern="*.aar")
+
+        output = Tns.prepare_android(attributes={"--path": self.app_name})
+        TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.FULL)
+        assert File.pattern_exists(self.app_name + "/platforms/android", pattern="*.aar")
+        assert File.pattern_exists(self.app_name + "/platforms/android", pattern="*ACRA*")

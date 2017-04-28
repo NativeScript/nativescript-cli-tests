@@ -354,8 +354,8 @@ class RunAndroidEmulatorTests(BaseClass):
                               wait=False, assert_success=False)
         strings = ['Successfully installed on device with identifier',
                    'Successfully synced application',
-                   EMULATOR_ID,     # Verify device id
-                   'JS:']           # Verify console log messages are shown.
+                   EMULATOR_ID,  # Verify device id
+                   'JS:']  # Verify console log messages are shown.
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Add new files
@@ -469,3 +469,20 @@ class RunAndroidEmulatorTests(BaseClass):
         output = Tns.run_android(attributes={'--path': 'TestApp2', '--device': EMULATOR_ID, '--justlaunch': ''},
                                  assert_success=False)
         assert 'No space left on device' in output  # Test for CLI issue 2170
+
+    def test_401_tns_run_android_should_not_continue_on_build_failure(self):
+        """
+        `tns run android` should start emulator if device is not connected.
+        """
+        Tns.create_app(self.app_name, update_modules=True)
+        Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
+        File.replace(file_path=self.app_name + "/app/App_Resources/Android/app.gradle", str1="applicationId", str2="x")
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+        strings = ['FAILURE', 'BUILD FAILED', 'gradlew failed with exit code 1']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
+        time.sleep(10)
+        output = File.read(file_path=log)
+        assert "successfully built" not in output
+        assert "installed" not in output
+        assert "synced" not in output
