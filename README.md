@@ -1,7 +1,7 @@
-#nativesript-cli-tests
+# nativesript-cli-tests
 The NativeScript CLI integration tests
 
-##Software Prerequisites
+## Software Prerequisites
 Install [Python](https://www.python.org/downloads/) 2.7.*
 
 Install dependencies
@@ -18,7 +18,7 @@ brew install ideviceinstaller --HEAD
 brew install libimobiledevice --HEAD
 ```
 
-##Requirements
+## Requirements
 Android Requirements:
 - Valid pair of keystore and password
 
@@ -27,7 +27,7 @@ iOS Requirements:
 
 Note that some of the test require connected physical Android and iOS devices.
 
-##Environment setup
+## Environment setup
 Following environment variables should be set:
 
     - CLI_PATH - Path to CLI package under test (package file should be named nativescript.tgz)
@@ -48,7 +48,7 @@ Following environment variables should be set:
     
     - KEYCHAIN_PASS - Keychain password
 
-##Run Tests
+## Run Tests
 
 Run only High priority from listed folders:
 ```Shell
@@ -57,9 +57,9 @@ python runNose.py tests/build tests/other tests/transpilers tests/angular/Create
 
 If you run test via PyCharm and want to see console logs, please add "--nocapture" in params.
 
-##Write Tests
+## Write Tests
 
-###Test name convention:
+### Test name convention:
 001 - 199 - High priority
 
 200 - 299 - Medium priority
