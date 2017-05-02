@@ -358,23 +358,23 @@ class Tns(object):
                 assert "build/device/" + app_id + ".app" in output
                 assert File.exists(app_name + "/platforms/ios/build/device/" + app_id + ".ipa")
                 if "--release" in attributes.keys():
-                    assert not File.pattern_exists(directory=device_folder, pattern="*TKLiveSync*"), \
-                        "TKLiveSync binaries available in release configuration."
+                    output = File.read(app_name + "/platforms/ios/build/device/" + app_id + ".app/" + app_id)
+                    assert "TKLiveSync" not in output, "TKLiveSync binaries available in release configuration."
                 else:
                     pass
-                    # assert File.pattern_exists(directory=device_folder, pattern="*TKLiveSync*"), \
-                    #     "TKLiveSync binaries not available in debug configuration."
+                    output = File.read(app_name + "/platforms/ios/build/device/" + app_id + ".app/" + app_id)
+                    assert "TKLiveSync" in output, "TKLiveSync binaries not available in debug configuration."
             else:
                 assert "build/emulator/" + app_id + ".app" in output
                 assert File.exists(app_name + "/platforms/ios/build/emulator/" + app_id + ".app")
                 assert File.exists(app_name + "/platforms/ios/" + app_id + "/" + app_id + "-Prefix.pch")
                 if "--release" in attributes.keys():
-                    assert not File.pattern_exists(directory=emu_folder, pattern="*TKLiveSync*"), \
-                        "TKLiveSync binaries available in release configuration."
+                    output = File.read(app_name + "/platforms/ios/build/emulator/" + app_id + ".app/" + app_id)
+                    assert "TKLiveSync" not in output, "TKLiveSync binaries available in release configuration."
                 else:
                     pass
-                    # assert File.pattern_exists(directory=emu_folder, pattern="*TKLiveSync*"), \
-                    # "TKLiveSync binaries not available in debug configuration."
+                    output = File.read(app_name + "/platforms/ios/build/emulator/" + app_id + ".app/" + app_id)
+                    assert "TKLiveSync" in output, "TKLiveSync binaries not available in debug configuration."
         return output
 
     @staticmethod
