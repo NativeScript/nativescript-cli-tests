@@ -16,7 +16,6 @@ TODO: Add tests for:
 """
 
 import os
-import time
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -68,8 +67,7 @@ class RunIOSDeviceTests(BaseClass):
         """Make valid changes in JS,CSS and XML"""
 
         # `tns run ios` and wait until app is deployed
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--syncAllFiles': ''}, log_trace=True, wait=False,
-                          assert_success=False)
+        log = Tns.run_ios(attributes={'--path': self.app_name}, log_trace=True, wait=False, assert_success=False)
         strings = ['Project successfully built',
                    'Successfully installed on device with identifier', self.DEVICE_ID,
                    'Successfully synced application']
