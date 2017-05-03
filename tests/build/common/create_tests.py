@@ -8,7 +8,7 @@ from nose_parameterized import parameterized
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import CLI_PATH, BRANCH
+from core.settings.settings import BRANCH
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
@@ -135,7 +135,7 @@ class CreateTests(BaseClass):
     def test_200_create_project_with_template(self, template_source):
         """Create app should be possible with --template and npm packages, git repos and aliases"""
 
-        output = Tns.create_app(self.app_name, attributes={"--template": template_source})
+        output = Tns.create_app(self.app_name, attributes={"--template": template_source}, update_modules=True)
         TnsAsserts.created(self.app_name, output=output)
         if 'ts' in template_source and '#master' in template_source:
             TnsAsserts.created_ts(self.app_name, output=output)
