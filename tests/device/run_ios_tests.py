@@ -19,6 +19,7 @@ import os
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
+from core.device.device_type import DeviceType
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.file import File
@@ -78,6 +79,12 @@ class RunIOSDeviceTests(BaseClass):
         for device_id in self.DEVICES:
             assert device_id in output, 'Application is not deployed on {0}'.format(device_id)
 
+        # Verify app is running
+        assert Device.wait_for_text(device_type=DeviceType.IOS, device_id=self.DEVICE_ID, device_name="iPhone",
+                                    text="taps left"), "App failed to load!"
+        assert Device.wait_for_text(device_type=DeviceType.IOS, device_id=self.DEVICE_ID, device_name="iPhone",
+                                    text="TAP"), "XML changes not synced on device!"
+
         # Verify Simulator is not started
         assert not Simulator.is_running()[0], 'Device is attached, but emulator is also started after `tns run ios`!'
 
@@ -85,11 +92,15 @@ class RunIOSDeviceTests(BaseClass):
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
         strings = ['Successfully transferred', 'main-view-model.js', 'Successfully synced application', self.DEVICE_ID]
         Tns.wait_for_log(log_file=log, string_list=strings)
+        assert Device.wait_for_text(device_type=DeviceType.IOS, device_id=self.DEVICE_ID, device_name="iPhone",
+                                    text="clicks"), "JS changes not synced on device!"
 
         # Change XML and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
         strings = ['Successfully transferred', 'main-page.xml', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
+        assert Device.wait_for_text(device_type=DeviceType.IOS, device_id=self.DEVICE_ID, device_name="iPhone",
+                                    text="TEST"), "XML changes not synced on device!"
 
         # Change CSS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
@@ -100,13 +111,21 @@ class RunIOSDeviceTests(BaseClass):
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
         strings = ['Successfully transferred', 'main-view-model.js', 'Refreshing application']
         Tns.wait_for_log(log_file=log, string_list=strings)
+        assert Device.wait_for_text(device_type=DeviceType.IOS, device_id=self.DEVICE_ID, device_name="iPhone",
+                                    text="taps left"), "JS changes not synced on device!"
+
+        file_change = ReplaceHelper.CHANGE_XML
+        File.replace(self.app_name + '/' + file_change[0], "TEST", "MyTest")
+        File.copy(src=self.app_name + '/' + file_change[0], dest=self.app_name + '/' + file_change[0] + ".bak")
+        File.remove(self.app_name + '/' + file_change[0])
+        File.copy(src=self.app_name + '/' + file_change[0] + ".bak", dest=self.app_name + '/' + file_change[0])
+        strings = ['Successfully transferred', 'main-page.xml', 'Refreshing application']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+        assert Device.wait_for_text(device_type=DeviceType.IOS, device_id=self.DEVICE_ID, device_name="iPhone",
+                                    text="MyTest"), "XML changes not synced on device!"
 
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
         strings = ['Successfully transferred', 'app.css', 'Refreshing application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
-
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
-        strings = ['Successfully transferred', 'main-page.xml', 'Refreshing application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify Simulator is not started
