@@ -4,6 +4,9 @@ Helper for working with real devices
 import os
 import time
 
+import pytesseract
+from PIL import Image
+
 from core.device.adb import Adb, ADB_PATH
 from core.device.device_type import DeviceType
 from core.device.emulator import Emulator
@@ -83,6 +86,51 @@ class Device(object):
             File.remove("{0}.tiff".format(file_name))
 
     @staticmethod
+    def get_screen_text(device_type, device_name, device_id):
+        """
+        Get text of current screen on mobile device.
+        :param device_type: DeviceType value.
+        :param device_name: Name of device (name of Android avd image, or name or iOS Simulator).
+        :param device_id: Device identifier (example: `emulator-5554`).
+        :return: All the text visible on screen as string
+        """
+        img_name = "actual_{0}_{1}.png".format(device_id, time.time())
+        actual_image_path = os.path.join(OUTPUT_FOLDER, "images", device_name, img_name)
+        if File.exists(actual_image_path):
+            File.remove(actual_image_path)
+        Device.get_screen(device_type=device_type, device_id=device_id, file_path=actual_image_path)
+        image = Image.open(actual_image_path)
+        text = pytesseract.image_to_string(image)
+        return text
+
+    @staticmethod
+    def wait_for_text(device_type, device_name, device_id, text, timeout=60):
+        """
+        Wait for text to be visible on screen of device.
+        :param device_type: DeviceType value.
+        :param device_name: Name of device (name of Android avd image, or name or iOS Simulator).
+        :param device_id: Device identifier (example: `emulator-5554`).
+        :param text: Text that should be visible on the screen.
+        :param timeout: Timeout in seconds.
+        :return: True if text found, False if not found.
+        """
+        t_end = time.time() + timeout
+        found = False
+        while time.time() < t_end:
+            actual_text = Device.get_screen_text(device_type=device_type, device_name=device_name, device_id=device_id)
+            if text in actual_text:
+                print text + " found on scren of " + device_id
+                found = True
+                break
+            else:
+                print text + " NOT found on scren of " + device_id
+                time.sleep(5)
+        if not found:
+            print "ACTUAL TEXT:"
+            print actual_text
+        return found
+
+    @staticmethod
     def screen_match(device_type, device_name, device_id, expected_image, tolerance=0.05, timeout=60):
         """
         Verify screen match expected image.
@@ -121,7 +169,7 @@ class Device(object):
                     diff = comparison_result[1]
                     if are_equal:
                         print "{0} looks OK.".format(expected_image)
-                        break # Exist if images look OK.
+                        break  # Exist if images look OK.
                     else:
                         time.sleep(2)
                         print "{0} does not match. Diff is {1} %. Wait...".format(expected_image, diff)

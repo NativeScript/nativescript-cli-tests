@@ -12,6 +12,13 @@ pip install nose_parameterized
 pip install enum34
 pip install Pillow
 ```
+
+Real Devices Only: Install tesseract
+```
+pip install pytesseract
+brew install tesseract --all-languages
+```
+
 iOS Only: Install ideviceinstaller
 ```
 brew install ideviceinstaller --HEAD
