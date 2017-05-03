@@ -116,14 +116,15 @@ class Device(object):
         """
         t_end = time.time() + timeout
         found = False
+        actual_text = ""
         while time.time() < t_end:
             actual_text = Device.get_screen_text(device_type=device_type, device_name=device_name, device_id=device_id)
             if text in actual_text:
-                print text + " found on scren of " + device_id
+                print text + " found on screen of " + device_id
                 found = True
                 break
             else:
-                print text + " NOT found on scren of " + device_id
+                print text + " NOT found on screen of " + device_id
                 time.sleep(5)
         if not found:
             print "ACTUAL TEXT:"
