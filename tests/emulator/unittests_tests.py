@@ -44,15 +44,13 @@ class UnittestsEmulator(BaseClass):
         # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/2283
         Npm.install(package='mocha', folder=self.app_name, option='--save-dev')
 
-        # --timeout is hack to workaround https://github.com/NativeScript/karma-nativescript-launcher/issues/26
-        # Please remove --timeout after issue is fixed.
         output = Tns.run_tns_command("test android", attributes={"--emulator": "",
                                                                  "--justlaunch": "",
-                                                                 "--path": self.app_name,
-                                                                 "--timeout": "120"}, timeout=130)
+                                                                 "--path": self.app_name}, timeout=120)
 
         assert successfully_prepared in output
         assert server_started in output
         assert starting_ut_runner in output
-
         assert executed_tests in output
+
+        assert "Disconnectedundefined" not in output

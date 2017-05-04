@@ -40,15 +40,13 @@ class UnittestsSimulator(BaseClass):
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.run_tns_command("test init", attributes={"--framework": "jasmine", "--path": self.app_name})
 
-        # `timeout=130` is hack to workaround https://github.com/NativeScript/karma-nativescript-launcher/issues/26
-        # Please remove `timeout=130` after issue is fixed.
         output = Tns.run_tns_command("test ios", attributes={"--emulator": "",
                                                              "--justlaunch": "",
-                                                             "--path": self.app_name,
-                                                             "--timeout": "120"}, timeout=130)
+                                                             "--path": self.app_name}, timeout=120)
 
         assert successfully_prepared in output
         assert server_started in output
         assert starting_ut_runner in output
-
         assert executed_tests in output
+
+        assert "Disconnectedundefined" not in output
