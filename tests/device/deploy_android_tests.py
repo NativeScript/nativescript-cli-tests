@@ -9,8 +9,8 @@ from core.device.emulator import Emulator
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_PATH, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS
-from core.tns.tns import Tns
 from core.settings.strings import *
+from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 
 
@@ -119,5 +119,6 @@ class DeployAndroidTests(BaseClass):
                                                                    "--justlaunch": "",
                                                                    "--device": "invaliddevice_id"
                                                                    })
-        assert "Could not find an emulator image or identifier to run your project" in output
-        assert "tns device <platform> --available-devices" in output
+        assert "Could not find device by specified identifier" in output
+        assert "To list currently connected devices and verify that the specified identifier exists, run" in output
+        assert "tns device" in output
