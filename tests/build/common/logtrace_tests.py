@@ -22,9 +22,9 @@ class LogtraceTests(BaseClass):
         assert "template-hello-world with version undefined." in output
 
         if CURRENT_OS == OSType.WINDOWS:
-            assert 'spawn: npm.cmd "install" "tns-core-modules" "--save" "--save-exact"' in output
+            assert 'spawn: npm.cmd "install" "tns-core-modules@' in output
         else:
-            assert 'spawn: npm "install" "tns-core-modules" "--save" "--save-exact"' in output
+            assert 'spawn: npm "install" "tns-core-modules@' in output
         assert "Project " + self.app_name + " was successfully created" in output
 
     def test_102_platform_add_log_trace(self):
