@@ -356,25 +356,21 @@ class Tns(object):
             emu_folder = app_name + "/platforms/ios/build/emulator/"
             if "--forDevice" in attributes.keys() or "--for-device" in attributes.keys():
                 assert "build/device/" + app_id + ".app" in output
-                assert File.exists(app_name + "/platforms/ios/build/device/" + app_id + ".ipa")
+                assert File.exists(device_folder + app_id + ".ipa")
+                output = File.read(device_folder + app_id + ".app/" + app_id)
                 if "--release" in attributes.keys():
-                    assert not File.pattern_exists(directory=device_folder, pattern="*TKLiveSync*"), \
-                        "TKLiveSync binaries available in release configuration."
+                    assert "TKLiveSync" not in output, "TKLiveSync binaries available in release configuration."
                 else:
-                    pass
-                    # assert File.pattern_exists(directory=device_folder, pattern="*TKLiveSync*"), \
-                    #     "TKLiveSync binaries not available in debug configuration."
+                    assert "TKLiveSync" in output, "TKLiveSync binaries not available in debug configuration."
             else:
                 assert "build/emulator/" + app_id + ".app" in output
-                assert File.exists(app_name + "/platforms/ios/build/emulator/" + app_id + ".app")
                 assert File.exists(app_name + "/platforms/ios/" + app_id + "/" + app_id + "-Prefix.pch")
+                assert File.exists(emu_folder + app_id + ".app")
+                output = File.read(emu_folder + app_id + ".app/" + app_id)
                 if "--release" in attributes.keys():
-                    assert not File.pattern_exists(directory=emu_folder, pattern="*TKLiveSync*"), \
-                        "TKLiveSync binaries available in release configuration."
+                    assert "TKLiveSync" not in output, "TKLiveSync binaries available in release configuration."
                 else:
-                    pass
-                    # assert File.pattern_exists(directory=emu_folder, pattern="*TKLiveSync*"), \
-                    # "TKLiveSync binaries not available in debug configuration."
+                    assert "TKLiveSync" in output, "TKLiveSync binaries not available in debug configuration."
         return output
 
     @staticmethod

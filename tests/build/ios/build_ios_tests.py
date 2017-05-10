@@ -4,6 +4,7 @@ Test for building projects with iOS platform
 import os
 
 from core.base_class.BaseClass import BaseClass
+from core.device.simulator import Simulator
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -31,7 +32,7 @@ class BuildiOSTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-
+        Simulator.stop()
         Folder.cleanup(self.app_name_dash)
         Folder.cleanup(self.app_name_space)
         Folder.cleanup(self.app_name_ios)
@@ -39,6 +40,11 @@ class BuildiOSTests(BaseClass):
         Folder.cleanup(self.app_name_noplatform + '/platforms/ios/build')
 
         Folder.cleanup(self.app_name)
+
+    def tearDown(self):
+        BaseClass.tearDown(self)
+        # Uncomment after https://github.com/NativeScript/nativescript-cli/issues/2757 is fixed
+        # assert not Simulator.is_running()[0], "Simulator started after " + self._testMethodName
 
     @classmethod
     def tearDownClass(cls):
@@ -84,9 +90,7 @@ class BuildiOSTests(BaseClass):
 
     def test_211_build_ios_inside_project(self):
         Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH
-                                         })
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Folder.navigate_to(self.app_name)
         output = Tns.build_ios(tns_path=os.path.join("..", TNS_PATH), attributes={"--path": self.app_name},
                                assert_success=False)
