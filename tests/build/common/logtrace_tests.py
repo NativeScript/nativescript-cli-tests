@@ -1,12 +1,12 @@
 """
 Tests for --log trace option.
 """
-import os
 
-from core.tns.tns import Tns
 from core.base_class.BaseClass import BaseClass
 from core.osutils.folder import Folder
 from core.settings.settings import CURRENT_OS, OSType
+from core.tns.tns import Tns
+
 
 class LogtraceTests(BaseClass):
     def setUp(self):

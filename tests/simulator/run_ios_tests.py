@@ -24,7 +24,7 @@ from core.device.simulator import Simulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
-from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME
+from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME, TEST_RUN_HOME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -312,3 +312,13 @@ class RunIOSSimulatorTests(BaseClass):
             assert Simulator.wait_for_simulator(timeout=10), 'iOS Simulator not started by `tns run ios`!'
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
+
+    def test_400_tns_run_on_folder_with_spaces(self):
+        """
+        `tns run ios` for apps with spaces
+        """
+        destination_path = os.path.join(TEST_RUN_HOME, "folder with spaces", "Test App")
+        Folder.copy(src=self.app_name, dst=destination_path)
+        output = Tns.run_ios(attributes={'--path': "\"" + destination_path + "\"", '--justlaunch': ''})
+        assert "Multiple errors were thrown" not in output
+        assert "fail" not in output

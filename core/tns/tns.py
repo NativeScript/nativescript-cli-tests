@@ -357,20 +357,16 @@ class Tns(object):
             if "--forDevice" in attributes.keys() or "--for-device" in attributes.keys():
                 assert "build/device/" + app_id + ".app" in output
                 assert File.exists(device_folder + app_id + ".ipa")
-                output = File.read(device_folder + app_id + ".app/" + app_id)
-                if "--release" in attributes.keys():
-                    assert "TKLiveSync" not in output, "TKLiveSync binaries available in release configuration."
-                else:
-                    assert "TKLiveSync" in output, "TKLiveSync binaries not available in debug configuration."
+                bundle_content = File.read(device_folder + app_id + ".app/" + app_id)
             else:
                 assert "build/emulator/" + app_id + ".app" in output
                 assert File.exists(app_name + "/platforms/ios/" + app_id + "/" + app_id + "-Prefix.pch")
                 assert File.exists(emu_folder + app_id + ".app")
-                output = File.read(emu_folder + app_id + ".app/" + app_id)
-                if "--release" in attributes.keys():
-                    assert "TKLiveSync" not in output, "TKLiveSync binaries available in release configuration."
-                else:
-                    assert "TKLiveSync" in output, "TKLiveSync binaries not available in debug configuration."
+                bundle_content = File.read(emu_folder + app_id + ".app/" + app_id)
+            if "--release" in attributes.keys():
+                assert "TKLiveSync" not in bundle_content, "TKLiveSync binaries available in release configuration."
+            else:
+                assert "TKLiveSync" in bundle_content, "TKLiveSync binaries not available in debug configuration."
         return output
 
     @staticmethod
