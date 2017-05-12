@@ -138,7 +138,6 @@ class PrepareAndroidTests(BaseClass):
         output = Tns.run_tns_command("prepare windows", attributes={"--path": self.app_name})
         assert "Invalid platform windows. Valid platforms are ios or android." in output
 
-    @unittest.skipIf(CURRENT_OS == OSType.OSX, "Skip because of 'Maximum call stack size exceeded' error.")
     def test_401_prepare_project_with_many_dependencies(self):
         """
         Test for https://github.com/NativeScript/nativescript-cli/issues/2561
