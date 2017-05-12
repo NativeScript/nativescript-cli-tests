@@ -14,6 +14,10 @@ class ReplaceHelper(object):
 
     CHANGE_XML_INVALID_SYNTAX = ['app/main-page.xml', '</Page>', '</Page']
 
+    NG_CHANGE_TS = ['app/item/item.service.ts', 'Ter Stegen', 'Stegen Ter']
+    NG_CHANGE_CSS = ['app/app.css', 'core.light.css', 'core.dark.css']
+    NG_CHANGE_HTML = ['app/item/items.component.html', '[text]="item.name"', '[text]="item.id"']
+
     @staticmethod
     def replace(app_name, file_change, sleep=1):
         File.replace(app_name + '/' + file_change[0], file_change[1], file_change[2])

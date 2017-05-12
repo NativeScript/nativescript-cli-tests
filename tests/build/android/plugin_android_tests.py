@@ -1,12 +1,7 @@
 """
-Test for plugin* commands in context of Android
+Test for plugin commands in context of Android
 """
 
-# C0103 - Invalid %s name "%s"
-# C0111 - Missing docstring
-# R0201 - Method could be a function
-# R0904 - Too many public methods
-# pylint: disable=C0103, C0111, R0201, R0904
 import os
 import unittest
 import xml.etree.ElementTree as ET
@@ -21,11 +16,8 @@ from core.settings.strings import *
 
 
 class PluginsAndroidTests(BaseClass):
-
     def setUp(self):
         BaseClass.setUp(self)
-        print ("########### CLEAR FOLDER ##############")
-        Folder.cleanup(self.app_name)
 
     def test_001_plugin_add_before_platform_add_android(self):
         Tns.create_app(self.app_name)
@@ -115,8 +107,7 @@ class PluginsAndroidTests(BaseClass):
 
     def test_100_build_app_with_plugin_added_inside_project(self):
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
         output = run(os.path.join("..", TNS_PATH) + " plugin add tns-plugin")
@@ -136,8 +127,7 @@ class PluginsAndroidTests(BaseClass):
 
     def test_200_plugin_add_before_platform_add_android_and_build(self):
         Tns.create_app(self.app_name)
-        Tns.plugin_add("nativescript-telerik-ui", attributes={"--ignore-scripts": "",
-                                                                       "--path": self.app_name})
+        Tns.plugin_add("nativescript-telerik-ui", attributes={"--ignore-scripts": "", "--path": self.app_name})
 
         assert File.exists(self.app_name + "/node_modules/nativescript-telerik-ui/package.json")
         assert File.exists(self.app_name + "/node_modules/nativescript-telerik-ui/platforms/android")
@@ -146,19 +136,13 @@ class PluginsAndroidTests(BaseClass):
         assert "org.nativescript.TestApp" in output
         assert "dependencies" in output
         assert "nativescript-telerik-ui" in output
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH
-                                             })
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.build_android(attributes={"--path": self.app_name})
 
     def test_201_plugin_add_after_platform_add_android(self):
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH
-                                             })
-        Tns.plugin_add("nativescript-telerik-ui", attributes={"--ignore-scripts": "",
-                                                                       "--path": self.app_name
-                                                                       })
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.plugin_add("nativescript-telerik-ui", attributes={"--ignore-scripts": "", "--path": self.app_name})
 
         assert File.exists(self.app_name + "/node_modules/nativescript-telerik-ui/package.json")
         assert File.exists(self.app_name + "/node_modules/nativescript-telerik-ui/platforms/android")
@@ -173,9 +157,7 @@ class PluginsAndroidTests(BaseClass):
 
     def test_300_build_app_with_plugin_added_outside_project(self):
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH})
-
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name}, assert_success=False)
 
         Tns.build_android(attributes={"--path": self.app_name})
@@ -186,7 +168,6 @@ class PluginsAndroidTests(BaseClass):
         output = Tns.run_tns_command("plugin", attributes={"--path": self.app_name})
         assert tns_plugin in output
 
-    @unittest.skip("This test breaks the xml parser.")
     def test_400_plugin_add_not_existing_plugin(self):
         Tns.create_app(self.app_name)
         output = Tns.plugin_add("fakePlugin", attributes={"--path": self.app_name}, assert_success=False)
@@ -202,8 +183,7 @@ class PluginsAndroidTests(BaseClass):
         time.sleep(2)
         Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         output = Tns.plugin_add("tns-plugin@1.0.2", attributes={"--path": self.app_name}, assert_success=False)
         assert tns_plugin + " is not supported for android" in output
         assert installed_plugin.format(tns_plugin) in output
