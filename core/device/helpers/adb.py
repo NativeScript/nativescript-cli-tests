@@ -80,7 +80,7 @@ class Adb(object):
         :param device_id: Device id.
         """
         apps = Adb.run(command='shell pm list packages -3', device_id=device_id)
-        for line in apps:
+        for line in apps.splitlines():
             if 'package:' in line:
                 app = line.replace('package:', '')
                 Adb.uninstall(app_id=app, device_id=device_id)

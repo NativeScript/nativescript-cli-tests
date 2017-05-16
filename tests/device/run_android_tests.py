@@ -82,14 +82,14 @@ class RunAndroidDeviceTests(BaseClass):
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
         strings = ['Successfully transferred main-view-model.js', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Adb.wait_for_text(device_id=self.DEVICE_ID, text='clicks', timeout=20)
+        text_changed = Device.wait_for_text(device_id=self.DEVICE_ID, text='clicks', timeout=20)
         assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
 
         # Change XML and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
         strings = ['Successfully transferred main-page.xml', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Adb.wait_for_text(device_id=self.DEVICE_ID, text='TEST')
+        text_changed = Device.wait_for_text(device_id=self.DEVICE_ID, text='TEST')
         assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
 
         # Change CSS and wait until app is synced
@@ -111,8 +111,8 @@ class RunAndroidDeviceTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Assert changes are reverted
-        assert Adb.wait_for_text(device_id=self.DEVICE_ID, text='TAP'), 'Changes in XML file not reverted.'
-        assert Adb.wait_for_text(device_id=self.DEVICE_ID, text='taps'), 'Changes in JS file not reverted.'
+        assert Device.wait_for_text(device_id=self.DEVICE_ID, text='TAP'), 'Changes in XML file not reverted.'
+        assert Device.wait_for_text(device_id=self.DEVICE_ID, text='taps'), 'Changes in JS file not reverted.'
 
     def test_210_tns_run_android_add_remove_files_and_folders(self):
         """
