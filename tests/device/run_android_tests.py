@@ -18,9 +18,9 @@ TODO: Add tests for:
 import os
 
 from core.base_class.BaseClass import BaseClass
-from core.device.adb import Adb
 from core.device.device import Device
 from core.device.emulator import Emulator
+from core.device.helpers.adb import Adb
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
@@ -42,6 +42,7 @@ class RunAndroidDeviceTests(BaseClass):
         BaseClass.setUpClass(logfile)
         Emulator.stop()
         Device.ensure_available(platform=Platform.ANDROID)
+        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Folder.cleanup(cls.app_name)
         Tns.create_app(cls.app_name, attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world')},
                        update_modules=True)
@@ -49,10 +50,10 @@ class RunAndroidDeviceTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-        Process.kill(proc_name='node')  # Stop 'node' to kill the livesync after each test method.
+        Process.kill(proc_name='node', proc_cmdline='tns')  # Stop 'node' to kill the livesync after each test method.
 
     def tearDown(self):
-        Process.kill(proc_name='node')  # Stop 'node' to kill the livesync after each test method.
+        Process.kill(proc_name='node', proc_cmdline='tns')  # Stop 'node' to kill the livesync after each test method.
         BaseClass.tearDown(self)
 
     @classmethod
@@ -75,8 +76,7 @@ class RunAndroidDeviceTests(BaseClass):
             Device.wait_until_app_is_running(app_id=Tns.get_app_id(self.app_name), device_id=device_id, timeout=30)
 
         # Verify emulator is not started
-        assert not Emulator.is_running(EMULATOR_ID), \
-            'Device is attached, but emulator is also started after `tns run android`!'
+        assert not Emulator.is_running(EMULATOR_ID), 'Emulator is also started after `tns run android` on device!'
 
         # Change JS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)

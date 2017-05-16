@@ -7,9 +7,10 @@ import time
 import pytesseract
 from PIL import Image
 
-from core.device.adb import Adb
 from core.device.device_type import DeviceType
-from core.device.libimobiledevice import IDevice
+from core.device.helpers.adb import Adb
+from core.device.helpers.android_uiautomator import UIAuto
+from core.device.helpers.libimobiledevice import IDevice
 from core.device.simulator import Simulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -116,15 +117,14 @@ class Device(object):
             Device.get_screen(device_id, expected_image_original_path)
 
     @staticmethod
-    def get_screen_text(device_name, device_id):
+    def get_screen_text(device_id):
         """
         Get text of current screen on mobile device.
-        :param device_name: Name of device (name of Android avd image, or name or iOS Simulator).
         :param device_id: Device identifier (example: `emulator-5554`).
         :return: All the text visible on screen as string
         """
         img_name = "actual_{0}_{1}.png".format(device_id, time.time())
-        actual_image_path = os.path.join(OUTPUT_FOLDER, "images", device_name, img_name)
+        actual_image_path = os.path.join(OUTPUT_FOLDER, "images", device_id, img_name)
         if File.exists(actual_image_path):
             File.remove(actual_image_path)
         Device.get_screen(device_id=device_id, file_path=actual_image_path)
@@ -133,31 +133,48 @@ class Device(object):
         return text
 
     @staticmethod
-    def wait_for_text(device_name, device_id, text, timeout=60):
+    def wait_for_text(device_id, text="", timeout=60):
         """
         Wait for text to be visible on screen of device.
-        :param device_name: Name of device (name of Android avd image, or name or iOS Simulator).
         :param device_id: Device identifier (example: `emulator-5554`).
         :param text: Text that should be visible on the screen.
         :param timeout: Timeout in seconds.
         :return: True if text found, False if not found.
         """
-        t_end = time.time() + timeout
-        found = False
-        actual_text = ""
-        while time.time() < t_end:
-            actual_text = Device.get_screen_text(device_name=device_name, device_id=device_id)
-            if text in actual_text:
-                print text + " found on screen of " + device_id
-                found = True
-                break
-            else:
-                print text + " NOT found on screen of " + device_id
-                time.sleep(5)
-        if not found:
-            print "ACTUAL TEXT:"
-            print actual_text
-        return found
+        device_type = Device.__get_device_type(device_id)
+        if device_type == DeviceType.ANDROID or device_type == DeviceType.EMULATOR:
+            UIAuto.wait_for_text(device_id=device_id, text=text, timeout=timeout)
+        else:
+            t_end = time.time() + timeout
+            found = False
+            actual_text = ""
+            while time.time() < t_end:
+                actual_text = Device.get_screen_text(device_id=device_id)
+                if text in actual_text:
+                    print text + " found on screen of " + device_id
+                    found = True
+                    break
+                else:
+                    print text + " NOT found on screen of " + device_id
+                    time.sleep(5)
+            if not found:
+                print "ACTUAL TEXT:"
+                print actual_text
+            return found
+
+    @staticmethod
+    def click(device_id, text, timeout):
+        """
+        Click on text.
+        :param device_id: Device identifier (example: `emulator-5554`).
+        :param text: Text on where click will be performed.
+        :param timeout: Timeout to find text before clicking it.
+        """
+        device_type = Device.__get_device_type(device_id)
+        if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
+            UIAuto.click(device_id=device_id, text=text, timeout=timeout)
+        else:
+            raise NotImplementedError("Click on text not implemented for iOS devices and simulators.")
 
     @staticmethod
     def ensure_available(platform):
@@ -263,11 +280,10 @@ class Device(object):
         :param device_id: Device identifier.
         :param timeout: Timeout in seconds.
         """
-        running = False
         end_time = time.time() + timeout
-        while not running:
+        while time.time() < end_time:
             time.sleep(5)
-            running = Device.is_running(app_id, device_id)
+            running = Device.is_running(device_id=device_id, app_id=app_id)
             if running:
                 print '{0} is running on {1}'.format(app_id, device_id)
                 break

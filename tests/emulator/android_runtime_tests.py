@@ -2,14 +2,13 @@
 Test for specific needs of Android runtime.
 """
 import os
-
 import subprocess
 import threading
 import unittest
 
 from core.base_class.BaseClass import BaseClass
-from core.device.adb import ADB_PATH
 from core.device.emulator import Emulator
+from core.device.helpers.adb import ADB_PATH
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH
@@ -58,7 +57,8 @@ class RuntimeTests(BaseClass):
         output = process.communicate()[0]
 
         # make sure app hasn't crashed
-        assert "Displayed org.nativescript.TNSApp/com.tns.ErrorReportActivity" not in output, "App crashed with error activity"
+        assert "Displayed org.nativescript.TNSApp/com.tns.ErrorReportActivity" not in output, \
+            "App crashed with error activity"
 
         # check if we got called from custom activity that overrides the default one
         assert "we got called from onCreate of custom-nativescript-activity.js" in output, "Expected output not found"

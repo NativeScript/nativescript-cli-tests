@@ -8,7 +8,6 @@ Run should sync all the changes correctly:
 import os
 
 from core.base_class.BaseClass import BaseClass
-from core.device.adb import Adb
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.folder import Folder
@@ -33,7 +32,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
 
     def tearDown(self):
-        Process.kill('node')  # Stop 'node' to kill the livesync after each test method.
+        Process.kill(proc_name='node')  # Stop 'node' to kill the livesync after each test method.
         BaseClass.tearDown(self)
 
     @classmethod
@@ -53,21 +52,21 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify initial state of the app
-        assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Ter Stegen",
-                                 timeout=20), 'Hello-world NG App failed to start or it does not look correct!'
+        assert Device.wait_for_text(device_id=EMULATOR_ID, text="Ter Stegen",
+                                    timeout=20), 'Hello-world NG App failed to start or it does not look correct!'
 
         # Change TS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.NG_CHANGE_TS, sleep=10)
         strings = ['Successfully transferred', 'item.service.js', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Adb.wait_for_text(device_id=EMULATOR_ID, text="Stegen Ter", timeout=20)
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text="Stegen Ter", timeout=20)
         assert text_changed, 'Changes in TS file not applied (UI is not refreshed).'
 
         # Change HTML and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.NG_CHANGE_HTML, sleep=10)
         strings = ['Successfully transferred', 'items.component.html', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Adb.wait_for_text(device_id=EMULATOR_ID, text='"9"', timeout=20)
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='"9"', timeout=20)
         assert text_changed, 'Changes in HTML file not applied (UI is not refreshed).'
 
         # Change CSS and wait until app is synced
@@ -81,14 +80,14 @@ class RunAndroidEmulatorTests(BaseClass):
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.NG_CHANGE_HTML, sleep=10)
         strings = ['Successfully transferred', 'items.component.html', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Adb.wait_for_text(device_id=EMULATOR_ID, text="Stegen Ter", timeout=20)
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text="Stegen Ter", timeout=20)
         assert text_changed, 'Changes in HTML file not applied (UI is not refreshed).'
 
         # Revert TS and wait until app is synced
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.NG_CHANGE_TS, sleep=10)
         strings = ['Successfully transferred', 'item.service.js', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Adb.wait_for_text(device_id=EMULATOR_ID, text="Ter Stegen", timeout=20)
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text="Ter Stegen", timeout=20)
         assert text_changed, 'Changes in TS file not applied (UI is not refreshed).'
 
         # Revert CSS and wait until app is synced

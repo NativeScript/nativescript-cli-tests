@@ -4,7 +4,7 @@ Helper for working with emulator
 import os
 import time
 
-from core.device.adb import Adb
+from core.device.helpers.adb import Adb
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File

@@ -18,9 +18,9 @@ import unittest
 import nose
 
 from core.base_class.BaseClass import BaseClass
-from core.device.adb import Adb
 from core.device.device import Device
 from core.device.emulator import Emulator
+from core.device.helpers.adb import Adb
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -79,14 +79,14 @@ class RunAndroidEmulatorTests(BaseClass):
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
         strings = ['Successfully transferred main-view-model.js', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Adb.wait_for_text(device_id=EMULATOR_ID, text='clicks', timeout=20)
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='clicks', timeout=20)
         assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
 
         # Change XML and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
         strings = ['Successfully transferred main-page.xml', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Adb.wait_for_text(device_id=EMULATOR_ID, text='TEST')
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TEST')
         assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
 
         # Change CSS and wait until app is synced
@@ -320,7 +320,7 @@ class RunAndroidEmulatorTests(BaseClass):
         assert 'Building project...' in log, "Full rebuild not triggered when --clean is used"
         assert 'BUILD SUCCESSFUL' in log, "Full rebuild not triggered when --clean is used"
 
-        Adb.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
+        Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
 
         # Verify if changes are applied and then build with `--clean` it will apply changes on attached device
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS)
@@ -330,7 +330,7 @@ class RunAndroidEmulatorTests(BaseClass):
         assert 'Building project...' in log, "Full rebuild not triggered when --clean is used"
         assert 'BUILD SUCCESSFUL' in log, "Full rebuild not triggered when --clean is used"
 
-        Adb.wait_for_text(device_id=EMULATOR_ID, text='52 taps left')
+        Device.wait_for_text(device_id=EMULATOR_ID, text='52 taps left')
 
         # Verify if changes are applied and then build with `--clean` it will apply changes on attached device
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS)
@@ -340,7 +340,7 @@ class RunAndroidEmulatorTests(BaseClass):
         assert 'Building project...' in log
         assert 'BUILD SUCCESSFUL' in log
 
-        Adb.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
+        Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
 
     def test_320_tns_run_android_no_watch(self):
         """

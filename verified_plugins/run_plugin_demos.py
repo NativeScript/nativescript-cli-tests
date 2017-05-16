@@ -5,8 +5,8 @@ from unittest import SkipTest
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
-from core.device.adb import Adb
 from core.device.emulator import Emulator
+from core.device.helpers.adb import Adb
 from core.osutils.file import File
 from core.settings.settings import TEST_RUN_HOME, EMULATOR_ID
 
