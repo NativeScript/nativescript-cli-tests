@@ -1,3 +1,6 @@
+"""
+Wrapper around adb
+"""
 import os
 import time
 
@@ -5,7 +8,7 @@ from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.os_type import OSType
-from core.settings.settings import CURRENT_OS
+from core.settings.settings import CURRENT_OS, EMULATOR_ID
 
 ANDROID_HOME = os.environ.get('ANDROID_HOME')
 ADB_PATH = os.path.join(ANDROID_HOME, 'platform-tools', 'adb')
@@ -25,7 +28,7 @@ class Adb(object):
         return File.find(base_path=base_path, file_name=aapt_executable, exact_match=True)
 
     @staticmethod
-    def __get_pacakge_id(apk_file):
+    def __get_package_id(apk_file):
         """
         Get package id from apk file.
         :param apk_file: Path to apk file.
@@ -104,6 +107,31 @@ class Adb(object):
         assert 'Success' in output, 'Failed to uninstall {0}. \n Log: \n {1}'.format(app_id, output)
 
     @staticmethod
+    def stop_application(device_id, app_id):
+        """
+        Stop application
+        :param device_id: Device identifier
+        :param app_id: Bundle identifier (example: org.nativescript.TestApp)
+        """
+        output = run(ADB_PATH + " -s " + device_id + " shell am force-stop " + app_id)
+        time.sleep(5)
+        assert app_id not in output, "Failed to stop " + app_id
+
+    @staticmethod
+    def is_application_running(device_id, app_id):
+        """
+        Check if app is running.
+        :param app_id: Bundle identifier (example: org.nativescript.TestApp)
+        :param device_id: Device identifier
+        :return: True if application is running
+        """
+        output = run(ADB_PATH + " -s " + device_id + " shell ps | grep -i " + app_id)
+        if app_id in output:
+            return True
+        else:
+            return False
+
+    @staticmethod
     def monkey(apk_file, device_id):
         """
         Perform monkey testing.
@@ -111,7 +139,7 @@ class Adb(object):
         :param device_id: Device id.
         """
         Adb.__monkey_kill(device_id)
-        app_id = Adb.__get_pacakge_id(apk_file)
+        app_id = Adb.__get_package_id(apk_file)
         print 'Start monkey testing...'
         output = Adb.run(command='shell monkey -p ' + app_id + ' --throttle 100 -v 100 -s 120', device_id=device_id)
         assert 'No activities found' not in output, '{0} is not available on {1}'.format(app_id, device_id)
@@ -214,3 +242,50 @@ class Adb(object):
         if not found:
             print '{0} NOT found on current screen of {1}'.format(text, device_id)
         return found
+
+    @staticmethod
+    def get_screen(device_id, file_path):
+        """
+        Save screen of mobile device.
+        :param device_id: Device identifier (example: `emulator-5554`).
+        :param file_path: Name of image that will be saved.
+        """
+
+        base_path, file_name = os.path.split(file_path)
+        file_name = file_name.rsplit('.', 1)[0]
+
+        # Cleanup sdcard
+        output = Adb.run(command="shell rm /sdcard/*.png", device_id=device_id)
+        if "Read-only file system" in output:
+            Adb.unlock_sdcard(device_id=EMULATOR_ID)
+            output = Adb.run(command="shell rm /sdcard/*.png", device_id=device_id)
+            assert "error" not in output.lower(), "Screencap failed with: " + output
+        # Get current screen of mobile device
+        output = Adb.run(command="shell screencap -p /sdcard/{0}.png".format(file_name), device_id=device_id)
+        if "Read-only file system" in output:
+            Adb.unlock_sdcard(device_id=EMULATOR_ID)
+            output = Adb.run(command="shell screencap -p /sdcard/{0}.png".format(file_name), device_id=device_id)
+            assert "error" not in output.lower(), "Screencap failed with: " + output
+        # Transfer image from device to localhost
+        output = Adb.run(command="pull /sdcard/{0}.png {1}".format(file_name, file_path), device_id=device_id)
+        assert "100%" in output, "Failed to get {0}. Log: {1}".format(file_name, output)
+        # Cleanup sdcard
+        Adb.run(command="shell rm /sdcard/{0}.png".format(file_name), device_id=device_id)
+
+    @staticmethod
+    def unlock_sdcard(device_id, timeout=60):
+        """
+        Unlock sdcard of default emulator.
+        :param timeout: Timeout in seconds.
+        """
+        t_end = time.time() + timeout
+        unlocked = False
+        while time.time() < t_end:
+            output = Adb.run('shell mount -o remount rw /sdcard', device_id=device_id, log_level=CommandLogLevel.FULL)
+            if 'mount' not in output:
+                unlocked = True
+                break
+            else:
+                print 'Failed to unlock sdcard. Retry...'
+                time.sleep(10)
+        assert unlocked, 'Failed to unlock sdcard!'

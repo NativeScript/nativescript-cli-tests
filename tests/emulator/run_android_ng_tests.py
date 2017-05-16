@@ -10,7 +10,6 @@ import os
 from core.base_class.BaseClass import BaseClass
 from core.device.adb import Adb
 from core.device.device import Device
-from core.device.device_type import DeviceType
 from core.device.emulator import Emulator
 from core.osutils.folder import Folder
 from core.osutils.process import Process
@@ -75,8 +74,8 @@ class RunAndroidEmulatorTests(BaseClass):
         ReplaceHelper.replace(self.app_name, ReplaceHelper.NG_CHANGE_CSS, sleep=10)
         strings = ['Successfully transferred', 'app.css', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='ng-hello-world-home-dark', tolerance=5.0)
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image='ng-hello-world-home-dark',
+                            tolerance=5.0)
 
         # Revert HTML and wait until app is synced
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.NG_CHANGE_HTML, sleep=10)
@@ -96,5 +95,5 @@ class RunAndroidEmulatorTests(BaseClass):
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.NG_CHANGE_CSS, sleep=10)
         strings = ['Successfully transferred', 'app.css', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='ng-hello-world-home-white', tolerance=5.0)
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='ng-hello-world-home-white', tolerance=5.0)

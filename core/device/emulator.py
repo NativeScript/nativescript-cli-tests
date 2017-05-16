@@ -96,21 +96,3 @@ class Emulator(object):
             Emulator.stop()
             Emulator.start(emulator_name=EMULATOR_NAME, port=EMULATOR_PORT)
         return found
-
-    @staticmethod
-    def unlock_sdcard(timeout=60):
-        """
-        Unlock sdcard of default emulator.
-        :param timeout: Timeout in seconds.
-        """
-        t_end = time.time() + timeout
-        unlocked = False
-        while time.time() < t_end:
-            output = Adb.run('shell mount -o remount rw /sdcard', device_id=EMULATOR_ID, log_level=CommandLogLevel.FULL)
-            if 'mount' not in output:
-                unlocked = True
-                break
-            else:
-                print 'Failed to unlock sdcard. Retry...'
-                time.sleep(10)
-        assert unlocked, 'Failed to unlock sdcard!'

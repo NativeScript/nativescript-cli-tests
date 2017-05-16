@@ -20,7 +20,6 @@ import nose
 from core.base_class.BaseClass import BaseClass
 from core.device.adb import Adb
 from core.device.device import Device
-from core.device.device_type import DeviceType
 from core.device.emulator import Emulator
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
@@ -73,8 +72,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
         # Change JS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
@@ -96,8 +95,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify application looks correct
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_js_css_xml')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_js_css_xml')
 
         # Rollback all the changes
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
@@ -113,8 +112,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
         # Changes in App_Resources should rebuild native project
         res_path = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'AndroidManifest.xml')
@@ -123,8 +122,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=60)
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
     def test_100_tns_run_android_release(self):
         """Make valid changes in JS,CSS and HTML"""
@@ -145,7 +144,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
+        Device.screen_match(device_name=EMULATOR_NAME,
                             device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
 
         # Kills `tns run android --release`
@@ -168,8 +167,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify app looks is update after changes in js, css and xml
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_js_css_xml')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_js_css_xml')
 
     def test_200_tns_run_android_break_and_fix_app(self):
         """
@@ -183,8 +182,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
         # Break the app with invalid xml changes
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML_INVALID_SYNTAX)
@@ -200,8 +199,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
     def test_210_tns_run_android_add_remove_files_and_folders(self):
         """
@@ -215,8 +214,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
         # Add new files
         new_file_name = 'main-page2.xml'
@@ -267,8 +266,8 @@ class RunAndroidEmulatorTests(BaseClass):
         # assert Adb.path_does_not_exist(device_id=EMULATOR_ID, package_id=app_id, path=path), error_message
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
     def test_300_tns_run_android_just_launch_and_incremental_builds(self):
         """
@@ -280,19 +279,18 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Execute `tns run android --path TNS_App --justlaunch` and verify app looks correct on emulator
         Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--justlaunch': ''})
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
         # Execute `tns run android --path TNS_App --justlaunch` again
         # without any changes on app under test and verify incremental prepare works
         output = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--justlaunch': ''},
                                  assert_success=False)
-        TnsAsserts.prepared(app_name=self.app_name, platform=Platform.ANDROID, output=output,
-                            prepare=Prepare.SKIP)
+        TnsAsserts.prepared(app_name=self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.SKIP)
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
         # Replace JS, XML and CSS files
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS)
@@ -305,8 +303,8 @@ class RunAndroidEmulatorTests(BaseClass):
                             prepare=Prepare.INCREMENTAL)
 
         # Verify app looks is update after changes in js, css and xml
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_js_css_xml')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_js_css_xml')
 
     def test_310_tns_run_android_clean_builds(self):
         """
@@ -393,8 +391,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
     def test_340_tns_run_should_not_sync_hidden_files(self):
         """
@@ -408,8 +406,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
         # Add some hidden files
         source_file = os.path.join(self.app_name, 'app', 'main-page.xml')
@@ -431,8 +429,8 @@ class RunAndroidEmulatorTests(BaseClass):
         assert Adb.path_does_not_exist(device_id=EMULATOR_ID, package_id=app_id, path=path), error_message
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
     def test_350_tns_run_android_should_start_emulator(self):
         """

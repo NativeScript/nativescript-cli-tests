@@ -6,7 +6,6 @@ import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
-from core.device.device_type import DeviceType
 from core.device.emulator import Emulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -14,8 +13,6 @@ from core.osutils.process import Process
 from core.settings.settings import EMULATOR_NAME, EMULATOR_ID, ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
-from core.tns.tns_prepare_type import Prepare
-from core.tns.tns_verifications import TnsAsserts
 
 
 class DebugAndroidEmulatorTests(BaseClass):
@@ -106,7 +103,7 @@ class DebugAndroidEmulatorTests(BaseClass):
         self.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
     @unittest.skip("No longer supported for Android.")
@@ -119,8 +116,8 @@ class DebugAndroidEmulatorTests(BaseClass):
         self.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME, tolerance=3.0,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_debug_brk')
+        Device.screen_match(device_name=EMULATOR_NAME, tolerance=3.0, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_debug_brk')
 
     def test_003_debug_android_emulator_start(self):
         """
@@ -128,9 +125,9 @@ class DebugAndroidEmulatorTests(BaseClass):
         """
 
         # Run the app and ensure it works
-        log = Tns.run_android(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
-                              assert_success=False, timeout=90)
-        Device.screen_match(device_type=DeviceType.EMULATOR, device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+        Tns.run_android(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
+                        assert_success=False, timeout=90)
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
         # Attach debugger

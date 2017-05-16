@@ -8,8 +8,8 @@ from core.device.device import Device
 from core.device.simulator import Simulator
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH
-from core.tns.tns import Tns
 from core.settings.strings import *
+from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 
 
@@ -24,7 +24,7 @@ class DeployiOSTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup('./' + self.app_name)
-        Device.uninstall_app("org.nativescript.", platform=Platform.IOS, fail=False)
+        Device.uninstall_app("org.nativescript.", platform=Platform.IOS)
 
     def tearDown(self):
         BaseClass.tearDown(self)
@@ -32,9 +32,7 @@ class DeployiOSTests(BaseClass):
 
     def test_001_deploy_ios_device(self):
         Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH
-                                         })
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         output = Tns.deploy_ios(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=180)
 
         # This is the first time we build the project -> we need a prepare
