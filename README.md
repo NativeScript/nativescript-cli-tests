@@ -10,6 +10,7 @@ pip install psutil
 pip install nose 
 pip install nose_parameterized
 pip install enum34
+pip install uiautomator
 pip install Pillow
 pip install pytesseract
 brew install tesseract --all-languages

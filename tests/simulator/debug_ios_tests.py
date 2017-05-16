@@ -6,7 +6,6 @@ import time
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
-from core.device.device_type import DeviceType
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.npm.npm import Npm
@@ -87,7 +86,7 @@ class DebugiOSSimulatorTests(BaseClass):
         self.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
+        Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
     def test_002_debug_ios_simulator_debug_brk(self):
@@ -99,8 +98,8 @@ class DebugiOSSimulatorTests(BaseClass):
         self.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME, tolerance=3.0,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_debug_brk')
+        Device.screen_match(device_name=SIMULATOR_NAME, tolerance=3.0, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_debug_brk')
 
     def test_003_debug_ios_simulator_start(self):
         """
@@ -111,8 +110,8 @@ class DebugiOSSimulatorTests(BaseClass):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
                           assert_success=False, timeout=30)
         TnsAsserts.prepared(app_name=self.app_name, platform=Platform.IOS, output=log, prepare=Prepare.SKIP)
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
         # Attach debugger
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--start': ''})
@@ -126,7 +125,7 @@ class DebugiOSSimulatorTests(BaseClass):
         self.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
+        Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
         # Change JS and wait until app is synced
@@ -149,7 +148,7 @@ class DebugiOSSimulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify application looks correct
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_js_css_xml')
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_js_css_xml')
 
         assert Process.is_running('NativeScript Inspector')

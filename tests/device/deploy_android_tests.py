@@ -8,7 +8,7 @@ from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_PATH, \
-    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS
+    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -23,15 +23,13 @@ class DeployAndroidTests(BaseClass):
         BaseClass.setUpClass(logfile)
         Device.ensure_available(platform=Platform.ANDROID)
         Tns.create_app(cls.app_name)
-        Tns.platform_add_android(attributes={"--path": cls.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH
-                                             })
+        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
 
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name_noplatform)
         Emulator.ensure_available()
-        Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID, fail=False)
+        Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
         Folder.cleanup(self.app_name + '/platforms/android/build/outputs')
 
     @classmethod
@@ -59,8 +57,7 @@ class DeployAndroidTests(BaseClass):
                                                     ANDROID_KEYSTORE_ALIAS_PASS,
                                                 "--release": "",
                                                 "--justlaunch": ""
-                                                },
-                                    timeout=180)
+                                                }, timeout=180)
 
         # We executed build once, but this is first time we call build --release -> we need a prepare
         assert successfully_prepared in output
@@ -69,13 +66,12 @@ class DeployAndroidTests(BaseClass):
             assert device_id in output
 
     def test_200_deploy_android_deviceid(self):
-        output = Tns.deploy_android(
-            attributes={"--path": self.app_name, "--device": emulator, "--justlaunch": ""},
-            timeout=180)
+        output = Tns.deploy_android(attributes={"--path": self.app_name, "--device": EMULATOR_ID, "--justlaunch": ""},
+                                    timeout=180)
 
         # We executed build once, but this is first time we call build --release -> we need a prepare
         assert successfully_prepared in output
-        assert installed_on_device.format(emulator) in output
+        assert installed_on_device.format(EMULATOR_ID) in output
         device_ids = Device.get_ids(platform=Platform.ANDROID)
         for device_id in device_ids:
             if "emulator" not in device_id:

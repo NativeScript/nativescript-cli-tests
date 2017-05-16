@@ -223,3 +223,11 @@ class Simulator(object):
         """
         command = 'xcrun simctl terminate booted {0}'.format(app_id)
         run(command=command, log_level=CommandLogLevel.FULL)
+
+    @staticmethod
+    def get_screen(file_path):
+        """
+        Save screen of iOS Simulator.
+        :param file_path: Name of image that will be saved.
+        """
+        run(command="xcrun simctl io booted screenshot {0}".format(file_path),log_level=CommandLogLevel.SILENT)

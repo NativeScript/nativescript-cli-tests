@@ -26,7 +26,7 @@ class DeviceAndroidTests(BaseClass):
         BaseClass.setUpClass(logfile)
         Folder.cleanup(cls.app_name)
         Device.ensure_available(platform=Platform.ANDROID)
-        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID, fail=False)
+        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Emulator.ensure_available()
 
         Tns.create_app(cls.app_name, update_modules=True)

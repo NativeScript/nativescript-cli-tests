@@ -18,7 +18,6 @@ import nose
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
-from core.device.device_type import DeviceType
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.file import File
@@ -69,8 +68,8 @@ class RunIOSSimulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify app looks correct inside simulator
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
         # Change JS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
@@ -88,8 +87,8 @@ class RunIOSSimulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify application looks correct
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_js_css_xml')
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_js_css_xml')
 
         # Rollback all the changes
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
@@ -105,7 +104,7 @@ class RunIOSSimulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify app looks correct inside simulator
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
+        Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
     def test_200_tns_run_ios_break_and_fix_app(self):
@@ -119,8 +118,8 @@ class RunIOSSimulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
         # Break the app with invalid xml changes
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML_INVALID_SYNTAX)
@@ -136,8 +135,8 @@ class RunIOSSimulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
     def test_210_tns_run_ios_add_remove_files_and_folders(self):
         """
@@ -151,8 +150,8 @@ class RunIOSSimulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
         # Add new files
         new_file_name = 'main-page2.xml'
@@ -201,7 +200,7 @@ class RunIOSSimulatorTests(BaseClass):
         assert Simulator.path_does_not_exist(package_id=app_id, path=path), error_message
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
+        Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
     def test_300_tns_run_ios_just_launch_and_incremental_builds(self):
@@ -214,7 +213,7 @@ class RunIOSSimulatorTests(BaseClass):
 
         # Execute `tns run android --path TNS_App --justlaunch` and verify app looks correct on emulator
         Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''}, timeout=120)
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
+        Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
         # Execute `tns run android --path TNS_App --justlaunch` again
@@ -224,8 +223,8 @@ class RunIOSSimulatorTests(BaseClass):
         TnsAsserts.prepared(app_name=self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.SKIP)
 
         # Verify app looks correct inside emulator
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
         # Replace JS, XML and CSS files
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS)
@@ -238,7 +237,7 @@ class RunIOSSimulatorTests(BaseClass):
         TnsAsserts.prepared(app_name=self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.INCREMENTAL)
 
         # Verify app looks is update after changes in js, css and xml
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
+        Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_js_css_xml')
 
     def test_330_tns_run_ios_sync_all_files(self):
@@ -259,8 +258,8 @@ class RunIOSSimulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify app looks correct inside simulator
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
     def test_340_tns_run_should_not_sync_hidden_files(self):
         """
@@ -275,8 +274,8 @@ class RunIOSSimulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify app looks correct inside simulator
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
         # Add some hidden files
         source_file = os.path.join(self.app_name, 'app', 'main-page.xml')
@@ -298,8 +297,8 @@ class RunIOSSimulatorTests(BaseClass):
         assert Simulator.path_does_not_exist(package_id=app_id, path=path), error_message
 
         # Verify app looks correct inside simulator
-        Device.screen_match(device_type=DeviceType.SIMULATOR, device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
 
     def test_350_tns_run_ios_should_start_simulator(self):
         """
