@@ -55,6 +55,9 @@ class RunAndroidEmulatorTests(BaseClass):
         assert Device.wait_for_text(device_id=EMULATOR_ID, text="Ter Stegen",
                                     timeout=20), 'Hello-world NG App failed to start or it does not look correct!'
 
+        # This is to ensure 'Change HTML and wait until app is synced' will be checked properly
+        assert not Device.wait_for_text(device_id=EMULATOR_ID, text='9', timeout=5)
+
         # Change TS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.NG_CHANGE_TS, sleep=10)
         strings = ['Successfully transferred', 'item.service.js', 'Successfully synced application']
@@ -66,7 +69,7 @@ class RunAndroidEmulatorTests(BaseClass):
         ReplaceHelper.replace(self.app_name, ReplaceHelper.NG_CHANGE_HTML, sleep=10)
         strings = ['Successfully transferred', 'items.component.html', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='"9"', timeout=20)
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='9', timeout=20)
         assert text_changed, 'Changes in HTML file not applied (UI is not refreshed).'
 
         # Change CSS and wait until app is synced

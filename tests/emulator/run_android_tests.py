@@ -79,7 +79,7 @@ class RunAndroidEmulatorTests(BaseClass):
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
         strings = ['Successfully transferred main-view-model.js', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='clicks', timeout=20)
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 clicks left', timeout=20)
         assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
 
         # Change XML and wait until app is synced
@@ -95,8 +95,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify application looks correct
-        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_js_css_xml')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image='livesync-hello-world_js_css_xml')
 
         # Rollback all the changes
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
