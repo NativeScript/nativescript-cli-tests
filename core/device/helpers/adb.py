@@ -103,8 +103,9 @@ class Adb(object):
         :param app_id: Package identifier (for example org.nativescript.testapp).
         :param device_id: Device id.
         """
-        output = Adb.run(command='shell pm uninstall ' + app_id, device_id=device_id)
+        output = Adb.run(command='shell pm uninstall ' + app_id, device_id=device_id, log_level=CommandLogLevel.SILENT)
         assert 'Success' in output, 'Failed to uninstall {0}. \n Log: \n {1}'.format(app_id, output)
+        print "{0} uninstalled from {1}".format(app_id, device_id)
 
     @staticmethod
     def stop_application(device_id, app_id):
@@ -113,7 +114,8 @@ class Adb(object):
         :param device_id: Device identifier
         :param app_id: Bundle identifier (example: org.nativescript.TestApp)
         """
-        output = run(ADB_PATH + " -s " + device_id + " shell am force-stop " + app_id)
+        command = ADB_PATH + " -s " + device_id + " shell am force-stop " + app_id
+        output = run(command=command, log_level=CommandLogLevel.SILENT)
         time.sleep(5)
         assert app_id not in output, "Failed to stop " + app_id
 
@@ -125,7 +127,8 @@ class Adb(object):
         :param device_id: Device identifier
         :return: True if application is running
         """
-        output = run(ADB_PATH + " -s " + device_id + " shell ps | grep -i " + app_id)
+        command = ADB_PATH + " -s " + device_id + " shell ps | grep -i " + app_id
+        output = run(command=command, log_level=CommandLogLevel.SILENT)
         if app_id in output:
             return True
         else:

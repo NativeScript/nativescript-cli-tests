@@ -141,9 +141,15 @@ class Device(object):
         :param timeout: Timeout in seconds.
         :return: True if text found, False if not found.
         """
+
+        # IMPORTANT NOTE !!!!
+        # UIAuto.wait_for_text() does not work well with cases when you specify partial text of element.
+        # Example: Element text is "42 taps left" and you try to wait for "taps" string only
+        # TODO: Think about some fix (may be xpath on view hierarchy)
+
         device_type = Device.__get_device_type(device_id)
         if device_type == DeviceType.ANDROID or device_type == DeviceType.EMULATOR:
-            UIAuto.wait_for_text(device_id=device_id, text=text, timeout=timeout)
+            return UIAuto.wait_for_text(device_id=device_id, text=text, timeout=timeout)
         else:
             t_end = time.time() + timeout
             found = False

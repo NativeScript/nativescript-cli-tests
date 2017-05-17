@@ -43,7 +43,6 @@ class UIAuto(object):
         :return True if text is found, False if text is not found.
         """
         d = UIAuto.__get_device(device_id=device_id)
-        element = d(text=text)
-        found = element.wait.exists(timeout=timeout * 1000)
+        found = d(text=text).wait.exists(timeout=timeout * 1000)
         UIAuto.__kill_uiautomator()
         return found
