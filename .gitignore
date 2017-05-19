@@ -15,10 +15,8 @@ TestApp*
 TNS_App*
 template-hello*
 sut/
-out/
 nosetests.xml
 Payload
-/out/*
 /workspace/*
 verified_plugins/data/*.csv
 nativescript-*
