@@ -18,8 +18,8 @@ class OutputStderrTests(BaseClass):
 
     def test_001_output_strerr(self):
         File.remove('./stderr.txt')
-        output = Tns.run_tns_command(emulate + " " + invalid, attributes={" 2> stderr.txt ": ""})
-        assert invalid_input.format(emulate) in output
+        output = Tns.run_tns_command(run + " " + invalid, attributes={" 2> stderr.txt ": ""})
+        assert invalid_input.format(run) in output
 
     def test_002_command_option_validation(self):
         output = Tns.run_tns_command("create " + self.app_name, attributes={"--" + invalid: "tns-app"})
