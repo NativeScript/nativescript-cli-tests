@@ -23,7 +23,7 @@ errorreporting = "error-reporting"
 error_reporting = "Error reporting"
 usage_reporting = "Usage reporting"
 restart_shell = "Restart your shell to {0} command auto-completion."
-
+run = "run"
 
 # Info
 enabled = "{0} is {1}enabled."
