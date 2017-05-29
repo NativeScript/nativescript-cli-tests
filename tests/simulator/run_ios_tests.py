@@ -24,6 +24,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
 from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME, TEST_RUN_HOME
+from core.settings.strings import cannot_resolve_device, list_devices
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -321,3 +322,9 @@ class RunIOSSimulatorTests(BaseClass):
         output = Tns.run_ios(attributes={'--path': "\"" + destination_path + "\"", '--justlaunch': ''})
         assert "Multiple errors were thrown" not in output
         assert "fail" not in output
+
+    def test_404_run_on_invalid_device_id(self):
+        output = Tns.run_ios(attributes={'--path': self.app_name, '--device': 'fakeId', '--justlaunch': ''},
+                             assert_success=False)
+        assert cannot_resolve_device in output
+        assert list_devices in output

@@ -28,6 +28,7 @@ from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import ANDROID_RUNTIME_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, EMULATOR_NAME, CURRENT_OS
+from core.settings.strings import cannot_resolve_device, list_devices
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -95,7 +96,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify application looks correct
-        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image='livesync-hello-world_js_css_xml')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_js_css_xml')
 
         # Rollback all the changes
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
@@ -483,3 +485,9 @@ class RunAndroidEmulatorTests(BaseClass):
         assert "successfully built" not in output
         assert "installed" not in output
         assert "synced" not in output
+
+    def test_404_run_on_invalid_device_id(self):
+        output = Tns.run_android(attributes={'--path': self.app_name, '--device': 'fakeId', '--justlaunch': ''},
+                                 assert_success=False)
+        assert cannot_resolve_device in output
+        assert list_devices in output
