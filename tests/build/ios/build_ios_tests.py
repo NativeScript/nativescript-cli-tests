@@ -138,6 +138,24 @@ class BuildiOSTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": "", "--copy-to": "./"})
         assert File.exists("TestApp.ipa")
 
+    def test_320_build_ios_with_custom_entitlements(self):
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.build_ios(attributes={"--path": self.app_name})
+
+        # Add entitlements in app/App_Resources/iOS/app.entitlements
+        source = os.path.join(TEST_RUN_HOME, 'data', 'entitlements', 'app.entitlements')
+        target = os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'app.entitlements')
+        File.copy(src=source, dest=target)
+
+        # Build again and verify entitlements are merged
+        Tns.build_ios(attributes={"--path": self.app_name})
+        entitlements_path = self.app_name + '/platforms/ios/' + self.app_name + '/' + self.app_name + '.entitlements'
+        assert File.exists(entitlements_path), "Entitlements file is missing!"
+        entitlements_content = File.read(entitlements_path)
+        assert '<key>aps-environment</key>' in entitlements_content, "Entitlements file content is wrong!"
+        assert '<string>development</string>' in entitlements_content, "Entitlements file content is wrong!"
+
     def test_400_build_ios_with_wrong_param(self):
         Tns.create_app(self.app_name_noplatform)
         output = Tns.build_ios(attributes={"--path": self.app_name_noplatform, "--" + invalid: ""},

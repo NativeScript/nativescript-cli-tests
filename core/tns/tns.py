@@ -351,12 +351,16 @@ class Tns(object):
             else:
                 assert config_debug in output
 
+            entitlements_path = app_name + '/platforms/ios/' + app_id + '/' + app_id + '.entitlements'
+            assert File.exists(entitlements_path), "Entitlements file is missing!"
+            assert 'dict' in File.read(entitlements_path), "Entitlements file content is wrong!"
+
             # Verify simulator/device builds
             device_folder = app_name + "/platforms/ios/build/device/"
             emu_folder = app_name + "/platforms/ios/build/emulator/"
             if "--forDevice" in attributes.keys() or "--for-device" in attributes.keys():
                 assert "build/device/" + app_id + ".app" in output
-                assert File.exists(device_folder + app_id + ".ipa")
+                assert File.exists(device_folder + app_id + ".ipa"), "IPA file not found!"
                 bundle_content = File.read(device_folder + app_id + ".app/" + app_id)
             else:
                 assert "build/emulator/" + app_id + ".app" in output
@@ -445,7 +449,8 @@ class Tns(object):
         Tns.run_tns_command("error-reporting disable")
 
     @staticmethod
-    def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=30, check_interval=3, clean_log=True):
+    def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=30, check_interval=3,
+                     clean_log=True):
         """
         Wait until log file contains list of string.
         :param log_file: Path to log file.
