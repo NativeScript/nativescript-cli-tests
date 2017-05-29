@@ -43,8 +43,7 @@ class BuildiOSTests(BaseClass):
 
     def tearDown(self):
         BaseClass.tearDown(self)
-        # Uncomment after https://github.com/NativeScript/nativescript-cli/issues/2757 is fixed
-        # assert not Simulator.is_running()[0], "Simulator started after " + self._testMethodName
+        assert not Simulator.is_running()[0], "Simulator started after " + self._testMethodName
 
     @classmethod
     def tearDownClass(cls):

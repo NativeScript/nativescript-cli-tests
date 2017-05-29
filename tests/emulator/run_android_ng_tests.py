@@ -49,7 +49,7 @@ class RunAndroidEmulatorTests(BaseClass):
         strings = ['Project successfully built',
                    'Successfully installed on device with identifier', EMULATOR_ID,
                    'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
 
         # Verify initial state of the app
         assert Device.wait_for_text(device_id=EMULATOR_ID, text="Ter Stegen",
