@@ -1,0 +1,85 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "tns-core-modules@3.0.1",
+        "scope": null,
+        "escapedName": "tns-core-modules",
+        "name": "tns-core-modules",
+        "rawSpec": "3.0.1",
+        "spec": "3.0.1",
+        "type": "version"
+      },
+      "/Users/topuzov/Git/nativescript-cli-tests/TestApp"
+    ]
+  ],
+  "_from": "tns-core-modules@3.0.1",
+  "_id": "tns-core-modules@3.0.1",
+  "_inCache": true,
+  "_location": "/tns-core-modules",
+  "_nodeVersion": "6.10.3",
+  "_npmUser": {},
+  "_npmVersion": "4.2.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "tns-core-modules@3.0.1",
+    "scope": null,
+    "escapedName": "tns-core-modules",
+    "name": "tns-core-modules",
+    "rawSpec": "3.0.1",
+    "spec": "3.0.1",
+    "type": "version"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "http://nsbuildlin01:4874/tns-core-modules/-/tns-core-modules-3.0.1.tgz",
+  "_shasum": "86beac867637f6758d439abee5c04e5c46fd2452",
+  "_shrinkwrap": null,
+  "_spec": "tns-core-modules@3.0.1",
+  "_where": "/Users/topuzov/Git/nativescript-cli-tests/TestApp",
+  "dependencies": {
+    "tns-core-modules-widgets": "3.0.1"
+  },
+  "description": "Telerik NativeScript Core Modules",
+  "devDependencies": {
+    "@types/node": "~7.0.5",
+    "tns-platform-declarations": "*"
+  },
+  "dist": {
+    "shasum": "86beac867637f6758d439abee5c04e5c46fd2452",
+    "tarball": "http://nsbuildlin01:4874/tns-core-modules/-/tns-core-modules-3.0.1.tgz"
+  },
+  "files": [
+    "**/*.d.ts",
+    "**/*.js",
+    "!android17.d.ts",
+    "!ios.d.ts",
+    "!bin/",
+    "!apps/",
+    "!build/",
+    "!node-tests/",
+    "!declarations.android.d.ts",
+    "!declarations.ios.d.ts",
+    "!gruntfile.js",
+    "!org.nativescript.widgets.d.ts"
+  ],
+  "homepage": "https://www.nativescript.org",
+  "license": "Apache-2.0",
+  "name": "tns-core-modules",
+  "nativescript": {
+    "platforms": {
+      "ios": "2.1.1",
+      "android": "2.1.1"
+    }
+  },
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NativeScript/NativeScript/commit/311e0358db71ee50ad31355b8d127f3fd4a08c83"
+  },
+  "typings": "tns-core-modules.d.ts",
+  "version": "3.0.1"
+}

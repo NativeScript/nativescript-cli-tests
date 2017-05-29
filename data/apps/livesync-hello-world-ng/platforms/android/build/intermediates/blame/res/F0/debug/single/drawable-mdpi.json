@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/build/intermediates/res/merged/F0/debug/drawable-mdpi/icon.png",
+        "source": "/Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/src/main/res/drawable-mdpi/icon.png"
+    },
+    {
+        "merged": "/Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/build/intermediates/res/merged/F0/debug/drawable-mdpi/background.png",
+        "source": "/Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/src/main/res/drawable-mdpi/background.png"
+    },
+    {
+        "merged": "/Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/build/intermediates/res/merged/F0/debug/drawable-mdpi/logo.png",
+        "source": "/Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/src/main/res/drawable-mdpi/logo.png"
+    }
+]

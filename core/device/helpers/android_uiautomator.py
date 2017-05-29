@@ -8,7 +8,6 @@ class UIAuto(object):
     @staticmethod
     def __kill_uiautomator():
         Process.kill(proc_name="adb", proc_cmdline="uiautomator")
-        Process.kill(proc_name="adb", proc_cmdline="fork-server")
 
     @staticmethod
     def __get_device(device_id):

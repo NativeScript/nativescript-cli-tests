@@ -1,0 +1,19 @@
+{
+    "@angular/animations": true,
+    "@angular/common": true,
+    "@angular/compiler": true,
+    "@angular/core": true,
+    "@angular/forms": true,
+    "@angular/http": true,
+    "@angular/platform-browser": true,
+    "@angular/router": true,
+    "nativescript-angular": true,
+    "nativescript-intl": true,
+    "reflect-metadata": true,
+    "nativescript-theme-core": true,
+    "rxjs": true,
+    "symbol-observable": true,
+    "tns-core-modules": true,
+    "tns-core-modules-widgets": true,
+    "zone.js": true
+}

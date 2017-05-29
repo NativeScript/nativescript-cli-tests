@@ -445,11 +445,12 @@ class Tns(object):
         Tns.run_tns_command("error-reporting disable")
 
     @staticmethod
-    def wait_for_log(log_file, string_list, timeout=30, check_interval=3, clean_log=True):
+    def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=30, check_interval=3, clean_log=True):
         """
         Wait until log file contains list of string.
         :param log_file: Path to log file.
         :param string_list: List of strings.
+        :param not_existing_string_list: List of string that should not be in logs.
         :param timeout: Timeout.
         :param check_interval: Check interval.
         :param clean_log: Specify if content of log file should be delete after check.
@@ -487,7 +488,11 @@ class Tns(object):
             File.write(file_path=log_file, text="")
 
         if all_items_found:
-            pass
+            if not_existing_string_list is None:
+                pass
+            else:
+                for item in not_existing_string_list:
+                    assert item not in log, "{0} found! It should not be in logs."
         else:
             print "##### OUTPUT BEGIN #####\n"
             print log
