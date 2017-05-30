@@ -2,7 +2,6 @@
 Tests for `tns debug android` executed on Android Emulator.
 """
 import os
-import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -106,7 +105,6 @@ class DebugAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
-    @unittest.skip("No longer supported for Android.")
     def test_002_debug_android_emulator_debug_brk(self):
         """
         Starts debugger and stop at the first code statement.

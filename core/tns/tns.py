@@ -231,7 +231,7 @@ class Tns(object):
             if platform is Platform.ANDROID:
                 assert not File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
             if platform is Platform.IOS:
-                assert not File.exists(app_name + TnsAsserts.IOS)
+                assert not File.exists(app_name + TnsAsserts.PLATFORM_IOS)
         return output
 
     @staticmethod
@@ -247,7 +247,7 @@ class Tns(object):
             if platform is Platform.ANDROID:
                 assert File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
             if platform is Platform.IOS:
-                assert File.exists(app_name + TnsAsserts.IOS)
+                assert File.exists(app_name + TnsAsserts.PLATFORM_IOS)
             assert "Project successfully created" in output
         return output
 
@@ -277,7 +277,7 @@ class Tns(object):
                                 tns_path=tns_path)
 
     @staticmethod
-    def platform_list(attributes={}, assert_success=True, log_trace=False, tns_path=None):
+    def platform_list(attributes={}, log_trace=False, tns_path=None):
         return Tns.run_tns_command("platform list", attributes=attributes, log_trace=log_trace, tns_path=tns_path)
 
     @staticmethod
@@ -417,8 +417,7 @@ class Tns(object):
         return output
 
     @staticmethod
-    def debug_android(attributes={}, assert_success=True, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None,
-                      wait=True):
+    def debug_android(attributes={}, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None):
         log_file = Tns.run_tns_command("debug android", attributes=attributes, log_trace=log_trace, timeout=timeout,
                                        tns_path=tns_path, wait=False)
         return log_file
