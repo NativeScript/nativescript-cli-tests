@@ -5,6 +5,7 @@ import os
 
 from core.base_class.BaseClass import BaseClass
 from core.device.simulator import Simulator
+from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -155,6 +156,22 @@ class BuildiOSTests(BaseClass):
         entitlements_content = File.read(entitlements_path)
         assert '<key>aps-environment</key>' in entitlements_content, "Entitlements file content is wrong!"
         assert '<string>development</string>' in entitlements_content, "Entitlements file content is wrong!"
+
+        # Install plugin with entitlements, build again and verify entitlements are merged
+        plugin_path = os.path.join(TEST_RUN_HOME, 'data', 'plugins', 'nativescript-test-entitlements-1.0.0.tgz')
+        Npm.install(package=plugin_path, option='--save', folder=self.app_name)
+        Tns.build_ios(attributes={"--path": self.app_name})
+        entitlements_content = File.read(entitlements_path)
+        assert '<key>aps-environment</key>' in entitlements_content, "Entitlements file content is wrong!"
+        assert '<string>development</string>' in entitlements_content, "Entitlements file content is wrong!"
+        assert '<key>inter-app-audio</key>' in entitlements_content, "Entitlements file content is wrong!"
+        assert '<true/>' in entitlements_content, "Entitlements file content is wrong!"
+
+        # Build in release, for device (provision without entitlements)
+        output = Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": ""},
+                               assert_success=False)
+        assert "Provisioning profile " in output
+        assert "doesn't include the inter-app-audio and aps-environment entitlements" in output
 
     def test_400_build_ios_with_wrong_param(self):
         Tns.create_app(self.app_name_noplatform)
