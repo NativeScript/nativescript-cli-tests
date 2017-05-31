@@ -496,7 +496,7 @@ class Tns(object):
                 pass
             else:
                 for item in not_existing_string_list:
-                    assert item not in log, "{0} found! It should not be in logs."
+                    assert item not in log, "{0} found! It should not be in logs.".format(item)
         else:
             print "##### OUTPUT BEGIN #####\n"
             print log
