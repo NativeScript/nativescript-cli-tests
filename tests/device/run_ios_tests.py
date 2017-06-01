@@ -205,10 +205,9 @@ class RunIOSDeviceTests(BaseClass):
         """
 
         # `tns run ios` and wait until app is deployed
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--device': self.DEVICE_ID}, wait=False,assert_success=False)
-        strings = ['Project successfully built',
-                   'Successfully installed on device with identifier', self.DEVICE_ID,
-                   'Successfully synced application']
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--device': self.DEVICE_ID}, wait=False,
+                          assert_success=False)
+        strings = [self.DEVICE_ID, 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify app is running
@@ -218,19 +217,7 @@ class RunIOSDeviceTests(BaseClass):
         # Update native project
         config_path = os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'build.xcconfig')
         File.replace(file_path=config_path, str1='More info', str2='If you need more info')
-        strings = ['BUILD SUCCEEDED', 'Successfully synced application', self.DEVICE_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120)
-
-        # Verify app is running
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "App failed to load!"
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TAP"), "App failed to load!"
-
-        # Kill livesync process
-        Process.kill(proc_name='node', proc_cmdline='tns')
-
-        # `tns run ios` and again and verify sync works without issues
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--device': self.DEVICE_ID}, wait=False, assert_success=False)
-        strings = ['Successfully synced application', 'CONSOLE LOG']
+        strings = ['BUILD SUCCEEDED', 'Successfully synced application', self.DEVICE_ID, 'CONSOLE LOG']
         not_existing_strings = ['Unable to sync files', 'Multiple errors were thrown', '.nsbuildinfo']
         Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_strings, timeout=120)
 
@@ -238,7 +225,6 @@ class RunIOSDeviceTests(BaseClass):
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "App failed to load!"
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TAP"), "App failed to load!"
 
-        # TODO: After changes app freeze, uncomment when it is fixed
         # Change JS and wait until app is synced
         # ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
         # strings = ['Successfully transferred', 'main-view-model.js', 'Successfully synced application', self.DEVICE_ID]
