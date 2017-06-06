@@ -211,8 +211,7 @@ class RunIOSDeviceTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify app is running
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "App failed to load!"
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TAP"), "App failed to load!"
+        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="Tap the button"), "App failed to load!"
 
         # Update native project
         config_path = os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'build.xcconfig')
@@ -222,8 +221,7 @@ class RunIOSDeviceTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_strings, timeout=120)
 
         # Verify app is running
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "App failed to load!"
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TAP"), "App failed to load!"
+        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="Tap the button"), "App failed to load!"
 
         # Change JS and wait until app is synced
         # ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
