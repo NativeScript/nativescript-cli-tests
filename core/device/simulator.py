@@ -96,9 +96,18 @@ class Simulator(object):
         :return: Boolean value for simulator state and string with simulator id (if it is running).
         """
         running = False
-        simid = Simulator.__get_id(name=simulator_name)
-        if Simulator.__get_state(simulator_id=simid) == 'Booted':
-            running = True
+        if simulator_name==None:
+            output = run(command='xcrun simctl list devices | grep Boot', timeout=60, log_level=CommandLogLevel.SILENT)
+            lines = output.splitlines()
+            if len(lines) > 0:
+                running = True
+                simid = lines[0].split('(')[1].split(')')[0]
+            else:
+                simid = None
+        else:
+            simid = Simulator.__get_id(name=simulator_name)
+            if Simulator.__get_state(simulator_id=simid) == 'Booted':
+                running = True
         return running, simid
 
     @staticmethod
@@ -144,10 +153,10 @@ class Simulator(object):
         Stop running simulators (by default stop all simulators)
         :param device_id: Device identifier (Simulator GUID)
         """
+        Process.kill('Simulator')
+        time.sleep(1)
         if '8.' in Xcode.get_version():
             print 'Stop all running simulators.'
-            Process.kill('Simulator')
-            time.sleep(1)
         elif '9.' in Xcode.get_version():
             if device_id == 'booted':
                 print 'Stop all running simulators.'
