@@ -148,7 +148,7 @@ class Simulator(object):
             print 'Stop all running simulators.'
             Process.kill('Simulator')
             time.sleep(1)
-        elif '8.' in Xcode.get_version():
+        elif '9.' in Xcode.get_version():
             if device_id == 'booted':
                 print 'Stop all running simulators.'
             else:

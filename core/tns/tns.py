@@ -385,7 +385,9 @@ class Tns(object):
 
     @staticmethod
     def deploy_ios(attributes={}, assert_success=True, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None):
-        if "8." in Xcode.get_version():
+        if "7." in Xcode.get_version():
+            print "Xcode 7. No need to pass --teamId param!"
+        else:
             attr = {"--teamId": DEVELOPMENT_TEAM}
             attributes.update(attr)
         output = Tns.run_tns_command("deploy ios", attributes=attributes, log_trace=log_trace, timeout=timeout,
@@ -407,7 +409,9 @@ class Tns(object):
 
     @staticmethod
     def run_ios(attributes={}, assert_success=True, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None, wait=True):
-        if "8." in Xcode.get_version():
+        if "7." in Xcode.get_version():
+            print "Xcode 7. No need to pass --teamId param!"
+        else:
             attr = {"--teamId": DEVELOPMENT_TEAM}
             attributes.update(attr)
         output = Tns.run_tns_command("run ios", attributes=attributes, log_trace=log_trace, timeout=timeout,
