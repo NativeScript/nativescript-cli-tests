@@ -318,6 +318,7 @@ class RunIOSSimulatorTests(BaseClass):
         `tns run ios` for apps with spaces
         """
         destination_path = os.path.join(TEST_RUN_HOME, "folder with spaces", "Test App")
+        Folder.cleanup(folder=destination_path)
         Folder.copy(src=self.app_name, dst=destination_path)
         output = Tns.run_ios(attributes={'--path': "\"" + destination_path + "\"", '--justlaunch': ''})
         assert "Multiple errors were thrown" not in output

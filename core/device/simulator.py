@@ -8,9 +8,40 @@ from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.process import Process
 from core.settings.settings import SIMULATOR_NAME
+from core.xcode.xcode import Xcode
 
 
 class Simulator(object):
+    @staticmethod
+    def __get_id(name):
+        """
+        Find simulator GUID by Simulator name
+        :param name: Simulator name
+        :return: Simulator GUID
+        """
+        output = run(command='xcrun simctl list | grep \'{0}\''.format(name), log_level=CommandLogLevel.SILENT)
+        lines = output.splitlines()
+        if len(lines) > 1:
+            raise AssertionError("Multiple simulators with same name found!")
+        elif len(lines) == 0:
+            return None
+        else:
+            return lines[0].split('(')[1].split(')')[0]
+
+    @staticmethod
+    def __get_state(simulator_id):
+        """
+        Find state of Simulator by id
+        :param simulator_id: Simulator GUID
+        :return: State as string
+        """
+        output = run(command='xcrun simctl list | grep {0}'.format(simulator_id), log_level=CommandLogLevel.SILENT)
+        lines = output.splitlines()
+        if len(lines) == 0:
+            raise AssertionError("Can not find device with id " + simulator_id)
+        else:
+            return lines[0].split('(')[-1].split(')')[0]
+
     @staticmethod
     def create(name, device_type, ios_version):
         """
@@ -29,7 +60,7 @@ class Simulator(object):
         print 'iOS Simulator created: ' + name
 
     @staticmethod
-    def start(name, sdk=None, timeout=300):
+    def start(name, timeout=300):
         """
         Start iOS Simulator
         :param name: Simulator name.
@@ -38,15 +69,15 @@ class Simulator(object):
         :return: Identifier of booted iOS Simulator.
         """
 
-        # Generate simulator name based on version
-        if sdk is not None:
-            name = '{0} ({1})'.format(name, sdk)
+        # Find simulator GUID
+        sim_id = Simulator.__get_id(name)
+        if sim_id is None:
+            raise AssertionError("Unable to find device with name " + name)
 
         # Fire start command
-        start_command = 'instruments -w "{0}"'.format(name)
+        start_command = 'xcrun simctl boot {0}'.format(sim_id)
         output = run(command=start_command, timeout=timeout, log_level=CommandLogLevel.SILENT)
-        assert 'Unknown device' not in output, "Can not find simulator with name " + name
-        assert 'Waiting for device to boot...' in output
+        assert 'Invalid device' not in output, "Can not find simulator with id " + sim_id
         print 'Simulator {0} is booting now...'.format(name)
 
         # Wait until simulator boot
@@ -60,27 +91,15 @@ class Simulator(object):
     @staticmethod
     def is_running(simulator_name=None):
         """
-
-        :param simulator_name:
-        :return:
+        Check if simulator with given name is running
+        :param simulator_name: Simulator name
+        :return: Boolean value for simulator state and string with simulator id (if it is running).
         """
         running = False
-        simulator_id = None
-        output = run(command='xcrun simctl list devices', log_level=CommandLogLevel.SILENT)
-        if 'Booted' in output:
-            for line in output.splitlines():
-                # Line looks like this: 'iPhone7N (A63FC6CE-7954-438A-905D-8C03438AC3FD) (Booted)'
-                if simulator_name is None:
-                    if 'Booted' in line:
-                        running = True
-                        simulator_id = line.split('(')[1].split(')')[0]
-                else:
-                    if ('Booted' in line) and (simulator_name in line):
-                        running = True
-                        simulator_id = line.split('(')[1].split(')')[0]
-            return running, simulator_id
-        else:
-            return False, None
+        simid = Simulator.__get_id(name=simulator_name)
+        if Simulator.__get_state(simulator_id=simid) == 'Booted':
+            running = True
+        return running, simid
 
     @staticmethod
     def wait_for_simulator(simulator_name=None, timeout=300):
@@ -120,12 +139,22 @@ class Simulator(object):
         return simulator_id
 
     @staticmethod
-    def stop():
+    def stop(device_id='booted'):
         """
-        Stop all running simulators.
+        Stop running simulators (by default stop all simulators)
+        :param device_id: Device identifier (Simulator GUID)
         """
-        Process.kill('Simulator')
-        time.sleep(1)
+        if '8.' in Xcode.get_version():
+            print 'Stop all running simulators.'
+            Process.kill('Simulator')
+            time.sleep(1)
+        elif '8.' in Xcode.get_version():
+            if device_id == 'booted':
+                print 'Stop all running simulators.'
+            else:
+                print 'Stop simulator with id ' + device_id
+            run(command='xcrun simctl shutdown {0}'.format(device_id), timeout=60, log_level=CommandLogLevel.SILENT)
+            time.sleep(1)
 
     @staticmethod
     def reset():
@@ -225,9 +254,10 @@ class Simulator(object):
         run(command=command, log_level=CommandLogLevel.FULL)
 
     @staticmethod
-    def get_screen(file_path):
+    def get_screen(device_id, file_path):
         """
         Save screen of iOS Simulator.
+        :param device_id: Device identifier (Simualtor GUID)
         :param file_path: Name of image that will be saved.
         """
-        run(command="xcrun simctl io booted screenshot {0}".format(file_path),log_level=CommandLogLevel.SILENT)
+        run(command="xcrun simctl io {0} screenshot {1}".format(device_id, file_path), log_level=CommandLogLevel.SILENT)

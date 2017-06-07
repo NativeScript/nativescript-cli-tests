@@ -54,7 +54,7 @@ class Device(object):
         if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
             Adb.get_screen(device_id=device_id, file_path=file_path)
         if device_type == DeviceType.SIMULATOR:
-            Simulator.get_screen(file_path=file_path)
+            Simulator.get_screen(device_id=device_id, file_path=file_path)
         if device_type == DeviceType.IOS:
             IDevice.get_screen(device_id=device_id, file_path=file_path)
 
