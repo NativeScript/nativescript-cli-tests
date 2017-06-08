@@ -404,7 +404,7 @@ class RunAndroidEmulatorTests(BaseClass):
                               assert_success=False)
         strings = ['Project successfully prepared', 'Project successfully built',
                    'Successfully installed on device with identifier', EMULATOR_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
@@ -415,9 +415,16 @@ class RunAndroidEmulatorTests(BaseClass):
         destination_file = os.path.join(self.app_name, 'app', '.tempfile')
         File.copy(source_file, destination_file)
 
-        # Give it 10 sec and check no messages are available in log files
-        time.sleep(10)
+        # Give it 5 sec and check no messages are available in log files
+        time.sleep(5)
         output = File.read(log)
+
+        print ""
+        print "LOG AFTER HIDDEN FILE ADDED:"
+        print ""
+        print output
+        print ""
+
         assert 'Successfully' not in output, 'Sync is triggered after adding hidden file.'
         assert 'synced' not in output, 'Sync is triggered after adding hidden file.'
         assert 'tempfile' not in output, 'Sync is triggered after adding hidden file.'
