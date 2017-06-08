@@ -2,6 +2,7 @@
 Wrapper around adb
 """
 import os
+import re
 import time
 
 from core.osutils.command import run
@@ -62,6 +63,50 @@ class Adb(object):
         return devices
 
     @staticmethod
+    def get_logcat(device_id):
+        """
+        Dump the log and then exit (don't block).
+        :param device_id: Device id.
+        """
+        Adb.run(command='logcat -d', device_id=device_id)
+
+    @staticmethod
+    def clear_logcat(device_id):
+        """
+        Clear (flush) the entire log and exit.
+        :param device_id: Device id.
+        """
+        Adb.run(command='logcat -c', device_id=device_id)
+        print "The logcat on {0} is cleared.".format(device_id)
+
+    @staticmethod
+    def get_start_time(device_id, app_id):
+        """
+        Parse the start time of application.
+        Example: I/ActivityManager(19531): Displayed org.nativescript.TestApp/com.tns.NativeScriptActivity: +3s452ms
+        :param device_id: Device id.
+        :param app_id: App id.
+        :return: Start time.
+        """
+        output = Adb.run(command='logcat -d | grep \'Displayed {0}\''.format(app_id), device_id=device_id)
+        print "Start time: {0}.".format(output)
+
+        start_time = output.rsplit("+")[1]
+        print "Start time: {0}.".format(start_time)
+
+        # Parsing "+3s452ms"
+        numbers = map(int, re.findall('\d+', start_time))
+        num_len = len(str(numbers[1]))
+        if num_len == 1:
+            numbers[1] = '00' + str(numbers[1])
+        elif num_len == 2:
+            numbers[1] = '0' + str(numbers[1])
+
+        result = str(numbers[0]) + str(numbers[1])
+        print "Start time: {0}.".format(result)
+        return result
+
+    @staticmethod
     def run(command, device_id, timeout=60, log_level=CommandLogLevel.COMMAND_ONLY):
         """
         Run adb command.
@@ -79,6 +124,7 @@ class Adb(object):
         Uninstall all 3rd party applications.
         :param device_id: Device id.
         """
+        print 'Uninstall all apps on {0}.'.format(device_id)
         apps = Adb.run(command='shell pm list packages -3', device_id=device_id)
         for line in apps.splitlines():
             if 'package:' in line:
@@ -86,26 +132,38 @@ class Adb(object):
                 Adb.uninstall(app_id=app, device_id=device_id)
 
     @staticmethod
-    def install(apk_file, device_id):
+    def install(apk_file_path, device_id):
         """
         Install application.
-        :param apk_file: Application under test.
+        :param apk_file_path: File path to .apk.
         :param device_id: Device id.
         """
-        output = Adb.run(command='install -r ' + apk_file, device_id=device_id)
-        assert 'Success' in output, 'Failed to install {0}. \n Log: \n {1}'.format(apk_file, output)
-        print '{0} installed successfully on {1}'.format(apk_file, device_id)
+        output = Adb.run(command='install -r ' + apk_file_path, device_id=device_id)
+        assert 'Success' in output, 'Failed to install {0}. Output: {1}'.format(apk_file_path, output)
+        print '{0} installed successfully on {1}.'.format(apk_file_path, device_id)
 
     @staticmethod
     def uninstall(app_id, device_id):
         """
         Uninstall application.
-        :param app_id: Package identifier (for example org.nativescript.testapp).
+        :param app_id: Package identifier - org.nativescript.testapp.
         :param device_id: Device id.
         """
         output = Adb.run(command='shell pm uninstall ' + app_id, device_id=device_id, log_level=CommandLogLevel.SILENT)
-        assert 'Success' in output, 'Failed to uninstall {0}. \n Log: \n {1}'.format(app_id, output)
-        print "{0} uninstalled from {1}".format(app_id, device_id)
+        assert 'Success' in output, 'Failed to uninstall {0}. Output: {1}'.format(app_id, output)
+        print '{0} uninstalled successfully from {1}.'.format(app_id, device_id)
+
+    @staticmethod
+    def start_app(device_id, app_id):
+        """
+        Start application.
+        :param device_id: Device id.
+        :param app_id: App id.
+        """
+        command = 'shell monkey -p ' + app_id + ' -c android.intent.category.LAUNCHER 1'
+        output = Adb.run(command=command, device_id=device_id)
+        assert 'Events injected: 1' in output, 'Failed to start {0}.'.format(app_id)
+        print '{0} started successfully.'.format(app_id)
 
     @staticmethod
     def stop_application(device_id, app_id):

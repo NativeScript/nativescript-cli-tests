@@ -133,6 +133,34 @@ class Device(object):
         return text
 
     @staticmethod
+    def get_log(device_id):
+        """
+        Dump the entire log.
+        :param device_id: Device id.
+        """
+        device_type = Device.__get_device_type(device_id)
+        if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
+            Adb.get_logcat(device_id)
+        else:
+            raise NotImplementedError('Not Implemented for iOS!')
+
+    @staticmethod
+    def get_start_time(device_id, app_id):
+        """
+        Get start time of application. Examples:
+        - Android - TODO: I/ActivityManager(19531): Displayed org.nativescript.TestApp/com.tns.NativeScriptActivity: +3s452ms
+        - iOS -
+        :param device_id: Device id.
+        :param app_id: App id.
+        :return: Start time.
+        """
+        device_type = Device.__get_device_type(device_id)
+        if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
+            return Adb.get_start_time(device_id, app_id)
+        else:
+            raise NotImplementedError('Not Implemented for iOS!')
+
+    @staticmethod
     def wait_for_text(device_id, text="", timeout=60):
         """
         Wait for text to be visible on screen of device.
@@ -169,6 +197,18 @@ class Device(object):
             return found
 
     @staticmethod
+    def clear_log(device_id):
+        """
+        Flush the entire log.
+        :param device_id: Device id.
+        """
+        device_type = Device.__get_device_type(device_id)
+        if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
+            Adb.clear_logcat(device_id)
+        else:
+            raise NotImplementedError('Not Implemented for iOS!')
+
+    @staticmethod
     def click(device_id, text, timeout):
         """
         Click on text.
@@ -186,13 +226,13 @@ class Device(object):
     def ensure_available(platform):
         """
         Ensure device is available.
-        :param platform: Platform enum value (Platform.ANDROID or Platform.IOS)
+        :param platform: `Platform.ANDROID` or `Platform.IOS`
         """
         count = Device.get_count(platform)
         if count > 0:
-            print "{0} {1} devices are running".format(count, platform)
+            print "{0} {1} device(s) attached.".format(count, platform)
         else:
-            raise TypeError("No real devices attached to this host.")
+            raise TypeError("No real devices attached.")
 
     @staticmethod
     def get_id(platform):
@@ -226,12 +266,28 @@ class Device(object):
     def get_count(platform):
         """
         Get physical device count.
-        :param platform: `Platform.ANDROID` or `Platform.IOS`
+        :param platform: `Platform.ANDROID` or `Platform.IOS`.
         :return: Count.
         """
         device_ids = Device.get_ids(platform=platform)
         return len(device_ids)
 
+    @staticmethod
+    def install_app(app_file_path, device_id):
+        """
+        Install application.
+        :param app_file_path: File path to app.
+        :param device_id: Device id.
+        """
+        device_type = Device.__get_device_type(device_id)
+        if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
+            Adb.install(app_file_path, device_id)
+        else:
+            raise NotImplementedError('Not Implemented for iOS!')
+
+    # TODO(vchimev): Revise it!
+    # Prefix not needed ...
+    # Think about stopping all running processes ...
     @staticmethod
     def uninstall_app(app_prefix, platform):
         """
@@ -246,6 +302,19 @@ class Device(object):
         elif platform == Platform.IOS:
             for device_id in device_ids:
                 IDevice.uninstall_all_app(device_id=device_id, app_prefix=app_prefix)
+
+    @staticmethod
+    def start_app(device_id, app_id):
+        """
+        Start application.
+        :param device_id: Device id.
+        :param app_id: App id.
+        """
+        device_type = Device.__get_device_type(device_id)
+        if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
+            Adb.start_app(device_id, app_id)
+        else:
+            raise NotImplementedError('Not Implemented for iOS!')
 
     @staticmethod
     def stop_application(device_id, app_id):

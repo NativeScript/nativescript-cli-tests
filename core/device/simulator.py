@@ -153,6 +153,7 @@ class Simulator(object):
         Stop running simulators (by default stop all simulators)
         :param device_id: Device identifier (Simulator GUID)
         """
+        print 'Stop all running simulators.'
         Process.kill('Simulator')
         time.sleep(1)
         if '8.' in Xcode.get_version():
