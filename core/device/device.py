@@ -148,8 +148,8 @@ class Device(object):
     def get_start_time(device_id, app_id):
         """
         Get start time of application. Examples:
-        - Android - TODO: I/ActivityManager(19531): Displayed org.nativescript.TestApp/com.tns.NativeScriptActivity: +3s452ms
-        - iOS -
+        - Android - I/ActivityManager(19531): Displayed org.nativescript.TestApp/com.tns.NativeScriptActivity: +3s452ms
+        - iOS - TODO(vchimev)
         :param device_id: Device id.
         :param app_id: App id.
         :return: Start time.
@@ -285,9 +285,6 @@ class Device(object):
         else:
             raise NotImplementedError('Not Implemented for iOS!')
 
-    # TODO(vchimev): Revise it!
-    # Prefix not needed ...
-    # Think about stopping all running processes ...
     @staticmethod
     def uninstall_app(app_prefix, platform):
         """
@@ -364,3 +361,15 @@ class Device(object):
                 break
             if (running is False) and (time.time() > end_time):
                 raise NameError('{0} is NOT running on {1}'.format(app_id, device_id))
+
+    @staticmethod
+    def turn_on_screen(device_id):
+        """
+        Turn on screen.
+        :param device_id: Device id.
+        """
+        device_type = Device.__get_device_type(device_id)
+        if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
+            Adb.turn_on_screen(device_id)
+        else:
+            raise NotImplementedError('Not Implemented for iOS!')

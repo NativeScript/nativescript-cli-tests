@@ -94,7 +94,6 @@ class Adb(object):
         start_time = output.rsplit("+")[1]
         print "Start time: {0}.".format(start_time)
 
-        # Parsing "+3s452ms"
         numbers = map(int, re.findall('\d+', start_time))
         num_len = len(str(numbers[1]))
         if num_len == 1:
@@ -350,3 +349,32 @@ class Adb(object):
                 print 'Failed to unlock sdcard. Retry...'
                 time.sleep(10)
         assert unlocked, 'Failed to unlock sdcard!'
+
+    @staticmethod
+    def turn_on_screen(device_id):
+        """
+        Turn on screen.
+        :param device_id: Device identifier
+        """
+        cmd_key_event = ADB_PATH + " -s " + device_id + " shell input keyevent 26"
+        cmd_input_method = ADB_PATH + " -s " + device_id + " shell dumpsys input_method | grep mActive"
+
+        output = run(command=cmd_input_method)
+        inactive = "mActive=false" in output
+        print "Is the screen off? {0}".format(inactive)
+
+        if inactive:
+            run(command=cmd_key_event)
+            time.sleep(1)
+            output = run(command=cmd_input_method)
+            assert "mActive=true" in output
+        else:
+            run(command=cmd_key_event)
+            time.sleep(1)
+            output = run(command=cmd_input_method)
+            assert "mActive=false" in output
+            time.sleep(1)
+            run(command=cmd_key_event)
+            time.sleep(1)
+            output = run(command=cmd_input_method)
+            assert "mActive=true" in output
