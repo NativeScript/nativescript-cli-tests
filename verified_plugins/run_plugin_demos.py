@@ -49,5 +49,5 @@ class RunPluginDemos(BaseClass):
         plugin_folder = os.path.join(TEST_RUN_HOME, 'verified_plugins', 'out', name)
         apk_file = File.find(base_path=plugin_folder, file_name='.apk', exact_match=False)
         assert apk_file is not '', "Can't find demo app for {0}!".format(name)
-        Adb.install(apk_file=apk_file, device_id=EMULATOR_ID)
+        Adb.install(apk_file_path=apk_file, device_id=EMULATOR_ID)
         Adb.monkey(apk_file=apk_file, device_id=EMULATOR_ID)

@@ -70,6 +70,25 @@ class File(object):
         return matches[match_index]
 
     @staticmethod
+    def find_by_extention(ext):
+        """
+        Find by file extension recursively.
+        :param ext: File extension.
+        :return: List of found files.
+        """
+        matches = []
+        if "." not in ext:
+            ext = "." + ext
+        for root, dirs, files in os.walk(os.curdir):
+            for f in files:
+                if f.endswith(ext):
+                    matches.append(os.path.join(root, f))
+        print "Files found by \"" + ext + "\" extension recursively:"
+        for match in matches:
+            print match
+        return matches
+
+    @staticmethod
     def pattern_exists(directory, pattern):
         """
         Check if file pattern exist at location.

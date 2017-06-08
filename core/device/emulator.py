@@ -18,9 +18,9 @@ class Emulator(object):
     @staticmethod
     def stop():
         """
-        Stop running emulators.
+        Stop all running emulators.
         """
-        print 'Stop all emulators'
+        print 'Stop all running emulators.'
         Process.kill('emulator')
         Process.kill('emulator64-arm')
         Process.kill('emulator64-x86')

@@ -20,3 +20,4 @@ Payload
 /workspace/*
 verified_plugins/data/*.csv
 nativescript-*
+/*.csv
