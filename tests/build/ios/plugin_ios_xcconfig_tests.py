@@ -3,7 +3,6 @@ Test for plugin* commands in context of iOS
 """
 
 from core.base_class.BaseClass import BaseClass
-from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import SUT_FOLDER, IOS_RUNTIME_PATH
@@ -38,9 +37,6 @@ class PluginsiOSXcconfigTests(BaseClass):
 
         output = File.read(self.app_name + "/platforms/ios/plugins-debug.xcconfig")
         assert "OTHER_LDFLAGS = $(inherited) -l\"sqlite3\"" in output
-
-        # output = run("cat " + self.app_name + "/platforms/ios/plugins-release.xcconfig")
-        # assert "OTHER_LDFLAGS = $(inherited) -l\"sqlite3\"" in output
 
         output = File.read(self.app_name + "/platforms/ios/TestApp/build-debug.xcconfig")
         assert "#include \"../plugins-debug.xcconfig\"" in output

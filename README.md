@@ -22,6 +22,11 @@ brew install ideviceinstaller --HEAD
 brew install libimobiledevice --HEAD
 ```
 
+Perf Tests Only:
+```
+pip install matplotlib numpy pandas
+```
+
 ## Requirements
 Android Requirements:
 - Valid pair of keystore and password
