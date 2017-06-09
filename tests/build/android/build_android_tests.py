@@ -127,6 +127,32 @@ class BuildAndroidTests(BaseClass):
         assert "[DEBUG]" in output
         assert "FAILURE" not in output
 
+    def test_300_build_android_with_scoped_dependencies(self):
+        """
+        'tns build android' with scoped dependencies.
+        Test for:
+        https://github.com/telerik/nativescript-ui-feedback/issues/191
+        https://github.com/NativeScript/nativescript-cli/pull/2837
+        """
+
+        # Simulate scoped dependency
+        Npm.install(package="nativescript-telerik-ui-pro", option="--save", folder=self.app_name)
+        File.replace(file_path=os.path.join(self.app_name, 'package.json'),
+                     str1='"nativescript-telerik-ui-pro"',
+                     str2='"@progress/nativescript-telerik-ui-pro"')
+        path1 = os.path.join(self.app_name, 'node_modules', 'nativescript-telerik-ui-pro')
+        path2 = os.path.join(self.app_name, 'node_modules', '@progress', 'nativescript-telerik-ui-pro')
+        Folder.copy(src=path1, dst=path2)
+        Folder.cleanup(folder=os.path.join(self.app_name, 'node_modules', 'nativescript-telerik-ui-pro'))
+        File.replace(file_path=os.path.join(self.app_name, 'node_modules', '@progress', 'nativescript-telerik-ui-pro',
+                                            'package.json'),
+                     str1='"name": "nativescript-telerik-ui-pro",',
+                     str2='"name": "progress@nativescript-telerik-ui-pro",')
+
+        # Build android
+        output = Tns.build_android(attributes={"--path": self.app_name})
+        assert "Flavor 'nativescript-telerik-ui' has unknown dimension 'nativescript-telerik-ui'" not in output
+
     def test_301_build_project_with_dash_and_ios_inspector_added(self):
         """
         Verify we can build projects with dashes.
