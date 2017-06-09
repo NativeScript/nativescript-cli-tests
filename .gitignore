@@ -1,8 +1,7 @@
-.settings
+.DS_Store
 .idea
 *.pyc
-.DS_Store
-/*.tgz
+/*.csv
 /*.png
 /*.tgz
 node_modules
@@ -20,4 +19,3 @@ Payload
 /workspace/*
 verified_plugins/data/*.csv
 nativescript-*
-/*.csv
