@@ -16,7 +16,7 @@ class PluginsiOSXcconfigTests(BaseClass):
         Xcode.cleanup_cache()
         Folder.cleanup(self.app_name)
 
-    def test_001_plugin_add_xcconfig_before_platform_add_ios(self):
+    def test_100_plugin_add_xcconfig_before_platform_add_ios(self):
         Tns.create_app(self.app_name)
 
         plugin_path = SUT_FOLDER + "/QA-TestApps/CocoaPods/xcconfig-plugin"

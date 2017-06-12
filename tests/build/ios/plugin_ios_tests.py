@@ -29,7 +29,7 @@ class PluginsiOSTests(BaseClass):
         BaseClass.tearDown(self)
         Folder.cleanup(self.app_name)
 
-    def test_001_plugin_add_before_platform_add_ios(self):
+    def test_100_plugin_add_before_platform_add_ios(self):
         Tns.create_app(self.app_name)
         output = Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})
         assert "Successfully installed plugin tns-plugin" in output
@@ -40,7 +40,7 @@ class PluginsiOSTests(BaseClass):
         assert "dependencies" in output
         assert tns_plugin in output
 
-    def test_002_plugin_add_after_platform_add_ios(self):
+    def test_101_plugin_add_after_platform_add_ios(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})

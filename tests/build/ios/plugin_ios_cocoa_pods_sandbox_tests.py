@@ -17,7 +17,7 @@ class PluginsiOSSandboxPodsTests(BaseClass):
         Xcode.cleanup_cache()
         Folder.cleanup(self.app_name)
 
-    def test_001_plugin_add_sandbox_pod_can_write_in_app_folder(self):
+    def test_100_plugin_add_sandbox_pod_can_write_in_app_folder(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
                                          "--frameworkPath": IOS_RUNTIME_PATH})
