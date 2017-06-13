@@ -339,7 +339,7 @@ class BuildAndroidTests(BaseClass):
     @unittest.skipIf(CURRENT_OS == OSType.OSX, "Skip on OSX")
     def test_405_build_ios_on_linux_machine(self):
         output = Tns.build_ios(attributes={"--path": self.app_name}, assert_success=False)
-        assert "Applications for platform ios can not be built on this OS" in output
+        assert "applications for platform ios can not be built on this os" in output.lower()
 
     def test_406_build_release_without_key_options(self):
         output = Tns.build_android(attributes={"--release": "", "--path": self.app_name}, assert_success=False)
