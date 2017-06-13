@@ -63,7 +63,7 @@ class PrepareiOSTests(BaseClass):
         TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.FULL)
 
         # Create new files in AppResources
-        File.copy(self.app_name + "/app/App_Resources/iOS/Assets.xcassets/AppIcon.appiconset/icon-50.png",
+        File.copy(self.app_name + "/app/App_Resources/iOS/Assets.xcassets/AppIcon.appiconset/icon-76.png",
                   self.app_name + "/app/App_Resources/iOS/newDefault.png")
 
         # prepare project
