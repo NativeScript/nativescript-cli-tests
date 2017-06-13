@@ -269,9 +269,9 @@ class TnsAsserts(object):
             assert 'Skipping prepare.' not in output
             assert 'Preparing project...' in output
             if platform is Platform.ANDROID or platform is Platform.BOTH:
-                assert 'Project successfully prepared (android)' in output
+                assert 'project successfully prepared (android)' in str(output).lower()
             if platform is Platform.IOS or platform is Platform.BOTH:
-                assert 'Project successfully prepared (ios)' in output
+                assert 'project successfully prepared (ios)' in str(output).lower()
 
         def _full_prepare():
             _incremental_prepare()

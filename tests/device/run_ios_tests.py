@@ -72,7 +72,7 @@ class RunIOSDeviceTests(BaseClass):
         strings = ['Project successfully built',
                    'Successfully installed on device with identifier', self.DEVICE_ID,
                    'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10, clean_log=False)
 
         # Verify app is deployed and running on all available ios devices
         output = File.read(log)

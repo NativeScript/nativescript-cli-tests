@@ -68,7 +68,7 @@ class RunAndroidDeviceTests(BaseClass):
         strings = ['Project successfully built', 'Successfully installed on device with identifier']
         for device_id in self.DEVICES:
             strings.append(device_id)
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10, clean_log=False)
 
         # Verify app is deployed and running on all available android devices
         for device_id in self.DEVICES:

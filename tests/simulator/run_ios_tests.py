@@ -63,8 +63,7 @@ class RunIOSSimulatorTests(BaseClass):
         """Make valid changes in JS,CSS and XML"""
 
         # `tns run ios` and wait until app is deployed
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, log_trace=True, wait=False,
-                          assert_success=False)
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
         strings = ['Project successfully built', 'Successfully installed on device with identifier', self.SIMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
