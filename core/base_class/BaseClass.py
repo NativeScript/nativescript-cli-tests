@@ -4,6 +4,8 @@ import sys
 import time
 import unittest
 
+from core.device.emulator import Emulator
+from core.device.simulator import Simulator
 from core.logger import Logger
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -111,3 +113,5 @@ class BaseClass(unittest.TestCase):
         Process.kill('NativeScript Inspector')
         Process.kill('Safari')
         Process.kill(proc_name='node', proc_cmdline='tns')
+        Simulator.stop()
+        Emulator.stop()

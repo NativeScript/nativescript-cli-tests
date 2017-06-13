@@ -65,7 +65,7 @@ class RunIOSSimulatorTests(BaseClass):
         # `tns run ios` and wait until app is deployed
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
         strings = ['Project successfully built', 'Successfully installed on device with identifier', self.SIMULATOR_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
 
         # Verify app looks correct inside simulator
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,

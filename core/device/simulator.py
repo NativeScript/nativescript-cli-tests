@@ -154,6 +154,7 @@ class Simulator(object):
         :param device_id: Device identifier (Simulator GUID)
         """
         Process.kill('Simulator')
+        time.sleep(1)
         if device_id == 'booted':
             print 'Stop all running simulators.'
         else:

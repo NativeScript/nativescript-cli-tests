@@ -70,7 +70,7 @@ class RunAndroidEmulatorTests(BaseClass):
         strings = ['Project successfully built',
                    'Successfully installed on device with identifier', EMULATOR_ID,
                    'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
