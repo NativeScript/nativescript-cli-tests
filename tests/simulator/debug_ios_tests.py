@@ -57,8 +57,7 @@ class DebugiOSSimulatorTests(BaseClass):
         Folder.cleanup(cls.app_name)
 
     def __verify_debugger_start(self, log):
-        strings = [self.SIMULATOR_ID, "Frontend client connected", "Backend socket created",
-                   "NativeScript debugger attached"]
+        strings = ["Frontend client connected", "Backend socket created", "NativeScript debugger attached"]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
         time.sleep(10)
         output = File.read(log)
