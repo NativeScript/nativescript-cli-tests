@@ -78,8 +78,6 @@ class TnsAsserts(object):
         if output is not None:
             app = app_name.rsplit('/')[-1]
             assert 'nativescript-theme-core' in output
-            if 'angular' not in str(TnsAsserts.get_package_json(app_name)):
-                assert 'nativescript-dev-android-snapshot' in output
             assert 'Project {0} was successfully created'.format(app) in output, 'Failed to create {0}'.format(app)
 
         if full_check:
