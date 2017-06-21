@@ -405,6 +405,15 @@ class Tns(object):
         if assert_success:
             assert "Project successfully built" in output
             assert "Successfully installed on device with identifier" in output
+            app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
+            apk_base_name = Tns.__get_final_package_name(app_name, platform=Platform.ANDROID)
+            base_app_path = app_name + TnsAsserts.PLATFORM_ANDROID + "build/outputs/apk/" + apk_base_name
+            if "--release" in attributes.keys():
+                apk_path = base_app_path + "-release.apk"
+            else:
+                apk_path = base_app_path + "-debug.apk"
+            apk_path = apk_path.replace("\"", "")  # Handle projects with space
+            assert File.exists(apk_path), "Apk file does not exist at " + apk_path
         return output
 
     @staticmethod
