@@ -43,13 +43,13 @@ class DebugiOSSimulatorTests(BaseClass):
         BaseClass.setUp(self)
         Process.kill('Safari')
         Process.kill('NativeScript Inspector')
-        Process.kill('node')
+        Tns.kill()
 
     def tearDown(self):
         BaseClass.tearDown(self)
         Process.kill('Safari')
         Process.kill('NativeScript Inspector')
-        Process.kill('node')
+        Tns.kill()
 
     @classmethod
     def tearDownClass(cls):

@@ -40,7 +40,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Folder.copy(src=source, dst=target)
 
     def tearDown(self):
-        Process.kill(proc_name='node')  # Stop 'node' to kill the livesync after each test method.
+        Tns.kill()
         BaseClass.tearDown(self)
 
     @classmethod

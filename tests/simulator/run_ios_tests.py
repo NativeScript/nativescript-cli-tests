@@ -51,7 +51,7 @@ class RunIOSSimulatorTests(BaseClass):
         Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
 
     def tearDown(self):
-        Process.kill('node')  # Stop 'node' to kill the livesync after each test method.
+        Tns.kill()
         BaseClass.tearDown(self)
 
     @classmethod

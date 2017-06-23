@@ -134,7 +134,7 @@ class File(object):
                 os.remove(file_path)
             except:
                 print "Failed to delete {0}".format(file_path)
-                Process.kill(proc_name='node')
+                Process.kill(proc_name='node', proc_cmdline='tns')
                 Process.kill(proc_name='aapt')
                 Process.kill(proc_name='adb')
                 Process.kill_gradle()

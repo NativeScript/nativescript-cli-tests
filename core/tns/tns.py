@@ -8,6 +8,7 @@ from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
+from core.osutils.process import Process
 from core.settings.settings import TNS_PATH, SUT_FOLDER, DEVELOPMENT_TEAM, BRANCH, TEST_RUN_HOME, \
     COMMAND_TIMEOUT, CURRENT_OS
 from core.settings.strings import config_release, codesign, config_debug
@@ -62,6 +63,13 @@ class Tns(object):
             if k == "--path":
                 app_name = v
         return app_name
+
+    @staticmethod
+    def kill():
+        """
+        Kill all running `tns` processes
+        """
+        Process.kill(proc_name='node', proc_cmdline='tns')  # Stop 'node' to kill the livesync after each test method.
 
     @staticmethod
     def get_app_id(app_name):

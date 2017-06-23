@@ -53,10 +53,10 @@ class RunIOSDeviceTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-        Process.kill(proc_name='node', proc_cmdline='tns')  # Stop 'node' to kill the livesync after each test method.
+        Tns.kill()
 
     def tearDown(self):
-        Process.kill(proc_name='node', proc_cmdline='tns')  # Stop 'node' to kill the livesync after each test method.
+        Tns.kill()
         BaseClass.tearDown(self)
 
     @classmethod

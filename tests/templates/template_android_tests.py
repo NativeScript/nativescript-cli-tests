@@ -37,7 +37,7 @@ class TemplateAndroidTests(BaseClass):
         BaseClass.setUp(self)
 
     def tearDown(self):
-        Process.kill('node')  # Stop 'node' to kill the livesync after each test method.
+        Tns.kill()
         BaseClass.tearDown(self)
 
     @classmethod

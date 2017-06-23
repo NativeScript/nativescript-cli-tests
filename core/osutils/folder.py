@@ -30,7 +30,7 @@ class Folder(object):
                     if 'Windows' in platform.platform():
                         output = run('rmdir /s /q \"{0}\"'.format(folder))
                         if ("another process" in output) or ("gradle" in output.lower()):
-                            Process.kill(proc_name='node')
+                            Process.kill(proc_name='node', proc_cmdline='tns')
                             Process.kill(proc_name='aapt')
                             Process.kill(proc_name='adb')
                             Process.kill_gradle()

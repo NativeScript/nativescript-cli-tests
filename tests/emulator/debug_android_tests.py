@@ -30,7 +30,7 @@ class DebugAndroidEmulatorTests(BaseClass):
         Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
 
     def tearDown(self):
-        Process.kill('node')  # Stop 'node' to kill the livesync after each test method.
+        Tns.kill()
         BaseClass.tearDown(self)
 
     @classmethod

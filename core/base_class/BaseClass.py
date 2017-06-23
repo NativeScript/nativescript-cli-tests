@@ -12,6 +12,7 @@ from core.osutils.folder import Folder
 from core.osutils.process import Process
 from core.osutils.screen import Screen
 from core.settings.settings import OUTPUT_FOLDER, TEST_RUN_HOME
+from core.tns.tns import Tns
 
 
 class BaseClass(unittest.TestCase):
@@ -67,7 +68,7 @@ class BaseClass(unittest.TestCase):
         Process.kill('NativeScript Inspector')
         Process.kill('Safari')
         Process.kill('Xcode')
-        Process.kill(proc_name='node', proc_cmdline='tns')
+        Tns.kill()
 
         if logfile == "":
             logfile = os.path.join(OUTPUT_FOLDER, cls.__name__ + ".txt")
@@ -112,6 +113,6 @@ class BaseClass(unittest.TestCase):
     def tearDownClass(cls):
         Process.kill('NativeScript Inspector')
         Process.kill('Safari')
-        Process.kill(proc_name='node', proc_cmdline='tns')
+        Tns.kill()
         Simulator.stop()
         Emulator.stop()
