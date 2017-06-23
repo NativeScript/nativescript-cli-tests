@@ -130,19 +130,19 @@ class DebugiOSSimulatorTests(BaseClass):
         # Change JS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
         strings = ['Successfully transferred', 'main-view-model.js', 'CONSOLE LOG',
-                   'Backend socket closed', 'Frontend socket closed', 'NativeScript debugger detached',
+                   'Backend socket closed', 'Frontend socket closed',
                    'Frontend client connected', 'Backend socket created', 'NativeScript debugger attached']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Change XML and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
-        strings = ['Successfully transferred', 'main-page.xml', 'Successfully synced application',
+        strings = ['Successfully transferred', 'main-page.xml',
                    'Backend socket created', 'NativeScript debugger attached', 'CONSOLE LOG']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Change CSS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
-        strings = ['Successfully transferred', 'app.css', 'Successfully synced application', 'Backend socket created',
+        strings = ['Successfully transferred', 'app.css', 'Backend socket created',
                    'NativeScript debugger attached', 'CONSOLE LOG']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
