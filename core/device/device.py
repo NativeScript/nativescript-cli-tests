@@ -12,6 +12,8 @@ from core.device.helpers.adb import Adb
 from core.device.helpers.android_uiautomator import UIAuto
 from core.device.helpers.libimobiledevice import IDevice
 from core.device.simulator import Simulator
+from core.osutils.command import run
+from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.image_utils import ImageUtils
@@ -68,6 +70,14 @@ class Device(object):
         :param tolerance: Tolerance in percents.
         :param timeout: Timeout in seconds.
         """
+
+        device_type = Device.__get_device_type(device_id)
+        if device_type == DeviceType.IOS:
+            type = run(command="ideviceinfo | grep ProductType", log_level=CommandLogLevel.SILENT)
+            type = type.replace(',','')
+            type = type.replace('ProductType:', '').strip(' ')
+            device_name = type
+
         print "Verify {0} looks correct...".format(expected_image)
         expected_image_original_path = os.path.join("data", "images", device_name, "{0}.png".format(expected_image))
         actual_image_path = os.path.join(OUTPUT_FOLDER, "images", device_name, "{0}_actual.png".format(expected_image))
@@ -112,7 +122,7 @@ class Device(object):
                 format(device_name, expected_image, diff)
         else:
             # If expected image is not found actual will be saved as expected.
-            print "Expected image not found. Actual image will be saved as expected."
+            print "Expected image not found. Actual image will be saved as expected: " + expected_image_original_path
             time.sleep(timeout)
             Device.get_screen(device_id, expected_image_original_path)
 

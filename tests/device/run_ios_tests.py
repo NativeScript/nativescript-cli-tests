@@ -16,6 +16,7 @@ TODO: Add tests for:
 """
 
 import os
+from time import sleep
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -23,7 +24,6 @@ from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.osutils.process import Process
 from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
@@ -87,7 +87,7 @@ class RunIOSDeviceTests(BaseClass):
         assert not Simulator.is_running()[0], 'Device is attached, but emulator is also started after `tns run ios`!'
 
         # Change JS and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=3)
         strings = ['Successfully transferred', 'main-view-model.js', 'Successfully synced application', self.DEVICE_ID]
         Tns.wait_for_log(log_file=log, string_list=strings)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="clicks"), "JS changes not synced on device!"
@@ -99,9 +99,18 @@ class RunIOSDeviceTests(BaseClass):
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TEST"), "XML changes not synced on device!"
 
         # Change CSS and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
+        css_change_1 = ['app/app.css', '42', '1']
+        ReplaceHelper.replace(self.app_name, css_change_1, sleep=3)
         strings = ['Successfully transferred', 'app.css', 'Refreshing application']
         Tns.wait_for_log(log_file=log, string_list=strings)
+        sleep(15)
+        assert "TEST" not in Device.get_screen_text(device_id=self.DEVICE_ID), "Sync of CSS files failed!"
+
+        css_change_2 = ['app/app.css', '1', '42']
+        ReplaceHelper.replace(self.app_name, css_change_2, sleep=3)
+        strings = ['Successfully transferred', 'app.css', 'Refreshing application']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TEST"), "Sync of CSS files failed!"
 
         # Rollback all the changes and verify files are synced
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
