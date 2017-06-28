@@ -16,6 +16,7 @@ import time
 import unittest
 
 import nose
+from flaky import flaky
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -61,6 +62,7 @@ class RunAndroidEmulatorTests(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
 
+    @flaky(max_runs=2)
     def test_001_tns_run_android_js_css_xml_manifest(self):
         """Make valid changes in JS,CSS and XML"""
 
@@ -395,6 +397,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
+    @flaky(max_runs=2)
     def test_340_tns_run_should_not_sync_hidden_files(self):
         """
         Adding hidden files should not break run and they should not be transferred.

@@ -17,6 +17,8 @@ TODO: Add tests for:
 
 import os
 
+from flaky import flaky
+
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -60,6 +62,7 @@ class RunAndroidDeviceTests(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()
 
+    @flaky(max_runs=2)
     def test_001_tns_run_android_js_css_xml(self):
         """Make valid changes in JS,CSS and XML"""
 
@@ -171,15 +174,17 @@ class RunAndroidDeviceTests(BaseClass):
         error_message = 'Deleted folder {0} is still available on {1}'.format(new_folder_name, self.DEVICE_ID)
         assert Adb.path_does_not_exist(device_id=self.DEVICE_ID, package_id=app_id, path=path), error_message
 
+    @flaky(max_runs=2)
     def test_300_tns_run_android_emulator_should_start_emulator_even_if_device_is_connected(self):
         """
         `tns run android --emulator` should start emulator even if physical device is connected
         """
         Emulator.stop()
-        output = Tns.run_android(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
-                                 assert_success=False)
+        output = Tns.run_android(
+            attributes={'--path': self.app_name, '--timeout': '180', '--emulator': '', '--justlaunch': ''},
+            assert_success=False)
         assert 'Starting Android emulator with image' in output
-        assert Emulator.is_running(device_id=EMULATOR_ID), 'Emulator not started by `tns run android`!'
+        assert Emulator.wait(device_id=EMULATOR_ID), 'Emulator not started by `tns run android`!'
 
     def test_310_tns_run_android_emulator_should_run_only_on_emulator(self):
         """

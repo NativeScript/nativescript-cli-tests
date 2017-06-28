@@ -3,12 +3,13 @@ Tests for `tns debug android` executed on Android Emulator.
 """
 import os
 
+from flaky import flaky
+
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.osutils.process import Process
 from core.settings.settings import EMULATOR_NAME, EMULATOR_ID, ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -38,46 +39,12 @@ class DebugAndroidEmulatorTests(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()
 
-    """
-    Spec:
-
-    Usage                                                                           Synopsis                                                                                          
-    Deploy on device, run the app start Chrome DevTools, and attach the debugger    $ tns debug android                                                                               
-    Deploy on device, run the app and stop at the first code statement              $ tns debug android --debug-brk [--device <Device ID>] [--debug-port <port>] [--timeout <timeout>]
-    Deploy in the native emulator, run the app and stop at the first code statement $ tns debug android --debug-brk --emulator [<Emulator Options>] [--timeout <timeout>]             
-    Attach the debug tools to a running app on device                               $ tns debug android --start [--device <Device ID>] [--debug-port <port>] [--timeout <timeout>]    
-    Attach the debug tools to a running app in the native emulator                  $ tns debug android --start --emulator [<Emulator Options>] [--timeout <timeout>]                 
-    Detach the debug tools                                                          $ tns debug android --stop                                                                        
-
-
-    Prepares, builds and deploys the project when necessary. Debugs your project on a connected device or emulator.
-    While debugging, prints the output from the application in the console and watches for changes in your code. Once a change is detected, it synchronizes the change with all selected devices and restarts/refreshes the application.
-
-    ### Options
-
-        * --device - Specifies a connected device on which to debug the app.
-        * --emulator - Specifies that you want to debug the app in the native Android emulator from the Android SDK.
-        * --debug-brk - Prepares, builds and deploys the application package on a device or in an emulator, launches the Chrome DevTools of your Chrome browser and stops at the first code statement.
-        * --start - Attaches the debug tools to a deployed and running app.
-        * --stop - Detaches the debug tools.
-        * --debug-port - Sets a new port on which to attach the debug tools.
-        * --timeout - Sets the number of seconds that the NativeScript CLI will wait for the debugger to boot. If not set, the default timeout is 90 seconds.
-        * --no-watch - If set, changes in your code will not be reflected during the execution of this command.
-        * --clean - If set, forces rebuilding the native application.
-
-    ### Attributes
-
-        * <Device ID> is the index or name of the target device as listed by $ tns device
-        * <Port> is an accessible port on the device to which you want to attach the debugging tools.
-        * <Emulator Options> is any valid combination of options as listed by $ tns help emulate android
-    """
-
     def __verify_debugger_start(self, log):
         strings = [EMULATOR_ID, 'NativeScript Debugger started', 'To start debugging, open the following URL in Chrome',
                    'chrome-devtools', 'localhost:40000']
         if Device.get_count(platform=Platform.ANDROID) > 0:
             strings.append("Multiple devices found! Starting debugger on emulator")
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
         output = File.read(file_path=log, print_content=True)
         assert "closed" not in output
         assert "detached" not in output
@@ -87,7 +54,7 @@ class DebugAndroidEmulatorTests(BaseClass):
         strings = [EMULATOR_ID, 'To start debugging', 'Chrome', 'chrome-devtools', 'localhost:40000']
         if Device.get_count(platform=Platform.ANDROID) > 0:
             strings.append("Multiple devices found! Starting debugger on emulator")
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
         output = File.read(file_path=log, print_content=True)
         assert "closed" not in output
         assert "detached" not in output
@@ -131,3 +98,13 @@ class DebugAndroidEmulatorTests(BaseClass):
         # Attach debugger
         log = Tns.debug_android(attributes={'--path': self.app_name, '--start': ''})
         self.__verify_debugger_attach(log=log)
+
+    @flaky(max_runs=2)
+    def test_100_debug_android_should_start_emulator_if_there_is_no_device(self):
+        """
+        Debug android should start emulator if emulator is not running
+        """
+
+        Emulator.stop()
+        Tns.debug_android(attributes={'--path': self.app_name, '--emulator': '', '--timeout': '180'})
+        assert Emulator.wait(device_id=EMULATOR_ID)

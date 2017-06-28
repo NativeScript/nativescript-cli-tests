@@ -5,6 +5,8 @@ Test for `tns run ios` command with Angular apps (on real devices).
 import os
 from time import sleep
 
+from flaky import flaky
+
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -53,6 +55,7 @@ class RunIOSDeviceTestsNG(BaseClass):
         BaseClass.tearDownClass()
         Simulator.stop()
 
+    @flaky(max_runs=2)
     def test_001_tns_run_ios_ts_css_html(self):
         """Make valid changes in JS,CSS and XML"""
 

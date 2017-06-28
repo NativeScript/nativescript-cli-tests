@@ -15,6 +15,7 @@ import os
 import time
 
 import nose
+from flaky import flaky
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -59,6 +60,7 @@ class RunIOSSimulatorTests(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()
 
+    @flaky(max_runs=2)
     def test_001_tns_run_ios_js_css_xml(self):
         """Make valid changes in JS,CSS and XML"""
 
@@ -261,6 +263,7 @@ class RunIOSSimulatorTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
+    @flaky(max_runs=2)
     def test_340_tns_run_should_not_sync_hidden_files(self):
         """
         Adding hidden files should not break run and they should not be transferred.

@@ -18,6 +18,8 @@ TODO: Add tests for:
 import os
 from time import sleep
 
+from flaky import flaky
+
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -64,6 +66,7 @@ class RunIOSDeviceTests(BaseClass):
         BaseClass.tearDownClass()
         Simulator.stop()
 
+    @flaky(max_runs=2)
     def test_001_tns_run_ios_js_css_xml(self):
         """Make valid changes in JS,CSS and XML"""
 
@@ -166,13 +169,14 @@ class RunIOSDeviceTests(BaseClass):
         strings = ['Successfully transferred test2', 'Successfully transferred test.txt']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
+    @flaky(max_runs=2)
     def test_300_tns_run_ios_emulator_should_start_emulator_even_if_device_is_connected(self):
         """
         `tns run ios --emulator` should start emulator even if physical device is connected
         """
         Simulator.stop()
         Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''}, assert_success=False)
-        assert Simulator.is_running()[0], 'iOS Simulator not started by `tns run ios`!'
+        assert Simulator.wait_for_simulator()[0], 'iOS Simulator not started by `tns run ios`!'
 
     def test_310_tns_run_ios_emulator_should_run_only_on_emulator(self):
         """
