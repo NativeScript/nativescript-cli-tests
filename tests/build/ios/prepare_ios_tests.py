@@ -9,7 +9,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, CURRENT_OS, OSType
+from core.settings.settings import IOS_RUNTIME_PATH, CURRENT_OS, OSType, TEST_RUN_HOME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -78,6 +78,27 @@ class PrepareiOSTests(BaseClass):
         Tns.create_app(self.app_name)
         output = Tns.prepare_ios(attributes={"--path": self.app_name})
         TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.FIRST_TIME)
+
+    def test_220_build_ios_with_custom_plist(self):
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+
+        # Update Info.plist
+        src_file = os.path.join(TEST_RUN_HOME, 'data', 'Info.plist')
+        target_file = os.path.join(TEST_RUN_HOME, self.app_name, 'app', 'App_Resources', 'iOS', 'Info.plist')
+        File.remove(target_file)
+        File.copy(src=src_file, dest=target_file)
+
+        # Prepare in debug
+        final_plist = os.path.join(TEST_RUN_HOME, self.app_name, 'platforms', 'ios', 'TestApp', 'TestApp-Info.plist')
+        Tns.prepare_ios(attributes={"--path": self.app_name})
+        assert "<string>fbXXXXXXXXX</string>" in File.read(final_plist)
+        assert "<string>orgnativescriptTestApp</string>" in File.read(final_plist)
+
+        # Prepare in release
+        Tns.prepare_ios(attributes={"--path": self.app_name, '--release': ''})
+        assert "<string>fbXXXXXXXXX</string>" in File.read(final_plist)
+        assert not "<string>orgnativescriptTestApp</string>" in File.read(final_plist)
 
     def test_300_prepare_ios_preserve_case(self):
         Tns.create_app(self.app_name)
