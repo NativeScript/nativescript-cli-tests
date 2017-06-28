@@ -7,16 +7,18 @@ Run should sync all the changes correctly:
 
 import os
 
+from flaky import flaky
+
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.folder import Folder
-from core.osutils.process import Process
 from core.settings.settings import ANDROID_RUNTIME_PATH, EMULATOR_ID, EMULATOR_NAME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 
 
+@flaky(max_runs=2)
 class RunAndroidEmulatorTestsNG(BaseClass):
     @classmethod
     def setUpClass(cls):

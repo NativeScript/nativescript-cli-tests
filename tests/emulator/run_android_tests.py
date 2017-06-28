@@ -397,7 +397,6 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
-    @flaky(max_runs=2)
     def test_340_tns_run_should_not_sync_hidden_files(self):
         """
         Adding hidden files should not break run and they should not be transferred.
@@ -407,11 +406,15 @@ class RunAndroidEmulatorTests(BaseClass):
                               assert_success=False)
         strings = ['Project successfully prepared', 'Project successfully built',
                    'Successfully installed on device with identifier', EMULATOR_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
+
+        # Make sure log file is clean
+        File.write(file_path=log, text="")
+        time.sleep(1)
 
         # Add some hidden files
         source_file = os.path.join(self.app_name, 'app', 'main-page.xml')
