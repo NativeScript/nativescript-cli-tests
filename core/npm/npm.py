@@ -3,6 +3,7 @@ A wrapper of npm commands.
 """
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
+from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TEST_RUN_HOME
 
@@ -16,6 +17,23 @@ class Npm(object):
         if folder is not None:
             Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         return output
+
+    @staticmethod
+    def version():
+        version = run('npm -v', log_level=CommandLogLevel.SILENT)
+        return int(version.split('.')[0])
+
+    @staticmethod
+    def pack(folder, output_file):
+        try:
+            Folder.navigate_to(folder)
+            run('npm pack', log_level=CommandLogLevel.SILENT)
+            src_file = File.find_by_extention('tgz')[0]
+            File.copy(src=src_file, dest=output_file)
+            File.remove(src_file)
+        except:
+            print "Failed to pack {0}".format(folder)
+        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
     @staticmethod
     def install(package, option='', folder=None, log_level=CommandLogLevel.COMMAND_ONLY):

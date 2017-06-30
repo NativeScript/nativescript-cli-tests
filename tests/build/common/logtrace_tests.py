@@ -19,8 +19,6 @@ class LogtraceTests(BaseClass):
         assert "Creating a new NativeScript project with name " + self.app_name in output
         assert "and id org.nativescript.{0} at location".format(self.app_name.replace("_", "")) in output
 
-        assert "template-hello-world with version undefined." in output
-
         if CURRENT_OS == OSType.WINDOWS:
             assert 'spawn: npm.cmd "install" "tns-core-modules@' in output
         else:

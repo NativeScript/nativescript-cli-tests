@@ -3,6 +3,7 @@ A wrapper of Xcode
 """
 
 from core.osutils.command import run
+from core.osutils.command_log_level import CommandLogLevel
 from core.settings.settings import COMMAND_TIMEOUT
 
 
@@ -12,7 +13,7 @@ class Xcode(object):
         """
         Cleanup Xcode cache and derived data
         """
-        run("rm -rf ~/Library/Developer/Xcode/DerivedData/*", COMMAND_TIMEOUT)
+        run(command="rm -rf ~/Library/Developer/Xcode/DerivedData/*", log_level=CommandLogLevel.SILENT)
 
     @staticmethod
     def get_version():
@@ -20,5 +21,5 @@ class Xcode(object):
         Get Xcode version
         :return: Version as string.
         """
-        output = run("xcodebuild -version | grep Xcode")
+        output = run(command="xcodebuild -version | grep Xcode", log_level=CommandLogLevel.SILENT)
         return output.replace("Xcode ", "")

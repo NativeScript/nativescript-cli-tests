@@ -9,6 +9,7 @@ from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.git.git import Git
 from core.installer.cli import Cli
+from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -43,6 +44,7 @@ def disable_crash_report():
     if CURRENT_OS == OSType.OSX:
         run("defaults write com.apple.CrashReporter DialogType none")
         run("defaults write -g ApplePersistence -bool no")
+
 
 def clean_npm():
     """Clean npm cache"""
@@ -89,6 +91,13 @@ def get_repos():
                    local_folder=os.path.join(SUT_FOLDER, 'template-hello-world-ts'), branch=BRANCH)
     Git.clone_repo(repo_url='git@github.com:NativeScript/template-hello-world-ng.git',
                    local_folder=os.path.join(SUT_FOLDER, 'template-hello-world-ng'), branch=BRANCH)
+
+    Npm.pack(folder=os.path.join(SUT_FOLDER, 'template-hello-world'),
+             output_file=os.path.join(SUT_FOLDER, 'tns-template-hello-world.tgz'))
+    Npm.pack(folder=os.path.join(SUT_FOLDER, 'template-hello-world-ts'),
+             output_file=os.path.join(SUT_FOLDER, 'tns-template-hello-world-ts.tgz'))
+    Npm.pack(folder=os.path.join(SUT_FOLDER, 'template-hello-world-ng'),
+             output_file=os.path.join(SUT_FOLDER, 'tns-template-hello-world-ng.tgz'))
 
     # Clone QA-TestApps repo
     # TODO: QA-TestApps is privite, we should make it public or move all test data to data folder.

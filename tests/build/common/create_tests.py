@@ -2,10 +2,12 @@
 Test for create command
 """
 import os
+import unittest
 
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
+from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import BRANCH
@@ -164,6 +166,7 @@ class CreateTests(BaseClass):
         res_path = os.path.join(self.app_name, 'app', 'App_Resources')
         assert File.exists(res_path), "App Resouces not added by {N} CLI if missing in template"
 
+    @unittest.skipIf(Npm.version() > 4, "Skip because of https://github.com/NativeScript/nativescript-cli/issues/2875")
     def test_400_create_project_with_wrong_template_path(self):
         """--template should not create project if value is no npm installable"""
 

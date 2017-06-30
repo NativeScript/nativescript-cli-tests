@@ -6,6 +6,7 @@ import os
 import unittest
 import xml.etree.ElementTree as ET
 from core.base_class.BaseClass import BaseClass
+from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -166,6 +167,7 @@ class PluginsAndroidTests(BaseClass):
         output = Tns.run_tns_command("plugin", attributes={"--path": self.app_name})
         assert tns_plugin in output
 
+    @unittest.skipIf(Npm.version() > 4, "Skip because of https://github.com/NativeScript/nativescript-cli/issues/2875")
     def test_400_plugin_add_not_existing_plugin(self):
         Tns.create_app(self.app_name)
         output = Tns.plugin_add("fakePlugin", attributes={"--path": self.app_name}, assert_success=False)

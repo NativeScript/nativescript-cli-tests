@@ -77,7 +77,6 @@ no_platform = "No platform specified"
 "and neither was a --path specified."
 cannot_resolve_device = "Could not find device by specified identifier"
 list_devices = "To list currently connected devices and verify that the specified identifier exists, run 'tns device'"
-invalid_version = "{0} is not a valid version."
 no_platform_installed = "No installed platforms found. Use $ tns platform add"
 
 
