@@ -5,6 +5,7 @@ import json
 import os
 import re
 
+from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
@@ -77,7 +78,8 @@ class TnsAsserts(object):
         # Assert console output is ok
         if output is not None:
             app = app_name.rsplit('/')[-1]
-            assert 'nativescript-theme-core' in output
+            if Npm.version() < 5:
+                assert 'nativescript-theme-core' in output
             assert 'Project {0} was successfully created'.format(app) in output, 'Failed to create {0}'.format(app)
 
         if full_check:
@@ -86,6 +88,7 @@ class TnsAsserts(object):
             assert File.exists(app_name + '/node_modules/tns-core-modules/package.json')
             assert File.exists(app_name + '/node_modules/tns-core-modules/LICENSE')
             assert File.exists(app_name + '/node_modules/tns-core-modules/xml/xml.js')
+            assert File.exists(app_name + '/node_modules/nativescript-theme-core')
             assert Folder.is_empty(app_name + '/platforms')
 
             # Assert content of package.json
@@ -105,7 +108,8 @@ class TnsAsserts(object):
         TnsAsserts.created(app_name=app_name, output=output)
 
         # Assert output contains TypeScript plugin
-        assert 'nativescript-dev-typescript' in output
+        if Npm.version() < 5:
+            assert 'nativescript-dev-typescript' in output
 
         # Assert files added with TypeScript plugin
         ts_config = os.path.join(app_name, 'tsconfig.json')

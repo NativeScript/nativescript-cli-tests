@@ -4,6 +4,7 @@ A wrapper of tns commands.
 import os
 import time
 
+from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -18,9 +19,7 @@ from core.xcode.xcode import Xcode
 
 
 class Tns(object):
-    # npm tag used when we publish master branch of https://github.com/NativeScript/NativeScript
-    # Please see https://github.com/NativeScript/NativeScript/blob/master/.travis.yml
-    NEXT_TAG = 'next'
+    NEXT_TAG = 'next'  # npm tag used when we publish master branch of tns-core-modules
 
     @staticmethod
     def __get_platform_string(platform=Platform.NONE):
@@ -63,6 +62,14 @@ class Tns(object):
             if k == "--path":
                 app_name = v
         return app_name
+
+    @staticmethod
+    def version(tns_path=None):
+        """
+        Get version of locally installed CLI
+        :return: Version of the CLI as string
+        """
+        return Tns.run_tns_command("", attributes={"--version": ""}, tns_path=tns_path).split(os.linesep)[-1]
 
     @staticmethod
     def kill():
@@ -111,7 +118,7 @@ class Tns(object):
         # In release branch we get modules versions from MODULES_VERSION variable.
         # To prevent errors in local testing when it is not specified default value is set to be same as CLI version.
         if "release" in BRANCH.lower():
-            cli_version = Tns.run_tns_command("", attributes={"--version": ""}, tns_path=tns_path)
+            cli_version = Tns.version(tns_path=None)
             version = os.environ.get("MODULES_VERSION", cli_version)
             Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False, tns_path=tns_path)
             output = Tns.plugin_add("tns-core-modules@" + version, attributes={"--path": path}, assert_success=False,
@@ -151,7 +158,7 @@ class Tns(object):
             attributes_to_string = "".join("{0} {1}".format(k, v))
         attr = {}
         if not any(s in attributes_to_string for s in ("--ng", "--template", "--tsc")):
-            attr = {"--template": SUT_FOLDER + os.path.sep + "template-hello-world"}
+            attr = {"--template": SUT_FOLDER + os.path.sep + "tns-template-hello-world.tgz"}
         attr.update(attributes)
         if app_name is None:
             output = Tns.run_tns_command("create ", attributes=attr, log_trace=log_trace)
@@ -175,7 +182,7 @@ class Tns(object):
         :param update_modules: If true update modules (branch is respected).
         :return: output of `tns create command`
         """
-        attr = {"--template": SUT_FOLDER + os.path.sep + "template-hello-world-ts"}
+        attr = {"--template": SUT_FOLDER + os.path.sep + "tns-template-hello-world-ts.tgz"}
         attributes.update(attr)
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,
@@ -191,13 +198,15 @@ class Tns(object):
             template = "tns-template-hello-world-ng@" + template_version
             attr = {"--template": template}
         else:
-            attr = {"--template": SUT_FOLDER + os.path.sep + "template-hello-world-ng"}
+            attr = {"--template": SUT_FOLDER + os.path.sep + "tns-template-hello-world-ng.tgz"}
         attributes.update(attr)
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,
                                 update_modules=update_modules)
         if assert_success:
-            assert "nativescript-angular" in output
+            if Npm.version() < 5:
+                assert "nativescript-angular" in output
+            assert File.exists(os.path.join(app_name, 'node_modules', 'nativescript-theme-core'))
 
         return output
 

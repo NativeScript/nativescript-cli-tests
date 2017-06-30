@@ -2,8 +2,10 @@
 Test platform add (android)
 """
 import os
+import unittest
 
 from core.base_class.BaseClass import BaseClass
+from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH, TEST_RUN_HOME
@@ -138,6 +140,7 @@ class PlatformAndroidTests(BaseClass):
         output = Tns.platform_add_android(attributes={"--path ": self.app_name}, assert_success=False)
         assert "Platform android already added" in output
 
+    @unittest.skipIf(Npm.version() > 4, "Skip because of https://github.com/NativeScript/nativescript-cli/issues/2875")
     def test_421_platform_add_android_wrong_option(self):
         Tns.create_app(self.app_name, update_modules=False)
 
