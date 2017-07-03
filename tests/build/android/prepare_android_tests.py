@@ -77,15 +77,15 @@ class PrepareAndroidTests(BaseClass):
         Tns.prepare_android(attributes={"--path": self.app_name})
 
         # Verify new files are in available in platforms folder
-        app_path = self.app_name + TnsAsserts.PLATFORM_ANDROID_APP_PATH
-        assert File.exists(app_path + 'app-new.js')
-        assert File.exists(app_path + 'app-new.css')
-        assert File.exists(app_path + 'main-page-new.xml')
+        app_path = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH)
+        assert File.exists(os.path.join(app_path, 'app-new.js'))
+        assert File.exists(os.path.join(app_path, 'app-new.css'))
+        assert File.exists(os.path.join(app_path, 'main-page-new.xml'))
 
         # Verify old files are removed from folder
-        assert not File.exists(app_path + 'app.js')
-        assert not File.exists(app_path + 'app.css')
-        assert not File.exists(app_path + 'main-page.xml')
+        assert not File.exists(os.path.join(app_path, 'app.js'))
+        assert not File.exists(os.path.join(app_path, 'app.css'))
+        assert not File.exists(os.path.join(app_path, 'main-page.xml'))
 
     def test_301_prepare_android_platform_specific_files(self):
         Tns.create_app(self.app_name, update_modules=False)
@@ -110,15 +110,15 @@ class PrepareAndroidTests(BaseClass):
         Tns.prepare_android(attributes={"--path": self.app_name})
 
         # Verify new files are in available in platforms folder
-        app_path = self.app_name + TnsAsserts.PLATFORM_ANDROID_APP_PATH
-        assert File.exists(app_path + 'app.css')
-        assert File.exists(app_path + 'app.js')
-        assert File.exists(app_path + 'appandroid.js')
-        assert File.exists(app_path + 'appios.js')
-        assert File.exists(app_path + 'android.js')
-        assert File.exists(app_path + 'ios.js')
-        assert not File.exists(app_path + 'app.ios.css')
-        assert not File.exists(app_path + 'app.android.css')
+        app_path = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH)
+        assert File.exists(os.path.join(app_path, 'app.css'))
+        assert File.exists(os.path.join(app_path, 'app.js'))
+        assert File.exists(os.path.join(app_path, 'appandroid.js'))
+        assert File.exists(os.path.join(app_path, 'appios.js'))
+        assert File.exists(os.path.join(app_path, 'android.js'))
+        assert File.exists(os.path.join(app_path, 'ios.js'))
+        assert not File.exists(os.path.join(app_path, 'app.ios.css'))
+        assert not File.exists(os.path.join(app_path, 'app.android.css'))
 
     def test_310_prepare_should_flatten_scoped_dependencies(self):
         Tns.create_app_ng(self.app_name)
@@ -126,8 +126,8 @@ class PrepareAndroidTests(BaseClass):
         Tns.prepare_android(attributes={"--path": self.app_name})
 
         # Verify scoped dependencies are flattened (verify #1783 is fixed)
-        ng_path_in_platforms_folder = self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + '@angular/core'
-        assert File.exists(ng_path_in_platforms_folder), "Scoped dependencies are flattened, please see #1783!"
+        ng_path = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, '@angular', 'core')
+        assert File.exists(ng_path), "Scoped dependencies are flattened, please see #1783!"
 
     def test_400_prepare_missing_or_missing_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
