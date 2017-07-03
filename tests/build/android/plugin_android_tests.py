@@ -167,11 +167,10 @@ class PluginsAndroidTests(BaseClass):
         output = Tns.run_tns_command("plugin", attributes={"--path": self.app_name})
         assert tns_plugin in output
 
-    @unittest.skipIf(Npm.version() > 4, "Skip because of https://github.com/NativeScript/nativescript-cli/issues/2875")
     def test_400_plugin_add_not_existing_plugin(self):
         Tns.create_app(self.app_name)
         output = Tns.plugin_add("fakePlugin", attributes={"--path": self.app_name}, assert_success=False)
-        assert "no such package available" in output
+        assert "npm ERR!" in output
 
     def test_401_plugin_add_invalid_plugin(self):
         Tns.create_app(self.app_name)

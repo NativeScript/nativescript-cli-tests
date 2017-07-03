@@ -1,4 +1,0 @@
-
-Support for Node.js 8.1.2 is not verified. This CLI might not install or run properly.
-
-Error reporting is now disabled.

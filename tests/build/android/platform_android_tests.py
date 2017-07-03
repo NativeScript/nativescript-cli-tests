@@ -140,14 +140,13 @@ class PlatformAndroidTests(BaseClass):
         output = Tns.platform_add_android(attributes={"--path ": self.app_name}, assert_success=False)
         assert "Platform android already added" in output
 
-    @unittest.skipIf(Npm.version() > 4, "Skip because of https://github.com/NativeScript/nativescript-cli/issues/2875")
     def test_421_platform_add_android_wrong_option(self):
         Tns.create_app(self.app_name, update_modules=False)
 
         # frameworkPath point to missing file
         output = Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": "invalidFile.tgz"},
                                           assert_success=False)
-        assert "no such package available" in output
+        assert "npm ERR!" in output
         assert "invalidFile.tgz" in output
 
         # Wrong frameworkPath option

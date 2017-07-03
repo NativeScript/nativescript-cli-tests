@@ -125,10 +125,9 @@ class Tns(object):
                                     tns_path=tns_path)
         # In master branch we use @next packages.
         else:
-            Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False, tns_path=tns_path)
-            output = Tns.plugin_add("tns-core-modules@" + Tns.NEXT_TAG, attributes={"--path": path}, tns_path=tns_path)
-        assert "undefined" not in output, "Something went wrong when modules are installed."
-        assert "ERR" not in output, "Something went wrong when modules are installed."
+            Npm.uninstall(package="tns-core-modules", option="--save", folder=path)
+            output = Npm.install(package="tns-core-modules@" + Tns.NEXT_TAG, option="--save", folder=path)
+            assert "ERR" not in output, "Something went wrong when modules are installed."
         return output
 
     @staticmethod
@@ -331,9 +330,12 @@ class Tns(object):
     def build_android(attributes={}, assert_success=True, tns_path=None):
         output = Tns.run_tns_command("build android", attributes=attributes, tns_path=tns_path)
         if assert_success:
+            # Verify output of build command
             assert "BUILD SUCCESSFUL" in output, "Build failed!"
             assert "Project successfully built" in output, "Build failed!"
             assert "NOT FOUND" not in output  # Test for https://github.com/NativeScript/android-runtime/issues/390
+
+            # Verify apk packages
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
             apk_base_name = Tns.__get_final_package_name(app_name, platform=Platform.ANDROID)
             base_app_path = app_name + TnsAsserts.PLATFORM_ANDROID + "build/outputs/apk/" + apk_base_name
@@ -343,6 +345,12 @@ class Tns(object):
                 apk_path = base_app_path + "-debug.apk"
             apk_path = apk_path.replace("\"", "")  # Handle projects with space
             assert File.exists(apk_path), "Apk file does not exist at " + apk_path
+
+            # Verify final package contains right modules
+            modules_version = str(TnsAsserts.get_modules_version(app_name)).replace('^', '').replace('~', '')
+            modules_json_in_platforms = File.read(
+                app_name + TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH + 'package.json')
+            assert modules_version in modules_json_in_platforms, "Platform folder contains wrong tns-core-modules!"
         return output
 
     @staticmethod

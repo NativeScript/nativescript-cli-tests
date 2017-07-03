@@ -1,0 +1,492 @@
+node_modules/.bin/tns create "TestApp" --template /Users/topuzov/Git/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+##### 11:08:12 Executing command : node_modules/.bin/tns create "TestApp" --template /Users/topuzov/Git/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+
+##### OUTPUT BEGIN #####
+
+Installing  /Users/topuzov/Git/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+/Users/topuzov/Git/nativescript-cli-tests/TestApp
+└─┬ tns-template-hello-world-ng@3.1.1 
+  ├── @angular/animations@4.1.3 
+  ├── @angular/common@4.1.3 
+  ├── @angular/compiler@4.1.3 
+  ├── @angular/core@4.1.3 
+  ├── @angular/forms@4.1.3 
+  ├── @angular/http@4.1.3 
+  ├── @angular/platform-browser@4.1.3 
+  ├── @angular/router@4.1.3 
+  ├─┬ nativescript-angular@3.1.1 
+  │ ├── nativescript-intl@3.0.0 
+  │ └── reflect-metadata@0.1.10  deduped
+  ├── nativescript-theme-core@1.0.4 
+  ├── reflect-metadata@0.1.10 
+  ├─┬ rxjs@5.3.3 
+  │ └── symbol-observable@1.0.4 
+  ├─┬ tns-core-modules@3.1.0 
+  │ └── tns-core-modules-widgets@3.1.0 
+  └── zone.js@0.8.12 
+
+
+> nativescript-dev-typescript@0.5.0 postinstall /Users/topuzov/Git/nativescript-cli-tests/TestApp/node_modules/nativescript-dev-typescript
+> node postinstall.js
+
+Adding 'es6' lib to tsconfig.json...
+Adding 'dom' lib to tsconfig.json...
+Adding 'es2015.iterable' lib to tsconfig.json...
+Adding tns-core-modules path mappings lib to tsconfig.json...
+Project already targets TypeScript ~2.2.1
+/Users/topuzov/Git/nativescript-cli-tests/TestApp
+├─┬ nativescript-dev-typescript@0.5.0 
+│ └─┬ nativescript-hook@0.2.1 
+│   ├─┬ glob@6.0.4 
+│   │ ├─┬ inflight@1.0.6 
+│   │ │ ├── once@1.4.0  deduped
+│   │ │ └── wrappy@1.0.2 
+│   │ ├── inherits@2.0.3 
+│   │ ├─┬ minimatch@3.0.4 
+│   │ │ └─┬ brace-expansion@1.1.8 
+│   │ │   ├── balanced-match@1.0.0 
+│   │ │   └── concat-map@0.0.1 
+│   │ ├─┬ once@1.4.0 
+│   │ │ └── wrappy@1.0.2  deduped
+│   │ └── path-is-absolute@1.0.1 
+│   └─┬ mkdirp@0.5.1 
+│     └── minimist@0.0.8 
+└── typescript@2.2.2 
+
+Project TestApp was successfully created.
+
+
+##### OUTPUT END #####
+
+org.nativescript.TestApp found in TestApp/package.json.
+tns-core-modules found in TestApp/package.json.
+nativescript-theme-core found in TestApp/package.json.
+Current dir: /Users/topuzov/Git/nativescript-cli-tests
+Navigate to: /Users/topuzov/Git/nativescript-cli-tests/TestApp
+##### 11:08:28 Executing command : npm un tns-core-modules --save
+
+##### OUTPUT BEGIN #####
+
+- tns-core-modules-widgets@3.1.0 node_modules/tns-core-modules-widgets
+- tns-core-modules@3.1.0 node_modules/tns-core-modules
+npm WARN nativescript-angular@3.1.1 requires a peer of tns-core-modules@^3.1.0 but none was installed.
+
+##### OUTPUT END #####
+
+Navigate to: /Users/topuzov/Git/nativescript-cli-tests
+Current dir: /Users/topuzov/Git/nativescript-cli-tests
+Navigate to: /Users/topuzov/Git/nativescript-cli-tests/TestApp
+##### 11:08:30 Executing command : npm i tns-core-modules@next --save
+
+##### OUTPUT BEGIN #####
+
+/Users/topuzov/Git/nativescript-cli-tests/TestApp
+└── (empty)
+
+npm WARN nativescript-angular@3.1.1 requires a peer of tns-core-modules@^3.1.0 but none was installed.
+
+##### OUTPUT END #####
+
+Navigate to: /Users/topuzov/Git/nativescript-cli-tests
+node_modules/.bin/tns platform add android --path TestApp --frameworkPath /Users/topuzov/Git/nativescript-cli-tests/sut/tns-android.tgz
+##### 11:08:33 Executing command : node_modules/.bin/tns platform add android --path TestApp --frameworkPath /Users/topuzov/Git/nativescript-cli-tests/sut/tns-android.tgz
+
+##### OUTPUT BEGIN #####
+
+Copying template files...
+Installing  /Users/topuzov/Git/nativescript-cli-tests/sut/tns-android.tgz
+[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m/Users/topuzov/Git/nativescript-cli-tests/TestApp
+└── tns-android@3.2.0-2017.6.30.1 
+
+[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m/Users/topuzov/Git/nativescript-cli-tests/TestApp
+└─┬ babel-traverse@6.25.0 
+  ├─┬ babel-code-frame@6.22.0 
+  │ ├─┬ chalk@1.1.3 
+  │ │ ├── ansi-styles@2.2.1 
+  │ │ ├── escape-string-regexp@1.0.5 
+  │ │ ├─┬ has-ansi@2.0.0 
+  │ │ │ └── ansi-regex@2.1.1 
+  │ │ ├─┬ strip-ansi@3.0.1 
+  │ │ │ └── ansi-regex@2.1.1  deduped
+  │ │ └── supports-color@2.0.0 
+  │ ├── esutils@2.0.2 
+  │ └── js-tokens@3.0.2 
+  ├─┬ babel-messages@6.23.0 
+  │ └── babel-runtime@6.23.0  deduped
+  ├─┬ babel-runtime@6.23.0 
+  │ ├── core-js@2.4.1 
+  │ └── regenerator-runtime@0.10.5 
+  ├─┬ babel-types@6.25.0 
+  │ ├── babel-runtime@6.23.0  deduped
+  │ ├── esutils@2.0.2  deduped
+  │ ├── lodash@4.17.4  deduped
+  │ └── to-fast-properties@1.0.3 
+  ├── babylon@6.17.4 
+  ├─┬ debug@2.6.8 
+  │ └── ms@2.0.0 
+  ├── globals@9.18.0 
+  ├─┬ invariant@2.2.2 
+  │ └─┬ loose-envify@1.3.1 
+  │   └── js-tokens@3.0.2  deduped
+  └── lodash@4.17.4 
+
+[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m/Users/topuzov/Git/nativescript-cli-tests/TestApp
+├─┬ babel-traverse@6.25.0
+│ └── babel-types@6.25.0  deduped
+└── babel-types@6.25.0 
+
+[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m/Users/topuzov/Git/nativescript-cli-tests/TestApp
+├─┬ babel-traverse@6.25.0
+│ └── babylon@6.17.4  deduped
+└── babylon@6.17.4 
+
+[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m/Users/topuzov/Git/nativescript-cli-tests/TestApp
+└── lazy@1.0.11 
+
+[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G  [96m◟ [90mInstalling [0m[0G  [96m◜ [90mInstalling [0m[0G  [96m◠ [90mInstalling [0m[0G  [96m◝ [90mInstalling [0m[0G  [96m◞ [90mInstalling [0m[0G  [96m◡ [90mInstalling [0m[0G[2KProject successfully created.
+
+##### OUTPUT END #####
+
+
+
+
+
+_________________________________TEST START_______________________________________
+Test Method: test_001_build_android_ng_project
+Start Time:  11:08:59
+
+node_modules/.bin/tns build android --path TestApp
+##### 11:08:59 Executing command : node_modules/.bin/tns build android --path TestApp
+
+##### OUTPUT BEGIN #####
+
+Executing before-prepare hook from /Users/topuzov/Git/nativescript-cli-tests/TestApp/hooks/before-prepare/nativescript-dev-typescript.js
+Found peer TypeScript 2.2.2
+Preparing project...
+
+:config phase:  createDefaultIncludeFiles
+
+:config phase:  addAarDependencies
+	+adding dependency: /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/libs/aar/widgets-release.aar
+The JavaCompile.setDependencyCacheDir() method has been deprecated and is scheduled to be removed in Gradle 4.0.
+The TaskInputs.source(Object) method has been deprecated and is scheduled to be removed in Gradle 4.0. Please use TaskInputs.file(Object).skipWhenEmpty() instead.
+Incremental java compilation is an incubating feature.
+The Task.leftShift(Closure) method has been deprecated and is scheduled to be removed in Gradle 5.0. Please use Task.doLast(Action) instead.
+	at build_7pcv7fqvx1j4i8xpfeg6q3a0d.run(/Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/build-tools/android-static-binding-generator/build.gradle:126)
+:asbg:clean UP-TO-DATE
+:deleteMetadata
+:deleteFlavors
+:deleteConfigurations UP-TO-DATE
+:deleteGeneratedBindings UP-TO-DATE
+:clean
+
+BUILD SUCCESSFUL
+
+Total time: 1.698 secs
+Successfully prepared plugin nativescript-angular for android.
+Successfully prepared plugin nativescript-theme-core for android.
+Successfully prepared plugin tns-core-modules for android.
+Successfully prepared plugin nativescript-intl for android.
+Successfully prepared plugin tns-core-modules-widgets for android.
+Project successfully prepared (android)
+Building project...
+
+:config phase:  createDefaultIncludeFiles
+	+found plugins: tns-core-modules-widgets
+	 + creating include.gradle file for /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/configurations/tns-core-modules-widgets
+Renaming plugin directory to flavor name: /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/src/tns-core-modules-widgets -> /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/src/F0
+
+:config phase:  createPluginsConfigFile
+	 Creating product flavors include.gradle file in /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/configurations folder...
+
+:config phase:  pluginExtend
+	+applying configuration from: /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/configurations/include.gradle
+	+applying configuration from: /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/configurations/tns-core-modules-widgets/include.gradle
+
+:config phase:  addAarDependencies
+	+adding dependency: /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/libs/aar/widgets-release.aar
+The JavaCompile.setDependencyCacheDir() method has been deprecated and is scheduled to be removed in Gradle 4.0.
+The TaskInputs.source(Object) method has been deprecated and is scheduled to be removed in Gradle 4.0. Please use TaskInputs.file(Object).skipWhenEmpty() instead.
+Incremental java compilation is an incubating feature.
+The Task.leftShift(Closure) method has been deprecated and is scheduled to be removed in Gradle 5.0. Please use Task.doLast(Action) instead.
+	at build_7pcv7fqvx1j4i8xpfeg6q3a0d.run(/Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/build-tools/android-static-binding-generator/build.gradle:126)
+:preBuild UP-TO-DATE
+:preF0DebugBuild UP-TO-DATE
+:checkF0DebugManifest
+:preF0ReleaseBuild UP-TO-DATE
+:prepareComAndroidSupportAnimatedVectorDrawable2600Alpha1Library
+:prepareComAndroidSupportAppcompatV72600Alpha1Library
+:prepareComAndroidSupportDesign2600Alpha1Library
+:prepareComAndroidSupportRecyclerviewV72600Alpha1Library
+:prepareComAndroidSupportSupportCompat2600Alpha1Library
+:prepareComAndroidSupportSupportCoreUi2600Alpha1Library
+:prepareComAndroidSupportSupportCoreUtils2600Alpha1Library
+:prepareComAndroidSupportSupportFragment2600Alpha1Library
+:prepareComAndroidSupportSupportMediaCompat2600Alpha1Library
+:prepareComAndroidSupportSupportV42600Alpha1Library
+:prepareComAndroidSupportSupportVectorDrawable2600Alpha1Library
+:prepareComAndroidSupportTransition2600Alpha1Library
+:prepareTestAppRuntimeUnspecifiedLibrary
+:prepareWidgetsReleaseLibrary
+:prepareF0DebugDependencies
+:compileF0DebugAidl
+:compileF0DebugRenderscript
+:generateF0DebugBuildConfig
+:cleanLocalAarFiles
+:ensureMetadataOutDir
+:collectAllJars
+:setProperties
+:generateTypescriptDefinitions SKIPPED
+:copyTypings SKIPPED
+:asbg:generateInterfaceNamesList
+:asbg:traverseJsFiles
+:asbg:runAstParser
+Running full build
+finished with reading lines with js files
+:asbg:generateBindings
+:generateF0DebugResValues
+:generateF0DebugResources
+:mergeF0DebugResources
+:processF0DebugManifest
+:processF0DebugResources
+:generateF0DebugSources
+:incrementalF0DebugJavaCompilationSafeguard
+:compileF0DebugJavaWithJavacNote: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+:compileF0DebugNdk UP-TO-DATE
+:compileF0DebugSources
+:buildMetadata
+:mergeF0DebugShaders
+:compileF0DebugShaders
+:generateF0DebugAssets
+:mergeF0DebugAssets
+:transformClassesWithDexForF0Debug
+:mergeF0DebugJniLibFolders
+:transformNative_libsWithMergeJniLibsForF0Debug
+:processF0DebugJavaRes UP-TO-DATE
+:transformResourcesWithMergeJavaResForF0Debug
+:validateSigningF0Debug
+:packageF0Debug
+:assembleF0Debug
+:assembleDebug
+:buildapk
+
+BUILD SUCCESSFUL
+
+Total time: 30.999 secs
+Project successfully built.
+
+##### OUTPUT END #####
+
+
+Test Method: test_001_build_android_ng_project
+End Time:    11:09:40
+Outcome:     PASSED
+_________________________________TEST END_______________________________________
+
+
+
+
+_________________________________TEST START_______________________________________
+Test Method: test_200_build_android_ng_project_release
+Start Time:  11:09:40
+
+/Users/topuzov/Git/Telerik.keystore
+node_modules/.bin/tns build android --keyStoreAlias Telerik --release  --keyStorePath /Users/topuzov/Git/Telerik.keystore --keyStoreAliasPassword t3l3r1kad --path TestApp --keyStorePassword t3l3r1kad
+##### 11:09:40 Executing command : node_modules/.bin/tns build android --keyStoreAlias Telerik --release  --keyStorePath /Users/topuzov/Git/Telerik.keystore --keyStoreAliasPassword t3l3r1kad --path TestApp --keyStorePassword t3l3r1kad
+
+##### OUTPUT BEGIN #####
+
+
+:config phase:  createDefaultIncludeFiles
+	+found plugins: tns-core-modules-widgets
+
+:config phase:  createPluginsConfigFile
+	 Creating product flavors include.gradle file in /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/configurations folder...
+
+:config phase:  pluginExtend
+	+applying configuration from: /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/configurations/include.gradle
+	+applying configuration from: /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/configurations/tns-core-modules-widgets/include.gradle
+
+:config phase:  addAarDependencies
+	+adding dependency: /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/libs/aar/widgets-release.aar
+The JavaCompile.setDependencyCacheDir() method has been deprecated and is scheduled to be removed in Gradle 4.0.
+The TaskInputs.source(Object) method has been deprecated and is scheduled to be removed in Gradle 4.0. Please use TaskInputs.file(Object).skipWhenEmpty() instead.
+Incremental java compilation is an incubating feature.
+The Task.leftShift(Closure) method has been deprecated and is scheduled to be removed in Gradle 5.0. Please use Task.doLast(Action) instead.
+	at build_7pcv7fqvx1j4i8xpfeg6q3a0d.run(/Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/build-tools/android-static-binding-generator/build.gradle:126)
+:asbg:clean
+:deleteMetadata
+:deleteFlavors
+:deleteConfigurations
+:deleteGeneratedBindings
+:clean
+
+BUILD SUCCESSFUL
+
+Total time: 2.355 secs
+Executing before-prepare hook from /Users/topuzov/Git/nativescript-cli-tests/TestApp/hooks/before-prepare/nativescript-dev-typescript.js
+Found peer TypeScript 2.2.2
+Preparing project...
+
+:config phase:  createDefaultIncludeFiles
+
+:config phase:  addAarDependencies
+	+adding dependency: /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/libs/aar/widgets-release.aar
+The JavaCompile.setDependencyCacheDir() method has been deprecated and is scheduled to be removed in Gradle 4.0.
+The TaskInputs.source(Object) method has been deprecated and is scheduled to be removed in Gradle 4.0. Please use TaskInputs.file(Object).skipWhenEmpty() instead.
+Incremental java compilation is an incubating feature.
+The Task.leftShift(Closure) method has been deprecated and is scheduled to be removed in Gradle 5.0. Please use Task.doLast(Action) instead.
+	at build_7pcv7fqvx1j4i8xpfeg6q3a0d.run(/Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/build-tools/android-static-binding-generator/build.gradle:126)
+:asbg:clean UP-TO-DATE
+:deleteMetadata
+:deleteFlavors
+:deleteConfigurations UP-TO-DATE
+:deleteGeneratedBindings UP-TO-DATE
+:clean
+
+BUILD SUCCESSFUL
+
+Total time: 11.383 secs
+Successfully prepared plugin nativescript-angular for android.
+Successfully prepared plugin nativescript-theme-core for android.
+Successfully prepared plugin tns-core-modules for android.
+Successfully prepared plugin nativescript-intl for android.
+Successfully prepared plugin tns-core-modules-widgets for android.
+Project successfully prepared (android)
+Building project...
+
+:config phase:  createDefaultIncludeFiles
+	+found plugins: tns-core-modules-widgets
+	 + creating include.gradle file for /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/configurations/tns-core-modules-widgets
+Renaming plugin directory to flavor name: /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/src/tns-core-modules-widgets -> /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/src/F0
+
+:config phase:  createPluginsConfigFile
+	 Creating product flavors include.gradle file in /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/configurations folder...
+
+:config phase:  pluginExtend
+	+applying configuration from: /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/configurations/include.gradle
+	+applying configuration from: /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/configurations/tns-core-modules-widgets/include.gradle
+
+:config phase:  addAarDependencies
+	+adding dependency: /Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/libs/aar/widgets-release.aar
+The JavaCompile.setDependencyCacheDir() method has been deprecated and is scheduled to be removed in Gradle 4.0.
+The TaskInputs.source(Object) method has been deprecated and is scheduled to be removed in Gradle 4.0. Please use TaskInputs.file(Object).skipWhenEmpty() instead.
+Incremental java compilation is an incubating feature.
+The Task.leftShift(Closure) method has been deprecated and is scheduled to be removed in Gradle 5.0. Please use Task.doLast(Action) instead.
+	at build_7pcv7fqvx1j4i8xpfeg6q3a0d.run(/Users/topuzov/Git/nativescript-cli-tests/TestApp/platforms/android/build-tools/android-static-binding-generator/build.gradle:126)
+:preBuild UP-TO-DATE
+:preF0ReleaseBuild UP-TO-DATE
+:checkF0ReleaseManifest
+:preF0DebugBuild UP-TO-DATE
+:prepareComAndroidSupportAnimatedVectorDrawable2600Alpha1Library
+:prepareComAndroidSupportAppcompatV72600Alpha1Library
+:prepareComAndroidSupportSupportCompat2600Alpha1Library
+:prepareComAndroidSupportSupportCoreUi2600Alpha1Library
+:prepareComAndroidSupportSupportCoreUtils2600Alpha1Library
+:prepareComAndroidSupportSupportFragment2600Alpha1Library
+:prepareComAndroidSupportSupportMediaCompat2600Alpha1Library
+:prepareComAndroidSupportSupportV42600Alpha1Library
+:prepareComAndroidSupportSupportVectorDrawable2600Alpha1Library
+:prepareTestAppRuntimeUnspecifiedLibrary
+:prepareWidgetsReleaseLibrary
+:prepareF0ReleaseDependencies
+:compileF0ReleaseAidl
+:compileF0ReleaseRenderscript
+:generateF0ReleaseBuildConfig
+:cleanLocalAarFiles
+:ensureMetadataOutDir
+:collectAllJars
+:setProperties
+:generateTypescriptDefinitions SKIPPED
+:copyTypings SKIPPED
+:asbg:generateInterfaceNamesList
+:asbg:traverseJsFiles
+:asbg:runAstParser
+Running full build
+finished with reading lines with js files
+:asbg:generateBindings
+:generateF0ReleaseResValues
+:generateF0ReleaseResources
+:mergeF0ReleaseResources
+:processF0ReleaseManifest
+:processF0ReleaseResources
+:generateF0ReleaseSources
+:incrementalF0ReleaseJavaCompilationSafeguard
+:compileF0ReleaseJavaWithJavac
+:compileF0ReleaseJavaWithJavac - is not incremental (e.g. outputs have changed, no previous execution, etc.).
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+:compileF0ReleaseNdk UP-TO-DATE
+:compileF0ReleaseSources
+:buildMetadata
+:lintVitalF0Release
+:mergeF0ReleaseShaders
+:compileF0ReleaseShaders
+:generateF0ReleaseAssets
+:mergeF0ReleaseAssets
+:transformClassesWithDexForF0Release
+:mergeF0ReleaseJniLibFolders
+:transformNative_libsWithMergeJniLibsForF0Release
+:processF0ReleaseJavaRes UP-TO-DATE
+:transformResourcesWithMergeJavaResForF0Release
+:validateSigningF0Release
+:packageF0Release
+:assembleF0Release
+:assembleRelease
+:buildapk
+
+BUILD SUCCESSFUL
+
+Total time: 39.305 secs
+Project successfully built.
+
+##### OUTPUT END #####
+
+
+Test Method: test_200_build_android_ng_project_release
+End Time:    11:10:43
+Outcome:     PASSED
+_________________________________TEST END_______________________________________
+
+
+Stop all running simulators.
+Stop all running emulators.
+node_modules/.bin/tns create "TestApp" --template /Users/topuzov/Git/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+##### 11:10:48 Executing command : node_modules/.bin/tns create "TestApp" --template /Users/topuzov/Git/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+
+##### OUTPUT BEGIN #####
+
+Installing  /Users/topuzov/Git/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+/Users/topuzov/Git/nativescript-cli-tests/TestApp
+└─┬ tns-template-hello-world@3.1.0 
+  └── nativescript-theme-core@1.0.4 
+
+Installing  tns-core-modules
+/Users/topuzov/Git/nativescript-cli-tests/TestApp
+└─┬ tns-core-modules@3.2.0-2017-7-3-1 
+  └── tns-core-modules-widgets@3.2.0-2017-6-30-4 
+
+Project TestApp was successfully created.
+
+
+##### OUTPUT END #####
+
+org.nativescript.TestApp found in TestApp/package.json.
+tns-core-modules found in TestApp/package.json.
+nativescript-theme-core found in TestApp/package.json.
+Current dir: /Users/topuzov/Git/nativescript-cli-tests
+Navigate to: /Users/topuzov/Git/nativescript-cli-tests/TestApp
+##### 11:11:04 Executing command : npm un tns-core-modules --save
+
+##### OUTPUT BEGIN #####
+
+- tns-core-modules-widgets@3.2.0-2017-6-30-4 node_modules/tns-core-modules-widgets
+- tns-core-modules@3.2.0-2017-7-3-1 node_modules/tns-core-modules
+
+##### OUTPUT END #####
+
+Navigate to: /Users/topuzov/Git/nativescript-cli-tests
+Current dir: /Users/topuzov/Git/nativescript-cli-tests
+Navigate to: /Users/t

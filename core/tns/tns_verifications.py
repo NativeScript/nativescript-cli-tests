@@ -46,15 +46,6 @@ class TnsAsserts(object):
         return data
 
     @staticmethod
-    def _get_modules_version(app_name):
-        """
-        Get version of `tns-core-modules` inside project
-        :param app_name: Project name (path relative to TEST_RUN_HOME).
-        :return: Value of `tns-core-modules`
-        """
-        return TnsAsserts.get_package_json(app_name=app_name).get('dependencies').get('tns-core-modules')
-
-    @staticmethod
     def _get_ios_app_path(app_name):
         normalized_app_name = app_name.replace(' ', '')
         normalized_app_name = normalized_app_name.replace('-', '')
@@ -65,6 +56,15 @@ class TnsAsserts(object):
     def _get_ios_modules_path(app_name):
         modules_path = TnsAsserts._get_ios_app_path(app_name) + 'tns_modules/tns-core-modules/'
         return modules_path
+
+    @staticmethod
+    def get_modules_version(app_name):
+        """
+        Get version of `tns-core-modules` inside project
+        :param app_name: Project name (path relative to TEST_RUN_HOME).
+        :return: Value of `tns-core-modules`
+        """
+        return TnsAsserts.get_package_json(app_name=app_name).get('dependencies').get('tns-core-modules')
 
     @staticmethod
     def created(app_name, output=None, full_check=True):
@@ -117,7 +117,7 @@ class TnsAsserts(object):
         dts = os.path.join(app_name, TnsAsserts.TNS_MODULES, 'tns-core-modules.d.ts')
 
         # Assert content of files added with TypeScript plugin.
-        modules_version = TnsAsserts._get_modules_version(app_name=app_name)
+        modules_version = TnsAsserts.get_modules_version(app_name=app_name)
         modules_version = re.sub("\D", "", modules_version)
 
         File.exists(ts_config)
