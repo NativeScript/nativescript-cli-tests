@@ -61,7 +61,7 @@ class Tns(object):
         for k, v in attributes.iteritems():
             if k == "--path":
                 app_name = v
-        return app_name
+        return app_name.replace('"', '')
 
     @staticmethod
     def version(tns_path=None):
@@ -127,7 +127,8 @@ class Tns(object):
         else:
             Npm.uninstall(package="tns-core-modules", option="--save", folder=path)
             output = Npm.install(package="tns-core-modules@" + Tns.NEXT_TAG, option="--save", folder=path)
-            assert "ERR" not in output, "Something went wrong when modules are installed."
+            if Npm.version() > 3:
+                assert "ERR" not in output, "Something went wrong when modules are installed."
         return output
 
     @staticmethod
@@ -337,8 +338,8 @@ class Tns(object):
 
             # Verify apk packages
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
-            apk_base_name = Tns.__get_final_package_name(app_name, platform=Platform.ANDROID)
-            base_app_path = app_name + TnsAsserts.PLATFORM_ANDROID + "build/outputs/apk/" + apk_base_name
+            apk_base = Tns.__get_final_package_name(app_name, platform=Platform.ANDROID)
+            base_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID, "build", "outputs", "apk", apk_base)
             if "--release" in attributes.keys():
                 apk_path = base_app_path + "-release.apk"
             else:
@@ -349,8 +350,10 @@ class Tns(object):
             # Verify final package contains right modules
             modules_version = str(TnsAsserts.get_modules_version(app_name)).replace('^', '').replace('~', '')
             modules_json_in_platforms = File.read(
-                app_name + TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH + 'package.json')
-            assert modules_version in modules_json_in_platforms, "Platform folder contains wrong tns-core-modules!"
+                os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH, 'package.json'))
+            assert modules_version in modules_json_in_platforms, \
+                "Platform folder contains wrong tns-core-modules! " + os.linesep + "Modules version: " \
+                + modules_version + os.linesep + "package.json: " + os.linesep + modules_json_in_platforms
         return output
 
     @staticmethod

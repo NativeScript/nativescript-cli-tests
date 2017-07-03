@@ -18,11 +18,11 @@ class TnsAsserts(object):
     NODE_MODULES = '/node_modules/'
     TNS_MODULES = NODE_MODULES + 'tns-core-modules/'
     HOOKS = '/hooks/'
-    PLATFORM_IOS = '/platforms/ios/'
-    PLATFORM_ANDROID = '/platforms/android/'
-    PLATFORM_ANDROID_APP_PATH = PLATFORM_ANDROID + 'src/main/assets/app/'
-    PLATFORM_ANDROID_NPM_MODULES_PATH = PLATFORM_ANDROID_APP_PATH + 'tns_modules/'
-    PLATFORM_ANDROID_TNS_MODULES_PATH = PLATFORM_ANDROID_NPM_MODULES_PATH + 'tns-core-modules/'
+    PLATFORM_IOS = os.path.join('platforms', 'ios/')
+    PLATFORM_ANDROID = os.path.join('platforms', 'android/')
+    PLATFORM_ANDROID_APP_PATH = os.path.join(PLATFORM_ANDROID, 'src', 'main', 'assets', 'app/')
+    PLATFORM_ANDROID_NPM_MODULES_PATH = os.path.join(PLATFORM_ANDROID_APP_PATH, 'tns_modules/')
+    PLATFORM_ANDROID_TNS_MODULES_PATH = os.path.join(PLATFORM_ANDROID_NPM_MODULES_PATH, 'tns-core-modules/')
 
     @staticmethod
     def __read_json(path):
@@ -175,14 +175,14 @@ class TnsAsserts(object):
 
         # Verify file and folder content
         if platform is Platform.NONE:
-            assert not File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
-            assert not File.exists(app_name + TnsAsserts.PLATFORM_IOS)
+            assert not File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_IOS))
+            assert not File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID))
         if platform is Platform.ANDROID or platform is Platform.BOTH:
-            assert File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
+            assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID))
             assert not Folder.is_empty(
-                app_name + TnsAsserts.PLATFORM_ANDROID + '/build-tools/android-static-binding-generator')
+                os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID, 'build-tools', 'android-static-binding-generator'))
         if platform is Platform.IOS or platform is Platform.BOTH:
-            assert File.exists(app_name + TnsAsserts.PLATFORM_IOS)
+            assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_IOS))
 
     @staticmethod
     def platform_list_status(output=None, prepared=Platform.NONE, added=Platform.NONE):
