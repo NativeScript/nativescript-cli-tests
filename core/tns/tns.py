@@ -262,9 +262,9 @@ class Tns(object):
             assert "Platform {0} successfully removed".format(platform_string) in output
             assert "error" not in output
             if platform is Platform.ANDROID:
-                assert File.exists(app_name + TnsAsserts.PLATFORM_ANDROID)
+                assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID))
             if platform is Platform.IOS:
-                assert File.exists(app_name + TnsAsserts.PLATFORM_IOS)
+                assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_IOS))
             assert "Project successfully created" in output
         return output
 

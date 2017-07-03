@@ -51,8 +51,6 @@ class PlatformAndroidTests(BaseClass):
 
         # Add custom version with tag
         Tns.platform_add_android(version="next", attributes={"--path": self.app_name})
-        TnsAsserts.package_json_contains(self.app_name, ["next"])
-        # tns-android@next package include 'next' as string in version
 
     def test_200_platform_update_android(self):
         """Update platform"""

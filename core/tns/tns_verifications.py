@@ -50,11 +50,11 @@ class TnsAsserts(object):
         normalized_app_name = app_name.replace(' ', '')
         normalized_app_name = normalized_app_name.replace('-', '')
         normalized_app_name = normalized_app_name.replace('_', '')
-        return app_name + TnsAsserts.PLATFORM_IOS + normalized_app_name + '/app/'
+        return os.path.join(app_name, TnsAsserts.PLATFORM_IOS, normalized_app_name, 'app/')
 
     @staticmethod
     def _get_ios_modules_path(app_name):
-        modules_path = TnsAsserts._get_ios_app_path(app_name) + 'tns_modules/tns-core-modules/'
+        modules_path = os.path.join(TnsAsserts._get_ios_app_path(app_name), 'tns_modules', 'tns-core-modules/')
         return modules_path
 
     @staticmethod
@@ -227,15 +227,15 @@ class TnsAsserts(object):
         :param app_name: Application name.
         :param string_list: List of strings.
         """
-        package_json_path = app_name + '/package.json'
+        package_json_path = os.path.join(app_name, 'package.json')
         output = File.read(package_json_path)
         for item in string_list:
             if item in output:
-                print '{0} found in {1}.'.format(item, package_json_path)
+                print '{0} found in {1}.'.format(item, str(package_json_path))
             else:
                 print 'package.json:'
                 print output
-                assert False, '{0} NOT found in {1}.'.format(item, package_json_path)
+                assert False, '{0} NOT found in {1}.'.format(item, str(package_json_path))
 
     @staticmethod
     def get_package_json(app_name):
@@ -306,25 +306,27 @@ class TnsAsserts(object):
                     assert 'tns-ios' in output
 
         if platform is Platform.ANDROID or platform is Platform.BOTH:
-            app_path = app_name + TnsAsserts.PLATFORM_ANDROID_APP_PATH
-            modules_path = app_name + TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH
-            assert File.exists(app_path + 'main-view-model.js'), \
+            app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH)
+            modules_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH)
+            assert File.exists(os.path.join(app_path, 'main-view-model.js')), \
                 'Application files does not exists in platforms folder.'
-            assert File.exists(modules_path + 'application/application.js'), \
+            assert File.exists(os.path.join(modules_path, 'application', 'application.js')), \
                 'Modules does not exists in platforms folder.'
-            assert File.exists(modules_path + 'xml/xml.js'), 'TNS Modules does not exists in platforms folder.'
-            assert not File.exists(modules_path + 'application/application.android.js'), \
+            assert File.exists(os.path.join(modules_path, 'xml', 'xml.js')), \
+                'TNS Modules does not exists in platforms folder.'
+            assert not File.exists(os.path.join(modules_path, 'application', 'application.android.js')), \
                 'Prepare does not strip \'android\' from name of js files.'
-            assert not File.exists(modules_path + 'application/application.ios.js'), \
+            assert not File.exists(os.path.join(modules_path, 'application', 'application.ios.js')), \
                 'Prepare does not skip \'ios\' specific js files.'
+
         if platform is Platform.IOS or platform is Platform.BOTH:
             app_path = TnsAsserts._get_ios_app_path(app_name)
             modules_path = TnsAsserts._get_ios_modules_path(app_name)
-            assert File.exists(app_path + 'main-view-model.js'), \
+            assert File.exists(os.path.join(app_path, 'main-view-model.js')), \
                 'Application files does not exists in platforms folder.'
-            assert File.exists(modules_path + 'application/application.js'), \
+            assert File.exists(os.path.join(modules_path, 'application', 'application.js')), \
                 'Modules does not exists in platforms folder.'
-            assert not File.exists(modules_path + 'application/application.android.js'), \
+            assert not File.exists(os.path.join(modules_path, 'application', 'application.android.js')), \
                 'Prepare does not skip \'ios\' specific js files.'
-            assert not File.exists(modules_path + 'application/application.ios.js'), \
+            assert not File.exists(os.path.join(modules_path, 'application', 'application.ios.js')), \
                 'Prepare does not strip \'ios\' from name of js files.'
