@@ -26,7 +26,8 @@ class DebugAndroidEmulatorTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-        Tns.create_app(self.app_name, attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world')},
+        Tns.create_app(self.app_name,
+                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
         Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
 
@@ -65,7 +66,7 @@ class DebugAndroidEmulatorTests(BaseClass):
         """
         Default `tns debug android` starts debugger (do not stop at the first code statement)
         """
-        log = Tns.debug_android(attributes={'--path': self.app_name})
+        log = Tns.debug_android(attributes={'--path': self.app_name, '--emulator': ''})
         self.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
@@ -77,7 +78,7 @@ class DebugAndroidEmulatorTests(BaseClass):
         Starts debugger and stop at the first code statement.
         """
 
-        log = Tns.debug_android(attributes={'--path': self.app_name, '--debug-brk': ''})
+        log = Tns.debug_android(attributes={'--path': self.app_name, '--debug-brk': '', '--emulator': ''})
         self.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code

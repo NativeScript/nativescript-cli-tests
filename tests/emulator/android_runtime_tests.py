@@ -67,7 +67,8 @@ class RuntimeTests(BaseClass):
         assert "we got called from onCreate of my-custom-class.js" in output, "Expected output not found"
 
     def test_300_verbose_log_android(self):
-        Tns.create_app(self.app_name, attributes={"--template": os.path.join("data", "apps", "verbose-hello-world")})
+        Tns.create_app(self.app_name,
+                       attributes={"--template": os.path.join("data", "apps", "verbose-hello-world.tgz")})
         Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH, "--path": self.app_name})
 
         output = File.cat(os.path.join(self.app_name, "app", "app.js"))
