@@ -45,7 +45,8 @@ class RunAndroidDeviceTests(BaseClass):
         Emulator.stop()
         Device.ensure_available(platform=Platform.ANDROID)
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
-        Tns.create_app(cls.app_name, attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world')},
+        Tns.create_app(cls.app_name,
+                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
         Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
 

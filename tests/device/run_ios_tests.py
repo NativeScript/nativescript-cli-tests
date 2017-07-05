@@ -49,7 +49,8 @@ class RunIOSDeviceTests(BaseClass):
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.IOS)
 
         Folder.cleanup(cls.app_name)
-        Tns.create_app(cls.app_name, attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world')},
+        Tns.create_app(cls.app_name,
+                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
         Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
 

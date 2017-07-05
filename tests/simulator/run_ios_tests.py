@@ -47,7 +47,8 @@ class RunIOSSimulatorTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-        Tns.create_app(self.app_name, attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world')},
+        Tns.create_app(self.app_name,
+                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
         Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
 

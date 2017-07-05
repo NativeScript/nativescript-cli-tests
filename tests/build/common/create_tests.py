@@ -144,6 +144,7 @@ class CreateTests(BaseClass):
         if 'ng' in template_source and '#master' in template_source:
             TnsAsserts.created_ng(self.app_name, output=output)
 
+    @unittest.skip(Npm.version() > 4, "This is not supported with npm5!")
     def test_201_create_project_with_local_directory_template(self):
         """--template should install all packages from package.json"""
 

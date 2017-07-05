@@ -10,6 +10,7 @@ import fileinput
 import os
 
 from core.base_class.BaseClass import BaseClass
+from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -76,10 +77,10 @@ class InitAndInstallTests(BaseClass):
 
     def test_205_install_node_modules(self):
         self.test_202_init_path()
-        Folder.navigate_to(BaseClass.app_name)
-        run("npm i gulp --save-dev")
-        run("npm i lodash --save")
-        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
+
+        Npm.install(package="gulp", option="--save-dev", folder=BaseClass.app_name)
+        Npm.install(package="lodash", option="--save", folder=BaseClass.app_name)
+
         output = File.read(self.app_name + "/package.json")
         assert devDependencies in output
         assert "gulp" in output
@@ -101,10 +102,9 @@ class InitAndInstallTests(BaseClass):
 
     def test_300_install_node_modules_if_node_modules_folder_exists(self):
         self.test_202_init_path()
-        Folder.navigate_to(BaseClass.app_name)
-        run("npm i gulp --save-dev")
-        run("npm i lodash --save")
-        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
+
+        Npm.install(package="gulp", option="--save-dev", folder=BaseClass.app_name)
+        Npm.install(package="lodash", option="--save", folder=BaseClass.app_name)
 
         output = File.read(self.app_name + "/package.json")
         assert devDependencies in output
@@ -121,11 +121,9 @@ class InitAndInstallTests(BaseClass):
     def test_301_install_and_prepare(self):
         self.test_202_init_path()
 
-        Folder.navigate_to(BaseClass.app_name)
-        run("npm i gulp --save-dev")
-        run("npm i lodash --save")
+        Npm.install(package="gulp", option="--save-dev", folder=BaseClass.app_name)
+        Npm.install(package="lodash", option="--save", folder=BaseClass.app_name)
 
-        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         run("cp -R " + SUT_FOLDER + os.path.sep + "template-hello-world " + self.app_name + os.path.sep + "app")
         output = File.read(self.app_name + "/package.json")
         assert devDependencies in output

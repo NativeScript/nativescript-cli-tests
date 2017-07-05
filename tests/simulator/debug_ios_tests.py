@@ -36,7 +36,8 @@ class DebugiOSSimulatorTests(BaseClass):
         Simulator.stop()
         cls.SIMULATOR_ID = Simulator.start(name=SIMULATOR_NAME)
         Folder.cleanup(cls.INSPECTOR_GLOBAL_PATH)
-        Tns.create_app(cls.app_name, attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world')},
+        Tns.create_app(cls.app_name,
+                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
         Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
         Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--save-dev', folder=cls.app_name)
