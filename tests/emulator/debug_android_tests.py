@@ -93,7 +93,7 @@ class DebugAndroidEmulatorTests(BaseClass):
                             expected_image='livesync-hello-world_home')
 
         # Attach debugger
-        log = Tns.debug_android(attributes={'--path': self.app_name, '--start': ''})
+        log = Tns.debug_android(attributes={'--path': self.app_name, '--start': '', '--emulator': ''})
         self.__verify_debugger_attach(log=log)
 
     @flaky(max_runs=2)
