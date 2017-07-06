@@ -144,7 +144,7 @@ class PlatformAndroidTests(BaseClass):
         # frameworkPath point to missing file
         output = Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": "invalidFile.tgz"},
                                           assert_success=False)
-        assert "npm ERR!" in output
+        assert "npm ERR!" in output or "exit code 1" in output
         assert "invalidFile.tgz" in output
 
         # Wrong frameworkPath option
