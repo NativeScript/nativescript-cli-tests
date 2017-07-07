@@ -42,7 +42,7 @@ class UnittestsSimulator(BaseClass):
 
         output = Tns.run_tns_command("test ios", attributes={"--emulator": "",
                                                              "--justlaunch": "",
-                                                             "--path": self.app_name}, timeout=120)
+                                                             "--path": self.app_name}, timeout=180)
 
         assert successfully_prepared in output
         assert server_started in output
