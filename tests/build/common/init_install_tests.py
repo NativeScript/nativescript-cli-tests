@@ -120,7 +120,7 @@ class InitAndInstallTests(BaseClass):
 
     def test_301_install_and_prepare(self):
         self.test_202_init_path()
-
+        Npm.install(package='', folder=BaseClass.app_name)
         Npm.install(package="gulp", option="--save-dev", folder=BaseClass.app_name)
         Npm.install(package="lodash", option="--save", folder=BaseClass.app_name)
 

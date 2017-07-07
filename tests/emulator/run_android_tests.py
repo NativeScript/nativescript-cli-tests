@@ -129,6 +129,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
+    @flaky(max_runs=2)
     def test_100_tns_run_android_release(self):
         """Make valid changes in JS,CSS and HTML"""
 
@@ -152,7 +153,7 @@ class RunAndroidEmulatorTests(BaseClass):
                             device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
 
         # Kills `tns run android --release`
-        Process.kill('node')
+        Tns.kill()
 
         # Replace files
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS)
