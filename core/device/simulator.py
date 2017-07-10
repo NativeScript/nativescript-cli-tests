@@ -172,8 +172,8 @@ class Simulator(object):
 
         # Check if simulator app is visible and start it
         if not Simulator.__is_simulator_app_visible():
-            ""
             Simulator.stop()
+            print "Open Simulator.app with {0}".format(simulator_id)
             start_command = "open {0} --args -CurrentDeviceUDID {1}".format(Simulator.SIM_PATH, simulator_id)
             run(command=start_command, log_level=CommandLogLevel.SILENT)
 
