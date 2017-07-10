@@ -33,7 +33,7 @@ class TemplateIOSTests(BaseClass):
         BaseClass.setUpClass(logfile)
         Emulator.stop()
         Simulator.stop()
-        cls.SIMULATOR_ID = Simulator.start(name=SIMULATOR_NAME)
+        cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
         Folder.cleanup(cls.app_name)
 
     def setUp(self):

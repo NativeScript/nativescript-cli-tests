@@ -1,16 +1,33 @@
 """
 Helper for working with simulator
 """
-
+import os
 import time
 
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
+from core.osutils.file import File
 from core.osutils.process import Process
-from core.settings.settings import SIMULATOR_NAME
+from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME, SIMULATOR_TYPE, SIMULATOR_SDK
 
 
 class Simulator(object):
+    SIM_PATH = "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app"
+
+    @staticmethod
+    def __is_simulator_app_visible():
+        """
+        Check if simulator app is visible
+        :return: True if visible, False if not visible
+        """
+        script_path = os.path.join(TEST_RUN_HOME, 'core', 'device', 'helpers', 'macos_get_visible_apps')
+        visible_apps = run(command='osascript ' + script_path, log_level=CommandLogLevel.SILENT)
+        if "Simulator" in visible_apps:
+            return True
+        else:
+            print "Simulator is booted, but Simulator application is not visible!"
+            return False
+
     @staticmethod
     def __get_id(name):
         """
@@ -64,7 +81,7 @@ class Simulator(object):
         print 'iOS Simulator created: ' + name
 
     @staticmethod
-    def start(name, timeout=300):
+    def start(name, timeout=30):
         """
         Start iOS Simulator
         :param name: Simulator name.
@@ -105,21 +122,19 @@ class Simulator(object):
             output = run(command='xcrun simctl list devices | grep Boot', timeout=60, log_level=CommandLogLevel.SILENT)
             lines = output.splitlines()
             if len(lines) > 0:
-                if Process.is_running(proc_name="Simulator"):
-                    running = True
-                    simid = lines[0].split('(')[1].split(')')[0]
-                else:
-                    print "Simulator report to be booted, but Simulator process is not running!"
+                running = True
+                simid = lines[0].split('(')[1].split(')')[0]
             else:
                 simid = None
         else:
             simid = Simulator.__get_id(name=simulator_name)
             if Simulator.__get_state(simulator_id=simid) == 'Booted':
                 running = True
+
         return running, simid
 
     @staticmethod
-    def wait_for_simulator(simulator_name=None, timeout=300):
+    def wait_for_simulator(simulator_name=None, timeout=30):
         """
         Wait until simulator boot.
         :param simulator_name:
@@ -140,10 +155,11 @@ class Simulator(object):
         return found, simulator_id
 
     @staticmethod
-    def ensure_available(simulator_name=None):
+    def ensure_available(simulator_name=None, timeout=30):
         """
         Ensure iOS Simulator is running.
         :param simulator_name: iOS Simulator name.
+        :param timeout: Timeout to wait for simulator
         :return: True if booted, False if it fails to boot.
         :return: Identifier of booted simulator (None if simulator fails to boot).
         """
@@ -152,7 +168,15 @@ class Simulator(object):
             print 'iOS Simulator is running.'
         else:
             Simulator.stop()
-            simulator_id = Simulator.start(name=simulator_name, timeout=300)
+            simulator_id = Simulator.start(name=simulator_name, timeout=timeout)
+
+        # Check if simulator app is visible and start it
+        if not Simulator.__is_simulator_app_visible():
+            ""
+            Simulator.stop()
+            start_command = "open {0} --args -CurrentDeviceUDID {1}".format(Simulator.SIM_PATH, simulator_id)
+            run(command=start_command, log_level=CommandLogLevel.SILENT)
+
         return simulator_id
 
     @staticmethod
@@ -275,3 +299,4 @@ class Simulator(object):
         :param file_path: Name of image that will be saved.
         """
         run(command="xcrun simctl io {0} screenshot {1}".format(device_id, file_path), log_level=CommandLogLevel.SILENT)
+        assert File.exists(file_path), "Failed to get screenshot at " + file_path
