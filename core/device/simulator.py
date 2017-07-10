@@ -8,7 +8,6 @@ from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.process import Process
 from core.settings.settings import SIMULATOR_NAME
-from core.xcode.xcode import Xcode
 
 
 class Simulator(object):
@@ -50,6 +49,11 @@ class Simulator(object):
         :param device_type: Device type, example: 'iPhone 7'
         :param ios_version: iOS Version, example: '10.0'
         """
+
+        # Ensure simulators are stopped
+        Simulator.stop()
+        Simulator.delete(SIMULATOR_NAME)
+
         ios_version = ios_version.replace('.', '-')
         sdk = "com.apple.CoreSimulator.SimRuntime.iOS-{0}".format(ios_version)
         create_command = 'xcrun simctl create "{0}" "{1}" "{2}"'.format(name, device_type, sdk)
@@ -78,6 +82,7 @@ class Simulator(object):
         start_command = 'xcrun simctl boot {0}'.format(sim_id)
         output = run(command=start_command, timeout=timeout, log_level=CommandLogLevel.SILENT)
         assert 'Invalid device' not in output, "Can not find simulator with id " + sim_id
+        assert 'Unable to boot' not in output, "Failed to boot " + sim_id
         print 'Simulator {0} is booting now...'.format(name)
 
         # Wait until simulator boot
@@ -100,8 +105,11 @@ class Simulator(object):
             output = run(command='xcrun simctl list devices | grep Boot', timeout=60, log_level=CommandLogLevel.SILENT)
             lines = output.splitlines()
             if len(lines) > 0:
-                running = True
-                simid = lines[0].split('(')[1].split(')')[0]
+                if Process.is_running(proc_name="Simulator"):
+                    running = True
+                    simid = lines[0].split('(')[1].split(')')[0]
+                else:
+                    print "Simulator report to be booted, but Simulator process is not running!"
             else:
                 simid = None
         else:

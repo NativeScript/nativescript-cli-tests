@@ -81,7 +81,9 @@ class Emulator(object):
             booted = Emulator.is_running(device_id=device_id)
             if (booted is True) or (time.time() > end_time):
                 break
-
+        # If booted, make sure screen will not lock
+        if booted:
+            Adb.run(command='shell settings put system screen_off_timeout -1', device_id=device_id)
         return booted
 
     @staticmethod

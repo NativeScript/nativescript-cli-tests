@@ -19,7 +19,6 @@ from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.folder import Folder
-from core.osutils.process import Process
 from core.settings.settings import ANDROID_RUNTIME_PATH, EMULATOR_ID, EMULATOR_NAME
 from core.tns.tns import Tns
 
@@ -63,11 +62,18 @@ class TemplateAndroidTests(BaseClass):
 
         # Create application
         url = "https://github.com/NativeScript/" + template_source
-        Tns.create_app(self.app_name, attributes={"--template": url}, update_modules=False)
+        template = str(template_source).replace("template-", "").replace("-ng", "").replace("-ts", "").replace("-", "")
+        Tns.create_app(self.app_name, attributes={"--template": url, "--appid": "org.nativescript." + template},
+                       assert_success=False)
         Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
 
+        # Build it
+        Tns.build_android(attributes={'--path': self.app_name})
+
         # Start it
-        Tns.run_android(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''})
+        output = Tns.run_android(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
+                                 assert_success=False)
+        assert "Successfully synced application" in output, "Failed to run the app!"
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image=template_source + "_home")

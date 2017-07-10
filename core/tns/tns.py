@@ -332,8 +332,8 @@ class Tns(object):
         output = Tns.run_tns_command("build android", attributes=attributes, tns_path=tns_path)
         if assert_success:
             # Verify output of build command
-            assert "BUILD SUCCESSFUL" in output, "Build failed!"
-            assert "Project successfully built" in output, "Build failed!"
+            assert "BUILD SUCCESSFUL" in output, "Build failed!" + os.linesep + output
+            assert "Project successfully built" in output, "Build failed!" + os.linesep + output
             assert "NOT FOUND" not in output  # Test for https://github.com/NativeScript/android-runtime/issues/390
 
             # Verify apk packages

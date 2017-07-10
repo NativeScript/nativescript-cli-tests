@@ -121,8 +121,6 @@ if __name__ == '__main__':
     if CURRENT_OS == OSType.OSX:
         disable_crash_report()
         get_test_packages(platform=Platform.BOTH)
-        Simulator.stop()
-        Simulator.delete(SIMULATOR_NAME)
         Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
         Xcode.cleanup_cache()  # Clean Xcode cache folders
     else:

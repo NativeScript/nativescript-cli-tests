@@ -20,7 +20,6 @@ from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.folder import Folder
-from core.osutils.process import Process
 from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME
 from core.tns.tns import Tns
 
@@ -63,7 +62,6 @@ class TemplateIOSTests(BaseClass):
         "template-tab-navigation-ng",
     ])
     def test_100_templates_ios(self, template_source):
-        """Tests for {N} templates"""
 
         # Create application
         url = "https://github.com/NativeScript/" + template_source
@@ -71,8 +69,13 @@ class TemplateIOSTests(BaseClass):
         Tns.create_app(self.app_name, attributes={"--template": url}, update_modules=False)
         Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
 
+        # Build it
+        Tns.build_ios(attributes={'--path': self.app_name})
+
         # Start it
-        Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''})
+        output = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
+                             assert_success=False)
+        assert "Successfully synced application" in output, "Failed to run the app!"
 
         # Verify app looks correct inside simulator
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
