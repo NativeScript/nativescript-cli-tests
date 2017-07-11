@@ -16,7 +16,6 @@ import time
 import unittest
 
 import nose
-from flaky import flaky
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -26,7 +25,6 @@ from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
-from core.osutils.process import Process
 from core.settings.settings import ANDROID_RUNTIME_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, EMULATOR_NAME, CURRENT_OS
 from core.settings.strings import cannot_resolve_device, list_devices
@@ -63,7 +61,6 @@ class RunAndroidEmulatorTests(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
 
-    @flaky(max_runs=2)
     def test_001_tns_run_android_js_css_xml_manifest(self):
         """Make valid changes in JS,CSS and XML"""
 
@@ -73,7 +70,7 @@ class RunAndroidEmulatorTests(BaseClass):
         strings = ['Project successfully built',
                    'Successfully installed on device with identifier', EMULATOR_ID,
                    'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
@@ -129,7 +126,6 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
-    @flaky(max_runs=2)
     def test_100_tns_run_android_release(self):
         """Make valid changes in JS,CSS and HTML"""
 
@@ -146,7 +142,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         strings = ['Project successfully prepared', 'Project successfully built',
                    'Successfully installed on device with identifier', EMULATOR_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME,
@@ -169,7 +165,7 @@ class RunAndroidEmulatorTests(BaseClass):
                                           '--release': ''}, wait=False, assert_success=False)
 
         strings = ['Project successfully prepared']
-        Tns.wait_for_log(log_file=log, string_list=strings)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=60)
 
         # Verify app looks is update after changes in js, css and xml
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
