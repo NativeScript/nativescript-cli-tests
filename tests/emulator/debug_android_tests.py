@@ -3,8 +3,6 @@ Tests for `tns debug android` executed on Android Emulator.
 """
 import os
 
-from flaky import flaky
-
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -12,7 +10,6 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import EMULATOR_NAME, EMULATOR_ID, ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
-from core.tns.tns_platform_type import Platform
 
 
 class DebugAndroidEmulatorTests(BaseClass):
@@ -96,7 +93,6 @@ class DebugAndroidEmulatorTests(BaseClass):
         log = Tns.debug_android(attributes={'--path': self.app_name, '--start': '', '--emulator': ''})
         self.__verify_debugger_attach(log=log)
 
-    @flaky(max_runs=2)
     def test_100_debug_android_should_start_emulator_if_there_is_no_device(self):
         """
         Debug android should start emulator if emulator is not running
