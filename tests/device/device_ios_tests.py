@@ -25,7 +25,7 @@ class DeviceIOSTests(BaseClass):
 
     def test_001_device_list(self):
         # Ensure both simulator and real device are listed
-        self.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
+        self.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME, timeout=120)
         output = Tns.run_tns_command("device ios")
         assert self.SIMULATOR_ID in output
         for device_id in self.DEVICE_IDS:
@@ -56,9 +56,7 @@ class DeviceIOSTests(BaseClass):
 
     def test_100_device_log_list_applications_and_run_ios(self):
         """
-        Verify following command work
-        - tns device list-applications
-        - tns device log
+        Verify `tns device list-applications` and `tns device log`
         """
 
         # Deploy TNS_App on device
