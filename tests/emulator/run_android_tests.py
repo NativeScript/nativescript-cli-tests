@@ -164,8 +164,11 @@ class RunAndroidEmulatorTests(BaseClass):
                                           '--keyStoreAliasPassword': ANDROID_KEYSTORE_ALIAS_PASS,
                                           '--release': ''}, wait=False, assert_success=False)
 
-        strings = ['Project successfully prepared']
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=60)
+        strings = ['Project successfully prepared', 'Project successfully built',
+                   'Successfully installed on device with identifier',
+                   'Successfully started on device with identifier',
+                   'JS:', EMULATOR_ID]
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120)
 
         # Verify app looks is update after changes in js, css and xml
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
