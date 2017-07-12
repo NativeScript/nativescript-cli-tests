@@ -68,7 +68,7 @@ class Adb(object):
         Dump the log and then exit (don't block).
         :param device_id: Device id.
         """
-        Adb.run(command='logcat -d', device_id=device_id)
+        return Adb.run(command='logcat -d', device_id=device_id)
 
     @staticmethod
     def clear_logcat(device_id):

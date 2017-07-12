@@ -129,6 +129,14 @@ class PrepareAndroidTests(BaseClass):
         ng_path = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, '@angular', 'core')
         assert File.exists(ng_path), "Scoped dependencies are flattened, please see #1783!"
 
+    def test_320_unmet_peer_dependencies_do_not_stop_prepare(self):
+        Tns.create_app_ng(self.app_name, update_modules=False)
+        # Cleanup node_modules and let CLI install npm dependencies
+        Folder.cleanup(os.path.join(TEST_RUN_HOME, self.app_name, 'node_modules'))
+        output = Tns.prepare_android(attributes={"--path": self.app_name})
+        assert "requires a peer of tns-core-modules" in output, "No npm warning for unmet peer dependencies."
+        assert "but none was installed" in output, "No npm warning for unmet peer dependencies."
+
     def test_400_prepare_missing_or_missing_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
 
