@@ -215,7 +215,7 @@ class RunIOSSimulatorTests(BaseClass):
         """
 
         # Execute `tns run android --path TNS_App --justlaunch` and verify app looks correct on emulator
-        Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''}, timeout=120)
+        Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''}, timeout=180)
         Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 

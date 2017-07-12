@@ -16,6 +16,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, EMULATOR_ID, EMULATOR_NAME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
+from core.tns.tns_platform_type import Platform
 
 
 @flaky(max_runs=2)
@@ -25,6 +26,7 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         logfile = os.path.join('out', cls.__name__ + '.txt')
         BaseClass.setUpClass(logfile)
         Emulator.stop()
+        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Emulator.ensure_available()
         Folder.cleanup(cls.app_name)
 

@@ -10,6 +10,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import EMULATOR_NAME, EMULATOR_ID, ANDROID_RUNTIME_PATH
 from core.tns.tns import Tns
+from core.tns.tns_platform_type import Platform
 
 
 class DebugAndroidEmulatorTests(BaseClass):
@@ -18,6 +19,7 @@ class DebugAndroidEmulatorTests(BaseClass):
         logfile = os.path.join('out', cls.__name__ + '.txt')
         BaseClass.setUpClass(logfile)
         Emulator.stop()
+        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Emulator.ensure_available()
         Folder.cleanup(cls.app_name)
 

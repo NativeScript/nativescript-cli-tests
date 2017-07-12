@@ -41,6 +41,7 @@ class RunAndroidEmulatorTests(BaseClass):
         logfile = os.path.join('out', cls.__name__ + '.txt')
         BaseClass.setUpClass(logfile)
         Emulator.stop()
+        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Emulator.ensure_available()
         Folder.cleanup(cls.app_name)
 

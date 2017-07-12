@@ -9,7 +9,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, IOS_RUNTIME_PATH, ANDROID_RUNTIME_PATH
+from core.settings.settings import TNS_PATH, IOS_RUNTIME_PATH, ANDROID_RUNTIME_PATH, TEST_RUN_HOME
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -189,6 +189,20 @@ class PluginsiOSTests(BaseClass):
                                "nativescript-appversion/appversion.android.js")
         assert not File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/" +
                                "nativescript-appversion/appversion.ios.js")
+
+    def test_320_CFBundleURLTypes_overridden_from_plugin(self):
+        """
+        Test for issue https://github.com/NativeScript/nativescript-cli/issues/2936
+        """
+        Tns.create_app(self.app_name)
+        plugin_path = os.path.join(TEST_RUN_HOME, 'data', 'plugins', 'CFBundleURLName-Plugin.tgz')
+        Tns.plugin_add(plugin_path, attributes={"--path": self.app_name})
+        Tns.prepare_ios(attributes={"--path": self.app_name})
+        plist = File.read(os.path.join(TEST_RUN_HOME, self.app_name, 'platforms', 'ios', self.app_name,
+                                       self.app_name + "-Info.plist"))
+        assert "<key>NSAllowsArbitraryLoads</key>" in plist, \
+            "NSAppTransportSecurity from plugin is not found in final Info.plist"
+        assert "<string>bar</string>" in plist, "CFBundleURLTypes from plugin is not found in final Info.plist"
 
     def test_401_plugin_add_invalid_plugin(self):
         Tns.create_app(self.app_name)
