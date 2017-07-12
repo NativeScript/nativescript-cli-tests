@@ -130,7 +130,7 @@ class PrepareAndroidTests(BaseClass):
         assert File.exists(ng_path), "Scoped dependencies are flattened, please see #1783!"
 
     def test_320_unmet_peer_dependencies_do_not_stop_prepare(self):
-        Tns.create_app_ng(self.app_name, update_modules=False)
+        Tns.create_app_ng(self.app_name, update_modules=True)
         # Cleanup node_modules and let CLI install npm dependencies
         Folder.cleanup(os.path.join(TEST_RUN_HOME, self.app_name, 'node_modules'))
         output = Tns.prepare_android(attributes={"--path": self.app_name})
