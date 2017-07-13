@@ -129,6 +129,7 @@ class PrepareAndroidTests(BaseClass):
         ng_path = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, '@angular', 'core')
         assert File.exists(ng_path), "Scoped dependencies are flattened, please see #1783!"
 
+    @unittest.skip("TODO: Fix the test")
     def test_320_unmet_peer_dependencies_do_not_stop_prepare(self):
         Tns.create_app_ng(self.app_name, update_modules=True)
         # Cleanup node_modules and let CLI install npm dependencies

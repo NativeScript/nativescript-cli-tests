@@ -176,6 +176,7 @@ class Simulator(object):
             print "Open Simulator.app with {0}".format(simulator_id)
             start_command = "open {0} --args -CurrentDeviceUDID {1}".format(Simulator.SIM_PATH, simulator_id)
             run(command=start_command, log_level=CommandLogLevel.SILENT)
+            Simulator.wait_for_simulator(simulator_name=None, timeout=timeout)
 
         return simulator_id
 
