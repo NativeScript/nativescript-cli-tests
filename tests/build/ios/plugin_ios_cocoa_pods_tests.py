@@ -147,7 +147,7 @@ class PluginsiOSPodsTests(BaseClass):
 
         output = Tns.prepare_ios(attributes={"--path": self.app_name}, assert_success=False)
         assert "Installing pods..." in output
-        assert "Processing node_modules failed. Error:" in output
+        assert "Command pod failed with exit code 1" in output
 
         output = File.read(self.app_name + "/platforms/ios/Podfile")
         assert "pod 'InvalidPod'" in output
