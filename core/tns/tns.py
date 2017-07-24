@@ -11,7 +11,7 @@ from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import TNS_PATH, SUT_FOLDER, DEVELOPMENT_TEAM, BRANCH, TEST_RUN_HOME, \
-    COMMAND_TIMEOUT, CURRENT_OS
+    COMMAND_TIMEOUT, CURRENT_OS, TAG
 from core.settings.strings import config_release, codesign, config_debug
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
@@ -19,8 +19,6 @@ from core.xcode.xcode import Xcode
 
 
 class Tns(object):
-    NEXT_TAG = 'next'  # npm tag used when we publish master branch of tns-core-modules
-
     @staticmethod
     def __get_platform_string(platform=Platform.NONE):
         if platform is Platform.NONE:
@@ -115,20 +113,10 @@ class Tns(object):
         if " " in path:
             path = "\"" + path + "\""
 
-        # In release branch we get modules versions from MODULES_VERSION variable.
-        # To prevent errors in local testing when it is not specified default value is set to be same as CLI version.
-        if "release" in BRANCH.lower():
-            cli_version = Tns.version(tns_path=None)
-            version = os.environ.get("MODULES_VERSION", cli_version)
-            Tns.plugin_remove("tns-core-modules", attributes={"--path": path}, assert_success=False, tns_path=tns_path)
-            output = Tns.plugin_add("tns-core-modules@" + version, attributes={"--path": path}, assert_success=False,
-                                    tns_path=tns_path)
-        # In master branch we use @next packages.
-        else:
-            Npm.uninstall(package="tns-core-modules", option="--save", folder=path)
-            output = Npm.install(package="tns-core-modules@" + Tns.NEXT_TAG, option="--save", folder=path)
-            if Npm.version() > 3:
-                assert "ERR" not in output, "Something went wrong when modules are installed."
+        Npm.uninstall(package="tns-core-modules", option="--save", folder=path)
+        output = Npm.install(package="tns-core-modules@" + TAG, option="--save", folder=path)
+        if Npm.version() > 3:
+            assert "ERR" not in output, "Something went wrong when modules are installed."
         return output
 
     @staticmethod
@@ -203,6 +191,7 @@ class Tns(object):
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,
                                 update_modules=update_modules)
+        # TODO: Update angular!
         if assert_success:
             if Npm.version() < 5:
                 assert "nativescript-angular" in output
@@ -213,10 +202,6 @@ class Tns(object):
     @staticmethod
     def platform_add(platform=Platform.NONE, version=None, attributes={}, assert_success=True, log_trace=False,
                      tns_path=None):
-
-        #######################################################################################
-        # Add platforms
-        #######################################################################################
 
         platform_string = Tns.__get_platform_string(platform)
 
@@ -302,7 +287,7 @@ class Tns(object):
         output = Tns.run_tns_command("plugin add " + name, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
         if assert_success:
-            short_name = name.replace("@" + Tns.NEXT_TAG, "").replace(".tgz", "").split(os.sep)[-1]
+            short_name = name.replace("@" + TAG, "").replace(".tgz", "").split(os.sep)[-1]
             assert "Successfully installed plugin {0}".format(short_name) in output
         return output
 
@@ -311,7 +296,7 @@ class Tns(object):
         output = Tns.run_tns_command("plugin remove " + name, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
         if assert_success:
-            assert "Successfully removed plugin {0}".format(name.replace("@" + Tns.NEXT_TAG, "")) in output
+            assert "Successfully removed plugin {0}".format(name.replace("@" + TAG, "")) in output
         return output
 
     @staticmethod

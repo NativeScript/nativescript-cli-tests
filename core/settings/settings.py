@@ -20,12 +20,14 @@ TEST_RUN_HOME = os.getcwd()  # Get test run root folder.
 # Test packages location from env. variables
 BASE_PACKAGE_PATH = os.environ.get("BASE_PACKAGE_PATH", "/tns-dist")
 BRANCH = os.environ.get("BRANCH", "master").lower()
-SHARE_BRANCH = BRANCH
 if "release" in BRANCH:
     SHARE_BRANCH = "Release"
+    TAG = "rc"
 else:
     SHARE_BRANCH = "Stable"
+    TAG = "next"
 SHARE_BRANCH = os.environ.get("SHARE_BRANCH", SHARE_BRANCH)
+TAG = os.environ.get("TAG", TAG)
 
 # Set source location of separate package based on base path
 CLI_PATH = os.environ.get("CLI_PATH", os.path.join(BASE_PACKAGE_PATH, "CLI", SHARE_BRANCH, "nativescript.tgz"))

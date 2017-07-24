@@ -148,7 +148,7 @@ class Adb(object):
         :param app_id: Package identifier - org.nativescript.testapp.
         :param device_id: Device id.
         """
-        output = Adb.run(command='shell pm uninstall ' + app_id, device_id=device_id, log_level=CommandLogLevel.SILENT)
+        output = Adb.run(command='uninstall ' + app_id, device_id=device_id, log_level=CommandLogLevel.SILENT)
         assert 'Success' in output, 'Failed to uninstall {0}. Output: {1}'.format(app_id, output)
         print '{0} uninstalled successfully from {1}.'.format(app_id, device_id)
 
@@ -336,6 +336,7 @@ class Adb(object):
     def unlock_sdcard(device_id, timeout=60):
         """
         Unlock sdcard of default emulator.
+        :param device_id: Device identifier (example: `emulator-5554`).
         :param timeout: Timeout in seconds.
         """
         t_end = time.time() + timeout
