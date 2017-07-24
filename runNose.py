@@ -5,6 +5,7 @@ import tarfile
 
 import nose
 
+from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.git.git import Git
@@ -123,6 +124,8 @@ if __name__ == '__main__':
         get_test_packages(platform=Platform.BOTH)
         Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
         Xcode.cleanup_cache()  # Clean Xcode cache folders
+        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
+        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.IOS)
     else:
         get_test_packages(platform=Platform.ANDROID)
 
