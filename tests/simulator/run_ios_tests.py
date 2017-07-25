@@ -316,6 +316,49 @@ class RunIOSSimulatorTests(BaseClass):
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
 
+    def test_370_tns_run_plugin_add(self):
+        """
+        `tns run ios` should do full rebuild after plugin is added.
+        """
+        # `tns run ios` and wait until app is deployed
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+
+        # Verify app looks correct inside simulator
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
+        # Add plugin
+        Tns.plugin_add("nativescript-telerik-ui", attributes={"--path": self.app_name})
+
+        # Change JS and wait for full sync
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
+        strings = ['BUILD SUCCEEDED', 'Project successfully built', 'Successfully installed on device with identifier',
+                   self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=log, string_list=strings)
+
+        # Rollback JS changes and verify sync is incremental
+        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
+        strings = ['Successfully transferred', 'main-view-model.js', 'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
+        assert 'BUILD SUCCEEDED' not in File.read(log), "Second change of JS files after plugin add is not incremental!"
+        File.write(file_path=log, text="")  # Clean log file
+
+        # Change XML and wait until app is synced
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
+        strings = ['Successfully transferred', 'main-page.xml', 'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
+        assert 'BUILD SUCCEEDED' not in File.read(log), "Change of XML files after plugin add is not incremental!"
+        File.write(file_path=log, text="")  # Clean log file
+
+        # Change CSS and wait until app is synced
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
+        strings = ['Successfully transferred', 'app.css', 'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
+        assert 'BUILD SUCCEEDED' not in File.read(log), "Change of CSS files after plugin add is not incremental!"
+        File.write(file_path=log, text="")  # Clean log file
+
     def test_400_tns_run_on_folder_with_spaces(self):
         """
         `tns run ios` for apps with spaces
