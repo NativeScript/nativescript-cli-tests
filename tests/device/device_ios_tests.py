@@ -76,5 +76,4 @@ class DeviceIOSTests(BaseClass):
 
         # Get logs
         log = Tns.run_tns_command("device log", attributes={"--device": self.DEVICE_ID}, wait=False)
-        strings = ['iP', 'message', '<Notice>:']
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=30, clean_log=False)
+        Tns.wait_for_log(log_file=log, string_list=['message', '<Notice>:'], timeout=30, clean_log=False)
