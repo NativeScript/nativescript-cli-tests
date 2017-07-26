@@ -375,6 +375,8 @@ class Tns(object):
             emu_folder = app_name + "/platforms/ios/build/emulator/"
             if "--forDevice" in attributes.keys() or "--for-device" in attributes.keys():
                 assert "build/device/" + app_id + ".app" in output
+                assert "ARCHIVE SUCCEEDED" in output
+                assert "EXPORT SUCCEEDED" in output
                 assert File.exists(device_folder + app_id + ".ipa"), "IPA file not found!"
                 bundle_content = File.read(device_folder + app_id + ".app/" + app_id)
             else:
