@@ -248,3 +248,5 @@ class RunIOSDeviceTests(BaseClass):
         # strings = ['Successfully transferred', 'main-view-model.js', 'Refreshing application']
         # Tns.wait_for_log(log_file=log, string_list=strings)
         # assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "JS changes not synced on device!"
+
+        # TODO: We need test for issue 2988 and 3007

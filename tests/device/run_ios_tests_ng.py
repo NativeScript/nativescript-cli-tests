@@ -11,6 +11,7 @@ from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
+from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH
 from core.tns.replace_helper import ReplaceHelper
@@ -57,7 +58,7 @@ class RunIOSDeviceTestsNG(BaseClass):
 
     @flaky(max_runs=2)
     def test_001_tns_run_ios_ts_css_html(self):
-        """Make valid changes in JS,CSS and XML"""
+        """Make valid changes in TS,CSS and XML"""
 
         # `tns run ios` and wait until app is deployed
         log = Tns.run_ios(attributes={'--path': self.app_name, '--device': self.DEVICE_ID}, wait=False,
@@ -78,9 +79,14 @@ class RunIOSDeviceTestsNG(BaseClass):
         strings = ['Successfully transferred', 'item.service.js', 'Successfully synced application',
                    'Application loaded!',  # This is to verify app is restarted.
                    'Home page loaded!']
-        Tns.wait_for_log(log_file=log, string_list=strings)
+        Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
         text_changed = Device.wait_for_text(device_id=self.DEVICE_ID, text="Stegen Ter", timeout=20)
         assert text_changed, 'Changes in TS file not applied (UI is not refreshed).'
+        log_content = File.read(log)
+        print log
+        assert 'item.service.ts' in log_content, "CLI should transfer TS files!"
+        assert log_content.count('Application loaded!') == 1, "Console log messages are doubled!"
+        File.write(file_path=log, text="")  # Clean log
 
         # Change HTML and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.NG_CHANGE_HTML, sleep=10)
