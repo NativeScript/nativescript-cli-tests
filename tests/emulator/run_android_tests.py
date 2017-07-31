@@ -482,7 +482,8 @@ class RunAndroidEmulatorTests(BaseClass):
         # Run the app and verify there is appropriate error
         output = Tns.run_android(attributes={'--path': 'TestApp2', '--device': EMULATOR_ID, '--justlaunch': ''},
                                  assert_success=False)
-        assert 'No space left on device' in output  # Test for CLI issue 2170
+        # Test for CLI issue 2170
+        assert 'No space left on device' in output or "didn't have enough storage space" in output
 
     def test_401_tns_run_android_should_not_continue_on_build_failure(self):
         """
