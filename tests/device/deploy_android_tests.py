@@ -3,6 +3,8 @@ Tests for deploy command
 """
 import os
 
+from flaky import flaky
+
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -36,7 +38,9 @@ class DeployAndroidTests(BaseClass):
     def tearDownClass(cls):
         Folder.cleanup(cls.app_name)
 
+    @flaky(max_runs=3)
     def test_001_deploy_android(self):
+        Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
         output = Tns.run_tns_command("deploy android", attributes={"--path": self.app_name,
                                                                    "--justlaunch": ""}, timeout=180)
 

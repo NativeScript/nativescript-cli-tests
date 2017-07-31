@@ -3,6 +3,8 @@ Test for device command in context of iOS
 """
 from time import sleep
 
+from flaky import flaky
+
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.simulator import Simulator
@@ -23,8 +25,10 @@ class DeviceIOSTests(BaseClass):
         Device.ensure_available(platform=Platform.IOS)
         Simulator.stop()
 
+    @flaky(max_runs=3)
     def test_001_device_list(self):
         # Ensure both simulator and real device are listed
+        Simulator.stop()
         self.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME, timeout=120)
         sleep(10)
         output = Tns.run_tns_command("device ios")
@@ -62,6 +66,7 @@ class DeviceIOSTests(BaseClass):
 
         # Deploy TNS_App on device
         Tns.create_app(self.app_name)
+
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         output = Tns.deploy_ios(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=180)
 

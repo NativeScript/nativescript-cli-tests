@@ -134,7 +134,7 @@ if __name__ == '__main__':
     Tns.disable_reporting()
 
     # Run Tests
-    arguments = ['nosetests', '-v', '-s', '--nologcapture', '--with-doctest', '--with-xunit']
+    arguments = ['nosetests', '-v', '-s', '--nologcapture', '--with-doctest', '--with-xunit', '--with-flaky']
     for i in sys.argv:
         arguments.append(str(i))
     nose.run(argv=arguments)
