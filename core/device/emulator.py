@@ -4,6 +4,7 @@ Helper for working with emulator
 import os
 import time
 
+from core.device.device import Device
 from core.device.helpers.adb import Adb
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
@@ -81,9 +82,17 @@ class Emulator(object):
             booted = Emulator.is_running(device_id=device_id)
             if (booted is True) or (time.time() > end_time):
                 break
+
         # If booted, make sure screen will not lock
         if booted:
             Adb.run(command='shell settings put system screen_off_timeout -1', device_id=device_id)
+
+        # If booted, make sure screen will not lock
+        if booted:
+            text = Adb.get_page_source(device_id=device_id)
+            if "android.process.acore" in text:
+                print "Error dialog detected! Try to kill it..."
+                Device.click(device_id=device_id, text="OK", timeout=10)
         return booted
 
     @staticmethod

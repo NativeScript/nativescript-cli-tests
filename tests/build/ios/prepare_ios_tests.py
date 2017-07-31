@@ -9,7 +9,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, CURRENT_OS, OSType, TEST_RUN_HOME
+from core.settings.settings import IOS_RUNTIME_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, ANDROID_RUNTIME_PATH
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -32,6 +32,7 @@ class PrepareiOSTests(BaseClass):
     def test_100_prepare_ios(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
 
         # Initial prepare should be full.
         output = Tns.prepare_ios(attributes={"--path": self.app_name})
@@ -53,6 +54,18 @@ class PrepareiOSTests(BaseClass):
         assert result is not None
         result = re.search("Schemes:\n\s*TestApp", output)
         assert result is not None
+
+        # Initial prepare for other platform (Android) should be full.
+        output = Tns.prepare_android(attributes={"--path": self.app_name})
+        TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.FULL)
+
+        # Prepare original platform (iOS) should be skipped.
+        output = Tns.prepare_ios(attributes={"--path": self.app_name}, assert_success=False)
+        TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.SKIP)
+
+        # Initial prepare for other platform (Android) should be skipped.
+        output = Tns.prepare_android(attributes={"--path": self.app_name}, assert_success=False)
+        TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.SKIP)
 
     def test_200_prepare_additional_appresources(self):
         Tns.create_app(self.app_name)
@@ -98,7 +111,7 @@ class PrepareiOSTests(BaseClass):
         # Prepare in release
         Tns.prepare_ios(attributes={"--path": self.app_name, '--release': ''})
         assert "<string>fbXXXXXXXXX</string>" in File.read(final_plist)
-        assert not "<string>orgnativescriptTestApp</string>" in File.read(final_plist)
+        assert "<string>orgnativescriptTestApp</string>" not in File.read(final_plist)
 
     def test_300_prepare_ios_preserve_case(self):
         Tns.create_app(self.app_name)
