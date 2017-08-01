@@ -39,16 +39,19 @@ class GettingStartedTemplatesTests(BaseClass):
         Emulator.stop()
 
     @parameterized.expand([
-        "nativescript-template-tutorial",
-        "nativescript-template-ng-tutorial",
+        ('t-js-live-template-live-n', 'nativescript-template-tutorial', False),
+        ('t-js-live-template-next-n', 'nativescript-template-tutorial', True),
+        ('t-js-next-template-next-n', 'https://github.com/NativeScript/nativescript-template-tutorial', True),
+        ('t-ng-live-template-live-n', 'nativescript-template-ng-tutorial', False),
+        ('t-ng-live-template-next-n', 'nativescript-template-ng-tutorial', True),
+        ('t-ng-next-template-next-n', 'https://github.com/NativeScript/nativescript-template-ng-tutorial', True),
     ])
-    def test_100_templates_android(self, template_source):
-
+    def test(self, description, url, update):
         # Create application
-        url = "https://github.com/NativeScript/" + template_source
-        Tns.create_app(self.app_name, attributes={"--template": url}, assert_success=True)
-        Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
-        Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
+        Tns.create_app(self.app_name, attributes={"--template": url}, assert_success=True, update_modules=update)
+        if update:
+            Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
+            Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
 
         # Build it
         Tns.build_android(attributes={'--path': self.app_name})
@@ -58,11 +61,11 @@ class GettingStartedTemplatesTests(BaseClass):
         output = Tns.run_android(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
                                  assert_success=False)
         assert "Successfully synced application" in output, "Failed to run the app!"
-        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image=template_source + "_home")
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image=description, tolerance=3.0)
 
         # Verify iOS looks ok
         output = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
                              assert_success=False)
         assert "Successfully synced application" in output, "Failed to run the app!"
-        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
-                            expected_image=template_source + '_home')
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID, expected_image=description,
+                            tolerance=3.0)

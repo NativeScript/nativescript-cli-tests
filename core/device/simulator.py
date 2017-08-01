@@ -8,11 +8,21 @@ from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.process import Process
-from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME, SIMULATOR_TYPE, SIMULATOR_SDK
+from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME
 
 
 class Simulator(object):
-    SIM_PATH = "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app"
+    @staticmethod
+    def __get_sim_location():
+        output = run(command='xcrun --show-sdk-path', log_level=CommandLogLevel.SILENT).strip()
+        xcode_location = ''
+        for paths in output.split('/'):
+            xcode_location = xcode_location + paths + '/'
+            if "Xcode" in paths:
+                break
+        sim_location = xcode_location + 'Contents/Developer/Applications/Simulator.app'
+        print "Simulator Application: " + sim_location
+        return sim_location
 
     @staticmethod
     def __is_simulator_app_visible():
@@ -174,7 +184,8 @@ class Simulator(object):
         if not Simulator.__is_simulator_app_visible():
             Simulator.stop()
             print "Open Simulator.app with {0}".format(simulator_id)
-            start_command = "open {0} --args -CurrentDeviceUDID {1}".format(Simulator.SIM_PATH, simulator_id)
+            start_command = "open {0} --args -CurrentDeviceUDID {1}".format(Simulator.__get_sim_location(),
+                                                                            simulator_id)
             run(command=start_command, log_level=CommandLogLevel.SILENT)
             Simulator.wait_for_simulator(simulator_name=None, timeout=timeout)
 

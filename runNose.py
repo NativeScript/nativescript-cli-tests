@@ -17,7 +17,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
     COMMAND_TIMEOUT, ANDROID_PATH, IOS_PATH, SUT_FOLDER, CLI_PATH, ANDROID_RUNTIME_PATH, \
     IOS_RUNTIME_PATH, TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH, IOS_INSPECTOR_PATH, TNS_PLATFORM_DECLARATIONS_PATH, \
-    BRANCH, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK
+    BRANCH, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.xcode.xcode import Xcode
@@ -132,6 +132,13 @@ if __name__ == '__main__':
     # Install CLI
     Cli.install()
     Tns.disable_reporting()
+
+    # Add local CLI to ANDROID_PATH
+
+    path = os.path.join(TEST_RUN_HOME, 'node_modules', 'nativescript', 'bin') + os.pathsep + os.environ['PATH']
+    os.environ['PATH'] = path
+    out = run(command='tns --version')
+    assert "not" not in out, '"tns" not found in PATH!'
 
     # Run Tests
     arguments = ['nosetests', '-v', '-s', '--nologcapture', '--with-doctest', '--with-xunit', '--with-flaky']
