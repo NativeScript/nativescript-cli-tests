@@ -133,12 +133,17 @@ if __name__ == '__main__':
     Cli.install()
     Tns.disable_reporting()
 
-    # Add local CLI to ANDROID_PATH
-
-    path = os.path.join(TEST_RUN_HOME, 'node_modules', 'nativescript', 'bin') + os.pathsep + os.environ['PATH']
+    # Add local CLI to PATH
+    if CURRENT_OS != OSType.WINDOWS:
+        base_path = os.path.join(TEST_RUN_HOME, 'node_modules', 'nativescript', 'bin')
+        where_command = 'which tns'
+    else:
+        base_path = os.path.join(TEST_RUN_HOME, 'node_modules', '.bin')
+        where_command = 'where tns'
+    path = base_path + os.pathsep + os.environ['PATH']
     os.environ['PATH'] = path
-    out = run(command='tns --version')
-    assert "not" not in out, '"tns" not found in PATH!'
+    assert 'not' not in run(command='tns --version'), 'Tns global installation not found!'
+    assert base_path in run(command=where_command), 'Global installation is not the local one!'
 
     # Run Tests
     arguments = ['nosetests', '-v', '-s', '--nologcapture', '--with-doctest', '--with-xunit', '--with-flaky']
