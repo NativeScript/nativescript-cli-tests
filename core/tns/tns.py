@@ -101,11 +101,10 @@ class Tns(object):
         return output
 
     @staticmethod
-    def update_modules(path, tns_path=None):
+    def update_modules(path):
         """
         Update modules for {N} project
         :param path: Path to {N} project
-        :param tns_path: Path to tns executable
         :return: Output of command that update tns-core-modules plugin.
         """
 
@@ -115,6 +114,24 @@ class Tns(object):
 
         Npm.uninstall(package="tns-core-modules", option="--save", folder=path)
         output = Npm.install(package="tns-core-modules@" + TAG, option="--save", folder=path)
+        if Npm.version() > 3:
+            assert "ERR" not in output, "Something went wrong when modules are installed."
+        return output
+
+    @staticmethod
+    def update_angular(path):
+        """
+        Update modules for {N} project
+        :param path: Path to {N} project
+        :return: Output of command that update tns-core-modules plugin.
+        """
+
+        # Escape path with spaces
+        if " " in path:
+            path = "\"" + path + "\""
+
+        Npm.uninstall(package="nativescript-angular", option="--save", folder=path)
+        output = Npm.install(package="nativescript-angular@" + TAG, option="--save", folder=path)
         if Npm.version() > 3:
             assert "ERR" not in output, "Something went wrong when modules are installed."
         return output
@@ -191,7 +208,9 @@ class Tns(object):
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,
                                 update_modules=update_modules)
-        # TODO: Update angular!
+        if update_modules:
+            Tns.update_angular(path=app_name)
+            
         if assert_success:
             if Npm.version() < 5:
                 assert "nativescript-angular" in output

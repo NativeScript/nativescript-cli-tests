@@ -135,7 +135,7 @@ class BuildPluginDemos(BaseClass):
             assert 'ERR' not in output, 'Failed to install ' + plugin
 
         # Update tns-core-modules
-        Tns.update_modules(name, tns_path=tns)
+        Tns.update_modules(name)
 
         # Add platform and build it
         out_file_path = os.path.join(VERIFIED_PLUGINS_OUT, name)
