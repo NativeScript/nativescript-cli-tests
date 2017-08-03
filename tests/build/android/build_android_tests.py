@@ -40,6 +40,12 @@ class BuildAndroidTests(BaseClass):
         Tns.create_app(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
 
+        # Add release and debug configs
+        debug = os.path.join(cls.app_name, 'app', 'config.debug.json')
+        release = os.path.join(cls.app_name, 'app', 'config.release.json')
+        File.write(file_path=debug, text='{"config":"debug"}')
+        File.write(file_path=release, text='{"config":"release"}')
+
     def setUp(self):
         BaseClass.setUp(self)
 
@@ -47,10 +53,8 @@ class BuildAndroidTests(BaseClass):
         # Verify application state at the end of the test is correct
         if File.exists(self.app_name):
             data = TnsAsserts.get_package_json(self.app_name)
-            assert "tns-android" in data[
-                "nativescript"], "'tns-android' not found under `nativescript` inside package.json"
-            assert "tns-android" not in data[
-                "dependencies"], "'tns-android' found under `dependencies` inside package.json"
+            assert "tns-android" in data["nativescript"], "'tns-android' not found under `nativescript` in package.json"
+            assert "tns-android" not in data["dependencies"], "'tns-android' found under `dependencies` in package.json"
 
         BaseClass.tearDown(self)
         Folder.cleanup(self.platforms_android + '/build/outputs')
@@ -64,12 +68,14 @@ class BuildAndroidTests(BaseClass):
         pass
 
     def test_001_build_android(self):
-        # Default `tns run android`
         Tns.build_android(attributes={"--path": self.app_name})
         assert File.pattern_exists(self.platforms_android, "*.aar")
         assert not File.pattern_exists(self.platforms_android, "*.plist")
         assert not File.pattern_exists(self.platforms_android, "*.android.js")
         assert not File.pattern_exists(self.platforms_android, "*.ios.js")
+
+        # Configs are respected
+        assert 'debug' in File.read(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, 'config.json'))
 
         # And new platform specific file and verify next build is ok (test for issue #2697)
         src = os.path.join(self.app_name, 'app', 'app.js')
@@ -100,6 +106,9 @@ class BuildAndroidTests(BaseClass):
                                       "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
                                       "--release": ""
                                       })
+
+        # Configs are respected
+        assert 'release' in File.read(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, 'config.json'))
 
     def test_200_build_android_inside_project_folder(self):
         Folder.navigate_to(self.app_name)
