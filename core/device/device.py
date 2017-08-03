@@ -259,7 +259,7 @@ class Device(object):
             raise NameError(error)
 
     @staticmethod
-    def get_ids(platform):
+    def get_ids(platform, include_emulators=False):
         """
         Get IDs of all connected physical devices.
         :param platform: `Platform.ANDROID` or `Platform.IOS`
@@ -268,7 +268,7 @@ class Device(object):
         if platform is Platform.IOS:
             return IDevice.get_devices()
         elif platform is Platform.ANDROID:
-            return Adb.get_devices()
+            return Adb.get_devices(include_emulators=include_emulators)
         else:
             raise NameError('Invalid platform')
 
@@ -302,7 +302,7 @@ class Device(object):
         :param app_prefix: App prefix, for example: org.nativescript.
         :param platform: Platform enum value (Platform.ANDROID or Platform.IOS)
         """
-        device_ids = Device.get_ids(platform=platform)
+        device_ids = Device.get_ids(platform=platform, include_emulators=True)
         if platform == Platform.ANDROID:
             for device_id in device_ids:
                 Adb.uninstall_all_apps(device_id=device_id)

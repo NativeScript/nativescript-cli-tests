@@ -45,7 +45,7 @@ class Adb(object):
         return app_id
 
     @staticmethod
-    def get_devices():
+    def get_devices(include_emulators=False):
         """
         Get available android devices (only real devices).
         """
