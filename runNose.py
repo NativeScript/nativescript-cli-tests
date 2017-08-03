@@ -90,8 +90,10 @@ def get_repos():
                    local_folder=os.path.join(SUT_FOLDER, 'template-hello-world'), branch=BRANCH)
     Git.clone_repo(repo_url='git@github.com:NativeScript/template-hello-world-ts.git',
                    local_folder=os.path.join(SUT_FOLDER, 'template-hello-world-ts'), branch=BRANCH)
+
+    # `nativescript-angular` do not longer use release branch
     Git.clone_repo(repo_url='git@github.com:NativeScript/template-hello-world-ng.git',
-                   local_folder=os.path.join(SUT_FOLDER, 'template-hello-world-ng'), branch=BRANCH)
+                   local_folder=os.path.join(SUT_FOLDER, 'template-hello-world-ng'), branch='master')
 
     Npm.pack(folder=os.path.join(SUT_FOLDER, 'template-hello-world'),
              output_file=os.path.join(SUT_FOLDER, 'tns-template-hello-world.tgz'))
