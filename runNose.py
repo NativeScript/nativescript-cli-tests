@@ -100,12 +100,6 @@ def get_repos():
     Npm.pack(folder=os.path.join(SUT_FOLDER, 'template-hello-world-ng'),
              output_file=os.path.join(SUT_FOLDER, 'tns-template-hello-world-ng.tgz'))
 
-    # Clone QA-TestApps repo
-    # TODO: QA-TestApps is privite, we should make it public or move all test data to data folder.
-    Git.clone_repo(repo_url="git@github.com:NativeScript/QA-TestApps.git",
-                   local_folder=SUT_FOLDER + "/QA-TestApps", branch=BRANCH)
-
-
 if __name__ == '__main__':
 
     # Cleanup files and folders created by the test execution

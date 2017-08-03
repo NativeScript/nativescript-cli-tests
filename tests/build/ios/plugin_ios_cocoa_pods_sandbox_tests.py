@@ -26,7 +26,7 @@ class PluginsiOSSandboxPodsTests(BaseClass):
         Tns.platform_add_ios(attributes={"--path": self.app_name,
                                          "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = SUT_FOLDER + "/QA-TestApps/CocoaPods/nativescript-ios-working-with-sandbox-plugin"
+        plugin_path = SUT_FOLDER + "/data/CocoaPods/nativescript-ios-working-with-sandbox-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin nativescript-ios-working-with-sandbox-plugin." in output
 
@@ -46,7 +46,7 @@ class PluginsiOSSandboxPodsTests(BaseClass):
         Tns.platform_add_ios(attributes={"--path": self.app_name,
                                          "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = SUT_FOLDER + "/QA-TestApps/CocoaPods/nativescript-ios-fail-with-sandbox-plugin"
+        plugin_path = SUT_FOLDER + "/data/CocoaPods/nativescript-ios-fail-with-sandbox-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin nativescript-ios-fail-with-sandbox-plugin." in output
 
@@ -66,7 +66,7 @@ class PluginsiOSSandboxPodsTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = SUT_FOLDER + "/QA-TestApps/CocoaPods/nativescript-ios-fail-with-sandbox-plugin"
+        plugin_path = SUT_FOLDER + "/data/CocoaPods/nativescript-ios-fail-with-sandbox-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin nativescript-ios-fail-with-sandbox-plugin." in output
 

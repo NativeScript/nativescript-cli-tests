@@ -19,7 +19,7 @@ class PluginsiOSXcconfigTests(BaseClass):
     def test_100_plugin_add_xcconfig_before_platform_add_ios(self):
         Tns.create_app(self.app_name)
 
-        plugin_path = SUT_FOLDER + "/QA-TestApps/CocoaPods/xcconfig-plugin"
+        plugin_path = SUT_FOLDER + "/data/CocoaPods/xcconfig-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin xcconfig-plugin." in output
         assert File.exists(self.app_name + "/node_modules/xcconfig-plugin/package.json")
@@ -47,7 +47,7 @@ class PluginsiOSXcconfigTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = SUT_FOLDER + "/QA-TestApps/CocoaPods/xcconfig-plugin"
+        plugin_path = SUT_FOLDER + "/data/CocoaPods/xcconfig-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin xcconfig-plugin." in output
         assert File.exists(self.app_name + "/node_modules/xcconfig-plugin/package.json")

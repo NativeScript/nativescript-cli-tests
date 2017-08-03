@@ -20,7 +20,7 @@ class PluginsiOSLibsTests(BaseClass):
     def test_201_plugin_add_static_lib_universal_before_platform_add_ios(self):
         Tns.create_app(self.app_name)
 
-        plugin_path = SUT_FOLDER + "/QA-TestApps/static-lib/hello-plugin"
+        plugin_path = SUT_FOLDER + "/data/static-lib/hello-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin hello." in output
 
@@ -46,7 +46,7 @@ class PluginsiOSLibsTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = SUT_FOLDER + "/QA-TestApps/static-lib/hello-plugin"
+        plugin_path = SUT_FOLDER + "/data/static-lib/hello-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin hello." in output
 
@@ -71,7 +71,7 @@ class PluginsiOSLibsTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = SUT_FOLDER + "/QA-TestApps/static-lib/bye-plugin"
+        plugin_path = SUT_FOLDER + "/data/static-lib/bye-plugin"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin bye" in output
         
