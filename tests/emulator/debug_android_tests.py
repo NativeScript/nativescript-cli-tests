@@ -41,7 +41,7 @@ class DebugAndroidEmulatorTests(BaseClass):
 
     def __verify_debugger_start(self, log):
         strings = [EMULATOR_ID, 'NativeScript Debugger started', 'To start debugging, open the following URL in Chrome',
-                   'chrome-devtools', 'localhost:40000']
+                   'chrome-devtools', 'localhost:4000']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
         output = File.read(file_path=log, print_content=True)
         assert "closed" not in output
@@ -49,7 +49,7 @@ class DebugAndroidEmulatorTests(BaseClass):
         assert "did not start in time" not in output
 
     def __verify_debugger_attach(self, log):
-        strings = [EMULATOR_ID, 'To start debugging', 'Chrome', 'chrome-devtools', 'localhost:40000']
+        strings = [EMULATOR_ID, 'To start debugging', 'Chrome', 'chrome-devtools', 'localhost:4000']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
         output = File.read(file_path=log, print_content=True)
         assert "closed" not in output
