@@ -46,7 +46,7 @@ class RunIOSDeviceTests(BaseClass):
         Emulator.stop()
         Simulator.stop()
         Device.ensure_available(platform=Platform.IOS)
-        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.IOS)
+        Device.uninstall_app(app_prefix='org.nativescript.', platform=Platform.IOS)
 
         Folder.cleanup(cls.app_name)
         Tns.create_app(cls.app_name,
@@ -249,4 +249,33 @@ class RunIOSDeviceTests(BaseClass):
         # Tns.wait_for_log(log_file=log, string_list=strings)
         # assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "JS changes not synced on device!"
 
-        # TODO: We need test for issue 2988 and 3007
+        # TODO: We need test for issue 2988
+
+    def test_400_tns_run_ios_should_not_crash_when_uninstall_app(self):
+        """
+        `tns run ios` should work properly even if I manually uninstall the app (test for issue #3007)
+        """
+
+        # `tns run ios` and wait until app is deployed
+        log = Tns.run_ios(attributes={'--path': self.app_name, "--device": self.DEVICE_ID}, log_trace=True, wait=False, assert_success=False)
+        strings = [self.DEVICE_ID,'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+
+        # Verify app is running
+        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "App failed to load!"
+        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TAP"), "App failed to load!"
+
+        # Change JS and wait until app is synced
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=3)
+        strings = ['Successfully transferred', 'main-view-model.js', 'Successfully synced application', self.DEVICE_ID]
+        Tns.wait_for_log(log_file=log, string_list=strings)
+        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="clicks"), "JS changes not synced on device!"
+
+        # Uninstall app while `tns run` is running
+        Device.uninstall_app(app_prefix='org.nativescript.', platform=Platform.IOS)
+
+        # Change XML and wait until app is synced
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
+        strings = ['Successfully transferred', 'main-page.xml', 'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TEST"), "XML changes not synced on device!"

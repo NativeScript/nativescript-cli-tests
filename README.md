@@ -20,6 +20,7 @@ iOS Only: Install ideviceinstaller
 ```
 brew install ideviceinstaller --HEAD
 brew install libimobiledevice --HEAD
+(for iOS11 support) brew install https://gist.github.com/Haraguroicha/0dee2ee29c7376999178c5392080c16e/raw/libimobiledevice.rb --HEAD --with-ios11
 ```
 
 Perf Tests Only:
