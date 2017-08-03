@@ -130,8 +130,9 @@ class Tns(object):
         if " " in path:
             path = "\"" + path + "\""
 
+        # Always install next since we have no @rc and might drop release branch
         Npm.uninstall(package="nativescript-angular", option="--save", folder=path)
-        output = Npm.install(package="nativescript-angular@" + TAG, option="--save", folder=path)
+        output = Npm.install(package="nativescript-angular@next", option="--save", folder=path)
         if Npm.version() > 3:
             assert "ERR" not in output, "Something went wrong when modules are installed."
         return output
