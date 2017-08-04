@@ -304,6 +304,22 @@ class BuildAndroidTests(BaseClass):
         assert successfully_built in output
         assert File.exists("temp/appbuilderProject/appbuilderProject-debug.apk")
 
+    def test_390_build_project_with_foursquare_android_oauth(self):
+        # This is required when build with different SDK
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+
+        # Add foursquare native library as dependency
+        source = os.path.join('data','issues','android-runtime-755','app.gradle')
+        target = os.path.join(self.app_name, 'app','App_Resources','Android','app.gradle')
+        File.copy(src=source, dest=target)
+
+        # Build the project
+        output = Tns.build_android(attributes={"--path": self.app_name}, assert_success=False)
+        assert ':asbg:generateBindings', 'Static Binding Generator not executed'
+        assert 'cannot access its superclass' not in output
+
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows, because tar is not available")
     def test_399_build_project_with_gz_file(self):
         # This is required when build with different SDK
