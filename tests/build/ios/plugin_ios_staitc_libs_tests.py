@@ -6,7 +6,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, SUT_FOLDER
+from core.settings.settings import IOS_RUNTIME_PATH, SUT_FOLDER, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
@@ -20,7 +20,7 @@ class PluginsiOSLibsTests(BaseClass):
     def test_201_plugin_add_static_lib_universal_before_platform_add_ios(self):
         Tns.create_app(self.app_name)
 
-        plugin_path = "/data/static-lib/hello-plugin"
+        plugin_path = TEST_RUN_HOME + "/data/static-lib/hello-plugin.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin hello." in output
 
@@ -29,9 +29,7 @@ class PluginsiOSLibsTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/HelloLib.a")
         assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/include/HelloLib/Bye.h")
         assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/include/HelloLib/Hello.h")
-
-        output = File.read(self.app_name + "/package.json")
-        assert "static-lib/hello-plugin" in output
+        assert "static-lib/hello-plugin" in File.read(self.app_name + "/package.json")
 
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.build_ios(attributes={"--path": self.app_name})
@@ -46,7 +44,7 @@ class PluginsiOSLibsTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = "/data/static-lib/hello-plugin"
+        plugin_path = TEST_RUN_HOME + "/data/static-lib/hello-plugin.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin hello." in output
 
@@ -55,9 +53,7 @@ class PluginsiOSLibsTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/HelloLib.a")
         assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/include/HelloLib/Bye.h")
         assert File.exists(self.app_name + "/node_modules/hello/platforms/ios/include/HelloLib/Hello.h")
-
-        output = File.read(self.app_name + "/package.json")
-        assert "static-lib/hello-plugin" in output
+        assert "static-lib/hello-plugin" in File.read(self.app_name + "/package.json")
 
         Tns.build_ios(attributes={"--path": self.app_name})
 
@@ -71,7 +67,7 @@ class PluginsiOSLibsTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = "/data/static-lib/bye-plugin"
+        plugin_path = TEST_RUN_HOME + "/data/static-lib/bye-plugin.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin bye" in output
         

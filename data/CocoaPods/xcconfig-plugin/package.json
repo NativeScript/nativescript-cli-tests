@@ -1,9 +1,0 @@
-{
-  "name" : "xcconfig-plugin",
-  "version": "0.0.1",
-  "nativescript": {
-    "platforms": {
-      "ios": "1.4.0"
-    }
-  }
-}

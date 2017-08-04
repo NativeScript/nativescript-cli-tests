@@ -5,7 +5,7 @@ Test for plugin* commands in context of iOS
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, SUT_FOLDER
+from core.settings.settings import IOS_RUNTIME_PATH, SUT_FOLDER, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 from core.settings.strings import *
@@ -21,23 +21,19 @@ class PluginsiOSPodsTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = "/data/CocoaPods/carousel"
+        plugin_path = TEST_RUN_HOME + "/data/CocoaPods/carousel.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin carousel." in output
         assert File.exists(self.app_name + "/node_modules/carousel/package.json")
         assert File.exists(self.app_name + "/node_modules/carousel/platforms/ios/Podfile")
+        assert "carousel" in File.read(self.app_name + "/package.json")
 
-        output = File.read(self.app_name + "/package.json")
-        assert "carousel" in output
-
-        plugin_path = "/data/CocoaPods/keychain"
+        plugin_path = TEST_RUN_HOME + "/data/CocoaPods/keychain.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin keychain." in output
         assert File.exists(self.app_name + "/node_modules/keychain/package.json")
         assert File.exists(self.app_name + "/node_modules/keychain/platforms/ios/Podfile")
-
-        output = File.read(self.app_name + "/package.json")
-        assert "keychain" in output
+        assert "keychain" in File.read(self.app_name + "/package.json")
 
         output = Tns.build_ios(attributes={"--path": self.app_name})
         assert "Installing pods..." in output
@@ -60,7 +56,7 @@ class PluginsiOSPodsTests(BaseClass):
     def test_201_plugin_add_pod_google_maps_before_platform_add_ios(self):
         Tns.create_app(self.app_name)
 
-        plugin_path = "/data/CocoaPods/googlesdk"
+        plugin_path = TEST_RUN_HOME + "/data/CocoaPods/googlesdk.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin googlesdk." in output
         assert File.exists(self.app_name + "/node_modules/googlesdk/package.json")
@@ -99,7 +95,7 @@ class PluginsiOSPodsTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = "/data/CocoaPods/googlesdk"
+        plugin_path = TEST_RUN_HOME + "/data/CocoaPods/googlesdk.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin googlesdk." in output
         assert File.exists(self.app_name + "/node_modules/googlesdk/package.json")
@@ -112,7 +108,7 @@ class PluginsiOSPodsTests(BaseClass):
 
         output = Tns.build_ios(attributes={"--path": self.app_name})
         assert "Successfully prepared plugin googlesdk for ios." in output
-        assert "Installing pods..." in output
+        assert "Installing pods..." in    output
 
         output = File.read(self.app_name + "/platforms/ios/Podfile")
         assert "source 'https://github.com/CocoaPods/Specs.git'" in output
@@ -136,7 +132,7 @@ class PluginsiOSPodsTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = "/data/CocoaPods/invalidpod"
+        plugin_path = TEST_RUN_HOME + "/data/CocoaPods/invalidpod.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin invalidpod." in output
         assert File.exists(self.app_name + "/node_modules/invalidpod/package.json")
@@ -148,9 +144,7 @@ class PluginsiOSPodsTests(BaseClass):
         output = Tns.prepare_ios(attributes={"--path": self.app_name}, assert_success=False)
         assert "Installing pods..." in output
         assert "Command pod failed with exit code 1" in output
-
-        output = File.read(self.app_name + "/platforms/ios/Podfile")
-        assert "pod 'InvalidPod'" in output
+        assert "pod 'InvalidPod'" in File.read(self.app_name + "/platforms/ios/Podfile")
 
         assert not File.exists(self.app_name + "/platforms/ios/TestApp.xcworkspace")
         assert not File.exists(self.app_name + "/platforms/ios/Pods/Pods.xcodeproj")

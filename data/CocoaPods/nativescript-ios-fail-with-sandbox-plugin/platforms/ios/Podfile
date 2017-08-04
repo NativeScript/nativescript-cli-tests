@@ -1,1 +1,0 @@
-post_install do |installer_representation| `echo content > ../I_MADE_THIS_FILE.txt` end
