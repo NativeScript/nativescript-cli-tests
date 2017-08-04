@@ -10,7 +10,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
-from core.settings.settings import TNS_PATH, SUT_FOLDER, DEVELOPMENT_TEAM, BRANCH, TEST_RUN_HOME, \
+from core.settings.settings import TNS_PATH, SUT_FOLDER, DEVELOPMENT_TEAM, TEST_RUN_HOME, \
     COMMAND_TIMEOUT, CURRENT_OS, TAG
 from core.settings.strings import config_release, codesign, config_debug
 from core.tns.tns_platform_type import Platform
@@ -211,7 +211,7 @@ class Tns(object):
                                 update_modules=update_modules)
         if update_modules:
             Tns.update_angular(path=app_name)
-            
+
         if assert_success:
             if Npm.version() < 5:
                 assert "nativescript-angular" in output
@@ -431,6 +431,20 @@ class Tns(object):
         if assert_success:
             assert "Project successfully built" in output
             assert "Successfully installed on device" in output
+        return output
+
+    @staticmethod
+    def run(attributes={}, assert_success=True, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None, wait=True):
+        if "7." in Xcode.get_version():
+            print "Xcode 7. No need to pass --teamId param!"
+        else:
+            attr = {"--teamId": DEVELOPMENT_TEAM}
+            attributes.update(attr)
+        output = Tns.run_tns_command("run", attributes=attributes, log_trace=log_trace, timeout=timeout,
+                                     tns_path=tns_path, wait=wait)
+        if assert_success:
+            assert "Project successfully built" in output
+            assert "Successfully installed on device with identifier" in output
         return output
 
     @staticmethod
