@@ -21,7 +21,7 @@ class PluginsiOSPodsTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = SUT_FOLDER + "/data/CocoaPods/carousel"
+        plugin_path = "/data/CocoaPods/carousel"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin carousel." in output
         assert File.exists(self.app_name + "/node_modules/carousel/package.json")
@@ -30,7 +30,7 @@ class PluginsiOSPodsTests(BaseClass):
         output = File.read(self.app_name + "/package.json")
         assert "carousel" in output
 
-        plugin_path = SUT_FOLDER + "/data/CocoaPods/keychain"
+        plugin_path = "/data/CocoaPods/keychain"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin keychain." in output
         assert File.exists(self.app_name + "/node_modules/keychain/package.json")
@@ -60,7 +60,7 @@ class PluginsiOSPodsTests(BaseClass):
     def test_201_plugin_add_pod_google_maps_before_platform_add_ios(self):
         Tns.create_app(self.app_name)
 
-        plugin_path = SUT_FOLDER + "/data/CocoaPods/googlesdk"
+        plugin_path = "/data/CocoaPods/googlesdk"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin googlesdk." in output
         assert File.exists(self.app_name + "/node_modules/googlesdk/package.json")
@@ -99,7 +99,7 @@ class PluginsiOSPodsTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = SUT_FOLDER + "/data/CocoaPods/googlesdk"
+        plugin_path = "/data/CocoaPods/googlesdk"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin googlesdk." in output
         assert File.exists(self.app_name + "/node_modules/googlesdk/package.json")
@@ -136,7 +136,7 @@ class PluginsiOSPodsTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        plugin_path = SUT_FOLDER + "/data/CocoaPods/invalidpod"
+        plugin_path = "/data/CocoaPods/invalidpod"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin invalidpod." in output
         assert File.exists(self.app_name + "/node_modules/invalidpod/package.json")
