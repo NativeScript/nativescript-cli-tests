@@ -21,6 +21,7 @@ from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.helpers.adb import Adb
+from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -274,6 +275,33 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
+    @unittest.skipIf(CURRENT_OS == OSType.LINUX, "Run only on macOS.")
+    def test_290_tns_run_android_should_refresh_images(self):
+        """Test for https://github.com/NativeScript/nativescript-cli/issues/2981"""
+
+        # Ensure app with image
+        run("cp -R data/issues/nativescript-cli-2981/* " + self.app_name + "/app/")
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
+
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image='issue_2981_logo_image',
+                            tolerance=3.0, timeout=30)
+
+        # Change the image
+        old_image = os.path.join(self.app_name, 'app', 'img', 'logo.png')
+        new_image = os.path.join(self.app_name, 'app', 'img', 'icon.png')
+        File.copy(src=new_image, dest=old_image)
+        Tns.wait_for_log(log_file=log, string_list=['Successfully transferred', 'Successfully synced application'])
+
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image='issue_2981_icon_image',
+                            tolerance=3.0, timeout=30)
+
     def test_300_tns_run_android_just_launch_and_incremental_builds(self):
         """
         This test verify following things:
@@ -465,7 +493,7 @@ class RunAndroidEmulatorTests(BaseClass):
         """
         If bundle identifiers in package.json and app.gradle do not match CLI should warn the user.
         """
-        app_gradle = os.path.join(self.app_name, 'app', 'App_Resources','Android','app.gradle')
+        app_gradle = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
         File.replace(file_path=app_gradle, str1='org.nativescript.' + self.app_name, str2='org.nativescript.MyApp')
         File.replace(file_path=app_gradle, str1='__PACKAGE__', str2='org.nativescript.MyApp')
         assert "org.nativescript.MyApp" in File.read(app_gradle), "Failed to replace bundle identifier."
