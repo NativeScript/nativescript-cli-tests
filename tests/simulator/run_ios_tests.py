@@ -42,7 +42,7 @@ class RunIOSSimulatorTests(BaseClass):
         BaseClass.setUpClass(logfile)
         Emulator.stop()
         Simulator.stop()
-        cls.SIMULATOR_ID = Simulator.start(name=SIMULATOR_NAME)
+        cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
         Folder.cleanup(cls.app_name)
 
     def setUp(self):
@@ -358,6 +358,20 @@ class RunIOSSimulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
         assert 'BUILD SUCCEEDED' not in File.read(log), "Change of CSS files after plugin add is not incremental!"
         File.write(file_path=log, text="")  # Clean log file
+
+    def test_390_tns_run_ios_should_warn_if_package_ids_do_not_match(self):
+        """
+        If bundle identifiers in package.json and Info.plist do not match CLI should warn the user.
+        """
+        str1 = "<string>${EXECUTABLE_NAME}</string>"
+        str2 = "<string>${EXECUTABLE_NAME}</string>" \
+               "<key>CFBundleIdentifier</key>" \
+               "<string>org.nativescript.myapp</string>"
+        info = os.path.join(self.app_name, 'app', 'App_Resources','iOS','Info.plist')
+        File.replace(file_path=info, str1=str1, str2=str2)
+        output = Tns.run_ios(attributes={'--path': self.app_name, '--justlaunch': ''})
+        assert "[WARNING]: The CFBundleIdentifier key inside the 'Info.plist' will be overriden" in output
+        assert "Successfully synced application org.nativescript.TestApp" in output
 
     def test_400_tns_run_on_folder_with_spaces(self):
         """

@@ -461,6 +461,20 @@ class RunAndroidEmulatorTests(BaseClass):
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
 
+    def test_390_tns_run_android_should_warn_if_package_ids_do_not_match(self):
+        """
+        If bundle identifiers in package.json and app.gradle do not match CLI should warn the user.
+        """
+        app_gradle = os.path.join(self.app_name, 'app', 'App_Resources','Android','app.gradle')
+        File.replace(file_path=app_gradle, str1='org.nativescript.' + self.app_name, str2='org.nativescript.MyApp')
+        File.replace(file_path=app_gradle, str1='__PACKAGE__', str2='org.nativescript.MyApp')
+        assert "org.nativescript.MyApp" in File.read(app_gradle), "Failed to replace bundle identifier."
+
+        output = Tns.run_android(attributes={'--path': self.app_name, '--justlaunch': ''})
+        assert "The Application identifier is different from the one inside 'package.json' file." in output
+        assert "NativeScript CLI might not work properly." in output
+        assert "BUILD SUCCESSFUL" in output
+
     @unittest.skipIf(CURRENT_OS == OSType.LINUX, "`shell cp -r` fails for some reason on emulators on Linux.")
     def test_400_tns_run_android_respect_adb_errors(self):
         """
