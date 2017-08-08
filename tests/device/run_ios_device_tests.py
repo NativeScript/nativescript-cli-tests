@@ -16,6 +16,7 @@ TODO: Add tests for:
 """
 
 import os
+from datetime import datetime
 from time import sleep
 
 from flaky import flaky
@@ -26,7 +27,7 @@ from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME
+from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME, TEST_RUN_HOME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -38,6 +39,8 @@ class RunIOSDeviceTests(BaseClass):
     SIMULATOR_ID = ''
     DEVICES = Device.get_ids(platform=Platform.IOS)
     DEVICE_ID = Device.get_id(platform=Platform.IOS)
+    TEMP_FOLDER = os.path.join(TEST_RUN_HOME, 'out',
+                               'livesync-hello-world_app_' + datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
 
     @classmethod
     def setUpClass(cls):
@@ -52,11 +55,17 @@ class RunIOSDeviceTests(BaseClass):
         Tns.create_app(cls.app_name,
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
+        Folder.copy(src=os.path.join(cls.app_name, 'app'), dst=cls.TEMP_FOLDER)
         Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
 
     def setUp(self):
         BaseClass.setUp(self)
         Tns.kill()
+
+        # Replace app folder between tests.
+        app_folder = os.path.join(self.app_name, 'app')
+        Folder.cleanup(app_folder)
+        Folder.copy(src=self.TEMP_FOLDER, dst=app_folder)
 
     def tearDown(self):
         Tns.kill()
@@ -116,12 +125,13 @@ class RunIOSDeviceTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TEST"), "Sync of CSS files failed!"
 
-        # Rollback all the changes and verify files are synced
+        # Rollback JS changes and verify files are synced
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
         strings = ['Successfully transferred', 'main-view-model.js', 'Refreshing application']
         Tns.wait_for_log(log_file=log, string_list=strings)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "JS changes not synced on device!"
 
+        # Change XML again
         file_change = ReplaceHelper.CHANGE_XML
         File.replace(self.app_name + '/' + file_change[0], "TEST", "MyTest")
         File.copy(src=self.app_name + '/' + file_change[0], dest=self.app_name + '/' + file_change[0] + ".bak")
@@ -131,6 +141,7 @@ class RunIOSDeviceTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="MyTest"), "XML changes not synced on device!"
 
+        # Rollback CSS changes and verify files are synced
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
         strings = ['Successfully transferred', 'app.css', 'Refreshing application']
         Tns.wait_for_log(log_file=log, string_list=strings)
@@ -186,7 +197,7 @@ class RunIOSDeviceTests(BaseClass):
         self.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
         output = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
                              assert_success=False)
-        TnsAsserts.prepared(app_name=self.app_name, output=output, platform=Platform.IOS, prepare=Prepare.SKIP)
+        TnsAsserts.prepared(app_name=self.app_name, output=output, platform=Platform.IOS, prepare=Prepare.INCREMENTAL)
         assert self.SIMULATOR_ID in output
         for device_id in self.DEVICES:
             assert device_id not in output, 'Application is deployed on {0} device.'.format(device_id)
@@ -198,13 +209,14 @@ class RunIOSDeviceTests(BaseClass):
         self.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
         output = Tns.run_ios(attributes={'--path': self.app_name, '--device': self.DEVICE_ID, '--justlaunch': ''},
                              assert_success=False)
-        TnsAsserts.prepared(app_name=self.app_name, output=output, platform=Platform.IOS, prepare=Prepare.SKIP)
+        TnsAsserts.prepared(app_name=self.app_name, output=output, platform=Platform.IOS, prepare=Prepare.INCREMENTAL)
         assert self.SIMULATOR_ID not in output, 'Application is also deployed on iOS Simulator!'
         for device_id in self.DEVICES:
             if device_id != self.DEVICE_ID:
                 assert device_id not in output, \
                     'Application is deployed on {0} while it should be only on {1}'.format(device_id, self.DEVICES)
 
+        # Second prepare should be skipped, since there are no changes in the project.
         output = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
                              assert_success=False)
         TnsAsserts.prepared(app_name=self.app_name, output=output, platform=Platform.IOS, prepare=Prepare.SKIP)
@@ -257,8 +269,9 @@ class RunIOSDeviceTests(BaseClass):
         """
 
         # `tns run ios` and wait until app is deployed
-        log = Tns.run_ios(attributes={'--path': self.app_name, "--device": self.DEVICE_ID}, log_trace=True, wait=False, assert_success=False)
-        strings = [self.DEVICE_ID,'Successfully synced application']
+        log = Tns.run_ios(attributes={'--path': self.app_name, "--device": self.DEVICE_ID}, log_trace=True, wait=False,
+                          assert_success=False)
+        strings = [self.DEVICE_ID, 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
 
         # Verify app is running
