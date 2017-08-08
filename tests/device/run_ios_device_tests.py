@@ -269,7 +269,7 @@ class RunIOSDeviceTests(BaseClass):
         """
 
         # `tns run ios` and wait until app is deployed
-        log = Tns.run_ios(attributes={'--path': self.app_name, "--device": self.DEVICE_ID}, log_trace=True, wait=False,
+        log = Tns.run_ios(attributes={'--path': self.app_name, "--device": self.DEVICE_ID}, wait=False,
                           assert_success=False)
         strings = [self.DEVICE_ID, 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
@@ -289,6 +289,6 @@ class RunIOSDeviceTests(BaseClass):
 
         # Change XML and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
-        strings = ['Successfully transferred', 'main-page.xml', 'Successfully synced application']
+        strings = ['Successfully installed', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TEST"), "XML changes not synced on device!"
