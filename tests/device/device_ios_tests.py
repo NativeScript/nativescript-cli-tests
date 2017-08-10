@@ -84,3 +84,4 @@ class DeviceIOSTests(BaseClass):
         log = Tns.run_tns_command("device log", attributes={"--device": self.DEVICE_ID}, wait=False)
         Tns.wait_for_log(log_file=log, string_list=['>:'], timeout=30, clean_log=False)
         output = File.read(log)
+        assert "<Notice>:" in output or "<Error>:" in output
