@@ -8,6 +8,7 @@ from flaky import flaky
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.simulator import Simulator
+from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK
 from core.tns.tns import Tns
@@ -81,4 +82,5 @@ class DeviceIOSTests(BaseClass):
 
         # Get logs
         log = Tns.run_tns_command("device log", attributes={"--device": self.DEVICE_ID}, wait=False)
-        Tns.wait_for_log(log_file=log, string_list=['message', '<Notice>:'], timeout=30, clean_log=False)
+        Tns.wait_for_log(log_file=log, string_list=['>:'], timeout=30, clean_log=False)
+        output = File.read(log)
