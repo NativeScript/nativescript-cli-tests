@@ -34,7 +34,7 @@ class DebugiOSSimulatorTests(BaseClass):
         Process.kill('NativeScript Inspector')
         Emulator.stop()
         Simulator.stop()
-        cls.SIMULATOR_ID = Simulator.start(name=SIMULATOR_NAME)
+        cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
         Folder.cleanup(cls.INSPECTOR_GLOBAL_PATH)
         Tns.create_app(cls.app_name,
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
