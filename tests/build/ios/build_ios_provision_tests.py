@@ -8,7 +8,7 @@ from core.base_class.BaseClass import BaseClass
 from core.device.simulator import Simulator
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH, DEVELOPMENT_TEAM, \
-    PROVISIONING
+    PROVISIONING, DISTRIBUTION_PROVISIONING
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
@@ -50,6 +50,13 @@ class BuildiOSProvisioningTests(BaseClass):
                      "Skip on Xcode9 because of https://github.com/NativeScript/nativescript-cli/issues/3046")
     def test_201_build_ios_with_provision(self):
         build_attributes = {"--path": self.app_name, "--forDevice": "", "--release": "", "--provision": PROVISIONING}
+        Tns.build_ios(attributes=build_attributes)
+
+    @unittest.skipIf(Xcode.get_version() >= 9.0,
+                     "Skip on Xcode9 because of https://github.com/NativeScript/nativescript-cli/issues/3046")
+    def test_202_build_ios_with_distribution_provision(self):
+        build_attributes = {"--path": self.app_name, "--forDevice": "", "--release": "",
+                            "--provision": DISTRIBUTION_PROVISIONING}
         Tns.build_ios(attributes=build_attributes)
 
     def test_400_build_ios_with_wrong_provision(self):
