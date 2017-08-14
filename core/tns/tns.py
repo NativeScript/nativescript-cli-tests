@@ -307,7 +307,7 @@ class Tns(object):
         output = Tns.run_tns_command("plugin add " + name, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
         if assert_success:
-            short_name = name.replace("@" + TAG, "").replace(".tgz", "").split(os.sep)[-1]
+            short_name = name.rsplit('@', 1)[0].replace(".tgz", "").split(os.sep)[-1]
             assert "Successfully installed plugin {0}".format(short_name) in output
         return output
 

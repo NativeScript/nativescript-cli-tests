@@ -167,6 +167,15 @@ class PluginsAndroidTests(BaseClass):
         output = Tns.run_tns_command("plugin", attributes={"--path": self.app_name})
         assert tns_plugin in output
 
+    def test_390_plugin_with_promise_in_hooks(self):
+        Tns.create_app(self.app_name)
+        Tns.plugin_add("nativescript-fabric@1.0.6", attributes={"--path": self.app_name})
+        output = Tns.prepare_android(attributes={"--path": self.app_name}, assert_success=False)
+        assert "Failed to execute hook" in output
+        assert "nativescript-fabric.js" in output
+        assert "TypeError" not in output
+        assert "Cannot read property" not in output
+
     def test_400_plugin_add_not_existing_plugin(self):
         Tns.create_app(self.app_name)
         output = Tns.plugin_add("fakePlugin", attributes={"--path": self.app_name}, assert_success=False)
