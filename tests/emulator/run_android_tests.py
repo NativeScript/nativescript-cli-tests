@@ -27,7 +27,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_RUNTIME_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
-    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, EMULATOR_NAME, CURRENT_OS
+    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, EMULATOR_NAME, CURRENT_OS, TEST_RUN_HOME
 from core.settings.strings import cannot_resolve_device, list_devices
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
@@ -179,6 +179,7 @@ class RunAndroidEmulatorTests(BaseClass):
     def test_200_tns_run_android_break_and_fix_app(self):
         """
         Make changes in xml that break the app and then changes that fix the app.
+        Add/remove js files that break the app and then fix it.
         """
 
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
@@ -203,6 +204,22 @@ class RunAndroidEmulatorTests(BaseClass):
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML_INVALID_SYNTAX)
         strings = ['Successfully transferred main-page.xml', 'Successfully synced application', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
+
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
+        # Move js files
+        app_js_original_path = src=os.path.join(self.app_name, 'app', 'app.js')
+        app_js_new_path = src = os.path.join(TEST_RUN_HOME, 'app.js')
+        File.copy(src=app_js_original_path, dest=app_js_new_path)
+        File.remove(file_path=app_js_original_path)
+        strings = ['Successfully synced application', EMULATOR_ID]
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=30, check_interval=10)
+
+        File.copy(src=app_js_new_path, dest=app_js_original_path)
+        strings = ['Successfully synced application', 'app.js', EMULATOR_ID]
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=30, check_interval=10)
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
