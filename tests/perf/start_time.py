@@ -38,13 +38,13 @@ class StartTimeTestCase(unittest.TestCase):
     def tearDownClass(cls):
         print "tearDownClass"
         CsvUtils.analyze_data("./tmp-template-hello-world-ng-webpack-uglify-release.csv")
-        CsvUtils.analyze_data("./tmp-SDK-webpack-uglify-release.csv")
-        CsvUtils.analyze_data("./tmp-QSF-release.csv")
+        # CsvUtils.analyze_data("./tmp-SDK-webpack-uglify-release.csv")
+        # CsvUtils.analyze_data("./tmp-QSF-release.csv")
 
     @parameterized.expand([
-        ("template-hello-world-ng-webpack-uglify-release", "org.nativescript.TestApp"),
-        ("SDK-webpack-uglify-release", "org.nativescript.nativescriptsdkexamplesng"),
-        ("QSF-release", "org.nativescript.examples")
+        ("template-hello-world-ng-webpack-uglify-release", "org.nativescript.TestApp")  # ,
+        # ("SDK-webpack-uglify-release", "org.nativescript.nativescriptsdkexamplesng"),
+        # ("QSF-release", "org.nativescript.examples")
     ])
     def test_start_time(self, apk_name, app_id):
         print "test"
