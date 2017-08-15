@@ -46,14 +46,14 @@ class BuildiOSProvisioningTests(BaseClass):
         assert PROVISIONING in output
         assert DEVELOPMENT_TEAM in output
 
-    @unittest.skipIf(float(Xcode.get_version()) >= 9.0,
-                     "Skip on Xcode9 because of https://github.com/NativeScript/nativescript-cli/issues/3046")
+    @unittest.skipIf("9." in Xcode.get_version(),
+                     "Skip on Xcode 9 because of https://github.com/NativeScript/nativescript-cli/issues/3046")
     def test_201_build_ios_with_provision(self):
         build_attributes = {"--path": self.app_name, "--forDevice": "", "--release": "", "--provision": PROVISIONING}
         Tns.build_ios(attributes=build_attributes)
 
-    @unittest.skipIf(float(Xcode.get_version()) >= 9.0,
-                     "Skip on Xcode9 because of https://github.com/NativeScript/nativescript-cli/issues/3046")
+    @unittest.skipIf("9." in Xcode.get_version(),
+                     "Skip on Xcode 9 because of https://github.com/NativeScript/nativescript-cli/issues/3046")
     def test_202_build_ios_with_distribution_provision(self):
         build_attributes = {"--path": self.app_name, "--forDevice": "", "--release": "",
                             "--provision": DISTRIBUTION_PROVISIONING}

@@ -13,6 +13,7 @@ If simulator is not started and device is not connected `tns run ios` should sta
 
 import os
 import time
+import unittest
 
 import nose
 from flaky import flaky
@@ -367,7 +368,7 @@ class RunIOSSimulatorTests(BaseClass):
         str2 = "<string>${EXECUTABLE_NAME}</string>" \
                "<key>CFBundleIdentifier</key>" \
                "<string>org.nativescript.myapp</string>"
-        info = os.path.join(self.app_name, 'app', 'App_Resources','iOS','Info.plist')
+        info = os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'Info.plist')
         File.replace(file_path=info, str1=str1, str2=str2)
         output = Tns.run_ios(attributes={'--path': self.app_name, '--justlaunch': ''})
         assert "[WARNING]: The CFBundleIdentifier key inside the 'Info.plist' will be overriden" in output
@@ -389,3 +390,11 @@ class RunIOSSimulatorTests(BaseClass):
                              assert_success=False)
         assert cannot_resolve_device in output
         assert list_devices in output
+
+    @unittest.skipIf(Device.get_count(platform=Platform.IOS) > 0, "Valid only if there are no devices.")
+    def test_410_run_without_platform_and_without_devices(self):
+        Simulator.stop()
+        Tns.create_app(self.app_name, update_modules=True)
+        output = Tns.run(attributes={'--path': self.app_name, '--justlaunch': ''}, assert_success=False)
+        assert "Unable to find applicable devices to execute operation " \
+               "and unable to start emulator when platform is not specified" in output
