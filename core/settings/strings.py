@@ -5,8 +5,6 @@ from os import path
 ios = "ios"
 android = "android"
 invalid = "invalidEntry"
-config_debug = "CONFIGURATION Debug"
-config_release = "CONFIGURATION Release"
 app_identifier = "org.nativescript.testapp"
 
 # Files
@@ -60,11 +58,7 @@ nativescript_theme_core = "nativescript-theme-core"
 devDependencies = "devDependencies"
 started_on_device = "Successfully started on device with identifier"
 
-# Pods
-carousel = "carousel"
-
 # Plugins
-
 nativescript_unit_test_runner = "nativescript-unit-test-runner"
 tns_core_modules = "tns-core-modules"
 
@@ -75,11 +69,3 @@ invalid_option = "The option '{0}' is not supported."
 invalid_value = "The value '{0}' is not valid."
 no_platform = "No platform specified"
 "and neither was a --path specified."
-cannot_resolve_device = "Could not find device by specified identifier"
-list_devices = "To list currently connected devices and verify that the specified identifier exists, run 'tns device'"
-no_platform_installed = "No installed platforms found. Use $ tns platform add"
-
-
-
-
-

@@ -14,6 +14,7 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYST
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
+from core.tns.tns_verifications import TnsAsserts
 
 
 class DeployAndroidTests(BaseClass):
@@ -119,6 +120,4 @@ class DeployAndroidTests(BaseClass):
                                                                    "--justlaunch": "",
                                                                    "--device": "invaliddevice_id"
                                                                    })
-        assert "Could not find device by specified identifier" in output
-        assert "To list currently connected devices and verify that the specified identifier exists, run" in output
-        assert "tns device" in output
+        TnsAsserts.invalid_device(output=output)

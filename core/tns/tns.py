@@ -12,7 +12,7 @@ from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import TNS_PATH, SUT_FOLDER, DEVELOPMENT_TEAM, TEST_RUN_HOME, \
     COMMAND_TIMEOUT, CURRENT_OS, TAG
-from core.settings.strings import config_release, codesign, config_debug
+from core.settings.strings import codesign
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
@@ -382,9 +382,9 @@ class Tns(object):
 
             # Verify release/debug builds
             if "--release" in attributes.keys():
-                assert config_release in output
+                assert "CONFIGURATION Release" in output
             else:
-                assert config_debug in output
+                assert "CONFIGURATION Debug" in output
 
             entitlements_path = app_name + '/platforms/ios/' + app_id + '/' + app_id + '.entitlements'
             assert File.exists(entitlements_path), "Entitlements file is missing!"

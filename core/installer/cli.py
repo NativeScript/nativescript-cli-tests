@@ -13,11 +13,8 @@ class Cli(object):
     def install():
         output = run("npm i " + SUT_FOLDER + os.path.sep + "nativescript.tgz")
         message = "NativeScript CLI installation failed - \"{e}\" found in output."
-        assert "npm ERR" not in output, message.format(e="npm ERR")
-        assert "FiberFuture" not in output, message.format(e="FiberFuture")
         assert "dev-post-install" not in output, message.format(e="dev-post-install")
-        assert File.exists("node_modules/.bin/tns"), \
-            "NativeScript CLI installation failed - tns does not exist."
+        assert File.exists("node_modules/.bin/tns"), "NativeScript CLI installation failed - tns does not exist."
         print output
 
     @staticmethod

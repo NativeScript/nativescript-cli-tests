@@ -44,6 +44,7 @@ class BuildiOSProvisioningTests(BaseClass):
         assert "Due" in output
         assert "Devices" in output
         assert PROVISIONING in output
+        assert DISTRIBUTION_PROVISIONING in output
         assert DEVELOPMENT_TEAM in output
 
     @unittest.skipIf("9." in Xcode.get_version(),

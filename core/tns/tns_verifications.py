@@ -3,7 +3,6 @@ Verifications for NativeScript projects.
 """
 import json
 import os
-import re
 
 from core.npm.npm import Npm
 from core.osutils.file import File
@@ -71,7 +70,7 @@ class TnsAsserts(object):
         """
         Assert application is created properly.
         :param app_name: App name
-        :param output: Outout of `tns create command`
+        :param output: Output of `tns create command`
         :param full_check: If true everything will be checked. If false only console output will be checked.
         """
 
@@ -117,22 +116,17 @@ class TnsAsserts(object):
         dts = os.path.join(app_name, TnsAsserts.TNS_MODULES, 'tns-core-modules.d.ts')
 
         # Assert content of files added with TypeScript plugin.
-        modules_version = TnsAsserts.get_modules_version(app_name=app_name)
-        modules_version = re.sub("\D", "", modules_version)
-
         File.exists(ts_config)
         File.exists(ref_dts)
         File.exists(dts)
         red_tds_content = File.read(ref_dts)
-        if modules_version[0] < 3:
-            assert './node_modules/tns-core-modules/tns-core-modules.d.ts' in red_tds_content
-        else:
-            assert './node_modules/tns-core-modules/tns-core-modules.d.ts' not in red_tds_content
-            ts_config_json = TnsAsserts.get_tsconfig_json(app_name=app_name)
-            paths = ts_config_json.get('compilerOptions').get('paths')
-            assert paths is not None, 'Paths missing in tsconfig.json'
-            assert '/node_modules/tns-core-modules/' in str(paths), \
-                '"/node_modules/tns-core-modules/" not found in paths section iof tsconfig.json'
+
+        assert './node_modules/tns-core-modules/tns-core-modules.d.ts' not in red_tds_content
+        ts_config_json = TnsAsserts.get_tsconfig_json(app_name=app_name)
+        paths = ts_config_json.get('compilerOptions').get('paths')
+        assert paths is not None, 'Paths missing in tsconfig.json'
+        assert '/node_modules/tns-core-modules/' in str(paths), \
+            '"/node_modules/tns-core-modules/" not found in paths section iof tsconfig.json'
 
         assert not Folder.is_empty(app_name + TnsAsserts.NODE_MODULES + '/nativescript-dev-typescript')
         assert File.exists(app_name + TnsAsserts.HOOKS + 'before-prepare/nativescript-dev-typescript.js')
@@ -330,3 +324,28 @@ class TnsAsserts(object):
                 'Prepare does not skip \'ios\' specific js files.'
             assert not File.exists(os.path.join(modules_path, 'application', 'application.ios.js')), \
                 'Prepare does not strip \'ios\' from name of js files.'
+
+    @staticmethod
+    def can_not_find_device(output):
+        """
+        Assert output for invalid device.
+        :param output: Output of tns command
+        """
+        assert "Could not find device by specified identifier" in output
+        assert "To list currently connected devices and verify that the specified identifier exists" in output
+
+    @staticmethod
+    def invalid_device(output):
+        """
+        Assert output for invalid device.
+        :param output: Output of tns command
+        """
+
+        assert "Searching for devices..." in output
+        assert "Cannot find connected devices" in output
+        assert "No emulator image available for device identifier" in output or \
+               "No simulator image available for device identifier " in output
+        assert "To list available emulator images, run 'tns device <Platform> --available-devices'" in output or \
+               "To list available simulator images, run 'tns device <Platform> --available-devices" in output
+        assert "To list currently connected devices and verify that the specified identifier exists, run 'tns device'" \
+               in output

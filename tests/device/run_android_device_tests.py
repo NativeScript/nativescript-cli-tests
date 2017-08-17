@@ -25,7 +25,6 @@ from core.device.emulator import Emulator
 from core.device.helpers.adb import Adb
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.osutils.process import Process
 from core.settings.settings import ANDROID_RUNTIME_PATH, EMULATOR_ID
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns

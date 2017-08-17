@@ -10,9 +10,10 @@ from core.device.emulator import Emulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, EMULATOR_ID
+from core.settings.strings import invalid
 from core.tns.tns import Tns
-from core.settings.strings import *
 from core.tns.tns_platform_type import Platform
+from core.tns.tns_verifications import TnsAsserts
 
 
 class DeviceAndroidTests(BaseClass):
@@ -100,12 +101,12 @@ class DeviceAndroidTests(BaseClass):
 
     def test_401_device_log_invalid_device_id(self):
         output = Tns.run_tns_command("device log", attributes={"--device": "invaliddevice_id"})
-        assert cannot_resolve_device in output
+        TnsAsserts.can_not_find_device(output=output)
 
     def test_402_device_run_invalid_device_id(self):
         output = Tns.run_tns_command("device run android", attributes={"--device": "invaliddevice_id"})
-        assert cannot_resolve_device in output
+        TnsAsserts.can_not_find_device(output=output)
 
     def test_403_device_list_applications_invalid_device_id(self):
         output = Tns.run_tns_command("device list-applications", attributes={"--device": "invaliddevice_id"})
-        assert cannot_resolve_device in output
+        TnsAsserts.can_not_find_device(output=output)

@@ -28,7 +28,6 @@ from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_RUNTIME_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, EMULATOR_NAME, CURRENT_OS, TEST_RUN_HOME
-from core.settings.strings import cannot_resolve_device, list_devices
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -210,8 +209,8 @@ class RunAndroidEmulatorTests(BaseClass):
                             expected_image='livesync-hello-world_home')
 
         # Move js files
-        app_js_original_path = src=os.path.join(self.app_name, 'app', 'app.js')
-        app_js_new_path = src = os.path.join(TEST_RUN_HOME, 'app.js')
+        app_js_original_path = os.path.join(self.app_name, 'app', 'app.js')
+        app_js_new_path = os.path.join(TEST_RUN_HOME, 'app.js')
         File.copy(src=app_js_original_path, dest=app_js_new_path)
         File.remove(file_path=app_js_original_path)
         strings = ['Successfully synced application', EMULATOR_ID]
@@ -564,5 +563,4 @@ class RunAndroidEmulatorTests(BaseClass):
     def test_404_run_on_invalid_device_id(self):
         output = Tns.run_android(attributes={'--path': self.app_name, '--device': 'fakeId', '--justlaunch': ''},
                                  assert_success=False)
-        assert cannot_resolve_device in output
-        assert list_devices in output
+        TnsAsserts.invalid_device(output=output)
