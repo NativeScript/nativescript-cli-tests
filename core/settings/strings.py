@@ -53,8 +53,6 @@ copy_template_files = "Copying template files..."
 deployed_on_device = "Successfully deployed on device"
 installed_plugin = "Successfully installed plugin {0}"
 tns_plugin = "tns-plugin"
-codesign = "CodeSign"
-nativescript_theme_core = "nativescript-theme-core"
 devDependencies = "devDependencies"
 started_on_device = "Successfully started on device with identifier"
 

@@ -2,6 +2,7 @@
 A wrapper of tns commands.
 """
 import os
+
 import time
 
 from core.npm.npm import Npm
@@ -10,9 +11,8 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
-from core.settings.settings import TNS_PATH, SUT_FOLDER, DEVELOPMENT_TEAM, TEST_RUN_HOME, \
-    COMMAND_TIMEOUT, CURRENT_OS, TAG
-from core.settings.strings import codesign
+from core.settings.settings import COMMAND_TIMEOUT, TNS_PATH, TAG, TEST_RUN_HOME, DEVELOPMENT_TEAM, CURRENT_OS, \
+    SUT_FOLDER
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
@@ -231,10 +231,7 @@ class Tns(object):
         output = Tns.run_tns_command("platform add " + platform_string, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
 
-        #######################################################################################
-        # Verify platforms added (if assert_success=True)
-        #######################################################################################
-
+        # Verify platforms added
         app_name = Tns.__get_app_name_from_attributes(attributes)
         if assert_success:
             TnsAsserts.platform_added(app_name=app_name, platform=platform, output=output)
@@ -331,6 +328,14 @@ class Tns(object):
         output = Tns.run_tns_command("prepare ios ", attributes=attributes, log_trace=log_trace, tns_path=tns_path)
         if assert_success:
             assert "Project successfully prepared" in output
+
+        # Verify TEAM_ID
+        if "--for-device" in attributes.keys() or "--forDevice" in attributes.keys():
+            app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
+            app_id = Tns.__get_final_package_name(app_name, platform=Platform.IOS)
+            output = File.read(app_name + '/platforms/ios/' + app_id + 'TestApp' + '.xcodeproj/project.pbxproj')
+            assert DEVELOPMENT_TEAM in output, "TeamID not passed to Xcode project!"
+
         return output
 
     @staticmethod
@@ -370,15 +375,17 @@ class Tns(object):
             attr = {"--teamId": DEVELOPMENT_TEAM}
             attributes.update(attr)
         output = Tns.run_tns_command("build ios", attributes=attributes, tns_path=tns_path)
+
+        app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
+        app_name = app_name.replace("\"", "")  # Handle projects with space
+        app_id = Tns.__get_final_package_name(app_name, platform=Platform.IOS)
+
         if assert_success:
             assert "BUILD SUCCEEDED" in output
             assert "Project successfully built" in output
             assert "ERROR" not in output
             assert "malformed" not in output
-            assert codesign in output
-            app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
-            app_id = Tns.__get_final_package_name(app_name, platform=Platform.IOS)
-            app_name = app_name.replace("\"", "")  # Handle projects with space
+            assert "CodeSign" in output
 
             # Verify release/debug builds
             if "--release" in attributes.keys():
@@ -399,6 +406,9 @@ class Tns(object):
                 assert "EXPORT SUCCEEDED" in output
                 assert File.exists(device_folder + app_id + ".ipa"), "IPA file not found!"
                 bundle_content = File.read(device_folder + app_id + ".app/" + app_id)
+
+                output = File.read(app_name + '/platforms/ios/' + app_id + '.xcodeproj/project.pbxproj')
+                assert DEVELOPMENT_TEAM in output, "TeamID not passed to Xcode project!"
             else:
                 assert "build/emulator/" + app_id + ".app" in output
                 assert File.exists(app_name + "/platforms/ios/" + app_id + "/" + app_id + "-Prefix.pch")
