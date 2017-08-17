@@ -250,18 +250,16 @@ class RunIOSDeviceTests(BaseClass):
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="Tap the button"), "App failed to load!"
 
         # Change JS and wait until app is synced
-        # ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
-        # strings = ['Successfully transferred', 'main-view-model.js', 'Successfully synced application', self.DEVICE_ID]
-        # Tns.wait_for_log(log_file=log, string_list=strings)
-        # assert Device.wait_for_text(device_id=self.DEVICE_ID, text="clicks"), "JS changes not synced on device!"
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
+        strings = ['Successfully transferred', 'main-view-model.js', 'Successfully synced application', self.DEVICE_ID]
+        Tns.wait_for_log(log_file=log, string_list=strings)
+        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="clicks"), "JS changes not synced on device!"
 
         # Rollback all the changes and verify files are synced
-        # ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
-        # strings = ['Successfully transferred', 'main-view-model.js', 'Refreshing application']
-        # Tns.wait_for_log(log_file=log, string_list=strings)
-        # assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "JS changes not synced on device!"
-
-        # TODO: We need test for issue 2988
+        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
+        strings = ['Successfully transferred', 'main-view-model.js', 'Refreshing application']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "JS changes not synced on device!"
 
     def test_400_tns_run_ios_should_not_crash_when_uninstall_app(self):
         """
@@ -292,3 +290,14 @@ class RunIOSDeviceTests(BaseClass):
         strings = ['Successfully installed', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TEST"), "XML changes not synced on device!"
+
+    def test_404_tns_run_ios_on_not_existing_device_should_not_start_simualtor(self):
+        """
+        `tns run ios --device fakeID` should show error and emulator should not be started (test for issue #2728)
+        """
+        Simulator.stop()
+        output = Tns.run_ios(attributes={'--path': self.app_name, '--device': 'fakeID', '--justlaunch': ''},
+                             assert_success=False)
+        TnsAsserts.invalid_device(output=output)
+        sleep(10)
+        assert not Simulator.is_running()[0], 'iOS Simulator started by `tns run ios --device fakeID`!'
