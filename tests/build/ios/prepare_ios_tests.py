@@ -6,10 +6,12 @@ import os.path
 import re
 
 from core.base_class.BaseClass import BaseClass
+from core.device.simulator import Simulator
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, ANDROID_RUNTIME_PATH
+from core.settings.settings import IOS_RUNTIME_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, ANDROID_RUNTIME_PATH, \
+    PROVISIONING
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -24,10 +26,15 @@ class PrepareiOSTests(BaseClass):
         BaseClass.setUpClass(logfile)
         if CURRENT_OS != OSType.OSX:
             raise NameError("Can not run iOS tests on non OSX OS.")
+        else:
+            Simulator.stop()
 
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
+
+    def tearDown(self):
+        assert not Simulator.is_running()[0], 'iOS Simulator started after prepare!'
 
     def test_100_prepare_ios(self):
         Tns.create_app(self.app_name)
@@ -109,6 +116,7 @@ class PrepareiOSTests(BaseClass):
         assert "<string>orgnativescriptTestApp</string>" in File.read(final_plist)
 
         # Prepare in release
+        Folder.cleanup(os.path.join(self.app_name, 'platforms', 'ios'))
         Tns.prepare_ios(attributes={"--path": self.app_name, '--release': ''})
         assert "<string>fbXXXXXXXXX</string>" in File.read(final_plist)
         assert "<string>orgnativescriptTestApp</string>" not in File.read(final_plist)
@@ -142,3 +150,23 @@ class PrepareiOSTests(BaseClass):
         output = Tns.prepare_android(attributes={"--path": self.app_name})
         assert "nativescript-iqkeyboardmanager is not supported for android" in output
         assert "Successfully prepared plugin nativescript-social-share for android" in output
+
+    def test_320_prepare_ios_with_provisioning(self):
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+
+        # Prepare with --provision (debug, emulator)
+        Tns.prepare_ios(attributes={"--path": self.app_name, "--provision": PROVISIONING})
+
+        # Prepare with --provision (release, emulator)
+        Folder.cleanup(os.path.join(self.app_name, 'platforms', 'ios'))
+        Tns.prepare_ios(attributes={"--path": self.app_name, "--release": "", "--provision": PROVISIONING})
+
+        # Prepare with --provision (debug, device)
+        Folder.cleanup(os.path.join(self.app_name, 'platforms', 'ios'))
+        Tns.prepare_ios(attributes={"--path": self.app_name, "--forDevice": "", "--provision": PROVISIONING})
+
+        # Prepare with --provision (release, device)
+        Folder.cleanup(os.path.join(self.app_name, 'platforms', 'ios'))
+        Tns.prepare_ios(
+            attributes={"--path": self.app_name, "--release": "", "--forDevice": "", "--provision": PROVISIONING})

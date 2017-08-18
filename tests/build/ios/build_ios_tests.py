@@ -61,10 +61,14 @@ class BuildiOSTests(BaseClass):
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.build_ios(attributes={"--path": self.app_name})
 
-    def test_002_build_ios_release_fordevice(self):
-        Tns.create_app(self.app_name)
+        Folder.cleanup(os.path.join(self.app_name, 'platforms', 'ios'))
+        Tns.build_ios(attributes={"--path": self.app_name, "--release": ""})
+
+        Folder.cleanup(os.path.join(self.app_name, 'platforms', 'ios'))
+        Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": ""})
+
+        Folder.cleanup(os.path.join(self.app_name, 'platforms', 'ios'))
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": ""})
 
         # Verify no aar and frameworks in platforms folder
@@ -77,16 +81,6 @@ class BuildiOSTests(BaseClass):
         output = run("lipo -info Payload/TestApp.app/TestApp")
         assert "armv7" in output
         assert "arm64" in output
-
-    def test_200_build_ios_release(self):
-        Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
-        Tns.build_ios(attributes={"--path": self.app_name, "--release": ""})
-
-    def test_201_build_ios_fordevice(self):
-        Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
-        Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": ""})
 
     def test_211_build_ios_inside_project(self):
         Tns.create_app(self.app_name)
@@ -101,8 +95,6 @@ class BuildiOSTests(BaseClass):
     def test_213_build_ios_platform_not_added_or_platforms_deleted(self):
         Tns.create_app(self.app_name_noplatform)
         Tns.build_ios(attributes={"--path": self.app_name_noplatform})
-        Folder.cleanup(self.app_name_noplatform + '/platforms')
-        Tns.build_ios(attributes={"--path": self.app_name_noplatform}, assert_success=False)
 
     def test_300_build_ios_with_dash(self):
         Tns.create_app(self.app_name_dash)
@@ -127,15 +119,14 @@ class BuildiOSTests(BaseClass):
 
     def test_310_build_ios_with_copy_to(self):
         File.remove("TestApp.app")
+        File.remove("TestApp.ipa")
+
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+
         Tns.build_ios(attributes={"--path": self.app_name, "--copy-to": "./"})
         assert File.exists("TestApp.app")
 
-    def test_311_build_ios_release_with_copy_to(self):
-        File.remove("TestApp.ipa")
-        Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": "", "--copy-to": "./"})
         assert File.exists("TestApp.ipa")
 

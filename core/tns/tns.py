@@ -12,7 +12,7 @@ from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import COMMAND_TIMEOUT, TNS_PATH, TAG, TEST_RUN_HOME, DEVELOPMENT_TEAM, CURRENT_OS, \
-    SUT_FOLDER
+    SUT_FOLDER, DISTRIBUTION_PROVISIONING
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
@@ -60,6 +60,11 @@ class Tns(object):
             if k == "--path":
                 app_name = v
         return app_name.replace('"', '')
+
+    @staticmethod
+    def __get_xcode_project_file(app_name):
+        app_id = Tns.__get_final_package_name(app_name, platform=Platform.IOS)
+        return File.read(app_name + '/platforms/ios/' + app_id + '.xcodeproj/project.pbxproj')
 
     @staticmethod
     def version(tns_path=None):
@@ -330,11 +335,15 @@ class Tns(object):
             assert "Project successfully prepared" in output
 
         # Verify TEAM_ID
+        app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
         if "--for-device" in attributes.keys() or "--forDevice" in attributes.keys():
-            app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
-            app_id = Tns.__get_final_package_name(app_name, platform=Platform.IOS)
-            output = File.read(app_name + '/platforms/ios/' + app_id + 'TestApp' + '.xcodeproj/project.pbxproj')
-            assert DEVELOPMENT_TEAM in output, "TeamID not passed to Xcode project!"
+            assert DEVELOPMENT_TEAM in Tns.__get_xcode_project_file(app_name), "TeamID not passed to Xcode project!"
+
+        # Verify PROVISIONING
+        if "--provision" in attributes.keys():
+            id = attributes.get("--provision")
+            assert id in Tns.__get_xcode_project_file(app_name), \
+                "Provisioning profile specified by --provision not passed to Xcode project!"
 
         return output
 
@@ -369,11 +378,11 @@ class Tns(object):
 
     @staticmethod
     def build_ios(attributes={}, assert_success=True, tns_path=None):
-        if "7." in Xcode.get_version():
-            print "Xcode 7. No need to pass --teamId param!"
-        else:
+
+        if "--provision" not in attributes.keys():
             attr = {"--teamId": DEVELOPMENT_TEAM}
             attributes.update(attr)
+
         output = Tns.run_tns_command("build ios", attributes=attributes, tns_path=tns_path)
 
         app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
@@ -406,9 +415,12 @@ class Tns(object):
                 assert "EXPORT SUCCEEDED" in output
                 assert File.exists(device_folder + app_id + ".ipa"), "IPA file not found!"
                 bundle_content = File.read(device_folder + app_id + ".app/" + app_id)
-
-                output = File.read(app_name + '/platforms/ios/' + app_id + '.xcodeproj/project.pbxproj')
-                assert DEVELOPMENT_TEAM in output, "TeamID not passed to Xcode project!"
+                xcode_project = Tns.__get_xcode_project_file(app_name)
+                if "--provision" not in attributes.keys():
+                    assert DEVELOPMENT_TEAM in xcode_project, "TeamID not passed to Xcode!"
+                else:
+                    assert DEVELOPMENT_TEAM in xcode_project or DISTRIBUTION_PROVISIONING in xcode_project, \
+                        "TeamID not passed to Xcode!"
             else:
                 assert "build/emulator/" + app_id + ".app" in output
                 assert File.exists(app_name + "/platforms/ios/" + app_id + "/" + app_id + "-Prefix.pch")
