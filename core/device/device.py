@@ -358,8 +358,8 @@ class Device(object):
     def wait_until_app_is_running(device_id, app_id, timeout=60):
         """
         Wait until app is running.
-        :param app_id: Bundle identifier (example: org.nativescript.TestApp)
         :param device_id: Device identifier.
+        :param app_id: Bundle identifier (example: org.nativescript.TestApp)
         :param timeout: Timeout in seconds.
         """
         end_time = time.time() + timeout
