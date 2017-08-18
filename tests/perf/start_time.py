@@ -67,6 +67,7 @@ class StartTimeTestCase(unittest.TestCase):
         Device.start_app(device_id=self.device_id, app_id=app_id)
 
         time.sleep(10)
+        Device.wait_until_app_is_running(device_id=self.device_id, app_id=app_id, timeout=10)
         start_time = Device.get_start_time(self.device_id, app_id=app_id)
 
         tmp_csv_file_path = "./tmp-" + apk_name + self.csv_ext
