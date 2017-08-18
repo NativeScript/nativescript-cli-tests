@@ -89,21 +89,25 @@ class Adb(object):
         :return: Start time.
         """
         output = Adb.run(command='logcat -d | grep \'Displayed {0}\''.format(app_id), device_id=device_id)
-        print "Start time: {0}.".format(output)
+        if len(output) > 0:
+            print "Start time: {0}.".format(output)
 
-        start_time = output.rsplit("+")[1]
-        print "Start time: {0}.".format(start_time)
+            start_time = output.rsplit("+")[1]
+            print "Start time: {0}.".format(start_time)
 
-        numbers = map(int, re.findall('\d+', start_time))
-        num_len = len(str(numbers[1]))
-        if num_len == 1:
-            numbers[1] = '00' + str(numbers[1])
-        elif num_len == 2:
-            numbers[1] = '0' + str(numbers[1])
+            numbers = map(int, re.findall('\d+', start_time))
+            num_len = len(str(numbers[1]))
+            if num_len == 1:
+                numbers[1] = '00' + str(numbers[1])
+            elif num_len == 2:
+                numbers[1] = '0' + str(numbers[1])
 
-        result = str(numbers[0]) + str(numbers[1])
-        print "Start time: {0}.".format(result)
-        return result
+            result = str(numbers[0]) + str(numbers[1])
+            print "Start time: {0}.".format(result)
+            return result
+        else:
+            raise IOError('{0} has not displayed its activity - the app crashed!'.format(app_id))
+
 
     @staticmethod
     def run(command, device_id, timeout=60, log_level=CommandLogLevel.COMMAND_ONLY):
