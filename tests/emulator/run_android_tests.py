@@ -213,11 +213,13 @@ class RunAndroidEmulatorTests(BaseClass):
         app_js_new_path = os.path.join(TEST_RUN_HOME, 'app.js')
         File.copy(src=app_js_original_path, dest=app_js_new_path)
         File.remove(file_path=app_js_original_path)
-        strings = ['Successfully synced application', EMULATOR_ID]
+        verify_app_crash_adb_message = 'has died'
+        strings = ['Successfully synced application', EMULATOR_ID, verify_app_crash_adb_message]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=30, check_interval=10)
 
         File.copy(src=app_js_new_path, dest=app_js_original_path)
-        strings = ['Successfully synced application', 'app.js', EMULATOR_ID]
+        verify_app_loaded = 'JS: Page loaded'
+        strings = ['Successfully synced application', 'app.js', EMULATOR_ID, verify_app_loaded]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=30, check_interval=10)
 
         # Verify app looks correct inside emulator
