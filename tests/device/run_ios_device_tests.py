@@ -232,7 +232,7 @@ class RunIOSDeviceTests(BaseClass):
 
         # `tns run ios` and wait until app is deployed
         log = Tns.run_ios(attributes={'--path': self.app_name, '--device': self.DEVICE_ID}, wait=False,
-                          assert_success=False)
+                          assert_success=False, log_trace=True)
         strings = [self.DEVICE_ID, 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 

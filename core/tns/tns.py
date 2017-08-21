@@ -348,13 +348,16 @@ class Tns(object):
         return output
 
     @staticmethod
-    def build_android(attributes={}, assert_success=True, tns_path=None):
-        output = Tns.run_tns_command("build android", attributes=attributes, tns_path=tns_path)
+    def build_android(attributes={}, assert_success=True, tns_path=None, log_trace=False):
+        output = Tns.run_tns_command("build android", attributes=attributes, tns_path=tns_path, log_trace=log_trace)
         if assert_success:
             # Verify output of build command
-            assert "BUILD SUCCESSFUL" in output, "Build failed!" + os.linesep + output
             assert "Project successfully built" in output, "Build failed!" + os.linesep + output
             assert "NOT FOUND" not in output  # Test for https://github.com/NativeScript/android-runtime/issues/390
+            if log_trace:
+                assert "BUILD SUCCESSFUL" in output, "Build failed!" + os.linesep + output
+            else:
+                assert "BUILD SUCCESSFUL" not in output, "Native build out is displayed even without --log trace"
 
             # Verify apk packages
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
@@ -397,6 +400,9 @@ class Tns(object):
             if log_trace:
                 assert "BUILD SUCCEEDED" in output
                 assert "CodeSign" in output
+            else:
+                assert "BUILD SUCCEEDED" not in output, "Native build out is displayed even without --log trace"
+                assert "CodeSign" not in output, "Native build out is displayed even without --log trace"
 
             # Verify release/debug builds
             if "--release" in attributes.keys():
@@ -416,6 +422,9 @@ class Tns(object):
                     assert "build/device/" + app_id + ".app" in output
                     assert "ARCHIVE SUCCEEDED" in output
                     assert "EXPORT SUCCEEDED" in output
+                else:
+                    assert "ARCHIVE SUCCEEDED" not in output, "Native build out is displayed even without --log trace"
+                    assert "EXPORT SUCCEEDED" not in output, "Native build out is displayed even without --log trace"
                 assert File.exists(device_folder + app_id + ".ipa"), "IPA file not found!"
                 bundle_content = File.read(device_folder + app_id + ".app/" + app_id)
                 xcode_project = Tns.__get_xcode_project_file(app_name)
@@ -427,6 +436,9 @@ class Tns(object):
             else:
                 if log_trace:
                     assert "build/emulator/" + app_id + ".app" in output
+                else:
+                    assert "build/emulator/" + app_id + ".app" not in output, \
+                        "Native build out is displayed even without --log trace"
                 assert File.exists(app_name + "/platforms/ios/" + app_id + "/" + app_id + "-Prefix.pch")
                 assert File.exists(emu_folder + app_id + ".app")
                 bundle_content = File.read(emu_folder + app_id + ".app/" + app_id)
