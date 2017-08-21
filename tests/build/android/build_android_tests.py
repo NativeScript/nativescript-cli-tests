@@ -130,7 +130,7 @@ class BuildAndroidTests(BaseClass):
     def test_202_build_android_with_log_trace_and_platform_not_added_or_empty(self):
         """'tns build android' with log trace options should output more logs."""
         Tns.create_app(self.app_no_platform)
-        output = Tns.build_android(attributes={"--path": self.app_no_platform, "--log trace": ""})
+        output = Tns.build_android(attributes={"--path": self.app_no_platform}, log_trace=True)
 
         # Assert log trace show gradle logs
         assert "[DEBUG]" in output

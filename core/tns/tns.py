@@ -221,6 +221,10 @@ class Tns(object):
             if Npm.version() < 5:
                 assert "nativescript-angular" in output
             assert File.exists(os.path.join(app_name, 'node_modules', 'nativescript-theme-core'))
+            package_json = File.read(os.path.join(app_name, 'package.json'))
+            assert "tns-core-modules" in package_json
+            assert "nativescript-angular" in package_json
+            assert "nativescript-dev-typescript" in package_json
 
         return output
 
