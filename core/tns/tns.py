@@ -377,24 +377,26 @@ class Tns(object):
         return output
 
     @staticmethod
-    def build_ios(attributes={}, assert_success=True, tns_path=None):
+    def build_ios(attributes={}, assert_success=True, tns_path=None, log_trace=False):
 
         if "--provision" not in attributes.keys():
             attr = {"--teamId": DEVELOPMENT_TEAM}
             attributes.update(attr)
 
-        output = Tns.run_tns_command("build ios", attributes=attributes, tns_path=tns_path)
+        output = Tns.run_tns_command("build ios", attributes=attributes, tns_path=tns_path, log_trace=log_trace)
 
         app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
         app_name = app_name.replace("\"", "")  # Handle projects with space
         app_id = Tns.__get_final_package_name(app_name, platform=Platform.IOS)
 
         if assert_success:
-            assert "BUILD SUCCEEDED" in output
             assert "Project successfully built" in output
             assert "ERROR" not in output
             assert "malformed" not in output
-            assert "CodeSign" in output
+
+            if log_trace:
+                assert "BUILD SUCCEEDED" in output
+                assert "CodeSign" in output
 
             # Verify release/debug builds
             if "--release" in attributes.keys():
@@ -410,9 +412,10 @@ class Tns(object):
             device_folder = app_name + "/platforms/ios/build/device/"
             emu_folder = app_name + "/platforms/ios/build/emulator/"
             if "--forDevice" in attributes.keys() or "--for-device" in attributes.keys():
-                assert "build/device/" + app_id + ".app" in output
-                assert "ARCHIVE SUCCEEDED" in output
-                assert "EXPORT SUCCEEDED" in output
+                if log_trace:
+                    assert "build/device/" + app_id + ".app" in output
+                    assert "ARCHIVE SUCCEEDED" in output
+                    assert "EXPORT SUCCEEDED" in output
                 assert File.exists(device_folder + app_id + ".ipa"), "IPA file not found!"
                 bundle_content = File.read(device_folder + app_id + ".app/" + app_id)
                 xcode_project = Tns.__get_xcode_project_file(app_name)
@@ -422,7 +425,8 @@ class Tns(object):
                     assert DEVELOPMENT_TEAM in xcode_project or DISTRIBUTION_PROVISIONING in xcode_project, \
                         "TeamID not passed to Xcode!"
             else:
-                assert "build/emulator/" + app_id + ".app" in output
+                if log_trace:
+                    assert "build/emulator/" + app_id + ".app" in output
                 assert File.exists(app_name + "/platforms/ios/" + app_id + "/" + app_id + "-Prefix.pch")
                 assert File.exists(emu_folder + app_id + ".app")
                 bundle_content = File.read(emu_folder + app_id + ".app/" + app_id)
