@@ -357,6 +357,7 @@ class Tns(object):
         if assert_success:
             # Verify output of build command
             assert "Project successfully built" in output, "Build failed!" + os.linesep + output
+            assert "FAILURE" not in output
             assert "NOT FOUND" not in output  # Test for https://github.com/NativeScript/android-runtime/issues/390
             if log_trace:
                 assert "BUILD SUCCESSFUL" in output, "Build failed!" + os.linesep + output

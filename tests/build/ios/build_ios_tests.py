@@ -124,10 +124,11 @@ class BuildiOSTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        Tns.build_ios(attributes={"--path": self.app_name, "--copy-to": "./"})
+        Tns.build_ios(attributes={"--path": self.app_name, "--copy-to": "./"}, log_trace=True)
         assert File.exists("TestApp.app")
 
-        Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": "", "--copy-to": "./"})
+        Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": "", "--copy-to": "./"},
+                      log_trace=True)
         assert File.exists("TestApp.ipa")
 
     def test_320_build_ios_with_custom_entitlements(self):

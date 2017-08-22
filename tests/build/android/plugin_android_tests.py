@@ -113,14 +113,7 @@ class PluginsAndroidTests(BaseClass):
         os.chdir(current_dir)
         assert "Successfully installed plugin tns-plugin" in output
 
-        output = Tns.build_android(attributes={"--path": self.app_name})
-        assert successfully_prepared in output
-
-        assert build_successful in output
-        assert successfully_built in output
-        assert error not in output.lower()
-        assert "FAILURE" not in output
-
+        Tns.build_android(attributes={"--path": self.app_name}, log_trace=True)
         assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TestApp-debug.apk")
         assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
 
