@@ -519,7 +519,7 @@ class RunAndroidEmulatorTests(BaseClass):
         output = Tns.run_android(attributes={'--path': self.app_name, '--justlaunch': ''})
         assert "The Application identifier is different from the one inside 'package.json' file." in output
         assert "NativeScript CLI might not work properly." in output
-        assert "BUILD SUCCESSFUL" in output
+        assert "Project successfully built" in output
 
     @unittest.skipIf(CURRENT_OS == OSType.LINUX, "`shell cp -r` fails for some reason on emulators on Linux.")
     def test_400_tns_run_android_respect_adb_errors(self):
