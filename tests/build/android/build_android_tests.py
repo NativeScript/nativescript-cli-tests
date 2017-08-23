@@ -105,7 +105,7 @@ class BuildAndroidTests(BaseClass):
                                       "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
                                       "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
                                       "--release": ""
-                                      })
+                                      }, log_trace=True)
 
         # Configs are respected
         assert 'release' in File.read(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, 'config.json'))
@@ -113,7 +113,7 @@ class BuildAndroidTests(BaseClass):
     def test_200_build_android_inside_project_folder(self):
         Folder.navigate_to(self.app_name)
         output = Tns.build_android(tns_path=os.path.join("..", TNS_PATH), attributes={"--path": self.app_name},
-                                   assert_success=False)
+                                   assert_success=False, log_trace=True)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         assert successfully_prepared in output
         assert build_successful in output
@@ -130,7 +130,7 @@ class BuildAndroidTests(BaseClass):
     def test_202_build_android_with_log_trace_and_platform_not_added_or_empty(self):
         """'tns build android' with log trace options should output more logs."""
         Tns.create_app(self.app_no_platform)
-        output = Tns.build_android(attributes={"--path": self.app_no_platform, "--log trace": ""})
+        output = Tns.build_android(attributes={"--path": self.app_no_platform}, log_trace=True)
 
         # Assert log trace show gradle logs
         assert "[DEBUG]" in output
@@ -311,8 +311,8 @@ class BuildAndroidTests(BaseClass):
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
 
         # Add foursquare native library as dependency
-        source = os.path.join('data','issues','android-runtime-755','app.gradle')
-        target = os.path.join(self.app_name, 'app','App_Resources','Android','app.gradle')
+        source = os.path.join('data', 'issues', 'android-runtime-755', 'app.gradle')
+        target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
         File.copy(src=source, dest=target)
 
         # Build the project

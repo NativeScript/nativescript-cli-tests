@@ -320,7 +320,8 @@ class RunIOSSimulatorTests(BaseClass):
         `tns run ios` should do full rebuild after plugin is added.
         """
         # `tns run ios` and wait until app is deployed
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False,
+                          log_trace=True)
         strings = ['Project successfully built', 'Successfully installed on device with identifier', self.SIMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
 

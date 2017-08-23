@@ -6,7 +6,9 @@ import time
 import unittest
 
 from core.base_class.BaseClass import BaseClass
+from core.git.git import Git
 from core.npm.npm import Npm
+from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
@@ -21,6 +23,7 @@ from core.tns.tns_verifications import TnsAsserts
 class PrepareAndroidTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
+        Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
 
     def test_101_prepare_android(self):
         Tns.create_app(self.app_name, update_modules=False)
@@ -129,14 +132,29 @@ class PrepareAndroidTests(BaseClass):
         ng_path = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, '@angular', 'core')
         assert File.exists(ng_path), "Scoped dependencies are flattened, please see #1783!"
 
-    @unittest.skip("TODO: Fix the test")
-    def test_320_unmet_peer_dependencies_do_not_stop_prepare(self):
-        Tns.create_app_ng(self.app_name, update_modules=True)
-        # Cleanup node_modules and let CLI install npm dependencies
-        Folder.cleanup(os.path.join(TEST_RUN_HOME, self.app_name, 'node_modules'))
-        output = Tns.prepare_android(attributes={"--path": self.app_name})
-        assert "requires a peer of tns-core-modules" in output, "No npm warning for unmet peer dependencies."
-        assert "but none was installed" in output, "No npm warning for unmet peer dependencies."
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows")
+    def test_320_prepare_scoped_plugins(self):
+        """
+        Test for https://github.com/NativeScript/nativescript-cli/pull/3080
+
+        Before this change we copied all NG components at following location (js demo of nativescript-facebook):
+        platforms/android/src/main/assets/app/tns_modules/nativescript-facebook/node_modules/@angular
+
+        Now folder above should be empty (or not existing at all).
+        """
+
+        Folder.cleanup("nativescript-facebook")
+        Git.clone_repo(repo_url='git@github.com:NativeScript/nativescript-facebook.git',
+                       local_folder="nativescript-facebook")
+        Folder.navigate_to(folder="nativescript-facebook/src")
+        output = run(command="npm run build")
+        Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
+        assert "tsc" in output
+        assert "ERR" not in output
+        Tns.prepare_android(attributes={"--path": "nativescript-facebook/demo"})
+        output = run(command="find nativescript-facebook/demo/platforms/android/ | grep @")
+        assert "@angular/core" not in output, "@angular/* should not be in platforms folder."
+        assert "@angular/router" not in output, "@angular/* should not be in platforms folder."
 
     def test_400_prepare_missing_or_missing_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
