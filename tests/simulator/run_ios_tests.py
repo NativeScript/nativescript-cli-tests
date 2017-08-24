@@ -389,9 +389,11 @@ class RunIOSSimulatorTests(BaseClass):
                              assert_success=False)
         TnsAsserts.invalid_device(output=output)
 
-    @unittest.skipIf(Device.get_count(platform=Platform.IOS) > 0, "Valid only if there are no devices.")
+    @unittest.skipIf(Device.get_count(platform=Platform.IOS) > 0 or Device.get_count(platform=Platform.ANDROID) > 0,
+                     "Valid only if there are no devices.")
     def test_410_run_without_platform_and_without_devices(self):
         Simulator.stop()
+        Emulator.stop()
         Tns.create_app(self.app_name, update_modules=True)
         output = Tns.run(attributes={'--path': self.app_name, '--justlaunch': ''}, assert_success=False)
         assert "Unable to find applicable devices to execute operation " \

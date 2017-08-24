@@ -36,7 +36,7 @@ class UnittestsEmulator(BaseClass):
         Emulator.stop()
 
     @timed(360)
-    def test_010_test_mocha_android_emulator(self):
+    def test_100_test_mocha_android_emulator(self):
         Tns.create_app(self.app_name, update_modules=True)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.run_tns_command("test init", attributes={"--framework": "mocha", "--path": self.app_name})

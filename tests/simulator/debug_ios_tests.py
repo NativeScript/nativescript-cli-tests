@@ -24,7 +24,7 @@ from core.tns.tns_verifications import TnsAsserts
 
 class DebugiOSSimulatorTests(BaseClass):
     SIMULATOR_ID = ''
-    INSPECTOR_GLOBAL_PATH = os.path.join(os.path.expanduser('~'), '.npm/tns-ios-inspector')
+    INSPECTOR_GLOBAL_PATH = os.path.join(os.path.expanduser('~'), '.npm', 'tns-ios-inspector')
 
     @classmethod
     def setUpClass(cls):

@@ -556,7 +556,7 @@ class RunAndroidEmulatorTests(BaseClass):
         File.replace(file_path=self.app_name + "/app/App_Resources/Android/app.gradle", str1="applicationId", str2="x")
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
-        strings = ['FAILURE', 'BUILD FAILED', 'gradlew failed with exit code 1']
+        strings = ['FAILURE', 'Build failed with an exception', 'gradlew failed with exit code 1']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
         time.sleep(10)
         output = File.read(file_path=log)

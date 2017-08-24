@@ -21,7 +21,7 @@ class UnittestsSimulator(BaseClass):
         BaseClass.setUpClass(logfile)
         Emulator.stop()
         Simulator.stop()
-        Simulator.start(name=SIMULATOR_NAME)
+        Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -35,7 +35,7 @@ class UnittestsSimulator(BaseClass):
         Simulator.stop()
 
     @timed(360)
-    def test_010_test_jasmine_ios_simulator(self):
+    def test_100_test_jasmine_ios_simulator(self):
         Tns.create_app(self.app_name, update_modules=True)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.run_tns_command("test init", attributes={"--framework": "jasmine", "--path": self.app_name})
