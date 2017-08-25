@@ -171,7 +171,7 @@ class Simulator(object):
         return found, simulator_id
 
     @staticmethod
-    def ensure_available(simulator_name=None, timeout=30):
+    def ensure_available(simulator_name=None, timeout=180):
         """
         Ensure iOS Simulator is running.
         :param simulator_name: iOS Simulator name.
