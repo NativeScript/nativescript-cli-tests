@@ -118,6 +118,7 @@ if __name__ == '__main__':
     if CURRENT_OS == OSType.OSX:
         disable_crash_report()
         get_test_packages(platform=Platform.BOTH)
+        Simulator.reset()
         Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
         Xcode.cleanup_cache()  # Clean Xcode cache folders
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
@@ -146,3 +147,7 @@ if __name__ == '__main__':
     for i in sys.argv:
         arguments.append(str(i))
     nose.run(argv=arguments)
+
+    # Cleanup and reset after test run is complete
+    if CURRENT_OS == OSType.OSX:
+        Simulator.reset()

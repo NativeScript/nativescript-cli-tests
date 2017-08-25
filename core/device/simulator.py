@@ -95,7 +95,6 @@ class Simulator(object):
         """
         Start iOS Simulator
         :param name: Simulator name.
-        :param sdk: iOS Version, example '10.0'
         :param timeout: Timeout in seconds.
         :return: Identifier of booted iOS Simulator.
         """
@@ -106,10 +105,9 @@ class Simulator(object):
             raise AssertionError("Unable to find device with name " + name)
 
         # Fire start command
-        start_command = 'xcrun simctl boot {0}'.format(sim_id)
-        output = run(command=start_command, timeout=timeout, log_level=CommandLogLevel.SILENT)
-        assert 'Invalid device' not in output, "Can not find simulator with id " + sim_id
-        assert 'Unable to boot' not in output, "Failed to boot " + sim_id
+        print "Open Simulator.app with {0}".format(sim_id)
+        start_command = "open {0} --args -CurrentDeviceUDID {1}".format(Simulator.__get_sim_location(), sim_id)
+        run(command=start_command, log_level=CommandLogLevel.SILENT)
         print 'Simulator {0} is booting now...'.format(name)
 
         # Wait until simulator boot
@@ -128,7 +126,7 @@ class Simulator(object):
         :return: Boolean value for simulator state and string with simulator id (if it is running).
         """
         running = False
-        if simulator_name == None:
+        if simulator_name is None:
             output = run(command='xcrun simctl list devices | grep Boot', timeout=60, log_level=CommandLogLevel.SILENT)
             lines = output.splitlines()
             if len(lines) > 0:
@@ -139,7 +137,15 @@ class Simulator(object):
         else:
             simid = Simulator.__get_id(name=simulator_name)
             if Simulator.__get_state(simulator_id=simid) == 'Booted':
-                running = True
+                command = 'xcrun simctl spawn {0} launchctl print system | grep com.apple.springboard.services'.format(
+                    simid)
+                output = run(command=command, timeout=60, log_level=CommandLogLevel.SILENT)
+                if "M   A   com.apple.springboard.services" in output:
+                    print 'Simulator "{0}" loaded.'.format(simulator_name)
+                    running = True
+                else:
+                    print 'Simulator "{0}" still loading...'.format(simulator_name)
+                    running = False
 
         return running, simid
 
@@ -173,23 +179,15 @@ class Simulator(object):
         :return: True if booted, False if it fails to boot.
         :return: Identifier of booted simulator (None if simulator fails to boot).
         """
-        found, simulator_id = Simulator.is_running(simulator_name=simulator_name)
+        found, sim_id = Simulator.is_running(simulator_name=simulator_name)
         if found:
             print 'iOS Simulator is running.'
         else:
             Simulator.stop()
-            simulator_id = Simulator.start(name=simulator_name, timeout=timeout)
-
-        # Check if simulator app is visible and start it
-        if not Simulator.__is_simulator_app_visible():
-            Simulator.stop()
-            print "Open Simulator.app with {0}".format(simulator_id)
-            start_command = "open {0} --args -CurrentDeviceUDID {1}".format(Simulator.__get_sim_location(),
-                                                                            simulator_id)
-            run(command=start_command, log_level=CommandLogLevel.SILENT)
+            Simulator.start(name=simulator_name, timeout=timeout)
             Simulator.wait_for_simulator(simulator_name=None, timeout=timeout)
 
-        return simulator_id
+        return sim_id
 
     @staticmethod
     def stop(device_id='booted'):
@@ -197,10 +195,10 @@ class Simulator(object):
         Stop running simulators (by default stop all simulators)
         :param device_id: Device identifier (Simulator GUID)
         """
-        Process.kill('Simulator')
-        time.sleep(1)
         if device_id == 'booted':
             print 'Stop all running simulators.'
+            Process.kill('Simulator')
+            time.sleep(1)
         else:
             print 'Stop simulator with id ' + device_id
         run(command='xcrun simctl shutdown {0}'.format(device_id), timeout=60, log_level=CommandLogLevel.SILENT)
