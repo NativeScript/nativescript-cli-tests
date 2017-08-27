@@ -209,15 +209,16 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
-        # Move js files
+        # Delete app.js and verify app crash with error activiry dialog
         app_js_original_path = os.path.join(self.app_name, 'app', 'app.js')
         app_js_new_path = os.path.join(TEST_RUN_HOME, 'app.js')
         File.copy(src=app_js_original_path, dest=app_js_new_path)
         File.remove(file_path=app_js_original_path)
-        verify_app_crash_adb_message = 'has died'
-        strings = ['Successfully synced application', EMULATOR_ID, verify_app_crash_adb_message]
+        strings = ['Successfully synced application', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=30, check_interval=10)
+        assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Exception", timeout=30), "Error activity not found!"
 
+        # Restore js file and verify app
         File.copy(src=app_js_new_path, dest=app_js_original_path)
         verify_app_loaded = 'JS: Page loaded'
         strings = ['Successfully synced application', 'app.js', EMULATOR_ID, verify_app_loaded]
