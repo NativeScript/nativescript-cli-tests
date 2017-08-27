@@ -1,0 +1,5 @@
+<Page xmlns="http://www.nativescript.org/tns.xsd" loaded="pageLoaded">
+  <StackLayout>
+    <Image src="~/img/logo.png" />
+  </StackLayout>
+</Page>
