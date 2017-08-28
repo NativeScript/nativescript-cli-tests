@@ -91,7 +91,7 @@ class Simulator(object):
         print 'iOS Simulator created: ' + name
 
     @staticmethod
-    def start(name, timeout=30):
+    def start(name, timeout=180):
         """
         Start iOS Simulator
         :param name: Simulator name.
@@ -107,7 +107,7 @@ class Simulator(object):
         # Fire start command
         print "Open Simulator.app with {0}".format(sim_id)
         start_command = "open {0} --args -CurrentDeviceUDID {1}".format(Simulator.__get_sim_location(), sim_id)
-        run(command=start_command, log_level=CommandLogLevel.SILENT)
+        run(command=start_command, log_level=CommandLogLevel.FULL)
         print 'Simulator {0} is booting now...'.format(name)
 
         # Wait until simulator boot
@@ -150,7 +150,7 @@ class Simulator(object):
         return running, simid
 
     @staticmethod
-    def wait_for_simulator(simulator_name=None, timeout=30):
+    def wait_for_simulator(simulator_name=None, timeout=180):
         """
         Wait until simulator boot.
         :param simulator_name:
@@ -176,7 +176,6 @@ class Simulator(object):
         Ensure iOS Simulator is running.
         :param simulator_name: iOS Simulator name.
         :param timeout: Timeout to wait for simulator
-        :return: True if booted, False if it fails to boot.
         :return: Identifier of booted simulator (None if simulator fails to boot).
         """
         found, sim_id = Simulator.is_running(simulator_name=simulator_name)
@@ -184,9 +183,7 @@ class Simulator(object):
             print 'iOS Simulator is running.'
         else:
             Simulator.stop()
-            Simulator.start(name=simulator_name, timeout=timeout)
-            Simulator.wait_for_simulator(simulator_name=None, timeout=timeout)
-
+            sim_id = Simulator.start(name=simulator_name, timeout=timeout)
         return sim_id
 
     @staticmethod
