@@ -25,6 +25,7 @@ class UnittestsEmulator(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
+        Tns.kill()
         Folder.cleanup(self.app_name)
 
     def tearDown(self):
@@ -34,6 +35,7 @@ class UnittestsEmulator(BaseClass):
     @classmethod
     def tearDownClass(cls):
         Emulator.stop()
+        Tns.kill()
 
     @timed(360)
     def test_100_test_mocha_android_emulator(self):

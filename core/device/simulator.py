@@ -45,13 +45,15 @@ class Simulator(object):
         :param name: Simulator name
         :return: Simulator GUID
         """
-        output = run(command='xcrun simctl list | grep \'{0}\''.format(name), log_level=CommandLogLevel.SILENT)
+        output = run(command='xcrun simctl list | grep \'{0}\''.format(name), log_level=CommandLogLevel.FULL)
         lines = output.splitlines()
         if len(lines) > 1:
             raise AssertionError("Multiple simulators with same name found!")
         elif len(lines) == 0:
             return None
         else:
+            print "Simulator found:"
+            print lines[0]
             return lines[0].split('(')[1].split(')')[0]
 
     @staticmethod
