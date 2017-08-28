@@ -8,13 +8,15 @@ Verify that:
 """
 
 import os
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.device.helpers.adb import Adb
 from core.osutils.folder import Folder
+from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_RUNTIME_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
-    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID
+    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, CURRENT_OS
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 
@@ -49,6 +51,7 @@ class AndroidErrorActivityTests(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()
 
+    @unittest.skipIf(CURRENT_OS == OSType.LINUX, "Temporary ignore on Linux.")
     def test_200_error_activity_shown_on_error(self):
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
