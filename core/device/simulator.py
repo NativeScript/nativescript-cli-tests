@@ -210,7 +210,7 @@ class Simulator(object):
         Reset settings and storage of all simulators.
         """
         Simulator.stop()
-        run(command='xcrun simctl erase all', timeout=60, log_level=CommandLogLevel.SILENT)
+        run(command='xcrun simctl erase all', timeout=300, log_level=CommandLogLevel.SILENT)
         print 'Reset settings and storage of all simulators.'
 
     @staticmethod

@@ -47,15 +47,6 @@ def disable_crash_report():
         run("defaults write -g ApplePersistence -bool no")
 
 
-def clean_npm():
-    """Clean npm cache"""
-    if CURRENT_OS == OSType.WINDOWS:
-        run("npm cache clean", COMMAND_TIMEOUT)
-    else:
-        run("npm cache clean", COMMAND_TIMEOUT)
-        run("rm -rf ~/.npm/tns*", COMMAND_TIMEOUT)
-
-
 def clean_gradle():
     """Clean gradle cache"""
     if CURRENT_OS == OSType.WINDOWS:
@@ -109,7 +100,7 @@ if __name__ == '__main__':
     Folder.create(OUTPUT_FOLDER)
     Folder.cleanup(SUT_FOLDER)
     Folder.cleanup("node_modules")
-    clean_npm()  # Clean NPM cache
+    Npm.cache_clean()
     clean_gradle()  # Clean Gradle
     get_repos()
     Emulator.stop()  # Stop running emulators

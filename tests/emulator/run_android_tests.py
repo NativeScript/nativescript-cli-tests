@@ -133,7 +133,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # `tns run android --release` and wait until app is deployed
         # IMPORTANT NOTE: `tns run android --release` Do NOT livesync by design!
-
+        Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           '--device': EMULATOR_ID,
                                           '--keyStorePath': ANDROID_KEYSTORE_PATH,
@@ -503,6 +503,10 @@ class RunAndroidEmulatorTests(BaseClass):
         """
         count = Device.get_count(platform=Platform.ANDROID)
         if count == 0:
+            # Hack: Due to slow boot of emulators we boot latest supported emulator once without -wipe-data.
+            Emulator.stop()
+            Emulator.start(emulator_name="Emulator-Api26-Google", wipe_data=False)
+            # End of hack!
             Emulator.stop()
             output = Tns.run_android(attributes={'--path': self.app_name, '--justlaunch': ''})
             assert 'Starting Android emulator with image' in output

@@ -5,7 +5,8 @@ from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TEST_RUN_HOME
+from core.osutils.os_type import OSType
+from core.settings.settings import TEST_RUN_HOME, CURRENT_OS
 
 
 class Npm(object):
@@ -42,3 +43,11 @@ class Npm(object):
     @staticmethod
     def uninstall(package, option='', folder=None, log_level=CommandLogLevel.FULL):
         return Npm.__run_npm_command('un {0} {1}'.format(package, option), folder=folder, log_level=log_level)
+
+    @staticmethod
+    def cache_clean():
+        if CURRENT_OS == OSType.WINDOWS:
+            run(command="npm cache clean --force")
+        else:
+            run(command="npm cache clean --force")
+            run(command="rm -rf ~/.npm/tns*")

@@ -60,6 +60,12 @@ class Device(object):
         if device_type == DeviceType.IOS:
             IDevice.get_screen(device_id=device_id, file_path=file_path)
 
+        if File.exists(file_path):
+            print "Get screenshot of {0} at {1}".format(device_id, file_path)
+        else:
+            error = "Failed to get screenshot of {0} at {1}".format(device_id, file_path)
+            raise Exception(error)
+
     @staticmethod
     def screen_match(device_name, device_id, expected_image, tolerance=0.05, timeout=60):
         """

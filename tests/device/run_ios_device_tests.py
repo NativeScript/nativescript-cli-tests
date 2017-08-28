@@ -284,6 +284,7 @@ class RunIOSDeviceTests(BaseClass):
 
         # Uninstall app while `tns run` is running
         Device.uninstall_app(app_prefix='org.nativescript.', platform=Platform.IOS)
+        sleep(5)
 
         # Change XML and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)

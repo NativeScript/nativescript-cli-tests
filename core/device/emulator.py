@@ -32,7 +32,7 @@ class Emulator(object):
         Process.kill('qemu-system-i38')  # Linux
 
     @staticmethod
-    def start(emulator_name=EMULATOR_NAME, port=EMULATOR_PORT, timeout=300):
+    def start(emulator_name=EMULATOR_NAME, port=EMULATOR_PORT, timeout=300, wipe_data=True):
         """
         Start emulator.
         :param emulator_name: Name of android emulator image (avd).
@@ -40,7 +40,9 @@ class Emulator(object):
         :param timeout: Time to wait until emulator boot.
         """
         print 'Starting emulator {0}'.format(emulator_name)
-        start_command = EMULATOR_PATH + ' -avd ' + emulator_name + ' -port ' + port + ' -wipe-data'
+        start_command = EMULATOR_PATH + ' -avd ' + emulator_name + ' -port ' + port
+        if wipe_data:
+            start_command = start_command + ' -wipe-data'
         log_file = run(start_command, timeout=timeout, wait=False, log_level=CommandLogLevel.COMMAND_ONLY)
 
         # Check if emulator is running
