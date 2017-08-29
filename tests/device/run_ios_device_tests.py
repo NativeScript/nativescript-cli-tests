@@ -16,6 +16,7 @@ TODO: Add tests for:
 """
 
 import os
+import unittest
 from datetime import datetime
 from time import sleep
 
@@ -261,6 +262,7 @@ class RunIOSDeviceTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "JS changes not synced on device!"
 
+    @unittest.skipIf('f5ae7a' in Device.get_id(platform=Platform.IOS), "Can not run on this device!")
     def test_400_tns_run_ios_should_not_crash_when_uninstall_app(self):
         """
         `tns run ios` should work properly even if I manually uninstall the app (test for issue #3007)
