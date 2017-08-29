@@ -1,6 +1,7 @@
 import os
 
 from core.base_class.BaseClass import BaseClass
+from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_RUNTIME_PATH
 from core.tns.tns import Tns
@@ -27,3 +28,6 @@ class BuildiOSNGTests(BaseClass):
 
     def test_200_build_ios_ng_project_release_fordevice(self):
         Tns.build_ios(attributes={"--path": self.app_name, "--for-device": "", "--release": ""})
+        platform_folder = os.path.join(self.app_name, 'platforms', 'ios', self.app_name, 'app', 'item')
+        assert File.pattern_exists(platform_folder, '*.js'), "JS files not found!"
+        assert not File.pattern_exists(platform_folder, '*.ts'), "TS files found!"

@@ -1,10 +1,12 @@
 import os
 
 from core.base_class.BaseClass import BaseClass
+from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS
 from core.tns.tns import Tns
+from core.tns.tns_verifications import TnsAsserts
 
 
 class BuildAndroidNGTests(BaseClass):
@@ -32,3 +34,6 @@ class BuildAndroidNGTests(BaseClass):
                                       "--release": "",
                                       "--path": self.app_name
                                       })
+        platform_folder = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, 'item')
+        assert File.pattern_exists(platform_folder, '*.js'), "JS files not found!"
+        assert not File.pattern_exists(platform_folder, '*.ts'), "TS files found!"
