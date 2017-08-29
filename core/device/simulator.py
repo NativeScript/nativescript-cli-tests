@@ -128,6 +128,15 @@ class Simulator(object):
                 print 'Simulator {0} with id {1} is up and running!'.format(name, simulator_id)
                 return simulator_id
             else:
+                print "Mem usage:"
+                run(command="top -l 1 -s 0 | grep PhysMem", log_level=CommandLogLevel.FULL)
+                print "Nodes:"
+                run(command="df -i", log_level=CommandLogLevel.FULL)
+                print "Running processes:"
+                run(command="ps -ef | wc -l", log_level=CommandLogLevel.FULL)
+                print "--------------------------"
+                run(command="ps -ef", log_level=CommandLogLevel.FULL)
+                print "--------------------------"
                 raise NameError('Failed to boot {0}!'.format(name))
 
     @staticmethod
@@ -207,6 +216,9 @@ class Simulator(object):
         if device_id == 'booted':
             print 'Stop all running simulators.'
             Process.kill('Simulator')
+            Process.kill('com.apple.CoreSimulator.CoreSimulatorService')
+            Process.kill('tail')
+            Process.kill('launchd_sim')
             time.sleep(1)
         else:
             print 'Stop simulator with id ' + device_id

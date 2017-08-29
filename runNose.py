@@ -107,6 +107,7 @@ if __name__ == '__main__':
 
     # Copy test packages and cleanup
     if CURRENT_OS == OSType.OSX:
+        Simulator.stop()
         disable_crash_report()
         get_test_packages(platform=Platform.BOTH)
         Simulator.reset()
