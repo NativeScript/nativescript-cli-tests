@@ -270,7 +270,7 @@ class RunIOSDeviceTests(BaseClass):
         log = Tns.run_ios(attributes={'--path': self.app_name, "--device": self.DEVICE_ID}, wait=False,
                           assert_success=False)
         strings = [self.DEVICE_ID, 'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
 
         # Verify app is running
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "App failed to load!"
@@ -289,7 +289,7 @@ class RunIOSDeviceTests(BaseClass):
         # Change XML and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
         strings = ['Successfully installed', 'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TEST"), "XML changes not synced on device!"
 
     def test_404_tns_run_ios_on_not_existing_device_should_not_start_simualtor(self):

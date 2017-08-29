@@ -8,7 +8,7 @@ from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.process import Process
-from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME
+from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME, SIMULATOR_TYPE, SIMULATOR_SDK
 
 
 class Simulator(object):
@@ -79,7 +79,7 @@ class Simulator(object):
 
         # Ensure simulators are stopped
         Simulator.stop()
-        Simulator.delete(SIMULATOR_NAME)
+        Simulator.delete(name)
 
         ios_version = ios_version.replace('.', '-')
         sdk = "com.apple.CoreSimulator.SimRuntime.iOS-{0}".format(ios_version)
@@ -107,7 +107,7 @@ class Simulator(object):
         # Fire start command
         print "Open Simulator.app with {0}".format(sim_id)
         start_command = "open {0} --args -CurrentDeviceUDID {1}".format(Simulator.__get_sim_location(), sim_id)
-        run(command=start_command, log_level=CommandLogLevel.FULL)
+        run(command=start_command, log_level=CommandLogLevel.SILENT)
         print 'Simulator {0} is booting now...'.format(name)
 
         # Wait until simulator boot
@@ -116,7 +116,17 @@ class Simulator(object):
             print 'Simulator {0} with id {1} is up and running!'.format(name, simulator_id)
             return simulator_id
         else:
-            raise NameError('Failed to boot {0}!'.format(name))
+            # Retry once...
+            Simulator.reset()
+            Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
+            print 'Retry booting simulator...'.format(name)
+            run(command=start_command, log_level=CommandLogLevel.SILENT)
+            found, simulator_id = Simulator.wait_for_simulator(simulator_name=name, timeout=timeout)
+            if found:
+                print 'Simulator {0} with id {1} is up and running!'.format(name, simulator_id)
+                return simulator_id
+            else:
+                raise NameError('Failed to boot {0}!'.format(name))
 
     @staticmethod
     def is_running(simulator_name=None):
