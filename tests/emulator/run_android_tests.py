@@ -160,6 +160,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Run `tns run android --release` again and make sure changes above are applied
         log = Tns.run_android(attributes={'--path': self.app_name,
+                                          '--device': EMULATOR_ID,
                                           '--keyStorePath': ANDROID_KEYSTORE_PATH,
                                           '--keyStorePassword': ANDROID_KEYSTORE_PASS,
                                           '--keyStoreAlias': ANDROID_KEYSTORE_ALIAS,
