@@ -6,6 +6,7 @@ import unittest
 
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
+from core.gradle.gradle import Gradle
 from core.logger import Logger
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -65,10 +66,11 @@ class BaseClass(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls, logfile=""):
+        Tns.kill()
+        Gradle.kill()
         Process.kill('NativeScript Inspector')
         Process.kill('Safari')
         Process.kill('Xcode')
-        Tns.kill()
 
         if logfile == "":
             logfile = os.path.join(OUTPUT_FOLDER, cls.__name__ + ".txt")
@@ -116,3 +118,4 @@ class BaseClass(unittest.TestCase):
         Tns.kill()
         Simulator.stop()
         Emulator.stop()
+        Gradle.kill()

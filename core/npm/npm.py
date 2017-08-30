@@ -46,6 +46,7 @@ class Npm(object):
 
     @staticmethod
     def cache_clean():
+        print "Clean npm cache."
         if CURRENT_OS == OSType.WINDOWS:
             run(command="npm cache clean")
         else:

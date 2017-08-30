@@ -9,6 +9,7 @@ from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.git.git import Git
+from core.gradle.gradle import Gradle
 from core.installer.cli import Cli
 from core.npm.npm import Npm
 from core.osutils.command import run
@@ -45,14 +46,6 @@ def disable_crash_report():
     if CURRENT_OS == OSType.OSX:
         run("defaults write com.apple.CrashReporter DialogType none")
         run("defaults write -g ApplePersistence -bool no")
-
-
-def clean_gradle():
-    """Clean gradle cache"""
-    if CURRENT_OS == OSType.WINDOWS:
-        run("rmdir /s /q {USERPROFILE}\\.gradle".format(**os.environ), COMMAND_TIMEOUT)
-    else:
-        run("rm -rf ~/.gradle", 600)
 
 
 def get_test_packages(platform=Platform.BOTH):
@@ -101,7 +94,8 @@ if __name__ == '__main__':
     Folder.cleanup(SUT_FOLDER)
     Folder.cleanup("node_modules")
     Npm.cache_clean()
-    clean_gradle()  # Clean Gradle
+    Gradle.kill()
+    Gradle.cache_clean()
     get_repos()
     Emulator.stop()  # Stop running emulators
 
@@ -143,3 +137,5 @@ if __name__ == '__main__':
     # Cleanup and reset after test run is complete
     if CURRENT_OS == OSType.OSX:
         Simulator.reset()
+        Gradle.kill()
+        Gradle.cache_clean()
