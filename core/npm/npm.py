@@ -47,7 +47,7 @@ class Npm(object):
     @staticmethod
     def cache_clean():
         if CURRENT_OS == OSType.WINDOWS:
-            run(command="npm cache clean --force")
+            run(command="npm cache clean")
         else:
-            run(command="npm cache clean --force")
+            run(command="npm cache clean")
             run(command="rm -rf ~/.npm/tns*")
