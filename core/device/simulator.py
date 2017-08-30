@@ -45,7 +45,7 @@ class Simulator(object):
         :param name: Simulator name
         :return: Simulator GUID
         """
-        output = run(command='xcrun simctl list | grep \'{0}\''.format(name), log_level=CommandLogLevel.FULL)
+        output = run(command='xcrun simctl list | grep \'{0}\''.format(name), log_level=CommandLogLevel.SILENT)
         lines = output.splitlines()
         if len(lines) > 1:
             raise AssertionError("Multiple simulators with same name found!")
@@ -216,9 +216,10 @@ class Simulator(object):
         if device_id == 'booted':
             print 'Stop all running simulators.'
             Process.kill('Simulator')
-            Process.kill('com.apple.CoreSimulator.CoreSimulatorService')
             Process.kill('tail')
             Process.kill('launchd_sim')
+            command = "ps -ef  | grep 'CoreSimulator' | grep -v grep | awk '{ print $2 }' | xargs kill -9"
+            run(command=command, log_level=CommandLogLevel.SILENT)
             time.sleep(1)
         else:
             print 'Stop simulator with id ' + device_id
