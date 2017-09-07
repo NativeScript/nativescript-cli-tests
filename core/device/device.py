@@ -45,7 +45,7 @@ class Device(object):
         """
         Save screen of mobile device.
         :param device_id: Device identifier (example: `emulator-5554`).
-        :param file_path: Name of image that will be saved.
+        :param file_path: Path to image that will be saved.
         """
 
         File.remove(file_path)
@@ -60,11 +60,12 @@ class Device(object):
         if device_type == DeviceType.IOS:
             IDevice.get_screen(device_id=device_id, file_path=file_path)
 
+        image_saved = False
         if File.exists(file_path):
-            print "Get screenshot of {0} at {1}".format(device_id, file_path)
-        else:
-            error = "Failed to get screenshot of {0} at {1}".format(device_id, file_path)
-            raise Exception(error)
+            size = os.path.getsize(file_path)
+            if size > 10:
+                image_saved = True
+        return image_saved
 
     @staticmethod
     def screen_match(device_name, device_id, expected_image, tolerance=0.05, timeout=60):
@@ -97,14 +98,8 @@ class Device(object):
             are_equal = False
             comparison_result = None
             while time.time() < t_end:
-                # Get actual screen
-                if File.exists(actual_image_path):
-                    File.remove(actual_image_path)
-                Device.get_screen(device_id=device_id, file_path=actual_image_path)
                 time.sleep(1)
-
-                # Compare with expected image
-                if File.exists(actual_image_path):
+                if Device.get_screen(device_id=device_id, file_path=actual_image_path):
                     comparison_result = ImageUtils.image_match(actual_image_path=actual_image_path,
                                                                expected_image_path=expected_image_original_path,
                                                                tolerance=tolerance)

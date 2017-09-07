@@ -21,8 +21,8 @@ class GettingStartedTemplatesTests(BaseClass):
         logfile = os.path.join('out', cls.__name__ + '.txt')
         BaseClass.setUpClass(logfile)
         Emulator.stop()
-        Emulator.ensure_available()
         Simulator.stop()
+        Emulator.ensure_available()
         cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
         Folder.cleanup(cls.app_name)
 
