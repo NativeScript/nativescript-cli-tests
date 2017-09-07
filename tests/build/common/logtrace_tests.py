@@ -20,9 +20,9 @@ class LogtraceTests(BaseClass):
         assert "and id org.nativescript.{0} at location".format(self.app_name.replace("_", "")) in output
 
         if CURRENT_OS == OSType.WINDOWS:
-            assert 'spawn: npm.cmd "install" "tns-core-modules@' in output
+            assert 'spawn: npm.cmd "install"' in output
         else:
-            assert 'spawn: npm "install" "tns-core-modules@' in output
+            assert 'spawn: npm "install"' in output
         assert "Project " + self.app_name + " was successfully created" in output
 
     def test_102_platform_add_log_trace(self):
