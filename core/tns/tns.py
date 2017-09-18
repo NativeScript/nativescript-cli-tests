@@ -2,7 +2,6 @@
 A wrapper of tns commands.
 """
 import os
-
 import time
 
 from core.npm.npm import Npm
@@ -12,7 +11,7 @@ from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import COMMAND_TIMEOUT, TNS_PATH, TAG, TEST_RUN_HOME, DEVELOPMENT_TEAM, CURRENT_OS, \
-    SUT_FOLDER, DISTRIBUTION_PROVISIONING
+    SUT_FOLDER, DISTRIBUTION_PROVISIONING, PROVISIONING
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
@@ -387,8 +386,10 @@ class Tns(object):
     @staticmethod
     def build_ios(attributes={}, assert_success=True, tns_path=None, log_trace=False):
 
-        if "--provision" not in attributes.keys():
-            attr = {"--teamId": DEVELOPMENT_TEAM}
+        if "--teamId" not in attributes.keys() \
+                and "--team-id" not in attributes.keys() \
+                and "--provision" not in attributes.keys():
+            attr = {"--provision": PROVISIONING}
             attributes.update(attr)
 
         output = Tns.run_tns_command("build ios", attributes=attributes, tns_path=tns_path, log_trace=log_trace)
@@ -483,7 +484,7 @@ class Tns(object):
             print "Xcode 7. No need to pass --teamId param!"
         else:
             if "--emulator" not in attributes.keys():
-                attr = {"--teamId": DEVELOPMENT_TEAM}
+                attr = {"--provision": PROVISIONING}
                 attributes.update(attr)
         output = Tns.run_tns_command("run", attributes=attributes, log_trace=log_trace, timeout=timeout,
                                      tns_path=tns_path, wait=wait)
@@ -517,7 +518,7 @@ class Tns(object):
             print "Xcode 7. No need to pass --teamId param!"
         else:
             if "--emulator" not in attributes.keys():
-                attr = {"--teamId": DEVELOPMENT_TEAM}
+                attr = {"--provision": PROVISIONING}
                 attributes.update(attr)
         output = Tns.run_tns_command("run ios", attributes=attributes, log_trace=log_trace, timeout=timeout,
                                      tns_path=tns_path, wait=wait)

@@ -9,7 +9,8 @@ from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, TNS_PATH, TEST_RUN_HOME, ANDROID_RUNTIME_PATH
+from core.settings.settings import IOS_RUNTIME_PATH, TNS_PATH, TEST_RUN_HOME, ANDROID_RUNTIME_PATH, PROVISIONING, \
+    DISTRIBUTION_PROVISIONING, DEVELOPMENT_TEAM
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
@@ -81,6 +82,33 @@ class BuildiOSTests(BaseClass):
         output = run("lipo -info Payload/TestApp.app/TestApp")
         assert "armv7" in output
         assert "arm64" in output
+
+    def test_190_build_ios_distribution_provisions(self):
+
+        Tns.create_app(self.app_name)
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+
+        # List all provisions and verify them
+        output = Tns.build_ios(attributes={"--path": self.app_name, "--provision": ""}, assert_success=False)
+        assert "Provision Name" in output
+        assert "Provision UUID" in output
+        assert "App Id" in output
+        assert "Team" in output
+        assert "Type" in output
+        assert "Due" in output
+        assert "Devices" in output
+        assert PROVISIONING in output
+        assert DISTRIBUTION_PROVISIONING in output
+        assert DEVELOPMENT_TEAM in output
+
+        # Build with correct distribution provision
+        build_attributes = {"--path": self.app_name, "--forDevice": "", "--release": "",
+                            "--provision": DISTRIBUTION_PROVISIONING}
+        Tns.build_ios(attributes=build_attributes)
+
+        # Verify that passing wrong provision shows user friendly error
+        output = Tns.build_ios(attributes={"--path": self.app_name, "--provision": "fake"}, assert_success=False)
+        assert "Failed to find mobile provision with UUID or Name: fake" in output
 
     def test_200_build_ios_inside_project(self):
         Tns.create_app(self.app_name)
