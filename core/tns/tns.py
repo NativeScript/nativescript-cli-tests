@@ -465,12 +465,9 @@ class Tns(object):
 
     @staticmethod
     def deploy_ios(attributes={}, assert_success=True, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None):
-        if "7." in Xcode.get_version():
-            print "Xcode 7. No need to pass --teamId param!"
-        else:
-            if "--emulator" not in attributes.keys():
-                attr = {"--teamId": DEVELOPMENT_TEAM}
-                attributes.update(attr)
+        if "--emulator" not in attributes.keys():
+            attr = {"--provision": PROVISIONING}
+            attributes.update(attr)
         output = Tns.run_tns_command("deploy ios", attributes=attributes, log_trace=log_trace, timeout=timeout,
                                      tns_path=tns_path)
         if assert_success:
@@ -480,12 +477,9 @@ class Tns(object):
 
     @staticmethod
     def run(attributes={}, assert_success=True, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None, wait=True):
-        if "7." in Xcode.get_version():
-            print "Xcode 7. No need to pass --teamId param!"
-        else:
-            if "--emulator" not in attributes.keys():
-                attr = {"--provision": PROVISIONING}
-                attributes.update(attr)
+        if "--emulator" not in attributes.keys():
+            attr = {"--provision": PROVISIONING}
+            attributes.update(attr)
         output = Tns.run_tns_command("run", attributes=attributes, log_trace=log_trace, timeout=timeout,
                                      tns_path=tns_path, wait=wait)
         if assert_success:
@@ -514,12 +508,9 @@ class Tns(object):
 
     @staticmethod
     def run_ios(attributes={}, assert_success=True, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None, wait=True):
-        if "7." in Xcode.get_version():
-            print "Xcode 7. No need to pass --teamId param!"
-        else:
-            if "--emulator" not in attributes.keys():
-                attr = {"--provision": PROVISIONING}
-                attributes.update(attr)
+        if "--emulator" not in attributes.keys():
+            attr = {"--provision": PROVISIONING}
+            attributes.update(attr)
         output = Tns.run_tns_command("run ios", attributes=attributes, log_trace=log_trace, timeout=timeout,
                                      tns_path=tns_path, wait=wait)
         if assert_success:
