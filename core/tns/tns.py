@@ -11,10 +11,9 @@ from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import COMMAND_TIMEOUT, TNS_PATH, TAG, TEST_RUN_HOME, DEVELOPMENT_TEAM, CURRENT_OS, \
-    SUT_FOLDER, DISTRIBUTION_PROVISIONING, PROVISIONING
+    SUT_FOLDER, PROVISIONING
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
-from core.xcode.xcode import Xcode
 
 
 class Tns(object):
@@ -337,12 +336,8 @@ class Tns(object):
         if assert_success:
             assert "Project successfully prepared" in output
 
-        # Verify TEAM_ID
-        app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
-        if "--for-device" in attributes.keys() or "--forDevice" in attributes.keys():
-            assert DEVELOPMENT_TEAM in Tns.__get_xcode_project_file(app_name), "TeamID not passed to Xcode project!"
-
         # Verify PROVISIONING
+        app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
         if "--provision" in attributes.keys():
             id = attributes.get("--provision")
             assert id in Tns.__get_xcode_project_file(app_name), \
@@ -423,35 +418,47 @@ class Tns(object):
             # Verify simulator/device builds
             device_folder = app_name + "/platforms/ios/build/device/"
             emu_folder = app_name + "/platforms/ios/build/emulator/"
+
+            # Check device/simulator builds
             if "--forDevice" in attributes.keys() or "--for-device" in attributes.keys():
                 if log_trace:
                     assert "build/device/" + app_id + ".app" in output
                     assert "ARCHIVE SUCCEEDED" in output
                     assert "EXPORT SUCCEEDED" in output
                 else:
-                    assert "ARCHIVE SUCCEEDED" not in output, "Native build out is displayed even without --log trace"
-                    assert "EXPORT SUCCEEDED" not in output, "Native build out is displayed even without --log trace"
+                    assert "ARCHIVE SUCCEEDED" not in output, "Native build out is displayed without --log trace"
+                    assert "EXPORT SUCCEEDED" not in output, "Native build out is displayed without --log trace"
                 assert File.exists(device_folder + app_id + ".ipa"), "IPA file not found!"
                 bundle_content = File.read(device_folder + app_id + ".app/" + app_id)
-                xcode_project = Tns.__get_xcode_project_file(app_name)
-                if "--provision" not in attributes.keys():
-                    assert DEVELOPMENT_TEAM in xcode_project, "TeamID not passed to Xcode!"
-                else:
-                    assert DEVELOPMENT_TEAM in xcode_project or DISTRIBUTION_PROVISIONING in xcode_project, \
-                        "TeamID not passed to Xcode!"
             else:
                 if log_trace:
                     assert "build/emulator/" + app_id + ".app" in output
                 else:
-                    assert "build/emulator/" + app_id + ".app" not in output, \
-                        "Native build out is displayed even without --log trace"
+                    assert "build/emulator/" + app_id + ".app" not in output, "Native build out is displayed!"
                 assert File.exists(app_name + "/platforms/ios/" + app_id + "/" + app_id + "-Prefix.pch")
                 assert File.exists(emu_folder + app_id + ".app")
                 bundle_content = File.read(emu_folder + app_id + ".app/" + app_id)
+
+            # Check release/debug builds
             if "--release" in attributes.keys():
                 assert "TKLiveSync" not in bundle_content, "TKLiveSync binaries available in release configuration."
             else:
                 assert "TKLiveSync" in bundle_content, "TKLiveSync binaries not available in debug configuration."
+
+            # Check signing options
+            xcode_project = Tns.__get_xcode_project_file(app_name)
+            if "--provision" in attributes.keys():
+                id = attributes.get("--provision")
+                assert id in xcode_project, "Provisioning profile specified by --provision not passed to Xcode project!"
+                assert "ProvisioningStyle = Manual" in xcode_project, \
+                    "If --provision is not specified Xcode should use automatic signing"
+            else:
+                assert "ProvisioningStyle = Automatic" in xcode_project, \
+                    "If --provision is not specified Xcode should use automatic signing"
+                if "--teamId" or "--team-id" in attributes.keys():
+                    id1 = attributes.get("--teamId")
+                    id2 = attributes.get("--team-id")
+                    assert id1 or id2 in xcode_project, "TeamID not passed to Xcode!"
         return output
 
     @staticmethod
