@@ -10,10 +10,11 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
-from core.settings.settings import COMMAND_TIMEOUT, TNS_PATH, TAG, TEST_RUN_HOME, DEVELOPMENT_TEAM, CURRENT_OS, \
+from core.settings.settings import COMMAND_TIMEOUT, TNS_PATH, TAG, TEST_RUN_HOME, CURRENT_OS, \
     SUT_FOLDER, PROVISIONING
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
+from core.xcode.xcode import Xcode
 
 
 class Tns(object):
@@ -434,7 +435,9 @@ class Tns(object):
                 if log_trace:
                     assert "build/emulator/" + app_id + ".app" in output
                 else:
-                    assert "build/emulator/" + app_id + ".app" not in output, "Native build out is displayed!"
+                    # Xcode 8.* output contains some warnings for images, so we will assert only on Xcode 9.*
+                    if "9." in Xcode.get_version():
+                        assert "build/emulator/" + app_id + ".app" not in output, "Native build out is displayed!"
                 assert File.exists(app_name + "/platforms/ios/" + app_id + "/" + app_id + "-Prefix.pch")
                 assert File.exists(emu_folder + app_id + ".app")
                 bundle_content = File.read(emu_folder + app_id + ".app/" + app_id)

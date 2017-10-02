@@ -4,7 +4,6 @@ A wrapper of Xcode
 
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
-from core.settings.settings import COMMAND_TIMEOUT
 
 
 class Xcode(object):
