@@ -12,9 +12,6 @@ from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, IOS_RUNTIME_PATH, ANDROID_RUNTIME_PATH, TEST_RUN_HOME
 from core.settings.strings import *
 from core.tns.tns import Tns
-from core.tns.tns_platform_type import Platform
-from core.tns.tns_prepare_type import Prepare
-from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
 
 
@@ -227,11 +224,9 @@ class PluginsiOSTests(BaseClass):
         assert "acra-telerik-analytics is not supported for ios" in output
         assert "Successfully installed plugin acra-telerik-analytics" in output
 
-        output = Tns.prepare_ios(attributes={"--path": self.app_name})
-        TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.FULL)
+        Tns.build_ios(attributes={"--path": self.app_name})
         assert not File.pattern_exists(self.app_name + "/platforms/ios", pattern="*.aar")
 
-        output = Tns.prepare_android(attributes={"--path": self.app_name})
-        TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.FULL)
+        Tns.build_android(attributes={"--path": self.app_name})
         assert File.pattern_exists(self.app_name + "/platforms/android", pattern="*.aar")
         assert File.pattern_exists(self.app_name + "/platforms/android", pattern="*ACRA*")
