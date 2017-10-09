@@ -3,17 +3,16 @@ Test for plugin commands in context of Android
 """
 
 import os
-import unittest
+import time
 import xml.etree.ElementTree as ET
+
 from core.base_class.BaseClass import BaseClass
-from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, ANDROID_RUNTIME_PATH
-from core.tns.tns import Tns
-import time
+from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH
 from core.settings.strings import *
+from core.tns.tns import Tns
 
 
 class PluginsAndroidTests(BaseClass):
@@ -49,7 +48,7 @@ class PluginsAndroidTests(BaseClass):
 
     def test_102_plugin_add_inside_project(self):
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name,"--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
         output = run(os.path.join("..", TNS_PATH) + " plugin add tns-plugin")
@@ -68,10 +67,10 @@ class PluginsAndroidTests(BaseClass):
         plugin_name = "nativescript-barcodescanner"
         plugin_manifest_path = os.path.join(self.app_name, "node_modules", plugin_name, "platforms",
                                             "android", "AndroidManifest.xml")
-        src_manifest = os.path.join(self.platforms_android, "src", plugin_name, "AndroidManifest.xml")
         res_manifest = os.path.join(self.platforms_android, "build", "intermediates", "manifests")
 
         Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.plugin_add(plugin_name, attributes={"--path": self.app_name})
         assert File.exists(plugin_manifest_path)
         plugin_manifest_file = ET.parse(plugin_manifest_path)
@@ -79,8 +78,6 @@ class PluginsAndroidTests(BaseClass):
         assert File.find_text('<manifest xmlns:android="http://schemas.android.com/apk/res/android">',
                               plugin_manifest_path)
         assert File.find_text('<?xml version="1.0" encoding="UTF-8"?>', plugin_manifest_path)
-        Tns.prepare_android(attributes={"--path": self.app_name})
-        assert File.exists(src_manifest)
         Tns.build_android(attributes={"--path": self.app_name})
         assert File.pattern_exists(res_manifest, "AndroidManifest.xml")
         merged_manifest_file = ET.parse(os.path.join(res_manifest, "full", "F0F1", "debug", "AndroidManifest.xml"))
@@ -101,7 +98,6 @@ class PluginsAndroidTests(BaseClass):
                             break
                         else:
                             res = False
-        print res
         assert res is True, "Manifest not merged completely"
 
     def test_200_build_app_with_plugin_added_inside_project(self):
