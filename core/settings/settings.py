@@ -18,8 +18,7 @@ if "Darwin" in platform.platform():
 TEST_RUN_HOME = os.getcwd()  # Get test run root folder.
 
 # Test packages location from env. variables
-# BASE_PACKAGE_PATH = os.environ.get("BASE_PACKAGE_PATH", "/tns-dist")
-BASE_PACKAGE_PATH = os.environ.get("BASE_PACKAGE_PATH", "/Users/mivanova/Projects/tns-dist")
+BASE_PACKAGE_PATH = os.environ.get("BASE_PACKAGE_PATH", "/tns-dist")
 BRANCH = os.environ.get("BRANCH", "master").lower()
 if "release" in BRANCH:
     SHARE_BRANCH = "Release"
