@@ -1,0 +1,214 @@
+
+_________________________________TEST START_______________________________________
+Test Method: test_110_webpack_build_install_all_cases
+Start Time:  10:19:32
+
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+##### 10:19:32 Executing command : node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+
+##### OUTPUT BEGIN #####
+
+Installing  /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+/Users/mivanova/Projects/nativescript-cli-tests/TestApp
+└─┬ tns-template-hello-world-ng@3.1.2 
+  ├─┬ @angular/animations@4.2.6 
+  │ └── tslib@1.8.0 
+  ├─┬ @angular/common@4.2.6 
+  │ └── tslib@1.8.0  deduped
+  ├─┬ @angular/compiler@4.2.6 
+  │ └── tslib@1.8.0  deduped
+  ├─┬ @angular/core@4.2.6 
+  │ └── tslib@1.8.0  deduped
+  ├─┬ @angular/forms@4.2.6 
+  │ └── tslib@1.8.0  deduped
+  ├─┬ @angular/http@4.2.6 
+  │ └── tslib@1.8.0  deduped
+  ├─┬ @angular/platform-browser@4.2.6 
+  │ └── tslib@1.8.0  deduped
+  ├─┬ @angular/router@4.2.6 
+  │ └── tslib@1.8.0  deduped
+  ├─┬ nativescript-angular@4.2.0 
+  │ ├── nativescript-intl@3.0.0 
+  │ └── reflect-metadata@0.1.10  deduped
+  ├── nativescript-theme-core@1.0.4 
+  ├── reflect-metadata@0.1.10 
+  ├─┬ rxjs@5.4.3 
+  │ └── symbol-observable@1.0.4 
+  ├─┬ tns-core-modules@3.1.1 
+  │ └── tns-core-modules-widgets@3.1.1 
+  └── zone.js@0.8.18 
+
+
+> nativescript-dev-typescript@0.5.1 postinstall /Users/mivanova/Projects/nativescript-cli-tests/TestApp/node_modules/nativescript-dev-typescript
+> node postinstall.js
+
+Adding 'es6' lib to tsconfig.json...
+Adding 'dom' lib to tsconfig.json...
+Adding 'es2015.iterable' lib to tsconfig.json...
+Adding tns-core-modules path mappings lib to tsconfig.json...
+Project already targets TypeScript ~2.4.2
+/Users/mivanova/Projects/nativescript-cli-tests/TestApp
+├─┬ nativescript-dev-typescript@0.5.1 
+│ └─┬ nativescript-hook@0.2.1 
+│   ├─┬ glob@6.0.4 
+│   │ ├─┬ inflight@1.0.6 
+│   │ │ ├── once@1.4.0  deduped
+│   │ │ └── wrappy@1.0.2 
+│   │ ├── inherits@2.0.3 
+│   │ ├─┬ minimatch@3.0.4 
+│   │ │ └─┬ brace-expansion@1.1.8 
+│   │ │   ├── balanced-match@1.0.0 
+│   │ │   └── concat-map@0.0.1 
+│   │ ├─┬ once@1.4.0 
+│   │ │ └── wrappy@1.0.2  deduped
+│   │ └── path-is-absolute@1.0.1 
+│   └─┬ mkdirp@0.5.1 
+│     └── minimist@0.0.8 
+└── typescript@2.4.2 
+
+Project TestApp was successfully created.
+
+
+##### OUTPUT END #####
+
+org.nativescript.TestApp found in TestApp/package.json.
+tns-core-modules found in TestApp/package.json.
+nativescript-theme-core found in TestApp/package.json.
+Current dir: /Users/mivanova/Projects/nativescript-cli-tests
+Navigate to: /Users/mivanova/Projects/nativescript-cli-tests/TestApp
+##### 10:19:49 Executing command : npm un tns-core-modules --save
+
+##### OUTPUT BEGIN #####
+
+- tns-core-modules-widgets@3.1.1 node_modules/tns-core-modules-widgets
+- tns-core-modules@3.1.1 node_modules/tns-core-modules
+npm WARN nativescript-angular@4.2.0 requires a peer of tns-core-modules@^3.1.0 || >3.2.0- but none was installed.
+
+##### OUTPUT END #####
+
+Navigate to: /Users/mivanova/Projects/nativescript-cli-tests
+Current dir: /Users/mivanova/Projects/nativescript-cli-tests
+Navigate to: /Users/mivanova/Projects/nativescript-cli-tests/TestApp
+##### 10:19:50 Executing command : npm i tns-core-modules@next --save
+
+##### OUTPUT BEGIN #####
+
+/Users/mivanova/Projects/nativescript-cli-tests/TestApp
+└── (empty)
+
+npm WARN nativescript-angular@4.2.0 requires a peer of tns-core-modules@^3.1.0 || >3.2.0- but none was installed.
+
+##### OUTPUT END #####
+
+Navigate to: /Users/mivanova/Projects/nativescript-cli-tests
+Current dir: /Users/mivanova/Projects/nativescript-cli-tests
+Navigate to: /Users/mivanova/Projects/nativescript-cli-tests/TestApp
+##### 10:19:53 Executing command : npm un nativescript-angular --save
+
+##### OUTPUT BEGIN #####
+
+- nativescript-intl@3.0.0 node_modules/nativescript-intl
+- nativescript-angular@4.2.0 node_modules/nativescript-angular
+
+##### OUTPUT END #####
+
+Navigate to: /Users/mivanova/Projects/nativescript-cli-tests
+Current dir: /Users/mivanova/Projects/nativescript-cli-tests
+Navigate to: /Users/mivanova/Projects/nativescript-cli-tests/TestApp
+##### 10:19:54 Executing command : npm i nativescript-angular@next --save
+
+##### OUTPUT BEGIN #####
+
+
+> nativescript-angular@4.5.0-2017-10-13-2 postinstall /Users/mivanova/Projects/nativescript-cli-tests/TestApp/node_modules/nativescript-angular
+> node postinstall.js
+
+/Users/mivanova/Projects/nativescript-cli-tests/TestApp
+└─┬ nativescript-angular@4.5.0-2017-10-13-2 
+  └── nativescript-intl@3.0.0 
+
+npm WARN nativescript-angular@4.5.0-2017-10-13-2 requires a peer of @angular/common@~4.4.1 but none was installed.
+npm WARN nativescript-angular@4.5.0-2017-10-13-2 requires a peer of @angular/compiler@~4.4.1 but none was installed.
+npm WARN nativescript-angular@4.5.0-2017-10-13-2 requires a peer of @angular/core@~4.4.1 but none was installed.
+npm WARN nativescript-angular@4.5.0-2017-10-13-2 requires a peer of @angular/forms@~4.4.1 but none was installed.
+npm WARN nativescript-angular@4.5.0-2017-10-13-2 requires a peer of @angular/http@~4.4.1 but none was installed.
+npm WARN nativescript-angular@4.5.0-2017-10-13-2 requires a peer of @angular/platform-browser@~4.4.1 but none was installed.
+npm WARN nativescript-angular@4.5.0-2017-10-13-2 requires a peer of @angular/router@~4.4.1 but none was installed.
+
+##### OUTPUT END #####
+
+Navigate to: /Users/mivanova/Projects/nativescript-cli-tests
+Current dir: /Users/mivanova/Projects/nativescript-cli-tests
+Navigate to: /Users/mivanova/Projects/nativescript-cli-tests/TestApp
+##### 10:19:57 Executing command : npm i nativescript-dev-webpack --save-dev
+
+##### OUTPUT BEGIN #####
+
+
+> nativescript-dev-webpack@0.8.0 postinstall /Users/mivanova/Projects/nativescript-cli-tests/TestApp/node_modules/nativescript-dev-webpack
+> node postinstall.js
+
+Creating file: /Users/mivanova/Projects/nativescript-cli-tests/TestApp/webpack.config.js
+Creating file: /Users/mivanova/Projects/nativescript-cli-tests/TestApp/tsconfig.aot.json
+Creating file: /Users/mivanova/Projects/nativescript-cli-tests/TestApp/app/vendor-platform.android.ts
+Creating file: /Users/mivanova/Projects/nativescript-cli-tests/TestApp/app/vendor-platform.ios.ts
+Creating file: /Users/mivanova/Projects/nativescript-cli-tests/TestApp/app/vendor.ts
+Registering script: ns-bundle
+Registering script: start-android-bundle
+Registering script: start-ios-bundle
+Registering script: build-android-bundle
+Registering script: build-ios-bundle
+Registering script: publish-ios-bundle
+Registering script: generate-android-snapshot
+Adding dev dependency: webpack@~3.2.0
+Adding dev dependency: webpack-bundle-analyzer@^2.8.2
+Adding dev dependency: webpack-sources@~1.0.1
+Adding dev dependency: copy-webpack-plugin@~4.0.1
+Adding dev dependency: raw-loader@~0.5.1
+Adding dev dependency: nativescript-css-loader@~0.26.0
+Adding dev dependency: nativescript-worker-loader@~0.8.1
+Adding dev dependency: resolve-url-loader@~2.1.0
+Adding dev dependency: extract-text-webpack-plugin@~3.0.0
+Adding dev dependency: @angular/compiler-cli@~4.2.0
+Dev dependency: typescript already added. Leaving version: ~2.4.2
+Adding dev dependency: @ngtools/webpack@~1.6.0
+
+NativeScript Webpack plugin was successfully added.
+You can now bundle your project with the following npm scripts:
+    - "npm run build-android-bundle" to build for android.
+    - "npm run build-ios-bundle" to build for ios.
+    - "npm run start-android-bundle" to run on android.
+    - "npm run start-ios-bundle" to run on ios.
+You can also pass the "--uglify" flag to use UglifyJS for minification.
+For more information check out https://docs.nativescript.org/tooling/bundling-with-webpack#bundling.
+
+Some dependencies have already been added. If you want to force update them, please run "node_modules/.bin/update-ns-webpack".
+
+A few new dependencies were added. Run "npm install" before building your project.
+
+/Users/mivanova/Projects/nativescript-cli-tests/TestApp
+└─┬ nativescript-dev-webpack@0.8.0 
+  ├── semver@5.4.1 
+  └── shelljs@0.6.1 
+
+npm WARN nativescript-angular@4.5.0-2017-10-13-2 requires a peer of @angular/common@~4.4.1 but none was installed.
+npm WARN nativescript-angular@4.5.0-2017-10-13-2 requires a peer of @angular/compiler@~4.4.1 but none was installed.
+npm WARN nativescript-angular@4.5.0-2017-10-13-2 requires a peer of @angular/core@~4.4.1 but none was installed.
+npm WARN nativescript-angular@4.5.0-2017-10-13-2 requires a peer of @angular/forms@~4.4.1 but none was installed.
+npm WARN nativescript-angular@4.5.0-2017-10-13-2 requires a peer of @angular/http@~4.4.1 but none was installed.
+npm WARN nativescript-angular@4.5.0-2017-10-13-2 requires a peer of @angular/platform-browser@~4.4.1 but none was installed.
+npm WARN nativescript-angular@4.5.0-2017-10-13-2 requires a peer of @angular/router@~4.4.1 but none was installed.
+
+##### OUTPUT END #####
+
+Navigate to: /Users/mivanova/Projects/nativescript-cli-tests
+Save current host screen at /Users/mivanova/Projects/nativescript-cli-tests/out/BuildiOSWebpackNGTests_test_110_webpack_build_install_all_cases/test_110_webpack_build_install_all_cases.png
+
+Test Method: test_110_webpack_build_install_all_cases
+End Time:    10:20:03
+Outcome:     FAILED
+_________________________________TEST END_______________________________________
+
+Stop all running simulators.
+Stop all running emulators.
+Kill gradle processes.

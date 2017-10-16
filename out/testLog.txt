@@ -1,0 +1,784 @@
+npm cache clean
+rm -rf ~/.npm/tns*
+rm -rf ~/.gradle
+git clone git@github.com:NativeScript/template-hello-world.git /Users/mivanova/Projects/nativescript-cli-tests/sut/template-hello-world -b master
+git clone git@github.com:NativeScript/template-hello-world-ts.git /Users/mivanova/Projects/nativescript-cli-tests/sut/template-hello-world-ts -b master
+git clone git@github.com:NativeScript/template-hello-world-ng.git /Users/mivanova/Projects/nativescript-cli-tests/sut/template-hello-world-ng -b master
+defaults write com.apple.CrashReporter DialogType none
+defaults write -g ApplePersistence -bool no
+/Users/mivanova/Library/Android/sdk/platform-tools/adb devices -l
+npm i /Users/mivanova/Projects/nativescript-cli-tests/sut/nativescript.tgz
+node_modules/.bin/tns usage-reporting disable
+node_modules/.bin/tns error-reporting disable
+tns --version
+which tns
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+rm -rf ~/.gradle
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+rm -rf ~/.gradle
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+node_modules/.bin/tns plugin add tns-plugin --path TestApp
+cat TestApp/package.json
+rm -rf ~/.gradle
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+node_modules/.bin/tns plugin add tns-plugin --path TestApp
+rm -rf ~/.gradle
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+node_modules/.bin/tns plugin add nativescript-telerik-ui --path TestApp --ignore-scripts 
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+rm -rf ~/.gradle
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+rm -rf ~/.gradle
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+rm -rf ~/.gradle
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+node_modules/.bin/tns plugin add tns-plugin --path TestApp
+cat TestApp/package.json
+rm -rf ~/.gradle
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+rm -rf ~/.gradle
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+node_modules/.bin/tns plugin add tns-plugin --path TestApp
+cat TestApp/package.json
+rm -rf ~/.gradle
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+node_modules/.bin/tns plugin add tns-plugin --path TestApp
+rm -rf ~/.gradle
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+node_modules/.bin/tns plugin add nativescript-telerik-ui --path TestApp --ignore-scripts 
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+rm -rf ~/.gradle
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+node_modules/.bin/tns plugin add nativescript-telerik-ui --path TestApp --ignore-scripts 
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+rm -rf ~/.gradle
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+rm -rf ~/.gradle
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp --for-device  --release 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+node_modules/.bin/tns platform add ios --path TestApp --frameworkPath /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-ios.tgz
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm i build-ios-bundle run
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify --snapshot
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --snapshot
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --for-device --release
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp --forDevice  --release  --log trace
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp --forDevice  --release 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp --for-device  --release 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --team-id  --path TestApp --for-device  --release 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --team-id CHSQ3M3P37 --path TestApp --for-device  --release 
+npm run build-ios-bundle --release --forDevice
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp --forDevice  --release 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --team-id CHSQ3M3P37 --path TestApp --forDevice  --release 
+npm run build-ios-bundle --release --forDevice
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --release --forDevice
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --team-id CHSQ3M3P37 --path TestApp --forDevice  --release 
+npm run build-ios-bundle --release --forDevice
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --team-id CHSQ3M3P37 --path TestApp --forDevice  --release 
+npm run build-ios-bundle --uglify --release --forDevice
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --team-id CHSQ3M3P37 --path TestApp --forDevice  --release 
+npm run build-ios-bundle --snapshot --release --forDevice
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --team-id CHSQ3M3P37 --path TestApp --forDevice  --release 
+npm run build-ios-bundle --uglify --snapshot --release --forDevice
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+rm -rf TestApp
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+npm i install 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack@next --save-dev
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack@next --save-dev
+npm i install 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+screencapture /Users/mivanova/Projects/nativescript-cli-tests/out/BuildiOSWebpackNGTests_test_102_webpack_build_bundle/test_102_webpack_build_bundle.png
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --team-id CHSQ3M3P37 --path TestApp --forDevice  --release 
+npm run build-ios-bundle --uglify --release --forDevice
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --team-id CHSQ3M3P37 --path TestApp --forDevice  --release 
+npm run build-ios-bundle --release --forDevice
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --team-id CHSQ3M3P37 --path TestApp --forDevice  --release 
+npm run build-ios-bundle --uglify --release --forDevice
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+npm run build-ios-bundle --uglify
+npm run build-ios-bundle --uglify --snapshot
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack@next --save-dev
+npm i install 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --uglify --snapshot
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --team-id CHSQ3M3P37 --path TestApp --forDevice  --release 
+npm run build-ios-bundle --release --forDevice
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle --snapshot
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --team-id CHSQ3M3P37 --path TestApp --forDevice  --release 
+npm run build-ios-bundle --uglify --release --forDevice
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --team-id CHSQ3M3P37 --path TestApp --forDevice  --release 
+npm run build-ios-bundle --snapshot --release --forDevice
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --team-id CHSQ3M3P37 --path TestApp --forDevice  --release 
+npm run build-ios-bundle --uglify --snapshot --release --forDevice
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns build ios --provision c14a1fff-7e08-45a9-a9c7-8280df7875fa --path TestApp
+npm run build-ios-bundle 
+npm run build-ios-bundle --uglify
+npm run build-ios-bundle --uglify --snapshot
+npm run build-ios-bundle --uglify
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+npm i install 
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+npm i install 
+node_modules/.bin/tns platform add ios --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+npm i install 
+node_modules/.bin/tns platform add ios --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+screencapture /Users/mivanova/Projects/nativescript-cli-tests/out/BuildiOSWebpackNGTests_test_110_webpack_build_install_all_cases/test_110_webpack_build_install_all_cases.png
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+npm install 
+node_modules/.bin/tns platform add ios --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+npm install 
+node_modules/.bin/tns platform add ios --path TestApp
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+npm install 
+node_modules/.bin/tns platform add ios --path TestApp
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
+npm install 
+npm run build-ios-bundle 
+node_modules/.bin/tns create "TestApp" --template /Users/mivanova/Projects/nativescript-cli-tests/sut/tns-template-hello-world-ng.tgz
+npm un tns-core-modules --save
+npm i tns-core-modules@next --save
+npm un nativescript-angular --save
+npm i nativescript-angular@next --save
+npm i nativescript-dev-webpack --save-dev
