@@ -108,7 +108,6 @@ class Adb(object):
         else:
             raise IOError('{0} has not displayed its activity - the app crashed!'.format(app_id))
 
-
     @staticmethod
     def run(command, device_id, timeout=60, log_level=CommandLogLevel.COMMAND_ONLY):
         """
@@ -365,20 +364,20 @@ class Adb(object):
         cmd_input_method = ADB_PATH + " -s " + device_id + " shell dumpsys input_method | grep mActive"
 
         output = run(command=cmd_input_method)
-        inactive = "mActive=false" in output
-        print "Is the screen off? {0}".format(inactive)
+        is_active = "mActive=true" in output
+        print "Is the screen on? {0}".format(is_active)
 
-        if inactive:
-            run(command=cmd_key_event)
-            time.sleep(1)
-            output = run(command=cmd_input_method)
-            assert "mActive=true" in output
-        else:
+        if is_active:
             run(command=cmd_key_event)
             time.sleep(1)
             output = run(command=cmd_input_method)
             assert "mActive=false" in output
             time.sleep(1)
+            run(command=cmd_key_event)
+            time.sleep(1)
+            output = run(command=cmd_input_method)
+            assert "mActive=true" in output
+        else:
             run(command=cmd_key_event)
             time.sleep(1)
             output = run(command=cmd_input_method)
