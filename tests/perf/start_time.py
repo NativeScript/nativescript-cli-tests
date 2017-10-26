@@ -16,7 +16,7 @@ class StartTimeTestCase(unittest.TestCase):
     app_dir = "./testapps/"
     apk_ext = ".apk"
     csv_ext = ".csv"
-    device_id = "077e4a47003b7698"  # Device.get_id(platform=Platform.ANDROID)
+    device_id = "0a9f9d090d5cdaf2"  # Device.get_id(platform=Platform.ANDROID)
     num_start = 3
 
     @classmethod
