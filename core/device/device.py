@@ -81,7 +81,7 @@ class Device(object):
         device_type = Device.__get_device_type(device_id)
         if device_type == DeviceType.IOS:
             type = run(command="ideviceinfo | grep ProductType", log_level=CommandLogLevel.SILENT)
-            type = type.replace(',','')
+            type = type.replace(',', '')
             type = type.replace('ProductType:', '').strip(' ')
             device_name = type
 
@@ -245,6 +245,11 @@ class Device(object):
         else:
             raise TypeError("No real devices attached.")
 
+        # If device is Android, make sure /data/local/tmp is clean
+        if platform == Platform.ANDROID:
+            for device_id in Device.get_ids(platform=Platform.ANDROID, include_emulators=True):
+                Adb.run(command="shell rm -rf /data/local/tmp/*", device_id=device_id, log_level=CommandLogLevel.FULL)
+
     @staticmethod
     def get_id(platform):
         """
@@ -307,6 +312,7 @@ class Device(object):
         if platform == Platform.ANDROID:
             for device_id in device_ids:
                 Adb.uninstall_all_apps(device_id=device_id)
+                Adb.run(command="shell rm -rf /data/local/tmp/*", device_id=device_id, log_level=CommandLogLevel.FULL)
         elif platform == Platform.IOS:
             for device_id in device_ids:
                 IDevice.uninstall_all_app(device_id=device_id, app_prefix=app_prefix)

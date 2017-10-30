@@ -105,6 +105,7 @@ class Emulator(object):
         found = Emulator.is_running(device_id=EMULATOR_ID)
         if found:
             print 'Emulator already running.'
+            Adb.run(command="shell rm -rf /data/local/tmp/*", device_id=EMULATOR_ID, log_level=CommandLogLevel.FULL)
         else:
             Emulator.stop()
             Emulator.start(emulator_name=EMULATOR_NAME, port=EMULATOR_PORT)
