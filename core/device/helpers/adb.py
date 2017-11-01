@@ -145,15 +145,16 @@ class Adb(object):
         print '{0} installed successfully on {1}.'.format(apk_file_path, device_id)
 
     @staticmethod
-    def uninstall(app_id, device_id):
+    def uninstall(app_id, device_id, assert_success=True):
         """
         Uninstall application.
         :param app_id: Package identifier - org.nativescript.testapp.
         :param device_id: Device id.
         """
         output = Adb.run(command='uninstall ' + app_id, device_id=device_id, log_level=CommandLogLevel.SILENT)
-        assert 'Success' in output, 'Failed to uninstall {0}. Output: {1}'.format(app_id, output)
-        print '{0} uninstalled successfully from {1}.'.format(app_id, device_id)
+        if assert_success:
+            assert 'Success' in output, 'Failed to uninstall {0}. Output: {1}'.format(app_id, output)
+            print '{0} uninstalled successfully from {1}.'.format(app_id, device_id)
 
     @staticmethod
     def start_app(device_id, app_id):

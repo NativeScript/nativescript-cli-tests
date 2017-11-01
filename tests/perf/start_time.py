@@ -7,6 +7,7 @@ from nose_parameterized import parameterized
 
 from core.device.device import Device
 from core.device.emulator import Emulator
+from core.device.helpers.adb import Adb
 from core.device.simulator import Simulator
 from core.tns.tns_platform_type import Platform
 from core.utils.csv_utils import CsvUtils
@@ -47,6 +48,7 @@ class StartTimeTestCase(unittest.TestCase):
             self.base_test(apk_name, app_id)
 
     def base_test(self, apk_name, app_id):
+        Adb.uninstall(app_id=app_id, device_id=self.device_id, assert_success=False)
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
 
         apk_file_path = self.app_dir + apk_name + self.apk_ext
