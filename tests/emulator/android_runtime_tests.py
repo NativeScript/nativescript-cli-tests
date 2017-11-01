@@ -2,13 +2,11 @@
 Test for specific needs of Android runtime.
 """
 import os
-import subprocess
-import threading
 from time import sleep
 
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
-from core.device.helpers.adb import ADB_PATH, Adb
+from core.device.helpers.adb import Adb
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, EMULATOR_ID

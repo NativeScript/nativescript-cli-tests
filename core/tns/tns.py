@@ -451,7 +451,7 @@ class Tns(object):
             # Check signing options
             xcode_project = Tns.__get_xcode_project_file(app_name)
             if "--provision" in attributes.keys():
-                id = attributes.get("--provision")
+                id = attributes.get("--provision").replace("'", "")
                 assert id in xcode_project, "Provisioning profile specified by --provision not passed to Xcode project!"
                 assert "ProvisioningStyle = Manual" in xcode_project, \
                     "If --provision is not specified Xcode should use automatic signing"
@@ -459,8 +459,8 @@ class Tns(object):
                 assert "ProvisioningStyle = Automatic" in xcode_project, \
                     "If --provision is not specified Xcode should use automatic signing"
                 if "--teamId" or "--team-id" in attributes.keys():
-                    id1 = attributes.get("--teamId")
-                    id2 = attributes.get("--team-id")
+                    id1 = attributes.get("--teamId").replace("'", "")
+                    id2 = attributes.get("--team-id").replace("'", "")
                     assert id1 or id2 in xcode_project, "TeamID not passed to Xcode!"
         return output
 
