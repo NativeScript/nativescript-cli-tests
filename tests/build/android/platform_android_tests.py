@@ -179,3 +179,20 @@ class PlatformAndroidTests(BaseClass):
         output = Tns.platform_update(attributes={"--path": self.app_name}, assert_success=False)
         assert no_platform in output
         assert "Usage" in output
+
+
+    def test_441_binding_text_exists(self):
+        # https: // github.com / NativeScript / android - runtime / issues / 833
+
+        Tns.create_app_ts(self.appTS_name)
+        Tns.create_app(self.app_name)
+        Folder.cleanup("TestApp/app")
+        copy = os.path.join("TestAppTS", 'app')
+        paste = os.path.join("TestApp", )
+        Folder.move(copy, paste)
+        Tns.platform_add_android(attributes={"--path": self.app_name})
+        Tns.build_android(attributes={"--path": self.app_name})
+        binding = os.stat(self.app_name + "/platforms/android/build-tools/android-static-binding-generator/bindings.txt")
+        assert binding.st_size > 15000
+        print binding.st_size
+        Folder.cleanup("TestAppTS")
