@@ -199,9 +199,10 @@ class RunIOSDeviceTests(BaseClass):
         output = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
                              assert_success=False)
         TnsAsserts.prepared(app_name=self.app_name, output=output, platform=Platform.IOS, prepare=Prepare.INCREMENTAL)
-        assert self.SIMULATOR_ID in output
+        app_id = Tns.get_app_id(self.app_name)
+        assert app_id + " on device " + self.SIMULATOR_ID in output, "App not deployed on iOS Simulator!"
         for device_id in self.DEVICES:
-            assert device_id not in output, 'Application is deployed on {0} device.'.format(device_id)
+            assert app_id + " on device " + device_id not in output, 'App is deployed on {0} device.'.format(device_id)
 
     def test_320_tns_run_ios_specific_device(self):
         """
@@ -211,11 +212,13 @@ class RunIOSDeviceTests(BaseClass):
         output = Tns.run_ios(attributes={'--path': self.app_name, '--device': self.DEVICE_ID, '--justlaunch': ''},
                              assert_success=False)
         TnsAsserts.prepared(app_name=self.app_name, output=output, platform=Platform.IOS, prepare=Prepare.INCREMENTAL)
-        assert self.SIMULATOR_ID not in output, 'Application is also deployed on iOS Simulator!'
+        app_id = Tns.get_app_id(self.app_name)
+        assert app_id + " on device " + self.DEVICE_ID in output, "App not deployed on specified device!"
+        assert app_id + " on device " + self.SIMULATOR_ID not in output, 'App is also deployed on iOS Simulator!'
         for device_id in self.DEVICES:
             if device_id != self.DEVICE_ID:
-                assert device_id not in output, \
-                    'Application is deployed on {0} while it should be only on {1}'.format(device_id, self.DEVICES)
+                assert app_id + " on device " + device_id not in output, \
+                    'App is deployed on {0} while it should be only on {1}'.format(device_id, self.DEVICES)
 
         # Second prepare should be skipped, since there are no changes in the project.
         output = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
