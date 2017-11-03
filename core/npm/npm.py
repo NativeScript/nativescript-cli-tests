@@ -41,6 +41,14 @@ class Npm(object):
         return Npm.__run_npm_command('i {0} {1}'.format(package, option), folder=folder, log_level=log_level)
 
     @staticmethod
+    def run(package, option='', folder=None, log_level=CommandLogLevel.FULL):
+        return Npm.__run_npm_command('run {0} {1}'.format(package, option), folder=folder, log_level=log_level)
+
+    @staticmethod
+    def npm(package, option='', folder=None, log_level=CommandLogLevel.FULL):
+        return Npm.__run_npm_command('{0} {1}'.format(package, option), folder=folder, log_level=log_level)
+
+    @staticmethod
     def uninstall(package, option='', folder=None, log_level=CommandLogLevel.FULL):
         return Npm.__run_npm_command('un {0} {1}'.format(package, option), folder=folder, log_level=log_level)
 
