@@ -110,8 +110,8 @@ class PluginsAndroidTests(BaseClass):
         assert "Successfully installed plugin tns-plugin" in output
 
         Tns.build_android(attributes={"--path": self.app_name}, log_trace=True)
-        assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TestApp-debug.apk")
-        assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
+        assert File.exists(self.app_name + "/platforms/android/app/build/outputs/apk/TestApp-debug.apk")
+        assert File.exists(self.app_name + "/platforms/android/app/src/main/assets/app/tns_modules/tns-plugin/index.js")
 
     def test_201_plugin_add_before_platform_add_android_and_build(self):
         Tns.create_app(self.app_name)
@@ -149,8 +149,8 @@ class PluginsAndroidTests(BaseClass):
         Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name}, assert_success=False)
 
         Tns.build_android(attributes={"--path": self.app_name})
-        assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TestApp-debug.apk")
-        assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
+        assert File.exists(self.app_name + "/platforms/android/app/build/outputs/apk/TestApp-debug.apk")
+        assert File.exists(self.app_name + "/platforms/android/app/src/main/assets/app/tns_modules/tns-plugin/index.js")
 
         # Verify plugin commmand list used plugins
         output = Tns.run_tns_command("plugin", attributes={"--path": self.app_name})
