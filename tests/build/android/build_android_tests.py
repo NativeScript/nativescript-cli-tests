@@ -177,7 +177,7 @@ class BuildAndroidTests(BaseClass):
         assert app_identifier in output.lower()
 
         # Verify AndroidManifest.xml
-        output = File.read(self.app_name_dash + "/platforms/android/src/main/AndroidManifest.xml")
+        output = File.read(self.app_name_dash + "/platforms/android/app/src/main/AndroidManifest.xml")
         assert app_identifier in output.lower()
 
     def test_302_build_project_with_space(self):
@@ -203,7 +203,7 @@ class BuildAndroidTests(BaseClass):
         output = File.read(self.app_name_space + os.sep + "package.json")
         assert app_identifier in output.lower()
 
-        output = File.read(self.app_name_space + "/platforms/android/src/main/AndroidManifest.xml")
+        output = File.read(self.app_name_space + "/platforms/android/app/src/main/AndroidManifest.xml")
         assert app_identifier in output.lower()
 
     def test_310_build_android_with_sdk22(self):
