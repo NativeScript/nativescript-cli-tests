@@ -139,6 +139,10 @@ class Tns(object):
         output = Npm.install(package="nativescript-angular@next", option="--save", folder=path)
         if Npm.version() > 3:
             assert "ERR" not in output, "Something went wrong when modules are installed."
+
+        output = run(path + "/node_modules/nativescript-angular/bin/update-app-ng-deps")
+        assert "Angular dependencies updated" in output
+        Npm.install(folder=path)
         return output
 
     @staticmethod

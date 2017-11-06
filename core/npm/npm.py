@@ -37,11 +37,11 @@ class Npm(object):
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
     @staticmethod
-    def install(package, option='', folder=None, log_level=CommandLogLevel.FULL):
+    def install(package='', option='', folder=None, log_level=CommandLogLevel.FULL):
         return Npm.__run_npm_command('i {0} {1}'.format(package, option), folder=folder, log_level=log_level)
 
     @staticmethod
-    def uninstall(package, option='', folder=None, log_level=CommandLogLevel.FULL):
+    def uninstall(package='', option='', folder=None, log_level=CommandLogLevel.FULL):
         return Npm.__run_npm_command('un {0} {1}'.format(package, option), folder=folder, log_level=log_level)
 
     @staticmethod
