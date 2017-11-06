@@ -2,10 +2,8 @@
 Test platform add (android)
 """
 import os
-import unittest
 
 from core.base_class.BaseClass import BaseClass
-from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH, TEST_RUN_HOME
