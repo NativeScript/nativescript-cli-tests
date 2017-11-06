@@ -19,7 +19,7 @@ class TnsAsserts(object):
     HOOKS = '/hooks/'
     PLATFORM_IOS = os.path.join('platforms', 'ios/')
     PLATFORM_ANDROID = os.path.join('platforms', 'android/')
-    PLATFORM_ANDROID_APP_PATH = os.path.join(PLATFORM_ANDROID, 'src', 'main', 'assets', 'app/')
+    PLATFORM_ANDROID_APP_PATH = os.path.join(PLATFORM_ANDROID, 'app', 'src', 'main', 'assets', 'app/')
     PLATFORM_ANDROID_NPM_MODULES_PATH = os.path.join(PLATFORM_ANDROID_APP_PATH, 'tns_modules/')
     PLATFORM_ANDROID_TNS_MODULES_PATH = os.path.join(PLATFORM_ANDROID_NPM_MODULES_PATH, 'tns-core-modules/')
 

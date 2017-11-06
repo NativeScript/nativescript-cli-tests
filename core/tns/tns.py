@@ -139,6 +139,10 @@ class Tns(object):
         output = Npm.install(package="nativescript-angular@next", option="--save", folder=path)
         if Npm.version() > 3:
             assert "ERR" not in output, "Something went wrong when modules are installed."
+
+        output = run(path + "/node_modules/nativescript-angular/bin/update-app-ng-deps")
+        assert "Angular dependencies updated" in output
+        Npm.install(folder=path)
         return output
 
     @staticmethod
@@ -361,8 +365,9 @@ class Tns(object):
 
             # Verify apk packages
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
-            apk_base = Tns.__get_final_package_name(app_name, platform=Platform.ANDROID)
-            base_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID, "build", "outputs", "apk", apk_base)
+            apk_name = Tns.__get_final_package_name(app_name, platform=Platform.ANDROID)
+            base_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID, "app", "build", "outputs", "apk",
+                                         apk_name)
             if "--release" in attributes.keys():
                 apk_path = base_app_path + "-release.apk"
             else:
