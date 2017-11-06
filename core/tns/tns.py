@@ -141,7 +141,9 @@ class Tns(object):
             assert "ERR" not in output, "Something went wrong when modules are installed."
 
         # Update NG dependencies
-        update_out = run(path + "/node_modules/nativescript-angular/bin/update-app-ng-deps")
+        update_script = os.path.join(TEST_RUN_HOME, path,
+                                     "node_modules", "nativescript-angular", "bin", "update-app-ng-deps")
+        update_out = run(update_script)
         assert "Angular dependencies updated" in update_out
         Npm.install(folder=path)
 
