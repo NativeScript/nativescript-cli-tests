@@ -30,6 +30,13 @@ class PageTemplatesTests(BaseClass):
         Emulator.ensure_available()
         cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
         Folder.cleanup(cls.app_name)
+        Folder.cleanup("extensions")
+        File.remove("user-settings.json")
+        output = Tns.run_tns_command(command='extension install nativescript-starter-kits --profileDir ' + TEST_RUN_HOME)
+        assert "Successfully installed extension nativescript-starter-kits" in output
+        assert "Successfully loaded extension nativescript-starter-kits" in output
+        Tns.run_tns_command(command='usage-reporting disable --profileDir ' + TEST_RUN_HOME)
+        Tns.run_tns_command(command='error-reporting disable --profileDir ' + TEST_RUN_HOME)
         Npm.install(package='global-modules-path', option='--save', folder=cls.folder)
 
     def setUp(self):
