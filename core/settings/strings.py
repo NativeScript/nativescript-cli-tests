@@ -7,12 +7,6 @@ android = "android"
 invalid = "invalidEntry"
 app_identifier = "org.nativescript.testapp"
 
-# Files
-debug_apk = "TestApp-debug.apk"
-release_apk = "TestApp-release.apk"
-debug_apk_path = path.join("platforms", "android", "build", "outputs", "apk", debug_apk)
-release_apk_path = path.join("platforms", "android", "build", "outputs", "apk", release_apk)
-
 # Commands
 autocomplete = "autocomplete"
 autocompletion = "Autocompletion"

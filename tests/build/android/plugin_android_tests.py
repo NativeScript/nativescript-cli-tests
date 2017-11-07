@@ -13,6 +13,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH
 from core.settings.strings import *
 from core.tns.tns import Tns
+from core.tns.tns_verifications import TnsAsserts
 
 
 class PluginsAndroidTests(BaseClass):
@@ -67,7 +68,7 @@ class PluginsAndroidTests(BaseClass):
         plugin_name = "nativescript-barcodescanner"
         plugin_manifest_path = os.path.join(self.app_name, "node_modules", plugin_name, "platforms",
                                             "android", "AndroidManifest.xml")
-        res_manifest = os.path.join(self.platforms_android, "build", "intermediates", "manifests")
+        res_manifest = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_BUILD, "intermediates", "manifests")
 
         Tns.create_app(self.app_name)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
@@ -110,8 +111,8 @@ class PluginsAndroidTests(BaseClass):
         assert "Successfully installed plugin tns-plugin" in output
 
         Tns.build_android(attributes={"--path": self.app_name}, log_trace=True)
-        assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TestApp-debug.apk")
-        assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
+        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_PATH + "/TestApp-debug.apk")
+        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "/tns-plugin/index.js")
 
     def test_201_plugin_add_before_platform_add_android_and_build(self):
         Tns.create_app(self.app_name)
@@ -149,10 +150,10 @@ class PluginsAndroidTests(BaseClass):
         Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name}, assert_success=False)
 
         Tns.build_android(attributes={"--path": self.app_name})
-        assert File.exists(self.app_name + "/platforms/android/build/outputs/apk/TestApp-debug.apk")
-        assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
+        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_PATH + "/TestApp-debug.apk")
+        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "/tns-plugin/index.js")
 
-        # Verify plugin commmand list used plugins
+        # Verify plugin command list used plugins
         output = Tns.run_tns_command("plugin", attributes={"--path": self.app_name})
         assert tns_plugin in output
 
