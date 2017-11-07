@@ -28,6 +28,7 @@ class BuildAndroidTests(BaseClass):
     app_name_dash = "test-app"
     app_name_space = "Test App"
     app_no_platform = "TestAppNoPlatform"
+    platforms_android = BaseClass.app_name + "/" + TnsAsserts.PLATFORM_ANDROID
 
     @classmethod
     def setUpClass(cls):
