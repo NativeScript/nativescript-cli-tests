@@ -517,7 +517,7 @@ class Tns(object):
             assert "Successfully installed on device with identifier" in output
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
             apk_base_name = Tns.__get_final_package_name(app_name, platform=Platform.ANDROID)
-            base_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID, "build", "outputs", "apk", apk_base_name)
+            base_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, apk_base_name)
             if "--release" in attributes.keys():
                 apk_path = base_path + "-release.apk"
             else:

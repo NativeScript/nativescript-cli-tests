@@ -11,11 +11,12 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_RUNTIME_PATH, EMULATOR_ID
 from core.tns.tns import Tns
+from core.tns.tns_verifications import TnsAsserts
 
 
 class RuntimeTests(BaseClass):
     custom_js_file = os.path.join(BaseClass.app_name, "app", "my-custom-class.js")
-    tns_folder = os.path.join(BaseClass.app_name, "platforms", "android", "src", "main", "java", "com", "tns")
+    tns_folder = os.path.join(BaseClass.app_name, TnsAsserts.PLATFORM_ANDROID_SRC_MAIN_PATH, "java", "com", "tns")
     gen_folder = os.path.join(tns_folder, "gen")
     generated_java_file = os.path.join(tns_folder, "MyJavaClass.java")
 
