@@ -12,10 +12,13 @@ from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, IOS_RUNTIME_PATH, ANDROID_RUNTIME_PATH, TEST_RUN_HOME
 from core.settings.strings import *
 from core.tns.tns import Tns
+from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
 
 
 class PluginsiOSTests(BaseClass):
+    debug_apk = "TestApp-debug.apk"
+
     def setUp(self):
         BaseClass.setUp(self)
         Xcode.cleanup_cache()
@@ -133,8 +136,8 @@ class PluginsiOSTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name})
         Tns.build_android(attributes={"--path": self.app_name})
 
-        assert File.exists(os.path.join(self.app_name, debug_apk_path))
-        assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/index.js")
+        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.debug_apk))
+        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-plugin/index.js")
 
         # Verify platform specific files
         assert File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/tns-plugin/test.js")
@@ -144,16 +147,15 @@ class PluginsiOSTests(BaseClass):
         assert not File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/tns-plugin/test.android.js")
         assert not File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/tns-plugin/test2.android.xml")
 
-        assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test.js")
-        assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/tns-plugin/test2.xml")
-        assert not File.exists(self.app_name + "/platforms/android/src/main/assets/"
-                                               "app/tns_modules/tns-plugin/test.ios.js")
-        assert not File.exists(self.app_name + "/platforms/android/src/main/assets/"
-                                               "app/tns_modules/tns-plugin/test2.ios.xml")
-        assert not File.exists(self.app_name + "/platforms/android/src/main/assets/"
-                                               "app/tns_modules/tns-plugin/test.android.js")
-        assert not File.exists(self.app_name + "/platforms/android/src/main/assets/"
-                                               "app/tns_modules/tns-plugin/test2.android.xml")
+        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-plugin/test.js")
+        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-plugin/test2.xml")
+        assert not File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-plugin/test.ios.js")
+        assert not File.exists(
+            self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-plugin/test2.ios.xml")
+        assert not File.exists(
+            self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-plugin/test.android.js")
+        assert not File.exists(
+            self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-plugin/test2.android.xml")
 
     def test_302_plugin_and_npm_modules_in_same_project(self):
         Tns.create_app(self.app_name, update_modules=True)
@@ -170,21 +172,21 @@ class PluginsiOSTests(BaseClass):
         Tns.build_android(attributes={"--path": self.app_name}, assert_success=True)
 
         # Verify plugin and npm module files
-        assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/" +
+        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
                            "nativescript-social-share/package.json")
-        assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/" +
+        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
                            "nativescript-social-share/social-share.js")
-        assert not File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/" +
+        assert not File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
                                "nativescript-social-share/social-share.android.js")
-        assert not File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/" +
+        assert not File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
                                "nativescript-social-share/social-share.ios.js")
-        assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/" +
+        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
                            "nativescript-appversion/package.json")
-        assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/" +
+        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
                            "nativescript-appversion/appversion.js")
-        assert not File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/" +
+        assert not File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
                                "nativescript-appversion/appversion.android.js")
-        assert not File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/" +
+        assert not File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
                                "nativescript-appversion/appversion.ios.js")
 
     def test_320_CFBundleURLTypes_overridden_from_plugin(self):
@@ -220,7 +222,7 @@ class PluginsiOSTests(BaseClass):
         assert "Successfully installed plugin tns-plugin" in output
 
         # Verify Android only plugin
-        output = Tns.plugin_add(" acra-telerik-analytics", attributes={"--path": self.app_name}, assert_success=False)
+        output = Tns.plugin_add("acra-telerik-analytics", attributes={"--path": self.app_name}, assert_success=False)
         assert "acra-telerik-analytics is not supported for ios" in output
         assert "Successfully installed plugin acra-telerik-analytics" in output
 
