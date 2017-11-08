@@ -2,10 +2,8 @@
 Test platform add (android)
 """
 import os
-import unittest
 
 from core.base_class.BaseClass import BaseClass
-from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH, TEST_RUN_HOME
@@ -89,7 +87,8 @@ class PlatformAndroidTests(BaseClass):
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH, "--sdk": "19"})
 
-        output = File.read(self.app_name + "/platforms/android/src/main/AndroidManifest.xml")
+        manifest = os.path.joint(self.app_name, TnsAsserts.PLATFORM_ANDROID_SRC_MAIN_PATH, "AndroidManifest.xml")
+        output = File.read(manifest)
         assert "android:minSdkVersion=\"17\"" in output
         assert "android:targetSdkVersion=\"19\"" in output
 
@@ -101,7 +100,8 @@ class PlatformAndroidTests(BaseClass):
         assert "Support for the selected Android target SDK android-29 is not verified. " + \
                "Your Android app might not work as expected." in output
 
-        output = File.read(self.app_name + "/platforms/android/src/main/AndroidManifest.xml")
+        manifest = os.path.joint(self.app_name, TnsAsserts.PLATFORM_ANDROID_SRC_MAIN_PATH, "AndroidManifest.xml")
+        output = File.read(manifest)
         assert "android:minSdkVersion=\"17\"" in output
         assert "android:targetSdkVersion=\"29\"/>" in output
 

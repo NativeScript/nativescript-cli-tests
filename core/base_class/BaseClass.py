@@ -18,7 +18,6 @@ from core.tns.tns import Tns
 
 class BaseClass(unittest.TestCase):
     app_name = "TestApp"
-    platforms_android = os.path.join(app_name, "platforms", "android")
 
     errors = 0
     failures = 0

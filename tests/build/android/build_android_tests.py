@@ -22,9 +22,13 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class BuildAndroidTests(BaseClass):
+    debug_apk = "TestApp-debug.apk"
+    release_apk = "TestApp-release.apk"
+
     app_name_dash = "test-app"
     app_name_space = "Test App"
     app_no_platform = "TestAppNoPlatform"
+    platforms_android = BaseClass.app_name + "/" + TnsAsserts.PLATFORM_ANDROID
 
     @classmethod
     def setUpClass(cls):
@@ -33,8 +37,8 @@ class BuildAndroidTests(BaseClass):
 
         Folder.cleanup(cls.app_no_platform)
 
-        File.remove(debug_apk)
-        File.remove(release_apk)
+        File.remove(cls.debug_apk)
+        File.remove(cls.release_apk)
         Folder.cleanup('temp')
 
         Tns.create_app(cls.app_name)
@@ -62,8 +66,8 @@ class BuildAndroidTests(BaseClass):
 
     @classmethod
     def tearDownClass(cls):
-        File.remove(debug_apk)
-        File.remove(release_apk)
+        File.remove(cls.debug_apk)
+        File.remove(cls.release_apk)
         Folder.cleanup('temp')
         pass
 
@@ -91,7 +95,7 @@ class BuildAndroidTests(BaseClass):
         assert not File.pattern_exists(self.platforms_android, "*.ios.js")
 
         # Verify apk does not contain aar files
-        archive = ZipFile(os.path.join(self.app_name, debug_apk_path))
+        archive = ZipFile(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.debug_apk))
         archive.extractall(self.app_name + "/temp")
         assert not File.pattern_exists(self.app_name + "/temp", "*.aar")
         assert not File.pattern_exists(self.app_name + "/temp", "*.plist")
@@ -109,6 +113,7 @@ class BuildAndroidTests(BaseClass):
 
         # Configs are respected
         assert 'release' in File.read(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, 'config.json'))
+        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.release_apk))
 
     def test_200_build_android_inside_project_folder(self):
         Folder.navigate_to(self.app_name)
@@ -118,7 +123,7 @@ class BuildAndroidTests(BaseClass):
         assert successfully_prepared in output
         assert build_successful in output
         assert successfully_built in output
-        assert File.exists(os.path.join(self.app_name, debug_apk_path))
+        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.debug_apk))
 
     def test_201_build_android_with_additional_prepare(self):
         """Verify that manually running prepare does not break next build command."""
@@ -177,7 +182,7 @@ class BuildAndroidTests(BaseClass):
         assert app_identifier in output.lower()
 
         # Verify AndroidManifest.xml
-        output = File.read(self.app_name_dash + "/platforms/android/src/main/AndroidManifest.xml")
+        output = File.read(self.app_name_dash + "/" + TnsAsserts.PLATFORM_ANDROID_SRC_MAIN_PATH + "AndroidManifest.xml")
         assert app_identifier in output.lower()
 
     def test_302_build_project_with_space(self):
@@ -203,7 +208,8 @@ class BuildAndroidTests(BaseClass):
         output = File.read(self.app_name_space + os.sep + "package.json")
         assert app_identifier in output.lower()
 
-        output = File.read(self.app_name_space + "/platforms/android/src/main/AndroidManifest.xml")
+        output = File.read(
+            self.app_name_space + "/" + TnsAsserts.PLATFORM_ANDROID_SRC_MAIN_PATH + "AndroidManifest.xml")
         assert app_identifier in output.lower()
 
     def test_310_build_android_with_sdk22(self):
@@ -239,10 +245,10 @@ class BuildAndroidTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
 
-        File.remove(debug_apk)
+        File.remove(self.debug_apk)
         Tns.build_android(attributes={"--path": self.app_name, "--copy-to": "./"})
-        assert File.exists(debug_apk)
-        File.remove(debug_apk)
+        assert File.exists(self.debug_apk)
+        File.remove(self.debug_apk)
 
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "AppBuilder does not use Windows machines")
     def test_330_build_like_appbuilder(self):
@@ -370,4 +376,4 @@ class BuildAndroidTests(BaseClass):
         output = Tns.build_android(attributes={"--release": "", "--path": self.app_name}, assert_success=False)
         assert "When producing a release build, you need to specify all --key-store-* options." in output
         assert "# build android" in output
-        assert not File.exists(release_apk_path)
+        assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.release_apk))
