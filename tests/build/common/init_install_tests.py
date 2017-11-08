@@ -15,8 +15,9 @@ from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, SUT_FOLDER
-from core.tns.tns import Tns
 from core.settings.strings import *
+from core.tns.tns import Tns
+from core.tns.tns_verifications import TnsAsserts
 
 
 class InitAndInstallTests(BaseClass):
@@ -136,14 +137,14 @@ class InitAndInstallTests(BaseClass):
         assert File.exists(self.app_name + "/platforms/android/build.gradle")
 
         Tns.prepare_android(attributes={"--path": self.app_name})
-        assert File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/lodash")
-        assert not File.exists(self.app_name + "/platforms/android/src/main/assets/app/tns_modules/gulp")
+        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "lodash")
+        assert not File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "gulp")
 
         if CURRENT_OS == OSType.OSX:
             assert File.exists(self.app_name + "/platforms/ios/TestApp.xcodeproj")
             Tns.prepare_ios(attributes={"--path": self.app_name})
-            assert File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/lodash")
-            assert not File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/gulp")
+            assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "lodash")
+            assert not File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "gulp")
 
     def test_400_install_in_not_existing_folder(self):
         output = Tns.install(attributes={"--path": self.app_name}, assert_success=False)
