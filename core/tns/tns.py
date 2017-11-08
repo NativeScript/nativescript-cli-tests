@@ -143,6 +143,8 @@ class Tns(object):
         # Update NG dependencies
         update_script = os.path.join(TEST_RUN_HOME, path,
                                      "node_modules", "nativescript-angular", "bin", "update-app-ng-deps")
+        if CURRENT_OS is OSType.WINDOWS:
+            update_script = "node " + update_script
         update_out = run(update_script)
         assert "Angular dependencies updated" in update_out
         Npm.install(folder=path)
