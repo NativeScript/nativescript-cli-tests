@@ -75,7 +75,8 @@ class PageTemplatesTests(BaseClass):
 
         # Set new page for home app page
         text_to_search = 'application.start({ moduleName:'
-        text_to_replace = "application.start({ moduleName: " + "\"{name}/{name}-page\"".format(name=page_type) + " });\n"
+        text_to_replace = "application.start({ moduleName: " + "\"{name}/{name}-page\"".format(name=page_type) + \
+            " });\n"
         for line in fileinput.input("blank-js/app/app.js", inplace=True):
             if line.strip().startswith(text_to_search):
                 line = text_to_replace
@@ -88,29 +89,29 @@ class PageTemplatesTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID, expected_image=expected_image,
                             tolerance=3.0)
 
-    @unittest.skipIf(CURRENT_OS == OSType.OSX, "Temporary ignore on Linux.")
-    # @parameterized.expand([
-    #    ('blank-app-ts', 'ts', 'https://github.com/NativeScript/template-blank-ts', 'login', 'loginPageScreen'),
-    #    ('blank', 'ts', 'https://github.com/NativeScript/template-blank-ts', 'blank', 'blankPageScreen'),
-    #    ('blank', 'ts', 'https://github.com/NativeScript/template-blank-ts', 'signup', 'signupPageScreen'),
-    # ])
-    def test_typescript(self, app_name, flavor, url, page_type, expected_image):
-        if app_name == 'blank-app-ts':
-            # Initial run of the app
-            Tns.create_app(app_name=app_name, attributes={"--template": url}, assert_success=True)
-            Tns.run_ios(attributes={'--path': self.app_name, "--emulator": ""}, wait=False, assert_success=False)
+    @parameterized.expand([
+        ('blank-app-ts', 'ts', 'https://github.com/NativeScript/template-blank-ts', 'login', 'loginPageScreen'),
+        ('blank', 'ts', 'https://github.com/NativeScript/template-blank-ts', 'blank', 'blankPageScreen'),
+        ('blank', 'ts', 'https://github.com/NativeScript/template-blank-ts', 'signup', 'signupPageScreen')
+    ])
+    def test_typescript(self, page_type, expected_image):
+        self.log = Tns.run_ios(attributes={'--path': 'blank-ts', '--emulator': ''}, wait=False, assert_success=False)
+        strings = ['Successfully synced', self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=self.log, string_list=strings, timeout=150, check_interval=10)
 
-        # Add pages to application
-        cmd = 'node {addPageScript} {pageName} {page_type} {flavor} {pathToApp}'.format(
-            addPageScript=os.path.join(self.folder, 'addPage.js'), pageName=page_type, page_type=page_type,
-            flavor=flavor, pathToApp=os.path.join(app_name))
+        # Add page to application
+        print(os.path)
+        cmd = 'node {addPageScript} {pageName} {page_type} ts blank-ts'.format(
+            addPageScript=os.path.join(self.folder, 'addPageNext.js'), pageName=page_type, page_type=page_type)
         run(cmd)
+        strings = ['Successfully synced application', 'Successfully transferred', page_type, self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=self.log, string_list=strings, timeout=150, check_interval=10)
 
         # Set new page for home app page
         text_to_search = 'app.start({ moduleName:'
-        text_to_replace = "app.start({ moduleName: " + "\"{name}/{name}-page\"".format(name=page_type) + "});"
+        text_to_replace = "app.start({ moduleName: " + "\"{name}/{name}-page\"".format(name=page_type) + "});\n"
 
-        for line in fileinput.input("blank-app-ts/app/app.ts", inplace=True):
+        for line in fileinput.input("blank-ts/app/app.ts", inplace=True):
             if line.strip().startswith(text_to_search):
                 line = text_to_replace
             sys.stdout.write(line)
@@ -119,36 +120,37 @@ class PageTemplatesTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID, expected_image=expected_image,
                             tolerance=3.0)
 
-    @unittest.skipIf(CURRENT_OS == OSType.OSX, "Temporary ignore on Linux.")
-    # @parameterized.expand([
-    ##    ('blank-app-ng', 'ng', 'https://github.com/NativeScript/template-blank-ng', 'login', 'loginPageScreen'),
-    #    ('blank', 'ng', 'https://github.com/NativeScript/template-blank-ng', 'blank', 'blankPageScreen'),
-    #    ('blank', 'ng', 'https://github.com/NativeScript/template-blank-ng', 'signup', 'signupPageScreen'),
-    # ])
-    def test_angular(self, app_name, flavor, url, page_type, expected_image):
-        if app_name == 'blank-app-ng':
-            Tns.create_app(app_name=app_name, attributes={"--template": url}, assert_success=True)
-            Tns.run_ios(attributes={'--path': self.app_name, "--emulator": ""}, wait=False, assert_success=False)
+    @parameterized.expand([
+        ('blank-app-ng', 'ng', 'https://github.com/NativeScript/template-blank-ng', 'login', 'loginPageScreen'),
+        ('blank', 'ng', 'https://github.com/NativeScript/template-blank-ng', 'blank', 'blankPageScreen'),
+        ('blank', 'ng', 'https://github.com/NativeScript/template-blank-ng', 'signup', 'signupPageScreen'),
+    ])
+    def test_angular(self, page_type, expected_image):
+        self.log = Tns.run_ios(attributes={'--path': 'blank-ng', '--emulator': ''}, wait=False, assert_success=False)
+        strings = ['Successfully synced', self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=self.log, string_list=strings, timeout=150, check_interval=10)
 
-        # Add pages to application
-        cmd = 'node {addPageScript} {pageName} {page_type} {flavor} {pathToApp}'.format(
-            addPageScript=os.path.join(self.folder, 'addPage.js'), pageName=page_type, page_type=page_type,
-            flavor=flavor, pathToApp=os.path.join(app_name))
+        # Add page to application
+        print(os.path)
+        cmd = 'node {addPageScript} {pageName} {page_type} ng blank-ng'.format(
+            addPageScript=os.path.join(self.folder, 'addPageNext.js'), pageName=page_type, page_type=page_type)
         run(cmd)
+        strings = ['Successfully synced application', 'Successfully transferred', page_type, self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=self.log, string_list=strings, timeout=150, check_interval=10)
 
         # Set new page for home app page
         text_to_search = '{ path: "", redirectTo: '
         text_to_replace = "{ path: \"\", redirectTo: \"" + "/{name}\"".format(name=page_type) + \
-                          ", pathMatch: \"full\" },"
-        for line in fileinput.input("blank-app-ng/app/app-routing.module.ts", inplace=True):
+                          ", pathMatch: \"full\" },\n"
+        for line in fileinput.input("blank-ng/app/app-routing.module.ts", inplace=True):
             if line.strip().startswith(text_to_search):
                 line = text_to_replace
             sys.stdout.write(line)
 
         text_to_search = "loadChildren:"
         text_to_replace = "{" + "path: \"{name}\",".format(
-            name=page_type) + " loadChildren: \"./{name}/{name}.module#{name}Module\"".format(name=page_type) + "}"
-        for line in fileinput.input("blank-app-ng/app/app-routing.module.ts", inplace=True):
+            name=page_type) + " loadChildren: \"./{name}/{name}.module#{name}Module\"".format(name=page_type) + "}\n"
+        for line in fileinput.input("blank-ng/app/app-routing.module.ts", inplace=True):
             if line.strip().startswith(text_to_search):
                 line = text_to_replace
             sys.stdout.write(line)
