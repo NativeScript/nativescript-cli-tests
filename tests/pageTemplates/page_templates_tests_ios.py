@@ -18,7 +18,7 @@ from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME
 from core.tns.tns import Tns
 
 
-class PageTemplatesTests(BaseClass):
+class PageTemplatesTestsIOS(BaseClass):
     folder = os.path.join(TEST_RUN_HOME, 'tests', 'pageTemplates')
     log = ""
 
