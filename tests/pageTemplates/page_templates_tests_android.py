@@ -19,7 +19,7 @@ from core.tns.tns import Tns
 
 
 class PageTemplatesTestsAndroid(BaseClass):
-    folder = os.path.join(TEST_RUN_HOME)
+    folder = os.path.join(TEST_RUN_HOME, 'tests', 'pageTemplates')
     log = ""
 
     @classmethod
