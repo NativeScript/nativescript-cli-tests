@@ -14,7 +14,7 @@ from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, SUT_FOLDER
+from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, SUT_FOLDER, ANDROID_RUNTIME_PATH
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
@@ -121,6 +121,8 @@ class InitAndInstallTests(BaseClass):
 
     def test_301_install_and_prepare(self):
         self.test_202_init_path()
+        Tns.platform_add_android(attributes={"--path": self.app_name}, version="next")
+
         Npm.install(package='', folder=BaseClass.app_name)
         Npm.install(package="gulp", option="--save-dev", folder=BaseClass.app_name)
         Npm.install(package="lodash", option="--save", folder=BaseClass.app_name)
@@ -137,14 +139,14 @@ class InitAndInstallTests(BaseClass):
         assert File.exists(self.app_name + "/platforms/android/build.gradle")
 
         Tns.prepare_android(attributes={"--path": self.app_name})
-        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "lodash")
-        assert not File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "gulp")
+        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "lodash"))
+        assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "gulp"))
 
         if CURRENT_OS == OSType.OSX:
             assert File.exists(self.app_name + "/platforms/ios/TestApp.xcodeproj")
             Tns.prepare_ios(attributes={"--path": self.app_name})
-            assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "lodash")
-            assert not File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "gulp")
+            assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "lodash"))
+            assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "gulp"))
 
     def test_400_install_in_not_existing_folder(self):
         output = Tns.install(attributes={"--path": self.app_name}, assert_success=False)

@@ -137,7 +137,8 @@ class PluginsiOSTests(BaseClass):
         Tns.build_android(attributes={"--path": self.app_name})
 
         assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.debug_apk))
-        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-plugin/index.js")
+        assert File.exists(
+            os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "tns-plugin/index.js"))
 
         # Verify platform specific files
         assert File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/tns-plugin/test.js")
@@ -147,15 +148,12 @@ class PluginsiOSTests(BaseClass):
         assert not File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/tns-plugin/test.android.js")
         assert not File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/tns-plugin/test2.android.xml")
 
-        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-plugin/test.js")
-        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-plugin/test2.xml")
-        assert not File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-plugin/test.ios.js")
-        assert not File.exists(
-            self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-plugin/test2.ios.xml")
-        assert not File.exists(
-            self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-plugin/test.android.js")
-        assert not File.exists(
-            self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "tns-plugin/test2.android.xml")
+        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "tns-plugin/test.js"))
+        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "tns-plugin/test2.xml"))
+        assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "tns-plugin/test.ios.js"))
+        assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "tns-plugin/test2.ios.xml"))
+        assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "tns-plugin/test.android.js"))
+        assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "tns-plugin/test2.android.xml"))
 
     def test_302_plugin_and_npm_modules_in_same_project(self):
         Tns.create_app(self.app_name, update_modules=True)
@@ -172,22 +170,14 @@ class PluginsiOSTests(BaseClass):
         Tns.build_android(attributes={"--path": self.app_name}, assert_success=True)
 
         # Verify plugin and npm module files
-        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
-                           "nativescript-social-share/package.json")
-        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
-                           "nativescript-social-share/social-share.js")
-        assert not File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
-                               "nativescript-social-share/social-share.android.js")
-        assert not File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
-                               "nativescript-social-share/social-share.ios.js")
-        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
-                           "nativescript-appversion/package.json")
-        assert File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
-                           "nativescript-appversion/appversion.js")
-        assert not File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
-                               "nativescript-appversion/appversion.android.js")
-        assert not File.exists(self.app_name + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH +
-                               "nativescript-appversion/appversion.ios.js")
+        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "nativescript-social-share/package.json"))
+        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "nativescript-social-share/social-share.js"))
+        assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "nativescript-social-share/social-share.android.js"))
+        assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "nativescript-social-share/social-share.ios.js"))
+        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "nativescript-appversion/package.json"))
+        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "nativescript-appversion/appversion.js"))
+        assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "nativescript-appversion/appversion.android.js"))
+        assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "nativescript-appversion/appversion.ios.js"))
 
     def test_320_CFBundleURLTypes_overridden_from_plugin(self):
         """
@@ -228,7 +218,8 @@ class PluginsiOSTests(BaseClass):
 
         Tns.build_ios(attributes={"--path": self.app_name})
         assert not File.pattern_exists(self.app_name + "/platforms/ios", pattern="*.aar")
+        assert not File.pattern_exists(self.app_name + "/platforms/ios", pattern="*acra*")
 
         Tns.build_android(attributes={"--path": self.app_name})
         assert File.pattern_exists(self.app_name + "/platforms/android", pattern="*.aar")
-        assert File.pattern_exists(self.app_name + "/platforms/android", pattern="*ACRA*")
+        assert File.pattern_exists(self.app_name + "/platforms/android", pattern="*acra*")

@@ -50,6 +50,7 @@ class PrepareAndroidTests(BaseClass):
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.FULL)
 
+    @unittest.skip("Skip this test until we release tns-android@3.4.0")
     def test_200_prepare_android_platform_not_added(self):
         Tns.create_app(self.app_name, update_modules=False)
         output = Tns.prepare_android(attributes={"--path": self.app_name})
@@ -59,7 +60,6 @@ class PrepareAndroidTests(BaseClass):
         Tns.create_app(self.app_name, update_modules=False)
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML_INVALID_SYNTAX)
         output = Tns.prepare_android(attributes={"--path": self.app_name})
-        TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.FIRST_TIME)
         assert "main-page.xml has syntax errors." in output
         assert "unclosed xml attribute" in output
 
