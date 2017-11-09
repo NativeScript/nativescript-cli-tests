@@ -19,7 +19,7 @@ from core.tns.tns import Tns
 
 
 class PageTemplatesTestsAndroid(BaseClass):
-    folder = os.path.join(TEST_RUN_HOME, 'tests', 'pageTemplates')
+    folder = os.path.join(TEST_RUN_HOME)
     log = ""
 
     @classmethod
@@ -91,9 +91,9 @@ class PageTemplatesTestsAndroid(BaseClass):
                             tolerance=3.0)
 
     @parameterized.expand([
-        ('blank-app-ts', 'ts', 'https://github.com/NativeScript/template-blank-ts', 'login', 'loginPageScreen'),
-        ('blank', 'ts', 'https://github.com/NativeScript/template-blank-ts', 'blank', 'blankPageScreen'),
-        ('blank', 'ts', 'https://github.com/NativeScript/template-blank-ts', 'signup', 'signupPageScreen')
+        ('login', 'loginPageScreen'),
+        ('blank', 'blankPageScreen'),
+        ('signup', 'signupPageScreen')
     ])
     def test_typescript(self, page_type, expected_image):
         self.log = Tns.run_android(attributes={'--path': 'blank-ts', '--emulator': ''}, wait=False,
@@ -123,9 +123,9 @@ class PageTemplatesTestsAndroid(BaseClass):
                             tolerance=3.0)
 
     @parameterized.expand([
-        ('blank-app-ng', 'ng', 'https://github.com/NativeScript/template-blank-ng', 'login', 'loginPageScreen'),
-        ('blank', 'ng', 'https://github.com/NativeScript/template-blank-ng', 'blank', 'blankPageScreen'),
-        ('blank', 'ng', 'https://github.com/NativeScript/template-blank-ng', 'signup', 'signupPageScreen'),
+        ('login', 'loginPageScreen'),
+        ('blank', 'blankPageScreen'),
+        ('signup', 'signupPageScreen'),
     ])
     def test_angular(self, page_type, expected_image):
         self.log = Tns.run_android(attributes={'--path': 'blank-ng', '--emulator': ''}, wait=False,
