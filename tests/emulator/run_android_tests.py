@@ -515,13 +515,14 @@ class RunAndroidEmulatorTests(BaseClass):
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
 
+    @unittest.skipIf("Skip the test while the bug is valid")
     def test_390_tns_run_android_should_warn_if_package_ids_do_not_match(self):
         """
         If bundle identifiers in package.json and app.gradle do not match CLI should warn the user.
         """
         app_gradle = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
         File.replace(file_path=app_gradle, str1='org.nativescript.' + self.app_name, str2='org.nativescript.MyApp')
-        File.replace(file_path=app_gradle, str1='__PACKAGE__', str2='org.nativescript.MyApp')
+        # File.replace(file_path=app_gradle, str1='__PACKAGE__', str2='org.nativescript.MyApp')
         assert "org.nativescript.MyApp" in File.read(app_gradle), "Failed to replace bundle identifier."
 
         output = Tns.run_android(attributes={'--path': self.app_name, '--justlaunch': ''})
