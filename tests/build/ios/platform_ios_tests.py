@@ -119,3 +119,21 @@ class PlatformiOSTests(BaseClass):
         Tns.prepare_android(attributes={"--path": self.app_name})
         output = Tns.platform_list(attributes={"--path": self.app_name})
         TnsAsserts.platform_list_status(output=output, prepared=Platform.BOTH, added=Platform.BOTH)
+
+    def test_391_LSApplicationQueriesSchemes_merged(self):
+        # https: // github.com / NativeScript / nativescript - cli / issues / 3108
+        Tns.create_app(self.app_name)
+        Folder.cleanup("TestApp/app/App_Resources/iOS/Info.plist")
+        infoC = os.path.join("data/issues/info-plist/app", 'Info.plist')
+        infoP = os.path.join("TestApp/app/App_Resources/iOS")
+        Folder.copy(infoC, infoP)
+        Tns.plugin_add("nativescript-geolocation", attributes={"--path": self.app_name})
+        Folder.cleanup("TestApp/node_modules/nativescript-geolocation/platforms/ios/Info.plist")
+        infoPluginC = os.path.join("data/issues/info-plist/plugin", 'Info.plist')
+        infoPluginP = os.path.join("TestApp/node_modules/nativescript-geolocation/platforms/ios")
+        Folder.copy(infoPluginC, infoPluginP)
+        Tns.build_ios(attributes={"--path": self.app_name})
+        output = File.read(self.app_name + "/platforms/ios/TestApp/TestApp-Info.plist")
+        assert "itms" in output
+        assert "itms-apps" in output
+        assert "LSApplicationQueriesSchemes" in output
