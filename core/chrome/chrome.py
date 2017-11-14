@@ -1,5 +1,5 @@
 """
-A wrapper of npm commands.
+Chrome related commands.
 """
 import os
 
@@ -12,7 +12,7 @@ from core.settings.settings import TEST_RUN_HOME
 class Chrome(object):
     @staticmethod
     def start(url=""):
-        command = "osascript " + os.path.join(TEST_RUN_HOME, 'core', 'chrome', 'start-chrome') + " " + url
+        command = "osascript " + os.path.join(TEST_RUN_HOME, 'core', 'chrome', 'start_chrome') + " " + url.replace("&", "\&")
         run(command=command, log_level=CommandLogLevel.SILENT)
         print "Open Google Chrome at {0}".format(url)
 
