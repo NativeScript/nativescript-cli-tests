@@ -14,7 +14,8 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class PlatformAndroidTests(BaseClass):
-    appTS_name = "TestAppTS"
+    app_ts_name = "TestAppTS"
+
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
@@ -183,16 +184,17 @@ class PlatformAndroidTests(BaseClass):
 
     def test_441_binding_text_exists(self):
         # https: // github.com / NativeScript / android - runtime / issues / 833
-        Tns.create_app_ts(self.appTS_name)
+        Tns.create_app_ts(self.app_ts_name)
         Tns.create_app(self.app_name)
-        Folder.cleanup("TestApp/app")
-        copy = os.path.join("TestAppTS", 'app')
-        paste = os.path.join("TestApp", )
+        Folder.cleanup(os.path.join(self.app_name, 'app'))
+        copy = os.path.join(self.app_ts_name, 'app')
+        paste = self.app_name
         Folder.move(copy, paste)
         Tns.platform_add_android(attributes={"--path": self.app_name})
         Tns.build_android(attributes={"--path": self.app_name})
-        binding = os.stat(
-        self.app_name + "/platforms/android/build-tools/android-static-binding-generator/bindings.txt")
+        bindings_path = os.path.join(self.app_name, 'platforms', 'android', 'build-tools',
+                                     'android-static-binding-generator', 'bindings.txt')
+        binding = os.stat(bindings_path)
         assert binding.st_size > 15000
         print binding.st_size
-        Folder.cleanup("TestAppTS")
+        Folder.cleanup(self.app_ts_name)
