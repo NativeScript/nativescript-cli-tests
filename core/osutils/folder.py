@@ -77,3 +77,13 @@ class Folder(object):
                 shutil.copy(src, dst)
             else:
                 raise
+
+    @staticmethod
+    def move(src, dst):
+        try:
+            shutil.move(src, dst)
+        except OSError as exc:  # python >2.5
+            if exc.errno == errno.ENOTDIR:
+                shutil.move(src, dst)
+            else:
+                raise

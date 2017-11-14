@@ -173,3 +173,7 @@ class File(object):
     @staticmethod
     def copy(src, dest):
         shutil.copy(src, dest)
+
+    @staticmethod
+    def move(src, dest):
+        shutil.move(src, dest)

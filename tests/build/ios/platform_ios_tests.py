@@ -119,3 +119,22 @@ class PlatformiOSTests(BaseClass):
         Tns.prepare_android(attributes={"--path": self.app_name})
         output = Tns.platform_list(attributes={"--path": self.app_name})
         TnsAsserts.platform_list_status(output=output, prepared=Platform.BOTH, added=Platform.BOTH)
+
+    def test_391_LSApplicationQueriesSchemes_merged(self):
+        # https: // github.com / NativeScript / nativescript - cli / issues / 3108
+        Tns.create_app(self.app_name)
+        Folder.cleanup(os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'Info.plist'))
+        info_c = os.path.join('data', 'issues', 'info-plist', 'app', 'Info.plist')
+        info_p = os.path.join(self.app_name, 'app', 'App_Resources', 'iOS')
+        Folder.copy(info_c, info_p)
+        Tns.plugin_add("nativescript-geolocation", attributes={"--path": self.app_name})
+        Folder.cleanup(
+            os.path.join(self.app_name, 'node_modules', 'nativescript-geolocation', 'platforms', 'ios', 'Info.plist'))
+        info_plugin_c = os.path.join('data', 'issues', 'info-plist', 'plugin', 'Info.plist')
+        info_plugin_p = os.path.join(self.app_name, 'node_modules', 'nativescript-geolocation', 'platforms', 'ios')
+        Folder.copy(info_plugin_c, info_plugin_p)
+        Tns.build_ios(attributes={"--path": self.app_name})
+        output = File.read(os.path.join(self.app_name, 'platforms', 'ios', 'TestApp', 'TestApp-Info.plist'))
+        assert 'itms' in output
+        assert "itms-apps" in output
+        assert "LSApplicationQueriesSchemes" in output
