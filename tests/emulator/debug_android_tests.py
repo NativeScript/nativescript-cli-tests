@@ -4,8 +4,10 @@ Tests for `tns debug android` executed on Android Emulator.
 import os
 
 from core.base_class.BaseClass import BaseClass
+from core.chrome.chrome import Chrome
 from core.device.device import Device
 from core.device.emulator import Emulator
+from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import EMULATOR_NAME, EMULATOR_ID, ANDROID_RUNTIME_PATH
@@ -103,3 +105,32 @@ class DebugAndroidEmulatorTests(BaseClass):
         Emulator.stop()
         Tns.debug_android(attributes={'--path': self.app_name, '--emulator': '', '--timeout': '180'})
         assert Emulator.wait(device_id=EMULATOR_ID)
+
+        # Reset the usage of the predefined emulator in settings.py so the next tests reuse its images
+        Emulator.stop()
+        Emulator.ensure_available()
+
+    def test_200_debug_android_with_response_from_server(self):
+        """
+        Checks that when `tns debug android` app doesn't crash when there is a response from server (https://github.com/NativeScript/nativescript-cli/issues/3187)
+        """
+
+        source = os.path.join('data', 'issues', 'nativescript-cli-3187', 'main-view-model.js')
+        target = os.path.join(self.app_name, 'app', 'main-view-model.js')
+        File.copy(src=source, dest=target)
+
+        log = Tns.debug_android(attributes={'--path': self.app_name, '--emulator': ''})
+        self.__verify_debugger_start(log)
+
+        # Verify app is running
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
+        # Get Chrome URL and open it
+        url = run(command="grep chrome-devtools " + log)
+        Chrome.start(url)
+
+        # Tap on the button and verify the app still works
+        Device.click(device_id=EMULATOR_ID, text="TAP", timeout=120)
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home_after_tap')

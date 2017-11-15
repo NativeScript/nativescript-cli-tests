@@ -125,3 +125,26 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_strings)
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='ng-hello-world-home-white', tolerance=5.0)
+
+    def test_200_tns_run_android_extending_class_inside_file_containing_dots(self):
+        """Test for https://github.com/NativeScript/android-runtime/issues/761"""
+
+        source_html = os.path.join('data', 'issues', 'android-runtime-761', 'items.component.html')
+        target_html = os.path.join(self.app_name, 'app', 'item', 'items.component.html')
+        File.copy(src=source_html, dest=target_html)
+
+        source_ts = os.path.join('data', 'issues', 'android-runtime-761', 'items.component.ts')
+        target_ts = os.path.join(self.app_name, 'app', 'item', 'items.component.ts')
+        File.copy(src=source_ts, dest=target_ts)
+
+        source_xml = os.path.join('data', 'issues', 'android-runtime-761', 'AndroidManifest.xml')
+        target_xml = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'AndroidManifest.xml')
+        File.copy(src=source_xml, dest=target_xml)
+
+        # Verify the app is running
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
