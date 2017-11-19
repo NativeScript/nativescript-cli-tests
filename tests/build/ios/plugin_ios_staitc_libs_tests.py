@@ -48,9 +48,4 @@ class PluginsiOSLibsTests(BaseClass):
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin bye" in output
 
-        output = Tns.prepare_ios(attributes={"--path": self.app_name}, assert_success=False)
-        assert "The static library at" in output
-        assert "ByeLib.a is not built for one or more of " + \
-               "the following required architectures:" in output
-        assert "armv7, arm64, i386." in output
-        assert "The static library must be built for all required architectures." in output
+        Tns.prepare_ios(attributes={"--path": self.app_name})
