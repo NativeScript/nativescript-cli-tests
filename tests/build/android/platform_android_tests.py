@@ -50,7 +50,7 @@ class PlatformAndroidTests(BaseClass):
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name})
 
         # Add custom version with tag
-        Tns.platform_add_android(version="next", attributes={"--path": self.app_name})
+        Tns.platform_add_android(version="rc", attributes={"--path": self.app_name})
 
     def test_200_platform_update_android(self):
         """Update platform"""
