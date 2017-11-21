@@ -126,6 +126,7 @@ class Device(object):
             print "Expected image not found. Actual image will be saved as expected: " + expected_image_original_path
             time.sleep(timeout)
             Device.get_screen(device_id, expected_image_original_path)
+            assert False, "Expected image not found!"
 
     @staticmethod
     def get_screen_text(device_id):

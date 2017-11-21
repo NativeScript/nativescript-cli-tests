@@ -52,6 +52,9 @@ class GettingStartedTemplatesTests(BaseClass):
         if update:
             Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
             Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
+        else:
+            Tns.platform_add_android(attributes={'--path': self.app_name}, version="latest")
+            Tns.platform_add_ios(attributes={'--path': self.app_name}, version="latest")
 
         # Build it
         Tns.build_android(attributes={'--path': self.app_name})

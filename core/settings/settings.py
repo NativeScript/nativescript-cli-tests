@@ -63,12 +63,12 @@ TEST_LOG = os.path.join(OUTPUT_FOLDER, 'testLog.txt')
 VERBOSE_LOG = os.path.join(OUTPUT_FOLDER, 'verboseLog.txt')
 
 # Default Simulator and Emulator settings
-EMULATOR_NAME = "Emulator-Api19-Default"
+EMULATOR_NAME = "Emulator-Api24-Default"
 EMULATOR_PORT = "5554"
 EMULATOR_ID = "emulator-{0}".format(EMULATOR_PORT)
 SIMULATOR_NAME = "iPhone7N"
 SIMULATOR_TYPE = 'iPhone 7'
-SIMULATOR_SDK = '10.0'
+SIMULATOR_SDK = '11.0'
 
 # Android Build Settings
 ANDROID_KEYSTORE_PATH = os.environ.get("ANDROID_KEYSTORE_PATH")
