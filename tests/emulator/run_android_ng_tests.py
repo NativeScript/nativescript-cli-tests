@@ -90,8 +90,9 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         strings = ['items.component.html', 'Successfully synced application', 'Home page loaded!']
         not_existing_strings = ['Application loaded!']  # This is to verify app is NOT restarted.
         Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_strings)
-        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='9', timeout=20)
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='9', timeout=30)
         assert text_changed, 'Changes in HTML file not applied (UI is not refreshed).'
+        File.write(file_path=log, text="")  # Clean log
 
         # Change CSS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.NG_CHANGE_CSS, sleep=10)
@@ -106,7 +107,7 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         strings = ['items.component.html', 'Successfully synced application', 'Home page loaded!']
         not_existing_strings = ['Application loaded!']  # This is to verify app is NOT restarted.
         Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_strings)
-        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text="Stegen Ter", timeout=20)
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text="Stegen Ter", timeout=30)
         assert text_changed, 'Changes in HTML file not applied (UI is not refreshed).'
 
         # Revert TS and wait until app is synced

@@ -6,6 +6,8 @@ import fnmatch
 import os
 import shutil
 
+import time
+
 from core import osutils
 from core.osutils.process import Process
 from core.settings.settings import TEST_LOG
@@ -29,6 +31,7 @@ class File(object):
     def write(file_path, text):
         with open(file_path, 'w') as file_to_write:
             file_to_write.write(text + '\n')
+        time.sleep(2)
 
     @staticmethod
     def append(file_path, text):

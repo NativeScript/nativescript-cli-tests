@@ -447,7 +447,9 @@ class Tns(object):
                 else:
                     # Xcode 8.* output contains some warnings for images, so we will assert only on Xcode 9.*
                     if "9." in Xcode.get_version():
-                        assert "build/emulator/" + app_id + ".app" not in output, "Native build out is displayed!"
+                        assert "CompileStoryboard" not in output, "Native build out is displayed!"
+                        assert "CompileAssetCatalog" not in output, "Native build out is displayed!"
+                        assert "ProcessInfoPlistFile" not in output, "Native build out is displayed!"
                 assert File.exists(app_name + "/platforms/ios/" + app_id + "/" + app_id + "-Prefix.pch")
                 assert File.exists(emu_folder + app_id + ".app")
                 bundle_content = File.read(emu_folder + app_id + ".app/" + app_id)
@@ -570,7 +572,7 @@ class Tns(object):
         Tns.run_tns_command("error-reporting disable")
 
     @staticmethod
-    def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=30, check_interval=3,
+    def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=45, check_interval=3,
                      clean_log=True):
         """
         Wait until log file contains list of string.
