@@ -1,8 +1,6 @@
 'use strict';
 
-const pathToPackage = require("global-modules-path").getPath("nativescript", "tns");
-
-const tns = require(pathToPackage);
+const tns = require("nativescript");
 
 const checkFlavor = (flavor) => {
     if (typeof flavor !== "string") {
