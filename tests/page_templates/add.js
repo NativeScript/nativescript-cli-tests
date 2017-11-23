@@ -1,6 +1,8 @@
 'use strict';
 
+const path = require("path");
 const tns = require("nativescript");
+tns.settingsService.setSettings({ profileDir: path.join(__dirname, "..", "..") });
 
 const checkFlavor = (flavor) => {
     if (typeof flavor !== "string") {
@@ -41,7 +43,6 @@ const pageAction = () => {
         templateFlavor: appFlavor
     }
     const appPath = args[3];
-
     tns.nsStarterKitsApplicationService.addPage(newPageName, options, appPath, "next")
     .then(function(details){
         console.log('Details=== ', details)
