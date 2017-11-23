@@ -57,13 +57,13 @@ class PageTemplatesTests(BaseClass):
 
     def tearDown(self):
         Tns.kill()
-        Folder.cleanup("blank-js")
-        Folder.cleanup("blank-ts")
-        Folder.cleanup("blank-ng")
         BaseClass.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
+        Folder.cleanup("blank-js")
+        Folder.cleanup("blank-ts")
+        Folder.cleanup("blank-ng")
         BaseClass.tearDownClass()
 
     @parameterized.expand([
