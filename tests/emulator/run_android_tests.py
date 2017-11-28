@@ -504,14 +504,11 @@ class RunAndroidEmulatorTests(BaseClass):
         """
         count = Device.get_count(platform=Platform.ANDROID)
         if count == 0:
-            # Hack: Due to slow boot of emulators we boot latest supported emulator once without -wipe-data.
             Emulator.stop()
-            Emulator.start(emulator_name="Emulator-Api26-Google", wipe_data=False)
-            # End of hack!
-            Emulator.stop()
-            output = Tns.run_android(attributes={'--path': self.app_name, '--justlaunch': ''})
-            assert 'Starting Android emulator with image' in output
-            assert Emulator.is_running(device_id=EMULATOR_ID), 'Emulator not started by `tns run android`!'
+            Tns.build_android(attributes={'--path': self.app_name})
+            log = Tns.run_android(attributes={'--path': self.app_name}, wait=False, assert_success=False)
+            strings = ['Starting Android emulator with image']
+            Tns.wait_for_log(log_file=log, string_list=strings, timeout=120)
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
 
