@@ -4,7 +4,8 @@ Test for `help` command
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, ANDROID_RUNTIME_PATH
+from core.osutils.os_type import OSType
+from core.settings.settings import IOS_RUNTIME_PATH, ANDROID_RUNTIME_PATH, CURRENT_OS
 from core.tns.tns import Tns
 
 
@@ -49,7 +50,11 @@ class HelpTests(BaseClass):
         assert "platform add" in output
         assert "Options" in output
         assert "Android latest" in output
-        assert "iOS latest runtime" in output
+
+        if CURRENT_OS == OSType.OSX:
+            assert "iOS latest runtime" in output
+        else:
+            assert "iOS latest runtime" not in output
 
     def test_104_platform_remove_help(self):
         output = Tns.run_tns_command("platform remove --help")
@@ -57,6 +62,12 @@ class HelpTests(BaseClass):
         HelpTests.verify_help(output)
         assert "platform remove" in output
         assert "Platform" in output
+        assert "android" in output
+        
+        if CURRENT_OS == OSType.OSX:
+            assert "ios" in output
+        else:
+            assert "ios" not in output
 
     def test_105_update_help(self):
         output = Tns.run_tns_command("platform update --help")
@@ -64,7 +75,11 @@ class HelpTests(BaseClass):
         HelpTests.verify_help(output)
         assert "platform update" in output
         assert "Android selected runtime" in output
-        assert "iOS latest runtime" in output
+
+        if CURRENT_OS == OSType.OSX:
+            assert "iOS latest runtime" in output
+        else:
+            assert "iOS latest runtime" not in output
 
     def test_106_prepare_help(self):
         output = Tns.run_tns_command("prepare --help")
@@ -72,7 +87,11 @@ class HelpTests(BaseClass):
         HelpTests.verify_help(output)
         assert "prepare" in output
         assert "android" in output
-        assert "ios" in output
+
+        if CURRENT_OS == OSType.OSX:
+            assert "ios" in output
+        else:
+            assert "ios" not in output
 
     def test_107_build_help(self):
         output = Tns.run_tns_command("build --help")
@@ -80,17 +99,25 @@ class HelpTests(BaseClass):
         HelpTests.verify_help(output)
         assert "build" in output
         assert "android" in output
-        assert "ios" in output
+
+        if CURRENT_OS == OSType.OSX:
+            assert "ios" in output
+        else:
+            assert "ios" not in output
 
     def test_108_deploy_help(self):
         output = Tns.run_tns_command("deploy --help")
 
         HelpTests.verify_help(output)
         assert "deploy" in output
-        assert "Options for iOS" in output
         assert "Options for Android" in output
         assert "device" in output
         assert "release" in output
+
+        if CURRENT_OS == OSType.OSX:
+            assert "Options for iOS" in output
+        else:
+            assert "Options for iOS" not in output
 
     def test_109_run_help(self):
         output = Tns.run_tns_command("run --help")
@@ -107,7 +134,11 @@ class HelpTests(BaseClass):
         HelpTests.verify_help(output)
         assert "debug" in output
         assert "android" in output
-        assert "ios" in output
+
+        if CURRENT_OS == OSType.OSX:
+            assert "ios" in output
+        else:
+            assert "ios" not in output
 
     def test_111_test_help(self):
         output = Tns.run_tns_command("test --help")
@@ -115,7 +146,11 @@ class HelpTests(BaseClass):
         HelpTests.verify_help(output)
         assert "test" in output
         assert "android" in output
-        assert "ios" in output
+
+        if CURRENT_OS == OSType.OSX:
+            assert "ios" in output
+        else:
+            assert "ios" not in output
 
     def test_112_install_help(self):
         output = Tns.run_tns_command("install -h")
