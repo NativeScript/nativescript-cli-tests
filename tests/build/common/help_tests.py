@@ -20,7 +20,7 @@ class HelpTests(BaseClass):
 
     @classmethod
     def verify_help(cls, output):
-        strings = ['Synopsis', 'Usage', 'Attributes']
+        strings = ['Synopsis', 'Usage']
         for str in strings:
             assert str in output
 
@@ -40,6 +40,7 @@ class HelpTests(BaseClass):
         HelpTests.verify_help(output)
         assert "create" in output
         assert "Options" in output
+        assert "Attributes" in output
         assert "Angular template" in output
         assert "Create from default" in output
 
@@ -48,6 +49,7 @@ class HelpTests(BaseClass):
 
         HelpTests.verify_help(output)
         assert "platform add" in output
+        assert "Attributes" in output
         assert "Options" in output
         assert "Android latest" in output
 
@@ -61,6 +63,7 @@ class HelpTests(BaseClass):
 
         HelpTests.verify_help(output)
         assert "platform remove" in output
+        assert "Attributes" in output
         assert "Platform" in output
         assert "android" in output
         
@@ -74,6 +77,7 @@ class HelpTests(BaseClass):
 
         HelpTests.verify_help(output)
         assert "platform update" in output
+        assert "Attributes" in output
         assert "Android selected runtime" in output
 
         if CURRENT_OS == OSType.OSX:
@@ -87,6 +91,7 @@ class HelpTests(BaseClass):
         HelpTests.verify_help(output)
         assert "prepare" in output
         assert "android" in output
+        assert "Attributes" in output
 
         if CURRENT_OS == OSType.OSX:
             assert "ios" in output
@@ -99,6 +104,7 @@ class HelpTests(BaseClass):
         HelpTests.verify_help(output)
         assert "build" in output
         assert "android" in output
+        assert "Attributes" in output
 
         if CURRENT_OS == OSType.OSX:
             assert "ios" in output
@@ -110,6 +116,7 @@ class HelpTests(BaseClass):
 
         HelpTests.verify_help(output)
         assert "deploy" in output
+        assert "Attributes" in output
         assert "Options for Android" in output
         assert "device" in output
         assert "release" in output
@@ -123,6 +130,7 @@ class HelpTests(BaseClass):
         output = Tns.run_tns_command("run --help")
 
         HelpTests.verify_help(output)
+        assert "Attributes" in output
         assert "run" in output
         assert "Options" in output
         assert "release" in output
@@ -132,6 +140,7 @@ class HelpTests(BaseClass):
         output = Tns.run_tns_command("debug --help")
 
         HelpTests.verify_help(output)
+        assert "Attributes" in output
         assert "debug" in output
         assert "android" in output
 
@@ -144,6 +153,7 @@ class HelpTests(BaseClass):
         output = Tns.run_tns_command("test --help")
 
         HelpTests.verify_help(output)
+        assert "Attributes" in output
         assert "test" in output
         assert "android" in output
 
@@ -155,9 +165,8 @@ class HelpTests(BaseClass):
     def test_112_install_help(self):
         output = Tns.run_tns_command("install -h")
 
+        HelpTests.verify_help(output)
         assert "install" in output
-        assert "Synopsis" in output
-        assert "Usage" in output
         assert "Arguments" in output
         assert "Options" in output
         assert "path" in output
@@ -166,6 +175,7 @@ class HelpTests(BaseClass):
         output = Tns.run_tns_command("plugin --help")
 
         HelpTests.verify_help(output)
+        assert "Attributes" in output
         assert "plugin" in output
         assert "add" in output
         assert "remove" in output
@@ -177,6 +187,7 @@ class HelpTests(BaseClass):
         output = Tns.run_tns_command("device log --help")
 
         HelpTests.verify_help(output)
+        assert "Attributes" in output
         assert "device log" in output
         assert "Options" in output
         assert "device" in output
