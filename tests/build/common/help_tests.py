@@ -120,14 +120,13 @@ class HelpTests(BaseClass):
         assert "deploy" in output
         assert "device" in output
         assert "release" in output
+        assert "Attributes" in output
 
         if CURRENT_OS == OSType.OSX:
             assert "Options for iOS" in output
-            assert "Attributes" in output
             assert "Options for Android" in output
         else:
             assert "Options for iOS" not in output
-            assert "Attributes" not in output
             assert "Options" in output
 
     def test_109_run_help(self):
