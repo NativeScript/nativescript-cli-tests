@@ -512,7 +512,7 @@ class RunAndroidEmulatorTests(BaseClass):
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
 
-    @unittest.skip("Skip the test while the bug is valid")
+    @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-cli/issues/2825")
     def test_390_tns_run_android_should_warn_if_package_ids_do_not_match(self):
         """
         If bundle identifiers in package.json and app.gradle do not match CLI should warn the user.
