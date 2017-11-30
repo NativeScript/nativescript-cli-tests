@@ -63,7 +63,6 @@ class HelpTests(BaseClass):
 
         HelpTests.verify_help(output)
         assert "platform remove" in output
-        assert "Platform" in output
         assert "android" in output
         
         if CURRENT_OS == OSType.OSX:
@@ -79,13 +78,12 @@ class HelpTests(BaseClass):
         HelpTests.verify_help(output)
         assert "platform update" in output
         assert "Android selected runtime" in output
+        assert "Attributes" in output
 
         if CURRENT_OS == OSType.OSX:
             assert "iOS latest runtime" in output
-            assert "Attributes" in output
         else:
             assert "iOS latest runtime" not in output
-            assert "Attributes" not in output
 
     def test_106_prepare_help(self):
         output = Tns.run_tns_command("prepare --help")
@@ -120,16 +118,17 @@ class HelpTests(BaseClass):
 
         HelpTests.verify_help(output)
         assert "deploy" in output
-        assert "Options for Android" in output
         assert "device" in output
         assert "release" in output
 
         if CURRENT_OS == OSType.OSX:
             assert "Options for iOS" in output
             assert "Attributes" in output
+            assert "Options for Android" in output
         else:
             assert "Options for iOS" not in output
             assert "Attributes" not in output
+            assert "Options" in output
 
     def test_109_run_help(self):
         output = Tns.run_tns_command("run --help")
@@ -139,11 +138,7 @@ class HelpTests(BaseClass):
         assert "Options" in output
         assert "release" in output
         assert "device" in output
-
-        if CURRENT_OS == OSType.OSX:
-            assert "Attributes" in output
-        else:
-            assert "Attributes" not in output
+        assert "Attributes" in output
 
     def test_110_debug_help(self):
         output = Tns.run_tns_command("debug --help")
@@ -192,11 +187,7 @@ class HelpTests(BaseClass):
         assert "update" in output
         assert "find" in output
         assert "search" in output
-
-        if CURRENT_OS == OSType.OSX:
-            assert "Attributes" in output
-        else:
-            assert "Attributes" not in output
+        assert "Attributes" in output
 
     def test_114_device_log_help(self):
         output = Tns.run_tns_command("device log --help")
@@ -205,8 +196,4 @@ class HelpTests(BaseClass):
         assert "device log" in output
         assert "Options" in output
         assert "device" in output
-
-        if CURRENT_OS == OSType.OSX:
-            assert "Attributes" in output
-        else:
-            assert "Attributes" not in output
+        assert "Attributes" in output
