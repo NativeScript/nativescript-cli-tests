@@ -10,6 +10,10 @@ from core.tns.tns import Tns
 class VersionTests(BaseClass):
 
     @classmethod
+    def setUpClass(cls):
+        BaseClass.setUpClass(cls.__name__)
+
+    @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
 

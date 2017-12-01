@@ -19,6 +19,14 @@ from core.xcode.xcode import Xcode
 class PluginsiOSTests(BaseClass):
     debug_apk = "TestApp-debug.apk"
 
+    @classmethod
+    def setUpClass(cls):
+        BaseClass.setUpClass(cls.__name__)
+
+    @classmethod
+    def tearDownClass(cls):
+        BaseClass.tearDownClass()
+
     def setUp(self):
         BaseClass.setUp(self)
         Xcode.cleanup_cache()

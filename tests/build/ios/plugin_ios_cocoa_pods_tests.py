@@ -12,6 +12,15 @@ from core.xcode.xcode import Xcode
 
 
 class PluginsiOSPodsTests(BaseClass):
+
+    @classmethod
+    def setUpClass(cls):
+        BaseClass.setUpClass(cls.__name__)
+
+    @classmethod
+    def tearDownClass(cls):
+        BaseClass.tearDownClass()
+
     def setUp(self):
         BaseClass.setUp(self)
         Xcode.cleanup_cache()

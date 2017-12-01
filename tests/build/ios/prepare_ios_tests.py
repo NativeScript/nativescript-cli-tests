@@ -20,6 +20,7 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class PrepareiOSTests(BaseClass):
+
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
@@ -27,6 +28,10 @@ class PrepareiOSTests(BaseClass):
             raise NameError("Can not run iOS tests on non OSX OS.")
         else:
             Simulator.stop()
+
+    @classmethod
+    def tearDownClass(cls):
+        BaseClass.tearDownClass()
 
     def setUp(self):
         BaseClass.setUp(self)

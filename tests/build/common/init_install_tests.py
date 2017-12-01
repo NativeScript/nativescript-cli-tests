@@ -14,16 +14,28 @@ from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, SUT_FOLDER, ANDROID_RUNTIME_PATH
+from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, SUT_FOLDER
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 
 
 class InitAndInstallTests(BaseClass):
+    @classmethod
+    def setUpClass(cls):
+        BaseClass.setUpClass(cls.__name__)
+
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
+
+    def tearDown(self):
+        BaseClass.tearDown(self)
+        Folder.cleanup(self.app_name)
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
 
     def test_201_init_defaults(self):
         Folder.cleanup(BaseClass.app_name)
