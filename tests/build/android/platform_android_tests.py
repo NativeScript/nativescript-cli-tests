@@ -91,6 +91,17 @@ class PlatformAndroidTests(BaseClass):
         Tns.platform_clean(platform=Platform.ANDROID, attributes={"--path": self.app_name})
         TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.4.0\""])
 
+    def test_230_tns_update(self):
+        """ Default `tns platform add` command"""
+        Tns.create_app(self.app_name, update_modules=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name})
+        output = Tns.run_tns_command(command="update 3.2.0")
+        assert "Platform android successfully removed" in output
+        assert "Succsessfully removed plugin tns-core-modules" in output
+        assert "Succsessfully removed plugin tns-core-modules-widgets" in output
+        assert "Project successfully created" in output
+        assert TnsAsserts.get_package_json(self.app_name)
+
     def test_300_set_sdk(self):
         """Platform add android should be able to specify target sdk with `--sdk` option"""
         Tns.create_app(self.app_name, update_modules=False)
