@@ -116,7 +116,7 @@ class RunAndroidEmulatorTestsNG(BaseClass):
                    'Application loaded!',  # This is to verify app is restarted.
                    'Home page loaded!']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text="Ter Stegen", timeout=20)
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text="Ter Stegen", timeout=30)
         assert text_changed, 'Changes in TS file not applied (UI is not refreshed).'
 
         # Revert CSS and wait until app is synced

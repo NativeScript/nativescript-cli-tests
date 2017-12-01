@@ -51,6 +51,7 @@ class AndroidErrorActivityTests(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()
 
+    @unittest.skipIf(CURRENT_OS == OSType.LINUX, "Temporary ignore on Linux.")
     def test_200_error_activity_shown_on_error(self):
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
