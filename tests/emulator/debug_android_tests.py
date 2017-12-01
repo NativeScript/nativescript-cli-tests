@@ -103,8 +103,10 @@ class DebugAndroidEmulatorTests(BaseClass):
         """
 
         Emulator.stop()
-        Tns.debug_android(attributes={'--path': self.app_name, '--emulator': '', '--timeout': '180'})
-        assert Emulator.wait(device_id=EMULATOR_ID)
+        Tns.build_android(attributes={'--path': self.app_name})
+        log = Tns.debug_android(attributes={'--path': self.app_name, '--emulator': '', '--timeout': '180'})
+        strings = ['Starting Android emulator with image']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120)
 
         # Reset the usage of the predefined emulator in settings.py so the next tests reuse its images
         Emulator.stop()
