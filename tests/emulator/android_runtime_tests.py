@@ -22,8 +22,7 @@ class RuntimeTests(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Emulator.ensure_available()
         Folder.cleanup('./' + cls.app_name)
 

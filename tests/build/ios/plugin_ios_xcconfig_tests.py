@@ -5,7 +5,7 @@ Test for plugin* commands in context of iOS
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import SUT_FOLDER, IOS_RUNTIME_PATH, TEST_RUN_HOME
+from core.settings.settings import IOS_RUNTIME_PATH, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 

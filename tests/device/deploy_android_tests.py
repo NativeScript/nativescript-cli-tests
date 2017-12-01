@@ -22,8 +22,7 @@ class DeployAndroidTests(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Device.ensure_available(platform=Platform.ANDROID)
         Tns.create_app(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})

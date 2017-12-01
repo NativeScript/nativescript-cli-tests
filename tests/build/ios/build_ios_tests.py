@@ -24,8 +24,7 @@ class BuildiOSTests(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
 
         File.remove("TestApp.app")
         File.remove("TestApp.ipa")

@@ -32,8 +32,7 @@ class BuildAndroidTests(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
 
         Folder.cleanup(cls.app_no_platform)
 

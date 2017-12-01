@@ -1,7 +1,6 @@
 """
 Tests for deploy command
 """
-import os.path
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -16,8 +15,7 @@ from core.tns.tns_platform_type import Platform
 class DeployiOSTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Device.ensure_available(platform=Platform.IOS)
         Simulator.stop()
 

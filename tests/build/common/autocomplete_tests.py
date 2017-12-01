@@ -9,6 +9,14 @@ from core.settings.strings import *
 
 class AutocompleteTests(BaseClass):
 
+    @classmethod
+    def setUpClass(cls):
+        BaseClass.setUpClass(cls.__name__)
+
+    @classmethod
+    def tearDownClass(cls):
+        BaseClass.tearDownClass()
+
     def test_101_autocomplete_enable(self):
         output = Tns.run_tns_command(autocomplete + " status")
         if disabled.format(autocompletion, "") in output:

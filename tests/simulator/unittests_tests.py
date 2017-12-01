@@ -1,7 +1,6 @@
 """
 Run jasmine tests on iOS Simulator.
 """
-import os.path
 
 from nose.tools import timed
 
@@ -17,8 +16,7 @@ from core.tns.tns import Tns
 class UnittestsSimulator(BaseClass):
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Emulator.stop()
         Simulator.stop()
         Simulator.ensure_available(simulator_name=SIMULATOR_NAME)

@@ -35,8 +35,7 @@ class BuildPluginDemos(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Folder.cleanup(VERIFIED_PLUGINS_OUT)
         Folder.cleanup(WORKSPACE)
         Folder.create(VERIFIED_PLUGINS_OUT)

@@ -12,9 +12,7 @@ from core.tns.tns_verifications import TnsAsserts
 class BuildAndroidNGTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass(logfile)
-        Folder.cleanup('./' + cls.app_name)
+        BaseClass.setUpClass(cls.__name__)
         Tns.create_app_ng(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
 

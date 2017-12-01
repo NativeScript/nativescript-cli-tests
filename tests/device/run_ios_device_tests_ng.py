@@ -26,8 +26,7 @@ class RunIOSDeviceTestsNG(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join('out', cls.__name__ + '.txt')
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Emulator.stop()
         Simulator.stop()
         Device.ensure_available(platform=Platform.IOS)

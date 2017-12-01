@@ -1,16 +1,14 @@
 """
 Run mocha tests on Android emulator.
 """
-import os.path
 
 from nose.tools import timed
 
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.npm.npm import Npm
-from core.osutils.command import run
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, TEST_RUN_HOME
+from core.settings.settings import ANDROID_RUNTIME_PATH
 from  core.settings.strings import *
 from core.tns.tns import Tns
 
@@ -18,8 +16,7 @@ from core.tns.tns import Tns
 class UnittestsEmulator(BaseClass):
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Emulator.stop()
         Emulator.ensure_available()
 

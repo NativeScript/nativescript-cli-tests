@@ -11,10 +11,8 @@ from core.xcode.xcode import Xcode
 class BuildiOSNGTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Xcode.cleanup_cache()
-
         Tns.create_app_ng(app_name=cls.app_name, update_modules=True)
         Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 

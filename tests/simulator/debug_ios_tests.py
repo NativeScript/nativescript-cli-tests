@@ -28,8 +28,7 @@ class DebugiOSSimulatorTests(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join('out', cls.__name__ + '.txt')
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Process.kill('Safari')
         Process.kill('NativeScript Inspector')
         Emulator.stop()

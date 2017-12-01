@@ -21,6 +21,15 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class PrepareAndroidTests(BaseClass):
+
+    @classmethod
+    def setUpClass(cls):
+        BaseClass.setUpClass(cls.__name__)
+
+    @classmethod
+    def tearDownClass(cls):
+        BaseClass.tearDownClass()
+
     def setUp(self):
         BaseClass.setUp(self)
         Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)

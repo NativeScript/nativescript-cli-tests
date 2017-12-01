@@ -24,8 +24,7 @@ from core.tns.tns import Tns
 class AndroidErrorActivityTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join('out', cls.__name__ + '.txt')
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Emulator.stop()
         Emulator.ensure_available()
         Folder.cleanup(cls.app_name)

@@ -37,8 +37,7 @@ class RunIOSSimulatorTests(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join('out', cls.__name__ + '.txt')
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Emulator.stop()
         Simulator.stop()
         cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)

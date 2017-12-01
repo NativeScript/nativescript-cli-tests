@@ -17,6 +17,15 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class PluginsAndroidTests(BaseClass):
+
+    @classmethod
+    def setUpClass(cls):
+        BaseClass.setUpClass(cls.__name__)
+
+    @classmethod
+    def tearDownClass(cls):
+        BaseClass.tearDownClass()
+
     def setUp(self):
         BaseClass.setUp(self)
 

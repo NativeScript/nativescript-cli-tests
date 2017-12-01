@@ -39,8 +39,7 @@ class RunAndroidDeviceTests(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join('out', cls.__name__ + '.txt')
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Emulator.stop()
         Device.ensure_available(platform=Platform.ANDROID)
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)

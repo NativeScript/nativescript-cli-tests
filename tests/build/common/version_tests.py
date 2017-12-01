@@ -8,6 +8,11 @@ from core.tns.tns import Tns
 
 
 class VersionTests(BaseClass):
+
+    @classmethod
+    def tearDownClass(cls):
+        BaseClass.tearDownClass()
+
     def test_001_version(self):
         version = Tns.version()
         match = re.compile("^\\d+\\.\\d+\\.\\d+(-\\S+)?$").match(version)

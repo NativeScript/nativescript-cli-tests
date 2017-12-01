@@ -64,15 +64,25 @@ class BaseClass(unittest.TestCase):
         return is_failed
 
     @classmethod
-    def setUpClass(cls, logfile=""):
+    def setUpClass(cls, class_name):
+
+        print ""
+        print "_________________________________CLASS START_______________________________________"
+        print "Class Name: {0}".format(class_name)
+        print "Start Time:  {0}".format(time.strftime("%X"))
+        print ""
+
         Tns.kill()
         Gradle.kill()
         Process.kill('NativeScript Inspector')
         Process.kill('Safari')
         Process.kill('Xcode')
 
-        if logfile == "":
+        if class_name is not None:
+            logfile = os.path.join('out', class_name + '.txt')
+        else:
             logfile = os.path.join(OUTPUT_FOLDER, cls.__name__ + ".txt")
+
         File.remove(logfile)
         sys.stdout = sys.stderr = Logger.Logger(logfile)
 

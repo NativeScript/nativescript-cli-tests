@@ -1,7 +1,6 @@
 """
 Test for `tns test init` command.
 """
-import os.path
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
@@ -13,8 +12,7 @@ from core.tns.tns import Tns
 class UnitTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
 
     def setUp(self):
         BaseClass.setUp(self)

@@ -2,8 +2,6 @@
 Tests for error output.
 """
 
-import time
-
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.settings.strings import invalid, invalid_input, invalid_option
@@ -11,11 +9,14 @@ from core.tns.tns import Tns
 
 
 class StderrOutputTests(BaseClass):
-    def tearDown(self):
-        print ""
-        print "{0} ____________________________________TEST END____________________________________". \
-            format(time.strftime("%X"))
-        print ""
+
+    @classmethod
+    def setUpClass(cls):
+        BaseClass.setUpClass(cls.__name__)
+
+    @classmethod
+    def tearDownClass(cls):
+        BaseClass.tearDownClass()
 
     def test_001_redirect_strerr_output_to_file(self):
         File.remove('./stderr.txt')

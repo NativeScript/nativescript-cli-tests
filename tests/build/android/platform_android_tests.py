@@ -16,6 +16,14 @@ from core.tns.tns_verifications import TnsAsserts
 class PlatformAndroidTests(BaseClass):
     app_ts_name = "TestAppTS"
 
+    @classmethod
+    def setUpClass(cls):
+        BaseClass.setUpClass(cls.__name__)
+
+    @classmethod
+    def tearDownClass(cls):
+        BaseClass.tearDownClass()
+
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)

@@ -2,8 +2,6 @@
 Verify getting started templates looks ok
 """
 
-import os
-
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
@@ -18,8 +16,7 @@ from core.tns.tns import Tns
 class GettingStartedTemplatesTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join('out', cls.__name__ + '.txt')
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Emulator.stop()
         Simulator.stop()
         Emulator.ensure_available()

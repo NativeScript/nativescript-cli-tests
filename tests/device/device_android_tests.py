@@ -1,7 +1,6 @@
 """
 Tests for device command in context of Android
 """
-import os.path
 from time import sleep
 
 from core.base_class.BaseClass import BaseClass
@@ -17,14 +16,12 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class DeviceAndroidTests(BaseClass):
-
     DEVICE_ID = Device.get_id(platform=Platform.ANDROID)
     DEVICE_IDS = Device.get_ids(platform=Platform.ANDROID)
 
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Folder.cleanup(cls.app_name)
         Device.ensure_available(platform=Platform.ANDROID)
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)

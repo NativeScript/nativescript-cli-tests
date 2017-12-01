@@ -24,8 +24,7 @@ class CreateTests(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Folder.cleanup('folder')
         Folder.cleanup(cls.app_name)
 

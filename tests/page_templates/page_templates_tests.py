@@ -25,8 +25,7 @@ class PageTemplatesTests(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join('out', cls.__name__ + '.txt')
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Emulator.stop()
         Emulator.ensure_available()
         Simulator.stop()

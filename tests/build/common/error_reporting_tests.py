@@ -8,6 +8,15 @@ from core.settings.strings import *
 
 
 class ErrorReportingTests(BaseClass):
+
+    @classmethod
+    def setUpClass(cls):
+        BaseClass.setUpClass(cls.__name__)
+
+    @classmethod
+    def tearDownClass(cls):
+        BaseClass.tearDownClass()
+
     def test_001_error_reporting_enable(self):
         output = Tns.run_tns_command(errorreporting + " enable")
         assert enabled.format(error_reporting, "now ") in output

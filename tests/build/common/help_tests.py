@@ -1,7 +1,6 @@
 """
 Test for `help` command
 """
-import os
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.os_type import OSType
@@ -12,8 +11,7 @@ from core.tns.tns import Tns
 class HelpTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        logfile = os.path.join("out", cls.__name__ + ".txt")
-        BaseClass.setUpClass(logfile)
+        BaseClass.setUpClass(cls.__name__)
         Tns.create_app(cls.app_name)
         Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})

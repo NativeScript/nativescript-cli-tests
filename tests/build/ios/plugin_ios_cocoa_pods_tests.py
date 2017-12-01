@@ -5,10 +5,10 @@ Test for plugin* commands in context of iOS
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, SUT_FOLDER, TEST_RUN_HOME
+from core.settings.settings import IOS_RUNTIME_PATH, TEST_RUN_HOME
+from core.settings.strings import *
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
-from core.settings.strings import *
 
 
 class PluginsiOSPodsTests(BaseClass):
@@ -108,7 +108,7 @@ class PluginsiOSPodsTests(BaseClass):
 
         output = Tns.build_ios(attributes={"--path": self.app_name})
         assert "Successfully prepared plugin googlesdk for ios." in output
-        assert "Installing pods..." in    output
+        assert "Installing pods..." in output
 
         output = File.read(self.app_name + "/platforms/ios/Podfile")
         assert "source 'https://github.com/CocoaPods/Specs.git'" in output
