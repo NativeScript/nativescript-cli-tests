@@ -4,6 +4,7 @@ Test platform add (android)
 import os
 
 from core.base_class.BaseClass import BaseClass
+from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH, TEST_RUN_HOME
@@ -91,16 +92,33 @@ class PlatformAndroidTests(BaseClass):
         Tns.platform_clean(platform=Platform.ANDROID, attributes={"--path": self.app_name})
         TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.4.0\""])
 
+    def verify_update(self, output):
+        assert "Platform android successfully removed" in output
+        assert "Successfully removed plugin tns-core-modules" in output
+        assert "Successfully removed plugin tns-core-modules-widgets" in output
+        assert "Project successfully created" in output
+        assert "Successfully installed plugin tns-core-modules" in output
+
     def test_230_tns_update(self):
         """ Default `tns platform add` command"""
         Tns.create_app(self.app_name, update_modules=False)
         Tns.platform_add_android(attributes={"--path": self.app_name})
-        output = Tns.run_tns_command(command="update 3.2.0")
-        assert "Platform android successfully removed" in output
-        assert "Succsessfully removed plugin tns-core-modules" in output
-        assert "Succsessfully removed plugin tns-core-modules-widgets" in output
-        assert "Project successfully created" in output
-        assert TnsAsserts.get_package_json(self.app_name)
+
+        output = Tns.update(attributes={"--path": self.app_name})
+        self.verify_update(output)
+        modules_version = Npm.get_version("tns-android")
+        android_version = Npm.get_version("tns-core-modules")
+        TnsAsserts.package_json_contains(self.app_name, [modules_version, android_version])
+
+        output = Tns.update(attributes={"3.2.0": "", "--path": self.app_name})
+        self.verify_update(output)
+        TnsAsserts.package_json_contains(self.app_name, ["3.2.0"])
+
+        Tns.update(attributes={"next": "", "--path": self.app_name})
+        self.verify_update(output)
+        modules_version = Npm.get_version("tns-android@next")
+        android_version = Npm.get_version("tns-core-modules@next")
+        TnsAsserts.package_json_contains(self.app_name, [modules_version, android_version])
 
     def test_300_set_sdk(self):
         """Platform add android should be able to specify target sdk with `--sdk` option"""

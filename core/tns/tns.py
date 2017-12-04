@@ -567,6 +567,10 @@ class Tns(object):
         return output
 
     @staticmethod
+    def update(attributes={}, tns_path=None):
+        return Tns.run_tns_command("update", attributes=attributes, tns_path=tns_path)
+
+    @staticmethod
     def disable_reporting():
         Tns.run_tns_command("usage-reporting disable")
         Tns.run_tns_command("error-reporting disable")

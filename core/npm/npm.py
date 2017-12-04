@@ -45,6 +45,10 @@ class Npm(object):
         return Npm.__run_npm_command('un {0} {1}'.format(package, option), folder=folder, log_level=log_level)
 
     @staticmethod
+    def get_version(package):
+        return Npm.__run_npm_command('show {0} version'.format(package), log_level=CommandLogLevel.SILENT)
+
+    @staticmethod
     def cache_clean():
         print "Clean npm cache."
         if CURRENT_OS == OSType.WINDOWS:
