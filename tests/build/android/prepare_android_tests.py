@@ -21,7 +21,6 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class PrepareAndroidTests(BaseClass):
-
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
@@ -164,6 +163,16 @@ class PrepareAndroidTests(BaseClass):
         output = run(command="find nativescript-facebook/demo/platforms/android/ | grep @")
         assert "@angular/core" not in output, "@angular/* should not be in platforms folder."
         assert "@angular/router" not in output, "@angular/* should not be in platforms folder."
+
+    def test_330_prepare_android_next(self):
+        Tns.create_app(self.app_name, update_modules=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name}, version="next")
+        Folder.cleanup(os.path.join(self.app_name, "node_modules"))
+        Folder.cleanup(os.path.join(self.app_name, "platforms"))
+        android_version = Npm.get_version("tns-android@next")
+        File.replace(file_path=os.path.join(self.app_name, "package.json"), str1=android_version, str2="next")
+        output = Tns.prepare_android(attributes={"--path": self.app_name})
+        TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.FIRST_TIME)
 
     def test_400_prepare_missing_or_missing_platform(self):
         Tns.create_app(self.app_name, update_modules=False)
