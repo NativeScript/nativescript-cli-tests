@@ -15,7 +15,6 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class PlatformAndroidTests(BaseClass):
-    app_ts_name = "TestAppTS"
 
     @classmethod
     def setUpClass(cls):
@@ -218,20 +217,3 @@ class PlatformAndroidTests(BaseClass):
         output = Tns.platform_update(attributes={"--path": self.app_name}, assert_success=False)
         assert no_platform in output
         assert "Usage" in output
-
-    def test_441_binding_text_exists(self):
-        # https: // github.com / NativeScript / android - runtime / issues / 833
-        Tns.create_app_ts(self.app_ts_name)
-        Tns.create_app(self.app_name)
-        Folder.cleanup(os.path.join(self.app_name, 'app'))
-        copy = os.path.join(self.app_ts_name, 'app')
-        paste = self.app_name
-        Folder.move(copy, paste)
-        Tns.platform_add_android(attributes={"--path": self.app_name})
-        Tns.build_android(attributes={"--path": self.app_name})
-        bindings_path = os.path.join(self.app_name, 'platforms', 'android', 'build-tools',
-                                     'android-static-binding-generator', 'bindings.txt')
-        binding = os.stat(bindings_path)
-        assert binding.st_size > 15000
-        print binding.st_size
-        Folder.cleanup(self.app_ts_name)

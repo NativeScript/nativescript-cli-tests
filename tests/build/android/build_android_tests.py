@@ -25,6 +25,7 @@ class BuildAndroidTests(BaseClass):
     debug_apk = "TestApp-debug.apk"
     release_apk = "TestApp-release.apk"
 
+    app_ts_name = "TestAppTS"
     app_name_dash = "test-app"
     app_name_space = "Test App"
     app_no_platform = "TestAppNoPlatform"
@@ -377,3 +378,23 @@ class BuildAndroidTests(BaseClass):
         assert "When producing a release build, you need to specify all --key-store-* options." in output
         assert "# build android" in output
         assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.release_apk))
+
+    def test_440_binding_text_exists(self):
+        # https: // github.com / NativeScript / android - runtime / issues / 833
+        Tns.create_app_ts(self.app_ts_name)
+
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+
+        Folder.cleanup(os.path.join(self.app_name, 'app'))
+        copy = os.path.join(self.app_ts_name, 'app')
+        paste = self.app_name
+        Folder.move(copy, paste)
+
+        Tns.build_android(attributes={"--path": self.app_name})
+        bindings_path = os.path.join(self.app_name, 'platforms', 'android', 'build-tools',
+                                     'android-static-binding-generator', 'bindings.txt')
+        binding = os.stat(bindings_path)
+        assert binding.st_size > 15000
+        print binding.st_size
+        Folder.cleanup(self.app_ts_name)
