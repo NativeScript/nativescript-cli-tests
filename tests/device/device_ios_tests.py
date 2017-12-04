@@ -20,6 +20,10 @@ class DeviceIOSTests(BaseClass):
     DEVICE_ID = Device.get_id(platform=Platform.IOS)
     DEVICE_IDS = Device.get_ids(platform=Platform.IOS)
 
+    @classmethod
+    def setUpClass(cls):
+        BaseClass.setUpClass(cls.__name__)
+
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name)
