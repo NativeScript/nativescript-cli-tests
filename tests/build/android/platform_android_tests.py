@@ -101,13 +101,12 @@ class PlatformAndroidTests(BaseClass):
     def test_230_tns_update(self):
         """ Default `tns platform add` command"""
         Tns.create_app(self.app_name, update_modules=False)
-        Tns.platform_add_android(attributes={"--path": self.app_name})
+        Tns.platform_add_android(attributes={"--path": self.app_name}, version="latest")
 
         output = Tns.update(attributes={"--path": self.app_name})
         self.verify_update(output)
-        modules_version = Npm.get_version("tns-android")
-        android_version = Npm.get_version("tns-core-modules")
-        TnsAsserts.package_json_contains(self.app_name, [modules_version, android_version])
+        modules_version = Npm.get_version("tns-core-modules")
+        TnsAsserts.package_json_contains(self.app_name, [modules_version])
 
         output = Tns.update(attributes={"3.2.0": "", "--path": self.app_name})
         self.verify_update(output)
