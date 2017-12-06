@@ -117,8 +117,10 @@ class Device(object):
             # Report results after timeout is over
             if not are_equal:
                 # Save expected and diff images (actual is already there)
+                diff_image_final_path = os.path.join("out", diff_image_path)
+                print "Diff image will be saved at " + diff_image_final_path
                 File.copy(src=expected_image_original_path, dest=expected_image_path)
-                comparison_result[2].save(os.path.join("out", diff_image_path))
+                comparison_result[2].save(diff_image_final_path)
             assert are_equal, "Current image on {0} does not match expected image {1}. Diff is {2}%". \
                 format(device_name, expected_image, diff)
         else:
