@@ -7,14 +7,14 @@ import time
 from flaky import flaky
 
 from core.base_class.BaseClass import BaseClass
+from core.chrome.chrome import Chrome
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
-from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
-from core.settings.settings import IOS_RUNTIME_PATH, IOS_INSPECTOR_PACKAGE, SIMULATOR_NAME
+from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -22,35 +22,31 @@ from core.tns.tns_prepare_type import Prepare
 from core.tns.tns_verifications import TnsAsserts
 
 
-class DebugiOSSimulatorTests(BaseClass):
+class DebugiOSChromeSimulatorTests(BaseClass):
     SIMULATOR_ID = ''
-    INSPECTOR_GLOBAL_PATH = os.path.join(os.path.expanduser('~'), '.npm', 'tns-ios-inspector')
 
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
+        Chrome.stop()
         Process.kill('Safari')
         Process.kill('NativeScript Inspector')
         Emulator.stop()
         Simulator.stop()
         cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
-        Folder.cleanup(cls.INSPECTOR_GLOBAL_PATH)
         Tns.create_app(cls.app_name,
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
         Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
-        Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--save-dev', folder=cls.app_name)
 
     def setUp(self):
         BaseClass.setUp(self)
-        Process.kill('Safari')
-        Process.kill('NativeScript Inspector')
+        Chrome.stop()
         Tns.kill()
 
     def tearDown(self):
         BaseClass.tearDown(self)
-        Process.kill('Safari')
-        Process.kill('NativeScript Inspector')
+        Chrome.stop()
         Tns.kill()
 
     @classmethod
@@ -59,31 +55,20 @@ class DebugiOSSimulatorTests(BaseClass):
         Folder.cleanup(cls.app_name)
 
     def __verify_debugger_start(self, log):
-        strings = ["Frontend client connected", "Backend socket created", "NativeScript debugger attached"]
+        strings = ["Setting up debugger proxy...", "Press Ctrl + C to terminate, or disconnect.",
+                   "Opened localhost", "To start debugging, open the following URL in Chrome"]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
         time.sleep(10)
         output = File.read(log)
-        assert "Frontend socket closed" not in output
-        assert "Backend socket closed" not in output
-        assert "NativeScript debugger detached" not in output
-        assert Process.is_running('NativeScript Inspector')
-
-    def __verify_debugger_attach(self, log):
-        strings = ["Frontend client connected", "Backend socket created"]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
-        time.sleep(10)
-        output = File.read(log)
-        assert "NativeScript debugger attached" not in output  # This is not in output when you attach to running app
-        assert "Frontend socket closed" not in output
-        assert "Backend socket closed" not in output
-        assert "NativeScript debugger detached" not in output
-        assert Process.is_running('NativeScript Inspector')
+        assert "socket closed" not in output
+        assert "detached" not in output
+        assert not Process.is_running('NativeScript Inspector')
 
     def test_001_debug_ios_simulator(self):
         """
         Default `tns debug ios` starts debugger (do not stop at the first code statement)
         """
-        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--inspector': ''})
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': ''})
         self.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
@@ -96,7 +81,7 @@ class DebugiOSSimulatorTests(BaseClass):
         """
 
         log = Tns.debug_ios(
-            attributes={'--path': self.app_name, '--emulator': '', '--debug-brk': '', '--inspector': ''})
+            attributes={'--path': self.app_name, '--emulator': '', '--debug-brk': ''})
         self.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
@@ -109,22 +94,22 @@ class DebugiOSSimulatorTests(BaseClass):
         """
 
         # Run the app and ensure it works
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': '', '--inspector': ''},
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
                           assert_success=False, timeout=30)
         TnsAsserts.prepared(app_name=self.app_name, platform=Platform.IOS, output=log, prepare=Prepare.SKIP)
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
         # Attach debugger
-        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--start': '', '--inspector': ''})
-        self.__verify_debugger_attach(log=log)
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--start': ''})
+        self.__verify_debugger_start(log=log)
 
     @flaky(max_runs=2)
     def test_100_debug_ios_simulator_with_livesync(self):
         """
         `tns debug ios` should be able to run with livesync
         """
-        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--inspector': ''})
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': ''})
         self.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
