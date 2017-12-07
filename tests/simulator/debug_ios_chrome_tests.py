@@ -4,8 +4,6 @@ Tests for `tns debug ios` executed on iOS Simulator.
 import os
 import time
 
-from flaky import flaky
-
 from core.base_class.BaseClass import BaseClass
 from core.chrome.chrome import Chrome
 from core.device.device import Device
@@ -45,6 +43,7 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         Tns.kill()
 
     def tearDown(self):
+        assert not Process.is_running('NativeScript Inspector')
         BaseClass.tearDown(self)
         Chrome.stop()
         Tns.kill()
@@ -104,7 +103,6 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--start': ''})
         self.__verify_debugger_start(log=log)
 
-    @flaky(max_runs=2)
     def test_100_debug_ios_simulator_with_livesync(self):
         """
         `tns debug ios` should be able to run with livesync
@@ -118,25 +116,19 @@ class DebugiOSChromeSimulatorTests(BaseClass):
 
         # Change JS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
-        strings = ['Successfully transferred', 'main-view-model.js', 'CONSOLE LOG',
-                   'Backend socket closed', 'Frontend socket closed',
-                   'Frontend client connected', 'Backend socket created', 'NativeScript debugger attached']
+        strings = ['Successfully transferred', 'main-view-model.js', 'open the following URL in Chrome', 'CONSOLE LOG']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Change XML and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
-        strings = ['Successfully transferred', 'main-page.xml',
-                   'Backend socket created', 'NativeScript debugger attached', 'CONSOLE LOG']
+        strings = ['Successfully transferred', 'main-page.xml', 'open the following URL in Chrome', 'CONSOLE LOG']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Change CSS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
-        strings = ['Successfully transferred', 'app.css', 'Backend socket created',
-                   'NativeScript debugger attached', 'CONSOLE LOG']
+        strings = ['Successfully transferred', 'app.css', 'open the following URL in Chrome', 'CONSOLE LOG']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify application looks correct
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_js_css_xml')
-
-        assert Process.is_running('NativeScript Inspector')

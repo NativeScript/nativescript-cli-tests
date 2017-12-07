@@ -22,7 +22,7 @@ from core.tns.tns_prepare_type import Prepare
 from core.tns.tns_verifications import TnsAsserts
 
 
-class DebugiOSSimulatorTests(BaseClass):
+class DebugiOSInspectorSimulatorTests(BaseClass):
     SIMULATOR_ID = ''
     INSPECTOR_GLOBAL_PATH = os.path.join(os.path.expanduser('~'), '.npm', 'tns-ios-inspector')
 
