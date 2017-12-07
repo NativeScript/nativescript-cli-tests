@@ -16,6 +16,7 @@ from core.tns.tns_platform_type import Platform
 
 
 class DebugAndroidEmulatorTests(BaseClass):
+
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)

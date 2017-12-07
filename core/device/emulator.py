@@ -98,7 +98,7 @@ class Emulator(object):
         return booted
 
     @staticmethod
-    def ensure_available():
+    def ensure_available(emulator_name=EMULATOR_NAME):
         """
         Ensure Android Emulator is running.
         """
@@ -108,5 +108,5 @@ class Emulator(object):
             Adb.run(command="shell rm -rf /data/local/tmp/*", device_id=EMULATOR_ID, log_level=CommandLogLevel.FULL)
         else:
             Emulator.stop()
-            Emulator.start(emulator_name=EMULATOR_NAME, port=EMULATOR_PORT)
+            Emulator.start(emulator_name=emulator_name, port=EMULATOR_PORT)
         return found
