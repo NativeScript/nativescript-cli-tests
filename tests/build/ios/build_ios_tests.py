@@ -60,14 +60,9 @@ class BuildiOSTests(BaseClass):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.build_ios(attributes={"--path": self.app_name}, log_trace=True)
-
-        Folder.cleanup(os.path.join(self.app_name, 'platforms', 'ios'))
         Tns.build_ios(attributes={"--path": self.app_name, "--release": ""}, log_trace=True)
-
-        Folder.cleanup(os.path.join(self.app_name, 'platforms', 'ios'))
         Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": ""}, log_trace=True)
 
-        Folder.cleanup(os.path.join(self.app_name, 'platforms', 'ios'))
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": ""}, log_trace=True)
 
