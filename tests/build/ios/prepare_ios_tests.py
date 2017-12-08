@@ -120,7 +120,6 @@ class PrepareiOSTests(BaseClass):
         assert "<string>orgnativescriptTestApp</string>" in File.read(final_plist)
 
         # Prepare in release
-        Folder.cleanup(os.path.join(self.app_name, 'platforms', 'ios'))
         Tns.prepare_ios(attributes={"--path": self.app_name, '--release': ''})
         assert "<string>fbXXXXXXXXX</string>" in File.read(final_plist)
         assert "<string>orgnativescriptTestApp</string>" not in File.read(final_plist)
@@ -163,14 +162,11 @@ class PrepareiOSTests(BaseClass):
         Tns.prepare_ios(attributes={"--path": self.app_name, "--provision": PROVISIONING})
 
         # Prepare with --provision (release, emulator)
-        Folder.cleanup(os.path.join(self.app_name, 'platforms', 'ios'))
         Tns.prepare_ios(attributes={"--path": self.app_name, "--release": "", "--provision": PROVISIONING})
 
         # Prepare with --provision (debug, device)
-        Folder.cleanup(os.path.join(self.app_name, 'platforms', 'ios'))
         Tns.prepare_ios(attributes={"--path": self.app_name, "--forDevice": "", "--provision": PROVISIONING})
 
         # Prepare with --provision (release, device)
-        Folder.cleanup(os.path.join(self.app_name, 'platforms', 'ios'))
         Tns.prepare_ios(
             attributes={"--path": self.app_name, "--release": "", "--forDevice": "", "--provision": PROVISIONING})

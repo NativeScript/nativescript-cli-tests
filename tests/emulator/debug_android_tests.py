@@ -34,6 +34,7 @@ class DebugAndroidEmulatorTests(BaseClass):
 
     def tearDown(self):
         Tns.kill()
+        Chrome.stop()
         BaseClass.tearDown(self)
 
     @classmethod
@@ -133,6 +134,6 @@ class DebugAndroidEmulatorTests(BaseClass):
         Chrome.start(url)
 
         # Tap on the button and verify the app still works
-        Device.click(device_id=EMULATOR_ID, text="TAP", timeout=15)
+        Device.click(device_id=EMULATOR_ID, text="TAP", timeout=30)
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home_after_tap', timeout=15)

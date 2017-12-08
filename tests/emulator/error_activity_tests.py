@@ -60,8 +60,8 @@ class AndroidErrorActivityTests(BaseClass):
                    'Error: Kill the app!']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
 
-        assert Adb.wait_for_text(device_id=EMULATOR_ID, text="EXCEPTION"), "Error activity not found!"
-        assert Adb.wait_for_text(device_id=EMULATOR_ID, text="LOGCAT"), "Error activity not found!"
+        assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Exception"), "Error activity not found!"
+        assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Logcat"), "Error activity not found!"
         assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Error: Kill the app!"), "Error activity not found!"
 
     def test_400_no_error_activity_in_release_builds(self):
@@ -75,5 +75,5 @@ class AndroidErrorActivityTests(BaseClass):
         strings = ['Project successfully built', 'Successfully installed on device with identifier', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
 
-        error = Adb.wait_for_text(device_id=EMULATOR_ID, text="EXCEPTION")
+        error = Adb.wait_for_text(device_id=EMULATOR_ID, text="Exception")
         assert not error, "Error activity found in release build!"
