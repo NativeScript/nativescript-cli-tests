@@ -10,8 +10,7 @@ from core.base_class.BaseClass import BaseClass
 from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import BRANCH
-from core.settings.strings import *
+from core.settings.settings import TAG
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 
@@ -52,20 +51,8 @@ class CreateTests(BaseClass):
 
     def test_001_create_app(self):
         """Create app with --template and update modules"""
-
-        # This test is more to test other things outside CLI.
-        # After project is created we update modules and verify
-        # Modules version in package.json is correct (we read the correct value from env. variable).
-        # This test is just to verify we have no infrastructure issues with Sinopia.
-        # Notes: Consider removing this test in future!
-
         output = Tns.create_app(self.app_name, update_modules=True)
         TnsAsserts.created(self.app_name, output=output)
-
-        if "release" in BRANCH.lower():
-            tns_core_modules_version = os.environ.get('MODULES_VERSION')
-            strings = [tns_core_modules_version]
-            TnsAsserts.package_json_contains(self.app_name, string_list=strings)
 
     def test_002_create_project_with_path(self):
         """Create project with --path option"""
