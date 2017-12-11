@@ -166,16 +166,14 @@ class CreateTests(BaseClass):
         res_path = os.path.join(self.app_name, 'app', 'App_Resources')
         assert File.exists(res_path), "App Resouces not added by {N} CLI if missing in template"
 
-    @unittest.skipIf(Npm.version() > 4, "Skip because of https://github.com/NativeScript/nativescript-cli/issues/2875")
     def test_400_create_project_with_wrong_template_path(self):
         """--template should not create project if value is no npm installable"""
 
-        output = Tns.create_app(self.app_name, attributes={"--template": invalid},
+        output = Tns.create_app(self.app_name, attributes={"--template": "invalidEntry"},
                                 assert_success=False, update_modules=False)
         assert "successfully created" not in output
         assert "npm ERR!" in output
         assert "404" in output
-        assert invalid in output
 
     def test_401_create_project_with_empty_template_path(self):
         output = Tns.create_app(self.app_name, attributes={"--template": ""}, assert_success=False,
