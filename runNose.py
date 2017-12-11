@@ -125,7 +125,7 @@ if __name__ == '__main__':
         where_command = 'where tns'
     path = base_path + os.pathsep + os.environ['PATH']
     os.environ['PATH'] = path
-    assert 'not' not in run(command='tns --version'), 'Tns global installation not found!'
+    assert 'not found' not in run(command='tns --version'), 'Tns global installation not found!'
     assert base_path in run(command=where_command), 'Global installation is not the local one!'
 
     # Run Tests
