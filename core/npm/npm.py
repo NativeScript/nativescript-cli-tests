@@ -29,7 +29,7 @@ class Npm(object):
         try:
             Folder.navigate_to(folder)
             run('npm pack', log_level=CommandLogLevel.SILENT)
-            src_file = File.find_by_extention('tgz')[0]
+            src_file = File.find_by_extension('tgz')[0]
             File.copy(src=src_file, dest=output_file)
             File.remove(src_file)
         except:

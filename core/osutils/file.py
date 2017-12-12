@@ -5,7 +5,6 @@ File utils.
 import fnmatch
 import os
 import shutil
-
 import time
 
 from core import osutils
@@ -73,7 +72,7 @@ class File(object):
         return matches[match_index]
 
     @staticmethod
-    def find_by_extention(ext):
+    def find_by_extension(ext):
         """
         Find by file extension recursively.
         :param ext: File extension.
@@ -180,3 +179,10 @@ class File(object):
     @staticmethod
     def move(src, dest):
         shutil.move(src, dest)
+
+    @staticmethod
+    def get_size(file_path):
+        if File.exists(file_path):
+            return os.path.getsize(file_path)
+        else:
+            raise IOError("{0} not found!".format(file_path))

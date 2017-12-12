@@ -380,13 +380,21 @@ class Tns(object):
             apk_path = apk_path.replace("\"", "")  # Handle projects with space
             assert File.exists(apk_path), "Apk file does not exist at " + apk_path
 
-            # Verify final package contains right modules
-            modules_version = str(TnsAsserts.get_modules_version(app_name)).replace('^', '').replace('~', '')
-            modules_json_in_platforms = File.read(
-                os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH, 'package.json'))
-            assert modules_version in modules_json_in_platforms, \
-                "Platform folder contains wrong tns-core-modules! " + os.linesep + "Modules version: " \
-                + modules_version + os.linesep + "package.json: " + os.linesep + modules_json_in_platforms
+            # Verify final package contains right modules (or verify bundle when it is used)
+            if "--bundle" not in attributes.keys():
+                modules_version = str(TnsAsserts.get_modules_version(app_name)).replace('^', '').replace('~', '')
+                modules_json_in_platforms = File.read(
+                    os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH, 'package.json'))
+                assert modules_version in modules_json_in_platforms, \
+                    "Platform folder contains wrong tns-core-modules! " + os.linesep + "Modules version: " \
+                    + modules_version + os.linesep + "package.json: " + os.linesep + modules_json_in_platforms
+            else:
+                assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "bundle.js"))
+                assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "package.json"))
+                assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "starter.js"))
+                assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "vendor.js"))
+                assert not Folder.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH))
+
         return output
 
     @staticmethod

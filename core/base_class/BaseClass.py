@@ -18,6 +18,8 @@ from core.tns.tns import Tns
 
 class BaseClass(unittest.TestCase):
     app_name = "TestApp"
+    app_name_ts = "TestAppTS"
+    app_name_ng = "TestAppNG"
 
     errors = 0
     failures = 0
