@@ -431,13 +431,11 @@ class RunAndroidEmulatorTests(BaseClass):
         """
         Verify '--syncAllFiles' option will sync all files, including node modules.
         """
+        Tns.build_android(attributes={'--path': self.app_name})
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--syncAllFiles': ''},
                               wait=False, assert_success=False)
-        strings = ['Successfully installed on device with identifier',
-                   'Successfully synced application',
-                   EMULATOR_ID,  # Verify device id
-                   'JS:']  # Verify console log messages are shown.
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
+        strings = ['Successfully synced application', EMULATOR_ID, 'JS:']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=60, check_interval=10)
 
         ReplaceHelper.replace(app_name=self.app_name, file_change=ReplaceHelper.CHANGE_TNS_MODULES)
 

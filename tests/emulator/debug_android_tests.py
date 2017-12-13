@@ -16,7 +16,6 @@ from core.tns.tns_platform_type import Platform
 
 
 class DebugAndroidEmulatorTests(BaseClass):
-
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
@@ -25,12 +24,15 @@ class DebugAndroidEmulatorTests(BaseClass):
         Emulator.ensure_available()
         Folder.cleanup(cls.app_name)
 
-    def setUp(self):
-        BaseClass.setUp(self)
-        Tns.create_app(self.app_name,
+        Tns.create_app(cls.app_name,
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
-        Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
+        Tns.build_android(attributes={'--path': cls.app_name})
+
+    def setUp(self):
+        BaseClass.setUp(self)
+        Tns.kill()
 
     def tearDown(self):
         Tns.kill()
@@ -122,6 +124,7 @@ class DebugAndroidEmulatorTests(BaseClass):
         target = os.path.join(self.app_name, 'app', 'main-view-model.js')
         File.copy(src=source, dest=target)
 
+        Tns.build_android(attributes={'--path': self.app_name})
         log = Tns.debug_android(attributes={'--path': self.app_name, '--emulator': ''})
         self.__verify_debugger_start(log)
 

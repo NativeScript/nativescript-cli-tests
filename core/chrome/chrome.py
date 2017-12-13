@@ -15,6 +15,7 @@ class Chrome(object):
         command = "osascript " + os.path.join(TEST_RUN_HOME, 'core', 'chrome', 'start_chrome') + " " + url.replace("&", "\&")
         run(command=command, log_level=CommandLogLevel.SILENT)
         print "Open Google Chrome at {0}".format(url)
+        Process.wait_until_running(proc_name="Google Chrome", timeout=20)
 
     @staticmethod
     def stop():

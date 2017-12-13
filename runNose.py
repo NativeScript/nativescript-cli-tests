@@ -16,7 +16,7 @@ from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
-    COMMAND_TIMEOUT, ANDROID_PATH, IOS_PATH, SUT_FOLDER, CLI_PATH, ANDROID_RUNTIME_PATH, \
+    ANDROID_PATH, IOS_PATH, SUT_FOLDER, CLI_PATH, ANDROID_RUNTIME_PATH, \
     IOS_RUNTIME_PATH, TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH, IOS_INSPECTOR_PATH, TNS_PLATFORM_DECLARATIONS_PATH, \
     BRANCH, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK, TEST_RUN_HOME
 from core.tns.tns import Tns
@@ -85,6 +85,7 @@ def get_repos():
              output_file=os.path.join(SUT_FOLDER, 'tns-template-hello-world-ts.tgz'))
     Npm.pack(folder=os.path.join(SUT_FOLDER, 'template-hello-world-ng'),
              output_file=os.path.join(SUT_FOLDER, 'tns-template-hello-world-ng.tgz'))
+
 
 if __name__ == '__main__':
 
