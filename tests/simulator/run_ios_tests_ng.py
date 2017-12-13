@@ -4,8 +4,6 @@ Test for `tns run ios` command with Angular apps (on simulator).
 
 import os
 
-from flaky import flaky
-
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -49,7 +47,6 @@ class RunIOSSimulatorTestsNG(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()
 
-    @flaky(max_runs=2)
     def test_001_tns_run_ios(self):
         # `tns run ios` and wait until app is deployed
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False,
