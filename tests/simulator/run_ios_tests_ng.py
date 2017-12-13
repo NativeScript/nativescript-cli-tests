@@ -49,10 +49,11 @@ class RunIOSSimulatorTestsNG(BaseClass):
 
     def test_001_tns_run_ios(self):
         # `tns run ios` and wait until app is deployed
+        Tns.build_ios(attributes={'--path': self.app_name})
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False,
                           assert_success=False)
         strings = ['Successfully synced application', self.SIMULATOR_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=90, check_interval=10, clean_log=False)
 
         # Verify initial state of the app
         assert Device.wait_for_text(device_id=self.SIMULATOR_ID, text="Ter Stegen",
