@@ -34,6 +34,8 @@ class WebPackHelloWorldJS(BaseClass):
 
     def test_000_build_without_bundle(self):
         Tns.build_android(attributes={"--path": self.app_name})
+        apk_size = File.get_size(self.get_apk_path(app_name=self.app_name, config="debug"))
+        assert 13000000 < apk_size < 13500000, "Actual apk size is" + apk_size
         self.run_android_via_adb(app_name=self.app_name, config="debug")
 
     def test_001_build_with_bundle(self):
@@ -47,11 +49,11 @@ class WebPackHelloWorldJS(BaseClass):
         main_page_xml_size = File.get_size(os.path.join(base_path, "main-page.xml"))
         apk_size = File.get_size(self.get_apk_path(app_name=self.app_name, config="debug"))
 
-        assert 6500 < bundle_js_size < 7000
-        assert 30 < starter_js_size < 50
-        assert 1200000 < vendor_js_size < 1310000
-        assert 1600 < main_page_xml_size < 2000
-        assert 12000000 < apk_size < 13000000
+        assert 6500 < bundle_js_size < 7000, "Actual bundle_js_size is " + bundle_js_size
+        assert 30 < starter_js_size < 50, "Actual starter_js_size is " + starter_js_size
+        assert 1200000 < vendor_js_size < 1310000, "Actual vendor_js_size is " + vendor_js_size
+        assert 1600 < main_page_xml_size < 2000, "Actual main_page_xml_size is " + main_page_xml_size
+        assert 12000000 < apk_size < 13000000, "Actual apk_size is " + apk_size
 
         self.run_android_via_adb(app_name=self.app_name, config="debug")
 
@@ -128,8 +130,7 @@ class WebPackHelloWorldJS(BaseClass):
         assert 30 < starter_js_size < 50
         assert vendor_js_size == 0
         assert 1600 < main_page_xml_size < 2000
-
-        print apk_size
+        assert 15500000 < apk_size < 16000000
 
         self.run_android_via_adb(app_name=self.app_name, config="release")
 
@@ -157,7 +158,7 @@ class WebPackHelloWorldJS(BaseClass):
         assert vendor_js_size == 0
         assert 1600 < main_page_xml_size < 2000
 
-        print apk_size
+        assert 15000000 < apk_size < 15500000
 
         self.run_android_via_adb(app_name=self.app_name, config="release")
 

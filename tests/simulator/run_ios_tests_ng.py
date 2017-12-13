@@ -3,6 +3,7 @@ Test for `tns run ios` command with Angular apps (on simulator).
 """
 
 import os
+
 from flaky import flaky
 
 from core.base_class.BaseClass import BaseClass
@@ -50,13 +51,10 @@ class RunIOSSimulatorTestsNG(BaseClass):
 
     @flaky(max_runs=2)
     def test_001_tns_run_ios(self):
-
         # `tns run ios` and wait until app is deployed
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False,
                           assert_success=False)
-        strings = ['Project successfully built',
-                   'Successfully installed on device with identifier', self.SIMULATOR_ID,
-                   'Successfully synced application']
+        strings = ['Successfully synced application', self.SIMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
 
         # Verify initial state of the app
@@ -64,7 +62,5 @@ class RunIOSSimulatorTestsNG(BaseClass):
                                     timeout=20), 'Hello-world NG App failed to start or it does not look correct!'
 
         # Verify console.log works - issue #3141
-        console_log_strings = ['Home page loaded!',
-                               'Application loaded!']
+        console_log_strings = ['CONSOLE LOG', 'Home page loaded!', 'Application loaded!']
         Tns.wait_for_log(log_file=log, string_list=console_log_strings, clean_log=False)
-

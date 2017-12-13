@@ -536,9 +536,11 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--justlaunch': ''})
 
         # Use all the disk space on emulator
-        for index in range(1, 100):
+        for index in range(1, 500):
             command = "shell cp -r /data/data/org.nativescript.TestApp /data/data/org.nativescript.TestApp" + str(index)
-            Adb.run(device_id=EMULATOR_ID, command=command, log_level=CommandLogLevel.FULL)
+            output = Adb.run(device_id=EMULATOR_ID, command=command, log_level=CommandLogLevel.FULL)
+            if "No space left on device" in output:
+                break
 
         # Create new app
         Tns.create_app(app_name='TestApp2', update_modules=True)
