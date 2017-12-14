@@ -9,6 +9,7 @@ from core.chrome.chrome import Chrome
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
+from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
@@ -83,7 +84,11 @@ class DebugiOSChromeSimulatorTests(BaseClass):
             attributes={'--path': self.app_name, '--emulator': '', '--debug-brk': ''})
         self.__verify_debugger_start(log)
 
-        # Verify app starts and do not stop on first line of code
+        # Get Chrome URL and open it
+        url = run(command="grep chrome-devtools " + log)
+        Chrome.start(url)
+
+        # Verify app starts and stops on the first line of code
         Device.screen_match(device_name=SIMULATOR_NAME, tolerance=3.0, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_debug_brk')
 
