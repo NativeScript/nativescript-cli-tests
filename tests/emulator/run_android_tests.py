@@ -506,6 +506,8 @@ class RunAndroidEmulatorTests(BaseClass):
             log = Tns.run_android(attributes={'--path': self.app_name}, wait=False, assert_success=False)
             strings = ['Starting Android emulator with image']
             Tns.wait_for_log(log_file=log, string_list=strings, timeout=120)
+            Emulator.stop()
+            Emulator.ensure_available()
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
 

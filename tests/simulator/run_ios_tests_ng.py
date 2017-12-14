@@ -61,4 +61,4 @@ class RunIOSSimulatorTestsNG(BaseClass):
 
         # Verify console.log works - issue #3141
         console_log_strings = ['CONSOLE LOG', 'Home page loaded!', 'Application loaded!']
-        Tns.wait_for_log(log_file=log, string_list=console_log_strings, clean_log=False)
+        Tns.wait_for_log(log_file=log, string_list=console_log_strings)
