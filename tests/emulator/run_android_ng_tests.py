@@ -7,8 +7,6 @@ Run should sync all the changes correctly:
 
 import os
 
-from flaky import flaky
-
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -20,7 +18,6 @@ from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 
 
-@flaky(max_runs=2)
 class RunAndroidEmulatorTestsNG(BaseClass):
     @classmethod
     def setUpClass(cls):
