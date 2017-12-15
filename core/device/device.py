@@ -68,7 +68,7 @@ class Device(object):
         return image_saved
 
     @staticmethod
-    def screen_match(device_name, device_id, expected_image, tolerance=3.00, timeout=30):
+    def screen_match(device_name, device_id, expected_image, tolerance=0.1, timeout=30):
         """
         Verify screen match expected image.
         :param device_name: Name of device (name of Android avd image, or name or iOS Simulator).
