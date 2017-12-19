@@ -176,8 +176,6 @@ class TnsAsserts(object):
             assert not File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID))
         if platform is Platform.ANDROID or platform is Platform.BOTH:
             assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID))
-            assert not Folder.is_empty(
-                os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID, 'build-tools', 'android-static-binding-generator'))
         if platform is Platform.IOS or platform is Platform.BOTH:
             assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_IOS))
 
