@@ -382,6 +382,7 @@ class Tns(object):
 
             # Verify final package contains right modules (or verify bundle when it is used)
             if "--bundle" not in attributes.keys():
+                assert "Webpack compilation complete" not in output
                 modules_version = str(TnsAsserts.get_modules_version(app_name)).replace('^', '').replace('~', '')
                 modules_json_in_platforms = File.read(
                     os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH, 'package.json'))
@@ -389,6 +390,7 @@ class Tns(object):
                     "Platform folder contains wrong tns-core-modules! " + os.linesep + "Modules version: " \
                     + modules_version + os.linesep + "package.json: " + os.linesep + modules_json_in_platforms
             else:
+                assert "Webpack compilation complete" in output
                 assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "bundle.js"))
                 assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "package.json"))
                 assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "starter.js"))
@@ -482,6 +484,13 @@ class Tns(object):
                     id1 = attributes.get("--teamId").replace("'", "")
                     id2 = attributes.get("--team-id").replace("'", "")
                     assert id1 or id2 in xcode_project, "TeamID not passed to Xcode!"
+
+            # Verify final package contains right modules (or verify bundle when it is used)
+            if "--bundle" not in attributes.keys():
+                assert "Webpack compilation complete" not in output
+            else:
+                assert "Webpack compilation complete" in output
+
         return output
 
     @staticmethod

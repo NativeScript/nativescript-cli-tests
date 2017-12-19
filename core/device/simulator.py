@@ -324,6 +324,16 @@ class Simulator(object):
         run(command=command, log_level=CommandLogLevel.FULL)
 
     @staticmethod
+    def install(path):
+        """
+        Install application
+        :param path: Path to app
+        """
+        command = 'xcrun simctl install booted {0}'.format(path)
+        output = run(command=command, log_level=CommandLogLevel.SILENT)
+        assert "Failed to install the requested application" not in output
+
+    @staticmethod
     def get_screen(device_id, file_path):
         """
         Save screen of iOS Simulator.
