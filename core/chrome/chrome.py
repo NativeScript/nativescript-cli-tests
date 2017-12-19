@@ -28,7 +28,7 @@ class Chrome(object):
         if CURRENT_OS is OSType.OSX:
             Process.kill("Google Chrome")
         elif CURRENT_OS is OSType.LINUX:
-            Process.wait_until_running(proc_name="chrome", timeout=30)
+            Process.kill("chrome")
 
     @staticmethod
     def clean_chrome_dev_tools_local_storage():
