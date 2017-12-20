@@ -1,4 +1,5 @@
 import os
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -19,8 +20,7 @@ from core.tns.tns_verifications import TnsAsserts
 
 class WebPackHelloWorldJS(BaseClass):
     SIMULATOR_ID = ""
-    # wp_run = ['Webpack compilation complete', 'Watching for file changes', 'Successfully installed', EMULATOR_ID]
-    wp_run = ['Successfully installed', EMULATOR_ID]
+    wp_run = ['Webpack compilation complete', 'Successfully installed']
     wp_errors = ['ERROR', 'Module not found', 'Error']
 
     js_template_xml_change = ['app/main-page.xml', 'TAP', 'TEST']
@@ -41,11 +41,6 @@ class WebPackHelloWorldJS(BaseClass):
 
     def setUp(self):
         Tns.kill()
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name})
-        Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
-        if CURRENT_OS is OSType.OSX:
-            Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name})
-            Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
         self.emulator_cleanup(app_name=self.app_name)
 
     @classmethod
@@ -67,7 +62,7 @@ class WebPackHelloWorldJS(BaseClass):
             ipa_size = File.get_size(ipa_path)
             assert 13000000 < ipa_size < 13500000, "Actual app is " + str(ipa_size)
 
-    def test_001_build_with_bundle(self):
+    def test_001_android_build_with_bundle(self):
         Tns.build_android(attributes={"--path": self.app_name, "--bundle": ""})
 
         base_path = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH)
@@ -85,23 +80,21 @@ class WebPackHelloWorldJS(BaseClass):
 
         self.run_android_via_adb(app_name=self.app_name, config="debug")
 
-        if CURRENT_OS is OSType.OSX:
-            Tns.build_ios(attributes={"--path": self.app_name, "--bundle": ""})
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_001_ios_build_with_bundle(self):
+        Tns.build_ios(attributes={"--path": self.app_name, "--bundle": ""})
 
-            # Simulator build
-            app_path = self.get_app_path(app_name=self.app_name)
+        app_path = self.get_app_path(app_name=self.app_name)
+        bundle_js_size = File.get_size(os.path.join(app_path, "app", "bundle.js"))
+        starter_js_size = File.get_size(os.path.join(app_path, "app", "starter.js"))
+        vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
+        main_page_xml_size = File.get_size(os.path.join(app_path, "app", "main-page.xml"))
+        assert 6500 < bundle_js_size < 7000, "Actual bundle_js_size is " + str(bundle_js_size)
+        assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
+        assert 1400000 < vendor_js_size < 1450000, "Actual vendor_js_size is " + str(vendor_js_size)
+        assert 1600 < main_page_xml_size < 2000, "Actual main_page_xml_size is " + main_page_xml_size
 
-            bundle_js_size = File.get_size(os.path.join(app_path, "app", "bundle.js"))
-            starter_js_size = File.get_size(os.path.join(app_path, "app", "starter.js"))
-            vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
-            main_page_xml_size = File.get_size(os.path.join(app_path, "app", "main-page.xml"))
-
-            assert 6500 < bundle_js_size < 7000, "Actual bundle_js_size is " + str(bundle_js_size)
-            assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
-            assert 1400000 < vendor_js_size < 1450000, "Actual vendor_js_size is " + str(vendor_js_size)
-            assert 1600 < main_page_xml_size < 2000, "Actual main_page_xml_size is " + main_page_xml_size
-
-    def test_002_build_release_with_bundle(self):
+    def test_002_android_build_release_with_bundle(self):
         Tns.build_android(attributes={"--path": self.app_name,
                                       "--keyStorePath": ANDROID_KEYSTORE_PATH,
                                       "--keyStorePassword": ANDROID_KEYSTORE_PASS,
@@ -125,25 +118,28 @@ class WebPackHelloWorldJS(BaseClass):
 
         self.run_android_via_adb(app_name=self.app_name, config="release")
 
-        if CURRENT_OS is OSType.OSX:
-            Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": ""})
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_002_ios_build_release_with_bundle(self):
+        Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": ""})
+        app_path = self.get_app_path(app_name=self.app_name).replace("emulator", "device")
+        ipa_path = app_path.replace(".app", ".ipa")
+        bundle_js_size = File.get_size(os.path.join(app_path, "app", "bundle.js"))
+        starter_js_size = File.get_size(os.path.join(app_path, "app", "starter.js"))
+        vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
+        main_page_xml_size = File.get_size(os.path.join(app_path, "app", "main-page.xml"))
+        ipa_size = File.get_size(ipa_path)
+        assert 6500 < bundle_js_size < 7000, "Actual bundle_js_size is " + str(bundle_js_size)
+        assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
+        assert 1400000 < vendor_js_size < 1450000, "Actual vendor_js_size is " + str(vendor_js_size)
+        assert 1600 < main_page_xml_size < 2000, "Actual main_page_xml_size is " + main_page_xml_size
+        assert 12500000 < ipa_size < 13000000, "Actual app is " + str(ipa_size)
 
-            app_path = self.get_app_path(app_name=self.app_name).replace("emulator", "device")
-            ipa_path = app_path.replace(".app", ".ipa")
+    def test_100_android_build_release_with_and_bundle_and_uglify(self):
 
-            bundle_js_size = File.get_size(os.path.join(app_path, "app", "bundle.js"))
-            starter_js_size = File.get_size(os.path.join(app_path, "app", "starter.js"))
-            vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
-            main_page_xml_size = File.get_size(os.path.join(app_path, "app", "main-page.xml"))
-            ipa_size = File.get_size(ipa_path)
+        # Workaround for https://github.com/NativeScript/nativescript-dev-webpack/issues/370
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name})
+        Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
 
-            assert 6500 < bundle_js_size < 7000, "Actual bundle_js_size is " + str(bundle_js_size)
-            assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
-            assert 1400000 < vendor_js_size < 1450000, "Actual vendor_js_size is " + str(vendor_js_size)
-            assert 1600 < main_page_xml_size < 2000, "Actual main_page_xml_size is " + main_page_xml_size
-            assert 12500000 < ipa_size < 13000000, "Actual app is " + str(ipa_size)
-
-    def test_100_build_release_with_and_bundle_and_uglify(self):
         Tns.build_android(attributes={"--path": self.app_name,
                                       "--keyStorePath": ANDROID_KEYSTORE_PATH,
                                       "--keyStorePassword": ANDROID_KEYSTORE_PASS,
@@ -168,26 +164,33 @@ class WebPackHelloWorldJS(BaseClass):
 
         self.run_android_via_adb(app_name=self.app_name, config="release")
 
-        if CURRENT_OS is OSType.OSX:
-            Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
-                                      "--env.uglify": ""})
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_100_ios_build_release_with_and_bundle_and_uglify(self):
+        # Workaround for https://github.com/NativeScript/nativescript-dev-webpack/issues/370
+        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name})
+        Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
 
-            app_path = self.get_app_path(app_name=self.app_name).replace("emulator", "device")
-            ipa_path = app_path.replace(".app", ".ipa")
+        Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
+                                  "--env.uglify": ""})
+        app_path = self.get_app_path(app_name=self.app_name).replace("emulator", "device")
+        ipa_path = app_path.replace(".app", ".ipa")
+        bundle_js_size = File.get_size(os.path.join(app_path, "app", "bundle.js"))
+        starter_js_size = File.get_size(os.path.join(app_path, "app", "starter.js"))
+        vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
+        main_page_xml_size = File.get_size(os.path.join(app_path, "app", "main-page.xml"))
+        ipa_size = File.get_size(ipa_path)
+        assert 3500 < bundle_js_size < 3750, "Actual bundle_js_size is " + str(bundle_js_size)
+        assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
+        assert 685000 < vendor_js_size < 695000, "Actual vendor_js_size is " + str(vendor_js_size)
+        assert 1600 < main_page_xml_size < 2000, "Actual main_page_xml_size is " + main_page_xml_size
+        assert 12500000 < ipa_size < 13000000, "Actual app is " + str(ipa_size)
 
-            bundle_js_size = File.get_size(os.path.join(app_path, "app", "bundle.js"))
-            starter_js_size = File.get_size(os.path.join(app_path, "app", "starter.js"))
-            vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
-            main_page_xml_size = File.get_size(os.path.join(app_path, "app", "main-page.xml"))
-            ipa_size = File.get_size(ipa_path)
+    def test_110_android_build_release_with_and_bundle_and_snapshot(self):
 
-            assert 3500 < bundle_js_size < 3750, "Actual bundle_js_size is " + str(bundle_js_size)
-            assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
-            assert 670000 < vendor_js_size < 680000, "Actual vendor_js_size is " + str(vendor_js_size)
-            assert 1600 < main_page_xml_size < 2000, "Actual main_page_xml_size is " + main_page_xml_size
-            assert 12000000 < ipa_size < 12500000, "Actual app is " + str(ipa_size)
+        # Workaround for https://github.com/NativeScript/nativescript-dev-webpack/issues/370
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name})
+        Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
 
-    def test_110_build_release_with_and_bundle_and_snapshot(self):
         Tns.build_android(attributes={"--path": self.app_name,
                                       "--keyStorePath": ANDROID_KEYSTORE_PATH,
                                       "--keyStorePassword": ANDROID_KEYSTORE_PASS,
@@ -212,26 +215,33 @@ class WebPackHelloWorldJS(BaseClass):
 
         self.run_android_via_adb(app_name=self.app_name, config="release")
 
-        if CURRENT_OS is OSType.OSX:
-            Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
-                                      "--env.snapshot": ""})
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_110_ios_build_release_with_and_bundle_and_snapshot(self):
+        # Workaround for https://github.com/NativeScript/nativescript-dev-webpack/issues/370
+        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name})
+        Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
 
-            app_path = self.get_app_path(app_name=self.app_name).replace("emulator", "device")
-            ipa_path = app_path.replace(".app", ".ipa")
+        Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
+                                  "--env.snapshot": ""})
+        app_path = self.get_app_path(app_name=self.app_name).replace("emulator", "device")
+        ipa_path = app_path.replace(".app", ".ipa")
+        bundle_js_size = File.get_size(os.path.join(app_path, "app", "bundle.js"))
+        starter_js_size = File.get_size(os.path.join(app_path, "app", "starter.js"))
+        vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
+        main_page_xml_size = File.get_size(os.path.join(app_path, "app", "main-page.xml"))
+        ipa_size = File.get_size(ipa_path)
+        assert 6500 < bundle_js_size < 7000, "Actual bundle_js_size is " + str(bundle_js_size)
+        assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
+        assert 1400000 < vendor_js_size < 1450000, "Actual vendor_js_size is " + str(vendor_js_size)
+        assert 1600 < main_page_xml_size < 2000
+        assert 12500000 < ipa_size < 13000000, "Actual app is " + str(ipa_size)
 
-            bundle_js_size = File.get_size(os.path.join(app_path, "app", "bundle.js"))
-            starter_js_size = File.get_size(os.path.join(app_path, "app", "starter.js"))
-            vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
-            main_page_xml_size = File.get_size(os.path.join(app_path, "app", "main-page.xml"))
-            ipa_size = File.get_size(ipa_path)
+    def test_120_android_build_release_with_and_bundle_and_snapshot_and_uglify(self):
 
-            assert 6500 < bundle_js_size < 7000, "Actual bundle_js_size is " + str(bundle_js_size)
-            assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
-            assert 1400000 < vendor_js_size < 1450000, "Actual vendor_js_size is " + str(vendor_js_size)
-            assert 1600 < main_page_xml_size < 2000
-            assert 12000000 < ipa_size < 12500000, "Actual app is " + str(ipa_size)
+        # Workaround for https://github.com/NativeScript/nativescript-dev-webpack/issues/370
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name})
+        Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
 
-    def test_120_build_release_with_and_bundle_and_snapshot_and_uglify(self):
         Tns.build_android(attributes={"--path": self.app_name,
                                       "--keyStorePath": ANDROID_KEYSTORE_PATH,
                                       "--keyStorePassword": ANDROID_KEYSTORE_PASS,
@@ -258,31 +268,34 @@ class WebPackHelloWorldJS(BaseClass):
 
         self.run_android_via_adb(app_name=self.app_name, config="release")
 
-        if CURRENT_OS is OSType.OSX:
-            Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
-                                      "--env.snapshot": "", "--env.uglify": ""})
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_120_ios_build_release_with_and_bundle_and_snapshot_and_uglify(self):
 
-            app_path = self.get_app_path(app_name=self.app_name).replace("emulator", "device")
-            ipa_path = app_path.replace(".app", ".ipa")
+        # Workaround for https://github.com/NativeScript/nativescript-dev-webpack/issues/370
+        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name})
+        Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
 
-            bundle_js_size = File.get_size(os.path.join(app_path, "app", "bundle.js"))
-            starter_js_size = File.get_size(os.path.join(app_path, "app", "starter.js"))
-            vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
-            main_page_xml_size = File.get_size(os.path.join(app_path, "app", "main-page.xml"))
-            ipa_size = File.get_size(ipa_path)
+        Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
+                                  "--env.snapshot": "", "--env.uglify": ""})
+        app_path = self.get_app_path(app_name=self.app_name).replace("emulator", "device")
+        ipa_path = app_path.replace(".app", ".ipa")
+        bundle_js_size = File.get_size(os.path.join(app_path, "app", "bundle.js"))
+        starter_js_size = File.get_size(os.path.join(app_path, "app", "starter.js"))
+        vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
+        main_page_xml_size = File.get_size(os.path.join(app_path, "app", "main-page.xml"))
+        ipa_size = File.get_size(ipa_path)
+        assert 3500 < bundle_js_size < 3750
+        assert 30 < starter_js_size < 50
+        assert 680000 < vendor_js_size < 700000, "Actual vendor_js_size is " + str(vendor_js_size)
+        assert 1600 < main_page_xml_size < 2000
+        assert 12500000 < ipa_size < 13000000, "Actual app is " + str(ipa_size)
 
-            assert 3500 < bundle_js_size < 3750
-            assert 30 < starter_js_size < 50
-            assert 680000 < vendor_js_size < 700000, "Actual vendor_js_size is " + str(vendor_js_size)
-            assert 1600 < main_page_xml_size < 2000
-            assert 12000000 < ipa_size < 12500000, "Actual app is " + str(ipa_size)
-
-    def test_200_run_with_bundle_sync_changes(self):
+    def test_200_run_android_with_bundle_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
-        self.screen_match(app_name=self.app_name, image='hello-world-js')
+        self.android_screen_match(app_name=self.app_name, image='hello-world-js')
         Tns.kill()
 
         # Change JS, XML and CSS
@@ -295,7 +308,7 @@ class WebPackHelloWorldJS(BaseClass):
                                           "--bundle": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=60)
-        self.screen_match(app_name=self.app_name, image='hello-world-js-js-css-xml')
+        self.android_screen_match(app_name=self.app_name, image='hello-world-js-js-css-xml')
         Tns.kill()
 
         # Revert changes
@@ -308,16 +321,48 @@ class WebPackHelloWorldJS(BaseClass):
                                           "--bundle": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
-        self.screen_match(app_name=self.app_name, image='hello-world-js')
+        self.android_screen_match(app_name=self.app_name, image='hello-world-js')
         Tns.kill()
 
-    def test_210_run_with_bundle_uglify_sync_changes(self):
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_200_run_ios_with_bundle_sync_changes(self):
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': ''}, wait=False,
+                          assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
+        self.ios_screen_match(image='hello-world-js')
+        Tns.kill()
+
+        # Change JS, XML and CSS
+        ReplaceHelper.replace(self.app_name, self.js_template_js_change)
+        ReplaceHelper.replace(self.app_name, self.js_template_xml_change)
+        ReplaceHelper.replace(self.app_name, self.js_template_css_change)
+
+        # Verify application looks correct
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': ''}, wait=False,
+                          assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=60)
+        self.ios_screen_match(image='hello-world-js-js-css-xml')
+        Tns.kill()
+
+        # Revert changes
+        ReplaceHelper.rollback(self.app_name, self.js_template_js_change)
+        ReplaceHelper.rollback(self.app_name, self.js_template_xml_change)
+        ReplaceHelper.rollback(self.app_name, self.js_template_css_change)
+
+        # Verify application looks correct
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': ''}, wait=False,
+                          assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
+        self.ios_screen_match(image='hello-world-js')
+        Tns.kill()
+
+    def test_210_run_android_with_bundle_uglify_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
                                           "--env.uglify": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
-        self.screen_match(app_name=self.app_name, image='hello-world-js')
+        self.android_screen_match(app_name=self.app_name, image='hello-world-js')
         Tns.kill()
 
         # Change JS, XML and CSS
@@ -331,7 +376,7 @@ class WebPackHelloWorldJS(BaseClass):
                                           "--env.uglify": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=60)
-        self.screen_match(app_name=self.app_name, image='hello-world-js-js-css-xml')
+        self.android_screen_match(app_name=self.app_name, image='hello-world-js-js-css-xml')
         Tns.kill()
 
         # Revert changes
@@ -345,16 +390,48 @@ class WebPackHelloWorldJS(BaseClass):
                                           "--env.uglify": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
-        self.screen_match(app_name=self.app_name, image='hello-world-js')
+        self.android_screen_match(app_name=self.app_name, image='hello-world-js')
         Tns.kill()
 
-    def test_220_run_with_bundle_snapshot_sync_changes(self):
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_210_run_ios_with_bundle_uglify_sync_changes(self):
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': ''},
+                          wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
+        self.ios_screen_match(image='hello-world-js')
+        Tns.kill()
+
+        # Change JS, XML and CSS
+        ReplaceHelper.replace(self.app_name, self.js_template_js_change)
+        ReplaceHelper.replace(self.app_name, self.js_template_xml_change)
+        ReplaceHelper.replace(self.app_name, self.js_template_css_change)
+
+        # Verify application looks correct
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': ''},
+                          wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=60)
+        self.ios_screen_match(image='hello-world-js-js-css-xml')
+        Tns.kill()
+
+        # Revert changes
+        ReplaceHelper.rollback(self.app_name, self.js_template_js_change)
+        ReplaceHelper.rollback(self.app_name, self.js_template_xml_change)
+        ReplaceHelper.rollback(self.app_name, self.js_template_css_change)
+
+        # Verify application looks correct
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': ''},
+                          wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
+        self.ios_screen_match(image='hello-world-js')
+        Tns.kill()
+
+    def test_220_run_android_with_bundle_snapshot_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
                                           "--env.snapshot": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
-        self.screen_match(app_name=self.app_name, image='hello-world-js')
+        self.android_screen_match(app_name=self.app_name, image='hello-world-js')
         Tns.kill()
 
         # Change JS, XML and CSS
@@ -368,7 +445,7 @@ class WebPackHelloWorldJS(BaseClass):
                                           "--env.snapshot": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=60)
-        self.screen_match(app_name=self.app_name, image='hello-world-js-js-css-xml')
+        self.android_screen_match(app_name=self.app_name, image='hello-world-js-js-css-xml')
         Tns.kill()
 
         # Revert changes
@@ -382,17 +459,49 @@ class WebPackHelloWorldJS(BaseClass):
                                           "--env.snapshot": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
-        self.screen_match(app_name=self.app_name, image='hello-world-js')
+        self.android_screen_match(app_name=self.app_name, image='hello-world-js')
         Tns.kill()
 
-    def test_230_run_with_bundle_snapshot_and_uglify_sync_changes(self):
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_220_run_ios_with_bundle_snapshot_sync_changes(self):
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.snapshot': ''},
+                          wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
+        self.ios_screen_match(image='hello-world-js')
+        Tns.kill()
+
+        # Change JS, XML and CSS
+        ReplaceHelper.replace(self.app_name, self.js_template_js_change)
+        ReplaceHelper.replace(self.app_name, self.js_template_xml_change)
+        ReplaceHelper.replace(self.app_name, self.js_template_css_change)
+
+        # Verify application looks correct
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.snapshot': ''},
+                          wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=60)
+        self.ios_screen_match(image='hello-world-js-js-css-xml')
+        Tns.kill()
+
+        # Revert changes
+        ReplaceHelper.rollback(self.app_name, self.js_template_js_change)
+        ReplaceHelper.rollback(self.app_name, self.js_template_xml_change)
+        ReplaceHelper.rollback(self.app_name, self.js_template_css_change)
+
+        # Verify application looks correct
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.snapshot': ''},
+                          wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
+        self.ios_screen_match(image='hello-world-js')
+        Tns.kill()
+
+    def test_230_run_android_with_bundle_snapshot_and_uglify_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
                                           "--env.snapshot": "",
                                           "--env.uglify": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
-        self.screen_match(app_name=self.app_name, image='hello-world-js')
+        self.android_screen_match(app_name=self.app_name, image='hello-world-js')
         Tns.kill()
 
         # Change JS, XML and CSS
@@ -407,7 +516,7 @@ class WebPackHelloWorldJS(BaseClass):
                                           "--env.uglify": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=60)
-        self.screen_match(app_name=self.app_name, image='hello-world-js-js-css-xml')
+        self.android_screen_match(app_name=self.app_name, image='hello-world-js-js-css-xml')
         Tns.kill()
 
         # Revert changes
@@ -422,7 +531,39 @@ class WebPackHelloWorldJS(BaseClass):
                                           "--env.uglify": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
-        self.screen_match(app_name=self.app_name, image='hello-world-js')
+        self.android_screen_match(app_name=self.app_name, image='hello-world-js')
+        Tns.kill()
+
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_230_run_ios_with_bundle_snapshot_and_uglify_sync_changes(self):
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.snapshot': '',
+                                      '--env.snapshot': ''}, wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
+        self.ios_screen_match(image='hello-world-js')
+        Tns.kill()
+
+        # Change JS, XML and CSS
+        ReplaceHelper.replace(self.app_name, self.js_template_js_change)
+        ReplaceHelper.replace(self.app_name, self.js_template_xml_change)
+        ReplaceHelper.replace(self.app_name, self.js_template_css_change)
+
+        # Verify application looks correct
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.snapshot': '',
+                                      '--env.snapshot': ''}, wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=60)
+        self.ios_screen_match(image='hello-world-js-js-css-xml')
+        Tns.kill()
+
+        # Revert changes
+        ReplaceHelper.rollback(self.app_name, self.js_template_js_change)
+        ReplaceHelper.rollback(self.app_name, self.js_template_xml_change)
+        ReplaceHelper.rollback(self.app_name, self.js_template_css_change)
+
+        # Verify application looks correct
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.snapshot': '',
+                                      '--env.snapshot': ''}, wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=self.wp_run, not_existing_string_list=self.wp_errors, timeout=180)
+        self.ios_screen_match(image='hello-world-js')
         Tns.kill()
 
     def test_400_build_with_bundle_without_plugin(self):
@@ -447,7 +588,7 @@ class WebPackHelloWorldJS(BaseClass):
         Tns.kill()
         self.emulator_cleanup(app_name=app_name)
         self.install_and_run_app(app_name=app_name, config=config)
-        self.screen_match(app_name=app_name, image='hello-world-js')
+        self.android_screen_match(app_name=app_name, image='hello-world-js')
 
     def emulator_cleanup(self, app_name):
         app_id = Tns.get_app_id(app_name)
@@ -460,8 +601,11 @@ class WebPackHelloWorldJS(BaseClass):
         Adb.install(apk_file_path=self.get_apk_path(app_name=app_name, config=config), device_id=EMULATOR_ID)
         Adb.start_app(device_id=EMULATOR_ID, app_id="org.nativescript." + app_name)
 
-    def screen_match(self, app_name, image):
+    def android_screen_match(self, app_name, image):
         app_id = Tns.get_app_id(app_name)
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image=image)
         Adb.stop_application(device_id=EMULATOR_ID, app_id=Tns.get_app_id(app_name))
         assert not Adb.is_application_running(device_id=EMULATOR_ID, app_id=app_id)
+
+    def ios_screen_match(self, image):
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID, expected_image=image)

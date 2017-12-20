@@ -9,6 +9,7 @@ class ImageUtils(object):
         Compare two images.
         :param actual_image_path: Path to actual image.
         :param expected_image_path: Path to expected image.
+        :param tolerance: Tolerance in percents.
         :return: match (boolean value), diff_percent (diff %), diff_image (diff image)
         """
         actual_image = Image.open(actual_image_path)

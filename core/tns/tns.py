@@ -390,7 +390,7 @@ class Tns(object):
                     "Platform folder contains wrong tns-core-modules! " + os.linesep + "Modules version: " \
                     + modules_version + os.linesep + "package.json: " + os.linesep + modules_json_in_platforms
             else:
-                # assert "Webpack compilation complete" in output
+                assert "Webpack compilation complete" in output
                 assert "after-prepare/nativescript-dev-webpack.js" in output
                 assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "bundle.js"))
                 assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "package.json"))
@@ -490,7 +490,7 @@ class Tns(object):
             if "--bundle" not in attributes.keys():
                 assert "Webpack compilation complete" not in output
             else:
-                # assert "Webpack compilation complete" in output
+                assert "Webpack compilation complete" in output
                 assert "after-prepare/nativescript-dev-webpack.js" in output
 
         return output
