@@ -13,13 +13,14 @@ from core.settings.settings import TEST_RUN_HOME, CURRENT_OS
 class Chrome(object):
     @staticmethod
     def start(url=""):
-        command = "osascript " + os.path.join(TEST_RUN_HOME, 'core', 'chrome', 'start_chrome') + " " + url.replace("&",
-                                                                                                                   "\&")
-        run(command=command, log_level=CommandLogLevel.SILENT)
-        print "Open Google Chrome at {0}".format(url)
         if CURRENT_OS is OSType.OSX:
+            chrome_path = os.path.join(TEST_RUN_HOME, 'core', 'chrome', 'start_chrome')
+            command = "osascript " + chrome_path + " " + url.replace("&", "\&")
+            run(command=command, log_level=CommandLogLevel.SILENT)
+            print "Open Google Chrome at {0}".format(url)
             Process.wait_until_running(proc_name="Google Chrome", timeout=30)
         elif CURRENT_OS is OSType.LINUX:
+            run(command="google-chrome", log_level=CommandLogLevel.SILENT)
             Process.wait_until_running(proc_name="chrome", timeout=30)
 
     @staticmethod
