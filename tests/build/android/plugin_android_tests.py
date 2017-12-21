@@ -4,6 +4,7 @@ Test for plugin commands in context of Android
 
 import os
 import time
+import unittest
 import xml.etree.ElementTree as ET
 
 from core.base_class.BaseClass import BaseClass
@@ -73,6 +74,7 @@ class PluginsAndroidTests(BaseClass):
         assert "dependencies" in output
         assert "tns-plugin" in output
 
+    @unittest.skip("Skip the test because of https://github.com/NativeScript/nativescript-cli/issues/3235")
     def test_103_check_android_manifest_merged(self):
         plugin_name = "nativescript-barcodescanner"
         plugin_manifest_path = os.path.join(self.app_name, "node_modules", plugin_name, "platforms",
