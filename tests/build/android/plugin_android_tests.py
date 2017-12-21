@@ -74,7 +74,7 @@ class PluginsAndroidTests(BaseClass):
         assert "dependencies" in output
         assert "tns-plugin" in output
 
-    @unittest.skip("Skip the test because of https://github.com/NativeScript/nativescript-cli/issues/3235")
+    @unittest.skip("Skip the test because of https://github.com/NativeScript/android-runtime/issues/903")
     def test_103_check_android_manifest_merged(self):
         plugin_name = "nativescript-barcodescanner"
         plugin_manifest_path = os.path.join(self.app_name, "node_modules", plugin_name, "platforms",
