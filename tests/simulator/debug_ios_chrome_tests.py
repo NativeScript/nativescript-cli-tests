@@ -115,6 +115,9 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': ''})
         self.__verify_debugger_start(log)
 
+        # Get Chrome URL
+        url_1 = run(command="grep chrome-devtools " + log)
+
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
@@ -132,8 +135,14 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         # Change CSS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
         strings = ['Successfully transferred', 'app.css', 'open the following URL in Chrome', 'CONSOLE LOG']
-        Tns.wait_for_log(log_file=log, string_list=strings)
+        Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
 
         # Verify application looks correct
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_js_css_xml')
+
+        # Get Chrome URL and check it is not changed - https://github.com/NativeScript/nativescript-cli/issues/3183
+        url_2 = run(command="grep -a chrome-devtools " + log)
+        assert url_1 == url_2, "Chrome DevTools URLs are different! \n First URL: {0}, \n Second URL: {1}"\
+            .format(url_1, url_2)
+
