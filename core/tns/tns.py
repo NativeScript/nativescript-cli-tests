@@ -417,7 +417,8 @@ class Tns(object):
 
         if assert_success:
             assert "Project successfully built" in output
-            assert "ERROR" not in output
+            if "--env.uglify" not in attributes.keys():
+                assert "ERROR" not in output
             assert "malformed" not in output
 
             if log_trace:
@@ -643,7 +644,7 @@ class Tns(object):
                 pass
             else:
                 for item in not_existing_string_list:
-                    assert item not in log, "{0} found! It should not be in logs.".format(item)
+                    assert item not in log, "{0} found! It should not be in logs.\nLog:\n{1}".format(item, log)
         else:
             print "##### OUTPUT BEGIN #####\n"
             print log
