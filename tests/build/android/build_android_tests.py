@@ -19,6 +19,7 @@ from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_prepare_type import Prepare
 from core.tns.tns_verifications import TnsAsserts
+import filecmp
 
 
 class BuildAndroidTests(BaseClass):
@@ -77,6 +78,12 @@ class BuildAndroidTests(BaseClass):
         assert not File.pattern_exists(self.platforms_android, "*.plist")
         assert not File.pattern_exists(self.platforms_android, "*.android.js")
         assert not File.pattern_exists(self.platforms_android, "*.ios.js")
+
+        # Compares folders and files in platforms/android. Ignores files that changes part of their name in every build.
+        ignore_files = set(['build/android-profile/profile-*',
+                            'app/build/intermediates/pre-dexed/debug/classes*',
+                            '.*\.DS_Store'])
+        assert Folder.has_same_structure(self.platforms_android, 'data/platforms_android/android', ignore_files)
 
         # Configs are respected
         assert 'debug' in File.read(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, 'config.json'))
