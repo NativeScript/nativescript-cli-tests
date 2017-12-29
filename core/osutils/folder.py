@@ -90,37 +90,34 @@ class Folder(object):
                 raise
 
     @staticmethod
-    def has_same_structure(dir1, dir2, ignore_set=set()):
+    def has_same_structure(dir_path_1, dir_path_2, ignore_set=set()):
         """
         Compares two directories with option to exclude specific files.
+        Also can compare directory and set(). Instead of
         Print the diff files if any.
-        :param dir1: Path to dir1
-        :param dir2: Path to dir2
+        :param dir_path_1: Path to dir1
+        :param dir_path_2: Path to dir2
         :param ignore_set: Paths to files to exclude while comparing dir1 and dir2. Can use regular expressions.
         """
 
-        '''
-        
-        Get full path to be sure that the comparison is made at the right folders 
-        (e.g. can exist a lot of paltforms/android folders)
-        
-        '''
-        cwd = os.getcwd()
-        dir1_full_path = os.path.join(cwd, dir1)
-        dir2_full_path = os.path.join(cwd, dir2)
-
-        in_dir1, in_dir2 = Folder.__compare_directories(dir1_full_path, dir2_full_path, ignore_set)
+        in_dir1, in_dir2 = Folder.__compare_directories(dir_path_1, dir_path_2, ignore_set)
 
         if 0 == len(in_dir1) == len(in_dir2):
             return True
         else:
-            Folder.__print_directories_diff(in_dir1, in_dir2, dir1, dir2)
+            Folder.__print_directories_diff(in_dir1, in_dir2, dir_path_1, dir_path_2)
             return False
 
     @staticmethod
     def __compare_directories(dir1, dir2, ignore_set):
         files_set1 = Folder.__build_files_set(dir1, ignore_set)
-        files_set2 = Folder.__build_files_set(dir2, ignore_set)
+
+        # Compares directly set() without building it form directory
+        if type(dir2) is set:
+            files_set2 = dir2
+        else:
+            files_set2 = Folder.__build_files_set(dir2, ignore_set)
+
         return files_set1 - files_set2, files_set2 - files_set1
 
     @staticmethod

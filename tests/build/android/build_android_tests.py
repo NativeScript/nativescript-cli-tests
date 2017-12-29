@@ -19,7 +19,7 @@ from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_prepare_type import Prepare
 from core.tns.tns_verifications import TnsAsserts
-import filecmp
+from core.osutils.expected_platform_files import ExpectedPlatformsFiles
 
 
 class BuildAndroidTests(BaseClass):
@@ -83,7 +83,8 @@ class BuildAndroidTests(BaseClass):
         ignore_files = set(['build/android-profile/profile-*',
                             'app/build/intermediates/pre-dexed/debug/classes*',
                             '.*\.DS_Store'])
-        assert Folder.has_same_structure(self.platforms_android, 'data/platforms_android/android', ignore_files)
+        assert Folder.has_same_structure(os.path.join(Folder.get_current_folder(), self.platforms_android),
+                                         ExpectedPlatformsFiles.ANDROID, ignore_files)
 
         # Configs are respected
         assert 'debug' in File.read(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, 'config.json'))
