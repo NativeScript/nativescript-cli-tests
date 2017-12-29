@@ -79,7 +79,8 @@ class BuildAndroidTests(BaseClass):
         assert not File.pattern_exists(self.platforms_android, "*.android.js")
         assert not File.pattern_exists(self.platforms_android, "*.ios.js")
 
-        # Compares folders and files in platforms/android. Ignores files that changes part of their name in every build.
+        # Compares folders and files names in platforms/android.
+        # Ignores files that changes part of their name in every build.
         ignore_files = set(['build/android-profile/profile-*',
                             'app/build/intermediates/pre-dexed/debug/classes*',
                             '.*\.DS_Store'])

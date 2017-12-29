@@ -7,6 +7,7 @@ from core.settings.settings import ANDROID_RUNTIME_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
+from core.osutils.expected_platform_files import ExpectedPlatformsFiles
 
 
 class BuildAndroidNGTests(BaseClass):
@@ -23,6 +24,16 @@ class BuildAndroidNGTests(BaseClass):
 
     def test_001_build_android_ng_project(self):
         Tns.build_android(attributes={"--path": self.app_name})
+
+        # Compares folders and files names in platforms/android.
+        # Ignores files that changes part of their name in every build.
+
+        full_platforms_android = os.path.join(Folder.get_current_folder(), self.app_name, TnsAsserts.PLATFORM_ANDROID)
+        ignore_files = set(['build/android-profile/profile-*',
+                            'app/build/intermediates/pre-dexed/debug/classes*',
+                            '.*\.DS_Store'])
+
+        assert Folder.has_same_structure(full_platforms_android, ExpectedPlatformsFiles.ANDROID_NG, ignore_files)
 
     def test_200_build_android_ng_project_release(self):
         Tns.build_android(attributes={"--keyStorePath": ANDROID_KEYSTORE_PATH,
