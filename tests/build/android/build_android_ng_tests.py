@@ -29,9 +29,9 @@ class BuildAndroidNGTests(BaseClass):
         # Ignores files that changes part of their name in every build.
 
         full_platforms_android = os.path.join(Folder.get_current_folder(), self.app_name, TnsAsserts.PLATFORM_ANDROID)
-        ignore_files = set(['build/android-profile/profile-*',
-                            'app/build/intermediates/pre-dexed/debug/classes*',
-                            '.*\.DS_Store'])
+        ignore_files = set([os.path.join('build', 'android-profile', 'profile-*'),
+                            os.path.join('app', 'build', 'intermediates', 'pre-dexed', 'debug', 'classes*'),
+                            os.path.join('.*', '.DS_Store')])
 
         assert Folder.has_same_structure(full_platforms_android, ExpectedPlatformsFiles.ANDROID_NG, ignore_files)
 

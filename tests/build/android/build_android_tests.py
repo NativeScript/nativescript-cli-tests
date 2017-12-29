@@ -81,9 +81,9 @@ class BuildAndroidTests(BaseClass):
 
         # Compares folders and files names in platforms/android.
         # Ignores files that changes part of their name in every build.
-        ignore_files = set(['build/android-profile/profile-*',
-                            'app/build/intermediates/pre-dexed/debug/classes*',
-                            '.*\.DS_Store'])
+        ignore_files = set([os.path.join('build', 'android-profile', 'profile-*'),
+                            os.path.join('app', 'build', 'intermediates', 'pre-dexed', 'debug', 'classes*'),
+                            os.path.join('.*', '.DS_Store')])
         assert Folder.has_same_structure(os.path.join(Folder.get_current_folder(), self.platforms_android),
                                          ExpectedPlatformsFiles.ANDROID, ignore_files)
 
