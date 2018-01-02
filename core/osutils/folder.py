@@ -10,6 +10,7 @@ import re
 
 from core.osutils.command import run
 from core.osutils.process import Process
+from ast import literal_eval
 
 
 class Folder(object):
@@ -112,7 +113,7 @@ class Folder(object):
     def __compare_directories(dir1, dir2, ignore_set):
         files_set1 = Folder.__build_files_set(dir1, ignore_set)
 
-        # Compares directly set() without building it form directory
+        # Compares directly set() without building it from directory
         if type(dir2) is set:
             files_set2 = dir2
         else:
