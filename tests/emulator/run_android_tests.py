@@ -119,8 +119,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # Changes in App_Resources should rebuild native project
         res_path = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'AndroidManifest.xml')
         File.replace(res_path, '17', '19')
-        strings = ['Preparing project', 'Building project', 'Gradle build', 'Running full build',
-                   'Successfully synced application']
+        strings = ['Preparing project', 'Building project', 'Gradle build', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=60)
 
         # Verify app looks correct inside emulator
@@ -372,7 +371,6 @@ class RunAndroidEmulatorTests(BaseClass):
         assert 'Skipping prepare' in log, "Prepare NOT skipped when no files are changed and `tns run android --clean`"
         assert 'Building project...' in log, "Full rebuild not triggered when --clean is used"
         assert 'Gradle build' in log, "Full rebuild not triggered when --clean is used"
-        assert 'Running full build' in log, "Full rebuild not triggered when --clean is used"
 
         Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
 
@@ -382,7 +380,6 @@ class RunAndroidEmulatorTests(BaseClass):
                                           '--justlaunch': '', '--clean': ''})
         assert 'Skipping prepare' not in log, "Prepare skipped when change files and run `tns run android --clean`"
         assert 'Gradle build' in log, "Full rebuild not triggered when --clean is used"
-        assert 'Running full build' in log, "Full rebuild not triggered when --clean is used"
 
         Device.wait_for_text(device_id=EMULATOR_ID, text='52 taps left')
 
@@ -392,7 +389,6 @@ class RunAndroidEmulatorTests(BaseClass):
                                           '--justlaunch': '', '--clean': ''})
         assert 'Skipping prepare' not in log
         assert 'Gradle build' in log, "Full rebuild not triggered when --clean is used"
-        assert 'Running full build' in log, "Full rebuild not triggered when --clean is used"
 
         Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
 
