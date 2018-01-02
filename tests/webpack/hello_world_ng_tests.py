@@ -154,7 +154,7 @@ class WebPackHelloWorldNG(BaseClass):
         assert 450000 < bundle_js_size < 500000, "Actual bundle_js_size is " + str(bundle_js_size)
         assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
         assert 1300000 < vendor_js_size < 1350000, "Actual vendor_js_size is " + str(vendor_js_size)
-        assert 11000000 < apk_size < 11500000, "Actual app is " + str(apk_size)
+        assert 11500000 < apk_size < 12000000, "Actual app is " + str(apk_size)
 
         Helpers.run_android_via_adb(app_name=self.app_name, config="release", image=self.image_original)
 
@@ -172,7 +172,7 @@ class WebPackHelloWorldNG(BaseClass):
         starter_js_size = File.get_size(os.path.join(app_path, "app", "starter.js"))
         vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
         ipa_size = File.get_size(ipa_path)
-        assert 3500 < bundle_js_size < 3750, "Actual bundle_js_size is " + str(bundle_js_size)
+        assert 450000 < bundle_js_size < 500000, "Actual bundle_js_size is " + str(bundle_js_size)
         assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
         assert 685000 < vendor_js_size < 695000, "Actual vendor_js_size is " + str(vendor_js_size)
         assert 12500000 < ipa_size < 13000000, "Actual app is " + str(ipa_size)
@@ -221,7 +221,7 @@ class WebPackHelloWorldNG(BaseClass):
         assert 1300000 < bundle_js_size < 1350000, "Actual bundle_js_size is " + str(bundle_js_size)
         assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
         assert 3500000 < vendor_js_size < 3600000, "Actual vendor_js_size is " + str(vendor_js_size)
-        assert 12500000 < ipa_size < 13000000, "Actual app is " + str(ipa_size)
+        assert 13000000 < ipa_size < 13500000, "Actual app is " + str(ipa_size)
 
     def test_120_android_build_release_with_and_bundle_and_snapshot_and_uglify(self):
         # Workaround for https://github.com/NativeScript/nativescript-dev-webpack/issues/370
@@ -247,7 +247,7 @@ class WebPackHelloWorldNG(BaseClass):
         assert 450000 < bundle_js_size < 500000, "Actual bundle_js_size is " + str(bundle_js_size)
         assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
         assert vendor_js_size == 0, "Actual vendor_js_size is " + str(vendor_js_size)
-        assert 12500000 < apk_size < 13500000, "Actual app is " + str(apk_size)
+        assert 14000000 < apk_size < 15000000, "Actual app is " + str(apk_size)
 
         Helpers.run_android_via_adb(app_name=self.app_name, config="release", image=self.image_original)
 
@@ -265,8 +265,8 @@ class WebPackHelloWorldNG(BaseClass):
         starter_js_size = File.get_size(os.path.join(app_path, "app", "starter.js"))
         vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
         ipa_size = File.get_size(ipa_path)
-        assert 3500 < bundle_js_size < 3750
-        assert 30 < starter_js_size < 50
+        assert 450000 < bundle_js_size < 500000, "Actual bundle_js_size is " + str(bundle_js_size)
+        assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
         assert 680000 < vendor_js_size < 700000, "Actual vendor_js_size is " + str(vendor_js_size)
         assert 12500000 < ipa_size < 13000000, "Actual app is " + str(ipa_size)
 

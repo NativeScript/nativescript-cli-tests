@@ -11,7 +11,7 @@ from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import COMMAND_TIMEOUT, TNS_PATH, TAG, TEST_RUN_HOME, CURRENT_OS, \
-    SUT_FOLDER, PROVISIONING
+    SUT_FOLDER, PROVISIONING, BRANCH
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
@@ -178,7 +178,10 @@ class Tns(object):
             attributes_to_string = "".join("{0} {1}".format(k, v))
         attr = {}
         if not any(s in attributes_to_string for s in ("--ng", "--template", "--tsc")):
-            attr = {"--template": SUT_FOLDER + os.path.sep + "tns-template-hello-world.tgz"}
+            if BRANCH is "master":
+                attr = {"--template": SUT_FOLDER + os.path.sep + "tns-template-hello-world.tgz"}
+            else:
+                attr = {"--template": "tns-template-hello-world"}
         attr.update(attributes)
         if app_name is None:
             output = Tns.run_tns_command("create ", attributes=attr, log_trace=log_trace)
@@ -202,7 +205,10 @@ class Tns(object):
         :param update_modules: If true update modules (branch is respected).
         :return: output of `tns create command`
         """
-        attr = {"--template": SUT_FOLDER + os.path.sep + "tns-template-hello-world-ts.tgz"}
+        if BRANCH is "master":
+            attr = {"--template": SUT_FOLDER + os.path.sep + "tns-template-hello-world-ts.tgz"}
+        else:
+            attr = {"--template": "tns-template-hello-world-ts"}
         attributes.update(attr)
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,
@@ -218,7 +224,10 @@ class Tns(object):
             template = "tns-template-hello-world-ng@" + template_version
             attr = {"--template": template}
         else:
-            attr = {"--template": SUT_FOLDER + os.path.sep + "tns-template-hello-world-ng.tgz"}
+            if BRANCH is "master":
+                attr = {"--template": SUT_FOLDER + os.path.sep + "tns-template-hello-world-ng.tgz"}
+            else:
+                attr = {"--template": "tns-template-hello-world-ng"}
         attributes.update(attr)
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,

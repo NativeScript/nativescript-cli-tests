@@ -18,7 +18,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
     ANDROID_PATH, IOS_PATH, SUT_FOLDER, CLI_PATH, ANDROID_RUNTIME_PATH, \
     IOS_RUNTIME_PATH, TNS_MODULES_PATH, TNS_MODULES_WIDGETS_PATH, IOS_INSPECTOR_PATH, TNS_PLATFORM_DECLARATIONS_PATH, \
-    BRANCH, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK, TEST_RUN_HOME
+    SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.xcode.xcode import Xcode
@@ -71,13 +71,13 @@ def get_repos():
     Clone template-hello-world repositories
     """
     Git.clone_repo(repo_url='git@github.com:NativeScript/template-hello-world.git',
-                   local_folder=os.path.join(SUT_FOLDER, 'template-hello-world'), branch=BRANCH)
+                   local_folder=os.path.join(SUT_FOLDER, 'template-hello-world'))
     Git.clone_repo(repo_url='git@github.com:NativeScript/template-hello-world-ts.git',
-                   local_folder=os.path.join(SUT_FOLDER, 'template-hello-world-ts'), branch=BRANCH)
+                   local_folder=os.path.join(SUT_FOLDER, 'template-hello-world-ts'))
 
     # `nativescript-angular` do not longer use release branch
     Git.clone_repo(repo_url='git@github.com:NativeScript/template-hello-world-ng.git',
-                   local_folder=os.path.join(SUT_FOLDER, 'template-hello-world-ng'), branch='master')
+                   local_folder=os.path.join(SUT_FOLDER, 'template-hello-world-ng'))
 
     Npm.pack(folder=os.path.join(SUT_FOLDER, 'template-hello-world'),
              output_file=os.path.join(SUT_FOLDER, 'tns-template-hello-world.tgz'))
