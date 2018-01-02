@@ -70,6 +70,7 @@ class UnittestsSimulator(BaseClass):
         assert "Disconnectedundefined" not in output
 
     def test_201_test_init_mocha_js_stacktrace(self):
+        # https://github.com/NativeScript/ios-runtime/issues/565
         Tns.create_app(app_name=self.app_name)
         Npm.install(package='mocha', folder=self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
