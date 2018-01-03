@@ -160,7 +160,7 @@ class WebPackHelloWorldTS(BaseClass):
         main_page_xml_size = File.get_size(os.path.join(base_path, "main-page.xml"))
         apk_size = File.get_size(Helpers.get_apk_path(app_name=self.app_name, config="release"))
 
-        assert 3500 < bundle_js_size < 3750, "Actual bundle_js_size is " + str(bundle_js_size)
+        assert 4000 < bundle_js_size < 5000, "Actual bundle_js_size is " + str(bundle_js_size)
         assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
         assert 670000 < vendor_js_size < 680000, "Actual vendor_js_size is " + str(vendor_js_size)
         assert 1600 < main_page_xml_size < 2000, "Actual main_page_xml_size is " + main_page_xml_size
@@ -183,7 +183,7 @@ class WebPackHelloWorldTS(BaseClass):
         vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
         main_page_xml_size = File.get_size(os.path.join(app_path, "app", "main-page.xml"))
         ipa_size = File.get_size(ipa_path)
-        assert 3500 < bundle_js_size < 3750, "Actual bundle_js_size is " + str(bundle_js_size)
+        assert 4000 < bundle_js_size < 5000, "Actual bundle_js_size is " + str(bundle_js_size)
         assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
         assert 685000 < vendor_js_size < 695000, "Actual vendor_js_size is " + str(vendor_js_size)
         assert 1600 < main_page_xml_size < 2000, "Actual main_page_xml_size is " + main_page_xml_size
@@ -261,7 +261,7 @@ class WebPackHelloWorldTS(BaseClass):
         main_page_xml_size = File.get_size(os.path.join(base_path, "main-page.xml"))
         apk_size = File.get_size(Helpers.get_apk_path(app_name=self.app_name, config="release"))
 
-        assert 3500 < bundle_js_size < 3750
+        assert 4000 < bundle_js_size < 5000, "Actual bundle_js_size is " + str(bundle_js_size)
         assert 30 < starter_js_size < 50
         assert vendor_js_size == 0
         assert 1600 < main_page_xml_size < 2000
@@ -285,7 +285,7 @@ class WebPackHelloWorldTS(BaseClass):
         vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
         main_page_xml_size = File.get_size(os.path.join(app_path, "app", "main-page.xml"))
         ipa_size = File.get_size(ipa_path)
-        assert 3500 < bundle_js_size < 3750
+        assert 4000 < bundle_js_size < 5000, "Actual bundle_js_size is " + str(bundle_js_size)
         assert 30 < starter_js_size < 50
         assert 680000 < vendor_js_size < 700000, "Actual vendor_js_size is " + str(vendor_js_size)
         assert 1600 < main_page_xml_size < 2000
