@@ -20,7 +20,7 @@ class Chrome(object):
             print "Open Google Chrome at {0}".format(url)
             Process.wait_until_running(proc_name="Google Chrome", timeout=30)
         elif CURRENT_OS is OSType.LINUX:
-            run(command="google-chrome", log_level=CommandLogLevel.SILENT)
+            run(command="google-chrome", log_level=CommandLogLevel.SILENT, wait=False)
             Process.wait_until_running(proc_name="chrome", timeout=30)
 
     @staticmethod
