@@ -392,7 +392,8 @@ class BuildAndroidTests(BaseClass):
         Folder.move(copy, paste)
 
         Tns.build_android(attributes={"--path": self.app_name})
-        bindings_path = os.path.join(self.app_name, 'platforms', 'android', 'build-tools', 'sbg-bindings.txt')
+        bindings_path = os.path.join(self.app_name, 'platforms', 'android', 'build-tools',
+                                     'android-static-binding-generator', 'bindings.txt')
         binding = os.stat(bindings_path)
         assert binding.st_size > 15000
         print binding.st_size
