@@ -24,7 +24,7 @@ class WebPackHelloWorldNG(BaseClass):
     image_change = 'hello-world-ng-js-css-xml'
 
     wp_run = ['Webpack compilation complete', 'Successfully installed']
-    wp_errors = ['ERROR', 'Module not found', 'Error']
+    wp_errors = ['ERROR', 'Module not found']
 
     html_change = ['app/item/items.component.html', '[text]="item.name"', '[text]="item.id"']
     ts_change = ['app/item/item.service.ts', 'Ter Stegen', 'Stegen Ter']
@@ -55,7 +55,7 @@ class WebPackHelloWorldNG(BaseClass):
     def test_000_build_without_bundle(self):
         Tns.build_android(attributes={"--path": self.app_name})
         apk_size = File.get_size(Helpers.get_apk_path(app_name=self.app_name, config="debug"))
-        assert 26500000 < apk_size < 27000000, "Actual apk size is " + str(apk_size)
+        assert 26000000 < apk_size < 27000000, "Actual apk size is " + str(apk_size)
         Helpers.run_android_via_adb(app_name=self.app_name, config="debug", image=self.image_original)
 
         if CURRENT_OS is OSType.OSX:
@@ -65,7 +65,7 @@ class WebPackHelloWorldNG(BaseClass):
             app_path = Helpers.get_app_path(app_name=self.app_name).replace("emulator", "device")
             ipa_path = app_path.replace(".app", ".ipa")
             ipa_size = File.get_size(ipa_path)
-            assert 26500000 < ipa_size < 27000000, "Actual app is " + str(ipa_size)
+            assert 26000000 < ipa_size < 27000000, "Actual app is " + str(ipa_size)
 
     def test_001_android_build_with_bundle(self):
         Tns.build_android(attributes={"--path": self.app_name, "--bundle": ""})
@@ -172,7 +172,7 @@ class WebPackHelloWorldNG(BaseClass):
         starter_js_size = File.get_size(os.path.join(app_path, "app", "starter.js"))
         vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
         ipa_size = File.get_size(ipa_path)
-        assert 450000 < bundle_js_size < 500000, "Actual bundle_js_size is " + str(bundle_js_size)
+        assert 400000 < bundle_js_size < 500000, "Actual bundle_js_size is " + str(bundle_js_size)
         assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
         assert 685000 < vendor_js_size < 695000, "Actual vendor_js_size is " + str(vendor_js_size)
         assert 12500000 < ipa_size < 13000000, "Actual app is " + str(ipa_size)
@@ -265,7 +265,7 @@ class WebPackHelloWorldNG(BaseClass):
         starter_js_size = File.get_size(os.path.join(app_path, "app", "starter.js"))
         vendor_js_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
         ipa_size = File.get_size(ipa_path)
-        assert 450000 < bundle_js_size < 500000, "Actual bundle_js_size is " + str(bundle_js_size)
+        assert 400000 < bundle_js_size < 500000, "Actual bundle_js_size is " + str(bundle_js_size)
         assert 30 < starter_js_size < 50, "Actual starter_js_size is " + str(starter_js_size)
         assert 680000 < vendor_js_size < 700000, "Actual vendor_js_size is " + str(vendor_js_size)
         assert 12500000 < ipa_size < 13000000, "Actual app is " + str(ipa_size)
