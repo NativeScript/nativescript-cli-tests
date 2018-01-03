@@ -35,14 +35,16 @@ class WebPackHelloWorldNG(BaseClass):
         BaseClass.setUpClass(cls.__name__)
         Emulator.stop()
         Emulator.ensure_available()
-        Simulator.stop()
-        cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
         Tns.create_app_ng(cls.app_name, update_modules=True)
         Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev', folder=cls.app_name)
         Npm.install(package="nativescript-dev-typescript@next", option='--save-dev', folder=cls.app_name)
         Npm.install(package="nativescript-dev-webpack@next", option='--save-dev', folder=cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
-        Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
+
+        if CURRENT_OS == OSType.OSX:
+            Simulator.stop()
+            cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
+            Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
 
     def setUp(self):
         Tns.kill()
