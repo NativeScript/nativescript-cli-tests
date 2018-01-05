@@ -44,6 +44,11 @@ class WebPackHelloWorldJS(BaseClass):
     def setUp(self):
         Tns.kill()
         Helpers.emulator_cleanup(app_name=self.app_name)
+        BaseClass.tearDown(self)
+
+    def tearDown(self):
+        BaseClass.tearDown(self)
+        Tns.kill()
 
     @classmethod
     def tearDownClass(cls):

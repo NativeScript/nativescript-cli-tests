@@ -25,6 +25,23 @@ class BaseClass(unittest.TestCase):
     failures = 0
 
     @classmethod
+    def __copy_images(cls, artifacts_folder):
+        """
+        Archive test app (without platforms and node_modules)
+        :param artifacts_folder: Base folder where artifacts from failed tests are stored.
+        """
+        src = os.path.join(TEST_RUN_HOME, 'out', 'images')
+        dest = os.path.join(artifacts_folder, 'artifacts')
+        if os.path.isdir(src):
+            try:
+                shutil.copytree(src, dest)
+                Folder.cleanup(src)
+            except:
+                print "Failed to backup images and logs."
+        else:
+            print "No images and logs data."
+
+    @classmethod
     def __copy_project_folder(cls, artifacts_folder):
         """
         Archive test app (without platforms and node_modules)
@@ -96,6 +113,7 @@ class BaseClass(unittest.TestCase):
         print "Test Method: {0}".format(self._testMethodName)
         print "Start Time:  {0}".format(time.strftime("%X"))
         print ""
+        Folder.cleanup(os.path.join(TEST_RUN_HOME, 'out', 'images'))
 
     def tearDown(self):
         # Logic executed only on test failure
@@ -112,6 +130,7 @@ class BaseClass(unittest.TestCase):
                 Folder.create(artifacts_folder)
 
             # Collect artifacts on test failure
+            self.__copy_images(artifacts_folder=artifacts_folder)
             self.__copy_project_folder(artifacts_folder=artifacts_folder)
             self.__save_host_screen(artifacts_folder=artifacts_folder, test_method_name=test_name)
 
