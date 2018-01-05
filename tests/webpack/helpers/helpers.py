@@ -74,11 +74,11 @@ class Helpers(object):
         y = int(actual)
         if actual >= 0:
             diff = abs(x - y) * 1.00
-            assert diff < x * tolerance * 0.01, error_message + str(actual)
+            assert diff <= x * tolerance * 0.01, error_message + str(actual)
 
     @staticmethod
-    def assert_sizes(expected_sizes, actual_sizes, tolerance=5):
-        print "Config: " + str(expected_sizes[1])
+    def assert_sizes(expected_sizes, actual_sizes, tolerance=1):
+        print "Config: " + str(expected_sizes[0])
         print "Actual bundle.js size: " + str(actual_sizes[0])
         print "Actual vendor.js size: " + str(actual_sizes[1])
         print "Actual app size: " + str(actual_sizes[2])
