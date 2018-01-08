@@ -507,6 +507,33 @@ class RunAndroidEmulatorTests(BaseClass):
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
 
+    def test_360_tns_run_android_with_jar_file_in_plugin(self):
+        """
+        App should not crash when reference .jar file in some plugin
+        https://github.com/NativeScript/android-runtime/pull/905
+        """
+
+        # Add .jar file in plugin and modify the app to reference it
+        custom_jar_file = os.path.join('data', 'issues', 'android-runtime-pr-905', 'customLib.jar')
+        modules_widgets = os.path.join(self.app_name, 'node_modules', 'tns-core-modules-widgets', 'platforms', 'android')
+        File.copy(src=custom_jar_file, dest=modules_widgets)
+
+        source = os.path.join('data', 'issues', 'android-runtime-pr-905', 'app.js')
+        target = os.path.join(self.app_name, 'app', 'app.js')
+        File.copy(src=source, dest=target)
+
+        # `tns run android` and wait until app is deployed
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
+
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
     @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-cli/issues/2825")
     def test_390_tns_run_android_should_warn_if_package_ids_do_not_match(self):
         """
