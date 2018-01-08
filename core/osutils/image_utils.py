@@ -32,7 +32,7 @@ class ImageUtils(object):
                     expected_r = expected_pixel[0]
                     expected_g = expected_pixel[1]
                     expected_b = expected_pixel[2]
-                    if abs(actual_r + actual_g + actual_b - expected_r - expected_g - expected_b) > 15:
+                    if abs(actual_r + actual_g + actual_b - expected_r - expected_g - expected_b) > 30:
                         diff_pixels += 1
                         diff_image.load()[x, y] = (255, 0, 0)
 

@@ -11,6 +11,9 @@ from core.tns.tns_verifications import TnsAsserts
 
 class Helpers(object):
 
+    wp_run = ['Webpack compilation complete', 'Successfully installed']
+    wp_errors = ['Module not found', 'Snapshot generation failed']
+
     @staticmethod
     def get_apk_path(app_name, config):
         return os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, app_name + "-release.apk")
