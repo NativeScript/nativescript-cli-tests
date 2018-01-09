@@ -66,6 +66,24 @@ class Process(object):
         return result
 
     @staticmethod
+    def kill_by_commandline(cmdline):
+        for proc in psutil.process_iter():
+            cmd = ""
+            try:
+                name = str(proc.name())
+                cmd = str(proc.cmdline())
+            except:
+                continue
+            if (cmdline in cmd):
+                try:
+                    proc.kill()
+                    print "Process {0} has been killed.".format(cmdline)
+                    result = True
+                except psutil.NoSuchProcess:
+                    continue
+        return result
+
+    @staticmethod
     def kill_gradle():
         if CURRENT_OS is OSType.WINDOWS:
             print "Kill gradle daemon!"

@@ -82,7 +82,7 @@ def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=Comm
     # kill thread if it exceed the timeout
     if thread.is_alive():
         if wait:
-            Process.kill('node')
+            Process.kill_by_commandline(command.partition(' ')[0].rpartition(os.sep)[-1])
             thread.join()
             raise NameError('Process has timed out at ' + time.strftime("%X"))
 

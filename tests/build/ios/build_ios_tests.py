@@ -2,7 +2,6 @@
 Test for building projects with iOS platform
 """
 import os
-import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.simulator import Simulator
@@ -73,12 +72,11 @@ class BuildiOSTests(BaseClass):
 
         # Verify ipa has both armv7 and arm64 archs
         run("mv " + self.app_name + "/platforms/ios/build/device/TestApp.ipa TestApp-ipa.tgz")
-        run("tar -xvf TestApp-ipa.tgz")
+        run("unzip -o TestApp-ipa.tgz")
         output = run("lipo -info Payload/TestApp.app/TestApp")
-        assert "armv7" in output
-        assert "arm64" in output
+        Folder.cleanup("Payload")
+        assert "Architectures in the fat file: Payload/TestApp.app/TestApp are: armv7 arm64" in output
 
-    @unittest.skip("Skip due to temporary issues with distribution certificates")
     def test_190_build_ios_distribution_provisions(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
