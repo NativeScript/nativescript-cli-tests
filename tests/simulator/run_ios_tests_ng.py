@@ -64,10 +64,15 @@ class RunIOSSimulatorTestsNG(BaseClass):
         console_log_strings = ['CONSOLE LOG', 'Home page loaded!', 'Application loaded!']
         Tns.wait_for_log(log_file=log, string_list=console_log_strings)
 
+    def test_280_tns_run_ios_console_time(self):
         # Replace app.component.ts to use console.time() and console.timeEnd()
         source = os.path.join('data', 'issues', 'ios-runtime-843', 'app.component.ts')
         target = os.path.join(self.app_name, 'app', 'app.component.ts')
         File.copy(src=source, dest=target)
+
+        # `tns run ios` and wait until app is deployed
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False,
+                          assert_success = False)
 
         # Verify sync and initial state of the app
         strings = ['Successfully synced application', self.SIMULATOR_ID]
