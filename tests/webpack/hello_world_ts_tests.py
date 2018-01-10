@@ -135,7 +135,7 @@ class WebPackHelloWorldTS(BaseClass):
                                           "--bundle": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=60)
+                         timeout=90)
         Helpers.android_screen_match(app_name=self.app_name, image=self.image_change)
         Tns.kill()
 
@@ -171,7 +171,7 @@ class WebPackHelloWorldTS(BaseClass):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': ''}, wait=False,
                           assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=60)
+                         timeout=90)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change)
         Tns.kill()
 
@@ -209,7 +209,7 @@ class WebPackHelloWorldTS(BaseClass):
                                           "--env.uglify": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=60)
+                         timeout=90)
         Helpers.android_screen_match(app_name=self.app_name, image=self.image_change)
         Tns.kill()
 
@@ -246,7 +246,7 @@ class WebPackHelloWorldTS(BaseClass):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': ''},
                           wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=60)
+                         timeout=90)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change)
         Tns.kill()
 
@@ -284,7 +284,7 @@ class WebPackHelloWorldTS(BaseClass):
                                           "--env.snapshot": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=60)
+                         timeout=90)
         Helpers.android_screen_match(app_name=self.app_name, image=self.image_change)
         Tns.kill()
 
@@ -321,7 +321,7 @@ class WebPackHelloWorldTS(BaseClass):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.snapshot': ''},
                           wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=60)
+                         timeout=90)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change)
         Tns.kill()
 
@@ -361,7 +361,7 @@ class WebPackHelloWorldTS(BaseClass):
                                           "--env.uglify": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=60)
+                         timeout=90)
         Helpers.android_screen_match(app_name=self.app_name, image=self.image_change)
         Tns.kill()
 
@@ -399,7 +399,7 @@ class WebPackHelloWorldTS(BaseClass):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.snapshot': '',
                                       '--env.uglify': ''}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=60)
+                         timeout=90)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change)
         Tns.kill()
 
