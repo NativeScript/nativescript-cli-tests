@@ -80,14 +80,14 @@ class Helpers(object):
             assert diff <= x * tolerance * 0.01, error_message + str(actual)
 
     @staticmethod
-    def assert_sizes(expected_sizes, actual_sizes, tolerance=1):
+    def assert_sizes(expected_sizes, actual_sizes):
         print "Config: " + str(expected_sizes[0])
         print "Actual bundle.js size: " + str(actual_sizes[0])
         print "Actual vendor.js size: " + str(actual_sizes[1])
         print "Actual app size: " + str(actual_sizes[2])
-        Helpers.assert_size(expected_sizes[1], actual_sizes[0], tolerance, "Actual bundle.js size:")
-        Helpers.assert_size(expected_sizes[2], actual_sizes[1], tolerance, "Actual vendor.js size:")
-        Helpers.assert_size(expected_sizes[3], actual_sizes[2], tolerance, "Actual app size:")
+        Helpers.assert_size(expected_sizes[1], actual_sizes[0], 10, "Actual bundle.js size:")
+        Helpers.assert_size(expected_sizes[2], actual_sizes[1], 10, "Actual vendor.js size:")
+        Helpers.assert_size(expected_sizes[3], actual_sizes[2], 5, "Actual app size:")
 
     @staticmethod
     def verify_size(app_name, config):
