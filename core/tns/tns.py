@@ -400,7 +400,7 @@ class Tns(object):
                     + modules_version + os.linesep + "package.json: " + os.linesep + modules_json_in_platforms
             else:
                 assert "Webpack compilation complete" in output
-                assert "after-prepare/nativescript-dev-webpack.js" in output
+                assert "after-prepare" + os.sep + "nativescript-dev-webpack.js" in output
                 assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "bundle.js"))
                 assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "package.json"))
                 assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "starter.js"))
