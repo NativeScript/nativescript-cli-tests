@@ -302,41 +302,6 @@ class WebPackHelloWorldJS(BaseClass):
         Helpers.android_screen_match(app_name=self.app_name, image=self.image_original)
         Tns.kill()
 
-    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
-    def test_220_run_ios_with_bundle_snapshot_sync_changes(self):
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.snapshot': ''},
-                          wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
-        Tns.kill()
-
-        # Change JS, XML and CSS
-        ReplaceHelper.replace(self.app_name, self.js_change)
-        ReplaceHelper.replace(self.app_name, self.xml_change)
-        ReplaceHelper.replace(self.app_name, self.css_change)
-
-        # Verify application looks correct
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.snapshot': ''},
-                          wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=60)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change)
-        Tns.kill()
-
-        # Revert changes
-        ReplaceHelper.rollback(self.app_name, self.js_change)
-        ReplaceHelper.rollback(self.app_name, self.xml_change)
-        ReplaceHelper.rollback(self.app_name, self.css_change)
-
-        # Verify application looks correct
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.snapshot': ''},
-                          wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
-        Tns.kill()
-
     def test_230_run_android_with_bundle_snapshot_and_uglify_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
@@ -378,41 +343,6 @@ class WebPackHelloWorldJS(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
         Helpers.android_screen_match(app_name=self.app_name, image=self.image_original)
-        Tns.kill()
-
-    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
-    def test_230_run_ios_with_bundle_snapshot_and_uglify_sync_changes(self):
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.snapshot': '',
-                                      '--env.uglify': ''}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
-        Tns.kill()
-
-        # Change JS, XML and CSS
-        ReplaceHelper.replace(self.app_name, self.js_change)
-        ReplaceHelper.replace(self.app_name, self.xml_change)
-        ReplaceHelper.replace(self.app_name, self.css_change)
-
-        # Verify application looks correct
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.snapshot': '',
-                                      '--env.uglify': ''}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=60)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change)
-        Tns.kill()
-
-        # Revert changes
-        ReplaceHelper.rollback(self.app_name, self.js_change)
-        ReplaceHelper.rollback(self.app_name, self.xml_change)
-        ReplaceHelper.rollback(self.app_name, self.css_change)
-
-        # Verify application looks correct
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.snapshot': '',
-                                      '--env.uglify': ''}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
         Tns.kill()
 
     def test_400_build_with_bundle_without_plugin(self):

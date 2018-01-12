@@ -69,6 +69,7 @@ class UnittestsSimulator(BaseClass):
 
         assert "Disconnectedundefined" not in output
 
+    @timed(360)
     def test_201_test_init_mocha_js_stacktrace(self):
         # https://github.com/NativeScript/ios-runtime/issues/565
         Tns.create_app(app_name=self.app_name)
