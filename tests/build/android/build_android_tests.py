@@ -251,66 +251,6 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.debug_apk)
         File.remove(self.debug_apk)
 
-    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "AppBuilder does not use Windows machines")
-    def test_330_build_like_appbuilder(self):
-        Folder.cleanup("temp")
-        Folder.copy("data/apps/appbuilderProject", "temp/appbuilderProject")
-        android_version = run("node -e \"console.log(require('./sut/tns-android/package/package.json').version)\"")
-
-        # Init
-        Folder.navigate_to("temp/appbuilderProject")
-        output = Tns.run_tns_command("init", attributes={"--appid": "com.telerik.appbuilderProject",
-                                                         "--frameworkName": "tns-android",
-                                                         "--frameworkVersion": android_version,
-                                                         "--path": "./appbuilderProject",
-                                                         "--profile-dir": ".",
-                                                         "--no-hooks": "",
-                                                         "--ignoreScripts": ""
-                                                         },
-                                     tns_path="../../node_modules/.bin/tns")
-        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert successfully_initialized in output
-
-        # Update modules
-        Folder.navigate_to("temp/appbuilderProject/appbuilderProject")
-        uninstall_command = "npm uninstall tns-core-modules --save"
-        run(uninstall_command)
-        output = Tns.run_tns_command("plugin add tns-core-modules", tns_path="../../../node_modules/.bin/tns")
-        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert installed_plugin.format(tns_core_modules) in output
-
-        # Platform Add
-        Folder.navigate_to("temp/appbuilderProject/appbuilderProject")
-
-        output = Tns.run_tns_command("platform add android",
-                                     attributes={"--frameworkPath": "../../../sut/tns-android/package",
-                                                 "--profile-dir": "../",
-                                                 "--no-hooks": "",
-                                                 "--ignore-scripts": ""
-                                                 },
-                                     tns_path="../../../node_modules/.bin/tns")
-        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert successfully_created in output
-
-        # Build
-        Folder.navigate_to("temp/appbuilderProject/appbuilderProject")
-        output = Tns.run_tns_command("build android", attributes={"--keyStorePath": ANDROID_KEYSTORE_PATH,
-                                                                  "--keyStorePassword": ANDROID_KEYSTORE_PASS,
-                                                                  "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
-                                                                  "--keyStoreAliasPassword":
-                                                                      ANDROID_KEYSTORE_ALIAS_PASS,
-                                                                  "--sdk": "22",
-                                                                  "--release": "",
-                                                                  "--copy-to": "../appbuilderProject-debug.apk",
-                                                                  "--profile-dir": "../",
-                                                                  "--no-hooks": "",
-                                                                  "--ignore-scripts": ""
-                                                                  },
-                                     tns_path="../../../node_modules/.bin/tns")
-        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-        assert successfully_built in output
-        assert File.exists("temp/appbuilderProject/appbuilderProject-debug.apk")
-
     def test_390_build_project_with_foursquare_android_oauth(self):
         # This is required when build with different SDK
         Folder.cleanup(self.app_name)
