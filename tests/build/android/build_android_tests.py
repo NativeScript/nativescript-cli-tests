@@ -132,7 +132,6 @@ class BuildAndroidTests(BaseClass):
         TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.INCREMENTAL)
         Tns.build_android(attributes={"--path": self.app_name})
 
-    @unittest.skip("Skip this test until we release tns-android@3.4.0")
     def test_202_build_android_with_log_trace_and_platform_not_added_or_empty(self):
         """'tns build android' with log trace options should output more logs."""
         Tns.create_app(self.app_no_platform)
