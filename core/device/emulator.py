@@ -9,8 +9,9 @@ from core.device.helpers.adb import Adb
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
+from core.osutils.os_type import OSType
 from core.osutils.process import Process
-from core.settings.settings import EMULATOR_NAME, EMULATOR_PORT, EMULATOR_ID
+from core.settings.settings import EMULATOR_NAME, EMULATOR_PORT, EMULATOR_ID, CURRENT_OS
 
 EMULATOR_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'emulator')
 
@@ -61,7 +62,10 @@ class Emulator(object):
         :param device_id: Device id.
         :return: True if running, False if not running.
         """
-        command = "shell dumpsys window windows | grep -E 'mFocusedApp'"
+        if CURRENT_OS == OSType.WINDOWS:
+            command = "shell dumpsys window windows | findstr mFocusedApp"
+        else:
+            command = "shell dumpsys window windows | grep -E 'mFocusedApp'"
         output = Adb.run(command=command, device_id=device_id, log_level=CommandLogLevel.SILENT)
         if 'ActivityRecord' in output:
             return True
