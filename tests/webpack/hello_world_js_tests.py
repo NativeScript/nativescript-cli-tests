@@ -88,6 +88,7 @@ class WebPackHelloWorldJS(BaseClass):
 
         Helpers.verify_size(app_name=self.app_name, config="js-ios-bundle-uglify")
 
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Windows can't build with snapshot.")
     def test_110_android_build_release_with_bundle_and_snapshot(self):
         Tns.build_android(attributes={"--path": self.app_name,
                                       "--keyStorePath": ANDROID_KEYSTORE_PATH,
@@ -101,6 +102,7 @@ class WebPackHelloWorldJS(BaseClass):
         Helpers.verify_size(app_name=self.app_name, config="js-android-bundle-snapshot")
         Helpers.run_android_via_adb(app_name=self.app_name, config="release", image=self.image_original)
 
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Windows can't build with snapshot.")
     def test_120_android_build_release_with_bundle_and_snapshot_and_uglify(self):
         Tns.build_android(attributes={"--path": self.app_name,
                                       "--keyStorePath": ANDROID_KEYSTORE_PATH,
