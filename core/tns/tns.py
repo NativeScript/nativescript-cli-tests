@@ -78,7 +78,10 @@ class Tns(object):
         """
         Kill all running `tns` processes
         """
-        Process.kill(proc_name='node', proc_cmdline='tns')  # Stop 'node' to kill the livesync after each test method.
+        Process.kill(proc_name='node', proc_cmdline='tns')
+        time.sleep(1)
+        Process.kill_by_commandline(proc_cmdline='tns')
+        time.sleep(1)
 
     @staticmethod
     def get_app_id(app_name):
