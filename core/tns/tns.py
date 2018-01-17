@@ -80,7 +80,7 @@ class Tns(object):
         """
         Process.kill(proc_name='node', proc_cmdline='tns')
         time.sleep(1)
-        Process.kill_by_commandline(proc_cmdline='tns')
+        Process.kill_by_commandline('tns')
         time.sleep(1)
 
     @staticmethod
