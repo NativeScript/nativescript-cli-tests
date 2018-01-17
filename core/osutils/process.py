@@ -67,6 +67,7 @@ class Process(object):
 
     @staticmethod
     def kill_by_commandline(cmdline):
+        result = False
         for proc in psutil.process_iter():
             cmd = ""
             try:
