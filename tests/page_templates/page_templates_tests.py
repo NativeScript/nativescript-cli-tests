@@ -44,6 +44,8 @@ class PageTemplatesTests(BaseClass):
         Tns.create_app(app_name="blank-js", attributes={"--template": base_url + "template-blank"})
         Tns.create_app(app_name="blank-ts", attributes={"--template": base_url + "template-blank-ts"})
         Tns.create_app(app_name="blank-ng", attributes={"--template": base_url + "template-blank-ng"})
+        Tns.update_angular(path="blank-ng")
+
         Tns.platform_add_ios(attributes={"--path": "blank-js", "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.platform_add_ios(attributes={"--path": "blank-ts", "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.platform_add_ios(attributes={"--path": "blank-ng", "--frameworkPath": IOS_RUNTIME_PATH})

@@ -78,7 +78,10 @@ class Tns(object):
         """
         Kill all running `tns` processes
         """
-        Process.kill(proc_name='node', proc_cmdline='tns')  # Stop 'node' to kill the livesync after each test method.
+        Process.kill(proc_name='node', proc_cmdline='tns')
+        time.sleep(1)
+        Process.kill_by_commandline('tns')
+        time.sleep(1)
 
     @staticmethod
     def get_app_id(app_name):
@@ -400,7 +403,7 @@ class Tns(object):
                     + modules_version + os.linesep + "package.json: " + os.linesep + modules_json_in_platforms
             else:
                 assert "Webpack compilation complete" in output
-                assert "after-prepare/nativescript-dev-webpack.js" in output
+                assert "after-prepare" + os.sep + "nativescript-dev-webpack.js" in output
                 assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "bundle.js"))
                 assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "package.json"))
                 assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "starter.js"))

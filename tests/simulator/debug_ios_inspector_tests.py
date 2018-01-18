@@ -4,8 +4,6 @@ Tests for `tns debug ios` executed on iOS Simulator.
 import os
 import time
 
-from flaky import flaky
-
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -119,7 +117,6 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--start': '', '--inspector': ''})
         self.__verify_debugger_attach(log=log)
 
-    @flaky(max_runs=2)
     def test_100_debug_ios_simulator_with_livesync(self):
         """
         `tns debug ios` should be able to run with livesync

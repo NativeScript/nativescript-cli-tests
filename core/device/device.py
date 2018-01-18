@@ -121,6 +121,14 @@ class Device(object):
                 print "Diff image will be saved at " + diff_image_final_path
                 File.copy(src=expected_image_original_path, dest=expected_image_path)
                 comparison_result[2].save(diff_image_final_path)
+                # Get logs (from android devices).
+                if device_type == DeviceType.EMULATOR or device_type == DeviceType.ANDROID:
+                    log_path = diff_image_final_path.replace('_diff.png', '.log')
+                    print "Console logs will be saved at " + log_path
+                    log = Adb.get_logcat(device_id=device_id)
+                    if len(log) < 10000:
+                        print log
+                    File.write(file_path=log_path, text=log)
             assert are_equal, "Current image on {0} does not match expected image {1}. Diff is {2}%". \
                 format(device_name, expected_image, diff)
         else:
