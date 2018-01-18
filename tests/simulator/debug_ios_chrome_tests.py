@@ -164,8 +164,40 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_js_css_xml')
 
+    def test_101_debug_ios_simulator_start_chrome_second_attach(self):
+        # https: // github.com / NativeScript / ios - runtime / issues / 832
+        """
+        When trying to debug application with the --start option the first debug session is OK.
+        If I start the debugger again without restarting the application on the device - the runtime crashes.
+        """
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', "--justlaunch": ""})
+        self.__verify_debugger_start(log)
+        log = Tns.debug_ios(
+            attributes={'--path': self.app_name, '--start': '', '--chrome': ''})
+        self.__verify_debugger_start(log)
+
+        # Get Chrome URL and open it
+        url = run(command="grep chrome-devtools " + log)
+        Chrome.start(url)
+
+        # Verify app starts and stops on the first line of code
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
+        Chrome.stop()
+
+        log = Tns.debug_ios(
+            attributes={'--path': self.app_name, '--start': '', '--chrome': ''})
+        self.__verify_debugger_start(log)
+
+        # Get Chrome URL and open it
+        url = run(command="grep chrome-devtools " + log)
+        Chrome.start(url)
+
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
         # Get Chrome URL and check it is not changed - https://github.com/NativeScript/nativescript-cli/issues/3183
         url_2 = run(command="grep -a chrome-devtools " + log)
         assert url_1 == url_2, "Chrome DevTools URLs are different! \n First URL: {0}, \n Second URL: {1}"\
             .format(url_1, url_2)
-
