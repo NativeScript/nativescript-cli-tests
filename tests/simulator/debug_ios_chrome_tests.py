@@ -144,11 +144,8 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         When trying to debug application with the --start option the first debug session is OK.
         If I start the debugger again without restarting the application on the device - the runtime crashes.
         """
-        # Tns.deploy_ios(attributes={"--path": self.app_name})
-        Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', "--justlaunch": ""})
-        time.sleep(25)
-
-        # self.__verify_debugger_start(log)
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', "--justlaunch": ""})
+        self.__verify_debugger_start(log)
         log = Tns.debug_ios(
             attributes={'--path': self.app_name, '--start': '', '--chrome': ''})
         self.__verify_debugger_start(log)
