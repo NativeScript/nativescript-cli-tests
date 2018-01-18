@@ -4,6 +4,8 @@ Tests for `tns debug ios` executed on iOS Simulator.
 import os
 import time
 
+import sys
+
 from core.base_class.BaseClass import BaseClass
 from core.chrome.chrome import Chrome
 from core.device.device import Device
@@ -106,6 +108,27 @@ class DebugiOSChromeSimulatorTests(BaseClass):
 
         # Attach debugger
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--start': ''})
+        self.__verify_debugger_start(log=log)
+
+    def test_004_debug_ios_simulator_second_with_start(self):
+        """
+        Attach the debug tools to a running app in the iOS Simulator and second time is with start option
+        """
+
+        # Run the app and ensure it works
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': ''}, log_trace=True)
+        self.__verify_debugger_start(log)
+        # Get Chrome URL
+        url = run(command="grep chrome-devtools " + log)
+        Chrome.start(url)
+
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
+        Tns.kill()
+
+        # Attach debugger
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--start': ''}, log_trace=True)
         self.__verify_debugger_start(log=log)
 
     def test_100_debug_ios_simulator_with_livesync(self):
