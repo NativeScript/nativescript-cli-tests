@@ -21,22 +21,19 @@ class Folder(object):
                 raise
 
     @staticmethod
-    def cleanup(folder):
+    def cleanup(folder, force=True):
         if os.path.exists(folder):
             try:
                 shutil.rmtree(folder, False)
             except:
                 if os.path.exists(folder):
                     if 'Windows' in platform.platform():
-                        output = run('rmdir /s /q \"{0}\"'.format(folder))
-                        if ("another process" in output) or ("gradle" in output.lower()):
-                            Process.kill(proc_name='node', proc_cmdline='tns')
-                            Process.kill(proc_name='aapt')
-                            Process.kill(proc_name='adb')
-                            Process.kill_gradle()
-                            output = run('rmdir /s /q \"{0}\"'.format(folder))
-                            assert 'another process' not in output, "Failed to delete {0}".format(folder)
-                            assert 'gradle' not in output.lower(), "Failed to delete {0}".format(folder)
+                        # File is locked by some process
+                        print "Failed to delete {0}.".format(folder)
+                        if force:
+                            print "Kill processes associated with this file."
+                            Process.kill_by_handle(folder)
+                            shutil.rmtree(folder)
                     else:
                         run('rm -rf ' + folder)
 
@@ -49,7 +46,7 @@ class Folder(object):
 
     @staticmethod
     def is_empty(path):
-        if os.listdir(path) == []:
+        if not os.listdir(path):
             return True
         else:
             return False

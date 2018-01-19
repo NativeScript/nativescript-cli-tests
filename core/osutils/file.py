@@ -7,9 +7,7 @@ import os
 import shutil
 import time
 
-from core import osutils
 from core.osutils.process import Process
-from core.settings.settings import TEST_LOG
 
 
 class File(object):
@@ -28,9 +26,12 @@ class File(object):
 
     @staticmethod
     def write(file_path, text):
-        with open(file_path, 'w') as file_to_write:
-            file_to_write.write(text + '\n')
-        time.sleep(2)
+        try:
+            with open(file_path, 'w') as file_to_write:
+                file_to_write.write(text + '\n')
+            time.sleep(2)
+        except:
+            print "Failed to write in {0}".format(file_path)
 
     @staticmethod
     def append(file_path, text):
@@ -108,14 +109,6 @@ class File(object):
         return found
 
     @staticmethod
-    def cat(path):
-        command = "cat " + path
-        output = osutils.command.run(command)
-        File.append(TEST_LOG, command)
-        print command
-        return output
-
-    @staticmethod
     def extension_exists(path, extension):
         result = False
         for file_name in os.listdir(path):
@@ -130,17 +123,17 @@ class File(object):
         return result
 
     @staticmethod
-    def remove(file_path):
+    def remove(file_path, force=True):
         if os.path.exists(file_path):
             try:
                 os.remove(file_path)
             except:
-                print "Failed to delete {0}".format(file_path)
-                Process.kill(proc_name='node', proc_cmdline='tns')
-                Process.kill(proc_name='aapt')
-                Process.kill(proc_name='adb')
-                Process.kill_gradle()
-                shutil.rmtree(file_path)
+                # File is locked by some process
+                print "Failed to delete {0}.".format(file_path)
+                if force:
+                    print "Kill processes associated with this file."
+                    Process.kill_by_handle(file_path)
+                    os.remove(file_path)
 
     @staticmethod
     def replace(file_path, str1, str2):
