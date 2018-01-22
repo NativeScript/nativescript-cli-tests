@@ -140,8 +140,14 @@ class RunAndroidEmulatorTestsNG(BaseClass):
 
         # Revert CSS and wait until app is synced
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.NG_CHANGE_CSS, sleep=10)
+
+        # Verify app is synced and it is not restarted
         strings = ['Successfully transferred', 'app.css', 'Successfully synced application', 'Home page loaded!']
-        not_existing_strings = ['Application loaded!']  # This is to verify app is NOT restarted.
+        if CURRENT_OS == OSType.WINDOWS:
+            not_existing_strings = None  # We can not verify this on windows, because log is not clean
+        else:
+            not_existing_strings = ['Application loaded!']  # This is to verify app is NOT restarted.
+
         Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_strings)
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='ng-hello-world-home-white', tolerance=5.0)

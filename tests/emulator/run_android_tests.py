@@ -294,7 +294,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
-    @unittest.skipIf(CURRENT_OS == OSType.LINUX, "Run only on macOS.")
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_290_tns_run_android_should_refresh_images(self):
         """Test for https://github.com/NativeScript/nativescript-cli/issues/2981"""
 
@@ -442,6 +442,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Delete log during livesync not possible on Windows.")
     def test_340_tns_run_should_not_sync_hidden_files(self):
         """
         Adding hidden files should not break run and they should not be transferred.
@@ -458,9 +459,7 @@ class RunAndroidEmulatorTests(BaseClass):
                             expected_image='livesync-hello-world_home')
 
         # Clean log (this will not work on windows since file is locked)
-        if CURRENT_OS != OSType.WINDOWS:
-            File.write(file_path=log, text="")
-            time.sleep(1)
+        File.write(file_path=log, text="")
 
         # Add some hidden files
         source_file = os.path.join(self.app_name, 'app', 'main-page.xml')
@@ -516,7 +515,8 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Add .jar file in plugin and modify the app to reference it
         custom_jar_file = os.path.join('data', 'issues', 'android-runtime-pr-905', 'customLib.jar')
-        modules_widgets = os.path.join(self.app_name, 'node_modules', 'tns-core-modules-widgets', 'platforms', 'android')
+        modules_widgets = os.path.join(self.app_name, 'node_modules', 'tns-core-modules-widgets', 'platforms',
+                                       'android')
         File.copy(src=custom_jar_file, dest=modules_widgets)
 
         source = os.path.join('data', 'issues', 'android-runtime-pr-905', 'app.js')
@@ -576,6 +576,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # Test for CLI issue 2170
         assert 'No space left on device' in output or "didn't have enough storage space" in output
 
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Delete log during livesync not possible on Windows.")
     def test_401_tns_run_android_should_not_continue_on_build_failure(self):
         """
         `tns run android` should start emulator if device is not connected.
