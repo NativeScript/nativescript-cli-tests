@@ -12,7 +12,8 @@ from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, EMULATOR_ID, EMULATOR_NAME
+from core.osutils.os_type import OSType
+from core.settings.settings import ANDROID_RUNTIME_PATH, EMULATOR_ID, EMULATOR_NAME, CURRENT_OS
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -79,29 +80,51 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         assert text_changed, 'Changes in TS file not applied (UI is not refreshed).'
         log_content = File.read(log)
         assert 'item.service.ts' in log_content, "CLI should transfer TS files!"
-        File.write(file_path=log, text="")  # Clean log
+
+        # Clean log (this will not work on windows since file is locked)
+        if CURRENT_OS != OSType.WINDOWS:
+            File.write(file_path=log, text="")
 
         # Change HTML and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.NG_CHANGE_HTML, sleep=10)
+
+        # Verify app is synced and it is not restarted
         strings = ['items.component.html', 'Successfully synced application', 'Home page loaded!']
-        not_existing_strings = ['Application loaded!']  # This is to verify app is NOT restarted.
+        if CURRENT_OS == OSType.WINDOWS:
+            not_existing_strings = None  # We can not verify this on windows, because log is not clean
+        else:
+            not_existing_strings = ['Application loaded!']  # This is to verify app is NOT restarted.
         Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_strings)
         text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='9', timeout=30)
         assert text_changed, 'Changes in HTML file not applied (UI is not refreshed).'
-        File.write(file_path=log, text="")  # Clean log
+
+        # Clean log (this will not work on windows since file is locked)
+        if CURRENT_OS != OSType.WINDOWS:
+            File.write(file_path=log, text="")
 
         # Change CSS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.NG_CHANGE_CSS, sleep=10)
+
+        # Verify app is synced and it is not restarted
         strings = ['Successfully transferred', 'app.css', 'Successfully synced application', 'Home page loaded!']
-        not_existing_strings = ['Application loaded!']  # This is to verify app is NOT restarted.
+        if CURRENT_OS == OSType.WINDOWS:
+            not_existing_strings = None  # We can not verify this on windows, because log is not clean
+        else:
+            not_existing_strings = ['Application loaded!']  # This is to verify app is NOT restarted.
+
         Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_strings)
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image='ng-hello-world-home-dark',
                             tolerance=5.0)
 
         # Revert HTML and wait until app is synced
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.NG_CHANGE_HTML, sleep=10)
+
+        # Verify app is synced and it is not restarted
         strings = ['items.component.html', 'Successfully synced application', 'Home page loaded!']
-        not_existing_strings = ['Application loaded!']  # This is to verify app is NOT restarted.
+        if CURRENT_OS == OSType.WINDOWS:
+            not_existing_strings = None  # We can not verify this on windows, because log is not clean
+        else:
+            not_existing_strings = ['Application loaded!']  # This is to verify app is NOT restarted.
         Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_strings)
         text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text="Stegen Ter", timeout=30)
         assert text_changed, 'Changes in HTML file not applied (UI is not refreshed).'

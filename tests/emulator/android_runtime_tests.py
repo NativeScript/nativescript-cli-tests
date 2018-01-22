@@ -52,7 +52,7 @@ class RuntimeTests(BaseClass):
                        attributes={"--template": os.path.join("data", "apps", "verbose-hello-world.tgz")})
         Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH, "--path": self.app_name})
 
-        output = File.cat(os.path.join(self.app_name, "app", "app.js"))
+        output = File.read(os.path.join(self.app_name, "app", "app.js"), print_content=True)
         assert "__enableVerboseLogging()" in output, "Verbose logging not enabled in app.js"
 
         # `tns run android` and wait until app is deployed

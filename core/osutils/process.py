@@ -2,9 +2,7 @@
 Process utils.
 """
 
-import os
 import time
-from os.path import expanduser
 
 import psutil
 
@@ -85,21 +83,16 @@ class Process(object):
         return result
 
     @staticmethod
-    def kill_gradle():
-        if CURRENT_OS is OSType.WINDOWS:
-            print "Kill gradle daemon!"
-            gradle_file_path = None
-            user_home = expanduser("~")
-            for root, dirs, files in os.walk(user_home):
-                for current_file in files:
-                    if (current_file == 'gradle.bat') and ('3.' in root):
-                        gradle_file_path = os.path.join(root, current_file)
-            print gradle_file_path
-            if gradle_file_path is not None:
-                os.system(gradle_file_path + " --stop")
-        else:
-            print "No need to kill gradle daemon on OSX."
-            pass
+    def kill_by_handle(file_path):
+        for proc in psutil.process_iter():
+            try:
+                for item in proc.open_files():
+                    if file_path in item.path:
+                        print "{0} is locked by {1}".format(file_path, proc.name())
+                        print "Proc cmd: {0}".format(proc.cmdline())
+                        proc.kill()
+            except:
+                continue
 
     @staticmethod
     def list():

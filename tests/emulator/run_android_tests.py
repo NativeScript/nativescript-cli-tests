@@ -457,9 +457,10 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
-        # Make sure log file is clean
-        File.write(file_path=log, text="")
-        time.sleep(1)
+        # Clean log (this will not work on windows since file is locked)
+        if CURRENT_OS != OSType.WINDOWS:
+            File.write(file_path=log, text="")
+            time.sleep(1)
 
         # Add some hidden files
         source_file = os.path.join(self.app_name, 'app', 'main-page.xml')
