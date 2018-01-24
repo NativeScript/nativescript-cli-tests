@@ -26,7 +26,7 @@ class BuildiOSTests(BaseClass):
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
 
-        Folder.remove("TestApp.app")
+        Folder.cleanup("TestApp.app")
         File.remove("TestApp.ipa")
 
         Xcode.cleanup_cache()
