@@ -35,7 +35,7 @@ class PrepareiOSTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-        Folder.cleanup(self.app_name)
+        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
 
     def tearDown(self):
         assert not Simulator.is_running()[0], 'iOS Simulator started after prepare!'
@@ -79,6 +79,7 @@ class PrepareiOSTests(BaseClass):
         TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.SKIP)
 
     def test_200_prepare_additional_appresources(self):
+        Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
@@ -99,12 +100,10 @@ class PrepareiOSTests(BaseClass):
         assert "newDefault.png" in output
 
     def test_201_prepare_ios_platform_not_added(self):
-        Tns.create_app(self.app_name)
         output = Tns.prepare_ios(attributes={"--path": self.app_name})
         TnsAsserts.prepared(self.app_name, platform=Platform.IOS, output=output, prepare=Prepare.FIRST_TIME)
 
     def test_220_build_ios_with_custom_plist(self):
-        Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
         # Update Info.plist
@@ -125,7 +124,6 @@ class PrepareiOSTests(BaseClass):
         assert "<string>orgnativescriptTestApp</string>" not in File.read(final_plist)
 
     def test_300_prepare_ios_preserve_case(self):
-        Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         File.copy(self.app_name + "/node_modules/tns-core-modules/application/application-common.js",
                   self.app_name + "/node_modules/tns-core-modules/application/New-application-common.js")
@@ -144,7 +142,6 @@ class PrepareiOSTests(BaseClass):
         assert not File.exists(path + 'application/New-application.ios.js')
 
     def test_301_prepare_android_does_not_prepare_ios(self):
-        Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
         Tns.plugin_add("nativescript-social-share", attributes={"--path": self.app_name})
@@ -155,6 +152,7 @@ class PrepareiOSTests(BaseClass):
         assert "Successfully prepared plugin nativescript-social-share for android" in output
 
     def test_320_prepare_ios_with_provisioning(self):
+        Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 

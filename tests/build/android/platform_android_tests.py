@@ -19,6 +19,7 @@ class PlatformAndroidTests(BaseClass):
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
+        Tns.create_app(cls.app_name, update_modules=False)
 
     @classmethod
     def tearDownClass(cls):
@@ -26,21 +27,18 @@ class PlatformAndroidTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-        Folder.cleanup(self.app_name)
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
 
     def test_100_platform_add_android(self):
         """ Default `tns platform add` command"""
-        Tns.create_app(self.app_name, update_modules=False)
         Tns.platform_add_android(attributes={"--path": self.app_name})
 
     def test_110_platform_add_android_framework_path(self):
         """ Add platform from local package"""
-        Tns.create_app(self.app_name, update_modules=False)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
 
     def test_120_platform_add_android_inside_project(self):
         """ Add platform inside project folder (not using --path)"""
-        Tns.create_app(self.app_name, update_modules=False)
         Folder.navigate_to(self.app_name)
         output = Tns.platform_add_android(tns_path=os.path.join("..", TNS_PATH), assert_success=False)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
@@ -50,7 +48,6 @@ class PlatformAndroidTests(BaseClass):
         """Verify platform add supports custom versions"""
 
         # Add custom version number
-        Tns.create_app(self.app_name, update_modules=False)
         Tns.platform_add_android(version="2.4.0", attributes={"--path": self.app_name})
         TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.4.0\""])
 
@@ -64,7 +61,6 @@ class PlatformAndroidTests(BaseClass):
         """Update platform"""
 
         # Create project with tns-android@2.4.0
-        Tns.create_app(self.app_name, update_modules=False)
         Tns.platform_add_android(version="2.4.0", attributes={"--path": self.app_name})
         TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.4.0\""])
 
@@ -74,7 +70,6 @@ class PlatformAndroidTests(BaseClass):
 
     def test_210_platform_update_android_when_platform_not_added(self):
         """`platform update` should work even if platform is not added"""
-        Tns.create_app(self.app_name, update_modules=False)
         output = Tns.platform_update(platform=Platform.ANDROID, attributes={"--path": self.app_name},
                                      assert_success=False)
         TnsAsserts.platform_added(self.app_name, platform=Platform.ANDROID, output=output)
@@ -83,7 +78,6 @@ class PlatformAndroidTests(BaseClass):
         """Prepare after `platform clean` should add the same version that was before clean"""
 
         # Create project with tns-android@2.4.0
-        Tns.create_app(self.app_name, update_modules=False)
         Tns.platform_add_android(version="2.4.0", attributes={"--path": self.app_name})
         TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.4.0\""])
 
@@ -100,7 +94,6 @@ class PlatformAndroidTests(BaseClass):
 
     def test_230_tns_update(self):
         """ Default `tns platform add` command"""
-        Tns.create_app(self.app_name, update_modules=False)
         Tns.platform_add_android(attributes={"--path": self.app_name}, version="latest")
 
         output = Tns.update(attributes={"--path": self.app_name})
@@ -120,7 +113,6 @@ class PlatformAndroidTests(BaseClass):
 
     def test_300_set_sdk(self):
         """Platform add android should be able to specify target sdk with `--sdk` option"""
-        Tns.create_app(self.app_name, update_modules=False)
         Tns.platform_add_android(attributes={"--path": self.app_name,
                                              "--frameworkPath": ANDROID_RUNTIME_PATH, "--sdk": "19"})
 
@@ -130,7 +122,6 @@ class PlatformAndroidTests(BaseClass):
         assert "android:targetSdkVersion=\"19\"" in output
 
     def test_310_set_sdk_not_installed(self):
-        Tns.create_app(self.app_name, update_modules=False)
         output = Tns.platform_add_android(attributes={"--path": self.app_name,
                                                       "--frameworkPath": ANDROID_RUNTIME_PATH, "--sdk": "29"})
 
@@ -144,8 +135,6 @@ class PlatformAndroidTests(BaseClass):
 
     def test_390_platform_list(self):
         """Platform list command should list installed platforms and if app is prepared for those platforms"""
-
-        Tns.create_app(self.app_name, update_modules=False)
 
         # `tns platform list` on brand new project
         output = Tns.platform_list(attributes={"--path": self.app_name})
@@ -176,7 +165,6 @@ class PlatformAndroidTests(BaseClass):
         assert "Platform android already added" in output
 
     def test_421_platform_add_android_wrong_option(self):
-        Tns.create_app(self.app_name, update_modules=False)
 
         # frameworkPath point to missing file
         output = Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": "invalidFile.tgz"},
@@ -195,7 +183,6 @@ class PlatformAndroidTests(BaseClass):
         assert "Usage" in output
 
     def test_430_platform_remove_missing_invalid_or_empty_platform(self):
-        Tns.create_app(self.app_name, update_modules=False)
 
         output = Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
                                      assert_success=False)
@@ -212,7 +199,6 @@ class PlatformAndroidTests(BaseClass):
         assert "Usage" in output
 
     def test_440_platform_update_empty_platform(self):
-        Tns.create_app(self.app_name, update_modules=False)
         output = Tns.platform_update(attributes={"--path": self.app_name}, assert_success=False)
         assert no_platform in output
         assert "Usage" in output

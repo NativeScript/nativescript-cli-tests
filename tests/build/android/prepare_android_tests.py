@@ -32,6 +32,7 @@ class PrepareAndroidTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
         Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
 
     def test_101_prepare_android(self):
         Tns.create_app(self.app_name, update_modules=False)
