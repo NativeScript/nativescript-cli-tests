@@ -48,7 +48,7 @@ class BuildiOSTests(BaseClass):
 
     @classmethod
     def tearDownClass(cls):
-        File.remove("TestApp.app")
+        Folder.cleanup("TestApp.app")
         File.remove("TestApp.ipa")
 
         Folder.cleanup(cls.app_name)
@@ -139,7 +139,7 @@ class BuildiOSTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name_ios})
 
     def test_310_build_ios_with_copy_to(self):
-        File.remove("TestApp.app")
+        Folder.cleanup("TestApp.app")
         File.remove("TestApp.ipa")
 
         Tns.create_app(self.app_name)
