@@ -2,9 +2,9 @@
 Tests for `tns debug ios` executed on iOS Simulator.
 """
 import os
-import time
+from time import sleep
 
-import sys
+from enum import Enum
 
 from core.base_class.BaseClass import BaseClass
 from core.chrome.chrome import Chrome
@@ -21,6 +21,11 @@ from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_prepare_type import Prepare
 from core.tns.tns_verifications import TnsAsserts
+
+
+class DebugMode(Enum):
+    DEFAULT = 0
+    START = 1
 
 
 class DebugiOSChromeSimulatorTests(BaseClass):
@@ -56,43 +61,74 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         BaseClass.tearDownClass()
         Folder.cleanup(cls.app_name)
 
-    def __verify_debugger_start(self, log):
+    @staticmethod
+    def attach_chrome(log, mode=DebugMode.DEFAULT, port="41000"):
+        """
+        Attach chrome dev tools and verify logs
+        :type log: Log file of `tns debug ios` command.
+        """
+
+        # Check initial logs
         strings = ["Setting up debugger proxy...", "Press Ctrl + C to terminate, or disconnect.",
                    "Opened localhost", "To start debugging, open the following URL in Chrome"]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
-        time.sleep(10)
+
+        # Attach Chrome DevTools
+        url = run(command="grep chrome-devtools " + log)
+        text_log = File.read(log)
+        assert "chrome-devtools://devtools/remote" in text_log, "Debug url not printed in output of 'tns debug ios'."
+        assert "localhost:" + port in text_log, "Wrong port of debug url:" + url
+        Chrome.start(url)
+
+        # Verify debugger attached
+        strings = ["Frontend client connected", "Backend socket created"]
+        if mode != DebugMode.START:
+            strings.extend(["Loading inspector modules",
+                            "Finished loading inspector modules",
+                            "NativeScript debugger attached"])
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
+
+        # Verify debugger not disconnected
+        sleep(10)
         output = File.read(log)
-        assert "socket closed" not in output
-        assert "detached" not in output
-        assert not Process.is_running('NativeScript Inspector')
+        assert "socket closed" not in output, "Debugger disconnected."
+        assert "detached" not in output, "Debugger disconnected."
+        assert not Process.is_running('NativeScript Inspector'), "iOS Inspector running instead of ChromeDev Tools."
+
+    @staticmethod
+    def assert_not_detached(log):
+        output = File.read(log)
+        assert "socket created" in output, "Debugger not attached at all.\n Log:\n" + output
+        assert "socket closed" not in output, "Debugger disconnected.\n Log:\n" + output
+        assert "detached" not in output, "Debugger disconnected.\n Log:\n" + output
 
     def test_001_debug_ios_simulator(self):
         """
         Default `tns debug ios` starts debugger (do not stop at the first code statement)
         """
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': ''})
-        self.__verify_debugger_start(log)
+        self.attach_chrome(log)
 
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
+        # Verify debugger not detached
+        self.assert_not_detached(log)
+
     def test_002_debug_ios_simulator_debug_brk(self):
         """
         Starts debugger and stop at the first code statement.
         """
-
-        log = Tns.debug_ios(
-            attributes={'--path': self.app_name, '--emulator': '', '--debug-brk': ''})
-        self.__verify_debugger_start(log)
-
-        # Get Chrome URL and open it
-        url = run(command="grep chrome-devtools " + log)
-        Chrome.start(url)
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--debug-brk': ''})
+        self.attach_chrome(log)
 
         # Verify app starts and stops on the first line of code
         Device.screen_match(device_name=SIMULATOR_NAME, tolerance=3.0, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_debug_brk')
+
+        # Verify debugger not detached
+        self.assert_not_detached(log)
 
     def test_003_debug_ios_simulator_start(self):
         """
@@ -101,45 +137,34 @@ class DebugiOSChromeSimulatorTests(BaseClass):
 
         # Run the app and ensure it works
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
-                          assert_success=False, timeout=30)
+                          assert_success=False, timeout=60)
         TnsAsserts.prepared(app_name=self.app_name, platform=Platform.IOS, output=log, prepare=Prepare.SKIP)
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
         # Attach debugger
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--start': ''})
-        self.__verify_debugger_start(log=log)
-
-    def test_004_debug_ios_simulator_second_with_start(self):
-        """
-        Attach the debug tools to a running app in the iOS Simulator and second time is with start option
-        """
-
-        # Run the app and ensure it works
-        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': ''}, log_trace=True)
-        self.__verify_debugger_start(log)
-        # Get Chrome URL
-        url = run(command="grep chrome-devtools " + log)
-        Chrome.start(url)
+        self.attach_chrome(log, mode=DebugMode.START)
 
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_home')
+        self.assert_not_detached(log)
 
+        # Attach debugger once again
         Tns.kill()
+        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--start': ''})
+        self.attach_chrome(log, mode=DebugMode.START)
 
-        # Attach debugger
-        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--start': ''}, log_trace=True)
-        self.__verify_debugger_start(log=log)
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+        self.assert_not_detached(log)
 
     def test_100_debug_ios_simulator_with_livesync(self):
         """
         `tns debug ios` should be able to run with livesync
         """
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': ''})
-        self.__verify_debugger_start(log)
-
-        # Get Chrome URL
-        url_1 = run(command="grep chrome-devtools " + log)
+        self.attach_chrome(log)
 
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=SIMULATOR_NAME,
@@ -148,12 +173,12 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         # Change JS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
         strings = ['Successfully transferred', 'main-view-model.js', 'open the following URL in Chrome', 'CONSOLE LOG']
-        Tns.wait_for_log(log_file=log, string_list=strings)
+        Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
 
         # Change XML and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
         strings = ['Successfully transferred', 'main-page.xml', 'open the following URL in Chrome', 'CONSOLE LOG']
-        Tns.wait_for_log(log_file=log, string_list=strings)
+        Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
 
         # Change CSS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
@@ -164,40 +189,5 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_js_css_xml')
 
-    def test_101_debug_ios_simulator_start_chrome_second_attach(self):
-        # https: // github.com / NativeScript / ios - runtime / issues / 832
-        """
-        When trying to debug application with the --start option the first debug session is OK.
-        If I start the debugger again without restarting the application on the device - the runtime crashes.
-        """
-        log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', "--justlaunch": ""})
-        self.__verify_debugger_start(log)
-        log = Tns.debug_ios(
-            attributes={'--path': self.app_name, '--start': '', '--chrome': ''})
-        self.__verify_debugger_start(log)
-
-        # Get Chrome URL and open it
-        url = run(command="grep chrome-devtools " + log)
-        Chrome.start(url)
-
-        # Verify app starts and stops on the first line of code
-        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
-
-        Chrome.stop()
-
-        log = Tns.debug_ios(
-            attributes={'--path': self.app_name, '--start': '', '--chrome': ''})
-        self.__verify_debugger_start(log)
-
-        # Get Chrome URL and open it
-        url = run(command="grep chrome-devtools " + log)
-        Chrome.start(url)
-
-        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
-
-        # Get Chrome URL and check it is not changed - https://github.com/NativeScript/nativescript-cli/issues/3183
-        url_2 = run(command="grep -a chrome-devtools " + log)
-        assert url_1 == url_2, "Chrome DevTools URLs are different! \n First URL: {0}, \n Second URL: {1}"\
-            .format(url_1, url_2)
+        # Verify debugger not detached
+        self.assert_not_detached(log)
