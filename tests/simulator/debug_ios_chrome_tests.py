@@ -123,9 +123,14 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         Starts debugger and stop at the first code statement.
         """
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--debug-brk': ''})
-        self.attach_chrome(log)
 
         # Verify app starts and stops on the first line of code
+        Device.screen_match(device_name=SIMULATOR_NAME, tolerance=3.0, device_id=self.SIMULATOR_ID,
+                            timeout=90, expected_image='livesync-hello-world_debug_brk')
+
+        self.attach_chrome(log)
+
+        # Verify app is still on first line of code
         Device.screen_match(device_name=SIMULATOR_NAME, tolerance=3.0, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_debug_brk')
 
@@ -191,5 +196,6 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_js_css_xml')
 
+        # Enable next lines after https://github.com/NativeScript/nativescript-cli/issues/3085 is implemented.
         # Verify debugger not detached
-        self.assert_not_detached(log)
+        # self.assert_not_detached(log)
