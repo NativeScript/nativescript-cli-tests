@@ -2,6 +2,7 @@
 Tests for `tns debug ios` executed on iOS Simulator.
 """
 import os
+import unittest
 from time import sleep
 
 from enum import Enum
@@ -116,6 +117,7 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         # Verify debugger not detached
         self.assert_not_detached(log)
 
+    @unittest.skip("Skip the test because of https://github.com/NativeScript/nativescript-cli/issues/3338")
     def test_002_debug_ios_simulator_debug_brk(self):
         """
         Starts debugger and stop at the first code statement.
