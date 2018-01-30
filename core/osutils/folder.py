@@ -31,7 +31,7 @@ class Folder(object):
                         # File is locked by some process
                         print "Failed to delete {0}.".format(folder)
                         if force:
-                            print "Kill processes associated with this file."
+                            print "Kill processes associated with this folder."
                             Process.kill_by_handle(folder)
                             shutil.rmtree(folder)
                     else:
