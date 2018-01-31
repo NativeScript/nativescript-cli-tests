@@ -364,7 +364,7 @@ class Tns(object):
         if "--provision" in attributes.keys():
             id = attributes.get("--provision")
             xcodeproj = Tns.__get_xcode_project_file(app_name)
-            assert id in xcodeproj, \
+            assert id.replace("'", "") in xcodeproj, \
                 "Provisioning profile specified by --provision not passed to Xcode project!" \
                 "\nProvision:\n" + id + "\nXcode Project:\n" + xcodeproj
 
