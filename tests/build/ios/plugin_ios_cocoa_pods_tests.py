@@ -33,9 +33,6 @@ class PluginsiOSPodsTests(BaseClass):
         Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
 
     def test_100_plugin_add_multiple_pods(self):
-        # Tns.create_app(self.app_name)
-        # Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
-
         plugin_path = TEST_RUN_HOME + "/data/CocoaPods/carousel.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin carousel." in output
@@ -69,7 +66,6 @@ class PluginsiOSPodsTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": ""})
 
     def test_201_plugin_add_pod_google_maps_before_platform_add_ios(self):
-        # Tns.create_app(self.app_name)
         Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
 
         plugin_path = TEST_RUN_HOME + "/data/CocoaPods/googlesdk.tgz"
@@ -108,9 +104,6 @@ class PluginsiOSPodsTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": ""})
 
     def test_202_plugin_add_pod_google_maps_after_platform_add_ios(self):
-        # Tns.create_app(self.app_name)
-        # Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
-
         plugin_path = TEST_RUN_HOME + "/data/CocoaPods/googlesdk.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin googlesdk." in output
@@ -145,9 +138,6 @@ class PluginsiOSPodsTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": ""})
 
     def test_401_plugin_add_invalid_pod(self):
-        # Tns.create_app(self.app_name)
-        # Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
-
         plugin_path = TEST_RUN_HOME + "/data/CocoaPods/invalidpod.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin invalidpod." in output

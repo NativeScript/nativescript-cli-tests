@@ -43,13 +43,16 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Emulator.ensure_available()
         Folder.cleanup(cls.app_name)
+        Tns.create_app(cls.app_name,
+                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
+                       update_modules=True)
+        Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
 
     def setUp(self):
         BaseClass.setUp(self)
-        Tns.create_app(self.app_name,
-                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
-                       update_modules=True)
-        Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
+        Folder.cleanup(self.app_name)
+        Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
 
     def tearDown(self):
         Tns.kill()
@@ -60,6 +63,7 @@ class RunAndroidEmulatorTests(BaseClass):
     def tearDownClass(cls):
         BaseClass.tearDownClass()
         Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
+        Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
 
     def test_001_tns_run_android_js_css_xml_manifest(self):
         """Make valid changes in JS,CSS and XML"""

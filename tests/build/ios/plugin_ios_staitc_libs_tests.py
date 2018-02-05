@@ -32,9 +32,6 @@ class PluginsiOSLibsTests(BaseClass):
         Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
 
     def test_200_plugin_add_static_lib_universal(self):
-        # Tns.create_app(self.app_name)
-        # Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
-
         plugin_path = TEST_RUN_HOME + "/data/static-lib/hello-plugin.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin hello." in output
@@ -55,9 +52,6 @@ class PluginsiOSLibsTests(BaseClass):
         assert "HelloLib.a in Frameworks" in output
 
     def test_401_plugin_add_static_lib_non_universal(self):
-        # Tns.create_app(self.app_name)
-        # Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
-
         plugin_path = TEST_RUN_HOME + "/data/static-lib/bye-plugin.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin bye" in output

@@ -45,7 +45,6 @@ class PluginsiOSTests(BaseClass):
         Folder.cleanup(self.app_name)
 
     def test_100_plugin_add_before_platform_add_ios(self):
-        # Tns.create_app(self.app_name)
         Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
         output = Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})
         assert "Successfully installed plugin tns-plugin" in output
@@ -57,8 +56,6 @@ class PluginsiOSTests(BaseClass):
         assert tns_plugin in output
 
     def test_101_plugin_add_after_platform_add_ios(self):
-        # Tns.create_app(self.app_name)
-        # Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})
 
         assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
@@ -70,7 +67,6 @@ class PluginsiOSTests(BaseClass):
         assert tns_plugin in output
 
     def test_201_plugin_add_before_platform_add_ios(self):
-        # Tns.create_app(self.app_name, update_modules=True)
         Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
         Tns.plugin_add("nativescript-telerik-ui", attributes={"--ignore-scripts": "",
                                                               "--path": self.app_name})
@@ -88,8 +84,6 @@ class PluginsiOSTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name})
 
     def test_202_plugin_add_after_platform_add_ios(self):
-        # Tns.create_app(self.app_name, update_modules=True)
-        # Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.plugin_add("nativescript-telerik-ui", attributes={"--ignore-scripts": "",
                                                               "--path": self.app_name
                                                               })
@@ -104,8 +98,6 @@ class PluginsiOSTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name})
 
     def test_203_plugin_add_inside_project(self):
-        # Tns.create_app(self.app_name)
-        # Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
         output = Tns.run_tns_command("plugin add tns-plugin", tns_path=os.path.join("..", TNS_PATH))
@@ -119,9 +111,6 @@ class PluginsiOSTests(BaseClass):
         assert tns_plugin in output
 
     def test_204_build_app_with_plugin_inside_project(self):
-        # Tns.create_app(self.app_name, update_modules=True)
-        # Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
-
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
         output = Tns.plugin_add(name="tns-plugin", tns_path=os.path.join("..", TNS_PATH), assert_success=False)
@@ -131,14 +120,10 @@ class PluginsiOSTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name})
 
     def test_300_build_app_with_plugin_outside(self):
-        # Tns.create_app(self.app_name, update_modules=True)
-        # Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})
         Tns.build_ios(attributes={"--path": self.app_name})
 
     def test_301_build_app_for_both_platforms(self):
-        # Tns.create_app(self.app_name, update_modules=True)
-        # Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})
 
@@ -173,7 +158,6 @@ class PluginsiOSTests(BaseClass):
         assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "tns-plugin/test2.android.xml"))
 
     def test_302_plugin_and_npm_modules_in_same_project(self):
-        # Tns.create_app(self.app_name, update_modules=True)
         Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.plugin_add("nativescript-social-share", attributes={"--path": self.app_name})
@@ -201,7 +185,6 @@ class PluginsiOSTests(BaseClass):
         """
         Test for issue https://github.com/NativeScript/nativescript-cli/issues/2936
         """
-        # Tns.create_app(self.app_name)
         Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
         plugin_path = os.path.join(TEST_RUN_HOME, 'data', 'plugins', 'CFBundleURLName-Plugin.tgz')
         Tns.plugin_add(plugin_path, attributes={"--path": self.app_name})
@@ -213,7 +196,6 @@ class PluginsiOSTests(BaseClass):
         assert "<string>bar</string>" in plist, "CFBundleURLTypes from plugin is not found in final Info.plist"
 
     def test_401_plugin_add_invalid_plugin(self):
-        # Tns.create_app(self.app_name)
         Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
         output = Tns.plugin_add("wd", attributes={"--path": self.app_name}, assert_success=False)
         assert "wd is not a valid NativeScript plugin" in output

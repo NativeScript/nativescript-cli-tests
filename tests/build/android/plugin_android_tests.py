@@ -38,7 +38,6 @@ class PluginsAndroidTests(BaseClass):
         Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
 
     def test_100_plugin_add_before_platform_add_android(self):
-        # Tns.create_app(self.app_name)
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name})
 
@@ -51,8 +50,6 @@ class PluginsAndroidTests(BaseClass):
         assert "tns-plugin" in output
 
     def test_101_plugin_add_after_platform_add_android(self):
-        # Tns.create_app(self.app_name)
-        # Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name})
 
         assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
@@ -64,8 +61,6 @@ class PluginsAndroidTests(BaseClass):
         assert "tns-plugin" in output
 
     def test_102_plugin_add_inside_project(self):
-        # Tns.create_app(self.app_name)
-        # Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
         output = run(os.path.join("..", TNS_PATH) + " plugin add tns-plugin")
@@ -123,7 +118,6 @@ class PluginsAndroidTests(BaseClass):
         assert res is True, "Manifest not merged completely"
 
     def test_201_plugin_add_before_platform_add_android_and_build(self):
-        # Tns.create_app(self.app_name)
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         Tns.plugin_add("nativescript-telerik-ui", attributes={"--ignore-scripts": "", "--path": self.app_name})
 
@@ -138,8 +132,6 @@ class PluginsAndroidTests(BaseClass):
         Tns.build_android(attributes={"--path": self.app_name})
 
     def test_202_plugin_add_after_platform_add_android(self):
-        # Tns.create_app(self.app_name)
-        # Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.plugin_add("nativescript-telerik-ui", attributes={"--ignore-scripts": "", "--path": self.app_name})
 
         assert File.exists(self.app_name + "/node_modules/nativescript-telerik-ui/package.json")
@@ -154,8 +146,6 @@ class PluginsAndroidTests(BaseClass):
         Tns.build_android(attributes={"--path": self.app_name})
 
     def test_300_build_app_with_plugin_added_outside_project(self):
-        # Tns.create_app(self.app_name)
-        # Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name}, assert_success=False)
 
         Tns.build_android(attributes={"--path": self.app_name})
@@ -167,7 +157,6 @@ class PluginsAndroidTests(BaseClass):
         assert tns_plugin in output
 
     def test_390_plugin_with_promise_in_hooks(self):
-        # Tns.create_app(self.app_name)
         Tns.plugin_add("nativescript-fabric@1.0.6", attributes={"--path": self.app_name})
         output = Tns.prepare_android(attributes={"--path": self.app_name}, assert_success=False)
         assert "Failed to execute hook" in output
@@ -176,7 +165,6 @@ class PluginsAndroidTests(BaseClass):
         assert "Cannot read property" not in output
 
     def test_400_plugin_add_invalid_plugin(self):
-        # Tns.create_app(self.app_name)
         output = Tns.plugin_add("fakePlugin", attributes={"--path": self.app_name}, assert_success=False)
         assert "npm ERR!" in output
 

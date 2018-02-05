@@ -28,18 +28,18 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         Emulator.ensure_available()
         Folder.cleanup(cls.app_name)
 
-    def setUp(self):
-        BaseClass.setUp(self)
-
         # Create default NG app (to get right dependencies from package.json)
-        Tns.create_app_ng(self.app_name)
-        Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
+        Tns.create_app_ng(cls.app_name)
+        Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
 
         # Copy the app folder (app is modified in order to get some console logs on loaded)
         source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'app')
-        target = os.path.join(self.app_name, 'app')
+        target = os.path.join(cls.app_name, 'app')
         Folder.cleanup(target)
         Folder.copy(src=source, dst=target)
+
+    def setUp(self):
+        BaseClass.setUp(self)
 
     def tearDown(self):
         Tns.kill()
