@@ -18,7 +18,6 @@ class DeployiOSTests(BaseClass):
         BaseClass.setUpClass(cls.__name__)
         Device.ensure_available(platform=Platform.IOS)
         Simulator.stop()
-        Tns.create_app(cls.app_name)
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -30,7 +29,7 @@ class DeployiOSTests(BaseClass):
         Folder.cleanup('./' + self.app_name)
 
     def test_001_deploy_ios_device(self):
-        # Tns.create_app(self.app_name)
+        Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         output = Tns.deploy_ios(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=180)
 
@@ -42,7 +41,7 @@ class DeployiOSTests(BaseClass):
             assert device_id in output
 
     def test_300_deploy_ios_platform_not_added(self):
-        # Tns.create_app(app_name=self.app_name)
+        Tns.create_app(app_name=self.app_name)
         output = Tns.deploy_ios(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=180)
         assert copy_template_files in output
         assert "Installing tns-ios" in output
