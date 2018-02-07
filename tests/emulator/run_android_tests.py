@@ -598,3 +598,15 @@ class RunAndroidEmulatorTests(BaseClass):
         output = Tns.run_android(attributes={'--path': self.app_name, '--device': 'fakeId', '--justlaunch': ''},
                                  assert_success=False)
         TnsAsserts.invalid_device(output=output)
+
+    def test_420_check_dex_files_on_device(self):
+        """
+        check for files on device - should have only odex and proxyThumb
+        """
+        Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--justlaunch': ''})
+        command = "shell ls /data/data/org.nativescript.TestApp/code_cache/secondary-dexes"
+        output = Adb.run(device_id=EMULATOR_ID, command=command, log_level=CommandLogLevel.FULL)
+        assert "odex" in output
+        assert "proxyThumb" in output
+        assert "*.dex" not in output
+        
