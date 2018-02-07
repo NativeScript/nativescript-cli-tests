@@ -29,7 +29,7 @@ class BuildiOSTests(BaseClass):
         Tns.create_app(cls.app_name)
         Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
-        File.remove("TestApp.app")
+        Folder.cleanup("TestApp.app")
         File.remove("TestApp.ipa")
 
         Xcode.cleanup_cache()
@@ -52,7 +52,7 @@ class BuildiOSTests(BaseClass):
 
     @classmethod
     def tearDownClass(cls):
-        File.remove("TestApp.app")
+        Folder.cleanup("TestApp.app")
         File.remove("TestApp.ipa")
 
         Folder.cleanup(cls.app_name)
@@ -138,7 +138,7 @@ class BuildiOSTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name_ios})
 
     def test_310_build_ios_with_copy_to(self):
-        File.remove("TestApp.app")
+        Folder.cleanup("TestApp.app")
         File.remove("TestApp.ipa")
 
         # Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
