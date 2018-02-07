@@ -609,4 +609,3 @@ class RunAndroidEmulatorTests(BaseClass):
         assert "odex" in output
         assert "proxyThumb" in output
         assert "*.dex" not in output
-        
