@@ -217,5 +217,5 @@ class RunAndroidEmulatorTestsNG(BaseClass):
                             expected_image='ng-hello-world-home-white', tolerance=5.0)
 
         # Verify console.time() works
-        console_time = ['JS: console.time(startup):']
+        console_time = ['JS: startup:']
         Tns.wait_for_log(log_file=log, string_list=console_time)
