@@ -24,19 +24,22 @@ class PrepareAndroidTests(BaseClass):
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
+        Tns.create_app(cls.app_name, update_modules=False)
+        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
 
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
+        Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
 
     def setUp(self):
         BaseClass.setUp(self)
         Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
+        Folder.cleanup(self.app_name)
+        Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
 
     def test_101_prepare_android(self):
-        Tns.create_app(self.app_name, update_modules=False)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
-
         # Initial prepare should be full.
         output = Tns.prepare_android(attributes={"--path": self.app_name})
         TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.FULL)
@@ -51,28 +54,24 @@ class PrepareAndroidTests(BaseClass):
         TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.INCREMENTAL)
 
     def test_102_prepare_android_inside_project(self):
-        Tns.create_app(self.app_name, update_modules=False)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Folder.navigate_to(self.app_name)
         output = Tns.prepare_android(tns_path=os.path.join("..", TNS_PATH), assert_success=False)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.FULL)
 
     def test_200_prepare_android_platform_not_added(self):
-        Tns.create_app(self.app_name, update_modules=False)
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         output = Tns.prepare_android(attributes={"--path": self.app_name})
         TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.FIRST_TIME)
 
     def test_201_prepare_xml_error(self):
-        Tns.create_app(self.app_name, update_modules=False)
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML_INVALID_SYNTAX)
         output = Tns.prepare_android(attributes={"--path": self.app_name})
         assert "main-page.xml has syntax errors." in output
         assert "unclosed xml attribute" in output
 
     def test_300_prepare_android_remove_old_files(self):
-        Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.prepare_android(attributes={"--path": self.app_name})
 
         # Add new files and delete old files
@@ -98,8 +97,6 @@ class PrepareAndroidTests(BaseClass):
         assert not File.exists(os.path.join(app_path, 'main-page.xml'))
 
     def test_301_prepare_android_platform_specific_files(self):
-        Tns.create_app(self.app_name, update_modules=False)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.prepare_android(attributes={"--path": self.app_name})
 
         # Add set of platform specific files
@@ -131,6 +128,7 @@ class PrepareAndroidTests(BaseClass):
         assert not File.exists(os.path.join(app_path, 'app.android.css'))
 
     def test_310_prepare_should_flatten_scoped_dependencies(self):
+        Folder.cleanup(self.app_name)
         Tns.create_app_ng(self.app_name)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
         Tns.prepare_android(attributes={"--path": self.app_name})
@@ -164,7 +162,7 @@ class PrepareAndroidTests(BaseClass):
         assert "@angular/router" not in output, "@angular/* should not be in platforms folder."
 
     def test_330_prepare_android_next(self):
-        Tns.create_app(self.app_name, update_modules=False)
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         Tns.platform_add_android(attributes={"--path": self.app_name}, version="next")
         Folder.cleanup(os.path.join(self.app_name, "node_modules"))
         Folder.cleanup(os.path.join(self.app_name, "platforms"))
@@ -174,8 +172,7 @@ class PrepareAndroidTests(BaseClass):
         TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.FIRST_TIME)
 
     def test_400_prepare_missing_or_missing_platform(self):
-        Tns.create_app(self.app_name, update_modules=False)
-
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         output = Tns.run_tns_command("prepare", attributes={"--path": self.app_name})
         assert "No platform specified." in output
 
@@ -187,6 +184,7 @@ class PrepareAndroidTests(BaseClass):
         """
         Test for https://github.com/NativeScript/nativescript-cli/issues/2561
         """
+        Folder.cleanup(self.app_name)
         Tns.create_app_ng(app_name=self.app_name, template_version="2.5.0", update_modules=False)
         Npm.uninstall(package="tns-core-modules", option="--save-dev", folder=self.app_name)
         Npm.uninstall(package="nativescript-dev-android-snapshot", option="--save-dev", folder=self.app_name)

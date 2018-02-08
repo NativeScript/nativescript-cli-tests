@@ -13,6 +13,7 @@ from core.settings.settings import IOS_RUNTIME_PATH, TNS_PATH, TEST_RUN_HOME, AN
     DISTRIBUTION_PROVISIONING, DEVELOPMENT_TEAM
 from core.settings.strings import *
 from core.tns.tns import Tns
+from core.tns.tns_platform_type import Platform
 from core.xcode.xcode import Xcode
 
 
@@ -25,11 +26,14 @@ class BuildiOSTests(BaseClass):
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
+        Tns.create_app(cls.app_name)
+        Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
         Folder.cleanup("TestApp.app")
         File.remove("TestApp.ipa")
 
         Xcode.cleanup_cache()
+
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -40,7 +44,7 @@ class BuildiOSTests(BaseClass):
         Folder.cleanup(self.app_name_noplatform)
         Folder.cleanup(self.app_name_noplatform + '/platforms/ios/build')
 
-        Folder.cleanup(self.app_name)
+        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
 
     def tearDown(self):
         BaseClass.tearDown(self)
@@ -57,8 +61,6 @@ class BuildiOSTests(BaseClass):
         Folder.cleanup(cls.app_name_space)
 
     def test_001_build_ios(self):
-        Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.build_ios(attributes={"--path": self.app_name}, log_trace=True)
         Tns.build_ios(attributes={"--path": self.app_name, "--release": ""}, log_trace=True)
         Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": ""}, log_trace=True)
@@ -78,8 +80,7 @@ class BuildiOSTests(BaseClass):
         assert "Architectures in the fat file: Payload/TestApp.app/TestApp are: armv7 arm64" in output
 
     def test_190_build_ios_distribution_provisions(self):
-        Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
 
         # List all provisions and verify them
         output = Tns.build_ios(attributes={"--path": self.app_name, "--provision": ""}, assert_success=False)
@@ -104,8 +105,6 @@ class BuildiOSTests(BaseClass):
         assert "Failed to find mobile provision with UUID or Name: fake" in output
 
     def test_200_build_ios_inside_project(self):
-        Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Folder.navigate_to(self.app_name)
         output = Tns.build_ios(tns_path=os.path.join("..", TNS_PATH), attributes={"--path": self.app_name},
                                assert_success=False, log_trace=True)
@@ -142,8 +141,7 @@ class BuildiOSTests(BaseClass):
         Folder.cleanup("TestApp.app")
         File.remove("TestApp.ipa")
 
-        Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        # Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
         Tns.build_ios(attributes={"--path": self.app_name, "--copy-to": "./"}, log_trace=True)
         assert File.exists("TestApp.app")
@@ -153,8 +151,6 @@ class BuildiOSTests(BaseClass):
         assert File.exists("TestApp.ipa")
 
     def test_320_build_ios_with_custom_entitlements(self):
-        Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
         Tns.build_ios(attributes={"--path": self.app_name})
 
         # Add entitlements in app/App_Resources/iOS/app.entitlements

@@ -14,19 +14,21 @@ class PluginsiOSXcconfigTests(BaseClass):
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
+        Tns.create_app(cls.app_name)
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
 
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
+        Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
 
     def setUp(self):
         BaseClass.setUp(self)
         Xcode.cleanup_cache()
         Folder.cleanup(self.app_name)
+        Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
 
     def test_100_plugin_add_xcconfig_before_platform_add_ios(self):
-        Tns.create_app(self.app_name)
-
         plugin_path = TEST_RUN_HOME + "/data/CocoaPods/xcconfig-plugin.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)
         assert "Successfully installed plugin xcconfig-plugin." in output
@@ -50,7 +52,6 @@ class PluginsiOSXcconfigTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name})
 
     def test_202_plugin_add_xcconfig_after_platform_add_ios(self):
-        Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
 
         plugin_path = TEST_RUN_HOME + "/data/CocoaPods/xcconfig-plugin.tgz"
