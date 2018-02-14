@@ -181,7 +181,7 @@ class CreateTests(BaseClass):
 
         output = Tns.run_tns_command("create ")
         assert "You need to provide all the required parameters." in output
-        assert "# create" in output
+        assert "# tns create" in output
 
     def test_404_create_project_with_template_and_ng(self):
         output = Tns.create_app(self.app_name, attributes={"--template": "--ng"}, assert_success=False,

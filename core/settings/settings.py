@@ -46,6 +46,11 @@ IOS_INSPECTOR_PATH = os.environ.get("IOS_INSPECTOR_PATH",
                                     os.path.join(BASE_PACKAGE_PATH, "tns-ios-inspector", SHARE_BRANCH,
                                                  "tns-ios-inspector.tgz"))
 
+# Respect path variables
+CLI_PATH = os.environ.get("nativescript", CLI_PATH)
+WEBPACK_PACKAGE = os.environ.get("nativescript-dev-webpack" "nativescript-dev-webpack@next")
+TYPESCRIPT_PACKAGE = os.environ.get("nativescript-dev-webpack", "nativescript-dev-typescript@next")
+
 # Set local location of test packages
 TNS_PATH = os.path.join("node_modules", ".bin", "tns")
 SUT_FOLDER = TEST_RUN_HOME + os.path.sep + "sut"

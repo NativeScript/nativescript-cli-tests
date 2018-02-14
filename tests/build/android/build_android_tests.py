@@ -256,7 +256,7 @@ class BuildAndroidTests(BaseClass):
     def test_400_build_with_no_platform(self):
         output = Tns.run_tns_command("build")
         assert invalid_input.format("build") in output
-        assert "# build" in output
+        assert "# tns build" in output
 
         if CURRENT_OS == OSType.OSX:
             assert "$ tns build <Platform>" in output
@@ -289,7 +289,7 @@ class BuildAndroidTests(BaseClass):
     def test_406_build_release_without_key_options(self):
         output = Tns.build_android(attributes={"--release": "", "--path": self.app_name}, assert_success=False)
         assert "When producing a release build, you need to specify all --key-store-* options." in output
-        assert "# build android" in output
+        assert "# tns build android" in output
         assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.release_apk))
 
     def test_440_binding_text_exists(self):

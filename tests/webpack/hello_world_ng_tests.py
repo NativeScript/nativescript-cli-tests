@@ -7,7 +7,7 @@ from core.npm.npm import Npm
 from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_KEYSTORE_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, CURRENT_OS, \
-    IOS_RUNTIME_PATH, ANDROID_RUNTIME_PATH, SIMULATOR_NAME
+    IOS_RUNTIME_PATH, ANDROID_RUNTIME_PATH, SIMULATOR_NAME, WEBPACK_PACKAGE, TYPESCRIPT_PACKAGE
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from tests.webpack.helpers.helpers import Helpers
@@ -30,8 +30,8 @@ class WebPackHelloWorldNG(BaseClass):
         Emulator.ensure_available()
         Tns.create_app_ng(cls.app_name, update_modules=True)
         Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev', folder=cls.app_name)
-        Npm.install(package="nativescript-dev-typescript@next", option='--save-dev', folder=cls.app_name)
-        Npm.install(package="nativescript-dev-webpack@next", option='--save-dev', folder=cls.app_name)
+        Npm.install(package=TYPESCRIPT_PACKAGE, option='--save-dev', folder=cls.app_name)
+        Npm.install(package=WEBPACK_PACKAGE, option='--save-dev', folder=cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
 
         if CURRENT_OS == OSType.OSX:
