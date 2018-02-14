@@ -48,7 +48,7 @@ IOS_INSPECTOR_PATH = os.environ.get("IOS_INSPECTOR_PATH",
 
 # Respect path variables
 CLI_PATH = os.environ.get("nativescript", CLI_PATH)
-WEBPACK_PACKAGE = os.environ.get("nativescript-dev-webpack" "nativescript-dev-webpack@next")
+WEBPACK_PACKAGE = os.environ.get("nativescript-dev-webpack", "nativescript-dev-webpack@next")
 TYPESCRIPT_PACKAGE = os.environ.get("nativescript-dev-webpack", "nativescript-dev-typescript@next")
 
 # Set local location of test packages

@@ -33,15 +33,19 @@ class Npm(object):
             File.copy(src=src_file, dest=output_file)
             File.remove(src_file)
         except:
-            print "Failed to pack {0}".format(folder)
+            print 'Failed to pack {0}'.format(folder)
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
 
     @staticmethod
     def install(package='', option='', folder=None, log_level=CommandLogLevel.FULL):
+        if package is None:
+            raise NameError('Package can not be None.')
         return Npm.__run_npm_command('i {0} {1}'.format(package, option), folder=folder, log_level=log_level)
 
     @staticmethod
     def uninstall(package, option='', folder=None, log_level=CommandLogLevel.FULL):
+        if package is None or package is '':
+            raise NameError('Package can not be None.')
         return Npm.__run_npm_command('un {0} {1}'.format(package, option), folder=folder, log_level=log_level)
 
     @staticmethod
