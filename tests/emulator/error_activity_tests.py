@@ -15,7 +15,7 @@ from core.device.emulator import Emulator
 from core.device.helpers.adb import Adb
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
-from core.settings.settings import ANDROID_RUNTIME_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
+from core.settings.settings import ANDROID_PACKAGE, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, CURRENT_OS
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
@@ -32,7 +32,7 @@ class AndroidErrorActivityTests(BaseClass):
         Tns.create_app(cls.app_name,
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
-        Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_PACKAGE})
 
         # Break the app to test error activity
         file_change = ['app/app.js', 'application.start("main-page");', 'throw new Error("Kill the app!");']

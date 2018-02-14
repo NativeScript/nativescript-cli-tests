@@ -10,7 +10,7 @@ from core.device.simulator import Simulator
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, ANDROID_RUNTIME_PATH, \
+from core.settings.settings import IOS_PACKAGE, CURRENT_OS, OSType, TEST_RUN_HOME, ANDROID_PACKAGE, \
     PROVISIONING
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
@@ -29,7 +29,7 @@ class PrepareiOSTests(BaseClass):
         else:
             Simulator.stop()
         Tns.create_app(cls.app_name)
-        Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_PACKAGE})
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
 
     @classmethod
@@ -46,7 +46,7 @@ class PrepareiOSTests(BaseClass):
         assert not Simulator.is_running()[0], 'iOS Simulator started after prepare!'
 
     def test_100_prepare_ios(self):
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         # Initial prepare should be full.
         output = Tns.prepare_ios(attributes={"--path": self.app_name})

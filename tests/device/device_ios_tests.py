@@ -10,7 +10,7 @@ from core.device.device import Device
 from core.device.simulator import Simulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK
+from core.settings.settings import IOS_PACKAGE, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 
@@ -72,7 +72,7 @@ class DeviceIOSTests(BaseClass):
         # Deploy TNS_App on device
         Tns.create_app(self.app_name)
 
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_PACKAGE})
         output = Tns.deploy_ios(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=180)
 
         for device_id in self.DEVICE_IDS:

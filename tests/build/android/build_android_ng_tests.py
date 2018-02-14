@@ -3,7 +3,7 @@ import os
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, \
+from core.settings.settings import ANDROID_PACKAGE, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
@@ -14,7 +14,7 @@ class BuildAndroidNGTests(BaseClass):
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
         Tns.create_app_ng(cls.app_name)
-        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
     @classmethod
     def tearDownClass(cls):

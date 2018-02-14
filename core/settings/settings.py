@@ -6,16 +6,30 @@ import platform
 
 from core.osutils.os_type import OSType
 
-COMMAND_TIMEOUT = 600  # Timeout settings (in seconds).
 
-# Current OS
+def resolve_package(package_env, default_value):
+    package = default_value
+    package_env_value = os.environ.get(package_env)
+    if package_env_value is None:
+        print "{0} not set.".format(package_env)
+    elif '.tgz' in package_env:
+        package = package_env_value
+    else:
+        package = "{0}@{1}".format(package_env, package_env_value)
+    return package
+
+# Timeout settings (in seconds)
+COMMAND_TIMEOUT = 600
+
+# Set current OS
 CURRENT_OS = OSType.LINUX
 if "Windows" in platform.platform():
     CURRENT_OS = OSType.WINDOWS
 if "Darwin" in platform.platform():
     CURRENT_OS = OSType.OSX
 
-TEST_RUN_HOME = os.getcwd()  # Get test run root folder.
+# Set test run root folder
+TEST_RUN_HOME = os.getcwd()
 
 # Test packages location from env. variables
 BASE_PACKAGE_PATH = os.environ.get("BASE_PACKAGE_PATH", "/tns-dist")
@@ -26,39 +40,34 @@ if "release" in BRANCH:
 else:
     SHARE_BRANCH = "Stable"
     TAG = "next"
-SHARE_BRANCH = os.environ.get("SHARE_BRANCH", SHARE_BRANCH)
-TAG = os.environ.get("TAG", TAG)
 
 # Set source location of separate package based on base path
+
+
 CLI_PATH = os.environ.get("CLI_PATH", os.path.join(BASE_PACKAGE_PATH, "CLI", SHARE_BRANCH, "nativescript.tgz"))
 ANDROID_PATH = os.environ.get("ANDROID_PATH",
                               os.path.join(BASE_PACKAGE_PATH, "tns-android", SHARE_BRANCH, "tns-android.tgz"))
 IOS_PATH = os.environ.get("IOS_PATH", os.path.join(BASE_PACKAGE_PATH, "tns-ios", SHARE_BRANCH, "tns-ios.tgz"))
 TNS_MODULES_PATH = os.environ.get("TNS_MODULES_PATH",
                                   os.path.join(BASE_PACKAGE_PATH, "tns-modules", SHARE_BRANCH, "tns-core-modules.tgz"))
-TNS_MODULES_WIDGETS_PATH = os.environ.get("TNS_MODULES_WIDGETS_PATH",
-                                          os.path.join(BASE_PACKAGE_PATH, "android-widgets", SHARE_BRANCH,
-                                                       "tns-core-modules-widgets.tgz"))
-TNS_PLATFORM_DECLARATIONS_PATH = os.environ.get("TNS_PLATFORM_DECLARATIONS_PATH",
-                                                os.path.join(BASE_PACKAGE_PATH, "tns-modules", SHARE_BRANCH,
-                                                             "tns-platform-declarations.tgz"))
 IOS_INSPECTOR_PATH = os.environ.get("IOS_INSPECTOR_PATH",
                                     os.path.join(BASE_PACKAGE_PATH, "tns-ios-inspector", SHARE_BRANCH,
                                                  "tns-ios-inspector.tgz"))
 
-# Respect path variables
-CLI_PATH = os.environ.get("nativescript", CLI_PATH)
-WEBPACK_PACKAGE = os.environ.get("nativescript-dev-webpack", "nativescript-dev-webpack@next")
-TYPESCRIPT_PACKAGE = os.environ.get("nativescript-dev-webpack", "nativescript-dev-typescript@next")
+# Root folder for local packages
+SUT_FOLDER = os.path.join(TEST_RUN_HOME, "sut")
 
 # Set local location of test packages
 TNS_PATH = os.path.join("node_modules", ".bin", "tns")
-SUT_FOLDER = TEST_RUN_HOME + os.path.sep + "sut"
-ANDROID_RUNTIME_PATH = os.path.join(SUT_FOLDER, "tns-android.tgz")
-ANDROID_RUNTIME_SYMLINK_PATH = os.path.join(SUT_FOLDER, "tns-android", "package")
-IOS_RUNTIME_PATH = os.path.join(SUT_FOLDER, "tns-ios.tgz")
-IOS_RUNTIME_SYMLINK_PATH = os.path.join(SUT_FOLDER, "tns-ios", "package")
+ANDROID_PACKAGE = os.path.join(SUT_FOLDER, "tns-android.tgz")
+IOS_PACKAGE = os.path.join(SUT_FOLDER, "tns-ios.tgz")
 IOS_INSPECTOR_PACKAGE = os.path.join(SUT_FOLDER, "tns-ios-inspector.tgz")
+
+# Respect path variables
+WEBPACK_PACKAGE = resolve_package("nativescript-dev-webpack", "nativescript-dev-webpack@next")
+TYPESCRIPT_PACKAGE = resolve_package("nativescript-dev-typescript", "nativescript-dev-typescript@next")
+ANGULAR_PACKAGE = resolve_package("nativescript-angular", "nativescript-angular@next")
+MODULES_PACKAGE = resolve_package("tns-core-modules", "tns-core-modules@{0}".format(TAG))
 
 # Output settings
 OUTPUT_FOLDER = TEST_RUN_HOME + os.path.sep + "out"

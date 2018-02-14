@@ -3,7 +3,7 @@ import os
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH
+from core.settings.settings import IOS_PACKAGE
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
@@ -14,7 +14,7 @@ class BuildiOSNGTests(BaseClass):
         BaseClass.setUpClass(cls.__name__)
         Xcode.cleanup_cache()
         Tns.create_app_ng(app_name=cls.app_name, update_modules=True)
-        Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_PACKAGE})
 
     @classmethod
     def tearDownClass(cls):

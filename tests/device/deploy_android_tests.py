@@ -9,7 +9,7 @@ from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_PATH, \
+from core.settings.settings import ANDROID_PACKAGE, TNS_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_PATH, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID
 from core.settings.strings import *
 from core.tns.tns import Tns
@@ -25,7 +25,7 @@ class DeployAndroidTests(BaseClass):
         BaseClass.setUpClass(cls.__name__)
         Device.ensure_available(platform=Platform.ANDROID)
         Tns.create_app(cls.app_name)
-        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
     def setUp(self):
         BaseClass.setUp(self)

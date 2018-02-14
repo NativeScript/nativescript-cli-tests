@@ -6,7 +6,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, TEST_RUN_HOME
+from core.settings.settings import IOS_PACKAGE, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
@@ -17,7 +17,7 @@ class PluginsiOSLibsTests(BaseClass):
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
         Tns.create_app(cls.app_name)
-        Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_PACKAGE})
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
 
     @classmethod

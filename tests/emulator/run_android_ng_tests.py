@@ -13,7 +13,7 @@ from core.device.emulator import Emulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
-from core.settings.settings import ANDROID_RUNTIME_PATH, EMULATOR_ID, EMULATOR_NAME, CURRENT_OS
+from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID, EMULATOR_NAME, CURRENT_OS
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -30,7 +30,7 @@ class RunAndroidEmulatorTestsNG(BaseClass):
 
         # Create default NG app (to get right dependencies from package.json)
         Tns.create_app_ng(cls.app_name)
-        Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_PACKAGE})
 
         # # Copy the app folder (app is modified in order to get some console logs on loaded)
         # source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'app')

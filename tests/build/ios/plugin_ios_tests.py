@@ -9,7 +9,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, IOS_RUNTIME_PATH, ANDROID_RUNTIME_PATH, TEST_RUN_HOME
+from core.settings.settings import TNS_PATH, IOS_PACKAGE, ANDROID_PACKAGE, TEST_RUN_HOME
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -24,7 +24,7 @@ class PluginsiOSTests(BaseClass):
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
         Tns.create_app(cls.app_name)
-        Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_PACKAGE})
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
 
     @classmethod
@@ -80,7 +80,7 @@ class PluginsiOSTests(BaseClass):
         assert "dependencies" in output
         assert "nativescript-telerik-ui" in output
 
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_PACKAGE})
         Tns.build_ios(attributes={"--path": self.app_name})
 
     def test_202_plugin_add_after_platform_add_ios(self):
@@ -124,7 +124,7 @@ class PluginsiOSTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name})
 
     def test_301_build_app_for_both_platforms(self):
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
         Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})
 
         # Verify files of the plugin
@@ -159,7 +159,7 @@ class PluginsiOSTests(BaseClass):
 
     def test_302_plugin_and_npm_modules_in_same_project(self):
         Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
         Tns.plugin_add("nativescript-social-share", attributes={"--path": self.app_name})
 
         current_dir = os.getcwd()
@@ -202,8 +202,8 @@ class PluginsiOSTests(BaseClass):
         assert "Verify that the plugin package.json file " + \
                "contains a nativescript key and try again" in output
 
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_PACKAGE})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         # Verify iOS only plugin
         output = Tns.plugin_add("tns-plugin@1.0.2", attributes={"--path": self.app_name}, assert_success=False)

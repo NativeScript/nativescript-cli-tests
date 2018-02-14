@@ -10,7 +10,7 @@ from core.device.emulator import Emulator
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import EMULATOR_NAME, EMULATOR_ID, ANDROID_RUNTIME_PATH
+from core.settings.settings import EMULATOR_NAME, EMULATOR_ID, ANDROID_PACKAGE
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 
@@ -27,7 +27,7 @@ class DebugAndroidEmulatorTests(BaseClass):
         Tns.create_app(cls.app_name,
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
-        Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_PACKAGE})
         Tns.build_android(attributes={'--path': cls.app_name})
 
     def setUp(self):

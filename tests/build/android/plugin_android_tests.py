@@ -11,7 +11,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH, TEST_RUN_HOME
+from core.settings.settings import TNS_PATH, ANDROID_PACKAGE, TEST_RUN_HOME
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
@@ -24,7 +24,7 @@ class PluginsAndroidTests(BaseClass):
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
         Tns.create_app(cls.app_name)
-        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
 
     @classmethod
@@ -87,7 +87,7 @@ class PluginsAndroidTests(BaseClass):
         res_manifest = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_BUILD, "intermediates", "manifests")
 
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
         Tns.plugin_add(plugin_name, attributes={"--path": self.app_name})
         assert File.exists(plugin_manifest_path)
         plugin_manifest_file = ET.parse(plugin_manifest_path)
@@ -128,7 +128,7 @@ class PluginsAndroidTests(BaseClass):
         assert "org.nativescript.TestApp" in output
         assert "dependencies" in output
         assert "nativescript-telerik-ui" in output
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
         Tns.build_android(attributes={"--path": self.app_name})
 
     def test_202_plugin_add_after_platform_add_android(self):

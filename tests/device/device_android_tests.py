@@ -8,7 +8,7 @@ from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, EMULATOR_ID
+from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID
 from core.settings.strings import invalid
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -28,7 +28,7 @@ class DeviceAndroidTests(BaseClass):
         Emulator.ensure_available()
 
         Tns.create_app(cls.app_name, update_modules=True)
-        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
         cls.app_id = Tns.get_app_id(cls.app_name)
 
     @classmethod

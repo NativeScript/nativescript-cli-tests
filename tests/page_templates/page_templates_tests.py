@@ -14,8 +14,8 @@ from core.device.simulator import Simulator
 from core.npm.npm import Npm
 from core.osutils.command import *
 from core.osutils.folder import Folder
-from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME, IOS_RUNTIME_PATH, EMULATOR_NAME, EMULATOR_ID, \
-    ANDROID_RUNTIME_PATH
+from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME, IOS_PACKAGE, EMULATOR_NAME, EMULATOR_ID, \
+    ANDROID_PACKAGE
 from core.tns.tns import Tns
 
 
@@ -46,12 +46,12 @@ class PageTemplatesTests(BaseClass):
         Tns.create_app(app_name="blank-ng", attributes={"--template": base_url + "template-blank-ng"})
         Tns.update_angular(path="blank-ng")
 
-        Tns.platform_add_ios(attributes={"--path": "blank-js", "--frameworkPath": IOS_RUNTIME_PATH})
-        Tns.platform_add_ios(attributes={"--path": "blank-ts", "--frameworkPath": IOS_RUNTIME_PATH})
-        Tns.platform_add_ios(attributes={"--path": "blank-ng", "--frameworkPath": IOS_RUNTIME_PATH})
-        Tns.platform_add_android(attributes={"--path": "blank-js", "--frameworkPath": ANDROID_RUNTIME_PATH})
-        Tns.platform_add_android(attributes={"--path": "blank-ts", "--frameworkPath": ANDROID_RUNTIME_PATH})
-        Tns.platform_add_android(attributes={"--path": "blank-ng", "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": "blank-js", "--frameworkPath": IOS_PACKAGE})
+        Tns.platform_add_ios(attributes={"--path": "blank-ts", "--frameworkPath": IOS_PACKAGE})
+        Tns.platform_add_ios(attributes={"--path": "blank-ng", "--frameworkPath": IOS_PACKAGE})
+        Tns.platform_add_android(attributes={"--path": "blank-js", "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_android(attributes={"--path": "blank-ts", "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_android(attributes={"--path": "blank-ng", "--frameworkPath": ANDROID_PACKAGE})
 
     def setUp(self):
         BaseClass.setUp(self)

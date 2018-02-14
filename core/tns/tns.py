@@ -11,7 +11,7 @@ from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import COMMAND_TIMEOUT, TNS_PATH, TAG, TEST_RUN_HOME, CURRENT_OS, \
-    SUT_FOLDER, PROVISIONING, BRANCH
+    SUT_FOLDER, PROVISIONING, BRANCH, MODULES_PACKAGE, ANGULAR_PACKAGE
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
@@ -120,7 +120,7 @@ class Tns(object):
             path = "\"" + path + "\""
 
         Npm.uninstall(package="tns-core-modules", option="--save", folder=path)
-        output = Npm.install(package="tns-core-modules@" + TAG, option="--save", folder=path)
+        output = Npm.install(package=MODULES_PACKAGE, option="--save", folder=path)
         if Npm.version() > 3:
             assert "ERR" not in output, "Something went wrong when modules are installed."
         return output
@@ -137,9 +137,8 @@ class Tns(object):
         if " " in path:
             path = "\"" + path + "\""
 
-        # Always install next since we have no @rc and might drop release branch
         Npm.uninstall(package="nativescript-angular", option="--save", folder=path)
-        output = Npm.install(package="nativescript-angular@next", option="--save", folder=path)
+        output = Npm.install(package=ANGULAR_PACKAGE, option="--save", folder=path)
         if Npm.version() > 3:
             assert "ERR" not in output, "Something went wrong when modules are installed."
 

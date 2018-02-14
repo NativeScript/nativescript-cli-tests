@@ -5,7 +5,7 @@ Test for plugin* commands in context of iOS
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, TEST_RUN_HOME
+from core.settings.settings import IOS_PACKAGE, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
@@ -38,7 +38,7 @@ class PluginsiOSXcconfigTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/xcconfig-plugin/platforms/ios/XcconfigPlugin.h")
         assert "xcconfig-plugin" in File.read(self.app_name + "/package.json")
 
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_PACKAGE})
 
         output = Tns.prepare_ios(attributes={"--path": self.app_name})
         assert "Successfully prepared plugin xcconfig-plugin for ios." in output
@@ -52,7 +52,7 @@ class PluginsiOSXcconfigTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name})
 
     def test_202_plugin_add_xcconfig_after_platform_add_ios(self):
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_PACKAGE})
 
         plugin_path = TEST_RUN_HOME + "/data/CocoaPods/xcconfig-plugin.tgz"
         output = Tns.plugin_add(plugin_path, attributes={"--path": self.app_name}, assert_success=False)

@@ -10,7 +10,7 @@ from core.device.simulator import Simulator
 from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, SIMULATOR_NAME
+from core.settings.settings import IOS_PACKAGE, SIMULATOR_NAME
 from core.settings.strings import *
 from core.tns.tns import Tns
 
@@ -37,7 +37,7 @@ class UnittestsSimulator(BaseClass):
     @timed(360)
     def test_100_test_jasmine_ios_simulator(self):
         Tns.create_app(self.app_name, update_modules=True)
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_PACKAGE})
         Tns.run_tns_command("test init", attributes={"--framework": "jasmine", "--path": self.app_name})
 
         output = Tns.run_tns_command("test ios", attributes={"--emulator": "",
@@ -55,7 +55,7 @@ class UnittestsSimulator(BaseClass):
     def test_200_test_mocha_ios_simulator(self):
         Tns.create_app(self.app_name, update_modules=True)
         Npm.install(package='mocha', folder=self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_PACKAGE})
         Tns.run_tns_command("test init", attributes={"--framework": "mocha", "--path": self.app_name})
 
         output = Tns.run_tns_command("test ios", attributes={"--emulator": "",
@@ -74,7 +74,7 @@ class UnittestsSimulator(BaseClass):
         # https://github.com/NativeScript/ios-runtime/issues/565
         Tns.create_app(app_name=self.app_name)
         Npm.install(package='mocha', folder=self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_PACKAGE})
         Tns.run_tns_command("test init", attributes={"--framework": "mocha", "--path": self.app_name})
 
         copy = os.path.join('data', 'issues', 'ios-runtime-565', 'example.js')

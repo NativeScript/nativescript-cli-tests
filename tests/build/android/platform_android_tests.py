@@ -7,7 +7,7 @@ from core.base_class.BaseClass import BaseClass
 from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, ANDROID_RUNTIME_PATH, TEST_RUN_HOME
+from core.settings.settings import TNS_PATH, ANDROID_PACKAGE, TEST_RUN_HOME
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -35,7 +35,7 @@ class PlatformAndroidTests(BaseClass):
 
     def test_110_platform_add_android_framework_path(self):
         """ Add platform from local package"""
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
     def test_120_platform_add_android_inside_project(self):
         """ Add platform inside project folder (not using --path)"""
@@ -114,7 +114,7 @@ class PlatformAndroidTests(BaseClass):
     def test_300_set_sdk(self):
         """Platform add android should be able to specify target sdk with `--sdk` option"""
         Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_RUNTIME_PATH, "--sdk": "19"})
+                                             "--frameworkPath": ANDROID_PACKAGE, "--sdk": "19"})
 
         manifest = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_SRC_MAIN_PATH, "AndroidManifest.xml")
         output = File.read(manifest)
@@ -123,7 +123,7 @@ class PlatformAndroidTests(BaseClass):
 
     def test_310_set_sdk_not_installed(self):
         output = Tns.platform_add_android(attributes={"--path": self.app_name,
-                                                      "--frameworkPath": ANDROID_RUNTIME_PATH, "--sdk": "29"})
+                                                      "--frameworkPath": ANDROID_PACKAGE, "--sdk": "29"})
 
         assert "Support for the selected Android target SDK android-29 is not verified. " + \
                "Your Android app might not work as expected." in output
@@ -141,7 +141,7 @@ class PlatformAndroidTests(BaseClass):
         TnsAsserts.platform_list_status(output=output, prepared=Platform.NONE, added=Platform.NONE)
 
         # `tns platform list` when android is added
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
         output = Tns.platform_list(attributes={"--path": self.app_name})
         TnsAsserts.platform_list_status(output=output, prepared=Platform.NONE, added=Platform.ANDROID)
 

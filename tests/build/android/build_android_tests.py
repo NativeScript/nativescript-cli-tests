@@ -10,7 +10,7 @@ from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, TNS_PATH, \
+from core.settings.settings import ANDROID_PACKAGE, TNS_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS, \
     OSType, TEST_RUN_HOME
 from core.settings.strings import *
@@ -42,7 +42,7 @@ class BuildAndroidTests(BaseClass):
         Folder.cleanup('temp')
 
         Tns.create_app(cls.app_name)
-        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         # Add release and debug configs
         debug = os.path.join(cls.app_name, 'app', 'config.debug.json')
@@ -147,7 +147,7 @@ class BuildAndroidTests(BaseClass):
         Verify we can build android when inspector is added (test for CLI issue 2467)
         """
         Tns.create_app(self.app_name_dash)
-        Tns.platform_add_android(attributes={"--path": self.app_name_dash, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name_dash, "--frameworkPath": ANDROID_PACKAGE})
         Npm.install(package="tns-ios-inspector", option='--save-dev', folder=self.app_name_dash)
         Tns.build_android(attributes={"--path": self.app_name_dash})
 
@@ -162,7 +162,7 @@ class BuildAndroidTests(BaseClass):
     def test_301_build_project_with_space(self):
         Tns.create_app(self.app_name_space)
         Tns.platform_add_android(
-            attributes={"--path": "\"" + self.app_name_space + "\"", "--frameworkPath": ANDROID_RUNTIME_PATH})
+            attributes={"--path": "\"" + self.app_name_space + "\"", "--frameworkPath": ANDROID_PACKAGE})
 
         # Ensure ANDROID_KEYSTORE_PATH contain spaces (verification for CLI issue 2650)
         Folder.create("with space")
@@ -190,7 +190,7 @@ class BuildAndroidTests(BaseClass):
         # This is required when build with different SDK
         Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         Tns.build_android(attributes={"--compileSdk": "22", "--path": self.app_name})
 
@@ -198,7 +198,7 @@ class BuildAndroidTests(BaseClass):
         # This is required when build with different SDK
         Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         Tns.build_android(attributes={"--compileSdk": "23", "--path": self.app_name})
 
@@ -206,7 +206,7 @@ class BuildAndroidTests(BaseClass):
         # This is required when build with different SDK
         Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         output = Tns.build_android(attributes={"--compileSdk": "99", "--path": self.app_name},
                                    assert_success=False)
@@ -217,7 +217,7 @@ class BuildAndroidTests(BaseClass):
         # This is required when build with different SDK
         Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         File.remove(self.debug_apk)
         Tns.build_android(attributes={"--path": self.app_name, "--copy-to": "./"})
@@ -228,7 +228,7 @@ class BuildAndroidTests(BaseClass):
         # This is required when build with different SDK
         Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         # Add foursquare native library as dependency
         source = os.path.join('data', 'issues', 'android-runtime-755', 'app.gradle')
@@ -245,7 +245,7 @@ class BuildAndroidTests(BaseClass):
         # This is required when build with different SDK
         Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         # Create zip
         run("tar -czf " + self.app_name + "/app/app.tar.gz " + self.app_name + "/app/app.js")
@@ -297,7 +297,7 @@ class BuildAndroidTests(BaseClass):
         Tns.create_app_ts(self.app_ts_name)
 
         Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         Folder.cleanup(os.path.join(self.app_name, 'app'))
         copy = os.path.join(self.app_ts_name, 'app')

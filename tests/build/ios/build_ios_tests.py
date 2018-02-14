@@ -9,7 +9,7 @@ from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, TNS_PATH, TEST_RUN_HOME, ANDROID_RUNTIME_PATH, PROVISIONING, \
+from core.settings.settings import IOS_PACKAGE, TNS_PATH, TEST_RUN_HOME, ANDROID_PACKAGE, PROVISIONING, \
     DISTRIBUTION_PROVISIONING, DEVELOPMENT_TEAM
 from core.settings.strings import *
 from core.tns.tns import Tns
@@ -27,7 +27,7 @@ class BuildiOSTests(BaseClass):
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
         Tns.create_app(cls.app_name)
-        Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_PACKAGE})
 
         Folder.cleanup("TestApp.app")
         File.remove("TestApp.ipa")
@@ -65,7 +65,7 @@ class BuildiOSTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name, "--release": ""}, log_trace=True)
         Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": ""}, log_trace=True)
 
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
         Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": ""}, log_trace=True)
 
         # Verify no aar and frameworks in platforms folder
@@ -118,7 +118,7 @@ class BuildiOSTests(BaseClass):
 
     def test_300_build_ios_with_dash(self):
         Tns.create_app(self.app_name_dash)
-        Tns.platform_add_ios(attributes={"--path": self.app_name_dash, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name_dash, "--frameworkPath": IOS_PACKAGE})
         Tns.build_ios(attributes={"--path": self.app_name_dash})
 
         # Verify project id
@@ -128,13 +128,13 @@ class BuildiOSTests(BaseClass):
     def test_301_build_ios_with_space(self):
         Tns.create_app(self.app_name_space)
         Tns.platform_add_ios(attributes={"--path": "\"" + self.app_name_space + "\"",
-                                         "--frameworkPath": IOS_RUNTIME_PATH})
+                                         "--frameworkPath": IOS_PACKAGE})
 
         Tns.build_ios(attributes={"--path": "\"" + self.app_name_space + "\""})
 
     def test_302_build_ios_with_ios_in_path(self):
         Tns.create_app(self.app_name_ios)
-        Tns.platform_add_ios(attributes={"--path": self.app_name_ios, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name_ios, "--frameworkPath": IOS_PACKAGE})
         Tns.build_ios(attributes={"--path": self.app_name_ios})
 
     def test_310_build_ios_with_copy_to(self):

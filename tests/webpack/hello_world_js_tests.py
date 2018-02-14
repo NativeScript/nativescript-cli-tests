@@ -7,7 +7,7 @@ from core.npm.npm import Npm
 from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_KEYSTORE_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, CURRENT_OS, \
-    IOS_RUNTIME_PATH, SIMULATOR_NAME, ANDROID_RUNTIME_PATH, WEBPACK_PACKAGE
+    IOS_PACKAGE, SIMULATOR_NAME, ANDROID_PACKAGE, WEBPACK_PACKAGE
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from tests.webpack.helpers.helpers import Helpers
@@ -31,12 +31,12 @@ class WebPackHelloWorldJS(BaseClass):
 
         Tns.create_app(cls.app_name, update_modules=True)
         Npm.install(package=WEBPACK_PACKAGE, option='--save-dev', folder=cls.app_name)
-        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         if CURRENT_OS == OSType.OSX:
             Simulator.stop()
             cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
-            Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
+            Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_PACKAGE})
 
     def setUp(self):
         Tns.kill()

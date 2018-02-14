@@ -9,7 +9,7 @@ from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, EMULATOR_ID, IOS_RUNTIME_PATH, SIMULATOR_NAME
+from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID, IOS_PACKAGE, SIMULATOR_NAME
 from core.tns.tns import Tns
 
 
@@ -47,8 +47,8 @@ class GettingStartedTemplatesTests(BaseClass):
         # Create application
         Tns.create_app(self.app_name, attributes={"--template": url}, assert_success=True, update_modules=update)
         if update:
-            Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_RUNTIME_PATH})
-            Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_RUNTIME_PATH})
+            Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_PACKAGE})
+            Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_PACKAGE})
             if "-ng-" in description:
                 Tns.update_angular(self.app_name)
         else:

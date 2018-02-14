@@ -9,8 +9,8 @@ from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
-from core.settings.settings import ANDROID_RUNTIME_PATH, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
-    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, TEST_RUN_HOME, IOS_RUNTIME_PATH, CURRENT_OS, TNS_PATH, BRANCH
+from core.settings.settings import ANDROID_PACKAGE, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
+    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, TEST_RUN_HOME, IOS_PACKAGE, CURRENT_OS, TNS_PATH, BRANCH
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 from verified_plugins.data.update_data import csv_writer
@@ -140,7 +140,7 @@ class BuildPluginDemos(BaseClass):
         out_file_path = os.path.join(VERIFIED_PLUGINS_OUT, name)
         Folder.create(out_file_path)
         if android_support:
-            Tns.platform_add_android(attributes={"--path": name, "--frameworkPath": ANDROID_RUNTIME_PATH},
+            Tns.platform_add_android(attributes={"--path": name, "--frameworkPath": ANDROID_PACKAGE},
                                      tns_path=tns)
             Tns.build_android(attributes={"--path": name,
                                           "--keyStorePath": ANDROID_KEYSTORE_PATH,
@@ -152,7 +152,7 @@ class BuildPluginDemos(BaseClass):
                               tns_path=tns)
 
         if ios_support and CURRENT_OS is OSType.OSX:
-            Tns.platform_add_ios(attributes={"--path": name, "--frameworkPath": IOS_RUNTIME_PATH}, tns_path=tns)
+            Tns.platform_add_ios(attributes={"--path": name, "--frameworkPath": IOS_PACKAGE}, tns_path=tns)
             # Skip this because of https://github.com/NativeScript/nativescript-cli/issues/2357
             # Tns.build_ios(attributes={"--path": plugin_name, "--release": "", "--copy-to": out_file_path}, tns_path=tns)
             Tns.build_ios(attributes={"--path": name, "--forDevice": "", "--release": "",

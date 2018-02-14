@@ -6,8 +6,8 @@ import os
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, \
-    CURRENT_OS, OSType, ANDROID_RUNTIME_PATH
+from core.settings.settings import IOS_PACKAGE, \
+    CURRENT_OS, OSType, ANDROID_PACKAGE
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -30,13 +30,13 @@ class PlatformiOSTests(BaseClass):
         Tns.platform_add_ios(attributes={"--path": self.app_name})
 
     def test_200_platform_add_ios_framework_path(self):
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_PACKAGE})
 
         # If project.xcworkspace is there Xcode project name is wrong
         assert not File.exists(self.app_name + "/platforms/ios/TestApp.xcodeproj/project.xcworkspace")
 
     def test_201_platform_remove_ios(self):
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_PACKAGE})
         Tns.platform_remove(platform="ios", attributes={"--path": self.app_name})
         assert Folder.is_empty(self.app_name + '/platforms')
         output = File.read(self.app_name + os.sep + "package.json")
@@ -73,7 +73,7 @@ class PlatformiOSTests(BaseClass):
         assert "\"id\": \"org.nativescript.MyApp\"" in output
 
         # Add iOS platform
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_PACKAGE})
 
         # Verify plist file in native project (after prepare)
         Tns.prepare_ios(attributes={"--path": self.app_name})
@@ -114,7 +114,7 @@ class PlatformiOSTests(BaseClass):
         TnsAsserts.platform_list_status(output=output, prepared=Platform.NONE, added=Platform.NONE)
 
         # `tns platform list` when iOS is added
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_PACKAGE})
         output = Tns.platform_list(attributes={"--path": self.app_name})
         TnsAsserts.platform_list_status(output=output, prepared=Platform.NONE, added=Platform.IOS)
 
@@ -124,7 +124,7 @@ class PlatformiOSTests(BaseClass):
         TnsAsserts.platform_list_status(output=output, prepared=Platform.IOS, added=Platform.IOS)
 
         # `tns platform list` when android is added (iOS already prepared)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_RUNTIME_PATH})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
         output = Tns.platform_list(attributes={"--path": self.app_name})
         TnsAsserts.platform_list_status(output=output, prepared=Platform.IOS, added=Platform.BOTH)
 

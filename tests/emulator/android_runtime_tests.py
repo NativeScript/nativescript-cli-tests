@@ -9,7 +9,7 @@ from core.device.emulator import Emulator
 from core.device.helpers.adb import Adb
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_RUNTIME_PATH, EMULATOR_ID
+from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 
@@ -33,7 +33,7 @@ class RuntimeTests(BaseClass):
 
     def test_200_calling_custom_generated_classes_declared_in_manifest(self):
         Tns.create_app(self.app_name, attributes={"--template": os.path.join("data", "apps", "sbg-test-app.tgz")})
-        Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH, "--path": self.app_name})
+        Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_PACKAGE, "--path": self.app_name})
         Adb.clear_logcat(device_id=EMULATOR_ID)
         Tns.run_android(attributes={"--path": self.app_name, "--device": EMULATOR_ID, "--justlaunch": ""})
         sleep(10)
@@ -50,7 +50,7 @@ class RuntimeTests(BaseClass):
     def test_300_verbose_log_android(self):
         Tns.create_app(self.app_name,
                        attributes={"--template": os.path.join("data", "apps", "verbose-hello-world.tgz")})
-        Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_RUNTIME_PATH, "--path": self.app_name})
+        Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_PACKAGE, "--path": self.app_name})
 
         output = File.read(os.path.join(self.app_name, "app", "app.js"), print_content=True)
         assert "__enableVerboseLogging()" in output, "Verbose logging not enabled in app.js"

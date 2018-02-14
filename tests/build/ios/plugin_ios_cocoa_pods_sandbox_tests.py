@@ -6,7 +6,7 @@ import os
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_RUNTIME_PATH, TEST_RUN_HOME
+from core.settings.settings import IOS_PACKAGE, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
 
@@ -33,7 +33,7 @@ class PluginsiOSSandboxPodsTests(BaseClass):
     def test_100_plugin_add_sandbox_pod_can_write_in_app_folder(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH})
+                                         "--frameworkPath": IOS_PACKAGE})
 
         plugin = os.path.join(TEST_RUN_HOME, "data", "CocoaPods", "nativescript-ios-working-with-sandbox-plugin.tgz")
         output = Tns.plugin_add(plugin, attributes={"--path": self.app_name}, assert_success=False)
@@ -49,7 +49,7 @@ class PluginsiOSSandboxPodsTests(BaseClass):
     def test_400_plugin_add_sandbox_pod_can_write_outside_app_folder_by_default(self):
         Tns.create_app(self.app_name)
         Tns.platform_add_ios(attributes={"--path": self.app_name,
-                                         "--frameworkPath": IOS_RUNTIME_PATH})
+                                         "--frameworkPath": IOS_PACKAGE})
 
         plugin = os.path.join(TEST_RUN_HOME, "data", "CocoaPods", "nativescript-ios-fail-with-sandbox-plugin.tgz")
         output = Tns.plugin_add(plugin, attributes={"--path": self.app_name}, assert_success=False)
@@ -67,7 +67,7 @@ class PluginsiOSSandboxPodsTests(BaseClass):
         File.replace("node_modules/nativescript/config/config.json", '"USE_POD_SANDBOX": false',
                      '"USE_POD_SANDBOX": true')
         Tns.create_app(self.app_name)
-        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_RUNTIME_PATH})
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_PACKAGE})
 
         plugin = os.path.join(TEST_RUN_HOME, "data", "CocoaPods", "nativescript-ios-fail-with-sandbox-plugin.tgz")
         output = Tns.plugin_add(plugin, attributes={"--path": self.app_name}, assert_success=False)
