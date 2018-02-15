@@ -18,6 +18,21 @@ def resolve_package(package_env, default_value):
         package = "{0}@{1}".format(package_env, package_env_value)
     return package
 
+
+def resolve_path(package_env, default_value):
+    package = default_value
+    package_env_value = os.environ.get(package_env)
+    if package_env_value is None:
+        print "{0} not set.".format(package_env)
+    elif '.tgz' in package_env:
+        package = package_env_value
+    else:
+        # At the moment if we pass nativescript=rc we will still get default path.
+        # TODO: Make it more flexible.
+        package = default_value
+    return package
+
+
 # Timeout settings (in seconds)
 COMMAND_TIMEOUT = 600
 
@@ -64,6 +79,10 @@ IOS_PACKAGE = os.path.join(SUT_FOLDER, "tns-ios.tgz")
 IOS_INSPECTOR_PACKAGE = os.path.join(SUT_FOLDER, "tns-ios-inspector.tgz")
 
 # Respect path variables
+CLI_PATH = resolve_path("nativescript", CLI_PATH)
+ANDROID_PATH = resolve_path("android", ANDROID_PATH)
+IOS_PATH = resolve_path("ios", IOS_PATH)
+IOS_INSPECTOR_PATH = resolve_path("ios-inspector", IOS_INSPECTOR_PATH)
 WEBPACK_PACKAGE = resolve_package("nativescript-dev-webpack", "nativescript-dev-webpack@next")
 TYPESCRIPT_PACKAGE = resolve_package("nativescript-dev-typescript", "nativescript-dev-typescript@next")
 ANGULAR_PACKAGE = resolve_package("nativescript-angular", "nativescript-angular@next")
