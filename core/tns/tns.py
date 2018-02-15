@@ -435,10 +435,8 @@ class Tns(object):
             assert "malformed" not in output
 
             if log_trace:
-                assert "BUILD SUCCEEDED" in output
                 assert "CodeSign" in output
             else:
-                assert "BUILD SUCCEEDED" not in output, "Native build out is displayed even without --log trace"
                 assert "CodeSign" not in output, "Native build out is displayed even without --log trace"
 
             # Verify release/debug builds
@@ -461,6 +459,7 @@ class Tns(object):
                     assert "build/device/" + app_id + ".app" in output
                     assert "ARCHIVE SUCCEEDED" in output
                     assert "EXPORT SUCCEEDED" in output
+                    assert "BUILD SUCCEEDED" not in output
                 else:
                     assert "ARCHIVE SUCCEEDED" not in output, "Native build out is displayed without --log trace"
                     assert "EXPORT SUCCEEDED" not in output, "Native build out is displayed without --log trace"
@@ -468,6 +467,7 @@ class Tns(object):
                 bundle_content = File.read(device_folder + app_id + ".app/" + app_id)
             else:
                 if log_trace:
+                    assert "BUILD SUCCEEDED" in output
                     assert "build/emulator/" + app_id + ".app" in output
                 else:
                     # Xcode 8.* output contains some warnings for images, so we will assert only on Xcode 9.*
