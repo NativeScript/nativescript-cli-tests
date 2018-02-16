@@ -12,18 +12,19 @@ from core.tns.tns_verifications import TnsAsserts
 class Helpers(object):
 
     wp_run = ['Webpack compilation complete', 'Successfully installed']
+    wp_sync = ['Webpack compilation complete', 'Successfully synced application']
     wp_errors = ['Module not found', 'Snapshot generation failed']
 
     @staticmethod
-    def get_apk_path(app_name, config):
+    def get_apk_path(app_name):
         return os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, app_name + "-release.apk")
 
     @staticmethod
-    def run_android_via_adb(app_name, config, image):
+    def run_android_via_adb(app_name, image):
         Tns.kill()
         Helpers.emulator_cleanup(app_name=app_name)
-        Helpers.install_and_run_app(app_name=app_name, config=config)
-        Helpers.android_screen_match(app_name=app_name, image=image)
+        Helpers.install_and_run_app(app_name=app_name)
+        Helpers.android_screen_match(image=image)
 
     @staticmethod
     def emulator_cleanup(app_name):
@@ -35,15 +36,12 @@ class Helpers(object):
 
     @staticmethod
     def install_and_run_app(app_name, config):
-        Adb.install(apk_file_path=Helpers.get_apk_path(app_name=app_name, config=config), device_id=EMULATOR_ID)
+        Adb.install(apk_file_path=Helpers.get_apk_path(app_name=app_name), device_id=EMULATOR_ID)
         Adb.start_app(device_id=EMULATOR_ID, app_id="org.nativescript." + app_name)
 
     @staticmethod
-    def android_screen_match(app_name, image):
-        app_id = Tns.get_app_id(app_name)
+    def android_screen_match(image):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image=image)
-        Adb.stop_application(device_id=EMULATOR_ID, app_id=Tns.get_app_id(app_name))
-        assert not Adb.is_application_running(device_id=EMULATOR_ID, app_id=app_id)
 
     @staticmethod
     def ios_screen_match(sim_id, image):

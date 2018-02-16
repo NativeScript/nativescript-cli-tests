@@ -26,7 +26,6 @@ class WebPackHelloWorldNG(BaseClass):
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
-        Emulator.stop()
         Emulator.ensure_available()
         Tns.create_app_ng(cls.app_name, update_modules=True)
         Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev', folder=cls.app_name)
@@ -35,7 +34,6 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         if CURRENT_OS == OSType.OSX:
-            Simulator.stop()
             cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
             Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_PACKAGE})
 
@@ -62,7 +60,7 @@ class WebPackHelloWorldNG(BaseClass):
                                       "--bundle": ""})
 
         Helpers.verify_size(app_name=self.app_name, config="ng-android-bundle")
-        Helpers.run_android_via_adb(app_name=self.app_name, config="release", image=self.image_original)
+        Helpers.run_android_via_adb(app_name=self.app_name, image=self.image_original)
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_001_ios_build_release_with_bundle(self):
@@ -80,7 +78,7 @@ class WebPackHelloWorldNG(BaseClass):
                                       "--env.uglify": ""})
 
         Helpers.verify_size(app_name=self.app_name, config="ng-android-bundle-uglify")
-        Helpers.run_android_via_adb(app_name=self.app_name, config="release", image=self.image_original)
+        Helpers.run_android_via_adb(app_name=self.app_name, image=self.image_original)
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_100_ios_build_release_with_bundle_and_uglify(self):
@@ -101,7 +99,7 @@ class WebPackHelloWorldNG(BaseClass):
                                       "--env.snapshot": ""})
 
         Helpers.verify_size(app_name=self.app_name, config="ng-android-bundle-snapshot")
-        Helpers.run_android_via_adb(app_name=self.app_name, config="release", image=self.image_original)
+        Helpers.run_android_via_adb(app_name=self.app_name, image=self.image_original)
 
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Windows can't build with snapshot.")
     def test_120_android_build_release_with_bundle_and_snapshot_and_uglify(self):
@@ -116,7 +114,7 @@ class WebPackHelloWorldNG(BaseClass):
                                       "--env.snapshot": ""})
 
         Helpers.verify_size(app_name=self.app_name, config="ng-android-bundle-uglify-snapshot")
-        Helpers.run_android_via_adb(app_name=self.app_name, config="release", image=self.image_original)
+        Helpers.run_android_via_adb(app_name=self.app_name, image=self.image_original)
 
     def test_200_run_android_with_bundle_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
@@ -124,8 +122,7 @@ class WebPackHelloWorldNG(BaseClass):
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_original)
-        Tns.kill()
+        Helpers.android_screen_match(image=self.image_original)
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.ts_change)
@@ -133,13 +130,8 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=90)
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_change)
-        Tns.kill()
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Helpers.android_screen_match(image=self.image_change)
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, self.ts_change)
@@ -147,13 +139,8 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_original)
-        Tns.kill()
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Helpers.android_screen_match(image=self.image_original)
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_200_run_ios_with_bundle_sync_changes(self):
@@ -162,7 +149,6 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
-        Tns.kill()
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.ts_change)
@@ -170,12 +156,8 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': ''}, wait=False,
-                          assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=90)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change)
-        Tns.kill()
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, self.ts_change)
@@ -183,12 +165,8 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': ''}, wait=False,
-                          assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
-        Tns.kill()
 
     def test_210_run_android_with_bundle_uglify_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
@@ -197,8 +175,7 @@ class WebPackHelloWorldNG(BaseClass):
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_original)
-        Tns.kill()
+        Helpers.android_screen_match(image=self.image_original)
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.ts_change)
@@ -206,14 +183,8 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          "--env.uglify": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=90)
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_change)
-        Tns.kill()
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Helpers.android_screen_match(image=self.image_change)
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, self.ts_change)
@@ -221,14 +192,8 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          "--env.uglify": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_original)
-        Tns.kill()
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Helpers.android_screen_match(image=self.image_original)
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_210_run_ios_with_bundle_uglify_sync_changes(self):
@@ -237,7 +202,6 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
-        Tns.kill()
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.ts_change)
@@ -245,12 +209,8 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': ''},
-                          wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=90)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change)
-        Tns.kill()
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, self.ts_change)
@@ -258,12 +218,8 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': ''},
-                          wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
-        Tns.kill()
 
     def test_220_run_android_with_bundle_snapshot_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
@@ -272,8 +228,7 @@ class WebPackHelloWorldNG(BaseClass):
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_original)
-        Tns.kill()
+        Helpers.android_screen_match(image=self.image_original)
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.ts_change)
@@ -281,14 +236,8 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          "--env.snapshot": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=90)
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_change)
-        Tns.kill()
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Helpers.android_screen_match(image=self.image_change)
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, self.ts_change)
@@ -296,14 +245,8 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          "--env.snapshot": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_original)
-        Tns.kill()
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Helpers.android_screen_match(image=self.image_original)
 
     def test_230_run_android_with_bundle_snapshot_and_uglify_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
@@ -313,8 +256,7 @@ class WebPackHelloWorldNG(BaseClass):
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_original)
-        Tns.kill()
+        Helpers.android_screen_match(image=self.image_original)
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.ts_change)
@@ -322,15 +264,8 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          "--env.snapshot": "",
-                                          "--env.uglify": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=90)
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_change)
-        Tns.kill()
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Helpers.android_screen_match(image=self.image_change)
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, self.ts_change)
@@ -338,12 +273,5 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          "--env.snapshot": "",
-                                          "--env.uglify": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_original)
-        Tns.kill()
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Helpers.android_screen_match(image=self.image_original)

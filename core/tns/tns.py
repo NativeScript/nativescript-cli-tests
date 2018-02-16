@@ -82,6 +82,8 @@ class Tns(object):
         time.sleep(1)
         Process.kill_by_commandline('tns')
         time.sleep(1)
+        Process.kill_by_commandline('webpack.js')
+        Process.kill_by_commandline('tsc')
 
     @staticmethod
     def get_app_id(app_name):
