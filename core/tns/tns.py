@@ -479,12 +479,6 @@ class Tns(object):
                 assert File.exists(emu_folder + app_id + ".app")
                 bundle_content = File.read(emu_folder + app_id + ".app/" + app_id)
 
-            # Check release/debug builds
-            if "--release" in attributes.keys():
-                assert "TKLiveSync" not in bundle_content, "TKLiveSync binaries available in release configuration."
-            else:
-                assert "TKLiveSync" in bundle_content, "TKLiveSync binaries not available in debug configuration."
-
             # Check signing options
             xcode_project = Tns.__get_xcode_project_file(app_name)
             if "--provision" in attributes.keys():
