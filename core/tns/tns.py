@@ -435,10 +435,8 @@ class Tns(object):
             assert "malformed" not in output
 
             if log_trace:
-                assert "BUILD SUCCEEDED" in output
                 assert "CodeSign" in output
             else:
-                assert "BUILD SUCCEEDED" not in output, "Native build out is displayed even without --log trace"
                 assert "CodeSign" not in output, "Native build out is displayed even without --log trace"
 
             # Verify release/debug builds
@@ -461,6 +459,7 @@ class Tns(object):
                     assert "build/device/" + app_id + ".app" in output
                     assert "ARCHIVE SUCCEEDED" in output
                     assert "EXPORT SUCCEEDED" in output
+                    assert "BUILD SUCCEEDED" not in output
                 else:
                     assert "ARCHIVE SUCCEEDED" not in output, "Native build out is displayed without --log trace"
                     assert "EXPORT SUCCEEDED" not in output, "Native build out is displayed without --log trace"
@@ -468,6 +467,7 @@ class Tns(object):
                 bundle_content = File.read(device_folder + app_id + ".app/" + app_id)
             else:
                 if log_trace:
+                    assert "BUILD SUCCEEDED" in output
                     assert "build/emulator/" + app_id + ".app" in output
                 else:
                     # Xcode 8.* output contains some warnings for images, so we will assert only on Xcode 9.*
@@ -478,12 +478,6 @@ class Tns(object):
                 assert File.exists(app_name + "/platforms/ios/" + app_id + "/" + app_id + "-Prefix.pch")
                 assert File.exists(emu_folder + app_id + ".app")
                 bundle_content = File.read(emu_folder + app_id + ".app/" + app_id)
-
-            # Check release/debug builds
-            if "--release" in attributes.keys():
-                assert "TKLiveSync" not in bundle_content, "TKLiveSync binaries available in release configuration."
-            else:
-                assert "TKLiveSync" in bundle_content, "TKLiveSync binaries not available in debug configuration."
 
             # Check signing options
             xcode_project = Tns.__get_xcode_project_file(app_name)

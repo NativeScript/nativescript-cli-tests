@@ -12,7 +12,7 @@ def resolve_package(package_env, default_value):
     package_env_value = os.environ.get(package_env)
     if package_env_value is None:
         print "{0} not set.".format(package_env)
-    elif '.tgz' in package_env:
+    elif '.tgz' in package_env_value:
         package = package_env_value
     else:
         package = "{0}@{1}".format(package_env, package_env_value)
@@ -24,7 +24,7 @@ def resolve_path(package_env, default_value):
     package_env_value = os.environ.get(package_env)
     if package_env_value is None:
         print "{0} not set.".format(package_env)
-    elif '.tgz' in package_env:
+    elif '.tgz' in package_env_value:
         package = package_env_value
     else:
         # At the moment if we pass nativescript=rc we will still get default path.
