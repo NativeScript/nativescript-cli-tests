@@ -10,6 +10,7 @@ from core.settings.settings import ANDROID_KEYSTORE_PATH, \
     IOS_PACKAGE, ANDROID_PACKAGE, SIMULATOR_NAME, WEBPACK_PACKAGE, TYPESCRIPT_PACKAGE
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
+from core.tns.tns_platform_type import Platform
 from tests.webpack.helpers.helpers import Helpers
 
 
@@ -123,6 +124,7 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
         Helpers.android_screen_match(image=self.image_original)
+        Helpers.wait_webpack_watcher()
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.ts_change)
@@ -149,6 +151,7 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
+        Helpers.wait_webpack_watcher()
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.ts_change)
@@ -176,6 +179,7 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
         Helpers.android_screen_match(image=self.image_original)
+        Helpers.wait_webpack_watcher()
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.ts_change)
@@ -202,6 +206,7 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
+        Helpers.wait_webpack_watcher()
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.ts_change)
@@ -209,8 +214,9 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=60)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change, timeout=60)
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, self.ts_change)
@@ -218,10 +224,12 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=60)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=60)
 
-    def test_220_run_android_with_bundle_snapshot_sync_changes(self):
+    def test_320_run_android_with_bundle_snapshot_sync_changes(self):
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
                                           "--env.snapshot": "",
@@ -229,6 +237,7 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
         Helpers.android_screen_match(image=self.image_original)
+        Helpers.wait_webpack_watcher()
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.ts_change)
@@ -236,8 +245,9 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
-        Helpers.android_screen_match(image=self.image_change)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=60)
+        Helpers.android_screen_match(image=self.image_change, timeout=60)
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, self.ts_change)
@@ -245,10 +255,12 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
-        Helpers.android_screen_match(image=self.image_original)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=60)
+        Helpers.android_screen_match(image=self.image_original, timeout=60)
 
-    def test_230_run_android_with_bundle_snapshot_and_uglify_sync_changes(self):
+    def test_330_run_android_with_bundle_snapshot_and_uglify_sync_changes(self):
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
                                           "--env.snapshot": "",
@@ -257,6 +269,7 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
         Helpers.android_screen_match(image=self.image_original)
+        Helpers.wait_webpack_watcher()
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.ts_change)
@@ -264,8 +277,9 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
-        Helpers.android_screen_match(image=self.image_change)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=60)
+        Helpers.android_screen_match(image=self.image_change, timeout=60)
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, self.ts_change)
@@ -273,5 +287,6 @@ class WebPackHelloWorldNG(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
-        Helpers.android_screen_match(image=self.image_original)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=60)
+        Helpers.android_screen_match(image=self.image_original, timeout=60)

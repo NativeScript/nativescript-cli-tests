@@ -1,19 +1,35 @@
 import csv
 import os
+import time
 
 from core.device.device import Device
 from core.device.helpers.adb import Adb
 from core.osutils.file import File
+from core.osutils.process import Process
 from core.settings.settings import EMULATOR_ID, EMULATOR_NAME, SIMULATOR_NAME, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 
 
 class Helpers(object):
-
     wp_run = ['Webpack compilation complete', 'Successfully installed']
     wp_sync = ['Webpack compilation complete', 'Successfully synced application']
     wp_errors = ['Module not found', 'Snapshot generation failed']
+
+    @staticmethod
+    def wait_webpack_watcher(timeout=60):
+        running = False
+        end_time = time.time() + timeout
+        while not running:
+            time.sleep(5)
+            webpack_cmd = "webpack.js', '--config=webpack.config.js', '--progress', '--watch'"
+            running = Process.is_running_by_commandline(webpack_cmd)
+            if running:
+                running = True
+                break
+            if (running is False) and (time.time() > end_time):
+                raise NameError("Webpack with watcher is not running in {0} seconds.", timeout)
+        return running
 
     @staticmethod
     def get_apk_path(app_name):
@@ -40,12 +56,12 @@ class Helpers(object):
         Adb.start_app(device_id=EMULATOR_ID, app_id="org.nativescript." + app_name)
 
     @staticmethod
-    def android_screen_match(image):
-        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image=image)
+    def android_screen_match(image, timeout=45):
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image=image, timeout=timeout)
 
     @staticmethod
-    def ios_screen_match(sim_id, image):
-        Device.screen_match(device_name=SIMULATOR_NAME, device_id=sim_id, expected_image=image)
+    def ios_screen_match(sim_id, image, timeout=45):
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=sim_id, expected_image=image, timeout=timeout)
 
     @staticmethod
     def get_android_size(app_name):

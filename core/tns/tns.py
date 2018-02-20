@@ -83,6 +83,7 @@ class Tns(object):
         Process.kill_by_commandline('tns')
         time.sleep(1)
         Process.kill_by_commandline('webpack.js')
+        time.sleep(1)
         Process.kill_by_commandline('tsc')
 
     @staticmethod
