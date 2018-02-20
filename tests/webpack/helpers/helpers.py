@@ -35,7 +35,7 @@ class Helpers(object):
         assert not Adb.is_application_running(device_id=EMULATOR_ID, app_id=app_id)
 
     @staticmethod
-    def install_and_run_app(app_name, config):
+    def install_and_run_app(app_name):
         Adb.install(apk_file_path=Helpers.get_apk_path(app_name=app_name), device_id=EMULATOR_ID)
         Adb.start_app(device_id=EMULATOR_ID, app_id="org.nativescript." + app_name)
 
