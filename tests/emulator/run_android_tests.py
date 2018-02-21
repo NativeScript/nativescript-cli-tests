@@ -36,23 +36,26 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class RunAndroidEmulatorTests(BaseClass):
+    source_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
+    temp_app = os.path.join(TEST_RUN_HOME, 'data', BaseClass.app_name)
+
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
-        Emulator.stop()
-        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
+        Tns.kill()
         Emulator.ensure_available()
-        Folder.cleanup(cls.app_name)
+        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Tns.create_app(cls.app_name,
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
         Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_PACKAGE})
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
+        Folder.cleanup(cls.temp_app)
+        Folder.copy(cls.source_app, cls.temp_app)
 
     def setUp(self):
         BaseClass.setUp(self)
-        Folder.cleanup(self.app_name)
-        Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
+        Folder.cleanup(self.source_app)
+        Folder.copy(self.temp_app, self.source_app)
 
     def tearDown(self):
         Tns.kill()
@@ -63,7 +66,7 @@ class RunAndroidEmulatorTests(BaseClass):
     def tearDownClass(cls):
         BaseClass.tearDownClass()
         Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
-        Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
+        Folder.cleanup(cls.temp_app)
 
     def test_001_tns_run_android_js_css_xml_manifest(self):
         """Make valid changes in JS,CSS and XML"""
@@ -202,6 +205,7 @@ class RunAndroidEmulatorTests(BaseClass):
         strings = ['main-page.xml has syntax errors', 'unclosed xml attribute',
                    'Successfully synced application', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
+        assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Exception", timeout=30), "Error activity not found!"
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML_INVALID_SYNTAX)
