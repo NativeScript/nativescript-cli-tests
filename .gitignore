@@ -10,7 +10,6 @@ deviceLog.txt
 pylint*
 QA*
 Report*
-setup*
 TestApp*
 TNS_App*
 template-hello*
