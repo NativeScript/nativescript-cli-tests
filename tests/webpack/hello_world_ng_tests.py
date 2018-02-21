@@ -229,7 +229,6 @@ class WebPackHelloWorldNG(BaseClass):
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=60)
 
     def test_320_run_android_with_bundle_snapshot_sync_changes(self):
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
                                           "--env.snapshot": "",
@@ -260,7 +259,6 @@ class WebPackHelloWorldNG(BaseClass):
         Helpers.android_screen_match(image=self.image_original, timeout=60)
 
     def test_330_run_android_with_bundle_snapshot_and_uglify_sync_changes(self):
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
                                           "--env.snapshot": "",
