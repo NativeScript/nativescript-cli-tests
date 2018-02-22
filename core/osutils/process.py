@@ -22,7 +22,22 @@ class Process(object):
         return result
 
     @staticmethod
-    def wait_until_running(proc_name, timeout):
+    def is_running_by_commandline(commandline):
+        """Check if process with specified commandline is running"""
+        result = False
+        for proc in psutil.process_iter():
+            cmdline = ""
+            try:
+                cmdline = str(proc.cmdline())
+            except:
+                continue
+            if commandline in cmdline:
+                result = True
+                break
+        return result
+
+    @staticmethod
+    def wait_until_running(proc_name, timeout=60):
         """Wait until process is running
         :param proc_name: Process name.
         :param timeout: Timeout in seconds.
