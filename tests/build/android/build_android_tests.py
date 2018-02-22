@@ -1,6 +1,7 @@
 """
 Tests for building projects with the Android platform
 """
+import datetime
 import os
 import unittest
 from zipfile import ZipFile
@@ -88,7 +89,15 @@ class BuildAndroidTests(BaseClass):
         File.copy(src=src, dest=dest_1)
         File.copy(src=src, dest=dest_2)
 
-        Tns.build_android(attributes={"--path": self.app_name})
+        # Verify incremental native build
+        before_build = datetime.datetime.now()
+        output = Tns.build_android(attributes={"--path": self.app_name})
+        after_build = datetime.datetime.now()
+        assert "Gradle build..." in output, "Gradle build not called."
+        assert output.count("Gradle build...") is 1, "Only one gradle build is triggered."
+        assert (after_build - before_build).total_seconds() < 20, "Incremental build takes more then 20 sec."
+
+        # Verify platform specific files
         assert File.pattern_exists(self.platforms_android, "*.aar")
         assert not File.pattern_exists(self.platforms_android, "*.plist")
         assert not File.pattern_exists(self.platforms_android, "*.android.js")
@@ -101,6 +110,24 @@ class BuildAndroidTests(BaseClass):
         assert not File.pattern_exists(self.app_name + "/temp", "*.plist")
         assert not File.pattern_exists(self.app_name + "/temp", "*.android.*")
         assert not File.pattern_exists(self.app_name + "/temp", "*.ios.*")
+
+        # Verify clean build force native project rebuild
+        before_build = datetime.datetime.now()
+        output = Tns.build_android(attributes={"--path": self.app_name})
+        after_build = datetime.datetime.now()
+        assert "Gradle build..." in output, "Gradle build not called."
+        assert output.count("Gradle build...") is 1, "Only one gradle build is triggered."
+        assert (after_build - before_build).total_seconds() < 15, "Incremental build takes more then 15 sec."
+
+        # Verify incremental native build
+        before_build = datetime.datetime.now()
+        output = Tns.build_android(attributes={"--path": self.app_name, "--clean": ""})
+        after_build = datetime.datetime.now()
+        build_time = (after_build - before_build).total_seconds()
+        assert "Gradle build..." in output, "Gradle build not called."
+        assert output.count("Gradle build...") is 2, "Only one gradle build is triggered."
+        assert build_time > 15, "Clean build takes less then 15 sec."
+        assert build_time < 90, "Clean build takes more than 90 sec."
 
     def test_002_build_android_release(self):
         Tns.build_android(attributes={"--path": self.app_name,
