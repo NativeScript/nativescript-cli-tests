@@ -32,8 +32,9 @@ class Helpers(object):
         return running
 
     @staticmethod
-    def get_apk_path(app_name):
-        return os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, app_name + "-release.apk")
+    def get_apk_path(app_name, config):
+        app_id = Tns.get_app_id(app_name).rpartition('.')[-1]
+        return os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, app_id + '-{0}.apk'.format(config))
 
     @staticmethod
     def run_android_via_adb(app_name, image):
@@ -51,9 +52,10 @@ class Helpers(object):
         assert not Adb.is_application_running(device_id=EMULATOR_ID, app_id=app_id)
 
     @staticmethod
-    def install_and_run_app(app_name):
-        Adb.install(apk_file_path=Helpers.get_apk_path(app_name=app_name), device_id=EMULATOR_ID)
-        Adb.start_app(device_id=EMULATOR_ID, app_id="org.nativescript." + app_name)
+    def install_and_run_app(app_name, config):
+        app_id = Tns.get_app_id(app_name)
+        Adb.install(apk_file_path=Helpers.get_apk_path(app_name=app_name, config=config), device_id=EMULATOR_ID)
+        Adb.start_app(device_id=EMULATOR_ID, app_id=app_id)
 
     @staticmethod
     def android_screen_match(image, timeout=45):
