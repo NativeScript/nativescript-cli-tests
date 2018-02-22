@@ -10,13 +10,13 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class Helpers(object):
-
     wp_run = ['Webpack compilation complete', 'Successfully installed']
     wp_errors = ['Module not found', 'Snapshot generation failed']
 
     @staticmethod
     def get_apk_path(app_name, config):
-        return os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, app_name + "-release.apk")
+        app_id = Tns.get_app_id(app_name).rpartition('.')[-1]
+        return os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, app_id + '-{0}.apk'.format(config))
 
     @staticmethod
     def run_android_via_adb(app_name, config, image):
@@ -35,8 +35,9 @@ class Helpers(object):
 
     @staticmethod
     def install_and_run_app(app_name, config):
+        app_id = Tns.get_app_id(app_name)
         Adb.install(apk_file_path=Helpers.get_apk_path(app_name=app_name, config=config), device_id=EMULATOR_ID)
-        Adb.start_app(device_id=EMULATOR_ID, app_id="org.nativescript." + app_name)
+        Adb.start_app(device_id=EMULATOR_ID, app_id=app_id)
 
     @staticmethod
     def android_screen_match(app_name, image):
