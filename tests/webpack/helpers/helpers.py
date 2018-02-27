@@ -37,10 +37,11 @@ class Helpers(object):
         return os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, app_id + '-{0}.apk'.format(config))
 
     @staticmethod
-    def run_android_via_adb(app_name, image):
+    def run_android_via_adb(app_name, image, config="release"):
         Tns.kill()
         Helpers.emulator_cleanup(app_name=app_name)
-        Helpers.install_and_run_app(app_name=app_name)
+        Helpers.install_and_run_app(app_name=app_name, config=config)
+        Helpers.install_and_run_app(app_name=app_name, config=config)
         Helpers.android_screen_match(image=image)
 
     @staticmethod
