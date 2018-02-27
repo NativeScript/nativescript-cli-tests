@@ -65,7 +65,7 @@ class RegressionTestsJS(BaseClass):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=['Project successfully built', 'Successfully installed'], timeout=90)
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_original)
+        Helpers.android_screen_match(image=self.image_original)
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.js_change)
@@ -73,7 +73,7 @@ class RegressionTestsJS(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_change)
+        Helpers.android_screen_match(image=self.image_change)
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, self.js_change)
@@ -81,7 +81,7 @@ class RegressionTestsJS(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Helpers.android_screen_match(app_name=self.app_name, image=self.image_original)
+        Helpers.android_screen_match(image=self.image_original)
 
     def test_200_build_android_webpack(self):
         Tns.build_android(attributes={"--path": self.app_name,
