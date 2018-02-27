@@ -32,7 +32,7 @@ class RegressionTestsNG(BaseClass):
 
         Folder.cleanup(cls.target_app)
         Folder.copy(cls.source_app, cls.target_app)
-
+        Emulator.stop()
         Emulator.ensure_available()
         if CURRENT_OS == OSType.OSX:
             cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
@@ -76,8 +76,8 @@ class RegressionTestsNG(BaseClass):
         Helpers.android_screen_match(image=self.image_change)
 
         # Revert changes
-        ReplaceHelper.rollback(self.app_name, self.ts_change)
         ReplaceHelper.rollback(self.app_name, self.html_change)
+        ReplaceHelper.rollback(self.app_name, self.ts_change)
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct

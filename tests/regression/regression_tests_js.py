@@ -32,7 +32,8 @@ class RegressionTestsJS(BaseClass):
 
         Folder.cleanup(cls.target_app)
         Folder.copy(cls.source_app, cls.target_app)
-
+        
+        Emulator.stop()
         Emulator.ensure_available()
         if CURRENT_OS == OSType.OSX:
             cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
