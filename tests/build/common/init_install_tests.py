@@ -139,7 +139,10 @@ class InitAndInstallTests(BaseClass):
         Npm.install(package="gulp", option="--save-dev", folder=BaseClass.app_name)
         Npm.install(package="lodash", option="--save", folder=BaseClass.app_name)
 
-        run("cp -R " + SUT_FOLDER + os.path.sep + "template-hello-world " + self.app_name + os.path.sep + "app")
+        source = os.path.join(SUT_FOLDER, "template-hello-world")
+        dest = os.path.join(self.app_name, "app")
+        Folder.copy(source, dest)
+
         output = File.read(self.app_name + "/package.json")
         assert devDependencies in output
         assert "gulp" in output
