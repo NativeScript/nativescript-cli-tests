@@ -23,8 +23,8 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class BuildAndroidTests(BaseClass):
-    debug_apk = "TestApp-debug.apk"
-    release_apk = "TestApp-release.apk"
+    debug_apk = "app-debug.apk"
+    release_apk = "app-release.apk"
 
     app_ts_name = "TestAppTS"
     app_name_dash = "test-app"
@@ -104,7 +104,7 @@ class BuildAndroidTests(BaseClass):
         assert not File.pattern_exists(self.platforms_android, "*.ios.js")
 
         # Verify apk does not contain aar files
-        archive = ZipFile(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.debug_apk))
+        archive = ZipFile(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, self.debug_apk))
         archive.extractall(self.app_name + "/temp")
         archive.close()
         assert not File.pattern_exists(self.app_name + "/temp", "*.aar")
@@ -142,7 +142,7 @@ class BuildAndroidTests(BaseClass):
 
         # Configs are respected
         assert 'release' in File.read(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, 'config.json'))
-        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.release_apk))
+        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, self.release_apk))
 
     def test_200_build_android_inside_project_folder(self):
         Folder.navigate_to(self.app_name)
@@ -152,7 +152,7 @@ class BuildAndroidTests(BaseClass):
         assert successfully_prepared in output
         assert build_successful in output
         assert successfully_built in output
-        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.debug_apk))
+        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, self.debug_apk))
 
     def test_201_build_android_with_additional_prepare(self):
         """Verify that manually running prepare does not break next build command."""
@@ -319,7 +319,7 @@ class BuildAndroidTests(BaseClass):
         output = Tns.build_android(attributes={"--release": "", "--path": self.app_name}, assert_success=False)
         assert "When producing a release build, you need to specify all --key-store-* options." in output
         assert "# tns build android" in output
-        assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.release_apk))
+        assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, self.release_apk))
 
     def test_440_binding_text_exists(self):
         # https: // github.com / NativeScript / android - runtime / issues / 833

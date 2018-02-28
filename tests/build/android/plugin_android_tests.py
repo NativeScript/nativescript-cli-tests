@@ -76,7 +76,7 @@ class PluginsAndroidTests(BaseClass):
         assert "tns-plugin" in output
 
         Tns.build_android(attributes={"--path": self.app_name}, log_trace=True)
-        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_PATH + "/TestApp-debug.apk")
+        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH + "/app-debug.apk")
         assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "/tns-plugin/index.js")
 
     @unittest.skip("Skip the test because of https://github.com/NativeScript/android-runtime/issues/903")
@@ -149,7 +149,7 @@ class PluginsAndroidTests(BaseClass):
         Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name}, assert_success=False)
 
         Tns.build_android(attributes={"--path": self.app_name})
-        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_PATH + "/TestApp-debug.apk")
+        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH + "/app-debug.apk")
         assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "/tns-plugin/index.js")
 
         # Verify plugin command list used plugins

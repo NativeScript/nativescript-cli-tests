@@ -37,7 +37,7 @@ class Tns(object):
         :return:
         """
 
-        # Android respect id in package.json
+        # Android respect id in package.jsons
         # iOS respect folder name
         # See https://github.com/NativeScript/nativescript-cli/issues/2575
 
@@ -87,7 +87,7 @@ class Tns(object):
         Process.kill_by_commandline('tsc')
 
     @staticmethod
-    def get_app_id(app_name):
+    def get_app_id(app_name, platform=Platform.NONE):
         """
         Get application id from package.json
         :param app_name: Folder where application is located.
@@ -387,12 +387,13 @@ class Tns(object):
 
             # Verify apk packages
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
-            apk_name = Tns.__get_final_package_name(app_name, platform=Platform.ANDROID)
-            base_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, apk_name)
+            apk_name = "app"
+            debug_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, apk_name)
+            release_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, apk_name)
             if "--release" in attributes.keys():
-                apk_path = base_app_path + "-release.apk"
+                apk_path = release_app_path + "-release.apk"
             else:
-                apk_path = base_app_path + "-debug.apk"
+                apk_path = debug_app_path + "-debug.apk"
             apk_path = apk_path.replace("\"", "")  # Handle projects with space
             assert File.exists(apk_path), "Apk file does not exist at " + apk_path
 
@@ -548,12 +549,14 @@ class Tns(object):
             assert "Project successfully built" in output
             assert "Successfully installed on device with identifier" in output
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
-            apk_base_name = Tns.__get_final_package_name(app_name, platform=Platform.ANDROID)
-            base_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, apk_base_name)
+            # apk_name = Tns.__get_final_package_name(app_name, platform=Platform.ANDROID)
+            apk_name = "app"
+            debug_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, apk_name)
+            release_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, apk_name)
             if "--release" in attributes.keys():
-                apk_path = base_path + "-release.apk"
+                apk_path = release_app_path + "-release.apk"
             else:
-                apk_path = base_path + "-debug.apk"
+                apk_path = debug_app_path + "-debug.apk"
             apk_path = apk_path.replace("\"", "")  # Handle projects with space
             assert File.exists(apk_path), "Apk file does not exist at " + apk_path
         return output

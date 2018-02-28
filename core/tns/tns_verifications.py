@@ -21,6 +21,8 @@ class TnsAsserts(object):
     PLATFORM_ANDROID = os.path.join('platforms', 'android/')
     PLATFORM_ANDROID_BUILD = os.path.join(PLATFORM_ANDROID, 'app', 'build')
     PLATFORM_ANDROID_APK_PATH = os.path.join(PLATFORM_ANDROID_BUILD, 'outputs', 'apk')
+    PLATFORM_ANDROID_APK_RELEASE_PATH = os.path.join(PLATFORM_ANDROID_BUILD, 'outputs', 'apk', 'release')
+    PLATFORM_ANDROID_APK_DEBUG_PATH = os.path.join(PLATFORM_ANDROID_BUILD, 'outputs', 'apk', 'debug')
     PLATFORM_ANDROID_SRC_MAIN_PATH = os.path.join(PLATFORM_ANDROID, 'app', 'src', 'main/')
     PLATFORM_ANDROID_APP_PATH = os.path.join(PLATFORM_ANDROID_SRC_MAIN_PATH, 'assets', 'app/')
     PLATFORM_ANDROID_NPM_MODULES_PATH = os.path.join(PLATFORM_ANDROID_APP_PATH, 'tns_modules/')
