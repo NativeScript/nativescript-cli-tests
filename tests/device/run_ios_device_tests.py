@@ -245,7 +245,7 @@ class RunIOSDeviceTests(BaseClass):
         # Update native project
         config_path = os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'build.xcconfig')
         File.replace(file_path=config_path, str1='More info', str2='If you need more info')
-        strings = ['BUILD SUCCEEDED', 'Successfully synced application', self.DEVICE_ID, 'CONSOLE LOG']
+        strings = ['ARCHIVE SUCCEEDED', 'Successfully synced application', self.DEVICE_ID, 'CONSOLE LOG']
         not_existing_strings = ['Unable to sync files', 'Multiple errors were thrown']
         Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_strings, timeout=120)
 
