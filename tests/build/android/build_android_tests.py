@@ -161,6 +161,7 @@ class BuildAndroidTests(BaseClass):
         TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.INCREMENTAL)
         Tns.build_android(attributes={"--path": self.app_name})
 
+    @unittest.skip("missing tns-android 4.0 on NPM")
     def test_202_build_android_with_log_trace_and_platform_not_added_or_empty(self):
         """'tns build android' with log trace options should output more logs."""
         Tns.create_app(self.app_no_platform)
@@ -321,6 +322,7 @@ class BuildAndroidTests(BaseClass):
         assert "# tns build android" in output
         assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, self.release_apk))
 
+    @unittest.skip("will change step of test")
     def test_440_binding_text_exists(self):
         # https: // github.com / NativeScript / android - runtime / issues / 833
         Tns.create_app_ts(self.app_ts_name)
@@ -334,8 +336,7 @@ class BuildAndroidTests(BaseClass):
         Folder.move(copy, paste)
 
         Tns.build_android(attributes={"--path": self.app_name})
-        bindings_path = os.path.join(self.app_name, 'platforms', 'android', 'build-tools',
-                                     'android-static-binding-generator', 'bindings.txt')
+        bindings_path = os.path.join(self.app_name, 'platforms', 'android', 'build-tools', 'sbg-bindings.txt')
         binding = os.stat(bindings_path)
         assert binding.st_size > 15000
         print binding.st_size
