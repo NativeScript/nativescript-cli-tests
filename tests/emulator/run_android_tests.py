@@ -43,6 +43,7 @@ class RunAndroidEmulatorTests(BaseClass):
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
         Tns.kill()
+        Emulator.stop()
         Emulator.ensure_available()
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Tns.create_app(cls.app_name,
