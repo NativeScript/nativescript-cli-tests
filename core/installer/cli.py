@@ -1,6 +1,7 @@
 """
 A wrapper of the NativeScript CLI.
 """
+import os
 
 from core.npm.npm import Npm
 from core.osutils.file import File
@@ -14,7 +15,8 @@ class Cli(object):
         output = Npm.install(package=package, folder=TEST_RUN_HOME)
         message = "NativeScript CLI installation failed - \"{e}\" found in output."
         assert "dev-post-install" not in output, message.format(e="dev-post-install")
-        assert File.exists("node_modules/.bin/tns"), "NativeScript CLI installation failed - tns does not exist."
+        cli_path = os.path.join(TEST_RUN_HOME, "node_modules", ".bin", "tns")
+        assert File.exists(cli_path), "NativeScript CLI installation failed - tns does not exist."
 
     @staticmethod
     def uninstall():
