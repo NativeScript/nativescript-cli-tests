@@ -235,7 +235,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
-
+    #
     def test_210_tns_run_android_add_remove_files_and_folders(self):
         """
         New files and folders should be synced properly.
@@ -516,6 +516,7 @@ class RunAndroidEmulatorTests(BaseClass):
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
 
+    @unittest.skip("bug")
     def test_360_tns_run_android_with_jar_file_in_plugin(self):
         """
         App should not crash when reference .jar file in some plugin
