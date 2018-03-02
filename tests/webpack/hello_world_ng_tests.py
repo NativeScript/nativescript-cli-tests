@@ -83,6 +83,10 @@ class WebPackHelloWorldNG(BaseClass):
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_100_ios_build_release_with_bundle_and_uglify(self):
+        # Hack due to https://github.com/NativeScript/nativescript-cli/issues/3415
+        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name})
+        Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_PACKAGE})
+
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
                                   "--env.uglify": ""})
 
@@ -149,7 +153,7 @@ class WebPackHelloWorldNG(BaseClass):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': ''}, wait=False,
                           assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
+                         timeout=240)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
         Helpers.wait_webpack_watcher()
 
@@ -204,7 +208,7 @@ class WebPackHelloWorldNG(BaseClass):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': ''},
                           wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
+                         timeout=240)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
         Helpers.wait_webpack_watcher()
 
