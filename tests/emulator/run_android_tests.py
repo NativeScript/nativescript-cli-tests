@@ -280,7 +280,7 @@ class RunAndroidEmulatorTests(BaseClass):
         source_file = os.path.join(self.app_name, 'app', 'test')
         destination_file = os.path.join(self.app_name, 'app', new_folder_name)
         Folder.copy(source_file, destination_file)
-        strings = ['Successfully transferred test2', 'Successfully transferred test.txt', EMULATOR_ID]
+        strings = ['Successfully transferred test.txt', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify new folder is synced and available on device.
@@ -296,8 +296,8 @@ class RunAndroidEmulatorTests(BaseClass):
         # Uncomment following lines after https://github.com/NativeScript/nativescript-cli/issues/2657 is fixed.
 
         # Verify new folder is synced and available on device.
-        # error_message = 'Deleted folder {0} is still available on {1}'.format(new_folder_name, EMULATOR_ID)
-        # assert Adb.path_does_not_exist(device_id=EMULATOR_ID, package_id=app_id, path=path), error_message
+        error_message = 'Deleted folder {0} is still available on {1}'.format(new_folder_name, EMULATOR_ID)
+        assert Adb.path_does_not_exist(device_id=EMULATOR_ID, package_id=app_id, path=path), error_message
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
