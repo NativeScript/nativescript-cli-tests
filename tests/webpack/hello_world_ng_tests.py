@@ -209,7 +209,7 @@ class WebPackHelloWorldNG(BaseClass):
     def test_210_run_ios_with_bundle_uglify_sync_changes(self):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': ''},
                           wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp, not_existing_string_list=Helpers.wp_errors,
                          timeout=240)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
         Helpers.wait_webpack_watcher()

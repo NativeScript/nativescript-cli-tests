@@ -12,6 +12,7 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class Helpers(object):
+    wp = ['Webpack compilation complete']
     wp_run = ['Webpack compilation complete', 'Successfully installed']
     wp_sync = ['Webpack compilation complete', 'Successfully synced application']
     wp_errors = ['Module not found', 'Snapshot generation failed']
