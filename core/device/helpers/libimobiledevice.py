@@ -9,7 +9,6 @@ from core.osutils.file import File
 
 
 class IDevice(object):
-
     @staticmethod
     def get_devices():
         """
@@ -51,12 +50,12 @@ class IDevice(object):
         :param app_prefix: App prefix, for example: org.nativescript.
         """
         output = run("ideviceinstaller -u {0} -l".format(device_id), timeout=120)
+        if "command not found" in output:
+            raise NameError("ideviceinstaller not installed!")
         lines = output.splitlines()
         for line in lines:
             if app_prefix in line:
-                app_name = line.split(",")[0]
-                app_name = app_name.replace(" ", "")
-                app_name
+                app_name = line.split(",")[0].replace(" ", "")
                 uninstall_result = run("ideviceinstaller -u {0} -U {1}".format(device_id, app_name), timeout=120)
                 if "Uninstall: Complete" in uninstall_result:
                     print "{0} application successfully uninstalled.".format(app_prefix)
