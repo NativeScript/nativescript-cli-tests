@@ -3,8 +3,6 @@ Tests for deploy command
 """
 import os
 
-from flaky import flaky
-
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -18,11 +16,13 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class DeployAndroidTests(BaseClass):
+
     app_name_noplatform = "Test_AppNoPlatform"
 
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
+        Emulator.ensure_available()
         Device.ensure_available(platform=Platform.ANDROID)
         Tns.create_app(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
@@ -30,7 +30,6 @@ class DeployAndroidTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name_noplatform)
-        Emulator.ensure_available()
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
         Folder.cleanup(self.app_name + '/platforms/android/build/outputs')
 
@@ -38,7 +37,6 @@ class DeployAndroidTests(BaseClass):
     def tearDownClass(cls):
         Folder.cleanup(cls.app_name)
 
-    @flaky(max_runs=3)
     def test_001_deploy_android(self):
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
         output = Tns.run_tns_command("deploy android", attributes={"--path": self.app_name,

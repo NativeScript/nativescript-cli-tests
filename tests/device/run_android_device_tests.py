@@ -153,7 +153,7 @@ class RunAndroidDeviceTests(BaseClass):
         source_file = os.path.join(self.app_name, 'app', 'feature1')
         destination_file = os.path.join(self.app_name, 'app', new_folder_name)
         Folder.copy(source_file, destination_file)
-        strings = ['Successfully transferred', 'Successfully transferred', 'feature2', self.DEVICE_ID]
+        strings = ['Successfully transferred', 'Successfully transferred', 'feature1.js', self.DEVICE_ID]
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify new folder is synced and available on device.
