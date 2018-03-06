@@ -10,6 +10,7 @@ from core.settings.settings import ANDROID_KEYSTORE_PATH, \
     IOS_PACKAGE, SIMULATOR_NAME, ANDROID_PACKAGE, WEBPACK_PACKAGE
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
+from core.tns.tns_platform_type import Platform
 from tests.webpack.helpers.helpers import Helpers
 
 
@@ -83,6 +84,10 @@ class WebPackHelloWorldJS(BaseClass):
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_100_ios_build_release_with_bundle_and_uglify(self):
+        # Hack due to https://github.com/NativeScript/nativescript-cli/issues/3415
+        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name})
+        Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_PACKAGE})
+
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
                                   "--env.uglify": ""})
 

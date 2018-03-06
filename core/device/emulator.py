@@ -23,19 +23,15 @@ class Emulator(object):
         Stop all running emulators.
         """
         print 'Stop all running emulators.'
-        Process.kill('emulator')
-        Process.kill('emulator64-arm')
-        Process.kill('emulator64-x86')
-        Process.kill('emulator-arm')
-        Process.kill('emulator-x86')
-        Process.kill('qemu-system-arm')
-        Process.kill('qemu-system-i386')
-        Process.kill('qemu-system-i38')  # Linux
+        Process.kill_by_commandline('emulator')
+        Process.kill_by_commandline('qemu')
+        assert not Emulator.is_running(device_id=EMULATOR_ID), 'Emulator is still running!'
 
     @staticmethod
     def start(emulator_name=EMULATOR_NAME, port=EMULATOR_PORT, timeout=300, wipe_data=True):
         """
         Start emulator.
+        :param wipe_data: If true it will wipe emulator date.
         :param emulator_name: Name of android emulator image (avd).
         :param port: Port for Android emulator.
         :param timeout: Time to wait until emulator boot.

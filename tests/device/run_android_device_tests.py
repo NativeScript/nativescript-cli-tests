@@ -58,8 +58,8 @@ class RunAndroidDeviceTests(BaseClass):
 
     @classmethod
     def tearDownClass(cls):
-        BaseClass.tearDownClass()
         Emulator.stop()
+        BaseClass.tearDownClass()
 
     def test_001_tns_run_android_js_css_xml(self):
         """Make valid changes in JS,CSS and XML"""
@@ -188,6 +188,7 @@ class RunAndroidDeviceTests(BaseClass):
         """
         `tns run android --emulator` should start emulator even if physical device is connected
         """
+        Emulator.stop()
         Emulator.ensure_available()
         output = Tns.run_android(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
                                  assert_success=False)
