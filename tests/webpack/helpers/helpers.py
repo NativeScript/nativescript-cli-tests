@@ -15,6 +15,7 @@ class Helpers(object):
     wp = ['Webpack compilation complete']
     wp_run = ['Webpack compilation complete', 'Successfully installed']
     wp_sync = ['Webpack compilation complete', 'Successfully synced application']
+    wp_sync_snapshot = ['Webpack compilation complete', 'Successfully synced app', 'Stripping the snapshot flag.']
     wp_errors = ['Module not found', 'Snapshot generation failed']
 
     @staticmethod
