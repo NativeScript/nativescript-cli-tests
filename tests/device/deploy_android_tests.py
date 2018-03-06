@@ -16,7 +16,6 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class DeployAndroidTests(BaseClass):
-
     app_name_noplatform = "Test_AppNoPlatform"
 
     @classmethod
@@ -26,24 +25,27 @@ class DeployAndroidTests(BaseClass):
         Device.ensure_available(platform=Platform.ANDROID)
         Tns.create_app(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
+        Tns.prepare_android(attributes={"--path": cls.app_name})
 
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name_noplatform)
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
-        Folder.cleanup(self.app_name + '/platforms/android/build/outputs')
+
+    def tearDown(self):
+        BaseClass.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
-        Folder.cleanup(cls.app_name)
+        BaseClass.tearDownClass()
 
     def test_001_deploy_android(self):
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
         output = Tns.run_tns_command("deploy android", attributes={"--path": self.app_name,
                                                                    "--justlaunch": ""}, timeout=180)
 
-        # This is the first time we build the project -> we need a prepare
-        assert successfully_prepared in output
+        assert "Project successfully built" in output
+        assert "Installing" in output
 
         device_ids = Device.get_ids(platform=Platform.ANDROID)
         for device_id in device_ids:
@@ -61,8 +63,9 @@ class DeployAndroidTests(BaseClass):
                                                 "--justlaunch": ""
                                                 }, timeout=180)
 
-        # We executed build once, but this is first time we call build --release -> we need a prepare
-        assert successfully_prepared in output
+        assert "Project successfully built" in output
+        assert "Installing" in output
+
         device_ids = Device.get_ids(platform=Platform.ANDROID)
         for device_id in device_ids:
             assert device_id in output
