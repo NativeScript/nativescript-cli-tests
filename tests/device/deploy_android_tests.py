@@ -41,11 +41,7 @@ class DeployAndroidTests(BaseClass):
 
     def test_001_deploy_android(self):
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
-        output = Tns.run_tns_command("deploy android", attributes={"--path": self.app_name,
-                                                                   "--justlaunch": ""}, timeout=180)
-
-        assert "Project successfully built" in output
-        assert "Installing" in output
+        output = Tns.deploy_android(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=180)
 
         device_ids = Device.get_ids(platform=Platform.ANDROID)
         for device_id in device_ids:
@@ -61,10 +57,7 @@ class DeployAndroidTests(BaseClass):
                                                     ANDROID_KEYSTORE_ALIAS_PASS,
                                                 "--release": "",
                                                 "--justlaunch": ""
-                                                }, timeout=180)
-
-        assert "Project successfully built" in output
-        assert "Installing" in output
+                                                }, timeout=240)
 
         device_ids = Device.get_ids(platform=Platform.ANDROID)
         for device_id in device_ids:
@@ -98,7 +91,7 @@ class DeployAndroidTests(BaseClass):
 
     def test_300_deploy_android_platform_not_added(self):
         Tns.create_app(app_name=self.app_name_noplatform)
-        output = Tns.deploy_android(attributes={"--path": self.app_name_noplatform, "--justlaunch": ""}, timeout=180)
+        output = Tns.deploy_android(attributes={"--path": self.app_name_noplatform, "--justlaunch": ""}, timeout=240)
 
         # It is brand new project and we need a prepare for first run
         assert copy_template_files in output
