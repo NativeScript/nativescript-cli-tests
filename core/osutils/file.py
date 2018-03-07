@@ -7,7 +7,9 @@ import os
 import shutil
 import time
 
+from core.osutils.os_type import OSType
 from core.osutils.process import Process
+from core.settings.settings import CURRENT_OS
 
 
 class File(object):
@@ -133,6 +135,9 @@ class File(object):
                 if force:
                     print "Kill processes associated with this file."
                     Process.kill_by_handle(file_path)
+                    if CURRENT_OS == OSType.WINDOWS:
+                        Process.kill('node')
+                        Process.kill('adb')
                     os.remove(file_path)
 
     @staticmethod

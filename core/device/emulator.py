@@ -23,8 +23,18 @@ class Emulator(object):
         Stop all running emulators.
         """
         print 'Stop all running emulators.'
+
         Process.kill_by_commandline('qemu')
         Process.kill_by_commandline('emulator64')
+
+        Process.kill('emulator64-arm')
+        Process.kill('emulator64-x86')
+        Process.kill('emulator-arm')
+        Process.kill('emulator-x86')
+        Process.kill('qemu-system-arm')
+        Process.kill('qemu-system-i386')
+        Process.kill('qemu-system-i38')
+
         assert not Emulator.is_running(device_id=EMULATOR_ID), 'Emulator is still running!'
 
     @staticmethod

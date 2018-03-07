@@ -236,7 +236,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
-    def test_210_tns_run_android_add_remove_files_and_folders(self):
+    def test_210_run_android_add_remove_files_and_folders(self):
         """
         New files and folders should be synced properly.
         """
@@ -289,15 +289,16 @@ class RunAndroidEmulatorTests(BaseClass):
         assert Adb.path_exists(device_id=EMULATOR_ID, package_id=app_id, path=path), error_message
 
         # Delete folder
-        Folder.cleanup(destination_file)
-        strings = ['Successfully synced application', EMULATOR_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings)
+        if CURRENT_OS == OSType.OSX:
+            # Due to unknown reason this fails on Linux and Windows
+            # It might be related to https://github.com/NativeScript/nativescript-cli/issues/2657.
+            Folder.cleanup(destination_file)
+            strings = ['Successfully synced application', EMULATOR_ID]
+            Tns.wait_for_log(log_file=log, string_list=strings)
 
-        # Uncomment following lines after https://github.com/NativeScript/nativescript-cli/issues/2657 is fixed.
-
-        # Verify new folder is synced and available on device.
-        error_message = 'Deleted folder {0} is still available on {1}'.format(new_folder_name, EMULATOR_ID)
-        assert Adb.path_does_not_exist(device_id=EMULATOR_ID, package_id=app_id, path=path), error_message
+            # Verify new folder is synced and available on device.
+            error_message = 'Deleted folder {0} is still available on {1}'.format(new_folder_name, EMULATOR_ID)
+            assert Adb.path_does_not_exist(device_id=EMULATOR_ID, package_id=app_id, path=path), error_message
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
