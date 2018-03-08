@@ -1,10 +1,13 @@
 """
 Tests for doctor command
 """
+import unittest
 
-from core.tns.tns import Tns
 from core.base_class.BaseClass import BaseClass
+from core.osutils.os_type import OSType
+from core.settings.settings import CURRENT_OS
 from core.settings.strings import *
+from core.tns.tns import Tns
 
 
 class DoctorTests(BaseClass):
@@ -16,6 +19,8 @@ class DoctorTests(BaseClass):
     def tearDownClass(cls):
         BaseClass.tearDownClass()
 
+    @unittest.skipIf(CURRENT_OS != OSType.OSX,
+                     "Ignore because of https://github.com/NativeScript/nativescript-cli/issues/3413")
     def test_001_doctor(self):
         output = Tns.run_tns_command("doctor", timeout=180)
         assert no_issues in output

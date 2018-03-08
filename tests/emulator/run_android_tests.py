@@ -43,6 +43,7 @@ class RunAndroidEmulatorTests(BaseClass):
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
         Tns.kill()
+        Emulator.stop()
         Emulator.ensure_available()
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Tns.create_app(cls.app_name,
@@ -235,7 +236,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
-        
+
     def test_210_run_android_add_remove_files_and_folders(self):
         """
         New files and folders should be synced properly.

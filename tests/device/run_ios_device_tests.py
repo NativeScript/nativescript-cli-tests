@@ -16,7 +16,6 @@ TODO: Add tests for:
 """
 
 import os
-import unittest
 from datetime import datetime
 from time import sleep
 
@@ -74,7 +73,6 @@ class RunIOSDeviceTests(BaseClass):
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
-        Simulator.stop()
 
     @flaky(max_runs=2)
     def test_001_tns_run_ios_js_css_xml(self):
@@ -178,7 +176,7 @@ class RunIOSDeviceTests(BaseClass):
         source_file = os.path.join(self.app_name, 'app', 'test')
         destination_file = os.path.join(self.app_name, 'app', new_folder_name)
         Folder.copy(source_file, destination_file)
-        strings = ['Successfully transferred test2', 'Successfully transferred test.txt']
+        strings = ['Successfully transferred test.txt', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
     @flaky(max_runs=2)
@@ -245,7 +243,7 @@ class RunIOSDeviceTests(BaseClass):
         # Update native project
         config_path = os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'build.xcconfig')
         File.replace(file_path=config_path, str1='More info', str2='If you need more info')
-        strings = ['BUILD SUCCEEDED', 'Successfully synced application', self.DEVICE_ID, 'CONSOLE LOG']
+        strings = ['ARCHIVE SUCCEEDED', 'Successfully synced application', self.DEVICE_ID, 'CONSOLE LOG']
         not_existing_strings = ['Unable to sync files', 'Multiple errors were thrown']
         Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_strings, timeout=120)
 
@@ -264,7 +262,6 @@ class RunIOSDeviceTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "JS changes not synced on device!"
 
-    @unittest.skipIf('f5ae7a' in Device.get_id(platform=Platform.IOS), "Can not run on this device!")
     def test_400_tns_run_ios_should_not_crash_when_uninstall_app(self):
         """
         `tns run ios` should work properly even if I manually uninstall the app (test for issue #3007)

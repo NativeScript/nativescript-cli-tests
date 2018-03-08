@@ -4,8 +4,6 @@ Tests for deploy command
 import os
 import unittest
 
-from flaky import flaky
-
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -24,29 +22,27 @@ class DeployAndroidTests(BaseClass):
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
+        Emulator.ensure_available()
         Device.ensure_available(platform=Platform.ANDROID)
         Tns.create_app(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
+        Tns.prepare_android(attributes={"--path": cls.app_name})
 
     def setUp(self):
         BaseClass.setUp(self)
         Folder.cleanup(self.app_name_noplatform)
-        Emulator.ensure_available()
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
-        Folder.cleanup(self.app_name + '/platforms/android/build/outputs')
+
+    def tearDown(self):
+        BaseClass.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
-        Folder.cleanup(cls.app_name)
+        BaseClass.tearDownClass()
 
-    @flaky(max_runs=3)
     def test_001_deploy_android(self):
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
-        output = Tns.run_tns_command("deploy android", attributes={"--path": self.app_name,
-                                                                   "--justlaunch": ""}, timeout=180)
-
-        # This is the first time we build the project -> we need a prepare
-        assert successfully_prepared in output
+        output = Tns.deploy_android(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=180)
 
         device_ids = Device.get_ids(platform=Platform.ANDROID)
         for device_id in device_ids:
@@ -63,10 +59,8 @@ class DeployAndroidTests(BaseClass):
                                                     ANDROID_KEYSTORE_ALIAS_PASS,
                                                 "--release": "",
                                                 "--justlaunch": ""
-                                                }, timeout=180)
+                                                }, timeout=240)
 
-        # We executed build once, but this is first time we call build --release -> we need a prepare
-        assert successfully_prepared in output
         device_ids = Device.get_ids(platform=Platform.ANDROID)
         for device_id in device_ids:
             assert device_id in output
@@ -99,7 +93,7 @@ class DeployAndroidTests(BaseClass):
 
     def test_300_deploy_android_platform_not_added(self):
         Tns.create_app(app_name=self.app_name_noplatform)
-        output = Tns.deploy_android(attributes={"--path": self.app_name_noplatform, "--justlaunch": ""}, timeout=180)
+        output = Tns.deploy_android(attributes={"--path": self.app_name_noplatform, "--justlaunch": ""}, timeout=240)
 
         # It is brand new project and we need a prepare for first run
         assert copy_template_files in output

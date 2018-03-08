@@ -93,9 +93,12 @@ class BaseClass(unittest.TestCase):
 
         Tns.kill()
         Gradle.kill()
+        Process.kill('node')
+        Process.kill('adb')
         Process.kill('NativeScript Inspector')
         Process.kill('Safari')
         Process.kill('Xcode')
+        Process.kill_by_commandline('adb')
 
         if class_name is not None:
             logfile = os.path.join('out', class_name + '.txt')

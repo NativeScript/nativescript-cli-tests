@@ -27,6 +27,7 @@ class WebPackHelloWorldNG(BaseClass):
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
+        Emulator.stop()
         Emulator.ensure_available()
         Tns.create_app_ng(cls.app_name, update_modules=True)
         Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev', folder=cls.app_name)
@@ -35,6 +36,7 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         if CURRENT_OS == OSType.OSX:
+            Simulator.stop()
             cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
             Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_PACKAGE})
 
@@ -83,6 +85,10 @@ class WebPackHelloWorldNG(BaseClass):
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_100_ios_build_release_with_bundle_and_uglify(self):
+        # Hack due to https://github.com/NativeScript/nativescript-cli/issues/3415
+        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name})
+        Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_PACKAGE})
+
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
                                   "--env.uglify": ""})
 
@@ -149,7 +155,7 @@ class WebPackHelloWorldNG(BaseClass):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': ''}, wait=False,
                           assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
+                         timeout=240)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
         Helpers.wait_webpack_watcher()
 
@@ -203,8 +209,8 @@ class WebPackHelloWorldNG(BaseClass):
     def test_210_run_ios_with_bundle_uglify_sync_changes(self):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': ''},
                           wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp, not_existing_string_list=Helpers.wp_errors,
+                         timeout=240)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
         Helpers.wait_webpack_watcher()
 

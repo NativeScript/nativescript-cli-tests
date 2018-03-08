@@ -12,8 +12,10 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class Helpers(object):
+    wp = ['Webpack compilation complete']
     wp_run = ['Webpack compilation complete', 'Successfully installed']
     wp_sync = ['Webpack compilation complete', 'Successfully synced application']
+    wp_sync_snapshot = ['Webpack compilation complete', 'Successfully synced app', 'Stripping the snapshot flag.']
     wp_errors = ['Module not found', 'Snapshot generation failed']
 
     @staticmethod
@@ -82,7 +84,8 @@ class Helpers(object):
 
     @staticmethod
     def get_ios_size(app_name):
-        app_path = os.path.join(app_name, 'platforms', 'ios', 'build', 'device', app_name + '.app')
+        app_path = os.path.join(app_name, 'platforms', 'ios', 'build', 'archive', app_name + '.xcarchive', 'Products',
+                                'Applications', app_name + '.app')
         ipa_path = os.path.join(app_name, 'platforms', 'ios', 'build', 'device', app_name + '.ipa')
 
         bundle_js_size = File.get_size(os.path.join(app_path, "app", "bundle.js"))
