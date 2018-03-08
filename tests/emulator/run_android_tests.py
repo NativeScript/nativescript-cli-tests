@@ -134,6 +134,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
+    @unittest.skip("bug")
     def test_100_tns_run_android_release(self):
         """Make valid changes in JS,CSS and HTML"""
 
@@ -517,6 +518,7 @@ class RunAndroidEmulatorTests(BaseClass):
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
 
+    @unittest.skip("bug")
     def test_360_tns_run_android_with_jar_file_in_plugin(self):
         """
         App should not crash when reference .jar file in some plugin

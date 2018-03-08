@@ -76,7 +76,7 @@ class PluginsAndroidTests(BaseClass):
         assert "tns-plugin" in output
 
         Tns.build_android(attributes={"--path": self.app_name}, log_trace=True)
-        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_PATH + "/TestApp-debug.apk")
+        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH + "/app-debug.apk")
         assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "/tns-plugin/index.js")
 
     @unittest.skip("Skip the test because of https://github.com/NativeScript/android-runtime/issues/903")
@@ -117,6 +117,7 @@ class PluginsAndroidTests(BaseClass):
                             res = False
         assert res is True, "Manifest not merged completely"
 
+    @unittest.skip("missing tns-android 4.0 on NPM")
     def test_201_plugin_add_before_platform_add_android_and_build(self):
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         Tns.plugin_add("nativescript-telerik-ui", attributes={"--ignore-scripts": "", "--path": self.app_name})
@@ -131,6 +132,7 @@ class PluginsAndroidTests(BaseClass):
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
         Tns.build_android(attributes={"--path": self.app_name})
 
+    @unittest.skip("missing tns-android 4.0 on NPM")
     def test_202_plugin_add_after_platform_add_android(self):
         Tns.plugin_add("nativescript-telerik-ui", attributes={"--ignore-scripts": "", "--path": self.app_name})
 
@@ -149,7 +151,7 @@ class PluginsAndroidTests(BaseClass):
         Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name}, assert_success=False)
 
         Tns.build_android(attributes={"--path": self.app_name})
-        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_PATH + "/TestApp-debug.apk")
+        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH + "/app-debug.apk")
         assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "/tns-plugin/index.js")
 
         # Verify plugin command list used plugins

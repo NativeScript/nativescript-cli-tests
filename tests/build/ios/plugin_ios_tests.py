@@ -18,7 +18,7 @@ from core.xcode.xcode import Xcode
 
 
 class PluginsiOSTests(BaseClass):
-    debug_apk = "TestApp-debug.apk"
+    debug_apk = "app-debug.apk"
 
     @classmethod
     def setUpClass(cls):
@@ -138,7 +138,7 @@ class PluginsiOSTests(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name})
         Tns.build_android(attributes={"--path": self.app_name})
 
-        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.debug_apk))
+        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, self.debug_apk))
         assert File.exists(
             os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "tns-plugin/index.js"))
 

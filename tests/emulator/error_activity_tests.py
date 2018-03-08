@@ -64,6 +64,7 @@ class AndroidErrorActivityTests(BaseClass):
         assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Logcat"), "Error activity not found!"
         assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Error: Kill the app!"), "Error activity not found!"
 
+    @unittest.skip("bug")
     def test_400_no_error_activity_in_release_builds(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           '--device': EMULATOR_ID,

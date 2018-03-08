@@ -35,8 +35,11 @@ class Helpers(object):
 
     @staticmethod
     def get_apk_path(app_name, config):
-        app_id = Tns.get_app_id(app_name).rpartition('.')[-1]
-        return os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, app_id + '-{0}.apk'.format(config))
+        # app_id = Tns.get_app_id(app_name).rpartition('.')[-1]
+        if "debug" in config:
+            return os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, + 'app-{0}.apk'.format(config))
+        else:
+            return os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, + 'app-{0}.apk'.format(config))
 
     @staticmethod
     def run_android_via_adb(app_name, image, config="release"):
@@ -70,7 +73,7 @@ class Helpers(object):
 
     @staticmethod
     def get_android_size(app_name):
-        apk_size = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, app_name + "-release.apk")
+        apk_size = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, app_name + "-release.apk")
         base_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH)
 
         bundle_js_size = File.get_size(os.path.join(base_path, "bundle.js"))
