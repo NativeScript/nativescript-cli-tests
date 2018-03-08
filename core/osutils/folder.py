@@ -33,6 +33,7 @@ class Folder(object):
                         if force:
                             print "Kill processes associated with this folder."
                             Process.kill_by_handle(folder)
+                            run('rm -rf ' + folder)
                             shutil.rmtree(folder)
                     else:
                         run('rm -rf ' + folder)
