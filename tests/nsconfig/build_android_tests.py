@@ -16,8 +16,8 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class BuildAndroidTests(BaseClass):
-    debug_apk = "-debug.apk"
-    release_apk = "-release.apk"
+    debug_apk = "app-debug.apk"
+    release_apk = "app-release.apk"
 
     app_name = ""
     platforms_android = ""
@@ -26,15 +26,39 @@ class BuildAndroidTests(BaseClass):
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
 
-        # File.remove(cls.debug_apk)
-        # File.remove(cls.release_apk)
+        File.remove(cls.debug_apk)
+        File.remove(cls.release_apk)
         Folder.cleanup('temp')
 
         base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
 
-        # Change app/ location to be 'new_folder/app'
+        # Initial create of all projects
         app_name_change_app_location = "ChangeAppLocation"
         Tns.create_app(app_name=app_name_change_app_location)
+
+        # Add release and debug configs
+        debug = os.path.join(app_name_change_app_location, 'app', 'config.debug.json')
+        release = os.path.join(app_name_change_app_location, 'app', 'config.release.json')
+        File.write(file_path=debug, text='{"config":"debug"}')
+        File.write(file_path=release, text='{"config":"release"}')
+
+        # Create the other projects using the initial setup but in different folder
+        app_name_change_app_location_and_name = "ChangeAppLocationAndName"
+        Folder.copy(app_name_change_app_location, app_name_change_app_location_and_name)
+
+        app_name_change_app_res_location = "ChangeAppResLocation"
+        Folder.copy(app_name_change_app_location, app_name_change_app_res_location)
+
+        app_name_change_app_res_location_in_root = "ChangeAppResLocationInRoot"
+        Folder.copy(app_name_change_app_location, app_name_change_app_res_location_in_root)
+
+        app_name_rename_app = "RenameApp"
+        Folder.copy(app_name_change_app_location, app_name_rename_app)
+
+        app_name_rename_app_res = "RenameAppRes"
+        Folder.copy(app_name_change_app_location, app_name_rename_app_res)
+
+        # Change app/ location to be 'new_folder/app'
         proj_root = os.path.join(app_name_change_app_location)
         app_path = os.path.join(proj_root, 'app')
 
@@ -44,15 +68,7 @@ class BuildAndroidTests(BaseClass):
         Tns.platform_add_android(attributes={"--path": app_name_change_app_location,
                                              "--frameworkPath": ANDROID_PACKAGE})
 
-        # Add release and debug configs
-        debug = os.path.join(app_name_change_app_location, 'new_folder', 'app', 'config.debug.json')
-        release = os.path.join(app_name_change_app_location, 'new_folder', 'app', 'config.release.json')
-        File.write(file_path=debug, text='{"config":"debug"}')
-        File.write(file_path=release, text='{"config":"release"}')
-
         # Change app/ name and place to be 'my folder/my app'
-        app_name_change_app_location_and_name = "ChangeAppLocationAndName"
-        Tns.create_app(app_name_change_app_location_and_name)
         proj_root = os.path.join(app_name_change_app_location_and_name)
         app_path = os.path.join(proj_root, 'app')
 
@@ -64,15 +80,7 @@ class BuildAndroidTests(BaseClass):
         Tns.platform_add_android(attributes={"--path": app_name_change_app_location_and_name,
                                              "--frameworkPath": ANDROID_PACKAGE})
 
-        # Add release and debug configs
-        debug = os.path.join(app_name_change_app_location_and_name, 'my folder', 'my app', 'config.debug.json')
-        release = os.path.join(app_name_change_app_location_and_name, 'my folder', 'my app', 'config.release.json')
-        File.write(file_path=debug, text='{"config":"debug"}')
-        File.write(file_path=release, text='{"config":"release"}')
-
         # Change App_Resources/ location to be 'app/res/App_Resources'
-        app_name_change_app_res_location = "ChangeAppResLocation"
-        Tns.create_app(app_name=app_name_change_app_res_location)
         proj_root = os.path.join(app_name_change_app_res_location)
         app_path = os.path.join(proj_root, 'app')
         app_res_path = os.path.join(app_path, 'App_Resources')
@@ -84,15 +92,7 @@ class BuildAndroidTests(BaseClass):
         Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location,
                                              "--frameworkPath": ANDROID_PACKAGE})
 
-        # Add release and debug configs
-        debug = os.path.join(app_name_change_app_res_location, 'app', 'config.debug.json')
-        release = os.path.join(app_name_change_app_res_location, 'app', 'config.release.json')
-        File.write(file_path=debug, text='{"config":"debug"}')
-        File.write(file_path=release, text='{"config":"release"}')
-
         # Change App_Resources/ location to be in project root/App_Resources
-        app_name_change_app_res_location_in_root = "ChangeAppResLocationInRoot"
-        Tns.create_app(app_name_change_app_res_location_in_root)
         proj_root = os.path.join(app_name_change_app_res_location_in_root)
         app_path = os.path.join(proj_root, 'app')
         app_res_path = os.path.join(app_path, 'App_Resources')
@@ -103,15 +103,7 @@ class BuildAndroidTests(BaseClass):
         Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location_in_root,
                                              "--frameworkPath": ANDROID_PACKAGE})
 
-        # Add release and debug configs
-        debug = os.path.join(app_name_change_app_res_location_in_root, 'app', 'config.debug.json')
-        release = os.path.join(app_name_change_app_res_location_in_root, 'app', 'config.release.json')
-        File.write(file_path=debug, text='{"config":"debug"}')
-        File.write(file_path=release, text='{"config":"release"}')
-
         # Change app/ to renamed_app/
-        app_name_rename_app = "RenameApp"
-        Tns.create_app(app_name=app_name_rename_app)
         proj_root = os.path.join(app_name_rename_app)
         app_path = os.path.join(proj_root, 'app')
 
@@ -119,15 +111,7 @@ class BuildAndroidTests(BaseClass):
         os.rename(app_path, os.path.join(proj_root, 'renamed_app'))
         Tns.platform_add_android(attributes={"--path": app_name_rename_app, "--frameworkPath": ANDROID_PACKAGE})
 
-        # Add release and debug configs
-        debug = os.path.join(app_name_rename_app, 'renamed_app', 'config.debug.json')
-        release = os.path.join(app_name_rename_app, 'renamed_app', 'config.release.json')
-        File.write(file_path=debug, text='{"config":"debug"}')
-        File.write(file_path=release, text='{"config":"release"}')
-
         # Change App_Resources/ to My_App_Resources/
-        app_name_rename_app_res = "RenameAppRes"
-        Tns.create_app(app_name=app_name_rename_app_res)
         proj_root = os.path.join(app_name_rename_app_res)
         app_path = os.path.join(proj_root, 'app')
         app_res_path = os.path.join(app_path, 'App_Resources')
@@ -135,12 +119,6 @@ class BuildAndroidTests(BaseClass):
         File.copy(os.path.join(base_src, app_name_rename_app_res, 'nsconfig.json'), app_name_rename_app_res)
         os.rename(app_res_path, os.path.join(app_path, 'My_App_Resources'))
         Tns.platform_add_android(attributes={"--path": app_name_rename_app_res, "--frameworkPath": ANDROID_PACKAGE})
-
-        # Add release and debug configs
-        debug = os.path.join(app_name_rename_app_res, 'app', 'config.debug.json')
-        release = os.path.join(app_name_rename_app_res, 'app', 'config.release.json')
-        File.write(file_path=debug, text='{"config":"debug"}')
-        File.write(file_path=release, text='{"config":"release"}')
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -213,8 +191,7 @@ class BuildAndroidTests(BaseClass):
         assert not File.pattern_exists(self.platforms_android, "*.ios.js")
 
         # Verify apk does not contain aar files
-        archive = ZipFile(
-            os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.app_name + self.debug_apk))
+        archive = ZipFile(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, self.debug_apk))
         archive.extractall(self.app_name + "/temp")
         archive.close()
         assert not File.pattern_exists(self.app_name + "/temp", "*.aar")
@@ -251,7 +228,7 @@ class BuildAndroidTests(BaseClass):
     ])
     def test_002_build_android_release(self, app_name):
         self.app_name = app_name
-        self.platforms_android = self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID
+        # self.platforms_android = self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID
 
         Tns.build_android(attributes={"--path": self.app_name,
                                       "--keyStorePath": ANDROID_KEYSTORE_PATH,
@@ -263,5 +240,4 @@ class BuildAndroidTests(BaseClass):
 
         # Configs are respected
         assert 'release' in File.read(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, 'config.json'))
-        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, self.app_name
-                                        + self.release_apk))
+        assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, self.release_apk))

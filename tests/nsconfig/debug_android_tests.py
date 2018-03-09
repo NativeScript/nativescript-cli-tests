@@ -25,12 +25,35 @@ class DebugAndroidEmulatorTests(BaseClass):
 
         base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
 
-        # Change app/ location to be 'new_folder/app'
+        # Initial create of all projects
         app_name_change_app_location = "ChangeAppLocation"
         Folder.cleanup(app_name_change_app_location)
         Tns.create_app(app_name=app_name_change_app_location,
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
+
+        # Create the other projects using the initial setup but in different folder
+        app_name_change_app_location_and_name = "ChangeAppLocationAndName"
+        Folder.cleanup(app_name_change_app_location_and_name)
+        Folder.copy(app_name_change_app_location, app_name_change_app_location_and_name)
+
+        app_name_change_app_res_location = "ChangeAppResLocation"
+        Folder.cleanup(app_name_change_app_res_location)
+        Folder.copy(app_name_change_app_location, app_name_change_app_res_location)
+
+        app_name_change_app_res_location_in_root = "ChangeAppResLocationInRoot"
+        Folder.cleanup(app_name_change_app_res_location_in_root)
+        Folder.copy(app_name_change_app_location, app_name_change_app_res_location_in_root)
+
+        app_name_rename_app = "RenameApp"
+        Folder.cleanup(app_name_rename_app)
+        Folder.copy(app_name_change_app_location, app_name_rename_app)
+
+        app_name_rename_app_res = "RenameAppRes"
+        Folder.cleanup(app_name_rename_app_res)
+        Folder.copy(app_name_change_app_location, app_name_rename_app_res)
+
+        # Change app/ location to be 'new_folder/app'
         proj_root = os.path.join(app_name_change_app_location)
         app_path = os.path.join(proj_root, 'app')
 
@@ -42,11 +65,6 @@ class DebugAndroidEmulatorTests(BaseClass):
         Tns.build_android(attributes={'--path': app_name_change_app_location})
 
         # Change app/ name and place to be 'my folder/my app'
-        app_name_change_app_location_and_name = "ChangeAppLocationAndName"
-        Folder.cleanup(app_name_change_app_location_and_name)
-        Tns.create_app(app_name_change_app_location_and_name,
-                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
-                       update_modules=True)
         proj_root = os.path.join(app_name_change_app_location_and_name)
         app_path = os.path.join(proj_root, 'app')
 
@@ -60,11 +78,6 @@ class DebugAndroidEmulatorTests(BaseClass):
         Tns.build_android(attributes={'--path': app_name_change_app_location_and_name})
 
         # Change App_Resources/ location to be 'app/res/App_Resources'
-        app_name_change_app_res_location = "ChangeAppResLocation"
-        Folder.cleanup(app_name_change_app_res_location)
-        Tns.create_app(app_name=app_name_change_app_res_location,
-                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
-                       update_modules=True)
         proj_root = os.path.join(app_name_change_app_res_location)
         app_path = os.path.join(proj_root, 'app')
         app_res_path = os.path.join(app_path, 'App_Resources')
@@ -78,11 +91,6 @@ class DebugAndroidEmulatorTests(BaseClass):
         Tns.build_android(attributes={'--path': app_name_change_app_res_location})
 
         # Change App_Resources/ location to be in project root/App_Resources
-        app_name_change_app_res_location_in_root = "ChangeAppResLocationInRoot"
-        Folder.cleanup(app_name_change_app_res_location_in_root)
-        Tns.create_app(app_name_change_app_res_location_in_root,
-                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
-                       update_modules=True)
         proj_root = os.path.join(app_name_change_app_res_location_in_root)
         app_path = os.path.join(proj_root, 'app')
         app_res_path = os.path.join(app_path, 'App_Resources')
@@ -95,11 +103,6 @@ class DebugAndroidEmulatorTests(BaseClass):
         Tns.build_android(attributes={'--path': app_name_change_app_res_location_in_root})
 
         # Change app/ to renamed_app/s
-        app_name_rename_app = "RenameApp"
-        Folder.cleanup(app_name_rename_app)
-        Tns.create_app(app_name=app_name_rename_app,
-                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
-                       update_modules=True)
         proj_root = os.path.join(app_name_rename_app)
         app_path = os.path.join(proj_root, 'app')
 
@@ -109,11 +112,6 @@ class DebugAndroidEmulatorTests(BaseClass):
         Tns.build_android(attributes={'--path': app_name_rename_app})
 
         # Change App_Resources/ to My_App_Resources/
-        app_name_rename_app_res = "RenameAppRes"
-        Folder.cleanup(app_name_rename_app_res)
-        Tns.create_app(app_name=app_name_rename_app_res,
-                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
-                       update_modules=True)
         proj_root = os.path.join(app_name_rename_app_res)
         app_path = os.path.join(proj_root, 'app')
         app_res_path = os.path.join(app_path, 'App_Resources')
