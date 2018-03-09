@@ -34,7 +34,8 @@ class Folder(object):
                             print "Kill processes associated with this folder."
                             Process.kill_by_handle(folder)
                             run('rm -rf ' + folder)
-                            shutil.rmtree(folder)
+                            if Folder.exists(folder):
+                                shutil.rmtree(folder)
                     else:
                         run('rm -rf ' + folder)
 
