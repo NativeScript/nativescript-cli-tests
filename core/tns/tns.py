@@ -387,9 +387,17 @@ class Tns(object):
 
             # Verify apk packages
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
-            apk_name = "app"
-            debug_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, apk_name)
-            release_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, apk_name)
+            Tns.__get_platform_string(platform=Platform.ANDROID)
+            android_version = str(TnsAsserts.get_platform_version(app_name=app_name, platform='android'))
+            if android_version.startswith('4.'):
+                apk_name = "app"
+                debug_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, apk_name)
+                release_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, apk_name)
+            else:
+                apk_name = Tns.__get_final_package_name(app_name, platform=Platform.ANDROID)
+                debug_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, apk_name)
+                release_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_PATH, apk_name)
+
             if "--release" in attributes.keys():
                 apk_path = release_app_path + "-release.apk"
             else:

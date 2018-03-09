@@ -71,6 +71,16 @@ class TnsAsserts(object):
         return TnsAsserts.get_package_json(app_name=app_name).get('dependencies').get('tns-core-modules')
 
     @staticmethod
+    def get_platform_version(app_name, platform):
+        """
+        Get version of `tns-core-modules` inside project
+        :param app_name: Project name (path relative to TEST_RUN_HOME).
+        :param platform: Platform as string - 'android' or `ios`
+        :return: Value of `tns-core-modules`
+        """
+        return TnsAsserts.get_package_json(app_name=app_name).get('nativescript').get('tns-' + platform).get('version')
+
+    @staticmethod
     def created(app_name, output=None, full_check=True):
         """
         Assert application is created properly.
