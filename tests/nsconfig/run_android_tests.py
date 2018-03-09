@@ -43,18 +43,23 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Create the other projects using the initial setup but in different folder
         app_name_change_app_location_and_name = "ChangeAppLocationAndName"
+        Folder.cleanup(app_name_change_app_location_and_name)
         Folder.copy(app_name_change_app_location, app_name_change_app_location_and_name)
 
         app_name_change_app_res_location = "ChangeAppResLocation"
+        Folder.cleanup(app_name_change_app_res_location)
         Folder.copy(app_name_change_app_location, app_name_change_app_res_location)
 
         app_name_change_app_res_location_in_root = "ChangeAppResLocationInRoot"
+        Folder.cleanup(app_name_change_app_res_location_in_root)
         Folder.copy(app_name_change_app_location, app_name_change_app_res_location_in_root)
 
         app_name_rename_app = "RenameApp"
+        Folder.cleanup(app_name_rename_app)
         Folder.copy(app_name_change_app_location, app_name_rename_app)
 
         app_name_rename_app_res = "RenameAppRes"
+        Folder.cleanup(app_name_rename_app_res)
         Folder.copy(app_name_change_app_location, app_name_rename_app_res)
 
         # Change app/ location to be 'new_folder/app'
