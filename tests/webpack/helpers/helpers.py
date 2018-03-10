@@ -35,11 +35,16 @@ class Helpers(object):
 
     @staticmethod
     def get_apk_path(app_name, config):
-        # app_id = Tns.get_app_id(app_name).rpartition('.')[-1]
+        app_id = 'app'
+        debug_path = TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH
+        release_path = TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH
+        if TnsAsserts.get_platform_version(app_name=app_name, platform='android').startswith('3.'):
+            app_id = Tns.get_app_id(app_name).rpartition('.')[-1]
+            debug_path = release_path = TnsAsserts.PLATFORM_ANDROID_APK_PATH
         if "debug" in config:
-            return os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, + 'app-{0}.apk'.format(config))
+            return os.path.join(app_name, debug_path, '{0}-{1}.apk'.format(app_id, config))
         else:
-            return os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, + 'app-{0}.apk'.format(config))
+            return os.path.join(app_name, release_path, '{0}-{1}.apk'.format(app_id, config))
 
     @staticmethod
     def run_android_via_adb(app_name, image, config="release"):
