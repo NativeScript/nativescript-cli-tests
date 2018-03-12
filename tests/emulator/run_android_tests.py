@@ -545,6 +545,41 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
+    def test_370_tns_run_android_with_jar_and_aar_files_in_app_res(self):
+        """
+        App should not crash when reference .jar or/and .aar file in App_Resources/Android/libs
+        https://github.com/NativeScript/android-runtime/issues/899
+        """
+
+        # Create libs/ in app/App_resources/, add .jar and .aar files in it and modify the app to reference them
+        curr_folder = os.getcwd()
+        Folder.navigate_to(os.path.join(self.app_name, 'app', 'App_Resources', 'Android'))
+        Folder.create("libs")
+        app_res_libs = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'libs')
+        Folder.navigate_to(curr_folder)
+
+        custom_jar_file = os.path.join('data', 'issues', 'android-runtime-pr-905', 'customLib.jar')
+        custom_aar_file = os.path.join('data', 'issues', 'android-runtime-899', 'mylibrary.aar')
+
+        File.copy(src=custom_jar_file, dest=app_res_libs)
+        File.copy(src=custom_aar_file, dest=app_res_libs)
+
+        source = os.path.join('data', 'issues', 'android-runtime-899', 'app.js')
+        target = os.path.join(self.app_name, 'app', 'app.js')
+        File.copy(src=source, dest=target)
+
+        # `tns run android` and wait until app is deployed
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
+
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
     @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-cli/issues/2825")
     def test_390_tns_run_android_should_warn_if_package_ids_do_not_match(self):
         """
