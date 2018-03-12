@@ -5,8 +5,9 @@ import time
 from core.device.device import Device
 from core.device.helpers.adb import Adb
 from core.osutils.file import File
+from core.osutils.os_type import OSType
 from core.osutils.process import Process
-from core.settings.settings import EMULATOR_ID, EMULATOR_NAME, SIMULATOR_NAME, TEST_RUN_HOME
+from core.settings.settings import EMULATOR_ID, EMULATOR_NAME, SIMULATOR_NAME, TEST_RUN_HOME, CURRENT_OS
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 
@@ -20,18 +21,24 @@ class Helpers(object):
 
     @staticmethod
     def wait_webpack_watcher(timeout=60):
-        running = False
-        end_time = time.time() + timeout
-        while not running:
-            time.sleep(5)
-            webpack_cmd = "webpack.js', '--config=webpack.config.js', '--progress', '--watch'"
-            running = Process.is_running_by_commandline(webpack_cmd)
-            if running:
-                running = True
-                break
-            if (running is False) and (time.time() > end_time):
-                raise NameError("Webpack with watcher is not running in {0} seconds.", timeout)
-        return running
+        if CURRENT_OS != OSType.WINDOWS:
+            running = False
+            end_time = time.time() + timeout
+            while not running:
+                time.sleep(5)
+                webpack_cmd = "webpack.js', '--config=webpack.config.js', '--progress', '--watch'"
+                if CURRENT_OS == OSType.WINDOWS:
+                    webpack_cmd = "webpack"
+                running = Process.is_running_by_commandline(webpack_cmd)
+                if running:
+                    running = True
+                    break
+                if (running is False) and (time.time() > end_time):
+                    raise NameError("Webpack with watcher is not running in {0} seconds.", timeout)
+            return running
+        else:
+            time.sleep(20)
+            return True
 
     @staticmethod
     def get_apk_path(app_name, config):
@@ -78,12 +85,11 @@ class Helpers(object):
 
     @staticmethod
     def get_android_size(app_name):
-        apk_size = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, app_name + "-release.apk")
         base_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH)
-
+        apk_path = Helpers.get_apk_path(app_name=app_name, config="release")
         bundle_js_size = File.get_size(os.path.join(base_path, "bundle.js"))
         vendor_size = File.get_size(os.path.join(base_path, "vendor.js"))
-        app_size = File.get_size(apk_size)
+        app_size = File.get_size(apk_path)
 
         return bundle_js_size, vendor_size, app_size
 

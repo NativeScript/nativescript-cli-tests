@@ -65,8 +65,7 @@ class UnittestsSimulator(BaseClass):
         assert successfully_prepared in output
         assert server_started in output
         assert starting_ut_runner in output
-        assert executed_tests in output
-
+        assert "Executed 1 of 1 SUCCESS" in output
         assert "Disconnectedundefined" not in output
 
     @timed(360)

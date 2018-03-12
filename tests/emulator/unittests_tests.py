@@ -8,8 +8,9 @@ from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.npm.npm import Npm
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_PACKAGE
-from  core.settings.strings import *
+from core.osutils.os_type import OSType
+from core.settings.settings import ANDROID_PACKAGE, CURRENT_OS
+from core.settings.strings import *
 from core.tns.tns import Tns
 
 
@@ -51,6 +52,9 @@ class UnittestsEmulator(BaseClass):
         assert successfully_prepared in output
         assert server_started in output
         assert starting_ut_runner in output
-        assert executed_tests in output
-
+        if CURRENT_OS != OSType.WINDOWS:
+            assert "Executed 1 of 1 SUCCESS" in output
+        else:
+            assert "Executed 1 of 1" in output
+            assert "SUCCESS" in output
         assert "Disconnectedundefined" not in output
