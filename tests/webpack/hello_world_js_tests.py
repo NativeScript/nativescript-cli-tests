@@ -233,6 +233,7 @@ class WebPackHelloWorldJS(BaseClass):
                          timeout=60)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=60)
 
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Run only on macOS and Linux.")
     def test_320_run_android_with_bundle_snapshot_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
@@ -261,6 +262,7 @@ class WebPackHelloWorldJS(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync_snapshot, not_existing_string_list=Helpers.wp_errors)
         Helpers.android_screen_match(image=self.image_original, timeout=60)
 
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Run only on macOS and Linux.")
     def test_330_run_android_with_bundle_snapshot_and_uglify_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
