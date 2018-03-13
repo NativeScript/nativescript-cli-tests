@@ -347,7 +347,7 @@ class BuildAndroidTests(BaseClass):
         Folder.cleanup(target_app)
         Folder.copy(source_app, target_app)
 
-        output = Tns.run_tns_command("resources-update android", attributes={"--path": self.app_name})
+        output = Tns.run_tns_command("resources update android", attributes={"--path": self.app_name})
 
         assert "Successfully updated your project's application resources '/Android' directory structure" in output
         assert "The previous version of your Android application resources has been renamed to '/Android-Pre-v4'" in output
@@ -366,7 +366,7 @@ class BuildAndroidTests(BaseClass):
         Folder.cleanup(target_app)
         Folder.copy(source_app, target_app)
 
-        output = Tns.run_tns_command("resources-update", attributes={"--path": self.app_name})
+        output = Tns.run_tns_command("resources update", attributes={"--path": self.app_name})
 
         assert "Successfully updated your project's application resources '/Android' directory structure" in output
         assert "The previous version of your Android application resources has been renamed to '/Android-Pre-v4'" in output

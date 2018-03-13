@@ -195,5 +195,5 @@ class BuildiOSTests(BaseClass):
         Folder.cleanup(target_app)
         Folder.copy(source_app, target_app)
 
-        output = Tns.run_tns_command("resources-update ios", attributes={"--path": self.app_name})
+        output = Tns.run_tns_command("resources update ios", attributes={"--path": self.app_name})
         assert "The ios does not need to have its resources updated." in output
