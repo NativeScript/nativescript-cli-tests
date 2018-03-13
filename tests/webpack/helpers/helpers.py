@@ -13,6 +13,8 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class Helpers(object):
+    no_wp_run = ['Successfully installed']
+    no_wp_sync = ['Successfully synced application']
     wp = ['Webpack compilation complete']
     wp_run = ['Webpack compilation complete', 'Successfully installed']
     wp_sync = ['Webpack compilation complete', 'Successfully synced application']
