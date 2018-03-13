@@ -233,65 +233,6 @@ class WebPackHelloWorldJS(BaseClass):
                          timeout=60)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=60)
 
-    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Run only on macOS and Linux.")
-    def test_320_run_android_with_bundle_snapshot_sync_changes(self):
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          "--env.snapshot": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.android_screen_match(image=self.image_original)
-        Helpers.wait_webpack_watcher()
-
-        # Change JS, XML and CSS
-        ReplaceHelper.replace(self.app_name, self.js_change)
-        ReplaceHelper.replace(self.app_name, self.xml_change)
-        ReplaceHelper.replace(self.app_name, self.css_change)
-
-        # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync_snapshot, not_existing_string_list=Helpers.wp_errors)
-        Helpers.android_screen_match(image=self.image_change, timeout=60)
-
-        # Revert changes
-        ReplaceHelper.rollback(self.app_name, self.js_change)
-        ReplaceHelper.rollback(self.app_name, self.xml_change)
-        ReplaceHelper.rollback(self.app_name, self.css_change)
-
-        # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync_snapshot, not_existing_string_list=Helpers.wp_errors)
-        Helpers.android_screen_match(image=self.image_original, timeout=60)
-
-    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Run only on macOS and Linux.")
-    def test_330_run_android_with_bundle_snapshot_and_uglify_sync_changes(self):
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          "--env.snapshot": "",
-                                          "--env.uglify": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.android_screen_match(image=self.image_original)
-        Helpers.wait_webpack_watcher()
-
-        # Change JS, XML and CSS
-        ReplaceHelper.replace(self.app_name, self.js_change)
-        ReplaceHelper.replace(self.app_name, self.xml_change)
-        ReplaceHelper.replace(self.app_name, self.css_change)
-
-        # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync_snapshot, not_existing_string_list=Helpers.wp_errors)
-        Helpers.android_screen_match(image=self.image_change, timeout=60)
-
-        # Revert changes
-        ReplaceHelper.rollback(self.app_name, self.js_change)
-        ReplaceHelper.rollback(self.app_name, self.xml_change)
-        ReplaceHelper.rollback(self.app_name, self.css_change)
-
-        # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync_snapshot, not_existing_string_list=Helpers.wp_errors)
-        Helpers.android_screen_match(image=self.image_original, timeout=60)
-
     def test_400_build_with_bundle_without_plugin(self):
         Tns.create_app(self.app_name)
         output = Tns.build_android(attributes={"--path": self.app_name, "--bundle": ""}, assert_success=False)

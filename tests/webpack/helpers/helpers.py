@@ -37,6 +37,7 @@ class Helpers(object):
                     break
                 if (running is False) and (time.time() > end_time):
                     raise NameError("Webpack with watcher is not running in {0} seconds.", timeout)
+            time.sleep(5)
             return running
         else:
             time.sleep(20)
