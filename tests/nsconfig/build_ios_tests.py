@@ -162,8 +162,6 @@ class BuildiOSTests(BaseClass):
     ])
     def test_001_build_ios(self, app_name):
         Tns.build_ios(attributes={"--path": app_name}, log_trace=True)
-        Tns.build_ios(attributes={"--path": app_name, "--release": ""}, log_trace=True)
-        Tns.build_ios(attributes={"--path": app_name, "--forDevice": ""}, log_trace=True)
 
         Tns.platform_add_android(attributes={"--path": app_name, "--frameworkPath": ANDROID_PACKAGE})
         Tns.build_ios(attributes={"--path": app_name, "--forDevice": "", "--release": ""}, log_trace=True)

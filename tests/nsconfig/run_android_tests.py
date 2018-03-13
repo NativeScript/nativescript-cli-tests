@@ -41,6 +41,11 @@ class RunAndroidEmulatorTests(BaseClass):
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
 
+        # Rename the app so that all test apps has the same name and reuse the images
+        File.replace(
+            os.path.join(app_name_change_app_location, 'app', 'App_Resources', 'Android', 'AndroidManifest.xml'),
+            "@string/app_name", "TestApp")
+
         # Create the other projects using the initial setup but in different folder
         app_name_change_app_location_and_name = "ChangeAppLocationAndName"
         Folder.cleanup(app_name_change_app_location_and_name)
@@ -135,61 +140,47 @@ class RunAndroidEmulatorTests(BaseClass):
     def tearDownClass(cls):
         BaseClass.tearDownClass()
 
-        Folder.cleanup("ChangeAppLocation")
-        Folder.cleanup("ChangeAppLocationAndName")
-        Folder.cleanup("ChangeAppResLocation")
-        Folder.cleanup("ChangeAppResLocation")
-        Folder.cleanup("RenameApp")
-        Folder.cleanup("RenameAppRes")
+        # Folder.cleanup("ChangeAppLocation")
+        # Folder.cleanup("ChangeAppLocationAndName")
+        # Folder.cleanup("ChangeAppResLocation")
+        # Folder.cleanup("ChangeAppResLocation")
+        # Folder.cleanup("RenameApp")
+        # Folder.cleanup("RenameAppRes")
 
     @parameterized.expand([
         ('ChangeAppLocation',
          ['new_folder/app/main-view-model.js', 'taps', 'clicks'],
          ['new_folder/app/main-page.xml', 'TAP', 'TEST'],
          ['new_folder/app/app.css', '42', '99'],
-         'livesync-hello-world_home_change_app_location',
-         'livesync-hello-world_js_css_xml_change_app_location',
          os.path.join('ChangeAppLocation', 'new_folder', 'app', 'App_Resources', 'Android', 'AndroidManifest.xml')),
         ('ChangeAppLocationAndName',
          ['my folder/my app/main-view-model.js', 'taps', 'clicks'],
          ['my folder/my app/main-page.xml', 'TAP', 'TEST'],
          ['my folder/my app/app.css', '42', '99'],
-         'livesync-hello-world_home_change_app_location_and_name',
-         'livesync-hello-world_js_css_xml_change_app_location_and_name',
          os.path.join('ChangeAppLocationAndName', 'my folder', 'my app', 'App_Resources', 'Android',
                       'AndroidManifest.xml')),
         ('ChangeAppResLocation',
          ReplaceHelper.CHANGE_JS,
          ReplaceHelper.CHANGE_XML,
          ReplaceHelper.CHANGE_CSS,
-         'livesync-hello-world_home_change_app_res_location',
-         'livesync-hello-world_js_css_xml_change_app_res_location',
          os.path.join('ChangeAppResLocation', 'app', 'res', 'App_Resources', 'Android', 'AndroidManifest.xml')),
         ('ChangeAppResLocationInRoot',
          ReplaceHelper.CHANGE_JS,
          ReplaceHelper.CHANGE_XML,
          ReplaceHelper.CHANGE_CSS,
-         'livesync-hello-world_home_change_app_res_location_in_root',
-         'livesync-hello-world_js_css_xml_change_app_res_location_in_root',
          os.path.join('ChangeAppResLocationInRoot', 'App_Resources', 'Android', 'AndroidManifest.xml')),
         ('RenameApp',
          ['renamed_app/main-view-model.js', 'taps', 'clicks'],
          ['renamed_app/main-page.xml', 'TAP', 'TEST'],
          ['renamed_app/app.css', '42', '99'],
-         'livesync-hello-world_home_rename_app',
-         'livesync-hello-world_js_css_xml_rename_app',
          os.path.join('RenameApp', 'renamed_app', 'App_Resources', 'Android', 'AndroidManifest.xml')),
         ('RenameAppRes',
          ReplaceHelper.CHANGE_JS,
          ReplaceHelper.CHANGE_XML,
          ReplaceHelper.CHANGE_CSS,
-         'livesync-hello-world_home_rename_app_res',
-         'livesync-hello-world_js_css_xml_rename_app_res',
          os.path.join('RenameAppRes', 'app', 'My_App_Resources', 'Android', 'AndroidManifest.xml'))
     ])
     def test_001_tns_run_android_js_css_xml_manifest(self, app_name, change_js, change_xml, change_css,
-                                                     livesync_hello_world_home,
-                                                     livesync_hello_world_js_css_xml,
                                                      app_res_path):
         """Make valid changes in JS,CSS and XML"""
 
@@ -203,7 +194,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image=livesync_hello_world_home)
+                            expected_image='livesync-hello-world_home')
 
         # Change JS and wait until app is synced
         ReplaceHelper.replace(app_name, change_js, sleep=10)
@@ -226,7 +217,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify application looks correct
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image=livesync_hello_world_js_css_xml)
+                            expected_image='livesync-hello-world_js_css_xml')
 
         # Rollback all the changes
         ReplaceHelper.rollback(app_name, change_js, sleep=10)
@@ -243,7 +234,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image=livesync_hello_world_home)
+                            expected_image='livesync-hello-world_home')
 
         # Changes in App_Resources should rebuild native project
         File.replace(app_res_path, '17', '19')
@@ -252,50 +243,36 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image=livesync_hello_world_home)
+                            expected_image='livesync-hello-world_home')
 
     @parameterized.expand([
         ('ChangeAppLocation',
          ['new_folder/app/main-view-model.js', 'taps', 'clicks'],
          ['new_folder/app/main-page.xml', 'TAP', 'TEST'],
-         ['new_folder/app/app.css', '42', '99'],
-         'livesync-hello-world_home_change_app_location',
-         'livesync-hello-world_js_css_xml_change_app_location'),
+         ['new_folder/app/app.css', '42', '99']),
         ('ChangeAppLocationAndName',
          ['my folder/my app/main-view-model.js', 'taps', 'clicks'],
          ['my folder/my app/main-page.xml', 'TAP', 'TEST'],
-         ['my folder/my app/app.css', '42', '99'],
-         'livesync-hello-world_home_change_app_location_and_name',
-         'livesync-hello-world_js_css_xml_change_app_location_and_name'),
+         ['my folder/my app/app.css', '42', '99']),
         ('ChangeAppResLocation',
          ReplaceHelper.CHANGE_JS,
          ReplaceHelper.CHANGE_XML,
-         ReplaceHelper.CHANGE_CSS,
-         'livesync-hello-world_home_change_app_res_location',
-         'livesync-hello-world_js_css_xml_change_app_res_location'),
+         ReplaceHelper.CHANGE_CSS),
         ('ChangeAppResLocationInRoot',
          ReplaceHelper.CHANGE_JS,
          ReplaceHelper.CHANGE_XML,
-         ReplaceHelper.CHANGE_CSS,
-         'livesync-hello-world_home_change_app_res_location_in_root',
-         'livesync-hello-world_js_css_xml_change_app_res_location_in_root'),
+         ReplaceHelper.CHANGE_CSS),
         ('RenameApp',
          ['renamed_app/main-view-model.js', 'taps', 'clicks'],
          ['renamed_app/main-page.xml', 'TAP', 'TEST'],
-         ['renamed_app/app.css', '42', '99'],
-         'livesync-hello-world_home_rename_app',
-         'livesync-hello-world_js_css_xml_rename_app'),
+         ['renamed_app/app.css', '42', '99']),
         ('RenameAppRes',
          ReplaceHelper.CHANGE_JS,
          ReplaceHelper.CHANGE_XML,
-         ReplaceHelper.CHANGE_CSS,
-         'livesync-hello-world_home_rename_app_res',
-         'livesync-hello-world_js_css_xml_rename_app_res')
+         ReplaceHelper.CHANGE_CSS)
     ])
-    def test_100_tns_run_android_release(self, app_name, change_js, change_xml, change_css,
-                                         livesync_hello_world_home, livesync_hello_world_js_css_xml):
+    def test_100_tns_run_android_release(self, app_name, change_js, change_xml, change_css):
         """Make valid changes in JS,CSS and HTML"""
-
         # `tns run android --release` and wait until app is deployed
         # IMPORTANT NOTE: `tns run android --release` Do NOT livesync by design!
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
@@ -306,23 +283,18 @@ class RunAndroidEmulatorTests(BaseClass):
                                           '--keyStoreAlias': ANDROID_KEYSTORE_ALIAS,
                                           '--keyStoreAliasPassword': ANDROID_KEYSTORE_ALIAS_PASS,
                                           '--release': ''}, wait=False, assert_success=False)
-
         strings = ['Project successfully prepared', 'Project successfully built',
                    'Successfully installed on device with identifier', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
-
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image=livesync_hello_world_home)
-
+                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
         # Kills `tns run android --release`
         Tns.kill()
-
         # Replace files
         ReplaceHelper.replace(app_name, change_js)
         ReplaceHelper.replace(app_name, change_css)
         ReplaceHelper.replace(app_name, change_xml)
-
         # Run `tns run android --release` again and make sure changes above are applied
         log = Tns.run_android(attributes={'--path': app_name,
                                           '--device': EMULATOR_ID,
@@ -331,13 +303,11 @@ class RunAndroidEmulatorTests(BaseClass):
                                           '--keyStoreAlias': ANDROID_KEYSTORE_ALIAS,
                                           '--keyStoreAliasPassword': ANDROID_KEYSTORE_ALIAS_PASS,
                                           '--release': ''}, wait=False, assert_success=False)
-
         strings = ['Project successfully prepared', 'Project successfully built',
                    'Successfully installed on device with identifier',
                    'Successfully started on device with identifier',
                    'JS:', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120)
-
         # Verify app looks is update after changes in js, css and xml
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image=livesync_hello_world_js_css_xml)
+                            expected_image='livesync-hello-world_js_css_xml')

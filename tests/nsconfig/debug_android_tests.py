@@ -32,6 +32,11 @@ class DebugAndroidEmulatorTests(BaseClass):
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
 
+        # Rename the app so that all test apps has the same name and reuse the images
+        File.replace(
+            os.path.join(app_name_change_app_location, 'app', 'App_Resources', 'Android', 'AndroidManifest.xml'),
+            "@string/app_name", "TestApp")
+
         # Create the other projects using the initial setup but in different folder
         app_name_change_app_location_and_name = "ChangeAppLocationAndName"
         Folder.cleanup(app_name_change_app_location_and_name)
@@ -161,14 +166,14 @@ class DebugAndroidEmulatorTests(BaseClass):
         assert "NativeScript Debugger started" not in output
 
     @parameterized.expand([
-        ('ChangeAppLocation', 'livesync-hello-world_home_change_app_location'),
-        ('ChangeAppLocationAndName', 'livesync-hello-world_home_change_app_location_and_name'),
-        ('ChangeAppResLocation', 'livesync-hello-world_home_change_app_res_location'),
-        ('ChangeAppResLocationInRoot', 'livesync-hello-world_home_change_app_res_location_in_root'),
-        ('RenameApp', 'livesync-hello-world_home_rename_app'),
-        ('RenameAppRes', 'livesync-hello-world_home_rename_app_res')
+        'ChangeAppLocation',
+        'ChangeAppLocationAndName',
+        'ChangeAppResLocation',
+        'ChangeAppResLocationInRoot',
+        'RenameApp',
+        'RenameAppRes'
     ])
-    def test_001_debug_android(self, app_name, livesync_hello_world_home):
+    def test_001_debug_android(self, app_name):
         """
         Default `tns debug android` starts debugger (do not stop at the first code statement)
         """
@@ -177,7 +182,7 @@ class DebugAndroidEmulatorTests(BaseClass):
 
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image=livesync_hello_world_home)
+                            expected_image='livesync-hello-world_home')
 
     @parameterized.expand([
         'ChangeAppLocation',
@@ -200,14 +205,14 @@ class DebugAndroidEmulatorTests(BaseClass):
                             expected_image='livesync-hello-world_debug_brk')
 
     @parameterized.expand([
-        ('ChangeAppLocation', 'livesync-hello-world_home_change_app_location'),
-        ('ChangeAppLocationAndName', 'livesync-hello-world_home_change_app_location_and_name'),
-        ('ChangeAppResLocation', 'livesync-hello-world_home_change_app_res_location'),
-        ('ChangeAppResLocationInRoot', 'livesync-hello-world_home_change_app_res_location_in_root'),
-        ('RenameApp', 'livesync-hello-world_home_rename_app'),
-        ('RenameAppRes', 'livesync-hello-world_home_rename_app_res')
+        'ChangeAppLocation',
+        'ChangeAppLocationAndName',
+        'ChangeAppResLocation',
+        'ChangeAppResLocationInRoot',
+        'RenameApp',
+        'RenameAppRes'
     ])
-    def test_003_debug_android_emulator_start(self, app_name, livesync_hello_world_home):
+    def test_003_debug_android_emulator_start(self, app_name):
         """
         Attach the debug tools to a running app in the Android Emulator
         """
@@ -216,7 +221,7 @@ class DebugAndroidEmulatorTests(BaseClass):
         Tns.run_android(attributes={'--path': app_name, '--emulator': '', '--justlaunch': ''},
                         assert_success=False, timeout=90)
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image=livesync_hello_world_home)
+                            expected_image='livesync-hello-world_home')
 
         # Attach debugger
         log = Tns.debug_android(attributes={'--path': app_name, '--start': '', '--emulator': ''})
