@@ -601,7 +601,8 @@ class RunAndroidEmulatorTests(BaseClass):
         time.sleep(10)
         output = File.read(file_path=log)
         assert "successfully built" not in output
-        assert "installed" not in output
+        assert "Installing..." not in output
+        assert "installed on device" not in output
         assert "synced" not in output
 
     def test_404_run_on_invalid_device_id(self):
