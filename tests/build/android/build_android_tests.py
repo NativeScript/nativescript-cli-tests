@@ -119,7 +119,7 @@ class BuildAndroidTests(BaseClass):
         after_build = datetime.datetime.now()
         assert "Gradle build..." in output, "Gradle build not called."
         assert output.count("Gradle build...") is 1, "Only one gradle build is triggered."
-        assert (after_build - before_build).total_seconds() < 15, "Incremental build takes more then 15 sec."
+        assert (after_build - before_build).total_seconds() < 20, "Incremental build takes more then 20 sec."
 
         # Verify clean build force native project rebuild
         before_build = datetime.datetime.now()
