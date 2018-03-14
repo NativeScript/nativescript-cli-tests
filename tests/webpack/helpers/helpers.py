@@ -19,7 +19,7 @@ class Helpers(object):
     wp_run = ['Webpack compilation complete', 'Successfully installed']
     wp_sync = ['Webpack compilation complete', 'Successfully synced application']
     wp_sync_snapshot = ['Webpack compilation complete', 'Successfully synced app', 'Stripping the snapshot flag.']
-    wp_errors = ['Module not found', 'Snapshot generation failed']
+    wp_errors = ['Module not found', 'Snapshot generation failed', 'ENOENT']
 
     @staticmethod
     def wait_webpack_watcher(timeout=60):

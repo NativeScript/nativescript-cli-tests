@@ -50,12 +50,13 @@ class StarterKitsTemplateTests(BaseClass):
     @parameterized.expand(DEMOS)
     def test_000_prepare_apps(self, demo):
         Tns.create_app(demo, attributes={"--template": "https://github.com/NativeScript/" + demo})
+        Tns.platform_add_android(attributes={"--path": demo, "--frameworkPath": ANDROID_PACKAGE})
         if "-ng" in demo:
             Tns.update_angular(demo)
-        Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev', folder=demo)
-        Npm.install(package=TYPESCRIPT_PACKAGE, option='--save-dev', folder=demo)
-        Npm.install(package=WEBPACK_PACKAGE, option='--save-dev', folder=demo)
-        Tns.platform_add_android(attributes={"--path": demo, "--frameworkPath": ANDROID_PACKAGE})
+        if "-ng" in demo or "-ts" in demo:
+            Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev', folder=demo)
+            Npm.install(package=TYPESCRIPT_PACKAGE, option='--save-dev', folder=demo)
+            Npm.install(package=WEBPACK_PACKAGE, option='--save-dev', folder=demo)
 
         if CURRENT_OS == OSType.OSX:
             Tns.platform_add_ios(attributes={'--path': demo, '--frameworkPath': IOS_PACKAGE})
