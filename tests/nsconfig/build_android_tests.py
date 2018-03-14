@@ -147,7 +147,7 @@ class BuildAndroidTests(BaseClass):
         Folder.cleanup("ChangeAppLocation")
         Folder.cleanup("ChangeAppLocationAndName")
         Folder.cleanup("ChangeAppResLocation")
-        Folder.cleanup("ChangeAppResLocation")
+        Folder.cleanup("ChangeAppResLocationInRoot")
         Folder.cleanup("RenameApp")
         Folder.cleanup("RenameAppRes")
         pass

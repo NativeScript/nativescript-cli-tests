@@ -140,12 +140,12 @@ class RunAndroidEmulatorTests(BaseClass):
     def tearDownClass(cls):
         BaseClass.tearDownClass()
 
-        # Folder.cleanup("ChangeAppLocation")
-        # Folder.cleanup("ChangeAppLocationAndName")
-        # Folder.cleanup("ChangeAppResLocation")
-        # Folder.cleanup("ChangeAppResLocation")
-        # Folder.cleanup("RenameApp")
-        # Folder.cleanup("RenameAppRes")
+        Folder.cleanup("ChangeAppLocation")
+        Folder.cleanup("ChangeAppLocationAndName")
+        Folder.cleanup("ChangeAppResLocation")
+        Folder.cleanup("ChangeAppResLocationInRoot")
+        Folder.cleanup("RenameApp")
+        Folder.cleanup("RenameAppRes")
 
     @parameterized.expand([
         ('ChangeAppLocation',

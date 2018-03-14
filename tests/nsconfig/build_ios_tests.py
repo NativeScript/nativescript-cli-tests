@@ -20,6 +20,7 @@ class BuildiOSTests(BaseClass):
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
+
         base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
 
         # Initial create of all projects
@@ -148,7 +149,7 @@ class BuildiOSTests(BaseClass):
         Folder.cleanup("ChangeAppLocation")
         Folder.cleanup("ChangeAppLocationAndName")
         Folder.cleanup("ChangeAppResLocation")
-        Folder.cleanup("ChangeAppResLocation")
+        Folder.cleanup("ChangeAppResLocationInRoot")
         Folder.cleanup("RenameApp")
         Folder.cleanup("RenameAppRes")
 
