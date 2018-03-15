@@ -2,7 +2,7 @@
 Test for building projects for iOS platform with different nsconfig setup.
 """
 import os
-from parameterized import parameterized
+from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
 from core.device.simulator import Simulator

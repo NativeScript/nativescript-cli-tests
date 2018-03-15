@@ -2,7 +2,7 @@
 Tests for `tns debug android` executed on Android Emulator with different nsconfig setup.
 """
 import os
-from parameterized import parameterized
+from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
 from core.chrome.chrome import Chrome

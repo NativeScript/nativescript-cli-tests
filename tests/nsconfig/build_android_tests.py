@@ -4,7 +4,7 @@ Tests for building projects for Android platform with different nsconfig setup.
 import datetime
 import os
 from zipfile import ZipFile
-from parameterized import parameterized
+from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File

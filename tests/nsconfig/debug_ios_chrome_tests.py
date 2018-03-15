@@ -2,7 +2,7 @@
 Tests for `tns debug ios` executed on iOS Simulator with different nsconfig setup.
 """
 import os
-from parameterized import parameterized
+from nose_parameterized import parameterized
 from time import sleep
 
 from enum import Enum

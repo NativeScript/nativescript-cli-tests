@@ -10,7 +10,7 @@ If emulator is not started and device is not connected `tns run android` should 
 """
 
 import os
-from parameterized import parameterized
+from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device

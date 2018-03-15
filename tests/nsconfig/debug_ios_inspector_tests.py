@@ -3,7 +3,7 @@ Tests for `tns debug ios` executed on iOS Simulator with different nsconfig setu
 """
 import os
 import time
-from parameterized import parameterized
+from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
