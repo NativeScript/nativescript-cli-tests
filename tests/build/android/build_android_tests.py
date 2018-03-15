@@ -340,3 +340,11 @@ class BuildAndroidTests(BaseClass):
         assert binding.st_size > 15000
         print binding.st_size
         Folder.cleanup(self.app_ts_name)
+
+    def test_441_android_typings(self):
+        #Build with --androidTypings got nothing #3381
+        Tns.run_tns_command("build android --androidTypings", attributes={"--path": self.app_name})
+        assert File.exists(self.app_name + "/android.d.ts")
+        assert File.exists(self.app_name + "/_helpers.d.ts")
+
+
