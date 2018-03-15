@@ -188,3 +188,12 @@ class BuildiOSTests(BaseClass):
                                assert_success=False)
         assert invalid_option.format(invalid) in output
         assert error not in output.lower()
+
+    def test_450_resources_update_ios(self):
+        target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
+        source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-34')
+        Folder.cleanup(target_app)
+        Folder.copy(source_app, target_app)
+
+        output = Tns.run_tns_command("resources update ios", attributes={"--path": self.app_name})
+        assert "The ios does not need to have its resources updated." in output

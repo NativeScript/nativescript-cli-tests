@@ -346,5 +346,40 @@ class BuildAndroidTests(BaseClass):
         Tns.run_tns_command("build android --androidTypings", attributes={"--path": self.app_name})
         assert File.exists(self.app_name + "/android.d.ts")
         assert File.exists(self.app_name + "/_helpers.d.ts")
+        
+    def test_450_resources_update_android(self):
+        target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
+        source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-34')
+        Folder.cleanup(target_app)
+        Folder.copy(source_app, target_app)
 
+        output = Tns.run_tns_command("resources update android", attributes={"--path": self.app_name})
 
+        assert "Successfully updated your project's application resources '/Android' directory structure" in output
+        assert "The previous version of your Android application resources has been renamed to '/Android-Pre-v4'" in output
+        assert File.exists(self.app_name + "/app/App_Resources/Android-Pre-v4/app.gradle")
+        assert File.exists(self.app_name + "/app/App_Resources/Android/app.gradle")
+        assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/AndroidManifest.xml")
+        assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/assets")
+        assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/java")
+        assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/res/values")
+
+        Tns.build_android(attributes={"--path": self.app_name})
+
+    def test_451_resources_update(self):
+        target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
+        source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-34')
+        Folder.cleanup(target_app)
+        Folder.copy(source_app, target_app)
+
+        output = Tns.run_tns_command("resources update", attributes={"--path": self.app_name})
+
+        assert "Successfully updated your project's application resources '/Android' directory structure" in output
+        assert "The previous version of your Android application resources has been renamed to '/Android-Pre-v4'" in output
+        assert File.exists(self.app_name + "/app/App_Resources/Android-Pre-v4/app.gradle")
+        assert File.exists(self.app_name + "/app/App_Resources/Android/app.gradle")
+        assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/AndroidManifest.xml")
+        assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/assets")
+        assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/java")
+        assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/res/values")
+        Tns.build_android(attributes={"--path": self.app_name})
