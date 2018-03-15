@@ -13,11 +13,13 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class Helpers(object):
+    no_wp_run = ['Successfully installed']
+    no_wp_sync = ['Successfully synced application']
     wp = ['Webpack compilation complete']
     wp_run = ['Webpack compilation complete', 'Successfully installed']
     wp_sync = ['Webpack compilation complete', 'Successfully synced application']
     wp_sync_snapshot = ['Webpack compilation complete', 'Successfully synced app', 'Stripping the snapshot flag.']
-    wp_errors = ['Module not found', 'Snapshot generation failed']
+    wp_errors = ['Module not found', 'Snapshot generation failed', 'ENOENT']
 
     @staticmethod
     def wait_webpack_watcher(timeout=60):
@@ -35,6 +37,7 @@ class Helpers(object):
                     break
                 if (running is False) and (time.time() > end_time):
                     raise NameError("Webpack with watcher is not running in {0} seconds.", timeout)
+            time.sleep(5)
             return running
         else:
             time.sleep(20)

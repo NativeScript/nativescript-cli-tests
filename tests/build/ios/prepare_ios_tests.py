@@ -20,7 +20,6 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class PrepareiOSTests(BaseClass):
-
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
@@ -140,7 +139,7 @@ class PrepareiOSTests(BaseClass):
 
     def test_301_prepare_android_does_not_prepare_ios(self):
         Tns.plugin_add("nativescript-social-share", attributes={"--path": self.app_name})
-        Tns.plugin_add("nativescript-iqkeyboardmanager", attributes={"--path": self.app_name})
+        Tns.plugin_add("nativescript-iqkeyboardmanager@1.2.0", attributes={"--path": self.app_name})
 
         output = Tns.prepare_android(attributes={"--path": self.app_name})
         assert "nativescript-iqkeyboardmanager is not supported for android" in output

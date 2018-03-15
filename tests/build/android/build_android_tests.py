@@ -119,7 +119,7 @@ class BuildAndroidTests(BaseClass):
         after_build = datetime.datetime.now()
         assert "Gradle build..." in output, "Gradle build not called."
         assert output.count("Gradle build...") is 1, "Only one gradle build is triggered."
-        assert (after_build - before_build).total_seconds() < 15, "Incremental build takes more then 15 sec."
+        assert (after_build - before_build).total_seconds() < 20, "Incremental build takes more then 20 sec."
 
         # Verify clean build force native project rebuild
         before_build = datetime.datetime.now()
@@ -341,6 +341,12 @@ class BuildAndroidTests(BaseClass):
         print binding.st_size
         Folder.cleanup(self.app_ts_name)
 
+    def test_441_android_typings(self):
+        #Build with --androidTypings got nothing #3381
+        Tns.run_tns_command("build android --androidTypings", attributes={"--path": self.app_name})
+        assert File.exists(self.app_name + "/android.d.ts")
+        assert File.exists(self.app_name + "/_helpers.d.ts")
+        
     def test_450_resources_update_android(self):
         target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
         source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-34')

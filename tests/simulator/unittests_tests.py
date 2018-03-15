@@ -47,8 +47,7 @@ class UnittestsSimulator(BaseClass):
         assert successfully_prepared in output
         assert server_started in output
         assert starting_ut_runner in output
-        assert executed_tests in output
-
+        assert "Executed 1 of 1 SUCCESS" in output
         assert "Disconnectedundefined" not in output
 
     @timed(360)
@@ -83,7 +82,7 @@ class UnittestsSimulator(BaseClass):
         output = File.read(self.app_name + "/app/tests/example.js")
         assert "Mocha test" in output
         assert "Test" in output
-        assert not "Array" in output
+        assert "Array" not in output
 
         output = Tns.run_tns_command("test ios", attributes={"--emulator": "", "--path": self.app_name},
                                      log_trace=True, wait=False)
