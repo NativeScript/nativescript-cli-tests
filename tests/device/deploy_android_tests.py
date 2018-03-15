@@ -116,9 +116,3 @@ class DeployAndroidTests(BaseClass):
                                                                    "--device": "invaliddevice_id"
                                                                    })
         TnsAsserts.invalid_device(output=output)
-
-    def test_441_android_typings(self):
-        #Build with --androidTypings got nothing #3381
-        Tns.run_tns_command("deploy android --androidTypings", attributes={"--path": self.app_name})
-        assert File.exists(self.app_name + "/android.d.ts")
-        assert File.exists(self.app_name + "/_helpers.d.ts")
