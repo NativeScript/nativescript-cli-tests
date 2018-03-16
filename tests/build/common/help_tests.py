@@ -197,3 +197,22 @@ class HelpTests(BaseClass):
         assert "Options" in output
         assert "device" in output
         assert "Attributes" in output
+
+    def test_115_device_log_help(self):
+        output = Tns.run_tns_command("run ios --help")
+
+        HelpTests.verify_help(output)
+        assert "syncAllFiles" in output
+        assert "env.*" in output
+        assert "bundle" in output
+        assert "justlaunch" in output
+
+    def test_116_device_log_help(self):
+        output = Tns.run_tns_command("run android --help")
+
+        HelpTests.verify_help(output)
+        assert "syncAllFiles" in output
+        assert "env.*" in output
+        assert "bundle" in output
+        assert "justlaunch" in output
+
