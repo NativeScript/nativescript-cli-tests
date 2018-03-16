@@ -1,5 +1,5 @@
 import os
-from parameterized import parameterized
+from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File

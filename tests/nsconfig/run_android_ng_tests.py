@@ -6,7 +6,7 @@ Run should sync all the changes correctly:
 """
 
 import os
-from parameterized import parameterized
+from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -188,7 +188,7 @@ class RunAndroidEmulatorTestsNG(BaseClass):
 
         # Verify initial state of the app
         assert Device.wait_for_text(device_id=EMULATOR_ID, text="Ter Stegen",
-                                    timeout=20), 'Hello-world NG App failed to start or it does not look correct!'
+                                    timeout=30), 'Hello-world NG App failed to start or it does not look correct!'
 
         # This is to ensure 'Change HTML and wait until app is synced' will be checked properly
         assert not Device.wait_for_text(device_id=EMULATOR_ID, text='9', timeout=5)
@@ -199,7 +199,7 @@ class RunAndroidEmulatorTestsNG(BaseClass):
                    'Application loaded!',  # This is to verify app is restarted.
                    'Home page loaded!']
         Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
-        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text="Stegen Ter", timeout=20)
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text="Stegen Ter", timeout=40)
         assert text_changed, 'Changes in TS file not applied (UI is not refreshed).'
         log_content = File.read(log)
         assert 'item.service.ts' in log_content, "CLI should transfer TS files!"
@@ -272,6 +272,6 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         else:
             not_existing_strings = ['Application loaded!']  # This is to verify app is NOT restarted.
 
-        Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_strings)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=60, not_existing_string_list=not_existing_strings)
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='ng-hello-world-home-white', tolerance=5.0)
