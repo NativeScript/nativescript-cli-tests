@@ -1,6 +1,7 @@
 """
 Test for `help` command
 """
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.os_type import OSType
@@ -198,6 +199,7 @@ class HelpTests(BaseClass):
         assert "device" in output
         assert "Attributes" in output
 
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_115_device_log_help(self):
         output = Tns.run_tns_command("run ios --help")
 
@@ -215,4 +217,3 @@ class HelpTests(BaseClass):
         assert "env.*" in output
         assert "bundle" in output
         assert "justlaunch" in output
-
