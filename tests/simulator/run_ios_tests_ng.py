@@ -85,3 +85,16 @@ class RunIOSSimulatorTestsNG(BaseClass):
         console_time = ['CONSOLE DEBUG startup:']
         Tns.wait_for_log(log_file=log, string_list=console_time)
 
+    def test_290_tns_run_ios_console_dir(self):
+        # Replace app.component.ts to use console.time() and console.timeEnd()
+        source = os.path.join('data', 'issues', 'ios-runtime-875', 'items.component.ts')
+        target = os.path.join(self.app_name, 'app', 'item', 'items.component.ts')
+        File.copy(src=source, dest=target)
+
+        # `tns run ios` and wait until app is deployed
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False,
+                          assert_success = False, log_trace=True)
+
+        # Verify sync and initial state of the app
+        strings = ['name: Ter Stegen', 'role: Goalkeeper', 'object dump end', self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=90, check_interval=10, clean_log=False)
