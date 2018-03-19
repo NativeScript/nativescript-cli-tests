@@ -1,6 +1,7 @@
 """
 Tests for doctor command
 """
+import os
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.os_type import OSType
