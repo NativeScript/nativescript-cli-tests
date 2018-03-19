@@ -71,6 +71,7 @@ class Helpers(object):
         Adb.stop_application(device_id=EMULATOR_ID, app_id=app_id)
         Adb.uninstall(app_id=app_id, device_id=EMULATOR_ID, assert_success=False)
         assert not Adb.is_application_running(device_id=EMULATOR_ID, app_id=app_id)
+        Adb.run(command="shell rm -rf /data/app/org.nativescript.*", device_id=EMULATOR_ID)
 
     @staticmethod
     def install_and_run_app(app_name, config):
