@@ -1,5 +1,5 @@
 """
-Verify tns features like run wokrs properly with starter kit templates
+Verify tns features like run works properly with starter kit templates
 """
 import unittest
 

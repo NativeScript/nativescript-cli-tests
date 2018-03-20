@@ -53,8 +53,13 @@ class DoctorTests(BaseClass):
     def test_200_doctor_show_warning_when_new_components_are_available(self):
         Tns.create_app(self.app_name, update_modules=False)
         Tns.platform_add_android(version="2.2.0", attributes={"--path": self.app_name})
-        output = Tns.run_tns_command("doctor", attributes={"--path": self.app_name}, timeout=180)
-        assert "Update available for component tns-android" in output
+
+        out_doctor = Tns.run_tns_command("doctor", attributes={"--path": self.app_name}, timeout=180)
+        out_info = Tns.run_tns_command("info", attributes={"--path": self.app_name}, timeout=180)
+        for output in (out_doctor, out_info):
+            assert "Component tns-core-modules has" in output
+            assert "Update available for component tns-android" in output
+            assert "Component tns-ios is not installed." in output
 
     def test_400_doctor_should_detect_wrong_path_to_android_sdk(self):
         os.environ["ANDROID_HOME"] = "WRONG_PATH"
