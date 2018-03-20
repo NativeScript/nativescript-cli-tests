@@ -181,7 +181,8 @@ class PluginsAndroidTests(BaseClass):
         assert tns_plugin + " is not supported for android" in output
         assert installed_plugin.format(tns_plugin) in output
 
-    def test_410_plugin_remove_fails(self):
+    def test_410_plugin_remove_should_not_fail_if_plugin_name_has_dot(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/3451
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         Tns.plugin_add("nativescript-socket.io", attributes={"--path": self.app_name})
 
