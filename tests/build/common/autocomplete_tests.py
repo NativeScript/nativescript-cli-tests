@@ -2,13 +2,12 @@
 Autocomplete tests
 """
 
-from core.tns.tns import Tns
 from core.base_class.BaseClass import BaseClass
 from core.settings.strings import *
+from core.tns.tns import Tns
 
 
 class AutocompleteTests(BaseClass):
-
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
@@ -41,4 +40,4 @@ class AutocompleteTests(BaseClass):
 
     def test_400_autocomplete_invalid_parameter(self):
         output = Tns.run_tns_command(autocomplete + " " + invalid)
-        assert invalid_input.format(autocomplete) in output
+        assert "This command doesn't accept parameters." in output
