@@ -40,6 +40,15 @@ class DoctorTests(BaseClass):
         assert "The Java Development Kit (JDK) is installed and is configured properly." in output
         if CURRENT_OS != OSType.OSX:
             assert "Local builds for iOS can be executed only on a macOS system." in output
+        else:
+            assert "Xcode is installed and is configured properly." in output
+            assert "xcodeproj is installed and is configured properly." in output
+            assert "CocoaPods are installed." in output
+            assert "CocoaPods update is not required." in output
+            assert "CocoaPods are configured properly." in output
+            assert "Your current CocoaPods version is newer than 0.38.2." in output
+            assert "Python installed and configured correctly." in output
+            assert "The Python 'six' package is found." in output
 
     def test_200_doctor_show_warning_when_new_components_are_available(self):
         Tns.create_app(self.app_name, update_modules=False)

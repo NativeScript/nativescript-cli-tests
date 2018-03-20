@@ -132,3 +132,9 @@ class PlatformiOSTests(BaseClass):
         Tns.prepare_android(attributes={"--path": self.app_name})
         output = Tns.platform_list(attributes={"--path": self.app_name})
         TnsAsserts.platform_list_status(output=output, prepared=Platform.BOTH, added=Platform.BOTH)
+
+        # Verify build both platforms is not allowed
+        # Test for https://github.com/NativeScript/nativescript-cli/pull/3425
+        output = Tns.run_tns_command(command="build", attributes={"--path": self.app_name})
+        assert "The input is not valid sub-command for 'build' command" in output
+        assert "<Platform> is the target mobile platform for which you want to build your project" in output
