@@ -180,3 +180,18 @@ class PluginsAndroidTests(BaseClass):
         output = Tns.plugin_add("tns-plugin@1.0.2", attributes={"--path": self.app_name}, assert_success=False)
         assert tns_plugin + " is not supported for android" in output
         assert installed_plugin.format(tns_plugin) in output
+
+    def test_410_plugin_remove_should_not_fail_if_plugin_name_has_dot(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/3451
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        Tns.plugin_add("nativescript-socket.io", attributes={"--path": self.app_name})
+
+        assert File.exists(self.app_name + "/node_modules/nativescript-socket.io")
+
+        output = Tns.plugin_remove("nativescript-socket.io", attributes={"--path": self.app_name}, log_trace=True)
+        assert "stdout: removed 1 package" in output
+        assert "Successfully removed plugin nativescript-socket.io" in output
+        assert "Exec npm uninstall nativescript-socket.io --save" in output
+
+        output = File.read(self.app_name + "/package.json")
+        assert "nativescript-socket.io" not in output
