@@ -41,7 +41,7 @@ class RunAndroidEmulatorTests(BaseClass):
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
 
-        # Rename the app so that all test apps has the same name and reuse the images
+        # Rename the app in AndroidManifest.xml to reuse the images
         File.replace(
             os.path.join(app_name_change_app_location, 'app', 'App_Resources', 'Android', 'AndroidManifest.xml'),
             "@string/app_name", "TestApp")
@@ -51,21 +51,61 @@ class RunAndroidEmulatorTests(BaseClass):
         Folder.cleanup(app_name_change_app_location_and_name)
         Folder.copy(app_name_change_app_location, app_name_change_app_location_and_name)
 
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_location_and_name, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_location_and_name)
+        File.replace(
+            os.path.join(app_name_change_app_location_and_name, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "__PACKAGE__", "org.nativescript." + app_name_change_app_location_and_name)
+
         app_name_change_app_res_location = "ChangeAppResLocation"
         Folder.cleanup(app_name_change_app_res_location)
         Folder.copy(app_name_change_app_location, app_name_change_app_res_location)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_res_location, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location)
+        File.replace(
+            os.path.join(app_name_change_app_res_location, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "__PACKAGE__", "org.nativescript." + app_name_change_app_res_location)
 
         app_name_change_app_res_location_in_root = "ChangeAppResLocationInRoot"
         Folder.cleanup(app_name_change_app_res_location_in_root)
         Folder.copy(app_name_change_app_location, app_name_change_app_res_location_in_root)
 
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_res_location_in_root, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location_in_root)
+        File.replace(
+            os.path.join(app_name_change_app_res_location_in_root, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "__PACKAGE__", "org.nativescript." + app_name_change_app_res_location_in_root)
+
         app_name_rename_app = "RenameApp"
         Folder.cleanup(app_name_rename_app)
         Folder.copy(app_name_change_app_location, app_name_rename_app)
 
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_rename_app, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app)
+        File.replace(
+            os.path.join(app_name_rename_app, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "__PACKAGE__", "org.nativescript." + app_name_rename_app)
+
         app_name_rename_app_res = "RenameAppRes"
         Folder.cleanup(app_name_rename_app_res)
         Folder.copy(app_name_change_app_location, app_name_rename_app_res)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_rename_app_res, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app_res)
+        File.replace(
+            os.path.join(app_name_rename_app_res, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "__PACKAGE__", "org.nativescript." + app_name_rename_app_res)
 
         # Change app/ location to be 'new_folder/app'
         proj_root = os.path.join(app_name_change_app_location)
