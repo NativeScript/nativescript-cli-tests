@@ -61,7 +61,6 @@ class Helpers(object):
         Tns.kill()
         Helpers.emulator_cleanup(app_name=app_name)
         Helpers.install_and_run_app(app_name=app_name, config=config)
-        Helpers.install_and_run_app(app_name=app_name, config=config)
         Helpers.android_screen_match(image=image)
 
     @staticmethod

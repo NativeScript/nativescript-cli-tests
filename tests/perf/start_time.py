@@ -1,90 +1,119 @@
-import socket
-import time
-import unittest
-from datetime import datetime
+import csv
+import os
+from time import sleep
 
 from nose_parameterized import parameterized
 
+from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.helpers.adb import Adb
 from core.device.simulator import Simulator
+from core.npm.npm import Npm
+from core.settings.settings import ANDROID_PACKAGE, TYPESCRIPT_PACKAGE, WEBPACK_PACKAGE, ANDROID_KEYSTORE_PATH, \
+    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS_PASS, ANDROID_KEYSTORE_ALIAS, TEST_RUN_HOME
+from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
-from core.utils.csv_utils import CsvUtils
+from tests.webpack.helpers.helpers import Helpers
 
 
-class StartTimeTestCase(unittest.TestCase):
-    app_dir = "./testapps/"
-    apk_ext = ".apk"
-    csv_ext = ".csv"
-    device_id = "0a9f9d090d5cdaf2"  # Device.get_id(platform=Platform.ANDROID)
-    num_start = 3
+def read_data(device_id):
+    assert device_id in Device.get_ids(platform=Platform.ANDROID), "{0} not found!".format(device_id)
+    csv_file_path = os.path.join(TEST_RUN_HOME, 'tests', 'perf', 'values.csv')
+    csv_list = tuple(csv.reader(open(csv_file_path, 'rb'), delimiter=','))
+    return [tuple(l) for l in csv_list if l[3].startswith(device_id)]
+
+
+class PerfTests(BaseClass):
+    DEVICE_ID = os.getenv('DEVICE_TOKEN', None)
+    DATA = read_data(DEVICE_ID)
+
+    @staticmethod
+    def assert_time(expected, actual, tolerance=10, error_message="Startup time is not expected."):
+        print "Actual startup: " + actual
+        print "Expected startup: " + expected
+        x = int(expected)
+        y = int(actual)
+        if actual >= 0:
+            diff = abs(x - y) * 1.00
+            assert diff <= x * tolerance * 0.01, error_message + str(actual)
 
     @classmethod
     def setUpClass(cls):
-        print "setUpClass"
+        BaseClass.setUpClass(cls.__name__)
+        Npm.cache_clean()
         Emulator.stop()
         Simulator.stop()
-        Device.ensure_available(platform=Platform.ANDROID)
 
     def setUp(self):
-        print "setUp"
-        # Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
+        Tns.kill()
+        BaseClass.tearDown(self)
 
     def tearDown(self):
-        print "tearDown"
-        # Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
+        BaseClass.tearDown(self)
+        Tns.kill()
 
     @classmethod
     def tearDownClass(cls):
-        print "tearDownClass"
-        CsvUtils.analyze_data("./tmp-template-hello-world-ng-release.csv")
+        BaseClass.tearDownClass()
 
-    @parameterized.expand([
-        ("template-hello-world-ng-release", "org.nativescript.templatehelloworldng")
-    ])
-    def test_start_time(self, apk_name, app_id):
-        for x in range(0, self.num_start):
-            self.base_test(apk_name, app_id)
+    @parameterized.expand(DATA)
+    def test_android_(self, demo, config, device_name, device_id, first_start, second_start):
+        Tns.create_app(self.app_name, attributes={"--template": "https://github.com/" + demo})
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+        if "-ng" in demo:
+            Tns.update_angular(self.app_name)
+        if "-ng" in demo or "-ts" in demo:
+            Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev', folder=self.app_name)
+            Npm.install(package=TYPESCRIPT_PACKAGE, option='--save-dev', folder=self.app_name)
+        if "vue" not in demo:
+            Npm.install(package=WEBPACK_PACKAGE, option='--save-dev', folder=self.app_name)
 
-    def base_test(self, apk_name, app_id):
-        Adb.uninstall(app_id=app_id, device_id=self.device_id, assert_success=False)
-        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
+        attributes = {"--path": self.app_name,
+                      "--keyStorePath": ANDROID_KEYSTORE_PATH,
+                      "--keyStorePassword": ANDROID_KEYSTORE_PASS,
+                      "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
+                      "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
+                      "--release": ""}
 
-        apk_file_path = self.app_dir + apk_name + self.apk_ext
-        Device.install_app(app_file_path=apk_file_path, device_id=self.device_id)
-        Device.clear_log(device_id=self.device_id)
+        if "webpack" in config:
+            attr = {"--bundle": "", "--env.uglify": "", "--env.aot": ""}
+            attributes.update(attr)
 
-        time.sleep(10)
-        Device.turn_on_screen(device_id=self.device_id)
+        if "snapshot" in config:
+            attr = {"--env.snapshot": ""}
+            attributes.update(attr)
 
-        # TODO(vchimev): Is the device locked?
+        Tns.build_android(attributes=attributes)
 
-        time.sleep(10)
-        Device.start_app(device_id=self.device_id, app_id=app_id)
+        app_id = Tns.get_app_id(self.app_name)
+        Adb.clear_logcat(device_id=self.DEVICE_ID)
+        Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
+        Adb.uninstall(app_id=app_id, device_id=self.DEVICE_ID, assert_success=False)
+        assert not Adb.is_application_running(device_id=self.DEVICE_ID, app_id=app_id)
 
-        time.sleep(10)
-        Device.wait_until_app_is_running(device_id=self.device_id, app_id=app_id, timeout=10)
-        start_time = Device.get_start_time(self.device_id, app_id=app_id)
+        apk = Helpers.get_apk_path(app_name=self.app_name, config='release')
+        Adb.install(apk_file_path=apk, device_id=self.DEVICE_ID)
+        Device.turn_on_screen(device_id=self.DEVICE_ID)
+        sleep(10)
 
-        tmp_csv_file_path = "./tmp-" + apk_name + self.csv_ext
-        CsvUtils.write(tmp_csv_file_path, [self.datetime_now(),
-                                           self.get_hostname(),
-                                           self.device_id,
-                                           apk_name,
-                                           app_id,
-                                           start_time])
+        # Verify first start
+        Adb.clear_logcat(device_id=self.DEVICE_ID)
+        Adb.start_app(device_id=self.DEVICE_ID, app_id=app_id)
+        sleep(10)
+        Device.wait_until_app_is_running(device_id=self.DEVICE_ID, app_id=app_id, timeout=10)
+        start_time = Device.get_start_time(self.DEVICE_ID, app_id=app_id)
+        message = "{0} first start on {1} is {2} ms.".format(demo, device_name, start_time)
+        PerfTests.assert_time(expected=first_start, actual=start_time, tolerance=10, error_message=message)
 
-        Device.stop_application(device_id=self.device_id, app_id=app_id)
-        # PerfUtils.plot_data(csv_file_path=csv_file_path, title="Start Time: " + apk_name)
-        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
-
-    def get_hostname(self):
-        return socket.gethostname()
-
-    def datetime_now(self):
-        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-
-if __name__ == '__main__':
-    unittest.main()
+        # Verify second start
+        # Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
+        # assert not Adb.is_application_running(device_id=self.DEVICE_ID, app_id=app_id)
+        # Adb.clear_logcat(device_id=self.DEVICE_ID)
+        # sleep(5)
+        # Adb.start_app(device_id=self.DEVICE_ID, app_id=app_id)
+        # sleep(10)
+        # Device.wait_until_app_is_running(device_id=self.DEVICE_ID, app_id=app_id, timeout=10)
+        # start_time = Device.get_start_time(self.DEVICE_ID, app_id=app_id)
+        # message = "{0} second start on {1} is {2} ms.".format(demo, device_name, start_time)
+        # PerfTests.assert_time(expected=second_start, actual=start_time, tolerance=10, error_message=message)

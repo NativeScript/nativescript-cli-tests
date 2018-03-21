@@ -57,7 +57,7 @@ class Adb(object):
         HT46BWM02644           device usb:336592896X product:m8_google model:HTC_One_M8 device:htc_m8
         '''
         for line in output.splitlines():
-            if 'usb' in line and ' device ' in line:
+            if 'model' in line and ' device ' in line:
                 device_id = line.split(' ')[0]
                 devices.append(device_id)
         return devices
@@ -96,13 +96,13 @@ class Adb(object):
             print "Start time: {0}.".format(start_time)
 
             numbers = map(int, re.findall('\d+', start_time))
-            num_len = len(str(numbers[1]))
+            num_len = len(str(numbers[-1]))
             if num_len == 1:
                 numbers[1] = '00' + str(numbers[1])
             elif num_len == 2:
                 numbers[1] = '0' + str(numbers[1])
 
-            result = str(numbers[0]) + str(numbers[1])
+            result = ''.join(str(x) for x in numbers)
             print "Start time: {0}.".format(result)
             return result
         else:
@@ -176,9 +176,10 @@ class Adb(object):
         :param app_id: Bundle identifier (example: org.nativescript.TestApp)
         """
         command = ADB_PATH + " -s " + device_id + " shell am force-stop " + app_id
-        output = run(command=command, log_level=CommandLogLevel.SILENT)
+        output = run(command=command, log_level=CommandLogLevel.FULL)
         time.sleep(5)
         assert app_id not in output, "Failed to stop " + app_id
+        time.sleep(5)
 
     @staticmethod
     def is_application_running(device_id, app_id):
@@ -189,7 +190,7 @@ class Adb(object):
         :return: True if application is running
         """
         command = ADB_PATH + " -s " + device_id + " shell ps | grep -i " + app_id
-        output = run(command=command, log_level=CommandLogLevel.SILENT)
+        output = run(command=command, log_level=CommandLogLevel.FULL)
         if app_id in output:
             return True
         else:
