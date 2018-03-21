@@ -58,7 +58,7 @@ class PerfTests(BaseClass):
         BaseClass.tearDownClass()
 
     @parameterized.expand(DATA)
-    def test_android_(self, demo, config, device_name, device_id, first_start, second_start):
+    def test_android(self, demo, config, device_name, device_id, first_start, second_start):
         Tns.create_app(self.app_name, attributes={"--template": "https://github.com/" + demo})
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
         if "-ng" in demo:
