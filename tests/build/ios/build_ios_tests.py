@@ -197,3 +197,8 @@ class BuildiOSTests(BaseClass):
 
         output = Tns.run_tns_command("resources update ios", attributes={"--path": self.app_name})
         assert "The ios does not need to have its resources updated." in output
+
+    def test_460_platform_add_ios_rc(self):
+        Tns.platform_add_ios(version="rc", attributes={"--path": self.app_name})
+        output = Tns.build_ios(attributes={"--path": self.app_name})
+        assert "Invalid Version: rc" not in output
