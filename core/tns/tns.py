@@ -457,10 +457,6 @@ class Tns(object):
             else:
                 assert "CONFIGURATION Debug" in output
 
-            entitlements_path = app_name + '/platforms/ios/' + app_id + '/' + app_id + '.entitlements'
-            assert File.exists(entitlements_path), "Entitlements file is missing!"
-            assert 'dict' in File.read(entitlements_path), "Entitlements file content is wrong!"
-
             # Verify simulator/device builds
             device_folder = app_name + "/platforms/ios/build/device/"
             emu_folder = app_name + "/platforms/ios/build/emulator/"
