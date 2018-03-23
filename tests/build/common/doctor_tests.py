@@ -46,7 +46,7 @@ class DoctorTests(BaseClass):
             assert "CocoaPods are installed." in output
             assert "CocoaPods update is not required." in output
             assert "CocoaPods are configured properly." in output
-            assert "Your current CocoaPods version is newer than 0.38.2." in output
+            assert "Your current CocoaPods version is newer than 1.0.0" in output
             assert "Python installed and configured correctly." in output
             assert "The Python 'six' package is found." in output
 
