@@ -10,6 +10,7 @@ from core.device.emulator import Emulator
 from core.device.helpers.adb import Adb
 from core.device.simulator import Simulator
 from core.npm.npm import Npm
+from core.osutils.file import File
 from core.settings.settings import ANDROID_PACKAGE, TYPESCRIPT_PACKAGE, WEBPACK_PACKAGE, ANDROID_KEYSTORE_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS_PASS, ANDROID_KEYSTORE_ALIAS, TEST_RUN_HOME
 from core.tns.tns import Tns
@@ -58,7 +59,7 @@ class PerfTests(BaseClass):
         BaseClass.tearDownClass()
 
     @parameterized.expand(DATA)
-    def test_android(self, demo, config, device_name, device_id, first_start, second_start):
+    def test_prepare_android(self, demo, config, device_name, device_id, first_start, second_start):
         Tns.create_app(self.app_name, attributes={"--template": "https://github.com/" + demo})
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
         if "-ng" in demo:
@@ -85,35 +86,45 @@ class PerfTests(BaseClass):
             attributes.update(attr)
 
         Tns.build_android(attributes=attributes)
+        apk = Helpers.get_apk_path(app_name=self.app_name, config='release')
+        destination = os.path.join(TEST_RUN_HOME, "{0}-{1}.apk".format(demo.split('/')[-1], config))
+        File.remove(destination)
+        File.copy(src=apk, dest=destination)
 
-        app_id = Tns.get_app_id(self.app_name)
+    @parameterized.expand(DATA)
+    def test_start_time(self, demo, config, device_name, device_id, first_start, second_start):
+
+        app_id = 'org.nativescript.TestApp'
         Adb.clear_logcat(device_id=self.DEVICE_ID)
         Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
         Adb.uninstall(app_id=app_id, device_id=self.DEVICE_ID, assert_success=False)
         assert not Adb.is_application_running(device_id=self.DEVICE_ID, app_id=app_id)
 
-        apk = Helpers.get_apk_path(app_name=self.app_name, config='release')
+        apk = os.path.join(TEST_RUN_HOME, "{0}-{1}.apk".format(demo.split('/')[-1], config))
         Adb.install(apk_file_path=apk, device_id=self.DEVICE_ID)
         Device.turn_on_screen(device_id=self.DEVICE_ID)
-        sleep(10)
+        sleep(5)
 
         # Verify first start
         Adb.clear_logcat(device_id=self.DEVICE_ID)
         Adb.start_app(device_id=self.DEVICE_ID, app_id=app_id)
-        sleep(10)
+        sleep(5)
         Device.wait_until_app_is_running(device_id=self.DEVICE_ID, app_id=app_id, timeout=10)
         start_time = Device.get_start_time(self.DEVICE_ID, app_id=app_id)
         message = "{0} first start on {1} is {2} ms.".format(demo, device_name, start_time)
         PerfTests.assert_time(expected=first_start, actual=start_time, tolerance=10, error_message=message)
 
         # Verify second start
-        # Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
-        # assert not Adb.is_application_running(device_id=self.DEVICE_ID, app_id=app_id)
-        # Adb.clear_logcat(device_id=self.DEVICE_ID)
-        # sleep(5)
-        # Adb.start_app(device_id=self.DEVICE_ID, app_id=app_id)
-        # sleep(10)
-        # Device.wait_until_app_is_running(device_id=self.DEVICE_ID, app_id=app_id, timeout=10)
-        # start_time = Device.get_start_time(self.DEVICE_ID, app_id=app_id)
-        # message = "{0} second start on {1} is {2} ms.".format(demo, device_name, start_time)
-        # PerfTests.assert_time(expected=second_start, actual=start_time, tolerance=10, error_message=message)
+        Device.turn_on_screen(device_id=self.DEVICE_ID)
+        Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
+        assert not Adb.is_application_running(device_id=self.DEVICE_ID, app_id=app_id)
+        sleep(5)
+        Device.turn_on_screen(device_id=self.DEVICE_ID)
+        Adb.clear_logcat(device_id=self.DEVICE_ID)
+        sleep(5)
+        Adb.start_app(device_id=self.DEVICE_ID, app_id=app_id)
+        sleep(5)
+        Device.wait_until_app_is_running(device_id=self.DEVICE_ID, app_id=app_id, timeout=10)
+        start_time = Device.get_start_time(self.DEVICE_ID, app_id=app_id)
+        message = "{0} second start on {1} is {2} ms.".format(demo, device_name, start_time)
+        PerfTests.assert_time(expected=second_start, actual=start_time, tolerance=10, error_message=message)
