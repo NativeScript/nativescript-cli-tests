@@ -331,7 +331,18 @@ class Simulator(object):
         """
         command = 'xcrun simctl install booted {0}'.format(path)
         output = run(command=command, log_level=CommandLogLevel.SILENT)
-        assert "Failed to install the requested application" not in output
+        assert "Failed to install the requested application " + path not in output
+
+    @staticmethod
+    def uninstall(app_id):
+        """
+        Uninstall application
+        :param app_id: Bundle identifier (example: org.nativescript.TestApp)
+        """
+
+        command = "xcrun simctl uninstall booted " + app_id
+        output = run(command=command, log_level=CommandLogLevel.SILENT)
+        assert "Failed to uninstall the requested application " + app_id not in output
 
     @staticmethod
     def get_screen(device_id, file_path):

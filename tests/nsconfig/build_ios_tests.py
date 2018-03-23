@@ -32,21 +32,46 @@ class BuildiOSTests(BaseClass):
         Folder.cleanup(app_name_change_app_location_and_name)
         Folder.copy(app_name_change_app_location, app_name_change_app_location_and_name)
 
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_location_and_name, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_location_and_name)
+
         app_name_change_app_res_location = "ChangeAppResLocation"
         Folder.cleanup(app_name_change_app_res_location)
         Folder.copy(app_name_change_app_location, app_name_change_app_res_location)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_res_location, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location)
 
         app_name_change_app_res_location_in_root = "ChangeAppResLocationInRoot"
         Folder.cleanup(app_name_change_app_res_location_in_root)
         Folder.copy(app_name_change_app_location, app_name_change_app_res_location_in_root)
 
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_res_location_in_root, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location_in_root)
+
         app_name_rename_app = "RenameApp"
         Folder.cleanup(app_name_rename_app)
         Folder.copy(app_name_change_app_location, app_name_rename_app)
 
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_rename_app, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app)
+
         app_name_rename_app_res = "RenameAppRes"
         Folder.cleanup(app_name_rename_app_res)
         Folder.copy(app_name_change_app_location, app_name_rename_app_res)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_rename_app_res, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app_res)
 
         # Change app/ location to be 'new_folder/app'
         proj_root = os.path.join(app_name_change_app_location)
@@ -138,7 +163,7 @@ class BuildiOSTests(BaseClass):
         Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "ChangeAppResLocation"}, assert_success=False)
         Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "ChangeAppResLocation"}, assert_success=False)
         Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "RenameApp"}, assert_success=False)
-        # Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "RenameAppRes"}, assert_success=False)
+        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "RenameAppRes"}, assert_success=False)
 
     def tearDown(self):
         BaseClass.tearDown(self)

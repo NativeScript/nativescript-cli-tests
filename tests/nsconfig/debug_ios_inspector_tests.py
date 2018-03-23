@@ -3,6 +3,8 @@ Tests for `tns debug ios` executed on iOS Simulator with different nsconfig setu
 """
 import os
 import time
+import unittest
+
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
@@ -48,21 +50,46 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         Folder.cleanup(app_name_change_app_location_and_name)
         Folder.copy(app_name_change_app_location, app_name_change_app_location_and_name)
 
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_location_and_name, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_location_and_name)
+
         app_name_change_app_res_location = "ChangeAppResLocation"
         Folder.cleanup(app_name_change_app_res_location)
         Folder.copy(app_name_change_app_location, app_name_change_app_res_location)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_res_location, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location)
 
         app_name_change_app_res_location_in_root = "ChangeAppResLocationInRoot"
         Folder.cleanup(app_name_change_app_res_location_in_root)
         Folder.copy(app_name_change_app_location, app_name_change_app_res_location_in_root)
 
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_res_location_in_root, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location_in_root)
+
         app_name_rename_app = "RenameApp"
         Folder.cleanup(app_name_rename_app)
         Folder.copy(app_name_change_app_location, app_name_rename_app)
 
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_rename_app, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app)
+
         app_name_rename_app_res = "RenameAppRes"
         Folder.cleanup(app_name_rename_app_res)
         Folder.copy(app_name_change_app_location, app_name_rename_app_res)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_rename_app_res, 'package.json'),
+            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app_res)
 
         # Change app/ location to be 'new_folder/app'
         proj_root = os.path.join(app_name_change_app_location)
@@ -199,6 +226,9 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
+        # Uninstall the app so that to avoid "Address already in use" when trying to debug on the same simulator
+        Simulator.uninstall("org.nativescript." + app_name)
+
     @parameterized.expand([
         'ChangeAppLocation',
         'ChangeAppLocationAndName',
@@ -219,6 +249,9 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=SIMULATOR_NAME, tolerance=3.0, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_debug_brk')
+
+        # Uninstall the app so that to avoid "Address already in use" when trying to debug on the same simulator
+        Simulator.uninstall("org.nativescript." + app_name)
 
     @parameterized.expand([
         'ChangeAppLocation',
@@ -243,6 +276,9 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         # Attach debugger
         log = Tns.debug_ios(attributes={'--path': app_name, '--emulator': '', '--start': '', '--inspector': ''})
         self.__verify_debugger_attach(log=log)
+
+        # Uninstall the app so that to avoid "Address already in use" when trying to debug on the same simulator
+        Simulator.stop_application("org.nativescript." + app_name)
 
     @parameterized.expand([
         ('ChangeAppLocation',
@@ -270,6 +306,7 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
          ReplaceHelper.CHANGE_XML,
          ReplaceHelper.CHANGE_CSS)
     ])
+    @unittest.skip("Problems when running parameterized test")
     def test_100_debug_ios_simulator_with_livesync(self, app_name, change_js, change_xml, change_css):
         """
         `tns debug ios` should be able to run with livesync
@@ -305,3 +342,6 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
                             expected_image='livesync-hello-world_js_css_xml')
 
         assert Process.is_running('NativeScript Inspector')
+
+        # Uninstall the app so that to avoid "Address already in use" when trying to debug on the same simulator
+        Simulator.uninstall("org.nativescript." + app_name)
