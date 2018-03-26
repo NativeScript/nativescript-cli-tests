@@ -222,3 +222,17 @@ class PluginsiOSTests(BaseClass):
         Tns.build_android(attributes={"--path": self.app_name})
         assert File.pattern_exists(self.app_name + "/platforms/android", pattern="*.aar")
         assert File.pattern_exists(self.app_name + "/platforms/android", pattern="*acra*")
+
+    def test_402_do_not_create_entitlement(self):
+        #https://github.com/NativeScript/nativescript-cli/pull/3482
+        # change entitlements in app/App_Resources/iOS/app.entitlements
+        source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'nativescript-cli-pr-3482', 'app.entitlements')
+        target = os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'app.entitlements')
+        File.copy(src=source, dest=target)
+
+        Tns.plugin_add("nativescript-push-notifications", attributes={"--path": self.app_name})
+        Tns.build_ios(attributes={"--path": self.app_name})
+        entitlements_path = self.app_name + '/platforms/ios/' + self.app_name + '/' + self.app_name + '.entitlements'
+        entitlements_content = File.read(entitlements_path)
+        assert '<key>aps-environment</key>' in entitlements_content, "Entitlements file content is wrong!"
+        assert '<string>development</string>' in entitlements_content, "Entitlements file content is wrong!"

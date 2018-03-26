@@ -60,24 +60,24 @@ class BuildiOSTests(BaseClass):
         Folder.cleanup(cls.app_name_dash)
         Folder.cleanup(cls.app_name_space)
 
-    def test_001_build_ios(self):
-        Tns.build_ios(attributes={"--path": self.app_name}, log_trace=True)
-        Tns.build_ios(attributes={"--path": self.app_name, "--release": ""}, log_trace=True)
-        Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": ""}, log_trace=True)
-
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-        Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": ""}, log_trace=True)
-
-        # Verify no aar and frameworks in platforms folder
-        assert not File.pattern_exists(self.app_name + "/platforms/ios", "*.aar")
-        assert not File.pattern_exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules", "*.framework")
-
-        # Verify ipa has both armv7 and arm64 archs
-        run("mv " + self.app_name + "/platforms/ios/build/device/TestApp.ipa TestApp-ipa.tgz")
-        run("unzip -o TestApp-ipa.tgz")
-        output = run("lipo -info Payload/TestApp.app/TestApp")
-        Folder.cleanup("Payload")
-        assert "Architectures in the fat file: Payload/TestApp.app/TestApp are: armv7 arm64" in output
+    # def test_001_build_ios(self):
+    #     Tns.build_ios(attributes={"--path": self.app_name}, log_trace=True)
+    #     Tns.build_ios(attributes={"--path": self.app_name, "--release": ""}, log_trace=True)
+    #     Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": ""}, log_trace=True)
+    #
+    #     Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+    #     Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": ""}, log_trace=True)
+    #
+    #     # Verify no aar and frameworks in platforms folder
+    #     assert not File.pattern_exists(self.app_name + "/platforms/ios", "*.aar")
+    #     assert not File.pattern_exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules", "*.framework")
+    #
+    #     # Verify ipa has both armv7 and arm64 archs
+    #     run("mv " + self.app_name + "/platforms/ios/build/device/TestApp.ipa TestApp-ipa.tgz")
+    #     run("unzip -o TestApp-ipa.tgz")
+    #     output = run("lipo -info Payload/TestApp.app/TestApp")
+    #     Folder.cleanup("Payload")
+    #     assert "Architectures in the fat file: Payload/TestApp.app/TestApp are: armv7 arm64" in output
 
     def test_190_build_ios_distribution_provisions(self):
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
@@ -197,3 +197,16 @@ class BuildiOSTests(BaseClass):
 
         output = Tns.run_tns_command("resources update ios", attributes={"--path": self.app_name})
         assert "The ios does not need to have its resources updated." in output
+
+    def test_460_publish_command_failed_if_plist_is_not_binary(self):
+        #https://github.com/NativeScript/nativescript-cli/pull/3490
+        Tns.plugin_add("nativescript-camera", attributes={"--path": self.app_name})
+        Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": ""}, log_trace=True)
+
+        # Verify ipa has both armv7 and arm64 archs
+        run("mv " + self.app_name + "/platforms/ios/build/device/TestApp.ipa TestApp-ipa.tgz")
+        run("unzip -o TestApp-ipa.tgz")
+        row = "Payload/TestApp.app/Info.plist"
+        output = run("cat " + row)
+        assert "xml" not in output
+        assert "bplist" in output
