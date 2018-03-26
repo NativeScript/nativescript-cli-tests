@@ -6,6 +6,12 @@ NativeScript/template-hello-world-ng,default,Pixel2,FA7B71A00082,3664,2036
 NativeScript/template-hello-world-ng,webpack,Pixel2,FA7B71A00082,1791,1713
 NativeScript/template-hello-world-ng,webpack-snapshot,Pixel2,FA7B71A00082,771,683
 nativescript-vue/nativescript-vue-template,default,Pixel2,FA7B71A00082,1006,844
+NativeScript/nativescript-sdk-examples-ng,default,Pixel2,FA7B71A00082,3876,2142
+NativeScript/nativescript-sdk-examples-ng,webpack,Pixel2,FA7B71A00082,1912,1818
+NativeScript/nativescript-sdk-examples-ng,webpack-snapshot,Pixel2,FA7B71A00082,1371,817
+NativeScript/sample-Groceries,default,Pixel2,FA7B71A00082,4248,2501
+NativeScript/sample-Groceries,webpack,Pixel2,FA7B71A00082,1932,1880
+NativeScript/sample-Groceries,webpack-snapshot,Pixel2,FA7B71A00082,1477,1368
 NativeScript/template-hello-world,default,Nexus5x,016d37cd3fe7c676,1897,1504
 NativeScript/template-hello-world,webpack,Nexus5x,016d37cd3fe7c676,1693,1523
 NativeScript/template-hello-world,webpack-snapshot,Nexus5x,016d37cd3fe7c676,1335,1119
@@ -13,3 +19,9 @@ NativeScript/template-hello-world-ng,default,Nexus5x,016d37cd3fe7c676,5950,3539
 NativeScript/template-hello-world-ng,webpack,Nexus5x,016d37cd3fe7c676,3163,2950
 NativeScript/template-hello-world-ng,webpack-snapshot,Nexus5x,016d37cd3fe7c676,2273,2003
 nativescript-vue/nativescript-vue-template,default,Nexus5x,016d37cd3fe7c676,1992,1603
+NativeScript/nativescript-sdk-examples-ng,default,Nexus5x,016d37cd3fe7c676,6348,3561
+NativeScript/nativescript-sdk-examples-ng,webpack,Nexus5x,016d37cd3fe7c676,3218,2887
+NativeScript/nativescript-sdk-examples-ng,webpack-snapshot,Nexus5x,016d37cd3fe7c676,2561,2077
+NativeScript/sample-Groceries,default,Nexus5x,016d37cd3fe7c676,6348,4017
+NativeScript/sample-Groceries,webpack,Nexus5x,016d37cd3fe7c676,3218,3095
+NativeScript/sample-Groceries,webpack-snapshot,Nexus5x,016d37cd3fe7c676,2561,2113

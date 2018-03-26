@@ -22,3 +22,5 @@ package-lock.json
 template-master-detail
 template-master-detail-ts
 template-master-detail-ng
+*.apk
+*.txt

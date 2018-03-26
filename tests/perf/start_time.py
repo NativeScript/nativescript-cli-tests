@@ -9,12 +9,15 @@ from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.helpers.adb import Adb
 from core.device.simulator import Simulator
+from core.git.git import Git
 from core.npm.npm import Npm
 from core.osutils.file import File
+from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_PACKAGE, TYPESCRIPT_PACKAGE, WEBPACK_PACKAGE, ANDROID_KEYSTORE_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS_PASS, ANDROID_KEYSTORE_ALIAS, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
+from core.tns.tns_verifications import TnsAsserts
 from tests.webpack.helpers.helpers import Helpers
 
 
@@ -60,15 +63,6 @@ class PerfTests(BaseClass):
 
     @parameterized.expand(DATA)
     def test_prepare_android(self, demo, config, device_name, device_id, first_start, second_start):
-        Tns.create_app(self.app_name, attributes={"--template": "https://github.com/" + demo})
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-        if "-ng" in demo:
-            Tns.update_angular(self.app_name)
-        if "-ng" in demo or "-ts" in demo:
-            Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev', folder=self.app_name)
-            Npm.install(package=TYPESCRIPT_PACKAGE, option='--save-dev', folder=self.app_name)
-        if "vue" not in demo:
-            Npm.install(package=WEBPACK_PACKAGE, option='--save-dev', folder=self.app_name)
 
         attributes = {"--path": self.app_name,
                       "--keyStorePath": ANDROID_KEYSTORE_PATH,
@@ -85,16 +79,45 @@ class PerfTests(BaseClass):
             attr = {"--env.snapshot": ""}
             attributes.update(attr)
 
+        if "template" in demo:
+            Tns.create_app(self.app_name, attributes={"--template": "https://github.com/" + demo})
+            Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+            if "-ng" in demo:
+                Tns.update_angular(self.app_name)
+            if "-ng" in demo or "-ts" in demo:
+                Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev', folder=self.app_name)
+                Npm.install(package=TYPESCRIPT_PACKAGE, option='--save-dev', folder=self.app_name)
+            if "vue" not in demo:
+                Npm.install(package=WEBPACK_PACKAGE, option='--save-dev', folder=self.app_name)
+        else:
+            Folder.cleanup(self.app_name)
+            Git.clone_repo(repo_url="https://github.com/" + demo, local_folder=self.app_name)
+            Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+            Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+            Tns.update_modules(self.app_name)
+            Npm.uninstall(package="nativescript-dev-webpack", option='--save-dev', folder=self.app_name)
+            Npm.install(package=WEBPACK_PACKAGE, option='--save-dev', folder=self.app_name)
+
+            json = str(TnsAsserts.get_package_json(self.app_name))
+            if "angular" in json:
+                Tns.update_angular(self.app_name)
+            if "typescript" in json:
+                Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev', folder=self.app_name)
+                Npm.install(package=TYPESCRIPT_PACKAGE, option='--save-dev', folder=self.app_name)
+
         Tns.build_android(attributes=attributes)
         apk = Helpers.get_apk_path(app_name=self.app_name, config='release')
         destination = os.path.join(TEST_RUN_HOME, "{0}-{1}.apk".format(demo.split('/')[-1], config))
+        destination_info = os.path.join(TEST_RUN_HOME, "{0}-{1}.txt".format(demo.split('/')[-1], config))
         File.remove(destination)
+        File.remove(destination_info)
         File.copy(src=apk, dest=destination)
+        File.write(file_path=destination_info, text=Tns.get_app_id(self.app_name))
 
     @parameterized.expand(DATA)
     def test_start_time(self, demo, config, device_name, device_id, first_start, second_start):
 
-        app_id = 'org.nativescript.TestApp'
+        app_id = File.read(os.path.join(TEST_RUN_HOME, "{0}-{1}.txt".format(demo.split('/')[-1], config))).strip()
         Adb.clear_logcat(device_id=self.DEVICE_ID)
         Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
         Adb.uninstall(app_id=app_id, device_id=self.DEVICE_ID, assert_success=False)

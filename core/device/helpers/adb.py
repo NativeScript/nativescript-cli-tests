@@ -82,13 +82,14 @@ class Adb(object):
     @staticmethod
     def get_start_time(device_id, app_id):
         """
-        Parse the start time of application.
-        Example: I/ActivityManager(19531): Displayed org.nativescript.TestApp/com.tns.NativeScriptActivity: +3s452ms
+        Get start time of application.
         :param device_id: Device id.
         :param app_id: App id.
-        :return: Start time.
+        :return: Start time as string.
         """
-        output = Adb.run(command='logcat -d | grep \'Displayed {0}\''.format(app_id), device_id=device_id)
+        command = 'logcat -d | grep \'Displayed {0}\''.format(app_id)
+        output = Adb.run(command=command, device_id=device_id, log_level=CommandLogLevel.SILENT)
+        # Example: I/ActivityManager(19531): Displayed org.nativescript.TestApp/com.tns.NativeScriptActivity: +3s452ms
         if len(output) > 0:
             print "Start time: {0}.".format(output)
 
@@ -190,7 +191,7 @@ class Adb(object):
         :return: True if application is running
         """
         command = ADB_PATH + " -s " + device_id + " shell ps | grep -i " + app_id
-        output = run(command=command, log_level=CommandLogLevel.FULL)
+        output = run(command=command, log_level=CommandLogLevel.SILENT)
         if app_id in output:
             return True
         else:
@@ -365,22 +366,23 @@ class Adb(object):
         cmd_key_event = ADB_PATH + " -s " + device_id + " shell input keyevent 26"
         cmd_input_method = ADB_PATH + " -s " + device_id + " shell dumpsys input_method | grep mActive"
 
-        output = run(command=cmd_input_method)
+        output = run(command=cmd_input_method, log_level=CommandLogLevel.SILENT)
         is_active = "mActive=true" in output
-        print "Is the screen on? {0}".format(is_active)
 
         if is_active:
-            run(command=cmd_key_event)
+            print "The screen is already active."
+            run(command=cmd_key_event, log_level=CommandLogLevel.SILENT)
             time.sleep(1)
-            output = run(command=cmd_input_method)
+            output = run(command=cmd_input_method, log_level=CommandLogLevel.SILENT)
             assert "mActive=false" in output
             time.sleep(1)
             run(command=cmd_key_event)
             time.sleep(1)
-            output = run(command=cmd_input_method)
+            output = run(command=cmd_input_method, log_level=CommandLogLevel.SILENT)
             assert "mActive=true" in output
         else:
+            print "The screen is not active. Turn it on..."
             run(command=cmd_key_event)
             time.sleep(1)
-            output = run(command=cmd_input_method)
+            output = run(command=cmd_input_method, log_level=CommandLogLevel.SILENT)
             assert "mActive=true" in output
