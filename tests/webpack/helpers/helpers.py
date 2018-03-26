@@ -28,12 +28,19 @@ class Helpers(object):
             end_time = time.time() + timeout
             while not running:
                 time.sleep(5)
-                webpack_cmd = "webpack.js', '--config=webpack.config.js', '--progress', '--watch'"
+                webpack_cmd = "node_modules/webpack/bin/webpack.js"
                 if CURRENT_OS == OSType.WINDOWS:
                     webpack_cmd = "webpack"
                 running = Process.is_running_by_commandline(webpack_cmd)
                 if running:
                     running = True
+                    proc = Process.get_proc_by_commandline(webpack_cmd)
+                    cmdline = proc.cmdline()
+                    print "Params:"
+                    print cmdline
+                    if CURRENT_OS != OSType.WINDOWS:
+                        assert "--env.appResourcesPath=app/App_Resources" in cmdline
+                        assert "--env.appPath=app" in cmdline
                     break
                 if (running is False) and (time.time() > end_time):
                     raise NameError("Webpack with watcher is not running in {0} seconds.", timeout)

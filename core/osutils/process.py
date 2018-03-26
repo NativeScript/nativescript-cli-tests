@@ -24,7 +24,20 @@ class Process(object):
     @staticmethod
     def is_running_by_commandline(commandline):
         """Check if process with specified commandline is running"""
-        result = False
+        proc = Process.get_proc_by_commandline(commandline=commandline)
+        if proc is not None:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def get_proc_by_commandline(commandline):
+        """
+        Get process by commandline.
+        :param commandline: Sub string of process commandline.
+        :return: Process.
+        """
+        result = None
         for proc in psutil.process_iter():
             cmdline = ""
             try:
@@ -32,9 +45,9 @@ class Process(object):
             except:
                 continue
             if commandline in cmdline:
-                result = True
+                result = proc
                 break
-        return result
+        return proc
 
     @staticmethod
     def wait_until_running(proc_name, timeout=60):
