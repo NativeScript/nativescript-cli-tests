@@ -6,6 +6,7 @@ import unittest
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
+from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.npm.npm import Npm
@@ -96,6 +97,7 @@ class StarterKitsTemplateTests(BaseClass):
         else:
             ReplaceHelper.replace(demo, self.js_change)
             ReplaceHelper.replace(demo, self.xml_change)
+            assert Device.wait_for_text("Best Car Ever!"), "XML Changes not applied!"
         ReplaceHelper.replace(demo, self.sass_root_level_variable_change)
         ReplaceHelper.replace(demo, self.sass_root_level_android_change)
         ReplaceHelper.replace(demo, self.sass_nested_level_change)
@@ -114,6 +116,7 @@ class StarterKitsTemplateTests(BaseClass):
         else:
             ReplaceHelper.rollback(demo, self.js_change)
             ReplaceHelper.rollback(demo, self.xml_change)
+            assert Device.wait_for_text("Browse"), "XML Changes not applied!"
         ReplaceHelper.rollback(demo, self.sass_root_level_variable_change)
         ReplaceHelper.rollback(demo, self.sass_root_level_android_change)
         ReplaceHelper.rollback(demo, self.sass_nested_level_change)
