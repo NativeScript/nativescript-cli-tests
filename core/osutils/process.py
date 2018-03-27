@@ -47,7 +47,7 @@ class Process(object):
             if commandline in cmdline:
                 result = proc
                 break
-        return proc
+        return result
 
     @staticmethod
     def wait_until_running(proc_name, timeout=60):
