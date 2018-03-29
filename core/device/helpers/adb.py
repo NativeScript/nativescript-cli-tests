@@ -29,7 +29,7 @@ class Adb(object):
         return File.find(base_path=base_path, file_name=aapt_executable, exact_match=True)
 
     @staticmethod
-    def __get_package_id(apk_file):
+    def get_package_id(apk_file):
         """
         Get package id from apk file.
         :param apk_file: Path to apk file.
@@ -43,6 +43,16 @@ class Adb(object):
             if 'package:' in line:
                 app_id = line.split('\'')[1]
         return app_id
+
+    @staticmethod
+    def get_package_permission(apk_file):
+        """
+        Get permission from apk file.
+        :param apk_file: Path to apk file.
+        :return: Permissions as string.
+        """
+        command = Adb.__find_aapt() + ' d permissions ' + apk_file
+        return run(command=command, log_level=CommandLogLevel.COMMAND_ONLY)
 
     @staticmethod
     def get_devices(include_emulators=False):
@@ -205,7 +215,7 @@ class Adb(object):
         :param device_id: Device id.
         """
         Adb.__monkey_kill(device_id)
-        app_id = Adb.__get_package_id(apk_file)
+        app_id = Adb.get_package_id(apk_file)
         print 'Start monkey testing...'
         output = Adb.run(command='shell monkey -p ' + app_id + ' --throttle 100 -v 100 -s 120', device_id=device_id)
         assert 'No activities found' not in output, '{0} is not available on {1}'.format(app_id, device_id)
