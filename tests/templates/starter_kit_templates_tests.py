@@ -43,27 +43,29 @@ class StarterKitsTests(BaseClass):
 
     @staticmethod
     def apply_changes(self, demo, platform, device_id):
+
+        xml = "Best Car Ever!"
+        if platform == Platform.IOS:
+            xml = "BestCar"
+
         if '-ng' in demo:
             ReplaceHelper.replace(demo, self.ts_change_ng)
             assert Device.wait_for_text(device_id=device_id, text="SyncJSTest",
                                         timeout=20), "Failed to apply TS changes"
             ReplaceHelper.replace(demo, self.html_change)
-            assert Device.wait_for_text(device_id=device_id, text="Best Car Ever!",
-                                        timeout=20), "Failed to apply XML changes!"
+            assert Device.wait_for_text(device_id=device_id, text=xml, timeout=20), "Failed to apply XML changes!"
         elif '-ts' in demo:
             ReplaceHelper.replace(demo, self.ts_change)
             assert Device.wait_for_text(device_id=device_id, text="SyncJSTest",
                                         timeout=20), "Failed to apply TS changes"
             ReplaceHelper.replace(demo, self.xml_change)
-            assert Device.wait_for_text(device_id=device_id, text="Best Car Ever!",
-                                        timeout=20), "Failed to apply XML changes!"
+            assert Device.wait_for_text(device_id=device_id, text=xml, timeout=20), "Failed to apply XML changes!"
         else:
             ReplaceHelper.replace(demo, self.js_change)
             assert Device.wait_for_text(device_id=device_id, text="SyncJSTest",
                                         timeout=20), "Failed to apply JS changes"
             ReplaceHelper.replace(demo, self.xml_change)
-            assert Device.wait_for_text(device_id=device_id, text="Best Car Ever!",
-                                        timeout=20), "Failed to apply XML changes!"
+            assert Device.wait_for_text(device_id=device_id, text=xml, timeout=20), "Failed to apply XML changes!"
         ReplaceHelper.replace(demo, self.sass_root_level_variable_change)
         if platform == Platform.ANDROID:
             ReplaceHelper.replace(demo, self.sass_root_level_android_change)
