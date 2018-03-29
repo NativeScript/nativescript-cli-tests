@@ -3,6 +3,7 @@ Tests for building projects for Android platform with different nsconfig setup.
 """
 import datetime
 import os
+import unittest
 from zipfile import ZipFile
 from nose_parameterized import parameterized
 
@@ -10,7 +11,7 @@ from core.base_class.BaseClass import BaseClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_PACKAGE, \
-    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS
+    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 
@@ -30,140 +31,18 @@ class BuildAndroidTests(BaseClass):
         File.remove(cls.release_apk)
         Folder.cleanup('temp')
 
-        base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
-
-        # Initial create of all projects
-        app_name_change_app_location = "ChangeAppLocation"
-        Tns.create_app(app_name=app_name_change_app_location)
-
-        # Add release and debug configs
-        debug = os.path.join(app_name_change_app_location, 'app', 'config.debug.json')
-        release = os.path.join(app_name_change_app_location, 'app', 'config.release.json')
-        File.write(file_path=debug, text='{"config":"debug"}')
-        File.write(file_path=release, text='{"config":"release"}')
-
-        # Create the other projects using the initial setup but in different folder
-        app_name_change_app_location_and_name = "ChangeAppLocationAndName"
-        Folder.cleanup(app_name_change_app_location_and_name)
-        Folder.copy(app_name_change_app_location, app_name_change_app_location_and_name)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_location_and_name, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_location_and_name)
-        File.replace(
-            os.path.join(app_name_change_app_location_and_name, 'app', 'App_Resources', 'Android', 'app.gradle'),
-            "__PACKAGE__", "org.nativescript." + app_name_change_app_location_and_name)
-
-        app_name_change_app_res_location = "ChangeAppResLocation"
-        Folder.cleanup(app_name_change_app_res_location)
-        Folder.copy(app_name_change_app_location, app_name_change_app_res_location)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_res_location, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location)
-        File.replace(
-            os.path.join(app_name_change_app_res_location, 'app', 'App_Resources', 'Android', 'app.gradle'),
-            "__PACKAGE__", "org.nativescript." + app_name_change_app_res_location)
-
-        app_name_change_app_res_location_in_root = "ChangeAppResLocationInRoot"
-        Folder.cleanup(app_name_change_app_res_location_in_root)
-        Folder.copy(app_name_change_app_location, app_name_change_app_res_location_in_root)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_res_location_in_root, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location_in_root)
-        File.replace(
-            os.path.join(app_name_change_app_res_location_in_root, 'app', 'App_Resources', 'Android', 'app.gradle'),
-            "__PACKAGE__", "org.nativescript." + app_name_change_app_res_location_in_root)
-
-        app_name_rename_app = "RenameApp"
-        Folder.cleanup(app_name_rename_app)
-        Folder.copy(app_name_change_app_location, app_name_rename_app)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_rename_app, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app)
-        File.replace(
-            os.path.join(app_name_rename_app, 'app', 'App_Resources', 'Android', 'app.gradle'),
-            "__PACKAGE__", "org.nativescript." + app_name_rename_app)
-
-        app_name_rename_app_res = "RenameAppRes"
-        Folder.cleanup(app_name_rename_app_res)
-        Folder.copy(app_name_change_app_location, app_name_rename_app_res)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_rename_app_res, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app_res)
-        File.replace(
-            os.path.join(app_name_rename_app_res, 'app', 'App_Resources', 'Android', 'app.gradle'),
-            "__PACKAGE__", "org.nativescript." + app_name_rename_app_res)
-
-        # Change app/ location to be 'new_folder/app'
-        proj_root = os.path.join(app_name_change_app_location)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_change_app_location, 'nsconfig.json', ), app_name_change_app_location)
-        Folder.create(os.path.join(proj_root, "new_folder"))
-        Folder.move(app_path, os.path.join(proj_root, 'new_folder'))
-        Tns.platform_add_android(attributes={"--path": app_name_change_app_location,
-                                             "--frameworkPath": ANDROID_PACKAGE})
-
-        # Change app/ name and place to be 'my folder/my app'
-        proj_root = os.path.join(app_name_change_app_location_and_name)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_change_app_location_and_name, 'nsconfig.json'),
-                  app_name_change_app_location_and_name)
-        Folder.create(os.path.join(proj_root, "my folder"))
-        os.rename(app_path, os.path.join(proj_root, "my app"))
-        Folder.move(os.path.join(proj_root, "my app"), os.path.join(proj_root, "my folder"))
-        Tns.platform_add_android(attributes={"--path": app_name_change_app_location_and_name,
-                                             "--frameworkPath": ANDROID_PACKAGE})
-
-        # Change App_Resources/ location to be 'app/res/App_Resources'
-        proj_root = os.path.join(app_name_change_app_res_location)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_change_app_res_location, 'nsconfig.json'),
-                  app_name_change_app_res_location)
-        Folder.create(os.path.join(app_path, 'res'))
-        Folder.move(app_res_path, os.path.join(app_path, 'res'))
-        Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location,
-                                             "--frameworkPath": ANDROID_PACKAGE})
-
-        # Change App_Resources/ location to be in project root/App_Resources
-        proj_root = os.path.join(app_name_change_app_res_location_in_root)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_change_app_res_location_in_root, 'nsconfig.json'),
-                  app_name_change_app_res_location_in_root)
-        Folder.move(app_res_path, proj_root)
-        Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location_in_root,
-                                             "--frameworkPath": ANDROID_PACKAGE})
-
-        # Change app/ to renamed_app/
-        proj_root = os.path.join(app_name_rename_app)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_rename_app, 'nsconfig.json'), app_name_rename_app)
-        os.rename(app_path, os.path.join(proj_root, 'renamed_app'))
-        Tns.platform_add_android(attributes={"--path": app_name_rename_app, "--frameworkPath": ANDROID_PACKAGE})
-
-        # Change App_Resources/ to My_App_Resources/
-        proj_root = os.path.join(app_name_rename_app_res)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_rename_app_res, 'nsconfig.json'), app_name_rename_app_res)
-        os.rename(app_res_path, os.path.join(app_path, 'My_App_Resources'))
-        Tns.platform_add_android(attributes={"--path": app_name_rename_app_res, "--frameworkPath": ANDROID_PACKAGE})
+        if File.exists(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation"):
+            assert "ChangeAppLocation" in TEST_RUN_HOME + "/data/Projects/ChangeAppLocation"
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/ChangeAppLocation")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndName",
+                        TEST_RUN_HOME + "/ChangeAppLocationAndName")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocation", TEST_RUN_HOME + "/ChangeAppResLocation")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRoot",
+                        TEST_RUN_HOME + "/ChangeAppResLocationInRoot")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/RenameApp")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppRes", TEST_RUN_HOME + "/RenameAppRes")
+        else:
+            BaseClass.createApps(cls.__name__)
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -194,11 +73,11 @@ class BuildAndroidTests(BaseClass):
 
     @parameterized.expand([
         'ChangeAppLocation',
-        'ChangeAppLocationAndName',
-        'ChangeAppResLocation',
-        'ChangeAppResLocationInRoot',
-        'RenameApp',
-        'RenameAppRes'
+        # 'ChangeAppLocationAndName',
+        # 'ChangeAppResLocation',
+        # 'ChangeAppResLocationInRoot',
+        # 'RenameApp',
+        # 'RenameAppRes'
     ])
     def test_001_build_android(self, app_name):
         self.app_name = app_name
@@ -265,11 +144,11 @@ class BuildAndroidTests(BaseClass):
 
     @parameterized.expand([
         'ChangeAppLocation',
-        'ChangeAppLocationAndName',
-        'ChangeAppResLocation',
-        'ChangeAppResLocationInRoot',
-        'RenameApp',
-        'RenameAppRes'
+        # 'ChangeAppLocationAndName',
+        # 'ChangeAppResLocation',
+        # 'ChangeAppResLocationInRoot',
+        # 'RenameApp',
+        # 'RenameAppRes'
     ])
     def test_002_build_android_release(self, app_name):
         self.app_name = app_name
