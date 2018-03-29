@@ -73,11 +73,11 @@ class BuildAndroidTests(BaseClass):
 
     @parameterized.expand([
         'ChangeAppLocation',
-        # 'ChangeAppLocationAndName',
-        # 'ChangeAppResLocation',
-        # 'ChangeAppResLocationInRoot',
-        # 'RenameApp',
-        # 'RenameAppRes'
+        'ChangeAppLocationAndName',
+        'ChangeAppResLocation',
+        'ChangeAppResLocationInRoot',
+        'RenameApp',
+        'RenameAppRes'
     ])
     def test_001_build_android(self, app_name):
         self.app_name = app_name
@@ -144,11 +144,11 @@ class BuildAndroidTests(BaseClass):
 
     @parameterized.expand([
         'ChangeAppLocation',
-        # 'ChangeAppLocationAndName',
-        # 'ChangeAppResLocation',
-        # 'ChangeAppResLocationInRoot',
-        # 'RenameApp',
-        # 'RenameAppRes'
+        'ChangeAppLocationAndName',
+        'ChangeAppResLocation',
+        'ChangeAppResLocationInRoot',
+        'RenameApp',
+        'RenameAppRes'
     ])
     def test_002_build_android_release(self, app_name):
         self.app_name = app_name
