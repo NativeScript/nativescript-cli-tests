@@ -7,7 +7,7 @@ import unittest
 from zipfile import ZipFile
 from nose_parameterized import parameterized
 
-from core.base_class.BaseClass import BaseClass
+from core.base_class.BaseNSConfigClass import BaseNSConfigClass
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_PACKAGE, \
@@ -16,7 +16,7 @@ from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 
 
-class BuildAndroidTests(BaseClass):
+class BuildAndroidTests(BaseNSConfigClass):
     debug_apk = "app-debug.apk"
     release_apk = "app-release.apk"
 
@@ -25,7 +25,7 @@ class BuildAndroidTests(BaseClass):
 
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass(cls.__name__)
+        BaseNSConfigClass.setUpClass(cls.__name__)
 
         File.remove(cls.debug_apk)
         File.remove(cls.release_apk)
@@ -42,10 +42,10 @@ class BuildAndroidTests(BaseClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/RenameApp")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppRes", TEST_RUN_HOME + "/RenameAppRes")
         else:
-            BaseClass.createApps(cls.__name__)
+            BaseNSConfigClass.createApps(cls.__name__)
 
     def setUp(self):
-        BaseClass.setUp(self)
+        BaseNSConfigClass.setUp(self)
 
     def tearDown(self):
         # Verify application state at the end of the test is correct
@@ -54,7 +54,7 @@ class BuildAndroidTests(BaseClass):
             assert "tns-android" in data["nativescript"], "'tns-android' not found under `nativescript` in package.json"
             assert "tns-android" not in data["dependencies"], "'tns-android' found under `dependencies` in package.json"
 
-        BaseClass.tearDown(self)
+        BaseNSConfigClass.tearDown(self)
         Folder.cleanup(self.platforms_android + '/build/outputs')
 
     @classmethod

@@ -4,7 +4,7 @@ Test for building projects for iOS platform with different nsconfig setup.
 import os
 from nose_parameterized import parameterized
 
-from core.base_class.BaseClass import BaseClass
+from core.base_class.BaseNSConfigClass import BaseNSConfigClass
 from core.device.simulator import Simulator
 from core.osutils.command import run
 from core.osutils.file import File
@@ -16,10 +16,10 @@ from core.tns.tns_platform_type import Platform
 from core.xcode.xcode import Xcode
 
 
-class BuildiOSTests(BaseClass):
+class BuildiOSTests(BaseNSConfigClass):
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass(cls.__name__)
+        BaseNSConfigClass.setUpClass(cls.__name__)
 
         if File.exists(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation"):
             assert "ChangeAppLocation" in TEST_RUN_HOME + "/data/Projects/ChangeAppLocation"
@@ -32,7 +32,7 @@ class BuildiOSTests(BaseClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/RenameApp")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppRes", TEST_RUN_HOME + "/RenameAppRes")
         else:
-            BaseClass.createApps(cls.__name__)
+            BaseNSConfigClass.createApps(cls.__name__)
 
 
 
@@ -169,7 +169,7 @@ class BuildiOSTests(BaseClass):
         Xcode.cleanup_cache()
 
     def setUp(self):
-        BaseClass.setUp(self)
+        BaseNSConfigClass.setUp(self)
         Simulator.stop()
 
         Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "ChangeAppLocation"}, assert_success=False)
@@ -187,7 +187,7 @@ class BuildiOSTests(BaseClass):
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": "RenameAppRes"}, assert_success=False)
 
     def tearDown(self):
-        BaseClass.tearDown(self)
+        BaseNSConfigClass.tearDown(self)
         assert not Simulator.is_running()[0], "Simulator started after " + self._testMethodName
 
     @classmethod
