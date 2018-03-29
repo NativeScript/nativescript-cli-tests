@@ -34,13 +34,11 @@ class ResourcesGenerateTests(BaseClass):
         Folder.cleanup("temp_ios_resources")
 
     def test_001_tns_resources_generate_icons(self):
-        Folder.navigate_to(self.app_name)
-
-        app_resources_android = os.path.join(os.getcwd(), "app", "App_Resources", "Android")
-        app_resources_ios = os.path.join(os.getcwd(), "app", "App_Resources", "iOS", "Assets.xcassets",
+        app_resources_android = os.path.join(os.getcwd(), self.app_name, "app", "App_Resources", "Android")
+        app_resources_ios = os.path.join(os.getcwd(), self.app_name, "app", "App_Resources", "iOS", "Assets.xcassets",
                                          "AppIcon.appiconset")
 
-        output = run("tns resources generate icons \"" + self.image_path + "\"")
+        output = run("tns resources generate icons \"" + self.image_path + "\"" + " --path " + self.app_name)
         assert "Generating icons" in output
         assert "Icons generation completed" in output
 
@@ -73,8 +71,8 @@ class ResourcesGenerateTests(BaseClass):
         assert True
 
     def test_002_tns_resources_generate_spalshes(self):
-        app_resources_android = os.path.join(os.getcwd(), "app", "App_Resources", "Android")
-        app_resources_ios = os.path.join(os.getcwd(), "app", "App_Resources", "iOS", "Assets.xcassets")
+        app_resources_android = os.path.join(os.getcwd(), self.app_name, "app", "App_Resources", "Android")
+        app_resources_ios = os.path.join(os.getcwd(), self.app_name, "app", "App_Resources", "iOS", "Assets.xcassets")
         output = run("tns resources generate splashes \"" + self.image_path + "\"" + " --background green --path "
                      + self.app_name)
         assert "Generating splash screens" in output
