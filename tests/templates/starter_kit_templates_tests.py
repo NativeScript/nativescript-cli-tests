@@ -6,8 +6,8 @@ import unittest
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
+from core.device.device import Device
 from core.device.emulator import Emulator
-from core.device.helpers.adb import Adb
 from core.device.simulator import Simulator
 from core.npm.npm import Npm
 from core.osutils.os_type import OSType
@@ -19,10 +19,10 @@ from core.tns.tns_platform_type import Platform
 from tests.webpack.helpers.helpers import Helpers
 
 
-class StarterKitsTemplateTests(BaseClass):
+class StarterKitsTests(BaseClass):
     DEMOS = [
         'template-master-detail',
-        # 'template-master-detail-ts',
+        'template-master-detail-ts',
         'template-master-detail-ng'
     ]
 
@@ -42,22 +42,28 @@ class StarterKitsTemplateTests(BaseClass):
     SIMULATOR_ID = ""
 
     @staticmethod
-    def apply_changes(self, demo, platform):
+    def apply_changes(self, demo, platform, device_id):
         if '-ng' in demo:
             ReplaceHelper.replace(demo, self.ts_change_ng)
-            assert Adb.wait_for_text(device_id=EMULATOR_ID, text="SyncJSTest"), "Failed to apply TS changes"
+            assert Device.wait_for_text(device_id=device_id, text="SyncJSTest",
+                                        timeout=20), "Failed to apply TS changes"
             ReplaceHelper.replace(demo, self.html_change)
-            assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Best Car Ever!"), "Failed to apply XML changes!"
+            assert Device.wait_for_text(device_id=device_id, text="Best Car Ever!",
+                                        timeout=20), "Failed to apply XML changes!"
         elif '-ts' in demo:
             ReplaceHelper.replace(demo, self.ts_change)
-            assert Adb.wait_for_text(device_id=EMULATOR_ID, text="SyncJSTest"), "Failed to apply TS changes"
+            assert Device.wait_for_text(device_id=device_id, text="SyncJSTest",
+                                        timeout=20), "Failed to apply TS changes"
             ReplaceHelper.replace(demo, self.xml_change)
-            assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Best Car Ever!"), "Failed to apply XML changes!"
+            assert Device.wait_for_text(device_id=device_id, text="Best Car Ever!",
+                                        timeout=20), "Failed to apply XML changes!"
         else:
             ReplaceHelper.replace(demo, self.js_change)
-            assert Adb.wait_for_text(device_id=EMULATOR_ID, text="SyncJSTest"), "Failed to apply JS changes"
+            assert Device.wait_for_text(device_id=device_id, text="SyncJSTest",
+                                        timeout=20), "Failed to apply JS changes"
             ReplaceHelper.replace(demo, self.xml_change)
-            assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Best Car Ever!"), "Failed to apply XML changes!"
+            assert Device.wait_for_text(device_id=device_id, text="Best Car Ever!",
+                                        timeout=20), "Failed to apply XML changes!"
         ReplaceHelper.replace(demo, self.sass_root_level_variable_change)
         if platform == Platform.ANDROID:
             ReplaceHelper.replace(demo, self.sass_root_level_android_change)
@@ -69,22 +75,25 @@ class StarterKitsTemplateTests(BaseClass):
             ReplaceHelper.replace(demo, self.sass_nested_level_change)
 
     @staticmethod
-    def revert_changes(self, demo, platform):
+    def revert_changes(self, demo, platform, device_id):
         if '-ng' in demo:
             ReplaceHelper.rollback(demo, self.ts_change_ng)
-            assert Adb.wait_for_text(device_id=EMULATOR_ID, text="BMW"), "Failed to rollback TS changes"
+            assert Device.wait_for_text(device_id=device_id, text="BMW", timeout=20), "Failed to rollback TS changes"
             ReplaceHelper.rollback(demo, self.html_change)
-            assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Browse"), "Failed to rollback XML changes!"
+            assert Device.wait_for_text(device_id=device_id, text="Browse",
+                                        timeout=20), "Failed to rollback XML changes!"
         elif '-ts' in demo:
             ReplaceHelper.rollback(demo, self.ts_change)
-            assert Adb.wait_for_text(device_id=EMULATOR_ID, text="BMW"), "Failed to rollback TS changes"
+            assert Device.wait_for_text(device_id=device_id, text="BMW", timeout=20), "Failed to rollback TS changes"
             ReplaceHelper.rollback(demo, self.xml_change)
-            assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Browse"), "Failed to rollback XML changes!"
+            assert Device.wait_for_text(device_id=device_id, text="Browse",
+                                        timeout=20), "Failed to rollback XML changes!"
         else:
             ReplaceHelper.rollback(demo, self.js_change)
-            assert Adb.wait_for_text(device_id=EMULATOR_ID, text="BMW"), "Failed to rollback JS changes"
+            assert Device.wait_for_text(device_id=device_id, text="BMW", timeout=20), "Failed to rollback JS changes"
             ReplaceHelper.rollback(demo, self.xml_change)
-            assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Browse"), "Failed to rollback XML changes!"
+            assert Device.wait_for_text(device_id=device_id, text="Browse",
+                                        timeout=20), "Failed to rollback XML changes!"
         ReplaceHelper.rollback(demo, self.sass_root_level_variable_change)
         if platform == Platform.ANDROID:
             ReplaceHelper.rollback(demo, self.sass_root_level_android_change)
@@ -143,14 +152,14 @@ class StarterKitsTemplateTests(BaseClass):
         Helpers.android_screen_match(image=demo + '_home', tolerance=1.0)
 
         # Apply changes
-        StarterKitsTemplateTests.apply_changes(self=self, demo=demo, platform=Platform.ANDROID)
+        StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.ANDROID, device_id=EMULATOR_ID)
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors)
         Helpers.android_screen_match(image=demo + '_sync')
 
         # Revert changes
-        StarterKitsTemplateTests.revert_changes(self=self, demo=demo, platform=Platform.ANDROID)
+        StarterKitsTests.revert_changes(self=self, demo=demo, platform=Platform.ANDROID, device_id=EMULATOR_ID)
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors)
@@ -164,17 +173,17 @@ class StarterKitsTemplateTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=1.0)
-        Helpers.wait_webpack_watcher()
 
         # Apply changes
-        StarterKitsTemplateTests.apply_changes(self=self, demo=demo, platform=Platform.IOS)
+        StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.IOS, device_id=self.SIMULATOR_ID)
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_sync')
 
         # Revert changes
-        StarterKitsTemplateTests.revert_changes(self=self, demo=demo, platform=Platform.IOS)
+        StarterKitsTests.revert_changes(self=self, demo=demo, platform=Platform.IOS,
+                                        device_id=self.SIMULATOR_ID)
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors)
@@ -192,14 +201,14 @@ class StarterKitsTemplateTests(BaseClass):
         Helpers.wait_webpack_watcher()
 
         # Apply changes
-        StarterKitsTemplateTests.apply_changes(self=self, demo=demo, platform=Platform.ANDROID)
+        StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.ANDROID, device_id=EMULATOR_ID)
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
         Helpers.android_screen_match(image=demo + '_sync')
 
         # Revert changes
-        StarterKitsTemplateTests.revert_changes(self=self, demo=demo, platform=Platform.ANDROID)
+        StarterKitsTests.revert_changes(self=self, demo=demo, platform=Platform.ANDROID, device_id=EMULATOR_ID)
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
@@ -217,14 +226,15 @@ class StarterKitsTemplateTests(BaseClass):
         Helpers.wait_webpack_watcher()
 
         # Apply changes
-        StarterKitsTemplateTests.apply_changes(self=self, demo=demo, platform=Platform.IOS)
+        StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.IOS, device_id=self.SIMULATOR_ID)
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_sync')
 
         # Revert changes
-        StarterKitsTemplateTests.revert_changes(self=self, demo=demo, platform=Platform.IOS)
+        StarterKitsTests.revert_changes(self=self, demo=demo, platform=Platform.IOS,
+                                        device_id=self.SIMULATOR_ID)
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)

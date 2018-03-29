@@ -199,7 +199,7 @@ class Device(object):
 
         device_type = Device.__get_device_type(device_id)
         if device_type == DeviceType.ANDROID or device_type == DeviceType.EMULATOR:
-            return UIAuto.wait_for_text(device_id=device_id, text=text, timeout=timeout)
+            return Adb.wait_for_text(device_id=device_id, text=text, timeout=timeout)
         else:
             t_end = time.time() + timeout
             found = False
