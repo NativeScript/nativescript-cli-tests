@@ -4,7 +4,7 @@ Tests for `tns debug android` executed on Android Emulator with different nsconf
 import os
 from nose_parameterized import parameterized
 
-from core.base_class.BaseClass import BaseClass
+from core.base_class.BaseNSConfigClass import BaseNSConfigClass
 from core.chrome.chrome import Chrome
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -15,25 +15,26 @@ from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 
 
-class DebugAndroidEmulatorTests(BaseClass):
+class DebugAndroidEmulatorTests(BaseNSConfigClass):
     @classmethod
     def setUpClass(cls):
-        BaseClass.setUpClass(cls.__name__)
+        BaseNSConfigClass.setUpClass(cls.__name__)
         Emulator.stop()
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Emulator.ensure_available()
 
-        if File.exists(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation"):
-            assert "ChangeAppLocation" in TEST_RUN_HOME + "/data/Projects/ChangeAppLocation"
+        if File.exists(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS"):
+            assert "ChangeAppLocationLS" in TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS"
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
+                        TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
         else:
-            BaseClass.createApps(cls.__name__)
-
-        Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/ChangeAppLocation")
-        Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndName", TEST_RUN_HOME + "/ChangeAppLocationAndName")
-        Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocation", TEST_RUN_HOME + "/ChangeAppResLocation")
-        Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRoot", TEST_RUN_HOME + "/ChangeAppResLocationInRoot")
-        Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/RenameApp")
-        Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppRes", TEST_RUN_HOME + "/RenameAppRes")
+            BaseNSConfigClass.createAppsLiveSync(cls.__name__)
 
         # base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
         #
@@ -179,25 +180,25 @@ class DebugAndroidEmulatorTests(BaseClass):
         # Tns.build_android(attributes={'--path': app_name_rename_app_res})
 
     def setUp(self):
-        BaseClass.setUp(self)
+        BaseNSConfigClass.setUp(self)
         Tns.kill()
 
     def tearDown(self):
         Tns.kill()
         Chrome.stop()
-        BaseClass.tearDown(self)
+        BaseNSConfigClass.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
-        BaseClass.tearDownClass()
+        BaseNSConfigClass.tearDownClass()
         Emulator.stop()
 
-        Folder.cleanup("ChangeAppLocation")
-        Folder.cleanup("ChangeAppLocationAndName")
-        Folder.cleanup("ChangeAppResLocation")
-        Folder.cleanup("ChangeAppResLocationInRoot")
-        Folder.cleanup("RenameApp")
-        Folder.cleanup("RenameAppRes")
+        Folder.cleanup("ChangeAppLocationLS")
+        Folder.cleanup("ChangeAppLocationAndNameLS")
+        Folder.cleanup("ChangeAppResLocationLS")
+        Folder.cleanup("ChangeAppResLocationInRootLS")
+        Folder.cleanup("RenameAppLS")
+        Folder.cleanup("RenameAppResLS")
 
     def __verify_debugger_start(self, log):
         strings = [EMULATOR_ID, 'NativeScript Debugger started', 'To start debugging, open the following URL in Chrome',
@@ -218,12 +219,12 @@ class DebugAndroidEmulatorTests(BaseClass):
         assert "NativeScript Debugger started" not in output
 
     @parameterized.expand([
-        'ChangeAppLocation',
-        'ChangeAppLocationAndName',
-        'ChangeAppResLocation',
-        'ChangeAppResLocationInRoot',
-        'RenameApp',
-        'RenameAppRes'
+        'ChangeAppLocationLS',
+        'ChangeAppLocationAndNameLS',
+        'ChangeAppResLocationLS',
+        'ChangeAppResLocationInRootLS',
+        'RenameAppLS',
+        'RenameAppResLS'
     ])
     def test_001_debug_android(self, app_name):
         """
@@ -237,12 +238,12 @@ class DebugAndroidEmulatorTests(BaseClass):
                             expected_image='livesync-hello-world_home')
 
     @parameterized.expand([
-        'ChangeAppLocation',
-        'ChangeAppLocationAndName',
-        'ChangeAppResLocation',
-        'ChangeAppResLocationInRoot',
-        'RenameApp',
-        'RenameAppRes'
+        'ChangeAppLocationLS',
+        'ChangeAppLocationAndNameLS',
+        'ChangeAppResLocationLS',
+        'ChangeAppResLocationInRootLS',
+        'RenameAppLS',
+        'RenameAppResLS'
     ])
     def test_002_debug_android_emulator_debug_brk(self, app_name):
         """
@@ -257,12 +258,12 @@ class DebugAndroidEmulatorTests(BaseClass):
                             expected_image='livesync-hello-world_debug_brk')
 
     @parameterized.expand([
-        'ChangeAppLocation',
-        'ChangeAppLocationAndName',
-        'ChangeAppResLocation',
-        'ChangeAppResLocationInRoot',
-        'RenameApp',
-        'RenameAppRes'
+        'ChangeAppLocationLS',
+        'ChangeAppLocationAndNameLS',
+        'ChangeAppResLocationLS',
+        'ChangeAppResLocationInRootLS',
+        'RenameAppLS',
+        'RenameAppResLS'
     ])
     def test_003_debug_android_emulator_start(self, app_name):
         """
@@ -280,12 +281,12 @@ class DebugAndroidEmulatorTests(BaseClass):
         self.__verify_debugger_attach(log=log)
 
     @parameterized.expand([
-        'ChangeAppLocation',
-        'ChangeAppLocationAndName',
-        'ChangeAppResLocation',
-        'ChangeAppResLocationInRoot',
-        'RenameApp',
-        'RenameAppRes'
+        'ChangeAppLocationLS',
+        'ChangeAppLocationAndNameLS',
+        'ChangeAppResLocationLS',
+        'ChangeAppResLocationInRootLS',
+        'RenameAppLS',
+        'RenameAppResLS'
     ])
     def test_100_debug_android_should_start_emulator_if_there_is_no_device(self, app_name):
         """
