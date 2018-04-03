@@ -230,9 +230,6 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         assert Device.wait_for_text(device_id=EMULATOR_ID, text="Ter Stegen",
                                     timeout=30), 'Hello-world NG App failed to start or it does not look correct!'
 
-        # This is to ensure 'Change HTML and wait until app is synced' will be checked properly
-        assert not Device.wait_for_text(device_id=EMULATOR_ID, text='9', timeout=5)
-
         # Change TS and wait until app is synced
         ReplaceHelper.replace(app_name, ng_change_ts, sleep=10)
         strings = ['Successfully transferred', 'item.service.js', 'Successfully synced application',
