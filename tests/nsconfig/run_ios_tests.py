@@ -10,6 +10,7 @@ If simulator is not started and device is not connected `tns run ios` should sta
 """
 
 import os
+
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
@@ -18,7 +19,7 @@ from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_PACKAGE, SIMULATOR_NAME, TEST_RUN_HOME
+from core.settings.settings import IOS_PACKAGE, SIMULATOR_NAME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 

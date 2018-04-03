@@ -141,7 +141,6 @@ class RunIOSSimulatorTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
-    @unittest.skip("Skip the test because of https://github.com/NativeScript/nativescript-cli/issues/3235")
     def test_210_tns_run_ios_add_remove_files_and_folders(self):
         """
         New files and folders should be synced properly.
