@@ -48,6 +48,8 @@ class CreateTests(BaseClass):
         # This test case cover the real user scenario.
         output = Tns.run_tns_command("create " + self.app_name)
         TnsAsserts.created(self.app_name, output=output)
+        assert "Now you can navigate to your project with $ cd {0}".format(self.app_name) in output
+        assert "After that you can run it on device/emulator by executing $ tns run <platform>" in output
 
     def test_001_create_app(self):
         """Create app with --template and update modules"""
