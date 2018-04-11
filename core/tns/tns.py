@@ -11,7 +11,7 @@ from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import COMMAND_TIMEOUT, TNS_PATH, TAG, TEST_RUN_HOME, CURRENT_OS, \
-    SUT_FOLDER, PROVISIONING, BRANCH, MODULES_PACKAGE, ANGULAR_PACKAGE
+    SUT_FOLDER, PROVISIONING, BRANCH, MODULES_PACKAGE, ANGULAR_PACKAGE, TYPESCRIPT_PACKAGE
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
@@ -157,6 +157,25 @@ class Tns(object):
         return output
 
     @staticmethod
+    def update_typescript(path):
+        """
+        Update modules for {N} project
+        :param path: Path to {N} project
+        :return: Output of command that update tns-core-modules plugin.
+        """
+
+        # Escape path with spaces
+        if " " in path:
+            path = "\"" + path + "\""
+
+        Npm.uninstall(package="nativescript-typescript", option="--save", folder=path)
+        output = Npm.install(package=TYPESCRIPT_PACKAGE, option="--save", folder=path)
+        if Npm.version() > 3:
+            assert "ERR" not in output, "Something went wrong when modules are installed."
+
+        return output
+
+    @staticmethod
     def ensure_app_resources(path):
         app_resources_path = os.path.join(path, "app", "App_Resources")
         if File.exists(app_resources_path):
@@ -218,6 +237,8 @@ class Tns(object):
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,
                                 update_modules=update_modules)
+        if update_modules:
+            Tns.update_typescript(path=app_name)
         if assert_success:
             TnsAsserts.created_ts(app_name=app_name, output=output)
         return output
@@ -239,6 +260,7 @@ class Tns(object):
                                 update_modules=update_modules)
         if update_modules:
             Tns.update_angular(path=app_name)
+            Tns.update_typescript(path=app_name)
 
         if assert_success:
             if Npm.version() < 5:
