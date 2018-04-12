@@ -304,6 +304,13 @@ class BaseNSConfigClass(unittest.TestCase):
         Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app_res, "--frameworkPath": ANDROID_PACKAGE})
         Tns.platform_add_ios(attributes={"--path": cls.app_name_rename_app_res, "--frameworkPath": IOS_PACKAGE})
 
+        # Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/" + cls.app_name_change_app_location)
+        # Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndName", TEST_RUN_HOME + "/" + cls.app_name_change_app_location_and_name)
+        # Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocation", TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location)
+        # Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRoot", TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_in_root)
+        # Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/" + cls.app_name_rename_app)
+        # Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppRes", TEST_RUN_HOME + "/" + cls.app_name_rename_app_res)
+
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location, TEST_RUN_HOME + "/data/Projects/ChangeAppLocation")
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_and_name, TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndName")
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocation")

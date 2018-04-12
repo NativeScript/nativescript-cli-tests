@@ -46,6 +46,20 @@ class RunIOSSimulatorTests(BaseNSConfigClass):
         else:
             BaseNSConfigClass.createAppsLiveSync(cls.__name__)
 
+        if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS"):
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS",
+                        TEST_RUN_HOME + "/ChangeAppLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
+                        TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
+        else:
+            assert "ChangeAppLocationLS" in TEST_RUN_HOME + "/"
+
         # base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
         #
         # # Initial setup for all projects
