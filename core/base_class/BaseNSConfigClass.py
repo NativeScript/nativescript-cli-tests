@@ -36,6 +36,64 @@ class BaseNSConfigClass(unittest.TestCase):
     failures = 0
 
     @classmethod
+    def __copy_images(cls, artifacts_folder):
+        """
+        Archive test app (without platforms and node_modules)
+        :param artifacts_folder: Base folder where artifacts from failed tests are stored.
+        """
+        src = os.path.join(TEST_RUN_HOME, 'out', 'images')
+        dest = os.path.join(artifacts_folder, 'artifacts')
+        if os.path.isdir(src):
+            try:
+                shutil.copytree(src, dest)
+                Folder.cleanup(src)
+            except:
+                print "Failed to backup images and logs."
+        else:
+            print "No images and logs data."
+
+    @classmethod
+    def __copy_project_folder(cls, artifacts_folder):
+        """
+        Archive test app (without platforms and node_modules)
+        :param artifacts_folder: Base folder where artifacts from failed tests are stored.
+        """
+        src = os.path.join(TEST_RUN_HOME, cls.app_name)
+        dest = os.path.join(artifacts_folder, cls.app_name)
+        if os.path.isdir(src):
+            try:
+                shutil.copytree(src, dest)
+                shutil.rmtree(os.path.join(dest, "platforms"), ignore_errors=True)
+                shutil.rmtree(os.path.join(dest, "node_modules"), ignore_errors=True)
+            except:
+                print "Failed to backup {0}".format(cls.app_name)
+        else:
+            print "No project " + src
+
+    @classmethod
+    def __save_host_screen(cls, artifacts_folder, test_method_name):
+        """
+        Save screen of desktop host machine
+        :param artifacts_folder: Base folder where artifacts from failed tests are stored.
+        :param test_method_name: Test method name.
+        """
+        screen_path = os.path.join(artifacts_folder, "{0}.png".format(test_method_name))
+        Screen.save_screen(screen_path)
+
+    @classmethod
+    def IsFailed(cls, res):
+        is_failed = False
+
+        if len(res.failures) > cls.failures:
+            cls.failures = len(res.failures)
+            is_failed = True
+        if len(res.errors) > cls.errors:
+            cls.errors = len(res.errors)
+            is_failed = True
+
+        return is_failed
+
+    @classmethod
     def setUpClass(cls, class_name):
 
         print ""
@@ -419,14 +477,12 @@ class BaseNSConfigClass(unittest.TestCase):
         Tns.platform_add_android(attributes={"--path": app_name_rename_app_res_ls, "--frameworkPath": ANDROID_PACKAGE})
         Tns.platform_add_ios(attributes={"--path": app_name_rename_app_res_ls, "--frameworkPath": IOS_PACKAGE})
 
-        Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
-        Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
-                        TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
-        Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
-        Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
-                        TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
-        Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
-        Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_ls, TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_and_name_ls, TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_ls, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_in_root_ls, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_ls, TEST_RUN_HOME + "/data/Projects/RenameAppLS")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_res_ls, TEST_RUN_HOME + "/data/Projects/RenameAppResLS")
 
         Folder.cleanup("ChangeAppLocationLS")
         Folder.cleanup("ChangeAppLocationAndNameLS")

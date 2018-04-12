@@ -1,6 +1,6 @@
 from core.base_class.BaseNSConfigClass import BaseNSConfigClass
-from tests.nsconfig.build_android_tests import BuildAndroidTests
 from tests.nsconfig.build_ios_tests import BuildiOSTests
+from tests.nsconfig.build_android_tests import BuildAndroidTests
 from tests.nsconfig.run_android_tests import RunAndroidEmulatorTests
 from tests.nsconfig.run_ios_tests import RunIOSSimulatorTests
 from tests.nsconfig.debug_android_tests import DebugAndroidEmulatorTests
@@ -64,11 +64,11 @@ class SuiteRunAll(BaseNSConfigClass):
         pass
 
 def suite(self):
-    suite.addTest(BuildAndroidTests())
-    suite.addTest(BuildiOSTests())
-    suite.addTest(RunAndroidEmulatorTests())
-    suite.addTest(RunIOSSimulatorTests())
-    suite.addTest(DebugAndroidEmulatorTests())
-    suite.addTest(DebugiOSInspectorSimulatorTests())
-    suite.addTest(DebugiOSChromeSimulatorTests())
-    return suite
+        suite.addTest(BuildAndroidTests())
+        suite.addTest(BuildiOSTests())
+        suite.addTest(RunAndroidEmulatorTests())
+        suite.addTest(RunIOSSimulatorTests())
+        suite.addTest(DebugAndroidEmulatorTests())
+        suite.addTest(DebugiOSInspectorSimulatorTests())
+        suite.addTest(DebugiOSChromeSimulatorTests())
+        return suite
