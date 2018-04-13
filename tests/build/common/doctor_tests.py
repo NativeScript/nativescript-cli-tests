@@ -57,7 +57,7 @@ class DoctorTests(BaseClass):
         out_doctor = Tns.run_tns_command("doctor", attributes={"--path": self.app_name}, timeout=180)
         out_info = Tns.run_tns_command("info", attributes={"--path": self.app_name}, timeout=180)
         for output in (out_doctor, out_info):
-            assert "Component tns-core-modules has" in output
+            assert "Update available for component tns-core-modules" in output
             assert "Update available for component tns-android" in output
             assert "Component tns-ios is not installed." in output
 
