@@ -36,17 +36,17 @@ class DebugAndroidEmulatorTests(BaseNSConfigClass):
         else:
             BaseNSConfigClass.createAppsLiveSync(cls.__name__)
 
-        if not File.exists(TEST_RUN_HOME + "/ChangeAppLocation"):
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/ChangeAppLocation")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndName",
-                        TEST_RUN_HOME + "/ChangeAppLocationAndName")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocation", TEST_RUN_HOME + "/ChangeAppResLocation")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRoot",
-                        TEST_RUN_HOME + "/ChangeAppResLocationInRoot")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/RenameApp")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppRes", TEST_RUN_HOME + "/RenameAppRes")
+        if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS"):
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
+                        TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
         else:
-            assert File.exists(TEST_RUN_HOME + "/ChangeAppLocation")
+            assert File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS")
 
         # base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
         #

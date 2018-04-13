@@ -59,17 +59,17 @@ class SuiteRunAndroid(BaseNSConfigClass):
         File.remove("RenameAppResLS.ipa")
         pass
 
-    def build_android(self):
-        BuildAndroidTests()
+    # def build_android(self):
+    #     BuildAndroidTests()
+    #
+    # def run_android(self):
+    #     RunAndroidEmulatorTests()
+    #
+    # def debug_android(self):
+    #     DebugAndroidEmulatorTests()
 
-    def run_android(self):
-        RunAndroidEmulatorTests()
-
-    def debug_android(self):
-        DebugAndroidEmulatorTests()
-
-# def suite(self):
-#         suite.addTest(BuildAndroidTests())
-#         suite.addTest(RunAndroidEmulatorTests())
-#         suite.addTest(DebugAndroidEmulatorTests())
-#         return suite
+def suite(self):
+        suite.addTest(BuildAndroidTests())
+        suite.addTest(RunAndroidEmulatorTests())
+        suite.addTest(DebugAndroidEmulatorTests())
+        return suite
