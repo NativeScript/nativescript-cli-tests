@@ -76,7 +76,7 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text="Stegen Ter", timeout=20)
         assert text_changed, 'Changes in TS file not applied (UI is not refreshed).'
         log_content = File.read(log)
-        assert 'item.service.ts' in log_content, "CLI should transfer TS files!"
+        assert 'item.service.ts' not in log_content, "CLI should NOT transfer TS files!"
 
         # Clean log (this will not work on windows since file is locked)
         if CURRENT_OS != OSType.WINDOWS:
