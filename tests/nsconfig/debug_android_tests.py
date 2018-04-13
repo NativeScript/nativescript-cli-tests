@@ -46,7 +46,7 @@ class DebugAndroidEmulatorTests(BaseNSConfigClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/RenameApp")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppRes", TEST_RUN_HOME + "/RenameAppRes")
         else:
-            assert "ChangeAppLocation" in TEST_RUN_HOME + "/"
+            assert File.exists(TEST_RUN_HOME + "/ChangeAppLocation")
 
         # base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
         #

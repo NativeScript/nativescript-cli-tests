@@ -58,7 +58,7 @@ class RunIOSSimulatorTests(BaseNSConfigClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
         else:
-            assert "ChangeAppLocationLS" in TEST_RUN_HOME + "/"
+            assert File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS")
 
         # base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
         #
