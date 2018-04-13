@@ -80,7 +80,7 @@ class RunIOSDeviceTestsNG(BaseClass):
         assert text_changed, 'Changes in TS file not applied (UI is not refreshed).'
         log_content = File.read(log)
         print log
-        assert 'item.service.ts' in log_content, "CLI should transfer TS files!"
+        assert 'item.service.ts' not in log_content, "CLI should NOT transfer TS files!"
         assert log_content.count('Application loaded!') == 1, "Console log messages are doubled!"
         File.write(file_path=log, text="")  # Clean log
 
