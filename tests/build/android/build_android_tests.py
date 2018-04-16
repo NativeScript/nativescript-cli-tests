@@ -346,7 +346,7 @@ class BuildAndroidTests(BaseClass):
         Tns.run_tns_command("build android --androidTypings", attributes={"--path": self.app_name})
         assert File.exists(self.app_name + "/android.d.ts")
         assert File.exists(self.app_name + "/_helpers.d.ts")
-        
+
     def test_450_resources_update_android(self):
         target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
         source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-34')
@@ -383,3 +383,10 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/java")
         assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/res/values")
         Tns.build_android(attributes={"--path": self.app_name})
+
+    def test_460_platform_add_android_rc(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/3477
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name})
+        Tns.platform_add_android(version="rc", attributes={"--path": self.app_name})
+        output = Tns.build_android(attributes={"--path": self.app_name})
+        assert "Invalid Version: rc" not in output
