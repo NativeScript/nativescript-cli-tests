@@ -363,7 +363,7 @@ class Tns(object):
             elif "/src" in name:
                 short_name = name.rsplit('@', 1)[0].replace("/src", "").split(os.sep)[-1]
             else:
-                print "Cannot extract the name of the plugin. It is not .tgz or its path is not pointing to /src."
+                short_name = name
             assert "Successfully installed plugin {0}".format(short_name) in output
         return output
 
