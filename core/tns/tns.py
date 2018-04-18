@@ -358,7 +358,12 @@ class Tns(object):
         output = Tns.run_tns_command("plugin add " + name, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
         if assert_success:
-            short_name = name.rsplit('@', 1)[0].replace(".tgz", "").split(os.sep)[-1]
+            if "tgz" in name:
+                short_name = name.rsplit('@', 1)[0].replace(".tgz", "").split(os.sep)[-1]
+            elif "/src" in name:
+                short_name = name.rsplit('@', 1)[0].replace("/src", "").split(os.sep)[-1]
+            else:
+                print "Cannot extract the name of the plugin. It is not .tgz or its path is not pointing to /src."
             assert "Successfully installed plugin {0}".format(short_name) in output
         return output
 
