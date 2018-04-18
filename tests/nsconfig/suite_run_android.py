@@ -2,6 +2,8 @@ from core.base_class.BaseNSConfigClass import BaseNSConfigClass
 from tests.nsconfig.run_android_tests import RunAndroidEmulatorTests
 from tests.nsconfig.build_android_tests import BuildAndroidTests
 from tests.nsconfig.debug_android_tests import DebugAndroidEmulatorTests
+from tests.nsconfig.run_android_ng_tests import RunAndroidEmulatorTestsNG
+from tests.nsconfig.build_android_ng_tests import BuildAndroidNGTests
 from core.osutils.file import File
 from core.osutils.folder import Folder
 
@@ -72,4 +74,6 @@ def suite(self):
         suite.addTest(BuildAndroidTests())
         suite.addTest(RunAndroidEmulatorTests())
         suite.addTest(DebugAndroidEmulatorTests())
+        suite.addTest(RunAndroidEmulatorTestsNG())
+        suite.addTest(BuildAndroidNGTests())
         return suite

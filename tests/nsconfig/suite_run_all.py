@@ -1,11 +1,13 @@
 from core.base_class.BaseNSConfigClass import BaseNSConfigClass
 from tests.nsconfig.build_ios_tests import BuildiOSTests
 from tests.nsconfig.build_android_tests import BuildAndroidTests
+from tests.nsconfig.build_android_ng_tests import BuildAndroidNGTests
 from tests.nsconfig.run_android_tests import RunAndroidEmulatorTests
 from tests.nsconfig.run_ios_tests import RunIOSSimulatorTests
 from tests.nsconfig.debug_android_tests import DebugAndroidEmulatorTests
 from tests.nsconfig.debug_ios_inspector_tests import DebugiOSInspectorSimulatorTests
 from tests.nsconfig.debug_ios_chrome_tests import DebugiOSChromeSimulatorTests
+from tests.nsconfig.run_android_ng_tests import RunAndroidEmulatorTestsNG
 from core.osutils.file import File
 from core.osutils.folder import Folder
 
@@ -65,9 +67,11 @@ class SuiteRunAll(BaseNSConfigClass):
 
 def suite(self):
         suite.addTest(BuildAndroidTests())
+        suite.addTest(BuildAndroidNGTests())
         suite.addTest(BuildiOSTests())
         suite.addTest(RunAndroidEmulatorTests())
         suite.addTest(RunIOSSimulatorTests())
+        suite.addTest(RunAndroidEmulatorTestsNG())
         suite.addTest(DebugAndroidEmulatorTests())
         suite.addTest(DebugiOSInspectorSimulatorTests())
         suite.addTest(DebugiOSChromeSimulatorTests())

@@ -32,6 +32,20 @@ class BaseNSConfigClass(unittest.TestCase):
     app_name_rename_app_ls = "RenameAppLS"
     app_name_rename_app_res_ls = "RenameAppResLS"
 
+    app_name_change_app_location_ng = "ChangeAppLocationNG"
+    app_name_change_app_location_and_name_ng = "ChangeAppLocationAndNameNG"
+    app_name_change_app_res_location_ng = "ChangeAppResLocationNG"
+    app_name_change_app_res_location_in_root_ng = "ChangeAppResLocationInRootNG"
+    app_name_rename_app_ng = "RenameAppNG"
+    app_name_rename_app_res_ng = "RenameAppResNG"
+
+    app_name_change_app_location_ls_ng = "ChangeAppLocationLSNG"
+    app_name_change_app_location_and_name_ls_ng = "ChangeAppLocationAndNameLSNG"
+    app_name_change_app_res_location_ls_ng = "ChangeAppResLocationLSNG"
+    app_name_change_app_res_location_in_root_ls_ng = "ChangeAppResLocationInRootLSNG"
+    app_name_rename_app_ls_ng = "RenameAppLSNG"
+    app_name_rename_app_res_ls_ng = "RenameAppResLSNG"
+
     errors = 0
     failures = 0
 
@@ -509,3 +523,330 @@ class BaseNSConfigClass(unittest.TestCase):
         File.remove("RenameAppLS.ipa")
         Folder.cleanup("RenameAppResLS.app")
         File.remove("RenameAppResLS.ipa")
+
+    @classmethod
+    def createAppsNG(cls, class_name):
+        base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
+
+        # Initial create of all projects
+        app_name_change_app_location_ng = "ChangeAppLocationNG"
+        Tns.create_app_ng(app_name=app_name_change_app_location_ng)
+
+        # Create the other projects using the initial setup but in different folder
+        app_name_change_app_location_and_name_ng = "ChangeAppLocationAndNameNG"
+        Folder.cleanup(app_name_change_app_location_and_name_ng)
+        Folder.copy(app_name_change_app_location_ng, app_name_change_app_location_and_name_ng)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_location_and_name_ng, 'package.json'),
+            "org.nativescript.ChangeAppLocationNG", "org.nativescript." + app_name_change_app_location_and_name_ng)
+        File.replace(
+            os.path.join(app_name_change_app_location_and_name_ng, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "__PACKAGE__", "org.nativescript." + app_name_change_app_location_and_name_ng)
+
+        app_name_change_app_res_location_ng = "ChangeAppResLocationNG"
+        Folder.cleanup(app_name_change_app_res_location_ng)
+        Folder.copy(app_name_change_app_location_ng, app_name_change_app_res_location_ng)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_res_location_ng, 'package.json'),
+            "org.nativescript.ChangeAppLocationNG", "org.nativescript." + app_name_change_app_res_location_ng)
+        File.replace(
+            os.path.join(app_name_change_app_res_location_ng, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "__PACKAGE__", "org.nativescript." + app_name_change_app_res_location_ng)
+
+        app_name_change_app_res_location_in_root_ng = "ChangeAppResLocationInRootNG"
+        Folder.cleanup(app_name_change_app_res_location_in_root_ng)
+        Folder.copy(app_name_change_app_location_ng, app_name_change_app_res_location_in_root_ng)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_res_location_in_root_ng, 'package.json'),
+            "org.nativescript.ChangeAppLocationNG", "org.nativescript." + app_name_change_app_res_location_in_root_ng)
+        File.replace(
+            os.path.join(app_name_change_app_res_location_in_root_ng, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "__PACKAGE__", "org.nativescript." + app_name_change_app_res_location_in_root_ng)
+
+        app_name_rename_app_ng = "RenameAppNG"
+        Folder.cleanup(app_name_rename_app_ng)
+        Folder.copy(app_name_change_app_location_ng, app_name_rename_app_ng)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_rename_app_ng, 'package.json'),
+            "org.nativescript.ChangeAppLocationNG", "org.nativescript." + app_name_rename_app_ng)
+        File.replace(
+            os.path.join(app_name_rename_app_ng, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "__PACKAGE__", "org.nativescript." + app_name_rename_app_ng)
+
+        app_name_rename_app_res_ng = "RenameAppResNG"
+        Folder.cleanup(app_name_rename_app_res_ng)
+        Folder.copy(app_name_change_app_location_ng, app_name_rename_app_res_ng)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_rename_app_res_ng, 'package.json'),
+            "org.nativescript.ChangeAppLocationNG", "org.nativescript." + app_name_rename_app_res_ng)
+        File.replace(
+            os.path.join(app_name_rename_app_res_ng, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "__PACKAGE__", "org.nativescript." + app_name_rename_app_res_ng)
+
+        # Change app/ location to be 'new_folder/app'
+        proj_root = os.path.join(app_name_change_app_location_ng)
+        app_path = os.path.join(proj_root, 'app')
+
+        File.copy(os.path.join(base_src, app_name_change_app_location_ng, 'nsconfig.json', ), app_name_change_app_location_ng)
+        Folder.create(os.path.join(proj_root, "new_folder"))
+        Folder.move(app_path, os.path.join(proj_root, 'new_folder'))
+        Tns.platform_add_android(attributes={"--path": app_name_change_app_location_ng,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        # Change app/ name and place to be 'my folder/my app'
+        proj_root = os.path.join(app_name_change_app_location_and_name_ng)
+        app_path = os.path.join(proj_root, 'app')
+
+        File.copy(os.path.join(base_src, app_name_change_app_location_and_name_ng, 'nsconfig.json'),
+                  app_name_change_app_location_and_name_ng)
+        Folder.create(os.path.join(proj_root, "my folder"))
+        os.rename(app_path, os.path.join(proj_root, "my app"))
+        Folder.move(os.path.join(proj_root, "my app"), os.path.join(proj_root, "my folder"))
+        Tns.platform_add_android(attributes={"--path": app_name_change_app_location_and_name_ng,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        # Change App_Resources/ location to be 'app/res/App_Resources'
+        proj_root = os.path.join(app_name_change_app_res_location_ng)
+        app_path = os.path.join(proj_root, 'app')
+        app_res_path = os.path.join(app_path, 'App_Resources')
+
+        File.copy(os.path.join(base_src, app_name_change_app_res_location_ng, 'nsconfig.json'),
+                  app_name_change_app_res_location_ng)
+        Folder.create(os.path.join(app_path, 'res'))
+        Folder.move(app_res_path, os.path.join(app_path, 'res'))
+        Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location_ng,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        # Change App_Resources/ location to be in project root/App_Resources
+        proj_root = os.path.join(app_name_change_app_res_location_in_root_ng)
+        app_path = os.path.join(proj_root, 'app')
+        app_res_path = os.path.join(app_path, 'App_Resources')
+
+        File.copy(os.path.join(base_src, app_name_change_app_res_location_in_root_ng, 'nsconfig.json'),
+                  app_name_change_app_res_location_in_root_ng)
+        Folder.move(app_res_path, proj_root)
+        Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location_in_root_ng,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        # Change app/ to renamed_app/
+        proj_root = os.path.join(app_name_rename_app_ng)
+        app_path = os.path.join(proj_root, 'app')
+
+        File.copy(os.path.join(base_src, app_name_rename_app_ng, 'nsconfig.json'), app_name_rename_app_ng)
+        os.rename(app_path, os.path.join(proj_root, 'renamed_app'))
+        Tns.platform_add_android(attributes={"--path": app_name_rename_app_ng, "--frameworkPath": ANDROID_PACKAGE})
+
+        # Change App_Resources/ to My_App_Resources/
+        proj_root = os.path.join(app_name_rename_app_res_ng)
+        app_path = os.path.join(proj_root, 'app')
+        app_res_path = os.path.join(app_path, 'App_Resources')
+
+        File.copy(os.path.join(base_src, app_name_rename_app_res_ng, 'nsconfig.json'), app_name_rename_app_res_ng)
+        os.rename(app_res_path, os.path.join(app_path, 'My_App_Resources'))
+        Tns.platform_add_android(attributes={"--path": app_name_rename_app_res_ng, "--frameworkPath": ANDROID_PACKAGE})
+
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppLocationNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_and_name_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_in_root_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_ng, TEST_RUN_HOME + "/data/Projects/RenameAppNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_res_ng, TEST_RUN_HOME + "/data/Projects/RenameAppResNG")
+
+        Folder.cleanup("ChangeAppLocationNG")
+        Folder.cleanup("ChangeAppLocationAndNameNG")
+        Folder.cleanup("ChangeAppResLocationNG")
+        Folder.cleanup("ChangeAppResLocationInRootNG")
+        Folder.cleanup("RenameAppNG")
+        Folder.cleanup("RenameAppResNG")
+        Folder.cleanup("ChangeAppLocationNG.app")
+        File.remove("ChangeAppLocationNG.ipa")
+        Folder.cleanup("ChangeAppLocationAndNameNG.app")
+        File.remove("ChangeAppLocationAndNameNG.ipa")
+        Folder.cleanup("ChangeAppResLocationNG.app")
+        File.remove("ChangeAppResLocationNG.ipa")
+        Folder.cleanup("ChangeAppResLocationInRootNG.app")
+        File.remove("ChangeAppResLocationInRootNG.ipa")
+        Folder.cleanup("RenameAppNG.app")
+        File.remove("RenameAppNG.ipa")
+        Folder.cleanup("RenameAppResNG.app")
+        File.remove("RenameAppResNG.ipa")
+        pass
+
+    @classmethod
+    def createAppsLiveSyncNG(cls, class_name):
+        base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
+
+        # Initial create of all projects
+        app_name_change_app_location_ls_ng = "ChangeAppLocationLSNG"
+        Tns.create_app_ng(app_name=app_name_change_app_location_ls_ng)
+
+        # Copy the app folder (app is modified in order to get some console logs on loaded)
+        source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'app')
+        app_path = os.path.join(app_name_change_app_location_ls_ng, 'app')
+        Folder.cleanup(app_path)
+        Folder.copy(src=source, dst=app_path)
+
+        # Change applicationId in app.gradle so that the app can be run successfully
+        app_gradle_path = os.path.join('ChangeAppLocationLSNG', 'app', 'App_Resources',
+                                       'Android', 'app.gradle')
+        File.replace(app_gradle_path, "org.nativescript.TestApp", "org.nativescript.ChangeAppLocationLSNG")
+
+        # Create the other projects using the initial setup but in different folder
+        app_name_change_app_location_and_name_ls_ng = "ChangeAppLocationAndNameLSNG"
+        Folder.cleanup(app_name_change_app_location_and_name_ls_ng)
+        Folder.copy(app_name_change_app_location_ls_ng, app_name_change_app_location_and_name_ls_ng)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_location_and_name_ls_ng, 'package.json'),
+            "org.nativescript.ChangeAppLocationLSNG", "org.nativescript." + app_name_change_app_location_and_name_ls_ng)
+        File.replace(
+            os.path.join(app_name_change_app_location_and_name_ls_ng, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "org.nativescript.ChangeAppLocationLSNG", "org.nativescript." + app_name_change_app_location_and_name_ls_ng)
+
+        app_name_change_app_res_location_ls_ng = "ChangeAppResLocationLSNG"
+        Folder.cleanup(app_name_change_app_res_location_ls_ng)
+        Folder.copy(app_name_change_app_location_ls_ng, app_name_change_app_res_location_ls_ng)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_res_location_ls_ng, 'package.json'),
+            "org.nativescript.ChangeAppLocationLSNG", "org.nativescript." + app_name_change_app_res_location_ls_ng)
+        File.replace(
+            os.path.join(app_name_change_app_res_location_ls_ng, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "org.nativescript.ChangeAppLocationLSNG", "org.nativescript." + app_name_change_app_res_location_ls_ng)
+
+        app_name_change_app_res_location_in_root_ls_ng = "ChangeAppResLocationInRootLSNG"
+        Folder.cleanup(app_name_change_app_res_location_in_root_ls_ng)
+        Folder.copy(app_name_change_app_location_ls_ng, app_name_change_app_res_location_in_root_ls_ng)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_change_app_res_location_in_root_ls_ng, 'package.json'),
+            "org.nativescript.ChangeAppLocationLSNG", "org.nativescript." + app_name_change_app_res_location_in_root_ls_ng)
+        File.replace(
+            os.path.join(app_name_change_app_res_location_in_root_ls_ng, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "org.nativescript.ChangeAppLocationLSNG", "org.nativescript." + app_name_change_app_res_location_in_root_ls_ng)
+
+        app_name_rename_app_ls_ng = "RenameAppLSNG"
+        Folder.cleanup(app_name_rename_app_ls_ng)
+        Folder.copy(app_name_change_app_location_ls_ng, app_name_rename_app_ls_ng)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_rename_app_ls_ng, 'package.json'),
+            "org.nativescript.ChangeAppLocationLSNG", "org.nativescript." + app_name_rename_app_ls_ng)
+        File.replace(
+            os.path.join(app_name_rename_app_ls_ng, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "org.nativescript.ChangeAppLocationLSNG", "org.nativescript." + app_name_rename_app_ls_ng)
+
+        app_name_rename_app_res_ls_ng = "RenameAppResLSNG"
+        Folder.cleanup(app_name_rename_app_res_ls_ng)
+        Folder.copy(app_name_change_app_location_ls_ng, app_name_rename_app_res_ls_ng)
+
+        # Rename the app
+        File.replace(
+            os.path.join(app_name_rename_app_res_ls_ng, 'package.json'),
+            "org.nativescript.ChangeAppLocationLSNG", "org.nativescript." + app_name_rename_app_res_ls_ng)
+        File.replace(
+            os.path.join(app_name_rename_app_res_ls_ng, 'app', 'App_Resources', 'Android', 'app.gradle'),
+            "org.nativescript.ChangeAppLocationLSNG", "org.nativescript." + app_name_rename_app_res_ls_ng)
+
+        # Change app/ location to be 'new_folder/app'
+        proj_root = os.path.join(app_name_change_app_location_ls_ng)
+        app_path = os.path.join(proj_root, 'app')
+
+        File.copy(os.path.join(base_src, app_name_change_app_location_ls_ng, 'nsconfig.json', ), app_name_change_app_location_ls_ng)
+        Folder.create(os.path.join(proj_root, "new_folder"))
+        Folder.move(app_path, os.path.join(proj_root, 'new_folder'))
+        Tns.platform_add_android(attributes={"--path": app_name_change_app_location_ls_ng,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        # Change app/ name and place to be 'my folder/my app'
+        proj_root = os.path.join(app_name_change_app_location_and_name_ls_ng)
+        app_path = os.path.join(proj_root, 'app')
+
+        File.copy(os.path.join(base_src, app_name_change_app_location_and_name_ls_ng, 'nsconfig.json'),
+                  app_name_change_app_location_and_name_ls_ng)
+        Folder.create(os.path.join(proj_root, "my folder"))
+        os.rename(app_path, os.path.join(proj_root, "my app"))
+        Folder.move(os.path.join(proj_root, "my app"), os.path.join(proj_root, "my folder"))
+        Tns.platform_add_android(attributes={"--path": app_name_change_app_location_and_name_ls_ng,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        # Change App_Resources/ location to be 'app/res/App_Resources'
+        proj_root = os.path.join(app_name_change_app_res_location_ls_ng)
+        app_path = os.path.join(proj_root, 'app')
+        app_res_path = os.path.join(app_path, 'App_Resources')
+
+        File.copy(os.path.join(base_src, app_name_change_app_res_location_ls_ng, 'nsconfig.json'),
+                  app_name_change_app_res_location_ls_ng)
+        Folder.create(os.path.join(app_path, 'res'))
+        Folder.move(app_res_path, os.path.join(app_path, 'res'))
+        Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location_ls_ng,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        # Change App_Resources/ location to be in project root/App_Resources
+        proj_root = os.path.join(app_name_change_app_res_location_in_root_ls_ng)
+        app_path = os.path.join(proj_root, 'app')
+        app_res_path = os.path.join(app_path, 'App_Resources')
+
+        File.copy(os.path.join(base_src, app_name_change_app_res_location_in_root_ls_ng, 'nsconfig.json'),
+                  app_name_change_app_res_location_in_root_ls_ng)
+        Folder.move(app_res_path, proj_root)
+        Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location_in_root_ls_ng,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        # Change app/ to renamed_app/
+        proj_root = os.path.join(app_name_rename_app_ls_ng)
+        app_path = os.path.join(proj_root, 'app')
+
+        File.copy(os.path.join(base_src, app_name_rename_app_ls_ng, 'nsconfig.json'), app_name_rename_app_ls_ng)
+        os.rename(app_path, os.path.join(proj_root, 'renamed_app'))
+        Tns.platform_add_android(attributes={"--path": app_name_rename_app_ls_ng, "--frameworkPath": ANDROID_PACKAGE})
+
+        # Change App_Resources/ to My_App_Resources/
+        proj_root = os.path.join(app_name_rename_app_res_ls_ng)
+        app_path = os.path.join(proj_root, 'app')
+        app_res_path = os.path.join(app_path, 'App_Resources')
+
+        File.copy(os.path.join(base_src, app_name_rename_app_res_ls_ng, 'nsconfig.json'), app_name_rename_app_res_ls_ng)
+        os.rename(app_res_path, os.path.join(app_path, 'My_App_Resources'))
+        Tns.platform_add_android(attributes={"--path": app_name_rename_app_res_ls_ng, "--frameworkPath": ANDROID_PACKAGE})
+
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_ls_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_and_name_ls_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLSNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_ls_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLSNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_in_root_ls_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLSNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_ls_ng, TEST_RUN_HOME + "/data/Projects/RenameAppLSNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_res_ls_ng, TEST_RUN_HOME + "/data/Projects/RenameAppResLSNG")
+
+        Folder.cleanup("ChangeAppLocationLSNG")
+        Folder.cleanup("ChangeAppLocationAndNameLSNG")
+        Folder.cleanup("ChangeAppResLocationLSNG")
+        Folder.cleanup("ChangeAppResLocationInRootLSNG")
+        Folder.cleanup("RenameAppLSNG")
+        Folder.cleanup("RenameAppResLSNG")
+        Folder.cleanup("ChangeAppLocationLSNG.app")
+        File.remove("ChangeAppLocationLSNG.ipa")
+        Folder.cleanup("ChangeAppLocationAndNameLSNG.app")
+        File.remove("ChangeAppLocationAndNameLSNG.ipa")
+        Folder.cleanup("ChangeAppResLocationLSNG.app")
+        File.remove("ChangeAppResLocationLSNG.ipa")
+        Folder.cleanup("ChangeAppResLocationInRootLSNG.app")
+        File.remove("ChangeAppResLocationInRootLSNG.ipa")
+        Folder.cleanup("RenameAppLSNG.app")
+        File.remove("RenameAppLSNG.ipa")
+        Folder.cleanup("RenameAppResLSNG.app")
+        File.remove("RenameAppResLSNG.ipa")
+        pass

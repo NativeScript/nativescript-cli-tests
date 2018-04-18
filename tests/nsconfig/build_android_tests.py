@@ -152,7 +152,7 @@ class BuildAndroidTests(BaseNSConfigClass):
         assert output.count("Gradle build...") is 2, "Only one gradle build is triggered."
         assert build_time > 10, "Clean build takes less then 15 sec."
         assert build_time < 90, "Clean build takes more than 90 sec."
-
+    #
     @parameterized.expand([
         'ChangeAppLocation',
         'ChangeAppLocationAndName',
