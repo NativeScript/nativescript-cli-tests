@@ -8,7 +8,7 @@
 android {  
   defaultConfig {  
     generatedDensities = []
-    applicationId = "org.nativescript.flavorproject" 
+    applicationId = "org.nativescript.TestApp" 
     
     //override supported platforms
     // ndk {
