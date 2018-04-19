@@ -10,13 +10,15 @@ import os
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
+from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
-from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID, EMULATOR_NAME, CURRENT_OS
+from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID, EMULATOR_NAME, CURRENT_OS, TEST_RUN_HOME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
+from core.device.helpers.adb import Adb
 
 
 class RunAndroidEmulatorTestsNG(BaseClass):
@@ -210,3 +212,28 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         # Verify console.time() works
         console_time = ['JS: startup:']
         Tns.wait_for_log(log_file=log, string_list=console_time)
+
+
+    def test_420_check_dex_files_on_device(self):
+        """
+        check for files on device - shouldn't have *.dex
+        """
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
+                            assert_success=False)
+        File.remove(self.app_name + "/app/app.js")
+        Folder.copy(TEST_RUN_HOME + "/data/issues/android-runtime-pr-923/app.js", TEST_RUN_HOME + "/TestApp/app/")
+        Folder.create(self.app_name + "/app/" + "dir spaces")
+
+        Folder.copy(TEST_RUN_HOME + "/data/issues/android-runtime-pr-923/dir spaces/extended-classes.js",
+                    TEST_RUN_HOME + "/TestApp/app/dir spaces")
+        Folder.copy(TEST_RUN_HOME + "/data/issues/android-runtime-pr-923/extended-classes spaces.js",
+                    TEST_RUN_HOME + "/TestApp/app")
+        Folder.copy(TEST_RUN_HOME + "/data/issues/android-runtime-pr-923/extended-classes-dashes.js",
+                    TEST_RUN_HOME + "/TestApp/app")
+
+        Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--justlaunch': ''})
+        # command = "shell ls /data/data/org.nativescript.TestApp/code_cache/secondary-dexes | grep '\.dex'"
+        command = "shell ls /data/data/org.nativescript.TestApp/code_cache/secondary-dexes"
+        output = Adb.run(device_id=EMULATOR_ID, command=command, log_level=CommandLogLevel.FULL)
+        print output
+        assert "dex" in output
