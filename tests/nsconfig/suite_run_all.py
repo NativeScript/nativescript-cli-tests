@@ -1,13 +1,13 @@
 from core.base_class.BaseNSConfigClass import BaseNSConfigClass
+from core.settings.settings import ANDROID_PACKAGE, IOS_PACKAGE
+from core.tns.tns import Tns
 from tests.nsconfig.build_ios_tests import BuildiOSTests
 from tests.nsconfig.build_android_tests import BuildAndroidTests
-from tests.nsconfig.build_android_ng_tests import BuildAndroidNGTests
 from tests.nsconfig.run_android_tests import RunAndroidEmulatorTests
 from tests.nsconfig.run_ios_tests import RunIOSSimulatorTests
 from tests.nsconfig.debug_android_tests import DebugAndroidEmulatorTests
 from tests.nsconfig.debug_ios_inspector_tests import DebugiOSInspectorSimulatorTests
 from tests.nsconfig.debug_ios_chrome_tests import DebugiOSChromeSimulatorTests
-from tests.nsconfig.run_android_ng_tests import RunAndroidEmulatorTestsNG
 from core.osutils.file import File
 from core.osutils.folder import Folder
 
@@ -17,6 +17,57 @@ class SuiteRunAll(BaseNSConfigClass):
         BaseNSConfigClass.setUpClass(cls.__name__)
         BaseNSConfigClass.createApps(cls.__name__)
         BaseNSConfigClass.createAppsLiveSync(cls.__name__)
+
+        # add platform
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name_change_app_location, "--frameworkPath": IOS_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location_and_name,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name_change_app_location_and_name,
+                                         "--frameworkPath": IOS_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_res_location,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_ios(
+            attributes={"--path": cls.app_name_change_app_res_location, "--frameworkPath": IOS_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_res_location_in_root,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name_change_app_res_location_in_root,
+                                         "--frameworkPath": IOS_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app, "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name_rename_app, "--frameworkPath": IOS_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app_res, "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name_rename_app_res, "--frameworkPath": IOS_PACKAGE})
+
+        # add platform livesync projects
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location_ls,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name_change_app_location_ls, "--frameworkPath": IOS_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location_and_name_ls,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_ios(
+            attributes={"--path": cls.app_name_change_app_location_and_name_ls, "--frameworkPath": IOS_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_res_location_ls,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name_change_app_res_location_ls, "--frameworkPath": IOS_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_res_location_in_root_ls,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_ios(
+            attributes={"--path": cls.app_name_change_app_res_location_in_root_ls, "--frameworkPath": IOS_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app_ls, "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name_rename_app_ls, "--frameworkPath": IOS_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app_res_ls, "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_ios(attributes={"--path": cls.app_name_rename_app_res_ls, "--frameworkPath": IOS_PACKAGE})
 
     def setUp(self):
         BaseNSConfigClass.setUp(self)
@@ -67,11 +118,9 @@ class SuiteRunAll(BaseNSConfigClass):
 
 def suite(self):
         suite.addTest(BuildAndroidTests())
-        suite.addTest(BuildAndroidNGTests())
         suite.addTest(BuildiOSTests())
         suite.addTest(RunAndroidEmulatorTests())
         suite.addTest(RunIOSSimulatorTests())
-        suite.addTest(RunAndroidEmulatorTestsNG())
         suite.addTest(DebugAndroidEmulatorTests())
         suite.addTest(DebugiOSInspectorSimulatorTests())
         suite.addTest(DebugiOSChromeSimulatorTests())

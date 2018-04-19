@@ -1,0 +1,13 @@
+{
+	"description": "NativeScript Application",
+	"license": "SEE LICENSE IN <your-license-filename>",
+	"readme": "NativeScript Application",
+	"repository": "<fill-your-repository-here>",
+	"nativescript": {
+		"id": "org.nativescript.ChangeAppLocation"
+	},
+	"dependencies": {
+		"nativescript-theme-core": "~1.0.4",
+		"tns-core-modules": "^4.0.0-2018-04-19-01"
+	}
+}

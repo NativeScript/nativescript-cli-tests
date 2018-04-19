@@ -1,4 +1,6 @@
 from core.base_class.BaseNSConfigClass import BaseNSConfigClass
+from core.settings.settings import ANDROID_PACKAGE, IOS_PACKAGE
+from core.tns.tns import Tns
 from tests.nsconfig.run_android_tests import RunAndroidEmulatorTests
 from tests.nsconfig.build_android_tests import BuildAndroidTests
 from tests.nsconfig.debug_android_tests import DebugAndroidEmulatorTests
@@ -13,6 +15,40 @@ class SuiteRunAndroid(BaseNSConfigClass):
         BaseNSConfigClass.setUpClass(cls.__name__)
         BaseNSConfigClass.createApps(cls.__name__)
         BaseNSConfigClass.createAppsLiveSync(cls.__name__)
+
+        # add platform
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location_and_name,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_res_location,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_res_location_in_root,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app, "--frameworkPath": ANDROID_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app_res, "--frameworkPath": ANDROID_PACKAGE})
+
+        # add platform livesync projects
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location_ls,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location_and_name_ls,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_res_location_ls,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_res_location_in_root_ls,
+                                             "--frameworkPath": ANDROID_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app_ls, "--frameworkPath": ANDROID_PACKAGE})
+
+        Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app_res_ls, "--frameworkPath": ANDROID_PACKAGE})
 
     def setUp(self):
         BaseNSConfigClass.setUp(self)
@@ -59,44 +95,6 @@ class SuiteRunAndroid(BaseNSConfigClass):
         File.remove("RenameAppLS.ipa")
         Folder.cleanup("RenameAppResLS.app")
         File.remove("RenameAppResLS.ipa")
-
-        Folder.cleanup("ChangeAppLocationNG")
-        Folder.cleanup("ChangeAppLocationAndNameNG")
-        Folder.cleanup("ChangeAppResLocationNG")
-        Folder.cleanup("ChangeAppResLocationInRootNG")
-        Folder.cleanup("RenameAppNG")
-        Folder.cleanup("RenameAppResNG")
-        Folder.cleanup("ChangeAppLocationNG.app")
-        File.remove("ChangeAppLocationNG.ipa")
-        Folder.cleanup("ChangeAppLocationAndNameNG.app")
-        File.remove("ChangeAppLocationAndNameNG.ipa")
-        Folder.cleanup("ChangeAppResLocationNG.app")
-        File.remove("ChangeAppResLocationNG.ipa")
-        Folder.cleanup("ChangeAppResLocationInRootNG.app")
-        File.remove("ChangeAppResLocationInRootNG.ipa")
-        Folder.cleanup("RenameAppNG.app")
-        File.remove("RenameAppNG.ipa")
-        Folder.cleanup("RenameAppResNG.app")
-        File.remove("RenameAppResNG.ipa")
-
-        Folder.cleanup("ChangeAppLocationLSNG")
-        Folder.cleanup("ChangeAppLocationAndNameLSNG")
-        Folder.cleanup("ChangeAppResLocationLSNG")
-        Folder.cleanup("ChangeAppResLocationInRootLSNG")
-        Folder.cleanup("RenameAppLSNG")
-        Folder.cleanup("RenameAppResLSNG")
-        Folder.cleanup("ChangeAppLocationLSNG.app")
-        File.remove("ChangeAppLocationLSNG.ipa")
-        Folder.cleanup("ChangeAppLocationAndNameLSNG.app")
-        File.remove("ChangeAppLocationAndNameLSNG.ipa")
-        Folder.cleanup("ChangeAppResLocationLSNG.app")
-        File.remove("ChangeAppResLocationLSNG.ipa")
-        Folder.cleanup("ChangeAppResLocationInRootLSNG.app")
-        File.remove("ChangeAppResLocationInRootLSNG.ipa")
-        Folder.cleanup("RenameAppLSNG.app")
-        File.remove("RenameAppLSNG.ipa")
-        Folder.cleanup("RenameAppResLSNG.app")
-        File.remove("RenameAppResLSNG.ipa")
         pass
 
     # def build_android(self):
@@ -112,6 +110,4 @@ def suite(self):
         suite.addTest(BuildAndroidTests())
         suite.addTest(RunAndroidEmulatorTests())
         suite.addTest(DebugAndroidEmulatorTests())
-        suite.addTest(RunAndroidEmulatorTestsNG())
-        suite.addTest(BuildAndroidNGTests())
         return suite
