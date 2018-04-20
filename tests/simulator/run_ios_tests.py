@@ -110,6 +110,95 @@ class RunIOSSimulatorTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
 
+    def test_180_tns_run_ios_console_log(self):
+        """
+         Test console info, warn, error, assert, trace, time and logging of different objects.
+        """
+
+        # Change main-page.js so it contains console logging
+        source_js = os.path.join('data', 'console-log', 'main-page.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-page.js')
+        File.copy(src=source_js, dest=target_js)
+
+        john_obj = "{\n" \
+                   "\"name\": \"John\",\n" \
+                   "\"age\": 34\n" \
+                   "}"
+
+        john_obj2 = "[\n" + "1,\n" \
+                            "5,\n" \
+                            "12.5,\n" \
+                            "{\n" \
+                            "\"name\": \"John\",\n" \
+                            "\"age\": 34\n" \
+                            "},\n" \
+                            "\"text\",\n" \
+                            "42\n" \
+                            "]"
+
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', self.SIMULATOR_ID,
+                   "CONSOLE LOG",
+                   "true",
+                   "false",
+                   "null",
+                   "undefined",
+                   "-1",
+                   "text",
+                   john_obj,
+                   "number: -1",
+                   "string: text",
+                   "text -1",
+                   "CONSOLE INFO",
+                   "info",
+                   "CONSOLE WARN",
+                   "warn",
+                   "CONSOLE ERROR",
+                   "error",
+                   "false == true",
+                   "empty string evaluates to 'false'",
+                   "CONSOLE TRACE",
+                   "console.trace() called",
+                   "0: pageLoaded",
+                   "Button(8)",
+                   "-1 text {",
+                   john_obj2,
+                   "CONSOLE DEBUG Time:",
+                   "### TEST END ###"
+                   ]
+
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+
+    def test_181_tns_run_ios_console_dir(self):
+        """
+         Test console.dir() of different objects.
+        """
+
+        # Change main-page.js so it contains console logging
+        source_js = os.path.join('data', 'console-dir', 'main-page.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-page.js')
+        File.copy(src=source_js, dest=target_js)
+
+        john_obj = "==== object dump start ====\n" \
+                   "name: John\n" \
+                   "age: 34\n" \
+                   "==== object dump end ===="
+
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', self.SIMULATOR_ID,
+                   "true",
+                   "false",
+                   "null",
+                   "undefined",
+                   "-1",
+                   "text",
+                   john_obj
+                   ]
+
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+
     def test_200_tns_run_ios_break_and_fix_app(self):
         """
         Make changes in xml that break the app and then changes that fix the app.
