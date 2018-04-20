@@ -35,7 +35,7 @@ class PerfTests(BaseClass):
 
     @staticmethod
     def assert_time(expected, actual, tolerance=10, error_message="Startup time is not expected."):
-        print "Actual startup: " + actual
+        print "Actual startup: " + str(actual)
         print "Expected startup: " + expected
         x = int(expected)
         y = int(actual)
