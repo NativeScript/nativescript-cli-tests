@@ -25,7 +25,7 @@ def read_data(device_id, app_name):
     assert device_id in Device.get_ids(platform=Platform.ANDROID), "{0} not found!".format(device_id)
     csv_file_path = os.path.join(TEST_RUN_HOME, 'tests', 'perf', 'values.csv')
     csv_list = tuple(csv.reader(open(csv_file_path, 'rb'), delimiter=','))
-    return [tuple(l) for l in csv_list if (l[3].startswith(device_id) and l[0].find(app_name))]
+    return [tuple(l) for l in csv_list if (l[3].startswith(device_id) and l[0] is app_name)]
 
 
 class PerfTests(BaseClass):
