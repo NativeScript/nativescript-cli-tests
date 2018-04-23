@@ -157,7 +157,7 @@ class StarterKitsTests(BaseClass):
         Npm.uninstall(package="nativescript-dev-webpack", option='--save-dev', folder=demo)
         # Old webpack adds old webpack config. Cleanup to make sure we get the new config.
         File.remove(os.path.join(TEST_RUN_HOME, demo, 'webpack.config.js'))
-        Tns.install(package=WEBPACK_PACKAGE, option='--save-dev', folder=demo)
+        Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=demo)
         Npm.uninstall(package="nativescript-dev-sass", option='--save-dev', folder=demo)
         Npm.install(package=SASS_PACKAGE, option='--save-dev', folder=demo)
         if CURRENT_OS == OSType.OSX:

@@ -93,7 +93,7 @@ class PerfTests(BaseClass):
                 Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev', folder=self.app_name)
                 Npm.install(package=TYPESCRIPT_PACKAGE, option='--save-dev', folder=self.app_name)
             if "vue" not in demo:
-                Tns.install(package=WEBPACK_PACKAGE, option='--save-dev', folder=self.app_name)
+                Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=self.app_name)
         else:
             Folder.cleanup(self.app_name)
             Git.clone_repo(repo_url="https://github.com/" + demo, local_folder=self.app_name)
@@ -101,7 +101,7 @@ class PerfTests(BaseClass):
             Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
             Tns.update_modules(self.app_name)
             Npm.uninstall(package="nativescript-dev-webpack", option='--save-dev', folder=self.app_name)
-            Tns.install(package=WEBPACK_PACKAGE, option='--save-dev', folder=self.app_name)
+            Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=self.app_name)
 
             json = str(TnsAsserts.get_package_json(self.app_name))
             if "angular" in json:
