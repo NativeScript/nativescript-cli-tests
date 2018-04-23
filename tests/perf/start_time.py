@@ -21,11 +21,15 @@ from core.tns.tns_verifications import TnsAsserts
 from tests.webpack.helpers.helpers import Helpers
 
 
-def read_data(device_id, app_name):
+def read_data(device_id, app_name=None):
     assert device_id in Device.get_ids(platform=Platform.ANDROID), "{0} not found!".format(device_id)
     csv_file_path = os.path.join(TEST_RUN_HOME, 'tests', 'perf', 'values.csv')
     csv_list = tuple(csv.reader(open(csv_file_path, 'rb'), delimiter=','))
-    return [tuple(l) for l in csv_list if (l[3].startswith(device_id) and l[0] == app_name)]
+
+    if app_name is None:
+        return [tuple(l) for l in csv_list if l[3].startswith(device_id)]
+    else:
+        return [tuple(l) for l in csv_list if (l[3].startswith(device_id) and l[0] == app_name)]
 
 
 class PerfTests(BaseClass):
@@ -123,7 +127,7 @@ class PerfTests(BaseClass):
         start_time_actual = 0
         second_start_actual = 0
         for x in range(0, timesToRun):
-            print "Test run number {0}.".format(x+1)
+            print "Test run number {0}.".format(x + 1)
 
             Adb.clear_logcat(device_id=self.DEVICE_ID)
             Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
@@ -159,7 +163,11 @@ class PerfTests(BaseClass):
         start_time_actual = start_time_actual / timesToRun
         second_start_actual = second_start_actual / timesToRun
 
-        message = "{0} first start on {1} is {2} ms. The expected first start is {3} ms".format(demo, device_name, start_time_actual, first_start)
+        message = "{0} first start on {1} is {2} ms. The expected first start is {3} ms".format(demo, device_name,
+                                                                                                start_time_actual,
+                                                                                                first_start)
         PerfTests.assert_time(expected=first_start, actual=start_time_actual, tolerance=10, error_message=message)
-        message = "{0} second start on {1} is {2} ms. The expected second start is {3} ms".format(demo, device_name, second_start_actual, second_start)
+        message = "{0} second start on {1} is {2} ms. The expected second start is {3} ms".format(demo, device_name,
+                                                                                                  second_start_actual,
+                                                                                                  second_start)
         PerfTests.assert_time(expected=second_start, actual=second_start_actual, tolerance=10, error_message=message)
