@@ -205,11 +205,22 @@ class PerfTests(BaseClass):
         start_time_actual = start_time_actual / timesToRun
         second_start_actual = second_start_actual / timesToRun
 
-        message = "{0} first start on {1} is {2} ms. The expected first start is {3} ms".format(demo, device_name,
-                                                                                                start_time_actual,
-                                                                                                start_time_expected)
-        PerfTests.assert_time(expected=start_time_expected, actual=start_time_actual, tolerance=10, error_message=message)
-        message = "{0} second start on {1} is {2} ms. The expected second start is {3} ms".format(demo, device_name,
-                                                                                                  second_start_actual,
-                                                                                                  second_start_expected)
-        PerfTests.assert_time(expected=second_start_expected, actual=second_start_actual, tolerance=10, error_message=message)
+        message = "{0} with {4} configuration first start on {1} is {2} ms. The expected first start is {3} ms".format(
+            demo,
+            device_name,
+            start_time_actual,
+            start_time_expected,
+            config)
+
+        PerfTests.assert_time(expected=start_time_expected, actual=start_time_actual, tolerance=10,
+                              error_message=message)
+
+        message = "{0} with {4} configuration second start on {1} is {2} ms.The expected second start is {3} ms".format(
+            demo,
+            device_name,
+            second_start_actual,
+            second_start_expected,
+            config)
+
+        PerfTests.assert_time(expected=second_start_expected, actual=second_start_actual, tolerance=10,
+                              error_message=message)
