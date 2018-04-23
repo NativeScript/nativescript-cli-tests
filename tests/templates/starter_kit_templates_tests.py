@@ -88,20 +88,27 @@ class StarterKitsTests(BaseClass):
     def revert_changes(self, demo, platform, device_id):
         if '-ng' in demo:
             ReplaceHelper.rollback(demo, self.ts_change_ng)
-            assert Device.wait_for_text(device_id=device_id, text="Ford", timeout=30), "Failed to rollback TS changes"
+            if platform == Platform.ANDROID:
+                assert Device.wait_for_text(device_id=device_id, text="Ford",
+                                            timeout=30), "Failed to rollback TS changes"
             ReplaceHelper.rollback(demo, self.html_change)
-            assert Device.wait_for_text(device_id=device_id, text="Browse",
-                                        timeout=20), "Failed to rollback XML changes!"
+            if platform == Platform.ANDROID:
+                assert Device.wait_for_text(device_id=device_id, text="Browse",
+                                            timeout=20), "Failed to rollback XML changes!"
         elif '-ts' in demo:
             ReplaceHelper.rollback(demo, self.ts_change)
-            assert Device.wait_for_text(device_id=device_id, text="Ford", timeout=30), "Failed to rollback TS changes"
+            if platform == Platform.ANDROID:
+                assert Device.wait_for_text(device_id=device_id, text="Ford",
+                                            timeout=30), "Failed to rollback TS changes"
             ReplaceHelper.rollback(demo, self.xml_change)
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text="Browse",
                                             timeout=20), "Failed to rollback XML changes!"
         else:
             ReplaceHelper.rollback(demo, self.js_change)
-            assert Device.wait_for_text(device_id=device_id, text="Ford", timeout=30), "Failed to rollback JS changes"
+            if platform == Platform.ANDROID:
+                assert Device.wait_for_text(device_id=device_id, text="Ford",
+                                            timeout=30), "Failed to rollback JS changes"
             ReplaceHelper.rollback(demo, self.xml_change)
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text="Browse",
