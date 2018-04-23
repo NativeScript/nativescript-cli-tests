@@ -121,7 +121,7 @@ class PerfTests(BaseClass):
 
     @parameterized.expand(DATA)
     def test_start_time(self, demo, config, device_name, device_id, first_start, second_start):
-        timesToRun = int(os.getenv('RUN_TIMES', '5'))
+        timesToRun = int(os.getenv('RUN_TIMES', '3'))
         app_id = File.read(os.path.join(TEST_RUN_HOME, "{0}-{1}.txt".format(demo.split('/')[-1], config))).strip()
         apk = os.path.join(TEST_RUN_HOME, "{0}-{1}.apk".format(demo.split('/')[-1], config))
         release_apk = os.path.join(TEST_RUN_HOME, "release-apps", "{0}-{1}.apk".format(demo.split('/')[-1], config))
