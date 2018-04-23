@@ -74,6 +74,7 @@ SUT_FOLDER = os.path.join(TEST_RUN_HOME, "sut")
 
 # Set local location of test packages
 TNS_PATH = os.path.join("node_modules", ".bin", "tns")
+UPDATE_WEBPACK_PATH = os.path.join("node_modules", ".bin", "update-ns-webpack")
 ANDROID_PACKAGE = os.path.join(SUT_FOLDER, "tns-android.tgz")
 IOS_PACKAGE = os.path.join(SUT_FOLDER, "tns-ios.tgz")
 IOS_INSPECTOR_PACKAGE = os.path.join(SUT_FOLDER, "tns-ios-inspector.tgz")

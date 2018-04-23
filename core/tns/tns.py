@@ -6,12 +6,13 @@ import time
 
 from core.npm.npm import Npm
 from core.osutils.command import run
+from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import COMMAND_TIMEOUT, TNS_PATH, TAG, TEST_RUN_HOME, CURRENT_OS, \
-    SUT_FOLDER, PROVISIONING, BRANCH, MODULES_PACKAGE, ANGULAR_PACKAGE, TYPESCRIPT_PACKAGE
+    SUT_FOLDER, PROVISIONING, BRANCH, MODULES_PACKAGE, ANGULAR_PACKAGE, TYPESCRIPT_PACKAGE, UPDATE_WEBPACK_PATH
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
@@ -108,6 +109,22 @@ class Tns(object):
             cmd += " --log trace"
         print cmd
         output = run(command=cmd, timeout=timeout, wait=wait)
+        return output
+
+    @staticmethod
+    def install(package='', option='', folder=None, log_level=CommandLogLevel.FULL):
+        cmd = UPDATE_WEBPACK_PATH + " --configs"
+        Npm.install(package=package, option=option, folder=folder, log_level=log_level)
+        if folder is not None:
+            Folder.navigate_to(folder=folder, relative_from_current_folder=True)
+
+        print cmd
+        output = run(command=cmd)
+
+        if folder is not None:
+            Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
+
+
         return output
 
     @staticmethod
