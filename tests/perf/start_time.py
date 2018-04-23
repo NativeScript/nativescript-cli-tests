@@ -129,7 +129,7 @@ class PerfTests(BaseClass):
         second_start_expected = 0
         for x in range(0, timesToRun):
             sleep(30)
-            print "Test run number {0}.".format(x + 1)
+            print "Test run number {0} for release app(for expected time).".format(x + 1)
 
             Adb.clear_logcat(device_id=self.DEVICE_ID)
             Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
@@ -169,7 +169,7 @@ class PerfTests(BaseClass):
         second_start_actual = 0
         for x in range(0, timesToRun):
             sleep(30)
-            print "Test run number {0}.".format(x + 1)
+            print "Test run number {0} for actual time.".format(x + 1)
 
             Adb.clear_logcat(device_id=self.DEVICE_ID)
             Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
