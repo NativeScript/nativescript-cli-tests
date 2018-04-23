@@ -127,7 +127,8 @@ class PerfTests(BaseClass):
         start_time_actual = 0
         second_start_actual = 0
         for x in range(0, timesToRun):
-            print "Test run number {0}.".format(x + 1)
+            sleep(30)
+            print "Test run number {0}.".format(x+1)
 
             Adb.clear_logcat(device_id=self.DEVICE_ID)
             Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
