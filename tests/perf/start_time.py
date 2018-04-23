@@ -124,11 +124,52 @@ class PerfTests(BaseClass):
         timesToRun = int(os.getenv('RUN_TIMES', '5'))
         app_id = File.read(os.path.join(TEST_RUN_HOME, "{0}-{1}.txt".format(demo.split('/')[-1], config))).strip()
         apk = os.path.join(TEST_RUN_HOME, "{0}-{1}.apk".format(demo.split('/')[-1], config))
+        release_apk = os.path.join(TEST_RUN_HOME, "release-apps", "{0}-{1}.apk".format(demo.split('/')[-1], config))
+        start_time_expected = 0
+        second_start_expected = 0
+        for x in range(0, timesToRun):
+            sleep(30)
+            print "Test run number {0}.".format(x + 1)
+
+            Adb.clear_logcat(device_id=self.DEVICE_ID)
+            Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
+            Adb.uninstall(app_id=app_id, device_id=self.DEVICE_ID, assert_success=False)
+            assert not Adb.is_application_running(device_id=self.DEVICE_ID, app_id=app_id)
+
+            Adb.install(apk_file_path=release_apk, device_id=self.DEVICE_ID)
+            Device.turn_on_screen(device_id=self.DEVICE_ID)
+            sleep(5)
+
+            # Verify first start
+            Adb.clear_logcat(device_id=self.DEVICE_ID)
+            Adb.start_app(device_id=self.DEVICE_ID, app_id=app_id)
+            sleep(5)
+            Device.wait_until_app_is_running(device_id=self.DEVICE_ID, app_id=app_id, timeout=10)
+            start_time = int(Device.get_start_time(self.DEVICE_ID, app_id=app_id))
+            start_time_expected = start_time_expected + start_time
+
+            # Verify second start
+            Device.turn_on_screen(device_id=self.DEVICE_ID)
+            Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
+            assert not Adb.is_application_running(device_id=self.DEVICE_ID, app_id=app_id)
+            sleep(5)
+            Device.turn_on_screen(device_id=self.DEVICE_ID)
+            Adb.clear_logcat(device_id=self.DEVICE_ID)
+            sleep(5)
+            Adb.start_app(device_id=self.DEVICE_ID, app_id=app_id)
+            sleep(5)
+            Device.wait_until_app_is_running(device_id=self.DEVICE_ID, app_id=app_id, timeout=10)
+            start_time = int(Device.get_start_time(self.DEVICE_ID, app_id=app_id))
+            second_start_expected = second_start_expected + start_time
+
+        start_time_expected = start_time_expected / timesToRun
+        second_start_expected = second_start_expected / timesToRun
+
         start_time_actual = 0
         second_start_actual = 0
         for x in range(0, timesToRun):
             sleep(30)
-            print "Test run number {0}.".format(x+1)
+            print "Test run number {0}.".format(x + 1)
 
             Adb.clear_logcat(device_id=self.DEVICE_ID)
             Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
@@ -166,9 +207,9 @@ class PerfTests(BaseClass):
 
         message = "{0} first start on {1} is {2} ms. The expected first start is {3} ms".format(demo, device_name,
                                                                                                 start_time_actual,
-                                                                                                first_start)
-        PerfTests.assert_time(expected=first_start, actual=start_time_actual, tolerance=10, error_message=message)
+                                                                                                start_time_expected)
+        PerfTests.assert_time(expected=start_time_expected, actual=start_time_actual, tolerance=10, error_message=message)
         message = "{0} second start on {1} is {2} ms. The expected second start is {3} ms".format(demo, device_name,
                                                                                                   second_start_actual,
-                                                                                                  second_start)
-        PerfTests.assert_time(expected=second_start, actual=second_start_actual, tolerance=10, error_message=message)
+                                                                                                  second_start_expected)
+        PerfTests.assert_time(expected=second_start_expected, actual=second_start_actual, tolerance=10, error_message=message)
