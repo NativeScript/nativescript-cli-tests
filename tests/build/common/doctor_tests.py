@@ -4,6 +4,7 @@ Tests for doctor command
 import os
 
 from core.base_class.BaseClass import BaseClass
+from core.npm.npm import Npm
 from core.osutils.os_type import OSType
 from core.settings.settings import CURRENT_OS
 from core.tns.tns import Tns
@@ -52,8 +53,10 @@ class DoctorTests(BaseClass):
 
     def test_200_doctor_show_warning_when_new_components_are_available(self):
         Tns.create_app(self.app_name, update_modules=False)
-        Tns.platform_add_android(version="2.2.0", attributes={"--path": self.app_name})
 
+        Tns.platform_add_android(version="2.2.0", attributes={"--path": self.app_name})
+        Npm.uninstall(package="tns-core-modules", folder=self.app_name)
+        Npm.install(package="tns-core-modules@3", folder=self.app_name)
         out_doctor = Tns.run_tns_command("doctor", attributes={"--path": self.app_name}, timeout=180)
         out_info = Tns.run_tns_command("info", attributes={"--path": self.app_name}, timeout=180)
         for output in (out_doctor, out_info):
