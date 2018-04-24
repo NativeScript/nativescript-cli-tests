@@ -396,3 +396,14 @@ class Adb(object):
             time.sleep(1)
             output = run(command=cmd_input_method, log_level=CommandLogLevel.SILENT)
             assert "mActive=true" in output
+
+    @staticmethod
+    def reboot_device(device_id):
+        """
+        Start application.
+        :param device_id: Device id.
+        """
+        command = 'reboot'
+        output = Adb.run(command=command, device_id=device_id)
+        assert 'Events injected: 1' in output, 'Failed to start reboot.'
+        print 'Reboot started successfully.'

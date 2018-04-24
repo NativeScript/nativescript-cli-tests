@@ -5,6 +5,7 @@ from time import sleep
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
+from core.device import emulator
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.helpers.adb import Adb
@@ -127,49 +128,58 @@ class PerfTests(BaseClass):
     @parameterized.expand(DATA)
     def test_start_time(self, demo, config, device_name, device_id, first_start, second_start):
         verification_errors = []
+
         timesToRun = int(os.getenv('RUN_TIMES', '3'))
+        old_way_of_testing_performance = int(os.getenv('OLD_WAY_OF_TESTING', False))
+
         app_id = File.read(os.path.join(TEST_RUN_HOME, "{0}-{1}.txt".format(demo.split('/')[-1], config))).strip()
         apk = os.path.join(TEST_RUN_HOME, "{0}-{1}.apk".format(demo.split('/')[-1], config))
         release_apk = os.path.join(TEST_RUN_HOME, "release-apps", "{0}-{1}.apk".format(demo.split('/')[-1], config))
         start_time_expected = 0
         second_start_expected = 0
-        for x in range(0, timesToRun):
-            sleep(30)
-            print "Test run number {0} for release app(for expected time).".format(x + 1)
+        if old_way_of_testing_performance is False :
+            for x in range(0, timesToRun):
+                sleep(30)
+                print "Test run number {0} for release app(for expected time).".format(x + 1)
 
-            Adb.clear_logcat(device_id=self.DEVICE_ID)
-            Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
-            Adb.uninstall(app_id=app_id, device_id=self.DEVICE_ID, assert_success=False)
-            assert not Adb.is_application_running(device_id=self.DEVICE_ID, app_id=app_id)
+                Adb.clear_logcat(device_id=self.DEVICE_ID)
+                Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
+                Adb.uninstall(app_id=app_id, device_id=self.DEVICE_ID, assert_success=False)
+                assert not Adb.is_application_running(device_id=self.DEVICE_ID, app_id=app_id)
 
-            Adb.install(apk_file_path=release_apk, device_id=self.DEVICE_ID)
-            Device.turn_on_screen(device_id=self.DEVICE_ID)
-            sleep(5)
+                Adb.install(apk_file_path=release_apk, device_id=self.DEVICE_ID)
+                Device.turn_on_screen(device_id=self.DEVICE_ID)
+                sleep(5)
 
-            # Verify first start
-            Adb.clear_logcat(device_id=self.DEVICE_ID)
-            Adb.start_app(device_id=self.DEVICE_ID, app_id=app_id)
-            sleep(5)
-            Device.wait_until_app_is_running(device_id=self.DEVICE_ID, app_id=app_id, timeout=10)
-            start_time = int(Device.get_start_time(self.DEVICE_ID, app_id=app_id))
-            start_time_expected = start_time_expected + start_time
+                # Verify first start
+                Adb.clear_logcat(device_id=self.DEVICE_ID)
+                Adb.start_app(device_id=self.DEVICE_ID, app_id=app_id)
+                sleep(5)
+                Device.wait_until_app_is_running(device_id=self.DEVICE_ID, app_id=app_id, timeout=10)
+                start_time = int(Device.get_start_time(self.DEVICE_ID, app_id=app_id))
+                start_time_expected = start_time_expected + start_time
 
-            # Verify second start
-            Device.turn_on_screen(device_id=self.DEVICE_ID)
-            Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
-            assert not Adb.is_application_running(device_id=self.DEVICE_ID, app_id=app_id)
-            sleep(5)
-            Device.turn_on_screen(device_id=self.DEVICE_ID)
-            Adb.clear_logcat(device_id=self.DEVICE_ID)
-            sleep(5)
-            Adb.start_app(device_id=self.DEVICE_ID, app_id=app_id)
-            sleep(5)
-            Device.wait_until_app_is_running(device_id=self.DEVICE_ID, app_id=app_id, timeout=10)
-            start_time = int(Device.get_start_time(self.DEVICE_ID, app_id=app_id))
-            second_start_expected = second_start_expected + start_time
+                # Verify second start
+                Device.turn_on_screen(device_id=self.DEVICE_ID)
+                Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
+                assert not Adb.is_application_running(device_id=self.DEVICE_ID, app_id=app_id)
+                sleep(5)
+                Device.turn_on_screen(device_id=self.DEVICE_ID)
+                Adb.clear_logcat(device_id=self.DEVICE_ID)
+                sleep(5)
+                Adb.start_app(device_id=self.DEVICE_ID, app_id=app_id)
+                sleep(5)
+                Device.wait_until_app_is_running(device_id=self.DEVICE_ID, app_id=app_id, timeout=10)
+                start_time = int(Device.get_start_time(self.DEVICE_ID, app_id=app_id))
+                second_start_expected = second_start_expected + start_time
 
-        start_time_expected = start_time_expected / timesToRun
-        second_start_expected = second_start_expected / timesToRun
+            start_time_expected = start_time_expected / timesToRun
+            second_start_expected = second_start_expected / timesToRun
+        else:
+            start_time_expected = first_start
+            second_start_expected = second_start
+            emulator.reboot_device(self.DEVICE_ID)
+            emulator.wait(self.DEVICE_ID)
 
         start_time_actual = 0
         second_start_actual = 0
