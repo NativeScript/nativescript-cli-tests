@@ -38,14 +38,19 @@ class PerfTests(BaseClass):
     DATA = read_data(DEVICE_ID, APP_NAME)
 
     @staticmethod
-    def assert_time(expected, actual, tolerance=10, error_message="Startup time is not expected."):
+    def assert_time(expected, actual, tolerance=10, error_message="Startup time is not expected.",
+                    verification_errors=[]):
         print "Actual startup: " + str(actual)
         print "Expected startup: " + str(expected)
         x = int(expected)
         y = int(actual)
         if actual >= 0:
             diff = abs(x - y) * 1.00
-            assert diff <= x * tolerance * 0.01, error_message
+            try:
+                assert diff <= x * tolerance * 0.01, error_message
+            except AssertionError, e:
+                verification_errors.append(str(e))
+            return verification_errors
 
     @classmethod
     def setUpClass(cls):
@@ -121,6 +126,7 @@ class PerfTests(BaseClass):
 
     @parameterized.expand(DATA)
     def test_start_time(self, demo, config, device_name, device_id, first_start, second_start):
+        verification_errors = []
         timesToRun = int(os.getenv('RUN_TIMES', '3'))
         app_id = File.read(os.path.join(TEST_RUN_HOME, "{0}-{1}.txt".format(demo.split('/')[-1], config))).strip()
         apk = os.path.join(TEST_RUN_HOME, "{0}-{1}.apk".format(demo.split('/')[-1], config))
@@ -212,8 +218,9 @@ class PerfTests(BaseClass):
             start_time_expected,
             config)
 
-        PerfTests.assert_time(expected=start_time_expected, actual=start_time_actual, tolerance=10,
-                              error_message=message)
+        verification_errors = PerfTests.assert_time(expected=start_time_expected, actual=start_time_actual,
+                                                    tolerance=10,
+                                                    error_message=message, verification_errors=verification_errors)
 
         message = "{0} with {4} configuration second start on {1} is {2} ms.The expected second start is {3} ms".format(
             demo,
@@ -222,5 +229,8 @@ class PerfTests(BaseClass):
             second_start_expected,
             config)
 
-        PerfTests.assert_time(expected=second_start_expected, actual=second_start_actual, tolerance=10,
-                              error_message=message)
+        verification_errors = PerfTests.assert_time(expected=second_start_expected, actual=second_start_actual,
+                                                    tolerance=10,
+                                                    error_message=message, verification_errors=verification_errors)
+
+        self.assertEqual([], verification_errors)
