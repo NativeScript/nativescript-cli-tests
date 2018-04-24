@@ -9,7 +9,7 @@ from core.osutils.os_type import OSType
 
 def resolve_package(package_env, default_value):
     package = default_value
-    package_env_value = os.environ.get(package_env)
+    package_env_value = os.getenv(package_env)
     if package_env_value is None:
         print "{0} not set.".format(package_env)
     elif '.tgz' in package_env_value:
