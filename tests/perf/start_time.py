@@ -8,6 +8,7 @@ from core.base_class.BaseClass import BaseClass
 from core.device import emulator
 from core.device.device import Device
 from core.device.emulator import Emulator
+from core.device.helpers import adb
 from core.device.helpers.adb import Adb
 from core.device.simulator import Simulator
 from core.git.git import Git
@@ -178,7 +179,7 @@ class PerfTests(BaseClass):
         else:
             start_time_expected = first_start
             second_start_expected = second_start
-            emulator.reboot_device(self.DEVICE_ID)
+            adb.reboot_device(self.DEVICE_ID)
             emulator.wait(self.DEVICE_ID)
 
         start_time_actual = 0
