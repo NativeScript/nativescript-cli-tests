@@ -130,7 +130,7 @@ class PerfTests(BaseClass):
         verification_errors = []
 
         timesToRun = int(os.getenv('RUN_TIMES', '3'))
-        old_way_of_testing_performance = int(os.getenv('OLD_WAY_OF_TESTING', False))
+        old_way_of_testing_performance = os.getenv('OLD_WAY_OF_TESTING', False)
 
         app_id = File.read(os.path.join(TEST_RUN_HOME, "{0}-{1}.txt".format(demo.split('/')[-1], config))).strip()
         apk = os.path.join(TEST_RUN_HOME, "{0}-{1}.apk".format(demo.split('/')[-1], config))
