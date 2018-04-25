@@ -56,11 +56,12 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         Folder.cleanup(target)
         Folder.copy(src=source, dst=target)
 
+        Tns.build_android(attributes={"--path": self.app_name})
+
         # `tns run android` and wait until app is deployed
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
-        strings = ['Project successfully built',
-                   'Successfully installed on device with identifier', EMULATOR_ID,
+        strings = ['Successfully installed on device with identifier', EMULATOR_ID,
                    'Successfully synced application',
                    'Application loaded!',
                    'Home page loaded!']
