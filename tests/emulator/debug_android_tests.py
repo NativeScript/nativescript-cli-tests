@@ -2,6 +2,7 @@
 Tests for `tns debug android` executed on Android Emulator.
 """
 import os
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.chrome.chrome import Chrome
@@ -115,6 +116,7 @@ class DebugAndroidEmulatorTests(BaseClass):
         Emulator.stop()
         Emulator.ensure_available()
 
+    @unittest.skip("Ignore because of https://github.com/NativeScript/android-runtime/issues/1028")
     def test_200_debug_android_with_response_from_server(self):
         """
         Checks that when `tns debug android` app doesn't crash when there is a response from server (https://github.com/NativeScript/nativescript-cli/issues/3187)
