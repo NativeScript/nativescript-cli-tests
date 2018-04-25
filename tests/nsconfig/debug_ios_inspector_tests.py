@@ -64,17 +64,17 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
             assert File.exists(TEST_RUN_HOME + "/ChangeAppLocation")
 
         Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--save-dev',
-                    folder=cls.app_name_change_app_location_ls)
+                    folder=CreateNSConfigApps.app_name_change_app_location_ls)
         Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--save-dev',
-                    folder=cls.app_name_change_app_location_and_name_ls)
+                    folder=CreateNSConfigApps.app_name_change_app_location_and_name_ls)
         Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--save-dev',
-                    folder=cls.app_name_change_app_res_location_ls)
+                    folder=CreateNSConfigApps.app_name_change_app_res_location_ls)
         Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--save-dev',
-                    folder=cls.app_name_change_app_res_location_in_root_ls)
+                    folder=CreateNSConfigApps.app_name_change_app_res_location_in_root_ls)
         Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--save-dev',
-                    folder=cls.app_name_rename_app_ls)
+                    folder=CreateNSConfigApps.app_name_rename_app_ls)
         Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--save-dev',
-                    folder=cls.app_name_rename_app_res_ls)
+                    folder=CreateNSConfigApps.app_name_rename_app_res_ls)
 
     def setUp(self):
         BaseClass.setUp(self)
