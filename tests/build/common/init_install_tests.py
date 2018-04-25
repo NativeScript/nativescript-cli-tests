@@ -82,7 +82,7 @@ class InitAndInstallTests(BaseClass):
 
     def test_204_install_defaults(self):
         self.test_202_init_path()
-        Tns.install_npm(attributes={"--path": self.app_name})
+        Tns.install(attributes={"--path": self.app_name})
         assert File.exists(self.app_name + "/platforms/android/build.gradle")
 
         if CURRENT_OS == OSType.OSX:
@@ -104,7 +104,7 @@ class InitAndInstallTests(BaseClass):
         Folder.cleanup(self.app_name + '/node_modules')
         assert not File.exists(self.app_name + "/node_modules")
 
-        Tns.install_npm(attributes={"--path": self.app_name})
+        Tns.install(attributes={"--path": self.app_name})
         assert File.exists(self.app_name + "/node_modules/lodash")
         assert File.exists(self.app_name + "/node_modules/gulp")
 
@@ -124,7 +124,7 @@ class InitAndInstallTests(BaseClass):
         assert "gulp" in output
         assert "lodash" in output
 
-        Tns.install_npm(attributes={"--path": self.app_name})
+        Tns.install(attributes={"--path": self.app_name})
         assert File.exists(self.app_name + "/node_modules/lodash")
         assert File.exists(self.app_name + "/node_modules/gulp")
         assert File.exists(self.app_name + "/platforms/android/build.gradle")
@@ -148,7 +148,7 @@ class InitAndInstallTests(BaseClass):
         assert "gulp" in output
         assert "lodash" in output
 
-        Tns.install_npm(attributes={"--path": self.app_name})
+        Tns.install(attributes={"--path": self.app_name})
         assert File.exists(self.app_name + "/node_modules/lodash")
         assert File.exists(self.app_name + "/node_modules/gulp")
         assert File.exists(self.app_name + "/platforms/android/build.gradle")
@@ -164,5 +164,5 @@ class InitAndInstallTests(BaseClass):
             assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "gulp"))
 
     def test_400_install_in_not_existing_folder(self):
-        output = Tns.install_npm(attributes={"--path": self.app_name}, assert_success=False)
+        output = Tns.install(attributes={"--path": self.app_name}, assert_success=False)
         assert "No project found" in output
