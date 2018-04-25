@@ -181,6 +181,8 @@ class PerfTests(BaseClass):
             second_start_expected = second_start
             Adb.reboot_device(self.DEVICE_ID)
             Emulator.wait(self.DEVICE_ID)
+            Adb.kill_server()
+            Adb.start_server()
 
         start_time_actual = 0
         second_start_actual = 0

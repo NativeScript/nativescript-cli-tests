@@ -407,3 +407,17 @@ class Adb(object):
         output = Adb.run(command=command, device_id=device_id)
         assert '' in output, 'Failed to reboot the device.Error:' + output
         print 'Reboot started successfully.'
+
+    @staticmethod
+    def kill_server():
+        command = 'kill-server'
+        output = run(ADB_PATH + ' ' + command)
+        assert '' in output, 'Failed to kill server the device.Error:' + output
+        print 'Kill server successfully.'
+
+    @staticmethod
+    def start_server():
+        command = 'start-server'
+        output = run(ADB_PATH + ' ' + command)
+        assert 'daemon started successfully' in output, 'Failed to start the server.Error:' + output
+        print 'Start server successfully.'
