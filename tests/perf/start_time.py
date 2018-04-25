@@ -182,7 +182,9 @@ class PerfTests(BaseClass):
             Adb.reboot_device(self.DEVICE_ID)
             sleep(65)
             Adb.kill_server()
+            sleep(5)
             Adb.start_server()
+            sleep(10)
             Adb.usb()
 
         start_time_actual = 0

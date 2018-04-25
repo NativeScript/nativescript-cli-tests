@@ -426,5 +426,5 @@ class Adb(object):
     def usb():
         command = 'usb'
         output = run(ADB_PATH + ' ' + command)
-        assert '' in output, 'Failed to start the server.Error:' + output
-        print 'Start server successfully.'
+        assert '' in output, 'Failed to start the usb command.Error:' + output
+        print 'Start usb successfully.'
