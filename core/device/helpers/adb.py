@@ -421,3 +421,10 @@ class Adb(object):
         output = run(ADB_PATH + ' ' + command)
         assert 'daemon started successfully' in output, 'Failed to start the server.Error:' + output
         print 'Start server successfully.'
+
+    @staticmethod
+    def usb():
+        command = 'usb'
+        output = run(ADB_PATH + ' ' + command)
+        assert '' in output, 'Failed to start the server.Error:' + output
+        print 'Start server successfully.'

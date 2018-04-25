@@ -138,7 +138,7 @@ class PerfTests(BaseClass):
         release_apk = os.path.join(TEST_RUN_HOME, "release-apps", "{0}-{1}.apk".format(demo.split('/')[-1], config))
         start_time_expected = 0
         second_start_expected = 0
-        if old_way_of_testing_performance is False :
+        if old_way_of_testing_performance is False:
             for x in range(0, timesToRun):
                 sleep(30)
                 print "Test run number {0} for release app(for expected time).".format(x + 1)
@@ -183,6 +183,7 @@ class PerfTests(BaseClass):
             Emulator.wait(self.DEVICE_ID)
             Adb.kill_server()
             Adb.start_server()
+            Adb.usb()
 
         start_time_actual = 0
         second_start_actual = 0
