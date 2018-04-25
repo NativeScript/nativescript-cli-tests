@@ -405,5 +405,5 @@ class Adb(object):
         """
         command = 'reboot'
         output = Adb.run(command=command, device_id=device_id)
-        assert 'Events injected: 1' in output, 'Failed to start reboot.'
+        assert '' in output, 'Failed to reboot the device.Error:' + output
         print 'Reboot started successfully.'
