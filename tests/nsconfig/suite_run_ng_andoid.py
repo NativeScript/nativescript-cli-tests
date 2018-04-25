@@ -1,22 +1,59 @@
+import unittest
+from unittest import suite
+
 from core.base_class.BaseNSConfigClass import BaseNSConfigClass
 from core.settings.settings import ANDROID_PACKAGE, IOS_PACKAGE
 from core.tns.tns import Tns
-from tests.nsconfig.run_android_tests import RunAndroidEmulatorTests
-from tests.nsconfig.build_android_tests import BuildAndroidTests
-from tests.nsconfig.debug_android_tests import DebugAndroidEmulatorTests
-from tests.nsconfig.run_android_ng_tests import RunAndroidEmulatorTestsNG
 from tests.nsconfig.build_android_ng_tests import BuildAndroidNGTests
+from tests.nsconfig.run_android_ng_tests import RunAndroidEmulatorTestsNG
 from core.osutils.file import File
 from core.osutils.folder import Folder
 
-class SuiteRunAndroid(BaseNSConfigClass):
+# class Test1(unittest.TestCase):
+    # def testOne(self):
+    #     BaseNSConfigClass.createAppsNG(self.__name__)
+    #     pass
+
+# class Test1(unittest.TestCase):
+#     def TestOne(self):
+#         print "Hello 1"
+#         pass
+#
+#     def TestTwo(self):
+#         print "Hello 2"
+#         pass
+#
+# class Test2(unittest.TestCase):
+#     def TestThree(self):
+#         pass
+#     def testFour(self):
+#         pass
+#
+# if __name__ == '__main__':
+#     # Run only the tests in the specified classes
+#
+#     test_classes_to_run = [Test1, Test2]
+#
+#     loader = unittest.TestLoader()
+#
+#     suites_list = []
+#     for test_class in test_classes_to_run:
+#         suite = loader.loadTestsFromTestCase(test_class)
+#         suites_list.append(suite)
+#
+#     big_suite = unittest.TestSuite(suites_list)
+#
+#     runner = unittest.TextTestRunner()
+#     results = runner.run(big_suite)
+
+class SuiteRunAndroidNG(BaseNSConfigClass):
     @classmethod
     def setUpClass(cls):
         BaseNSConfigClass.setUpClass(cls.__name__)
         BaseNSConfigClass.createAppsNG(cls.__name__)
         BaseNSConfigClass.createAppsLiveSyncNG(cls.__name__)
 
-        # add platform
+        #add platform
         Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location_ng,
                                              "--frameworkPath": ANDROID_PACKAGE})
 
@@ -50,11 +87,11 @@ class SuiteRunAndroid(BaseNSConfigClass):
         Tns.platform_add_android(
             attributes={"--path": cls.app_name_rename_app_res_ls_ng, "--frameworkPath": ANDROID_PACKAGE})
 
-    def setUp(self):
-        BaseNSConfigClass.setUp(self)
-
-    def tearDown(self):
-        Folder.cleanup(self.platforms_android + '/build/outputs')
+    # def setUp(self):
+    #     BaseNSConfigClass.setUp(self)
+    #
+    # def tearDown(self):
+    #     Folder.cleanup(self.platforms_android + '/build/outputs')
 
     @classmethod
     def tearDownClass(cls):
@@ -97,16 +134,7 @@ class SuiteRunAndroid(BaseNSConfigClass):
         File.remove("RenameAppResLSNG.ipa")
         pass
 
-    # def build_android(self):
-    #     BuildAndroidTests()
-    #
-    # def run_android(self):
-    #     RunAndroidEmulatorTests()
-    #
-    # def debug_android(self):
-    #     DebugAndroidEmulatorTests()
 
-def suite(self):
-        suite.addTest(RunAndroidEmulatorTestsNG())
-        suite.addTest(BuildAndroidNGTests())
-        return suite
+    def run_android_01(self):
+        BuildAndroidNGTests()
+        RunAndroidEmulatorTestsNG()

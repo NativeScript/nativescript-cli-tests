@@ -176,14 +176,10 @@ class RunAndroidEmulatorTests(BaseNSConfigClass):
                             expected_image='livesync-hello-world_home')
 
     @parameterized.expand([
-        ('ChangeAppLocationLS',
-         ['new_folder/app/main-view-model.js', 'taps', 'clicks'],
-         ['new_folder/app/main-page.xml', 'TAP', 'TEST'],
-         ['new_folder/app/app.css', '42', '99']),
-        ('ChangeAppLocationAndNameLS',
-         ['my folder/my app/main-view-model.js', 'taps', 'clicks'],
-         ['my folder/my app/main-page.xml', 'TAP', 'TEST'],
-         ['my folder/my app/app.css', '42', '99']),
+        ('RenameAppResLS',
+         ReplaceHelper.CHANGE_JS,
+         ReplaceHelper.CHANGE_XML,
+         ReplaceHelper.CHANGE_CSS),
         ('ChangeAppResLocationLS',
          ReplaceHelper.CHANGE_JS,
          ReplaceHelper.CHANGE_XML,
@@ -196,10 +192,14 @@ class RunAndroidEmulatorTests(BaseNSConfigClass):
          ['renamed_app/main-view-model.js', 'taps', 'clicks'],
          ['renamed_app/main-page.xml', 'TAP', 'TEST'],
          ['renamed_app/app.css', '42', '99']),
-        ('RenameAppResLS',
-         ReplaceHelper.CHANGE_JS,
-         ReplaceHelper.CHANGE_XML,
-         ReplaceHelper.CHANGE_CSS)
+        ('ChangeAppLocationLS',
+         ['new_folder/app/main-view-model.js', 'taps', 'clicks'],
+         ['new_folder/app/main-page.xml', 'TAP', 'TEST'],
+         ['new_folder/app/app.css', '42', '99']),
+        ('ChangeAppLocationAndNameLS',
+         ['my folder/my app/main-view-model.js', 'taps', 'clicks'],
+         ['my folder/my app/main-page.xml', 'TAP', 'TEST'],
+         ['my folder/my app/app.css', '42', '99'])
     ])
     def test_100_tns_run_android_release(self, app_name, change_js, change_xml, change_css):
         """Make valid changes in JS,CSS and HTML"""
