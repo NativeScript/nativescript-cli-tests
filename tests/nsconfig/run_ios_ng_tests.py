@@ -49,14 +49,13 @@ class RunIOSSimulatorTestsNG(BaseClass):
             else:
                 assert "ChangeAppLocationLSNG" in TEST_RUN_HOME + "/"
 
-    # def setUp(self):
-    #     BaseNSConfigClass.setUp(self)
-    #     Tns.kill()
-    #
-    # def tearDown(self):
-    #     Tns.kill()
-    #     BaseNSConfigClass.tearDown(self)
+    def setUp(self):
+        BaseClass.setUp(self)
 
+    def tearDown(self):
+        Tns.kill()
+        BaseClass.tearDown(self)
+        
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()

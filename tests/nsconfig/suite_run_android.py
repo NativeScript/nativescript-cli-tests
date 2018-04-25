@@ -17,38 +17,38 @@ class SuiteRunAndroid(BaseClass):
         CreateNSConfigApps.createAppsLiveSync(cls.__name__)
 
         # add platform
-        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location,
+        Tns.platform_add_android(attributes={"--path": CreateNSConfigApps.app_name_change_app_location,
                                              "--frameworkPath": ANDROID_PACKAGE})
 
-        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location_and_name,
+        Tns.platform_add_android(attributes={"--path": CreateNSConfigApps.app_name_change_app_location_and_name,
                                              "--frameworkPath": ANDROID_PACKAGE})
 
-        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_res_location,
+        Tns.platform_add_android(attributes={"--path": CreateNSConfigApps.app_name_change_app_res_location,
                                              "--frameworkPath": ANDROID_PACKAGE})
 
-        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_res_location_in_root,
+        Tns.platform_add_android(attributes={"--path": CreateNSConfigApps.app_name_change_app_res_location_in_root,
                                              "--frameworkPath": ANDROID_PACKAGE})
 
-        Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app, "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_android(attributes={"--path": CreateNSConfigApps.app_name_rename_app, "--frameworkPath": ANDROID_PACKAGE})
 
-        Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app_res, "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_android(attributes={"--path": CreateNSConfigApps.app_name_rename_app_res, "--frameworkPath": ANDROID_PACKAGE})
 
         # add platform livesync projects
-        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location_ls,
+        Tns.platform_add_android(attributes={"--path": CreateNSConfigApps.app_name_change_app_location_ls,
                                              "--frameworkPath": ANDROID_PACKAGE})
 
-        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location_and_name_ls,
+        Tns.platform_add_android(attributes={"--path": CreateNSConfigApps.app_name_change_app_location_and_name_ls,
                                              "--frameworkPath": ANDROID_PACKAGE})
 
-        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_res_location_ls,
+        Tns.platform_add_android(attributes={"--path": CreateNSConfigApps.app_name_change_app_res_location_ls,
                                              "--frameworkPath": ANDROID_PACKAGE})
 
-        Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_res_location_in_root_ls,
+        Tns.platform_add_android(attributes={"--path": CreateNSConfigApps.app_name_change_app_res_location_in_root_ls,
                                              "--frameworkPath": ANDROID_PACKAGE})
 
-        Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app_ls, "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_android(attributes={"--path": CreateNSConfigApps.app_name_rename_app_ls, "--frameworkPath": ANDROID_PACKAGE})
 
-        Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app_res_ls, "--frameworkPath": ANDROID_PACKAGE})
+        Tns.platform_add_android(attributes={"--path": CreateNSConfigApps.app_name_rename_app_res_ls, "--frameworkPath": ANDROID_PACKAGE})
 
     def setUp(self):
         BaseClass.setUp(self)

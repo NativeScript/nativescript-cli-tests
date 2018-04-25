@@ -52,13 +52,6 @@ class RunAndroidEmulatorTestsNG(BaseClass):
             else:
                 assert "ChangeAppLocationLSNG" in TEST_RUN_HOME + "/"
 
-    # def setUp(self):
-    #     BaseClass.setUp(self)
-
-    # def tearDown(self):
-    #     Tns.kill()
-    #     BaseNSConfigClass.tearDown(self)
-
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()

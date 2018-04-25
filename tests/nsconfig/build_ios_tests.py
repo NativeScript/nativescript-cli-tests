@@ -4,6 +4,7 @@ Test for building projects for iOS platform with different nsconfig setup.
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
+from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.device.simulator import Simulator
 from core.osutils.command import run
 from core.osutils.file import File
@@ -30,7 +31,7 @@ class BuildiOSTests(BaseClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/RenameApp")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppRes", TEST_RUN_HOME + "/RenameAppRes")
         else:
-            BaseClass.createApps(cls.__name__)
+            CreateNSConfigApps.createApps(cls.__name__)
 
         if not File.exists(TEST_RUN_HOME + "/ChangeAppLocation"):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/ChangeAppLocation")
