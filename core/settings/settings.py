@@ -10,12 +10,25 @@ from core.osutils.os_type import OSType
 def resolve_package(package_env, default_value):
     package = default_value
     package_env_value = os.getenv(package_env)
-    if package_env_value is None:
+    package_env_value_with_dash = os.getenv(package_env.replace("-", "_"))
+
+    if package_env_value is None and package_env_value_with_dash is None:
         print "{0} not set.".format(package_env)
-    elif '.tgz' in package_env_value:
-        package = package_env_value
-    else:
-        package = "{0}@{1}".format(package_env, package_env_value)
+    elif package_env_value is not None:
+        if '.tgz' in package_env_value:
+            package = package_env_value
+            print "{0} tgz package found.".format(package)
+        else:
+            package = "{0}@{1}".format(package_env, package_env_value)
+            print "{0} npm package found.".format(package)
+    elif package_env_value_with_dash is not None:
+        if '.tgz' in package_env_value_with_dash:
+            package = package_env_value_with_dash
+            print "{0} tgz package found.".format(package_env_value_with_dash)
+        else:
+            package = "{0}@{1}".format(package_env, package_env_value_with_dash)
+            print "{0} npm package found.".format(package)
+
     return package
 
 
@@ -84,10 +97,10 @@ CLI_PATH = resolve_path("nativescript", CLI_PATH)
 ANDROID_PATH = resolve_path("android", ANDROID_PATH)
 IOS_PATH = resolve_path("ios", IOS_PATH)
 IOS_INSPECTOR_PATH = resolve_path("ios-inspector", IOS_INSPECTOR_PATH)
-WEBPACK_PACKAGE = resolve_package("nativescript-dev-webpack", "nativescript-dev-webpack@next")
-SASS_PACKAGE = resolve_package("nativescript-dev-sass", "nativescript-dev-sass@latest")
-TYPESCRIPT_PACKAGE = resolve_package("nativescript-dev-typescript", "nativescript-dev-typescript@next")
-ANGULAR_PACKAGE = resolve_package("nativescript-angular", "nativescript-angular@next")
+WEBPACK_PACKAGE = resolve_package("nativescript-dev-webpack", "nativescript-dev-webpack@{0}".format(TAG))
+SASS_PACKAGE = resolve_package("nativescript-dev-sass", "nativescript-dev-sass@{0}".format(TAG))
+TYPESCRIPT_PACKAGE = resolve_package("nativescript-dev-typescript", "nativescript-dev-typescript@{0}".format(TAG))
+ANGULAR_PACKAGE = resolve_package("nativescript-angular", "nativescript-angular@{0}".format(TAG))
 MODULES_PACKAGE = resolve_package("tns-core-modules", "tns-core-modules@{0}".format(TAG))
 
 # Output settings
