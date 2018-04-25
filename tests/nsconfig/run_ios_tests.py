@@ -9,26 +9,26 @@ Run should sync all the changes correctly:
 If simulator is not started and device is not connected `tns run ios` should start simulator.
 """
 
-import os
 from nose_parameterized import parameterized
 
-from core.base_class.BaseNSConfigClass import BaseNSConfigClass
+from core.base_class.BaseClass import BaseClass
+from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_PACKAGE, SIMULATOR_NAME, TEST_RUN_HOME
+from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 
 
-class RunIOSSimulatorTests(BaseNSConfigClass):
+class RunIOSSimulatorTests(BaseClass):
     SIMULATOR_ID = ''
 
     @classmethod
     def setUpClass(cls):
-        BaseNSConfigClass.setUpClass(cls.__name__)
+        BaseClass.setUpClass(cls.__name__)
         Emulator.stop()
         Simulator.stop()
         cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
@@ -44,7 +44,7 @@ class RunIOSSimulatorTests(BaseNSConfigClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
         else:
-            BaseNSConfigClass.createAppsLiveSync(cls.__name__)
+            CreateNSConfigApps.createAppsLiveSync(cls.__name__)
 
         if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS"):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS",
@@ -61,15 +61,15 @@ class RunIOSSimulatorTests(BaseNSConfigClass):
             assert File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS")
 
     def setUp(self):
-        BaseNSConfigClass.setUp(self)
+        BaseClass.setUp(self)
 
     def tearDown(self):
         Tns.kill()
-        BaseNSConfigClass.tearDown(self)
+        BaseClass.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
-        BaseNSConfigClass.tearDownClass()
+        BaseClass.tearDownClass()
         Emulator.stop()
 
         Folder.cleanup("ChangeAppLocationLS")

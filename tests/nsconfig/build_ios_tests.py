@@ -1,25 +1,23 @@
 """
 Test for building projects for iOS platform with different nsconfig setup.
 """
-import os
 from nose_parameterized import parameterized
 
-from core.base_class.BaseNSConfigClass import BaseNSConfigClass
+from core.base_class.BaseClass import BaseClass
 from core.device.simulator import Simulator
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_PACKAGE, ANDROID_PACKAGE, PROVISIONING, \
+from core.settings.settings import PROVISIONING, \
     DISTRIBUTION_PROVISIONING, DEVELOPMENT_TEAM, TEST_RUN_HOME
 from core.tns.tns import Tns
-from core.tns.tns_platform_type import Platform
 from core.xcode.xcode import Xcode
 
 
-class BuildiOSTests(BaseNSConfigClass):
+class BuildiOSTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseNSConfigClass.setUpClass(cls.__name__)
+        BaseClass.setUpClass(cls.__name__)
 
         if File.exists(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation"):
             assert "ChangeAppLocation" in TEST_RUN_HOME + "/data/Projects/ChangeAppLocation"
@@ -32,7 +30,7 @@ class BuildiOSTests(BaseNSConfigClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/RenameApp")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppRes", TEST_RUN_HOME + "/RenameAppRes")
         else:
-            BaseNSConfigClass.createApps(cls.__name__)
+            BaseClass.createApps(cls.__name__)
 
         if not File.exists(TEST_RUN_HOME + "/ChangeAppLocation"):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/ChangeAppLocation")
@@ -49,25 +47,11 @@ class BuildiOSTests(BaseNSConfigClass):
         Xcode.cleanup_cache()
 
     def setUp(self):
-        BaseNSConfigClass.setUp(self)
+        BaseClass.setUp(self)
         Simulator.stop()
 
-        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "ChangeAppLocation"}, assert_success=False)
-        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "ChangeAppLocationAndName"},
-                            assert_success=False)
-        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "ChangeAppResLocation"}, assert_success=False)
-        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "ChangeAppResLocation"}, assert_success=False)
-        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "RenameApp"}, assert_success=False)
-        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "RenameAppRes"}, assert_success=False)
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": "ChangeAppLocation"}, assert_success=False)
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": "ChangeAppLocationAndName"}, assert_success=False)
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": "ChangeAppResLocation"}, assert_success=False)
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": "ChangeAppResLocation"}, assert_success=False)
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": "RenameApp"}, assert_success=False)
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": "RenameAppRes"}, assert_success=False)
-
     def tearDown(self):
-        BaseNSConfigClass.tearDown(self)
+        BaseClass.tearDown(self)
         assert not Simulator.is_running()[0], "Simulator started after " + self._testMethodName
 
     @classmethod
@@ -80,16 +64,22 @@ class BuildiOSTests(BaseNSConfigClass):
         Folder.cleanup("RenameAppRes")
         Folder.cleanup("ChangeAppLocation.app")
         File.remove("ChangeAppLocation.ipa")
+        File.remove("ChangeAppLocation-ipa.tgz")
         Folder.cleanup("ChangeAppLocationAndName.app")
+        File.remove("ChangeAppLocationAndName-ipa.tgz")
         File.remove("ChangeAppLocationAndName.ipa")
         Folder.cleanup("ChangeAppResLocation.app")
+        File.remove("ChangeAppResLocation-ipa.tgz")
         File.remove("ChangeAppResLocation.ipa")
         Folder.cleanup("ChangeAppResLocationInRoot.app")
+        File.remove("ChangeAppResLocationInRoot-ipa.tgz")
         File.remove("ChangeAppResLocationInRoot.ipa")
         Folder.cleanup("RenameApp.app")
         File.remove("RenameApp.ipa")
+        File.remove("RenameApp-ipa.tgz")
         Folder.cleanup("RenameAppRes.app")
         File.remove("RenameAppRes.ipa")
+        File.remove("RenameAppRes-ipa.tgz")
 
     @parameterized.expand([
         'ChangeAppLocation',

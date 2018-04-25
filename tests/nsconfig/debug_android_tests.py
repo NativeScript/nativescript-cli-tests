@@ -1,24 +1,24 @@
 """
 Tests for `tns debug android` executed on Android Emulator with different nsconfig setup.
 """
-import os
 from nose_parameterized import parameterized
 
-from core.base_class.BaseNSConfigClass import BaseNSConfigClass
+from core.base_class.BaseClass import BaseClass
 from core.chrome.chrome import Chrome
+from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import EMULATOR_NAME, EMULATOR_ID, ANDROID_PACKAGE, TEST_RUN_HOME
+from core.settings.settings import EMULATOR_NAME, EMULATOR_ID, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 
 
-class DebugAndroidEmulatorTests(BaseNSConfigClass):
+class DebugAndroidEmulatorTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseNSConfigClass.setUpClass(cls.__name__)
+        BaseClass.setUpClass(cls.__name__)
         Emulator.stop()
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Emulator.ensure_available()
@@ -34,7 +34,7 @@ class DebugAndroidEmulatorTests(BaseNSConfigClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
         else:
-            BaseNSConfigClass.createAppsLiveSync(cls.__name__)
+            CreateNSConfigApps.createAppsLiveSync(cls.__name__)
 
         if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS"):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
@@ -49,17 +49,17 @@ class DebugAndroidEmulatorTests(BaseNSConfigClass):
             assert File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS")
 
     def setUp(self):
-        BaseNSConfigClass.setUp(self)
+        BaseClass.setUp(self)
         Tns.kill()
 
     def tearDown(self):
         Tns.kill()
         Chrome.stop()
-        BaseNSConfigClass.tearDown(self)
+        BaseClass.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
-        BaseNSConfigClass.tearDownClass()
+        BaseClass.tearDownClass()
         Emulator.stop()
 
         Folder.cleanup("ChangeAppLocationLS")

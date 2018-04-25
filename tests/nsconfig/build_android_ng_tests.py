@@ -1,19 +1,21 @@
 import os
+
 from nose_parameterized import parameterized
 
-from core.base_class.BaseNSConfigClass import BaseNSConfigClass
+from core.base_class.BaseClass import BaseClass
+from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_PACKAGE, \
-    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS, TEST_RUN_HOME
+from core.settings.settings import ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, \
+    ANDROID_KEYSTORE_ALIAS_PASS, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 
 
-class BuildAndroidNGTests(BaseNSConfigClass):
+class BuildAndroidNGTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseNSConfigClass.setUpClass(cls.__name__)
+        BaseClass.setUpClass(cls.__name__)
 
         if File.exists(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationNG"):
             assert "ChangeAppLocationNG" in TEST_RUN_HOME + "/data/Projects/ChangeAppLocationNG"
@@ -26,7 +28,7 @@ class BuildAndroidNGTests(BaseNSConfigClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppNG", TEST_RUN_HOME + "/RenameAppNG")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResNG", TEST_RUN_HOME + "/RenameAppResNG")
         else:
-            BaseNSConfigClass.createAppsNG(cls.__name__)
+            CreateNSConfigApps.createAppsNG(cls.__name__)
             if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationNG"):
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationNG", TEST_RUN_HOME + "/ChangeAppLocationNG")
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameNG",
@@ -41,7 +43,7 @@ class BuildAndroidNGTests(BaseNSConfigClass):
 
     @classmethod
     def tearDownClass(cls):
-        BaseNSConfigClass.tearDownClass()
+        BaseClass.tearDownClass()
 
         Folder.cleanup("ChangeAppLocationNG")
         Folder.cleanup("ChangeAppLocationAndNameNG")

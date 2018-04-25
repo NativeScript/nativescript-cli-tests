@@ -5,26 +5,25 @@ Run should sync all the changes correctly:
  - Valid changes in CSS, TS, HTML should be applied.
 """
 
-import os
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
-from core.base_class.BaseNSConfigClass import BaseNSConfigClass
+from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
-from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID, EMULATOR_NAME, CURRENT_OS, TEST_RUN_HOME
+from core.settings.settings import EMULATOR_ID, EMULATOR_NAME, CURRENT_OS, TEST_RUN_HOME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 
 
-class RunAndroidEmulatorTestsNG(BaseNSConfigClass):
+class RunAndroidEmulatorTestsNG(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseNSConfigClass.setUpClass(cls.__name__)
+        BaseClass.setUpClass(cls.__name__)
         Emulator.stop()
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Emulator.ensure_available()
@@ -40,7 +39,7 @@ class RunAndroidEmulatorTestsNG(BaseNSConfigClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLSNG", TEST_RUN_HOME + "/RenameAppLSNG")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLSNG", TEST_RUN_HOME + "/RenameAppResLSNG")
         else:
-            BaseNSConfigClass.createAppsLiveSyncNG(cls.__name__)
+            CreateNSConfigApps.createAppsLiveSyncNG(cls.__name__)
             if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLSNG"):
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG", TEST_RUN_HOME + "/ChangeAppLocationLSNG")
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLSNG",
@@ -62,7 +61,7 @@ class RunAndroidEmulatorTestsNG(BaseNSConfigClass):
 
     @classmethod
     def tearDownClass(cls):
-        BaseNSConfigClass.tearDownClass()
+        BaseClass.tearDownClass()
         Emulator.stop()
 
         Folder.cleanup("ChangeAppLocationLSNG")

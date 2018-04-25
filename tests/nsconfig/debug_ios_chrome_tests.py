@@ -1,16 +1,15 @@
 """
 Tests for `tns debug ios` executed on iOS Simulator with different nsconfig setup.
 """
-import os
 import unittest
-
-from nose_parameterized import parameterized
 from time import sleep
 
 from enum import Enum
+from nose_parameterized import parameterized
 
-from core.base_class.BaseNSConfigClass import BaseNSConfigClass
+from core.base_class.BaseClass import BaseClass
 from core.chrome.chrome import Chrome
+from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
@@ -18,7 +17,7 @@ from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
-from core.settings.settings import IOS_PACKAGE, SIMULATOR_NAME, TEST_RUN_HOME
+from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -31,12 +30,12 @@ class DebugMode(Enum):
     START = 1
 
 
-class DebugiOSChromeSimulatorTests(BaseNSConfigClass):
+class DebugiOSChromeSimulatorTests(BaseClass):
     SIMULATOR_ID = ''
 
     @classmethod
     def setUpClass(cls):
-        BaseNSConfigClass.setUpClass(cls.__name__)
+        BaseClass.setUpClass(cls.__name__)
         Chrome.stop()
         Process.kill('Safari')
         Process.kill('NativeScript Inspector')
@@ -55,7 +54,7 @@ class DebugiOSChromeSimulatorTests(BaseNSConfigClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
         else:
-            BaseNSConfigClass.createAppsLiveSync(cls.__name__)
+            CreateNSConfigApps.createAppsLiveSync(cls.__name__)
 
         if not File.exists(TEST_RUN_HOME + "/ChangeAppLocation"):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/ChangeAppLocation")
@@ -70,19 +69,19 @@ class DebugiOSChromeSimulatorTests(BaseNSConfigClass):
             assert File.exists(TEST_RUN_HOME + "/ChangeAppLocation")
 
     def setUp(self):
-        BaseNSConfigClass.setUp(self)
+        BaseClass.setUp(self)
         Chrome.stop()
         Tns.kill()
 
     def tearDown(self):
         assert not Process.is_running('NativeScript Inspector')
-        BaseNSConfigClass.tearDown(self)
+        BaseClass.tearDown(self)
         Chrome.stop()
         Tns.kill()
 
     @classmethod
     def tearDownClass(cls):
-        BaseNSConfigClass.tearDownClass()
+        BaseClass.tearDownClass()
 
         Folder.cleanup("ChangeAppLocationLS")
         Folder.cleanup("ChangeAppLocationAndNameLS")

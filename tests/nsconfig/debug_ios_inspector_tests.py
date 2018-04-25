@@ -7,7 +7,8 @@ import unittest
 
 from nose_parameterized import parameterized
 
-from core.base_class.BaseNSConfigClass import BaseNSConfigClass
+from core.base_class.BaseClass import BaseClass
+from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
@@ -15,7 +16,7 @@ from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
-from core.settings.settings import IOS_PACKAGE, IOS_INSPECTOR_PACKAGE, SIMULATOR_NAME, TEST_RUN_HOME
+from core.settings.settings import IOS_INSPECTOR_PACKAGE, SIMULATOR_NAME, TEST_RUN_HOME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -23,13 +24,13 @@ from core.tns.tns_prepare_type import Prepare
 from core.tns.tns_verifications import TnsAsserts
 
 
-class DebugiOSInspectorSimulatorTests(BaseNSConfigClass):
+class DebugiOSInspectorSimulatorTests(BaseClass):
     SIMULATOR_ID = ''
     INSPECTOR_GLOBAL_PATH = os.path.join(os.path.expanduser('~'), '.npm', 'tns-ios-inspector')
 
     @classmethod
     def setUpClass(cls):
-        BaseNSConfigClass.setUpClass(cls.__name__)
+        BaseClass.setUpClass(cls.__name__)
         Process.kill('Safari')
         Process.kill('NativeScript Inspector')
         Emulator.stop()
@@ -48,7 +49,7 @@ class DebugiOSInspectorSimulatorTests(BaseNSConfigClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
         else:
-            BaseNSConfigClass.createAppsLiveSync(cls.__name__)
+            CreateNSConfigApps.createAppsLiveSync(cls.__name__)
 
         if not File.exists(TEST_RUN_HOME + "/ChangeAppLocation"):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/ChangeAppLocation")
@@ -76,20 +77,20 @@ class DebugiOSInspectorSimulatorTests(BaseNSConfigClass):
                     folder=cls.app_name_rename_app_res_ls)
 
     def setUp(self):
-        BaseNSConfigClass.setUp(self)
+        BaseClass.setUp(self)
         Process.kill('Safari')
         Process.kill('NativeScript Inspector')
         Tns.kill()
 
     def tearDown(self):
-        BaseNSConfigClass.tearDown(self)
+        BaseClass.tearDown(self)
         Process.kill('Safari')
         Process.kill('NativeScript Inspector')
         Tns.kill()
 
     @classmethod
     def tearDownClass(cls):
-        BaseNSConfigClass.tearDownClass()
+        BaseClass.tearDownClass()
 
         Folder.cleanup("ChangeAppLocationLS")
         Folder.cleanup("ChangeAppLocationAndNameLS")

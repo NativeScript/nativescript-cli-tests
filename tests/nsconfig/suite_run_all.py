@@ -1,22 +1,24 @@
-from core.base_class.BaseNSConfigClass import BaseNSConfigClass
-from core.settings.settings import ANDROID_PACKAGE, IOS_PACKAGE
-from core.tns.tns import Tns
-from tests.nsconfig.build_ios_tests import BuildiOSTests
-from tests.nsconfig.build_android_tests import BuildAndroidTests
-from tests.nsconfig.run_android_tests import RunAndroidEmulatorTests
-from tests.nsconfig.run_ios_tests import RunIOSSimulatorTests
-from tests.nsconfig.debug_android_tests import DebugAndroidEmulatorTests
-from tests.nsconfig.debug_ios_inspector_tests import DebugiOSInspectorSimulatorTests
-from tests.nsconfig.debug_ios_chrome_tests import DebugiOSChromeSimulatorTests
+from core.base_class.BaseClass import BaseClass
+from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.osutils.file import File
 from core.osutils.folder import Folder
+from core.settings.settings import ANDROID_PACKAGE, IOS_PACKAGE
+from core.tns.tns import Tns
+from tests.nsconfig.build_android_tests import BuildAndroidTests
+from tests.nsconfig.build_ios_tests import BuildiOSTests
+from tests.nsconfig.debug_android_tests import DebugAndroidEmulatorTests
+from tests.nsconfig.debug_ios_chrome_tests import DebugiOSChromeSimulatorTests
+from tests.nsconfig.debug_ios_inspector_tests import DebugiOSInspectorSimulatorTests
+from tests.nsconfig.run_android_tests import RunAndroidEmulatorTests
+from tests.nsconfig.run_ios_tests import RunIOSSimulatorTests
 
-class SuiteRunAll(BaseNSConfigClass):
+
+class SuiteRunAll(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseNSConfigClass.setUpClass(cls.__name__)
-        BaseNSConfigClass.createApps(cls.__name__)
-        BaseNSConfigClass.createAppsLiveSync(cls.__name__)
+        BaseClass.setUpClass(cls.__name__)
+        CreateNSConfigApps.createApps(cls.__name__)
+        CreateNSConfigApps.createAppsLiveSync(cls.__name__)
 
         # add platform
         Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location,
@@ -70,7 +72,7 @@ class SuiteRunAll(BaseNSConfigClass):
         Tns.platform_add_ios(attributes={"--path": cls.app_name_rename_app_res_ls, "--frameworkPath": IOS_PACKAGE})
 
     def setUp(self):
-        BaseNSConfigClass.setUp(self)
+        BaseClass.setUp(self)
 
     def tearDown(self):
         Folder.cleanup(self.platforms_android + '/build/outputs')

@@ -10,24 +10,26 @@ If emulator is not started and device is not connected `tns run android` should 
 """
 
 import os
+
 from nose_parameterized import parameterized
 
-from core.base_class.BaseNSConfigClass import BaseNSConfigClass
+from core.base_class.BaseClass import BaseClass
+from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_PACKAGE, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
+from core.settings.settings import ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, EMULATOR_NAME, TEST_RUN_HOME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 
 
-class RunAndroidEmulatorTests(BaseNSConfigClass):
+class RunAndroidEmulatorTests(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseNSConfigClass.setUpClass(cls.__name__)
+        BaseClass.setUpClass(cls.__name__)
         Tns.kill()
         Emulator.stop()
         Emulator.ensure_available()
@@ -44,7 +46,7 @@ class RunAndroidEmulatorTests(BaseNSConfigClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
         else:
-            BaseNSConfigClass.createAppsLiveSync(cls.__name__)
+            CreateNSConfigApps.createAppsLiveSync(cls.__name__)
 
         if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS"):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
@@ -60,15 +62,15 @@ class RunAndroidEmulatorTests(BaseNSConfigClass):
             assert File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS")
 
     def setUp(self):
-        BaseNSConfigClass.setUp(self)
+        BaseClass.setUp(self)
 
     def tearDown(self):
         Tns.kill()
-        BaseNSConfigClass.tearDown(self)
+        BaseClass.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
-        BaseNSConfigClass.tearDownClass()
+        BaseClass.tearDownClass()
 
         Folder.cleanup("ChangeAppLocationLS")
         Folder.cleanup("ChangeAppLocationAndNameLS")
@@ -78,17 +80,7 @@ class RunAndroidEmulatorTests(BaseNSConfigClass):
         Folder.cleanup("RenameAppResLS")
 
     @parameterized.expand([
-        ('ChangeAppLocationLS',
-         ['new_folder/app/main-view-model.js', 'taps', 'clicks'],
-         ['new_folder/app/main-page.xml', 'TAP', 'TEST'],
-         ['new_folder/app/app.css', '42', '99'],
-         os.path.join('ChangeAppLocationLS', 'new_folder', 'app', 'App_Resources', 'Android', 'AndroidManifest.xml')),
-        ('ChangeAppLocationAndNameLS',
-         ['my folder/my app/main-view-model.js', 'taps', 'clicks'],
-         ['my folder/my app/main-page.xml', 'TAP', 'TEST'],
-         ['my folder/my app/app.css', '42', '99'],
-         os.path.join('ChangeAppLocationAndNameLS', 'my folder', 'my app', 'App_Resources', 'Android',
-                      'AndroidManifest.xml')),
+
         ('ChangeAppResLocationLS',
          ReplaceHelper.CHANGE_JS,
          ReplaceHelper.CHANGE_XML,
@@ -99,16 +91,28 @@ class RunAndroidEmulatorTests(BaseNSConfigClass):
          ReplaceHelper.CHANGE_XML,
          ReplaceHelper.CHANGE_CSS,
          os.path.join('ChangeAppResLocationInRootLS', 'App_Resources', 'Android', 'AndroidManifest.xml')),
+        ('RenameAppResLS',
+         ReplaceHelper.CHANGE_JS,
+         ReplaceHelper.CHANGE_XML,
+         ReplaceHelper.CHANGE_CSS,
+         os.path.join('RenameAppResLS', 'app', 'My_App_Resources', 'Android', 'AndroidManifest.xml')),
         ('RenameAppLS',
          ['renamed_app/main-view-model.js', 'taps', 'clicks'],
          ['renamed_app/main-page.xml', 'TAP', 'TEST'],
          ['renamed_app/app.css', '42', '99'],
          os.path.join('RenameAppLS', 'renamed_app', 'App_Resources', 'Android', 'AndroidManifest.xml')),
-        ('RenameAppResLS',
-         ReplaceHelper.CHANGE_JS,
-         ReplaceHelper.CHANGE_XML,
-         ReplaceHelper.CHANGE_CSS,
-         os.path.join('RenameAppResLS', 'app', 'My_App_Resources', 'Android', 'AndroidManifest.xml'))
+        ('ChangeAppLocationLS',
+         ['new_folder/app/main-view-model.js', 'taps', 'clicks'],
+         ['new_folder/app/main-page.xml', 'TAP', 'TEST'],
+         ['new_folder/app/app.css', '42', '99'],
+         os.path.join('ChangeAppLocationLS', 'new_folder', 'app', 'App_Resources', 'Android',
+                          'AndroidManifest.xml')),
+        ('ChangeAppLocationAndNameLS',
+         ['my folder/my app/main-view-model.js', 'taps', 'clicks'],
+         ['my folder/my app/main-page.xml', 'TAP', 'TEST'],
+         ['my folder/my app/app.css', '42', '99'],
+         os.path.join('ChangeAppLocationAndNameLS', 'my folder', 'my app', 'App_Resources', 'Android',
+                      'AndroidManifest.xml'))
     ])
     def test_001_tns_run_android_js_css_xml_manifest(self, app_name, change_js, change_xml, change_css,
                                                      app_res_path):

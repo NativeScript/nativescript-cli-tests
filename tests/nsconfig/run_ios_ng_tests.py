@@ -2,26 +2,25 @@
 Test for `tns run ios` command with Angular apps (on simulator).
 """
 
-import os
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
-from core.base_class.BaseNSConfigClass import BaseNSConfigClass
+from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_PACKAGE, SIMULATOR_NAME, TEST_RUN_HOME
+from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME
 from core.tns.tns import Tns
 
 
-class RunIOSSimulatorTestsNG(BaseNSConfigClass):
+class RunIOSSimulatorTestsNG(BaseClass):
     SIMULATOR_ID = ''
 
     @classmethod
     def setUpClass(cls):
-        BaseNSConfigClass.setUpClass(cls.__name__)
+        BaseClass.setUpClass(cls.__name__)
         Emulator.stop()
         Simulator.stop()
         cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
@@ -37,7 +36,7 @@ class RunIOSSimulatorTestsNG(BaseNSConfigClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLSNG", TEST_RUN_HOME + "/RenameAppLSNG")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLSNG", TEST_RUN_HOME + "/RenameAppResLSNG")
         else:
-            BaseNSConfigClass.createAppsLiveSyncNG(cls.__name__)
+            CreateNSConfigApps.createAppsLiveSyncNG(cls.__name__)
             if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLSNG"):
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG", TEST_RUN_HOME + "/ChangeAppLocationLSNG")
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLSNG",
@@ -60,7 +59,7 @@ class RunIOSSimulatorTestsNG(BaseNSConfigClass):
 
     @classmethod
     def tearDownClass(cls):
-        BaseNSConfigClass.tearDownClass()
+        BaseClass.tearDownClass()
         Emulator.stop()
 
         Folder.cleanup("ChangeAppLocationLSNG")

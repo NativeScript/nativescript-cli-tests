@@ -1,20 +1,19 @@
-import unittest
-from unittest import suite
-
-from core.base_class.BaseNSConfigClass import BaseNSConfigClass
-from core.settings.settings import ANDROID_PACKAGE, IOS_PACKAGE
+from core.base_class.BaseClass import BaseClass
+from core.create_apps.create_ns_config_apps import CreateNSConfigApps
+from core.osutils.file import File
+from core.osutils.folder import Folder
+from core.settings.settings import IOS_PACKAGE
 from core.tns.tns import Tns
 from tests.nsconfig.build_ios_ng_tests import BuildiOSNGTests
 from tests.nsconfig.run_ios_ng_tests import RunIOSSimulatorTestsNG
-from core.osutils.file import File
-from core.osutils.folder import Folder
 
-class SuiteRunAndroidNG(BaseNSConfigClass):
+
+class SuiteRunAndroidNG(BaseClass):
     @classmethod
     def setUpClass(cls):
-        BaseNSConfigClass.setUpClass(cls.__name__)
-        BaseNSConfigClass.createAppsNG(cls.__name__)
-        BaseNSConfigClass.createAppsLiveSyncNG(cls.__name__)
+        BaseClass.setUpClass(cls.__name__)
+        CreateNSConfigApps.createAppsNG(cls.__name__)
+        CreateNSConfigApps.createAppsLiveSyncNG(cls.__name__)
 
         # add platform
         Tns.platform_add_ios(attributes={"--path": cls.app_name_change_app_location_ng,

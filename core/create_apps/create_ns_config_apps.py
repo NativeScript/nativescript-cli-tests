@@ -1,23 +1,13 @@
 import os
-import shutil
-import sys
-import time
 import unittest
 
-from core.device.emulator import Emulator
-from core.device.simulator import Simulator
-from core.gradle.gradle import Gradle
-from core.logger import Logger
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.osutils.process import Process
-from core.osutils.screen import Screen
-from core.settings.settings import OUTPUT_FOLDER, TEST_RUN_HOME, IOS_PACKAGE
+from core.settings.settings import TEST_RUN_HOME
 from core.tns.tns import Tns
-from core.settings.settings import ANDROID_PACKAGE, \
-    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS
 
-class BaseNSConfigClass(unittest.TestCase):
+
+class CreateNSConfigApps(unittest.TestCase):
     app_name_change_app_location = "ChangeAppLocation"
     app_name_change_app_location_and_name = "ChangeAppLocationAndName"
     app_name_change_app_res_location = "ChangeAppResLocation"
@@ -48,135 +38,6 @@ class BaseNSConfigClass(unittest.TestCase):
 
     errors = 0
     failures = 0
-
-    @classmethod
-    def __copy_images(cls, artifacts_folder):
-        """
-        Archive test app (without platforms and node_modules)
-        :param artifacts_folder: Base folder where artifacts from failed tests are stored.
-        """
-        src = os.path.join(TEST_RUN_HOME, 'out', 'images')
-        dest = os.path.join(artifacts_folder, 'artifacts')
-        if os.path.isdir(src):
-            try:
-                shutil.copytree(src, dest)
-                Folder.cleanup(src)
-            except:
-                print "Failed to backup images and logs."
-        else:
-            print "No images and logs data."
-
-    @classmethod
-    def __copy_project_folder(cls, artifacts_folder):
-        """
-        Archive test app (without platforms and node_modules)
-        :param artifacts_folder: Base folder where artifacts from failed tests are stored.
-        """
-        src = os.path.join(TEST_RUN_HOME, cls.app_name)
-        dest = os.path.join(artifacts_folder, cls.app_name)
-        if os.path.isdir(src):
-            try:
-                shutil.copytree(src, dest)
-                shutil.rmtree(os.path.join(dest, "platforms"), ignore_errors=True)
-                shutil.rmtree(os.path.join(dest, "node_modules"), ignore_errors=True)
-            except:
-                print "Failed to backup {0}".format(cls.app_name)
-        else:
-            print "No project " + src
-
-    @classmethod
-    def __save_host_screen(cls, artifacts_folder, test_method_name):
-        """
-        Save screen of desktop host machine
-        :param artifacts_folder: Base folder where artifacts from failed tests are stored.
-        :param test_method_name: Test method name.
-        """
-        screen_path = os.path.join(artifacts_folder, "{0}.png".format(test_method_name))
-        Screen.save_screen(screen_path)
-
-    @classmethod
-    def IsFailed(cls, res):
-        is_failed = False
-
-        if len(res.failures) > cls.failures:
-            cls.failures = len(res.failures)
-            is_failed = True
-        if len(res.errors) > cls.errors:
-            cls.errors = len(res.errors)
-            is_failed = True
-
-        return is_failed
-
-    @classmethod
-    def setUpClass(cls, class_name):
-
-        print ""
-        print "_________________________________CLASS START_______________________________________"
-        print "Class Name: {0}".format(class_name)
-        print "Start Time:  {0}".format(time.strftime("%X"))
-        print ""
-
-        Tns.kill()
-        Gradle.kill()
-        Process.kill('node')
-        Process.kill('adb')
-        Process.kill('NativeScript Inspector')
-        Process.kill('Safari')
-        Process.kill('Xcode')
-        Process.kill_by_commandline('adb')
-
-        if class_name is not None:
-            logfile = os.path.join('out', class_name + '.txt')
-        else:
-            logfile = os.path.join(OUTPUT_FOLDER, cls.__name__ + ".txt")
-
-        File.remove(logfile)
-        sys.stdout = sys.stderr = Logger.Logger(logfile)
-
-        # Folder.cleanup(cls.app_name)
-
-    def setUp(self):
-        print ""
-        print "_________________________________TEST START_______________________________________"
-        print "Test Method: {0}".format(self._testMethodName)
-        print "Start Time:  {0}".format(time.strftime("%X"))
-        print ""
-        Folder.cleanup(os.path.join(TEST_RUN_HOME, 'out', 'images'))
-
-    def tearDown(self):
-        # Logic executed only on test failure
-        test_name = self._testMethodName
-        artifacts_folder = os.path.join(OUTPUT_FOLDER, self.__class__.__name__ + "_" + test_name)
-        outcome = "PASSED"
-        if self.IsFailed(self._resultForDoCleanups) is True:
-            outcome = "FAILED"
-
-            # Ensure `artifacts_folder` exists and it is clean
-            if File.exists(artifacts_folder):
-                Folder.cleanup(artifacts_folder)
-            else:
-                Folder.create(artifacts_folder)
-
-            # Collect artifacts on test failure
-            self.__copy_images(artifacts_folder=artifacts_folder)
-            self.__copy_project_folder(artifacts_folder=artifacts_folder)
-            self.__save_host_screen(artifacts_folder=artifacts_folder, test_method_name=test_name)
-
-        print ""
-        print "Test Method: {0}".format(self._testMethodName)
-        print "End Time:    {0}".format(time.strftime("%X"))
-        print "Outcome:     {0}".format(outcome)
-        print "_________________________________TEST END_______________________________________"
-        print ""
-
-    @classmethod
-    def tearDownClass(cls):
-        Process.kill('NativeScript Inspector')
-        Process.kill('Safari')
-        Tns.kill()
-        Simulator.stop()
-        Emulator.stop()
-        Gradle.kill()
 
     @classmethod
     def createApps(cls, class_name):
@@ -255,9 +116,6 @@ class BaseNSConfigClass(unittest.TestCase):
         File.copy(os.path.join(base_src, cls.app_name_change_app_location, 'nsconfig.json', ), cls.app_name_change_app_location)
         Folder.create(os.path.join(proj_root, "new_folder"))
         Folder.move(app_path, os.path.join(proj_root, 'new_folder'))
-        # Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
-        # Tns.platform_add_ios(attributes={"--path": cls.app_name_change_app_location, "--frameworkPath": IOS_PACKAGE})
 
         # Change app/ name and place to be 'my folder/my app'
         proj_root = os.path.join(cls.app_name_change_app_location_and_name)
@@ -268,10 +126,6 @@ class BaseNSConfigClass(unittest.TestCase):
         Folder.create(os.path.join(proj_root, "my folder"))
         os.rename(app_path, os.path.join(proj_root, "my app"))
         Folder.move(os.path.join(proj_root, "my app"), os.path.join(proj_root, "my folder"))
-        # Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_location_and_name,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
-        # Tns.platform_add_ios(attributes={"--path": cls.app_name_change_app_location_and_name,
-        #                                  "--frameworkPath": IOS_PACKAGE})
 
         # Change App_Resources/ location to be 'app/res/App_Resources'
         proj_root = os.path.join(cls.app_name_change_app_res_location)
@@ -282,9 +136,6 @@ class BaseNSConfigClass(unittest.TestCase):
                   cls.app_name_change_app_res_location)
         Folder.create(os.path.join(app_path, 'res'))
         Folder.move(app_res_path, os.path.join(app_path, 'res'))
-        # Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_res_location,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
-        # Tns.platform_add_ios(attributes={"--path": cls.app_name_change_app_res_location, "--frameworkPath": IOS_PACKAGE})
 
         # Change App_Resources/ location to be in project root/App_Resources
         proj_root = os.path.join(cls.app_name_change_app_res_location_in_root)
