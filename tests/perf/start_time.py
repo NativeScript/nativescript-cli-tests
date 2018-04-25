@@ -225,6 +225,20 @@ class PerfTests(BaseClass):
         start_time_actual = start_time_actual / timesToRun
         second_start_actual = second_start_actual / timesToRun
 
+        if old_way_of_testing_performance is False:
+            with open('perfResults.csv', 'a+') as csvfile:
+                fieldnames = ['app_name', 'configuration', 'device_name', 'expected_first_start', 'actual_first_start',
+                              'expected_second_start', 'actual_second_start']
+
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+                writer.writeheader()
+                writer.writerow({'app_name': demo.split('/')[-1], 'configuration': config, 'device_name' : device_name,
+                                 'expected_first_start': str(start_time_expected),
+                                 'actual_first_start':str(start_time_actual),
+                                 'expected_second_start':str(second_start_expected),
+                                 'actual_second_start':str(second_start_actual)})
+
         message = "{0} with {4} configuration first start on {1} is {2} ms. The expected first start is {3} ms".format(
             demo,
             device_name,
