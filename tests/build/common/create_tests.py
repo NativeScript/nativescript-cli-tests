@@ -10,7 +10,6 @@ from core.base_class.BaseClass import BaseClass
 from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TAG
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 
@@ -190,3 +189,11 @@ class CreateTests(BaseClass):
                                 update_modules=False)
         assert "successfully created" not in output
         assert "requires non-empty value" in output
+
+    def test_405_create_app_with_space_without_quotes(self):
+        """Create project with space without quotes."""
+
+        # Test for https://github.com/NativeScript/nativescript-cli/issues/2727
+        output = Tns.run_tns_command("create fake fake")
+        assert "The parameter fake is not valid for this command" in output
+        assert "# tns create" in output
