@@ -179,7 +179,7 @@ class PerfTests(BaseClass):
         else:
             start_time_expected = first_start
             second_start_expected = second_start
-            adb.reboot_device(self.DEVICE_ID)
+            Adb.reboot_device(self.DEVICE_ID)
             emulator.wait(self.DEVICE_ID)
 
         start_time_actual = 0
