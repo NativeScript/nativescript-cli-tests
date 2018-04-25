@@ -7,6 +7,8 @@ Run should sync all the changes correctly:
 
 import os
 
+from flaky import flaky
+
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -44,6 +46,7 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()
 
+    @flaky(max_runs=3)
     def test_001_tns_run_android_ts_css_html(self):
         """Make valid changes in JS,CSS and XML"""
 
@@ -53,11 +56,12 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         Folder.cleanup(target)
         Folder.copy(src=source, dst=target)
 
+        Tns.build_android(attributes={"--path": self.app_name})
+
         # `tns run android` and wait until app is deployed
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
-        strings = ['Project successfully built',
-                   'Successfully installed on device with identifier', EMULATOR_ID,
+        strings = ['Successfully installed on device with identifier', EMULATOR_ID,
                    'Successfully synced application',
                    'Application loaded!',
                    'Home page loaded!']
