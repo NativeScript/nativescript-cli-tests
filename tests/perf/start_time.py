@@ -185,8 +185,8 @@ class PerfTests(BaseClass):
             sleep(5)
             Adb.start_server()
             sleep(10)
-            Adb.usb()
-            sleep(10)
+            #Adb.usb()
+            #sleep(10)
 
         start_time_actual = 0
         second_start_actual = 0
