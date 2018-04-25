@@ -418,7 +418,7 @@ class Adb(object):
     @staticmethod
     def start_server():
         command = 'start-server'
-        output = run(ADB_PATH + ' ' + command)
+        output = run('sudo ' + ADB_PATH + ' ' + command)
         assert 'daemon started successfully' in output, 'Failed to start the server.Error:' + output
         print 'Start server successfully.'
 
