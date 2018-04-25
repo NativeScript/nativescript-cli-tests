@@ -5,10 +5,8 @@ from time import sleep
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
-from core.device import emulator
 from core.device.device import Device
 from core.device.emulator import Emulator
-from core.device.helpers import adb
 from core.device.helpers.adb import Adb
 from core.device.simulator import Simulator
 from core.git.git import Git
@@ -53,6 +51,22 @@ class PerfTests(BaseClass):
             except AssertionError, e:
                 verification_errors.append(str(e))
             return verification_errors
+
+    @staticmethod
+    def generate_report(demo, config, device_name, start_time_expected, start_time_actual, second_start_expected,
+                        second_start_actual):
+        with open('perfResults.csv', 'a+') as csvfile:
+            fieldnames = ['app_name', 'configuration', 'device_name', 'expected_first_start', 'actual_first_start',
+                          'expected_second_start', 'actual_second_start']
+
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            writer.writeheader()
+            writer.writerow({'app_name': demo.split('/')[-1], 'configuration': config, 'device_name': device_name,
+                             'expected_first_start': str(start_time_expected),
+                             'actual_first_start': str(start_time_actual),
+                             'expected_second_start': str(second_start_expected),
+                             'actual_second_start': str(second_start_actual)})
 
     @classmethod
     def setUpClass(cls):
@@ -130,7 +144,7 @@ class PerfTests(BaseClass):
     def test_start_time(self, demo, config, device_name, device_id, first_start, second_start):
         verification_errors = []
 
-        timesToRun = int(os.getenv('RUN_TIMES', '3'))
+        perf_loop = int(os.getenv('RUN_TIMES', '3'))
         old_way_of_testing_performance = os.getenv('OLD_WAY_OF_TESTING', False)
 
         app_id = File.read(os.path.join(TEST_RUN_HOME, "{0}-{1}.txt".format(demo.split('/')[-1], config))).strip()
@@ -139,7 +153,7 @@ class PerfTests(BaseClass):
         start_time_expected = 0
         second_start_expected = 0
         if old_way_of_testing_performance is False:
-            for x in range(0, timesToRun):
+            for x in range(0, perf_loop):
                 sleep(30)
                 print "Test run number {0} for release app(for expected time).".format(x + 1)
 
@@ -174,8 +188,8 @@ class PerfTests(BaseClass):
                 start_time = int(Device.get_start_time(self.DEVICE_ID, app_id=app_id))
                 second_start_expected = second_start_expected + start_time
 
-            start_time_expected = start_time_expected / timesToRun
-            second_start_expected = second_start_expected / timesToRun
+            start_time_expected = start_time_expected / perf_loop
+            second_start_expected = second_start_expected / perf_loop
         else:
             start_time_expected = first_start
             second_start_expected = second_start
@@ -185,12 +199,10 @@ class PerfTests(BaseClass):
             sleep(5)
             Adb.start_server()
             sleep(10)
-            #Adb.usb()
-            #sleep(10)
 
         start_time_actual = 0
         second_start_actual = 0
-        for x in range(0, timesToRun):
+        for x in range(0, perf_loop):
             sleep(30)
             print "Test run number {0} for actual time.".format(x + 1)
 
@@ -225,22 +237,13 @@ class PerfTests(BaseClass):
             start_time = int(Device.get_start_time(self.DEVICE_ID, app_id=app_id))
             second_start_actual = second_start_actual + start_time
 
-        start_time_actual = start_time_actual / timesToRun
-        second_start_actual = second_start_actual / timesToRun
+        start_time_actual = start_time_actual / perf_loop
+        second_start_actual = second_start_actual / perf_loop
 
         if old_way_of_testing_performance is False:
-            with open('perfResults.csv', 'a+') as csvfile:
-                fieldnames = ['app_name', 'configuration', 'device_name', 'expected_first_start', 'actual_first_start',
-                              'expected_second_start', 'actual_second_start']
-
-                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-                writer.writeheader()
-                writer.writerow({'app_name': demo.split('/')[-1], 'configuration': config, 'device_name' : device_name,
-                                 'expected_first_start': str(start_time_expected),
-                                 'actual_first_start':str(start_time_actual),
-                                 'expected_second_start':str(second_start_expected),
-                                 'actual_second_start':str(second_start_actual)})
+            PerfTests.generate_report(demo, config, device_name, start_time_expected, start_time_actual,
+                                      second_start_expected,
+                                      second_start_actual)
 
         message = "{0} with {4} configuration first start on {1} is {2} ms. The expected first start is {3} ms".format(
             demo,
