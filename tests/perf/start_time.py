@@ -53,8 +53,8 @@ class PerfTests(BaseClass):
             return verification_errors
 
     @staticmethod
-    def generate_report(demo, config, device_name, start_time_expected, start_time_actual, second_start_expected,
-                        second_start_actual):
+    def report_add_column_titles():
+
         with open('perfResults.csv', 'a+') as csvfile:
             fieldnames = ['app_name', 'configuration', 'device_name', 'expected_first_start', 'actual_first_start',
                           'expected_second_start', 'actual_second_start']
@@ -62,6 +62,16 @@ class PerfTests(BaseClass):
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
             writer.writeheader()
+
+    @staticmethod
+    def report_add_data(demo, config, device_name, start_time_expected, start_time_actual, second_start_expected,
+                        second_start_actual):
+        with open('perfResults.csv', 'a+') as csvfile:
+            fieldnames = ['app_name', 'configuration', 'device_name', 'expected_first_start', 'actual_first_start',
+                          'expected_second_start', 'actual_second_start']
+
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
             writer.writerow({'app_name': demo.split('/')[-1], 'configuration': config, 'device_name': device_name,
                              'expected_first_start': str(start_time_expected),
                              'actual_first_start': str(start_time_actual),
@@ -74,6 +84,7 @@ class PerfTests(BaseClass):
         Npm.cache_clean()
         Emulator.stop()
         Simulator.stop()
+        PerfTests.report_add_column_titles()
 
     def setUp(self):
         Tns.kill()
@@ -241,7 +252,7 @@ class PerfTests(BaseClass):
         second_start_actual = second_start_actual / perf_loop
 
         if old_way_of_testing_performance is False:
-            PerfTests.generate_report(demo, config, device_name, start_time_expected, start_time_actual,
+            PerfTests.report_add_data(demo, config, device_name, start_time_expected, start_time_actual,
                                       second_start_expected,
                                       second_start_actual)
 
