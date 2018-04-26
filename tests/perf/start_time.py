@@ -79,12 +79,12 @@ class PerfTests(BaseClass):
                              'actual_second_start': str(second_start_actual)})
 
     @staticmethod
-    def run_perf_tests(self, perf_loop, app_id, apk):
+    def run_perf_tests(self, perf_loop, app_id, apk, type_of_run):
         start_time = 0
         second_start = 0
         for x in range(0, perf_loop):
             sleep(30)
-            print "Test run number {0} for release app(for expected time).".format(x + 1)
+            print "Test run number {0} for {1}".format((x + 1), type_of_run)
 
             Adb.clear_logcat(device_id=self.DEVICE_ID)
             Adb.stop_application(device_id=self.DEVICE_ID, app_id=app_id)
@@ -207,7 +207,7 @@ class PerfTests(BaseClass):
         release_apk = os.path.join(TEST_RUN_HOME, "release-apps", "{0}-{1}.apk".format(demo.split('/')[-1], config))
 
         if old_way_of_testing_performance is False:
-            expected_time = PerfTests.run_perf_tests(self, perf_loop, app_id, release_apk)
+            expected_time = PerfTests.run_perf_tests(self, perf_loop, app_id, release_apk, "expected time")
 
             start_time_expected = expected_time[0]
             second_start_expected = expected_time[1]
@@ -221,7 +221,7 @@ class PerfTests(BaseClass):
             Adb.start_server()
             sleep(10)
 
-        actual_time = PerfTests.run_perf_tests(self, perf_loop, app_id, apk)
+        actual_time = PerfTests.run_perf_tests(self, perf_loop, app_id, apk, "actual time")
 
         start_time_actual = actual_time[0]
         second_start_actual = actual_time[1]
