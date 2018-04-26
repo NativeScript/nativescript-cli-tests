@@ -121,7 +121,7 @@ class SuiteRunAll(BaseClass):
         File.remove("RenameAppResLS.ipa")
         pass
 
-def suite(self):
+    def suite(self):
         BuildAndroidTests()
         BuildiOSTests()
         RunAndroidEmulatorTests()
@@ -132,5 +132,3 @@ def suite(self):
         BuildiOSNGTests()
         BuildAndroidNGTests()
         RunIOSSimulatorTestsNG()
-        RunAndroidEmulatorTestsNG()
-        return suite
