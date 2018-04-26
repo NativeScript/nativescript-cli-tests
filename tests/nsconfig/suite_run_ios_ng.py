@@ -1,10 +1,10 @@
 from core.base_class.BaseClass import BaseClass
-from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_PACKAGE
 from core.tns.tns import Tns
 from tests.nsconfig.build_ios_ng_tests import BuildiOSNGTests
+from tests.nsconfig.create_apps.create_ns_config_apps import CreateNSConfigApps
 from tests.nsconfig.run_ios_ng_tests import RunIOSSimulatorTestsNG
 
 

@@ -1,12 +1,12 @@
 from core.base_class.BaseClass import BaseClass
-from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_PACKAGE
 from core.tns.tns import Tns
 from tests.nsconfig.build_android_tests import BuildAndroidTests
-from tests.nsconfig.run_android_tests import RunAndroidEmulatorTests
+from tests.nsconfig.create_apps.create_ns_config_apps import CreateNSConfigApps
 from tests.nsconfig.debug_android_tests import DebugAndroidEmulatorTests
+from tests.nsconfig.run_android_tests import RunAndroidEmulatorTests
 
 
 class SuiteRunAndroid(BaseClass):

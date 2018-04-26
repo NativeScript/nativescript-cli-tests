@@ -12,7 +12,6 @@ If simulator is not started and device is not connected `tns run ios` should sta
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
-from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
@@ -21,6 +20,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
+from tests.nsconfig.create_apps.create_ns_config_apps import CreateNSConfigApps
 
 
 class RunIOSSimulatorTests(BaseClass):

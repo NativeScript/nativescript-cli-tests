@@ -3,12 +3,12 @@ import os
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
-from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.xcode.xcode import Xcode
+from tests.nsconfig.create_apps.create_ns_config_apps import CreateNSConfigApps
 
 
 class BuildiOSNGTests(BaseClass):

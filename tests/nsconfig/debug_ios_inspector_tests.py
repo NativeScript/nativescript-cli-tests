@@ -8,7 +8,6 @@ import unittest
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
-from core.create_apps.create_ns_config_apps import CreateNSConfigApps
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
@@ -22,6 +21,7 @@ from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_prepare_type import Prepare
 from core.tns.tns_verifications import TnsAsserts
+from tests.nsconfig.create_apps.create_ns_config_apps import CreateNSConfigApps
 
 
 class DebugiOSInspectorSimulatorTests(BaseClass):
