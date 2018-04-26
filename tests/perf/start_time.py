@@ -226,10 +226,9 @@ class PerfTests(BaseClass):
         start_time_actual = actual_time[0]
         second_start_actual = actual_time[1]
 
-        if old_way_of_testing_performance is False:
-            PerfTests.report_add_data(demo, config, device_name, start_time_expected, start_time_actual,
-                                      second_start_expected,
-                                      second_start_actual)
+        PerfTests.report_add_data(demo, config, device_name, start_time_expected, start_time_actual,
+                                  second_start_expected,
+                                  second_start_actual)
 
         message = "{0} with {4} configuration first start on {1} is {2} ms. The expected first start is {3} ms".format(
             demo,
