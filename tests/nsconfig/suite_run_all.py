@@ -6,11 +6,17 @@ from core.settings.settings import ANDROID_PACKAGE, IOS_PACKAGE
 from core.tns.tns import Tns
 from tests.nsconfig.build_android_tests import BuildAndroidTests
 from tests.nsconfig.build_ios_tests import BuildiOSTests
+from tests.nsconfig.run_android_tests import RunAndroidEmulatorTests
+from tests.nsconfig.run_ios_tests import RunIOSSimulatorTests
 from tests.nsconfig.debug_android_tests import DebugAndroidEmulatorTests
 from tests.nsconfig.debug_ios_chrome_tests import DebugiOSChromeSimulatorTests
 from tests.nsconfig.debug_ios_inspector_tests import DebugiOSInspectorSimulatorTests
-from tests.nsconfig.run_android_tests import RunAndroidEmulatorTests
-from tests.nsconfig.run_ios_tests import RunIOSSimulatorTests
+from tests.nsconfig.build_ios_ng_tests import BuildiOSNGTests
+from tests.nsconfig.build_android_ng_tests import BuildAndroidNGTests
+from tests.nsconfig.run_ios_ng_tests import RunIOSSimulatorTestsNG
+from tests.nsconfig.run_android_ng_tests import RunAndroidEmulatorTestsNG
+
+
 
 
 class SuiteRunAll(BaseClass):
@@ -74,12 +80,6 @@ class SuiteRunAll(BaseClass):
         Tns.platform_add_android(attributes={"--path": CreateNSConfigApps.app_name_rename_app_res_ls, "--frameworkPath": ANDROID_PACKAGE})
         Tns.platform_add_ios(attributes={"--path": CreateNSConfigApps.app_name_rename_app_res_ls, "--frameworkPath": IOS_PACKAGE})
 
-    def setUp(self):
-        BaseClass.setUp(self)
-
-    def tearDown(self):
-        Folder.cleanup(self.platforms_android + '/build/outputs')
-
     @classmethod
     def tearDownClass(cls):
         Folder.cleanup("ChangeAppLocation")
@@ -122,11 +122,15 @@ class SuiteRunAll(BaseClass):
         pass
 
 def suite(self):
-        suite.addTest(BuildAndroidTests())
-        suite.addTest(BuildiOSTests())
-        suite.addTest(RunAndroidEmulatorTests())
-        suite.addTest(RunIOSSimulatorTests())
-        suite.addTest(DebugAndroidEmulatorTests())
-        suite.addTest(DebugiOSInspectorSimulatorTests())
-        suite.addTest(DebugiOSChromeSimulatorTests())
+        BuildAndroidTests()
+        BuildiOSTests()
+        RunAndroidEmulatorTests()
+        RunIOSSimulatorTests()
+        DebugAndroidEmulatorTests()
+        DebugiOSInspectorSimulatorTests()
+        DebugiOSChromeSimulatorTests()
+        BuildiOSNGTests()
+        BuildAndroidNGTests()
+        RunIOSSimulatorTestsNG()
+        RunAndroidEmulatorTestsNG()
         return suite

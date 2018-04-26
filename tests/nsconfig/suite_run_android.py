@@ -5,8 +5,8 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_PACKAGE
 from core.tns.tns import Tns
 from tests.nsconfig.build_android_tests import BuildAndroidTests
-from tests.nsconfig.debug_android_tests import DebugAndroidEmulatorTests
 from tests.nsconfig.run_android_tests import RunAndroidEmulatorTests
+from tests.nsconfig.debug_android_tests import DebugAndroidEmulatorTests
 
 
 class SuiteRunAndroid(BaseClass):
@@ -50,12 +50,6 @@ class SuiteRunAndroid(BaseClass):
 
         Tns.platform_add_android(attributes={"--path": CreateNSConfigApps.app_name_rename_app_res_ls, "--frameworkPath": ANDROID_PACKAGE})
 
-    def setUp(self):
-        BaseClass.setUp(self)
-
-    def tearDown(self):
-        Folder.cleanup(self.platforms_android + '/build/outputs')
-
     @classmethod
     def tearDownClass(cls):
         Folder.cleanup("ChangeAppLocation")
@@ -98,7 +92,7 @@ class SuiteRunAndroid(BaseClass):
         pass
 
 def suite(self):
-        suite.addTest(BuildAndroidTests())
-        suite.addTest(RunAndroidEmulatorTests())
-        suite.addTest(DebugAndroidEmulatorTests())
+        BuildAndroidTests()
+        RunAndroidEmulatorTests()
+        DebugAndroidEmulatorTests()
         return suite
