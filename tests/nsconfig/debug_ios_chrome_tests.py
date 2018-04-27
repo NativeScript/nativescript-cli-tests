@@ -56,17 +56,17 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         else:
             CreateNSConfigApps.createAppsLiveSync(cls.__name__)
 
-        if not File.exists(TEST_RUN_HOME + "/ChangeAppLocation"):
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/ChangeAppLocation")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndName",
-                        TEST_RUN_HOME + "/ChangeAppLocationAndName")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocation", TEST_RUN_HOME + "/ChangeAppResLocation")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRoot",
-                        TEST_RUN_HOME + "/ChangeAppResLocationInRoot")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/RenameApp")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppRes", TEST_RUN_HOME + "/RenameAppRes")
+        if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS"):
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
+                        TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
         else:
-            assert File.exists(TEST_RUN_HOME + "/ChangeAppLocation")
+            assert File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS")
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -89,6 +89,18 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         Folder.cleanup("ChangeAppResLocationInRootLS")
         Folder.cleanup("RenameAppLS")
         Folder.cleanup("RenameAppResLS")
+        Folder.cleanup("ChangeAppLocationLS.app")
+        File.remove("ChangeAppLocationLS.ipa")
+        Folder.cleanup("ChangeAppLocationAndNameLS.app")
+        File.remove("ChangeAppLocationAndNameLS.ipa")
+        Folder.cleanup("ChangeAppResLocationLS.app")
+        File.remove("ChangeAppResLocationLS.ipa")
+        Folder.cleanup("ChangeAppResLocationInRootLS.app")
+        File.remove("ChangeAppResLocationInRootLS.ipa")
+        Folder.cleanup("RenameAppLS.app")
+        File.remove("RenameAppLS.ipa")
+        Folder.cleanup("RenameAppResLS.app")
+        File.remove("RenameAppResLS.ipa")
 
     @staticmethod
     def attach_chrome(log, mode=DebugMode.DEFAULT, port="41000"):
@@ -172,7 +184,7 @@ class DebugiOSChromeSimulatorTests(BaseClass):
 
         # Verify app starts and stops on the first line of code
         Device.screen_match(device_name=SIMULATOR_NAME, tolerance=3.0, device_id=self.SIMULATOR_ID,
-                            timeout=90, expected_image='livesync-hello-world_debug_brk')
+                            timeout=180, expected_image='livesync-hello-world_debug_brk')
 
         self.attach_chrome(log)
 
@@ -198,10 +210,9 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         """
         Attach the debug tools to a running app in the iOS Simulator
         """
-
         # Run the app and ensure it works
         log = Tns.run_ios(attributes={'--path': app_name, '--emulator': '', '--justlaunch': ''},
-                          assert_success=False, timeout=60)
+                          assert_success=False, timeout=120)
         TnsAsserts.prepared(app_name=app_name, platform=Platform.IOS, output=log, prepare=Prepare.SKIP)
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_home')
@@ -261,7 +272,7 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         self.attach_chrome(log)
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
+                            device_id=self.SIMULATOR_ID, timeout=180, expected_image='livesync-hello-world_home')
 
         # Change JS and wait until app is synced
         ReplaceHelper.replace(app_name, change_js, sleep=10)
@@ -280,7 +291,7 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
 
         # Verify application looks correct
-        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID, timeout=180,
                             expected_image='livesync-hello-world_js_css_xml')
         # Enable next lines after https://github.com/NativeScript/nativescript-cli/issues/3085 is implemented.
         # Verify debugger not detached

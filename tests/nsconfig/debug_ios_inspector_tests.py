@@ -51,17 +51,17 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         else:
             CreateNSConfigApps.createAppsLiveSync(cls.__name__)
 
-        if not File.exists(TEST_RUN_HOME + "/ChangeAppLocation"):
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/ChangeAppLocation")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndName",
-                        TEST_RUN_HOME + "/ChangeAppLocationAndName")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocation", TEST_RUN_HOME + "/ChangeAppResLocation")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRoot",
-                        TEST_RUN_HOME + "/ChangeAppResLocationInRoot")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/RenameApp")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppRes", TEST_RUN_HOME + "/RenameAppRes")
+        if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS"):
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/ChangeAppLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
+                        TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
         else:
-            assert File.exists(TEST_RUN_HOME + "/ChangeAppLocation")
+            assert File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS")
 
         Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--save-dev',
                     folder=CreateNSConfigApps.app_name_change_app_location_ls)
@@ -88,6 +88,25 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         Process.kill('NativeScript Inspector')
         Tns.kill()
 
+        Folder.cleanup("ChangeAppLocationLS")
+        Folder.cleanup("ChangeAppLocationAndNameLS")
+        Folder.cleanup("ChangeAppResLocationLS")
+        Folder.cleanup("ChangeAppResLocationInRootLS")
+        Folder.cleanup("RenameAppLS")
+        Folder.cleanup("RenameAppResLS")
+        Folder.cleanup("ChangeAppLocationLS.app")
+        File.remove("ChangeAppLocationLS.ipa")
+        Folder.cleanup("ChangeAppLocationAndNameLS.app")
+        File.remove("ChangeAppLocationAndNameLS.ipa")
+        Folder.cleanup("ChangeAppResLocationLS.app")
+        File.remove("ChangeAppResLocationLS.ipa")
+        Folder.cleanup("ChangeAppResLocationInRootLS.app")
+        File.remove("ChangeAppResLocationInRootLS.ipa")
+        Folder.cleanup("RenameAppLS.app")
+        File.remove("RenameAppLS.ipa")
+        Folder.cleanup("RenameAppResLS.app")
+        File.remove("RenameAppResLS.ipa")
+
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
@@ -98,6 +117,18 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         Folder.cleanup("ChangeAppResLocationInRootLS")
         Folder.cleanup("RenameAppLS")
         Folder.cleanup("RenameAppResLS")
+        Folder.cleanup("ChangeAppLocationLS.app")
+        File.remove("ChangeAppLocationLS.ipa")
+        Folder.cleanup("ChangeAppLocationAndNameLS.app")
+        File.remove("ChangeAppLocationAndNameLS.ipa")
+        Folder.cleanup("ChangeAppResLocationLS.app")
+        File.remove("ChangeAppResLocationLS.ipa")
+        Folder.cleanup("ChangeAppResLocationInRootLS.app")
+        File.remove("ChangeAppResLocationInRootLS.ipa")
+        Folder.cleanup("RenameAppLS.app")
+        File.remove("RenameAppLS.ipa")
+        Folder.cleanup("RenameAppResLS.app")
+        File.remove("RenameAppResLS.ipa")
 
     def __verify_debugger_start(self, log):
         strings = ["Frontend client connected", "Backend socket created", "NativeScript debugger attached"]
