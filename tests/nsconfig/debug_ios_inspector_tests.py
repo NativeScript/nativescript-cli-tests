@@ -52,7 +52,7 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
             CreateNSConfigApps.createAppsLiveSync(cls.__name__)
 
         if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS"):
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/ChangeAppLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
                         TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
