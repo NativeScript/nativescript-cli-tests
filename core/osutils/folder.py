@@ -8,6 +8,7 @@ import platform
 import shutil
 
 from core.osutils.command import run
+from core.osutils.file import File
 from core.osutils.process import Process
 
 
@@ -68,14 +69,26 @@ class Folder(object):
         os.chdir(new_folder)
 
     @staticmethod
-    def copy(src, dst):
-        try:
-            shutil.copytree(src, dst)
-        except OSError as exc:  # python >2.5
-            if exc.errno == errno.ENOTDIR:
-                shutil.copy(src, dst)
-            else:
-                raise
+    def copy(src, dst, only_files=False):
+        """
+        Copy src folder in the dst folder.
+        :param only_files: If it's set to True - only the files from src folder are copied to dst folder.
+        If it's set to False - src folder with all files in it are copied.
+        """
+        if only_files is True:
+            files = os.listdir(src)
+
+            for f in files:
+                f_path = os.path.join(src, f)
+                File.copy(f_path, dst)
+        else:
+            try:
+                shutil.copytree(src, dst)
+            except OSError as exc:  # python >2.5
+                if exc.errno == errno.ENOTDIR:
+                    shutil.copy(src, dst)
+                else:
+                    raise
 
     @staticmethod
     def move(src, dst):

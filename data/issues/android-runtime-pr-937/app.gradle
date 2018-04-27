@@ -1,0 +1,43 @@
+// Add your native dependencies here:
+
+// Uncomment to add recyclerview-v7 dependency
+//dependencies {
+//	compile 'com.android.support:recyclerview-v7:+'
+//}
+
+android {  
+  defaultConfig {  
+    generatedDensities = []
+    applicationId = "org.nativescript.TestApp" 
+    
+    //override supported platforms
+    // ndk {
+    //       abiFilters.clear()
+    //   		abiFilters "armeabi-v7a"
+ 		// }
+  
+  }  
+  aaptOptions {  
+    additionalParameters "--no-version-vectors"  
+  }
+
+  flavorDimensions "arch", "mode"
+
+  productFlavors {
+    demo {
+      dimension "mode"
+    }
+    full {
+      dimension "mode"
+    }
+    x86 {
+      dimension "arch"
+    }
+    arm {
+      dimension "arch"
+    }
+    arm64 {
+      dimension "arch"
+    }
+  }
+} 

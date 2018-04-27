@@ -7,6 +7,8 @@ Run should sync all the changes correctly:
 
 import os
 
+from flaky import flaky
+
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -44,6 +46,7 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()
 
+    @flaky(max_runs=3)
     def test_001_tns_run_android_ts_css_html(self):
         """Make valid changes in JS,CSS and XML"""
 
@@ -61,14 +64,11 @@ class RunAndroidEmulatorTestsNG(BaseClass):
                    'Successfully synced application',
                    'Application loaded!',
                    'Home page loaded!']
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10)
 
         # Verify initial state of the app
         assert Device.wait_for_text(device_id=EMULATOR_ID, text="Ter Stegen",
                                     timeout=20), 'Hello-world NG App failed to start or it does not look correct!'
-
-        # This is to ensure 'Change HTML and wait until app is synced' will be checked properly
-        assert not Device.wait_for_text(device_id=EMULATOR_ID, text='9', timeout=5)
 
         # Change TS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.NG_CHANGE_TS, sleep=10)
@@ -79,7 +79,7 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text="Stegen Ter", timeout=20)
         assert text_changed, 'Changes in TS file not applied (UI is not refreshed).'
         log_content = File.read(log)
-        assert 'item.service.ts' in log_content, "CLI should transfer TS files!"
+        assert 'item.service.ts' not in log_content, "CLI should NOT transfer TS files!"
 
         # Clean log (this will not work on windows since file is locked)
         if CURRENT_OS != OSType.WINDOWS:

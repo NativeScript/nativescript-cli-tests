@@ -6,12 +6,13 @@ import time
 
 from core.npm.npm import Npm
 from core.osutils.command import run
+from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import COMMAND_TIMEOUT, TNS_PATH, TAG, TEST_RUN_HOME, CURRENT_OS, \
-    SUT_FOLDER, PROVISIONING, BRANCH, MODULES_PACKAGE, ANGULAR_PACKAGE
+    SUT_FOLDER, PROVISIONING, BRANCH, MODULES_PACKAGE, ANGULAR_PACKAGE, TYPESCRIPT_PACKAGE, UPDATE_WEBPACK_PATH
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
@@ -111,6 +112,22 @@ class Tns(object):
         return output
 
     @staticmethod
+    def install_npm(package='', option='', folder=None, log_level=CommandLogLevel.FULL):
+        cmd = UPDATE_WEBPACK_PATH + " --configs --deps"
+        Npm.install(package=package, option=option, folder=folder, log_level=log_level)
+        if folder is not None:
+            Folder.navigate_to(folder=folder, relative_from_current_folder=True)
+
+        print cmd
+        output = run(command=cmd)
+
+        if folder is not None:
+            Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
+
+
+        return output
+
+    @staticmethod
     def update_modules(path):
         """
         Update modules for {N} project
@@ -153,6 +170,25 @@ class Tns(object):
         update_out = run(update_script)
         assert "Angular dependencies updated" in update_out
         Npm.install(folder=path)
+
+        return output
+
+    @staticmethod
+    def update_typescript(path):
+        """
+        Update modules for {N} project
+        :param path: Path to {N} project
+        :return: Output of command that update tns-core-modules plugin.
+        """
+
+        # Escape path with spaces
+        if " " in path:
+            path = "\"" + path + "\""
+
+        Npm.uninstall(package="nativescript-typescript", option="--save", folder=path)
+        output = Npm.install(package=TYPESCRIPT_PACKAGE, option="--save", folder=path)
+        if Npm.version() > 3:
+            assert "ERR" not in output, "Something went wrong when modules are installed."
 
         return output
 
@@ -218,6 +254,8 @@ class Tns(object):
         output = Tns.create_app(app_name=app_name, attributes=attributes, log_trace=log_trace,
                                 assert_success=assert_success,
                                 update_modules=update_modules)
+        if update_modules:
+            Tns.update_typescript(path=app_name)
         if assert_success:
             TnsAsserts.created_ts(app_name=app_name, output=output)
         return output
@@ -239,6 +277,7 @@ class Tns(object):
                                 update_modules=update_modules)
         if update_modules:
             Tns.update_angular(path=app_name)
+            Tns.update_typescript(path=app_name)
 
         if assert_success:
             if Npm.version() < 5:
@@ -336,7 +375,10 @@ class Tns(object):
         output = Tns.run_tns_command("plugin add " + name, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
         if assert_success:
-            short_name = name.rsplit('@', 1)[0].replace(".tgz", "").split(os.sep)[-1]
+            if "/src" in name:
+                short_name = name.rsplit('@', 1)[0].replace("/src", "").split(os.sep)[-1]
+            else:
+                short_name = name.rsplit('@', 1)[0].replace(".tgz", "").split(os.sep)[-1]
             assert "Successfully installed plugin {0}".format(short_name) in output
         return output
 

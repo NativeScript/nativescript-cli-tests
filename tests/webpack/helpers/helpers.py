@@ -22,6 +22,29 @@ class Helpers(object):
     wp_errors = ['Module not found', 'Snapshot generation failed', 'ENOENT']
 
     @staticmethod
+    def wait_typescript_watcher(timeout=60):
+        if CURRENT_OS != OSType.WINDOWS:
+            running = False
+            end_time = time.time() + timeout
+            while not running:
+                time.sleep(5)
+                tsc_cmd = "node_modules/typescript/lib/tsc.js"
+                running = Process.is_running_by_commandline(tsc_cmd)
+                if running:
+                    running = True
+                    cmdline = Process.get_proc_by_commandline(tsc_cmd).cmdline()
+                    print "Params:"
+                    print cmdline
+                    break
+                if (running is False) and (time.time() > end_time):
+                    raise NameError("Typescript with watcher is not running in {0} seconds.", timeout)
+            time.sleep(5)
+            return running
+        else:
+            time.sleep(20)
+            return True
+
+    @staticmethod
     def wait_webpack_watcher(timeout=60):
         if CURRENT_OS != OSType.WINDOWS:
             running = False
@@ -34,8 +57,7 @@ class Helpers(object):
                 running = Process.is_running_by_commandline(webpack_cmd)
                 if running:
                     running = True
-                    proc = Process.get_proc_by_commandline(webpack_cmd)
-                    cmdline = proc.cmdline()
+                    cmdline = Process.get_proc_by_commandline(webpack_cmd).cmdline()
                     print "Params:"
                     print cmdline
                     if CURRENT_OS != OSType.WINDOWS:
@@ -86,12 +108,14 @@ class Helpers(object):
         Adb.start_app(device_id=EMULATOR_ID, app_id=app_id)
 
     @staticmethod
-    def android_screen_match(image, timeout=45):
-        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image=image, timeout=timeout)
+    def android_screen_match(image, timeout=45, tolerance=0.1):
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image=image, timeout=timeout,
+                            tolerance=tolerance)
 
     @staticmethod
-    def ios_screen_match(sim_id, image, timeout=45):
-        Device.screen_match(device_name=SIMULATOR_NAME, device_id=sim_id, expected_image=image, timeout=timeout)
+    def ios_screen_match(sim_id, image, timeout=45, tolerance=0.1):
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=sim_id, expected_image=image, timeout=timeout,
+                            tolerance=tolerance)
 
     @staticmethod
     def get_android_size(app_name):

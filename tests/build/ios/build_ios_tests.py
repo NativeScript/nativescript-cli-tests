@@ -180,7 +180,7 @@ class BuildiOSTests(BaseClass):
         output = Tns.build_ios(attributes={"--path": self.app_name, "--forDevice": "", "--release": ""},
                                assert_success=False)
         assert "Provisioning profile " in output
-        assert "doesn't include the inter-app-audio and aps-environment entitlements" in output
+        assert "doesn't include the aps-environment and inter-app-audio entitlements" in output
 
     def test_400_build_ios_with_wrong_param(self):
         Tns.create_app(self.app_name_noplatform)

@@ -2,6 +2,7 @@
 Tests for `tns debug android` executed on Android Emulator.
 """
 import os
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.chrome.chrome import Chrome
