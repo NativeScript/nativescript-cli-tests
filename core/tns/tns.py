@@ -113,7 +113,7 @@ class Tns(object):
 
     @staticmethod
     def install_npm(package='', option='', folder=None, log_level=CommandLogLevel.FULL):
-        cmd = UPDATE_WEBPACK_PATH + " --configs"
+        cmd = UPDATE_WEBPACK_PATH + " --configs --deps"
         Npm.install(package=package, option=option, folder=folder, log_level=log_level)
         if folder is not None:
             Folder.navigate_to(folder=folder, relative_from_current_folder=True)
