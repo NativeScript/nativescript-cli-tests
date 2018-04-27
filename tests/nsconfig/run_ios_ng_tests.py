@@ -2,7 +2,6 @@
 Test for `tns run ios` command with Angular apps (on simulator).
 """
 
-import os
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
@@ -11,8 +10,9 @@ from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_PACKAGE, SIMULATOR_NAME
+from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME
 from core.tns.tns import Tns
+from tests.nsconfig.create_apps.create_ns_config_apps import CreateNSConfigApps
 
 
 class RunIOSSimulatorTestsNG(BaseClass):
@@ -25,154 +25,68 @@ class RunIOSSimulatorTestsNG(BaseClass):
         Simulator.stop()
         cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
 
-        base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
-
-        # Initial setup for all projects
-        app_name_change_app_location = "ChangeAppLocation"
-        Folder.cleanup(app_name_change_app_location)
-
-        # Create default NG app (to get right dependencies from package.json)
-        Tns.create_app_ng(app_name=app_name_change_app_location)
-
-        # Copy the app folder (app is modified in order to get some console logs on loaded)
-        source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'app')
-        app_path = os.path.join(app_name_change_app_location, 'app')
-        Folder.cleanup(app_path)
-        Folder.copy(src=source, dst=app_path)
-
-        # Create the other projects using the initial setup but in different folder
-        app_name_change_app_location_and_name = "ChangeAppLocationAndName"
-        Folder.cleanup(app_name_change_app_location_and_name)
-        Folder.copy(app_name_change_app_location, app_name_change_app_location_and_name)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_location_and_name, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_location_and_name)
-
-        app_name_change_app_res_location = "ChangeAppResLocation"
-        Folder.cleanup(app_name_change_app_res_location)
-        Folder.copy(app_name_change_app_location, app_name_change_app_res_location)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_res_location, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location)
-
-        app_name_change_app_res_location_in_root = "ChangeAppResLocationInRoot"
-        Folder.cleanup(app_name_change_app_res_location_in_root)
-        Folder.copy(app_name_change_app_location, app_name_change_app_res_location_in_root)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_res_location_in_root, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location_in_root)
-
-        app_name_rename_app = "RenameApp"
-        Folder.cleanup(app_name_rename_app)
-        Folder.copy(app_name_change_app_location, app_name_rename_app)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_rename_app, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app)
-
-        app_name_rename_app_res = "RenameAppRes"
-        Folder.cleanup(app_name_rename_app_res)
-        Folder.copy(app_name_change_app_location, app_name_rename_app_res)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_rename_app_res, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app_res)
-
-        # Change app/ location to be 'new_folder/app'
-        proj_root = os.path.join(app_name_change_app_location)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_change_app_location, 'nsconfig.json', ), app_name_change_app_location)
-        Folder.create(os.path.join(proj_root, "new_folder"))
-        Folder.move(app_path, os.path.join(proj_root, 'new_folder'))
-        Tns.platform_add_ios(attributes={"--path": app_name_change_app_location, "--frameworkPath": IOS_PACKAGE})
-
-        # Change app/ name and place to be 'my folder/my app'
-        proj_root = os.path.join(app_name_change_app_location_and_name)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_change_app_location_and_name, 'nsconfig.json'),
-                  app_name_change_app_location_and_name)
-        Folder.create(os.path.join(proj_root, "my folder"))
-        os.rename(app_path, os.path.join(proj_root, "my app"))
-        Folder.move(os.path.join(proj_root, "my app"), os.path.join(proj_root, "my folder"))
-        Tns.platform_add_ios(
-            attributes={"--path": app_name_change_app_location_and_name, "--frameworkPath": IOS_PACKAGE})
-
-        # Change App_Resources/ location to be 'app/res/App_Resources'
-        proj_root = os.path.join(app_name_change_app_res_location)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_change_app_res_location, 'nsconfig.json'),
-                  app_name_change_app_res_location)
-        Folder.create(os.path.join(app_path, 'res'))
-        Folder.move(app_res_path, os.path.join(app_path, 'res'))
-        Tns.platform_add_ios(attributes={"--path": app_name_change_app_res_location, "--frameworkPath": IOS_PACKAGE})
-
-        # Change App_Resources/ location to be in project root/App_Resources
-        proj_root = os.path.join(app_name_change_app_res_location_in_root)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_change_app_res_location_in_root, 'nsconfig.json'),
-                  app_name_change_app_res_location_in_root)
-        Folder.move(app_res_path, proj_root)
-        Tns.platform_add_ios(
-            attributes={"--path": app_name_change_app_res_location_in_root, "--frameworkPath": IOS_PACKAGE})
-
-        # Change app/ to renamed_app/
-        proj_root = os.path.join(app_name_rename_app)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_rename_app, 'nsconfig.json'), app_name_rename_app)
-        os.rename(app_path, os.path.join(proj_root, 'renamed_app'))
-        Tns.platform_add_ios(attributes={"--path": app_name_rename_app, "--frameworkPath": IOS_PACKAGE})
-
-        # Change App_Resources/ to My_App_Resources/
-        proj_root = os.path.join(app_name_rename_app_res)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_rename_app_res, 'nsconfig.json'), app_name_rename_app_res)
-        os.rename(app_res_path, os.path.join(app_path, 'My_App_Resources'))
-        Tns.platform_add_ios(attributes={"--path": app_name_rename_app_res, "--frameworkPath": IOS_PACKAGE})
+        if File.exists(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS"):
+            assert "ChangeAppLocationLSNG" in TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS"
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
+                        TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLSNG", TEST_RUN_HOME + "/ChangeAppResLocationLSNG")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLSNG",
+                        TEST_RUN_HOME + "/ChangeAppResLocationInRootLSNG")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLSNG", TEST_RUN_HOME + "/RenameAppLSNG")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLSNG", TEST_RUN_HOME + "/RenameAppResLSNG")
+        else:
+            CreateNSConfigApps.createAppsLiveSyncNG(cls.__name__)
+            if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLSNG"):
+                Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG", TEST_RUN_HOME + "/ChangeAppLocationLSNG")
+                Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLSNG",
+                            TEST_RUN_HOME + "/ChangeAppLocationAndNameLSNG")
+                Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLSNG", TEST_RUN_HOME + "/ChangeAppResLocationLSNG")
+                Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLSNG",
+                            TEST_RUN_HOME + "/ChangeAppResLocationInRootLSNG")
+                Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLSNG", TEST_RUN_HOME + "/RenameAppLSNG")
+                Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLSNG", TEST_RUN_HOME + "/RenameAppResLSNG")
+            else:
+                assert "ChangeAppLocationLSNG" in TEST_RUN_HOME + "/"
 
     def setUp(self):
         BaseClass.setUp(self)
-        Tns.kill()
 
     def tearDown(self):
         Tns.kill()
         BaseClass.tearDown(self)
-
+        
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
         Emulator.stop()
 
-        Folder.cleanup("ChangeAppLocation")
-        Folder.cleanup("ChangeAppLocationAndName")
-        Folder.cleanup("ChangeAppResLocation")
-        Folder.cleanup("ChangeAppResLocationInRoot")
-        Folder.cleanup("RenameApp")
-        Folder.cleanup("RenameAppRes")
+        Folder.cleanup("ChangeAppLocationLSNG")
+        Folder.cleanup("ChangeAppLocationAndNameLSNG")
+        Folder.cleanup("ChangeAppResLocationLSNG")
+        Folder.cleanup("ChangeAppResLocationInRootLSNG")
+        Folder.cleanup("RenameAppLSNG")
+        Folder.cleanup("RenameAppResLSNG")
+        Folder.cleanup("ChangeAppLocationLSNG.app")
+        File.remove("ChangeAppLocationLSNG.ipa")
+        Folder.cleanup("ChangeAppLocationAndNameLSNG.app")
+        File.remove("ChangeAppLocationAndNameLSNG.ipa")
+        Folder.cleanup("ChangeAppResLocationLSNG.app")
+        File.remove("ChangeAppResLocationLSNG.ipa")
+        Folder.cleanup("ChangeAppResLocationInRootLSNG.app")
+        File.remove("ChangeAppResLocationInRootLSNG.ipa")
+        Folder.cleanup("RenameAppLSNG.app")
+        File.remove("RenameAppLSNG.ipa")
+        Folder.cleanup("RenameAppResLSNG.app")
+        File.remove("RenameAppResLSNG.ipa")
 
     @parameterized.expand([
-        'ChangeAppLocation',
-        'ChangeAppLocationAndName',
-        'ChangeAppResLocation',
-        'ChangeAppResLocationInRoot',
-        'RenameApp',
-        'RenameAppRes'
+        'ChangeAppLocationLSNG',
+        'ChangeAppLocationAndNameLSNG',
+        'ChangeAppResLocationLSNG',
+        'ChangeAppResLocationInRootLSNG',
+        'RenameAppLSNG',
+        'RenameAppResLSNG'
     ])
     def test_001_tns_run_ios(self, app_name):
         # `tns run ios` and wait until app is deployed

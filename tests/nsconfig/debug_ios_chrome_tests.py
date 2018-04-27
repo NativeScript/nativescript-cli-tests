@@ -1,13 +1,11 @@
 """
 Tests for `tns debug ios` executed on iOS Simulator with different nsconfig setup.
 """
-import os
 import unittest
-
-from nose_parameterized import parameterized
 from time import sleep
 
 from enum import Enum
+from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
 from core.chrome.chrome import Chrome
@@ -18,12 +16,13 @@ from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
-from core.settings.settings import IOS_PACKAGE, SIMULATOR_NAME
+from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_prepare_type import Prepare
 from core.tns.tns_verifications import TnsAsserts
+from tests.nsconfig.create_apps.create_ns_config_apps import CreateNSConfigApps
 
 
 class DebugMode(Enum):
@@ -44,119 +43,30 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         Simulator.stop()
         cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
 
-        base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
+        if File.exists(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS"):
+            assert "ChangeAppLocationLS" in TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS"
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
+                        TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
+        else:
+            CreateNSConfigApps.createAppsLiveSync(cls.__name__)
 
-        # Initial create of all projects
-        app_name_change_app_location = "ChangeAppLocation"
-        Tns.create_app(app_name=app_name_change_app_location,
-                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
-                       update_modules=True)
-
-        # Create the other projects using the initial setup but in different folder
-        app_name_change_app_location_and_name = "ChangeAppLocationAndName"
-        Folder.cleanup(app_name_change_app_location_and_name)
-        Folder.copy(app_name_change_app_location, app_name_change_app_location_and_name)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_location_and_name, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_location_and_name)
-
-        app_name_change_app_res_location = "ChangeAppResLocation"
-        Folder.cleanup(app_name_change_app_res_location)
-        Folder.copy(app_name_change_app_location, app_name_change_app_res_location)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_res_location, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location)
-
-        app_name_change_app_res_location_in_root = "ChangeAppResLocationInRoot"
-        Folder.cleanup(app_name_change_app_res_location_in_root)
-        Folder.copy(app_name_change_app_location, app_name_change_app_res_location_in_root)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_res_location_in_root, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location_in_root)
-
-        app_name_rename_app = "RenameApp"
-        Folder.cleanup(app_name_rename_app)
-        Folder.copy(app_name_change_app_location, app_name_rename_app)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_rename_app, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app)
-
-        app_name_rename_app_res = "RenameAppRes"
-        Folder.cleanup(app_name_rename_app_res)
-        Folder.copy(app_name_change_app_location, app_name_rename_app_res)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_rename_app_res, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app_res)
-
-        # Change app/ location to be 'new_folder/app'
-        proj_root = os.path.join(app_name_change_app_location)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_change_app_location, 'nsconfig.json', ), app_name_change_app_location)
-        Folder.create(os.path.join(proj_root, "new_folder"))
-        Folder.move(app_path, os.path.join(proj_root, 'new_folder'))
-        Tns.platform_add_ios(attributes={"--path": app_name_change_app_location, "--frameworkPath": IOS_PACKAGE})
-
-        # Change app/ name and place to be 'my folder/my app'
-        proj_root = os.path.join(app_name_change_app_location_and_name)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_change_app_location_and_name, 'nsconfig.json'),
-                  app_name_change_app_location_and_name)
-        Folder.create(os.path.join(proj_root, "my folder"))
-        os.rename(app_path, os.path.join(proj_root, "my app"))
-        Folder.move(os.path.join(proj_root, "my app"), os.path.join(proj_root, "my folder"))
-        Tns.platform_add_ios(
-            attributes={"--path": app_name_change_app_location_and_name, "--frameworkPath": IOS_PACKAGE})
-
-        # Change App_Resources/ location to be 'app/res/App_Resources'
-        proj_root = os.path.join(app_name_change_app_res_location)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_change_app_res_location, 'nsconfig.json'),
-                  app_name_change_app_res_location)
-        Folder.create(os.path.join(app_path, 'res'))
-        Folder.move(app_res_path, os.path.join(app_path, 'res'))
-        Tns.platform_add_ios(attributes={"--path": app_name_change_app_res_location, "--frameworkPath": IOS_PACKAGE})
-
-        # Change App_Resources/ location to be in project root/App_Resources
-        proj_root = os.path.join(app_name_change_app_res_location_in_root)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_change_app_res_location_in_root, 'nsconfig.json'),
-                  app_name_change_app_res_location_in_root)
-        Folder.move(app_res_path, proj_root)
-        Tns.platform_add_ios(
-            attributes={"--path": app_name_change_app_res_location_in_root, "--frameworkPath": IOS_PACKAGE})
-
-        # Change app/ to renamed_app/
-        proj_root = os.path.join(app_name_rename_app)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_rename_app, 'nsconfig.json'), app_name_rename_app)
-        os.rename(app_path, os.path.join(proj_root, 'renamed_app'))
-        Tns.platform_add_ios(attributes={"--path": app_name_rename_app, "--frameworkPath": IOS_PACKAGE})
-
-        # Change App_Resources/ to My_App_Resources/
-        proj_root = os.path.join(app_name_rename_app_res)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_rename_app_res, 'nsconfig.json'), app_name_rename_app_res)
-        os.rename(app_res_path, os.path.join(app_path, 'My_App_Resources'))
-        Tns.platform_add_ios(attributes={"--path": app_name_rename_app_res, "--frameworkPath": IOS_PACKAGE})
+        if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS"):
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
+                        TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
+        else:
+            assert File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS")
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -173,12 +83,24 @@ class DebugiOSChromeSimulatorTests(BaseClass):
     def tearDownClass(cls):
         BaseClass.tearDownClass()
 
-        Folder.cleanup("ChangeAppLocation")
-        Folder.cleanup("ChangeAppLocationAndName")
-        Folder.cleanup("ChangeAppResLocation")
-        Folder.cleanup("ChangeAppResLocationInRoot")
-        Folder.cleanup("RenameApp")
-        Folder.cleanup("RenameAppRes")
+        Folder.cleanup("ChangeAppLocationLS")
+        Folder.cleanup("ChangeAppLocationAndNameLS")
+        Folder.cleanup("ChangeAppResLocationLS")
+        Folder.cleanup("ChangeAppResLocationInRootLS")
+        Folder.cleanup("RenameAppLS")
+        Folder.cleanup("RenameAppResLS")
+        Folder.cleanup("ChangeAppLocationLS.app")
+        File.remove("ChangeAppLocationLS.ipa")
+        Folder.cleanup("ChangeAppLocationAndNameLS.app")
+        File.remove("ChangeAppLocationAndNameLS.ipa")
+        Folder.cleanup("ChangeAppResLocationLS.app")
+        File.remove("ChangeAppResLocationLS.ipa")
+        Folder.cleanup("ChangeAppResLocationInRootLS.app")
+        File.remove("ChangeAppResLocationInRootLS.ipa")
+        Folder.cleanup("RenameAppLS.app")
+        File.remove("RenameAppLS.ipa")
+        Folder.cleanup("RenameAppResLS.app")
+        File.remove("RenameAppResLS.ipa")
 
     @staticmethod
     def attach_chrome(log, mode=DebugMode.DEFAULT, port="41000"):
@@ -222,12 +144,12 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         assert "detached" not in output, "Debugger disconnected.\n Log:\n" + output
 
     @parameterized.expand([
-        'ChangeAppLocation',
-        'ChangeAppLocationAndName',
-        'ChangeAppResLocation',
-        'ChangeAppResLocationInRoot',
-        'RenameApp',
-        'RenameAppRes'
+        'ChangeAppLocationLS',
+        'ChangeAppLocationAndNameLS',
+        'ChangeAppResLocationLS',
+        'ChangeAppResLocationInRootLS',
+        'RenameAppLS',
+        'RenameAppResLS'
     ])
     def test_001_debug_ios_simulator(self, app_name):
         """
@@ -247,12 +169,12 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         Simulator.uninstall("org.nativescript." + app_name)
 
     @parameterized.expand([
-        'ChangeAppLocation',
-        'ChangeAppLocationAndName',
-        'ChangeAppResLocation',
-        'ChangeAppResLocationInRoot',
-        'RenameApp',
-        'RenameAppRes'
+        'ChangeAppLocationLS',
+        'ChangeAppLocationAndNameLS',
+        'ChangeAppResLocationLS',
+        'ChangeAppResLocationInRootLS',
+        'RenameAppLS',
+        'RenameAppResLS'
     ])
     def test_002_debug_ios_simulator_debug_brk(self, app_name):
         """
@@ -262,7 +184,7 @@ class DebugiOSChromeSimulatorTests(BaseClass):
 
         # Verify app starts and stops on the first line of code
         Device.screen_match(device_name=SIMULATOR_NAME, tolerance=3.0, device_id=self.SIMULATOR_ID,
-                            timeout=90, expected_image='livesync-hello-world_debug_brk')
+                            timeout=180, expected_image='livesync-hello-world_debug_brk')
 
         self.attach_chrome(log)
 
@@ -277,21 +199,20 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         Simulator.uninstall("org.nativescript." + app_name)
 
     @parameterized.expand([
-        'ChangeAppLocation',
-        'ChangeAppLocationAndName',
-        'ChangeAppResLocation',
-        'ChangeAppResLocationInRoot',
-        'RenameApp',
-        'RenameAppRes'
+        'ChangeAppLocationLS',
+        'ChangeAppLocationAndNameLS',
+        'ChangeAppResLocationLS',
+        'ChangeAppResLocationInRootLS',
+        'RenameAppLS',
+        'RenameAppResLS'
     ])
     def test_003_debug_ios_simulator_start(self, app_name):
         """
         Attach the debug tools to a running app in the iOS Simulator
         """
-
         # Run the app and ensure it works
         log = Tns.run_ios(attributes={'--path': app_name, '--emulator': '', '--justlaunch': ''},
-                          assert_success=False, timeout=60)
+                          assert_success=False, timeout=120)
         TnsAsserts.prepared(app_name=app_name, platform=Platform.IOS, output=log, prepare=Prepare.SKIP)
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_home')
@@ -317,27 +238,27 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         Simulator.uninstall("org.nativescript." + app_name)
 
     @parameterized.expand([
-        ('ChangeAppLocation',
+        ('ChangeAppLocationLS',
          ['new_folder/app/main-view-model.js', 'taps', 'clicks'],
          ['new_folder/app/main-page.xml', 'TAP', 'TEST'],
          ['new_folder/app/app.css', '42', '99']),
-        ('ChangeAppLocationAndName',
+        ('ChangeAppLocationAndNameLS',
          ['my folder/my app/main-view-model.js', 'taps', 'clicks'],
          ['my folder/my app/main-page.xml', 'TAP', 'TEST'],
          ['my folder/my app/app.css', '42', '99']),
-        ('ChangeAppResLocation',
+        ('ChangeAppResLocationLS',
          ReplaceHelper.CHANGE_JS,
          ReplaceHelper.CHANGE_XML,
          ReplaceHelper.CHANGE_CSS),
-        ('ChangeAppResLocationInRoot',
+        ('ChangeAppResLocationInRootLS',
          ReplaceHelper.CHANGE_JS,
          ReplaceHelper.CHANGE_XML,
          ReplaceHelper.CHANGE_CSS),
-        ('RenameApp',
+        ('RenameAppLS',
          ['renamed_app/main-view-model.js', 'taps', 'clicks'],
          ['renamed_app/main-page.xml', 'TAP', 'TEST'],
          ['renamed_app/app.css', '42', '99']),
-        ('RenameAppRes',
+        ('RenameAppResLS',
          ReplaceHelper.CHANGE_JS,
          ReplaceHelper.CHANGE_XML,
          ReplaceHelper.CHANGE_CSS)
@@ -351,7 +272,7 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         self.attach_chrome(log)
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
+                            device_id=self.SIMULATOR_ID, timeout=180, expected_image='livesync-hello-world_home')
 
         # Change JS and wait until app is synced
         ReplaceHelper.replace(app_name, change_js, sleep=10)
@@ -370,7 +291,7 @@ class DebugiOSChromeSimulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
 
         # Verify application looks correct
-        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID, timeout=180,
                             expected_image='livesync-hello-world_js_css_xml')
         # Enable next lines after https://github.com/NativeScript/nativescript-cli/issues/3085 is implemented.
         # Verify debugger not detached

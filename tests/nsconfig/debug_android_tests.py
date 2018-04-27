@@ -1,7 +1,6 @@
 """
 Tests for `tns debug android` executed on Android Emulator with different nsconfig setup.
 """
-import os
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
@@ -10,9 +9,10 @@ from core.device.device import Device
 from core.device.emulator import Emulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import EMULATOR_NAME, EMULATOR_ID, ANDROID_PACKAGE
+from core.settings.settings import EMULATOR_NAME, EMULATOR_ID, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
+from tests.nsconfig.create_apps.create_ns_config_apps import CreateNSConfigApps
 
 
 class DebugAndroidEmulatorTests(BaseClass):
@@ -23,148 +23,30 @@ class DebugAndroidEmulatorTests(BaseClass):
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Emulator.ensure_available()
 
-        base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
+        if File.exists(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS"):
+            assert "ChangeAppLocationLS" in TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS"
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
+                        TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
+        else:
+            CreateNSConfigApps.createAppsLiveSync(cls.__name__)
 
-        # Initial create of all projects
-        app_name_change_app_location = "ChangeAppLocation"
-        Folder.cleanup(app_name_change_app_location)
-        Tns.create_app(app_name=app_name_change_app_location,
-                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
-                       update_modules=True)
-
-        # Rename the app in AndroidManifest.xml to reuse the images
-        File.replace(
-            os.path.join(app_name_change_app_location, 'app', 'App_Resources', 'Android', 'AndroidManifest.xml'),
-            "@string/app_name", "TestApp")
-
-        # Create the other projects using the initial setup but in different folder
-        app_name_change_app_location_and_name = "ChangeAppLocationAndName"
-        Folder.cleanup(app_name_change_app_location_and_name)
-        Folder.copy(app_name_change_app_location, app_name_change_app_location_and_name)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_location_and_name, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_location_and_name)
-        File.replace(
-            os.path.join(app_name_change_app_location_and_name, 'app', 'App_Resources', 'Android', 'app.gradle'),
-            "__PACKAGE__", "org.nativescript." + app_name_change_app_location_and_name)
-
-        app_name_change_app_res_location = "ChangeAppResLocation"
-        Folder.cleanup(app_name_change_app_res_location)
-        Folder.copy(app_name_change_app_location, app_name_change_app_res_location)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_res_location, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location)
-        File.replace(
-            os.path.join(app_name_change_app_res_location, 'app', 'App_Resources', 'Android', 'app.gradle'),
-            "__PACKAGE__", "org.nativescript." + app_name_change_app_res_location)
-
-        app_name_change_app_res_location_in_root = "ChangeAppResLocationInRoot"
-        Folder.cleanup(app_name_change_app_res_location_in_root)
-        Folder.copy(app_name_change_app_location, app_name_change_app_res_location_in_root)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_res_location_in_root, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location_in_root)
-        File.replace(
-            os.path.join(app_name_change_app_res_location_in_root, 'app', 'App_Resources', 'Android', 'app.gradle'),
-            "__PACKAGE__", "org.nativescript." + app_name_change_app_res_location_in_root)
-
-        app_name_rename_app = "RenameApp"
-        Folder.cleanup(app_name_rename_app)
-        Folder.copy(app_name_change_app_location, app_name_rename_app)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_rename_app, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app)
-        File.replace(
-            os.path.join(app_name_rename_app, 'app', 'App_Resources', 'Android', 'app.gradle'),
-            "__PACKAGE__", "org.nativescript." + app_name_rename_app)
-
-        app_name_rename_app_res = "RenameAppRes"
-        Folder.cleanup(app_name_rename_app_res)
-        Folder.copy(app_name_change_app_location, app_name_rename_app_res)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_rename_app_res, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app_res)
-        File.replace(
-            os.path.join(app_name_rename_app_res, 'app', 'App_Resources', 'Android', 'app.gradle'),
-            "__PACKAGE__", "org.nativescript." + app_name_rename_app_res)
-
-        # Change app/ location to be 'new_folder/app'
-        proj_root = os.path.join(app_name_change_app_location)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_change_app_location, 'nsconfig.json', ), app_name_change_app_location)
-        Folder.create(os.path.join(proj_root, "new_folder"))
-        Folder.move(app_path, os.path.join(proj_root, 'new_folder'))
-        Tns.platform_add_android(attributes={"--path": app_name_change_app_location,
-                                             "--frameworkPath": ANDROID_PACKAGE})
-        Tns.build_android(attributes={'--path': app_name_change_app_location})
-
-        # Change app/ name and place to be 'my folder/my app'
-        proj_root = os.path.join(app_name_change_app_location_and_name)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_change_app_location_and_name, 'nsconfig.json'),
-                  app_name_change_app_location_and_name)
-        Folder.create(os.path.join(proj_root, "my folder"))
-        os.rename(app_path, os.path.join(proj_root, "my app"))
-        Folder.move(os.path.join(proj_root, "my app"), os.path.join(proj_root, "my folder"))
-        Tns.platform_add_android(attributes={"--path": app_name_change_app_location_and_name,
-                                             "--frameworkPath": ANDROID_PACKAGE})
-        Tns.build_android(attributes={'--path': app_name_change_app_location_and_name})
-
-        # Change App_Resources/ location to be 'app/res/App_Resources'
-        proj_root = os.path.join(app_name_change_app_res_location)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_change_app_res_location, 'nsconfig.json'),
-                  app_name_change_app_res_location)
-        Folder.create(os.path.join(app_path, 'res'))
-        Folder.move(app_res_path, os.path.join(app_path, 'res'))
-        Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location,
-                                             "--frameworkPath": ANDROID_PACKAGE})
-        Tns.build_android(attributes={'--path': app_name_change_app_res_location})
-
-        # Change App_Resources/ location to be in project root/App_Resources
-        proj_root = os.path.join(app_name_change_app_res_location_in_root)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_change_app_res_location_in_root, 'nsconfig.json'),
-                  app_name_change_app_res_location_in_root)
-        Folder.move(app_res_path, proj_root)
-        Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location_in_root,
-                                             "--frameworkPath": ANDROID_PACKAGE})
-        Tns.build_android(attributes={'--path': app_name_change_app_res_location_in_root})
-
-        # Change app/ to renamed_app/s
-        proj_root = os.path.join(app_name_rename_app)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_rename_app, 'nsconfig.json'), app_name_rename_app)
-        os.rename(app_path, os.path.join(proj_root, 'renamed_app'))
-        Tns.platform_add_android(attributes={"--path": app_name_rename_app, "--frameworkPath": ANDROID_PACKAGE})
-        Tns.build_android(attributes={'--path': app_name_rename_app})
-
-        # Change App_Resources/ to My_App_Resources/
-        proj_root = os.path.join(app_name_rename_app_res)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_rename_app_res, 'nsconfig.json'), app_name_rename_app_res)
-        os.rename(app_res_path, os.path.join(app_path, 'My_App_Resources'))
-        Tns.platform_add_android(attributes={"--path": app_name_rename_app_res, "--frameworkPath": ANDROID_PACKAGE})
-        Tns.build_android(attributes={'--path': app_name_rename_app_res})
+        if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS"):
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
+                        TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
+        else:
+            assert File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS")
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -180,12 +62,12 @@ class DebugAndroidEmulatorTests(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()
 
-        Folder.cleanup("ChangeAppLocation")
-        Folder.cleanup("ChangeAppLocationAndName")
-        Folder.cleanup("ChangeAppResLocation")
-        Folder.cleanup("ChangeAppResLocationInRoot")
-        Folder.cleanup("RenameApp")
-        Folder.cleanup("RenameAppRes")
+        Folder.cleanup("ChangeAppLocationLS")
+        Folder.cleanup("ChangeAppLocationAndNameLS")
+        Folder.cleanup("ChangeAppResLocationLS")
+        Folder.cleanup("ChangeAppResLocationInRootLS")
+        Folder.cleanup("RenameAppLS")
+        Folder.cleanup("RenameAppResLS")
 
     def __verify_debugger_start(self, log):
         strings = [EMULATOR_ID, 'NativeScript Debugger started', 'To start debugging, open the following URL in Chrome',
@@ -206,12 +88,12 @@ class DebugAndroidEmulatorTests(BaseClass):
         assert "NativeScript Debugger started" not in output
 
     @parameterized.expand([
-        'ChangeAppLocation',
-        'ChangeAppLocationAndName',
-        'ChangeAppResLocation',
-        'ChangeAppResLocationInRoot',
-        'RenameApp',
-        'RenameAppRes'
+        'ChangeAppLocationLS',
+        'ChangeAppLocationAndNameLS',
+        'ChangeAppResLocationLS',
+        'ChangeAppResLocationInRootLS',
+        'RenameAppLS',
+        'RenameAppResLS'
     ])
     def test_001_debug_android(self, app_name):
         """
@@ -225,12 +107,12 @@ class DebugAndroidEmulatorTests(BaseClass):
                             expected_image='livesync-hello-world_home')
 
     @parameterized.expand([
-        'ChangeAppLocation',
-        'ChangeAppLocationAndName',
-        'ChangeAppResLocation',
-        'ChangeAppResLocationInRoot',
-        'RenameApp',
-        'RenameAppRes'
+        'ChangeAppLocationLS',
+        'ChangeAppLocationAndNameLS',
+        'ChangeAppResLocationLS',
+        'ChangeAppResLocationInRootLS',
+        'RenameAppLS',
+        'RenameAppResLS'
     ])
     def test_002_debug_android_emulator_debug_brk(self, app_name):
         """
@@ -245,12 +127,12 @@ class DebugAndroidEmulatorTests(BaseClass):
                             expected_image='livesync-hello-world_debug_brk')
 
     @parameterized.expand([
-        'ChangeAppLocation',
-        'ChangeAppLocationAndName',
-        'ChangeAppResLocation',
-        'ChangeAppResLocationInRoot',
-        'RenameApp',
-        'RenameAppRes'
+        'ChangeAppLocationLS',
+        'ChangeAppLocationAndNameLS',
+        'ChangeAppResLocationLS',
+        'ChangeAppResLocationInRootLS',
+        'RenameAppLS',
+        'RenameAppResLS'
     ])
     def test_003_debug_android_emulator_start(self, app_name):
         """
@@ -268,12 +150,12 @@ class DebugAndroidEmulatorTests(BaseClass):
         self.__verify_debugger_attach(log=log)
 
     @parameterized.expand([
-        'ChangeAppLocation',
-        'ChangeAppLocationAndName',
-        'ChangeAppResLocation',
-        'ChangeAppResLocationInRoot',
-        'RenameApp',
-        'RenameAppRes'
+        'ChangeAppLocationLS',
+        'ChangeAppLocationAndNameLS',
+        'ChangeAppResLocationLS',
+        'ChangeAppResLocationInRootLS',
+        'RenameAppLS',
+        'RenameAppResLS'
     ])
     def test_100_debug_android_should_start_emulator_if_there_is_no_device(self, app_name):
         """

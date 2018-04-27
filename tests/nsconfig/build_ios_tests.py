@@ -1,7 +1,6 @@
 """
 Test for building projects for iOS platform with different nsconfig setup.
 """
-import os
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
@@ -9,11 +8,11 @@ from core.device.simulator import Simulator
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_PACKAGE, ANDROID_PACKAGE, PROVISIONING, \
-    DISTRIBUTION_PROVISIONING, DEVELOPMENT_TEAM
+from core.settings.settings import PROVISIONING, \
+    DISTRIBUTION_PROVISIONING, DEVELOPMENT_TEAM, TEST_RUN_HOME
 from core.tns.tns import Tns
-from core.tns.tns_platform_type import Platform
 from core.xcode.xcode import Xcode
+from tests.nsconfig.create_apps.create_ns_config_apps import CreateNSConfigApps
 
 
 class BuildiOSTests(BaseClass):
@@ -21,149 +20,36 @@ class BuildiOSTests(BaseClass):
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
 
-        base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
+        if File.exists(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation"):
+            assert "ChangeAppLocation" in TEST_RUN_HOME + "/data/Projects/ChangeAppLocation"
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/ChangeAppLocation")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndName",
+                        TEST_RUN_HOME + "/ChangeAppLocationAndName")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocation", TEST_RUN_HOME + "/ChangeAppResLocation")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRoot",
+                        TEST_RUN_HOME + "/ChangeAppResLocationInRoot")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/RenameApp")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppRes", TEST_RUN_HOME + "/RenameAppRes")
+        else:
+            CreateNSConfigApps.createApps(cls.__name__)
 
-        # Initial create of all projects
-        app_name_change_app_location = "ChangeAppLocation"
-        Tns.create_app(app_name=app_name_change_app_location)
-
-        # Create the other projects using the initial setup but in different folder
-        app_name_change_app_location_and_name = "ChangeAppLocationAndName"
-        Folder.cleanup(app_name_change_app_location_and_name)
-        Folder.copy(app_name_change_app_location, app_name_change_app_location_and_name)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_location_and_name, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_location_and_name)
-
-        app_name_change_app_res_location = "ChangeAppResLocation"
-        Folder.cleanup(app_name_change_app_res_location)
-        Folder.copy(app_name_change_app_location, app_name_change_app_res_location)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_res_location, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location)
-
-        app_name_change_app_res_location_in_root = "ChangeAppResLocationInRoot"
-        Folder.cleanup(app_name_change_app_res_location_in_root)
-        Folder.copy(app_name_change_app_location, app_name_change_app_res_location_in_root)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_change_app_res_location_in_root, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_change_app_res_location_in_root)
-
-        app_name_rename_app = "RenameApp"
-        Folder.cleanup(app_name_rename_app)
-        Folder.copy(app_name_change_app_location, app_name_rename_app)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_rename_app, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app)
-
-        app_name_rename_app_res = "RenameAppRes"
-        Folder.cleanup(app_name_rename_app_res)
-        Folder.copy(app_name_change_app_location, app_name_rename_app_res)
-
-        # Rename the app
-        File.replace(
-            os.path.join(app_name_rename_app_res, 'package.json'),
-            "org.nativescript.ChangeAppLocation", "org.nativescript." + app_name_rename_app_res)
-
-        # Change app/ location to be 'new_folder/app'
-        proj_root = os.path.join(app_name_change_app_location)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_change_app_location, 'nsconfig.json', ), app_name_change_app_location)
-        Folder.create(os.path.join(proj_root, "new_folder"))
-        Folder.move(app_path, os.path.join(proj_root, 'new_folder'))
-        Tns.platform_add_ios(attributes={"--path": app_name_change_app_location, "--frameworkPath": IOS_PACKAGE})
-
-        Folder.cleanup("ChangeAppLocation.app")
-        File.remove("ChangeAppLocation.ipa")
-
-        # Change app/ name and place to be 'my folder/my app'
-        proj_root = os.path.join(app_name_change_app_location_and_name)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_change_app_location_and_name, 'nsconfig.json'),
-                  app_name_change_app_location_and_name)
-        Folder.create(os.path.join(proj_root, "my folder"))
-        os.rename(app_path, os.path.join(proj_root, "my app"))
-        Folder.move(os.path.join(proj_root, "my app"), os.path.join(proj_root, "my folder"))
-        Tns.platform_add_ios(
-            attributes={"--path": app_name_change_app_location_and_name, "--frameworkPath": IOS_PACKAGE})
-
-        Folder.cleanup("ChangeAppLocationAndName.app")
-        File.remove("ChangeAppLocationAndName.ipa")
-
-        # Change App_Resources/ location to be 'app/res/App_Resources'
-        proj_root = os.path.join(app_name_change_app_res_location)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_change_app_res_location, 'nsconfig.json'),
-                  app_name_change_app_res_location)
-        Folder.create(os.path.join(app_path, 'res'))
-        Folder.move(app_res_path, os.path.join(app_path, 'res'))
-        Tns.platform_add_ios(attributes={"--path": app_name_change_app_res_location, "--frameworkPath": IOS_PACKAGE})
-
-        Folder.cleanup("ChangeAppResLocation.app")
-        File.remove("ChangeAppResLocation.ipa")
-
-        # Change App_Resources/ location to be in project root/App_Resources
-        proj_root = os.path.join(app_name_change_app_res_location_in_root)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_change_app_res_location_in_root, 'nsconfig.json'),
-                  app_name_change_app_res_location_in_root)
-        Folder.move(app_res_path, proj_root)
-        Tns.platform_add_ios(
-            attributes={"--path": app_name_change_app_res_location_in_root, "--frameworkPath": IOS_PACKAGE})
-
-        Folder.cleanup("ChangeAppResLocationInRoot.app")
-        File.remove("ChangeAppResLocationInRoot.ipa")
-
-        # Change app/ to renamed_app/
-        proj_root = os.path.join(app_name_rename_app)
-        app_path = os.path.join(proj_root, 'app')
-
-        File.copy(os.path.join(base_src, app_name_rename_app, 'nsconfig.json'), app_name_rename_app)
-        os.rename(app_path, os.path.join(proj_root, 'renamed_app'))
-        Tns.platform_add_ios(attributes={"--path": app_name_rename_app, "--frameworkPath": IOS_PACKAGE})
-
-        Folder.cleanup("RenameApp.app")
-        File.remove("RenameApp.ipa")
-
-        # Change App_Resources/ to My_App_Resources/
-        proj_root = os.path.join(app_name_rename_app_res)
-        app_path = os.path.join(proj_root, 'app')
-        app_res_path = os.path.join(app_path, 'App_Resources')
-
-        File.copy(os.path.join(base_src, app_name_rename_app_res, 'nsconfig.json'), app_name_rename_app_res)
-        os.rename(app_res_path, os.path.join(app_path, 'My_App_Resources'))
-        Tns.platform_add_ios(attributes={"--path": app_name_rename_app_res, "--frameworkPath": IOS_PACKAGE})
-
-        Folder.cleanup("RenameAppRes.app")
-        File.remove("RenameAppRes.ipa")
+        if not File.exists(TEST_RUN_HOME + "/ChangeAppLocation"):
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/ChangeAppLocation")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndName",
+                        TEST_RUN_HOME + "/ChangeAppLocationAndName")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocation", TEST_RUN_HOME + "/ChangeAppResLocation")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRoot",
+                        TEST_RUN_HOME + "/ChangeAppResLocationInRoot")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/RenameApp")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppRes", TEST_RUN_HOME + "/RenameAppRes")
+        else:
+            assert File.exists(TEST_RUN_HOME + "/ChangeAppLocation")
 
         Xcode.cleanup_cache()
 
     def setUp(self):
         BaseClass.setUp(self)
         Simulator.stop()
-
-        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "ChangeAppLocation"}, assert_success=False)
-        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "ChangeAppLocationAndName"},
-                            assert_success=False)
-        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "ChangeAppResLocation"}, assert_success=False)
-        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "ChangeAppResLocation"}, assert_success=False)
-        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "RenameApp"}, assert_success=False)
-        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": "RenameAppRes"}, assert_success=False)
 
     def tearDown(self):
         BaseClass.tearDown(self)
@@ -177,6 +63,24 @@ class BuildiOSTests(BaseClass):
         Folder.cleanup("ChangeAppResLocationInRoot")
         Folder.cleanup("RenameApp")
         Folder.cleanup("RenameAppRes")
+        Folder.cleanup("ChangeAppLocation.app")
+        File.remove("ChangeAppLocation.ipa")
+        File.remove("ChangeAppLocation-ipa.tgz")
+        Folder.cleanup("ChangeAppLocationAndName.app")
+        File.remove("ChangeAppLocationAndName-ipa.tgz")
+        File.remove("ChangeAppLocationAndName.ipa")
+        Folder.cleanup("ChangeAppResLocation.app")
+        File.remove("ChangeAppResLocation-ipa.tgz")
+        File.remove("ChangeAppResLocation.ipa")
+        Folder.cleanup("ChangeAppResLocationInRoot.app")
+        File.remove("ChangeAppResLocationInRoot-ipa.tgz")
+        File.remove("ChangeAppResLocationInRoot.ipa")
+        Folder.cleanup("RenameApp.app")
+        File.remove("RenameApp.ipa")
+        File.remove("RenameApp-ipa.tgz")
+        Folder.cleanup("RenameAppRes.app")
+        File.remove("RenameAppRes.ipa")
+        File.remove("RenameAppRes-ipa.tgz")
 
     @parameterized.expand([
         'ChangeAppLocation',
@@ -188,8 +92,6 @@ class BuildiOSTests(BaseClass):
     ])
     def test_001_build_ios(self, app_name):
         Tns.build_ios(attributes={"--path": app_name}, log_trace=True)
-
-        Tns.platform_add_android(attributes={"--path": app_name, "--frameworkPath": ANDROID_PACKAGE})
         Tns.build_ios(attributes={"--path": app_name, "--forDevice": "", "--release": ""}, log_trace=True)
 
         # Verify no aar and frameworks in platforms folder
@@ -212,7 +114,7 @@ class BuildiOSTests(BaseClass):
         'RenameAppRes'
     ])
     def test_190_build_ios_distribution_provisions(self, app_name):
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": app_name}, assert_success=False)
+        # Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": app_name}, assert_success=False)
 
         # List all provisions and verify them
         output = Tns.build_ios(attributes={"--path": app_name, "--provision": ""}, assert_success=False)

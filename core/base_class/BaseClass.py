@@ -12,8 +12,10 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
 from core.osutils.screen import Screen
-from core.settings.settings import OUTPUT_FOLDER, TEST_RUN_HOME
+from core.settings.settings import OUTPUT_FOLDER, TEST_RUN_HOME, IOS_PACKAGE
 from core.tns.tns import Tns
+from core.settings.settings import ANDROID_PACKAGE, \
+    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS
 
 
 class BaseClass(unittest.TestCase):
