@@ -88,25 +88,6 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         Process.kill('NativeScript Inspector')
         Tns.kill()
 
-        Folder.cleanup("ChangeAppLocationLS")
-        Folder.cleanup("ChangeAppLocationAndNameLS")
-        Folder.cleanup("ChangeAppResLocationLS")
-        Folder.cleanup("ChangeAppResLocationInRootLS")
-        Folder.cleanup("RenameAppLS")
-        Folder.cleanup("RenameAppResLS")
-        Folder.cleanup("ChangeAppLocationLS.app")
-        File.remove("ChangeAppLocationLS.ipa")
-        Folder.cleanup("ChangeAppLocationAndNameLS.app")
-        File.remove("ChangeAppLocationAndNameLS.ipa")
-        Folder.cleanup("ChangeAppResLocationLS.app")
-        File.remove("ChangeAppResLocationLS.ipa")
-        Folder.cleanup("ChangeAppResLocationInRootLS.app")
-        File.remove("ChangeAppResLocationInRootLS.ipa")
-        Folder.cleanup("RenameAppLS.app")
-        File.remove("RenameAppLS.ipa")
-        Folder.cleanup("RenameAppResLS.app")
-        File.remove("RenameAppResLS.ipa")
-
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
