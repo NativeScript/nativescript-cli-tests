@@ -141,21 +141,38 @@ class Helpers(object):
 
     @staticmethod
     def assert_size(expected, actual, tolerance=5, error_message="Size is not expected."):
+        assertion_error = ''
         x = int(expected)
         y = int(actual)
         if actual >= 0:
             diff = abs(x - y) * 1.00
-            assert diff <= x * tolerance * 0.01, error_message + str(actual)
+            try:
+                assert diff <= x * tolerance * 0.01, error_message + str(actual) + ". Expected size: " + str(expected)
+            except AssertionError, e:
+                assertion_error = str(e)
+        return assertion_error
 
     @staticmethod
     def assert_sizes(expected_sizes, actual_sizes):
+        verification_errors = []
+        assertion_error = ''
         print "Config: " + str(expected_sizes[0])
         print "Actual bundle.js size: " + str(actual_sizes[0])
         print "Actual vendor.js size: " + str(actual_sizes[1])
         print "Actual app size: " + str(actual_sizes[2])
-        Helpers.assert_size(expected_sizes[1], actual_sizes[0], 10, "Actual bundle.js size:")
-        Helpers.assert_size(expected_sizes[2], actual_sizes[1], 10, "Actual vendor.js size:")
-        Helpers.assert_size(expected_sizes[3], actual_sizes[2], 5, "Actual app size:")
+        assertion_error = Helpers.assert_size(expected_sizes[1], actual_sizes[0], 10, "Actual bundle.js size:")
+        if assertion_error != '':
+            verification_errors.append(assertion_error)
+            assertion_error = ''
+        assertion_error = Helpers.assert_size(expected_sizes[2], actual_sizes[1], 10, "Actual vendor.js size:")
+        if assertion_error != '':
+            verification_errors.append(assertion_error)
+            assertion_error = ''
+        assertion_error = Helpers.assert_size(expected_sizes[3], actual_sizes[2], 5, "Actual app size:")
+        if assertion_error != '':
+            verification_errors.append(assertion_error)
+            assertion_error = ''
+        return verification_errors
 
     @staticmethod
     def verify_size(app_name, config):
@@ -170,5 +187,6 @@ class Helpers(object):
         for item in csv_data:
             if config == item[0]:
                 expected_sizes = item
-
-        Helpers.assert_sizes(actual_sizes=actual_sizes, expected_sizes=expected_sizes)
+        verification_errors = []
+        verification_errors = Helpers.assert_sizes(actual_sizes=actual_sizes, expected_sizes=expected_sizes)
+        return verification_errors

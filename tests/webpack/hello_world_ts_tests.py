@@ -62,13 +62,15 @@ class WebPackHelloWorldTS(BaseClass):
                                       "--release": "",
                                       "--bundle": ""})
 
-        Helpers.verify_size(app_name=self.app_name, config="ts-android-bundle")
+        verification_errors = Helpers.verify_size(app_name=self.app_name, config="ts-android-bundle")
         Helpers.run_android_via_adb(app_name=self.app_name, image=self.image_original)
+        self.assertEqual([], verification_errors)
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_001_ios_build_release_with_bundle(self):
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": ""})
-        Helpers.verify_size(app_name=self.app_name, config="ts-ios-bundle")
+        verification_errors = Helpers.verify_size(app_name=self.app_name, config="ts-ios-bundle")
+        self.assertEqual([], verification_errors)
 
     def test_100_android_build_release_with_bundle_and_uglify(self):
         Tns.build_android(attributes={"--path": self.app_name,
@@ -80,8 +82,9 @@ class WebPackHelloWorldTS(BaseClass):
                                       "--bundle": "",
                                       "--env.uglify": ""})
 
-        Helpers.verify_size(app_name=self.app_name, config="ts-android-bundle-uglify")
+        verification_errors = Helpers.verify_size(app_name=self.app_name, config="ts-android-bundle-uglify")
         Helpers.run_android_via_adb(app_name=self.app_name, image=self.image_original)
+        self.assertEqual([], verification_errors)
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_100_ios_build_release_with_bundle_and_uglify(self):
@@ -92,7 +95,8 @@ class WebPackHelloWorldTS(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
                                   "--env.uglify": ""})
 
-        Helpers.verify_size(app_name=self.app_name, config="ts-ios-bundle-uglify")
+        verification_errors = Helpers.verify_size(app_name=self.app_name, config="ts-ios-bundle-uglify")
+        self.assertEqual([], verification_errors)
 
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Windows can't build with snapshot.")
     def test_110_android_build_release_with_bundle_and_snapshot(self):
@@ -105,8 +109,9 @@ class WebPackHelloWorldTS(BaseClass):
                                       "--bundle": "",
                                       "--env.snapshot": ""})
 
-        Helpers.verify_size(app_name=self.app_name, config="ts-android-bundle-snapshot")
+        verification_errors = Helpers.verify_size(app_name=self.app_name, config="ts-android-bundle-snapshot")
         Helpers.run_android_via_adb(app_name=self.app_name, image=self.image_original)
+        self.assertEqual([], verification_errors)
 
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Windows can't build with snapshot.")
     def test_120_android_build_release_with_bundle_and_snapshot_and_uglify(self):
@@ -120,8 +125,9 @@ class WebPackHelloWorldTS(BaseClass):
                                       "--env.uglify": "",
                                       "--env.snapshot": ""})
 
-        Helpers.verify_size(app_name=self.app_name, config="ts-android-bundle-uglify-snapshot")
+        verification_errors = Helpers.verify_size(app_name=self.app_name, config="ts-android-bundle-uglify-snapshot")
         Helpers.run_android_via_adb(app_name=self.app_name, image=self.image_original)
+        self.assertEqual([], verification_errors)
 
     def test_200_run_android_with_bundle_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
