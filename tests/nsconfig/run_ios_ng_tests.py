@@ -25,11 +25,11 @@ class RunIOSSimulatorTestsNG(BaseClass):
         Simulator.stop()
         cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
 
-        if File.exists(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS"):
-            assert "ChangeAppLocationLSNG" in TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS"
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
-                        TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
+        if File.exists(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG"):
+            assert "ChangeAppLocationLSNG" in TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG"
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG", TEST_RUN_HOME + "/ChangeAppLocationLSNG")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLSNG",
+                        TEST_RUN_HOME + "/ChangeAppLocationAndNameLSNG")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLSNG", TEST_RUN_HOME + "/ChangeAppResLocationLSNG")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLSNG",
                         TEST_RUN_HOME + "/ChangeAppResLocationInRootLSNG")
