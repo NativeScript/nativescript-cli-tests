@@ -3,16 +3,13 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_PACKAGE, IOS_PACKAGE
 from core.tns.tns import Tns
-from tests.nsconfig.build_android_ng_tests import BuildAndroidNGTests
 from tests.nsconfig.build_android_tests import BuildAndroidTests
-from tests.nsconfig.build_ios_ng_tests import BuildiOSNGTests
 from tests.nsconfig.build_ios_tests import BuildiOSTests
 from tests.nsconfig.create_apps.create_ns_config_apps import CreateNSConfigApps
 from tests.nsconfig.debug_android_tests import DebugAndroidEmulatorTests
 from tests.nsconfig.debug_ios_chrome_tests import DebugiOSChromeSimulatorTests
 from tests.nsconfig.debug_ios_inspector_tests import DebugiOSInspectorSimulatorTests
 from tests.nsconfig.run_android_tests import RunAndroidEmulatorTests
-from tests.nsconfig.run_ios_ng_tests import RunIOSSimulatorTestsNG
 from tests.nsconfig.run_ios_tests import RunIOSSimulatorTests
 
 
@@ -126,6 +123,3 @@ class SuiteRunAll(BaseClass):
         DebugAndroidEmulatorTests()
         DebugiOSInspectorSimulatorTests()
         DebugiOSChromeSimulatorTests()
-        BuildiOSNGTests()
-        BuildAndroidNGTests()
-        RunIOSSimulatorTestsNG()
