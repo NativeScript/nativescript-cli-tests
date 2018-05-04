@@ -8,43 +8,6 @@ from tests.nsconfig.create_apps.create_ns_config_apps import CreateNSConfigApps
 from tests.nsconfig.run_android_ng_tests import RunAndroidEmulatorTestsNG
 
 
-# class Test1(unittest.TestCase):
-    # def testOne(self):
-    #     BaseNSConfigClass.createAppsNG(self.__name__)
-    #     pass
-
-# class Test1(unittest.TestCase):
-#     def TestOne(self):
-#         print "Hello 1"
-#         pass
-#
-#     def TestTwo(self):
-#         print "Hello 2"
-#         pass
-#
-# class Test2(unittest.TestCase):
-#     def TestThree(self):
-#         pass
-#     def testFour(self):
-#         pass
-#
-# if __name__ == '__main__':
-#     # Run only the tests in the specified classes
-#
-#     test_classes_to_run = [Test1, Test2]
-#
-#     loader = unittest.TestLoader()
-#
-#     suites_list = []
-#     for test_class in test_classes_to_run:
-#         suite = loader.loadTestsFromTestCase(test_class)
-#         suites_list.append(suite)
-#
-#     big_suite = unittest.TestSuite(suites_list)
-#
-#     runner = unittest.TextTestRunner()
-#     results = runner.run(big_suite)
-
 class SuiteRunAndroidNG(BaseClass):
     @classmethod
     def setUpClass(cls):
