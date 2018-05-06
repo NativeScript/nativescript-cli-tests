@@ -277,15 +277,15 @@ class RunAndroidEmulatorTests(BaseClass):
         assert '' in output, "Failed to change timezone!"
 
         # Change main-page.js so it contains only logging information
-        source_js = os.path.join('data', "issues", 'android-runtime-961', 'main-page.js')
+        source_js = os.path.join('data', 'console-log-date', 'main-page.js')
         target_js = os.path.join(self.app_name, 'app', 'main-page.js')
         File.copy(src=source_js, dest=target_js)
         # Change main-view-model.js so it contains the new date logging functionality
-        source_js = os.path.join('data', "issues", 'android-runtime-961', 'main-view-model.js')
+        source_js = os.path.join('data', 'console-log-date', 'main-view-model.js')
         target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
         File.copy(src=source_js, dest=target_js)
         # Change app package.json so it contains the options for remove V8 date cache
-        source_js = os.path.join('data', "issues", 'android-runtime-961', 'package.json')
+        source_js = os.path.join('data', 'console-log-date', 'package.json')
         target_js = os.path.join(self.app_name, 'app', 'package.json')
         File.copy(src=source_js, dest=target_js)
 
@@ -319,8 +319,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Open Date and time settings to change the timezone
         output = Adb.run("shell am start -a android.settings.DATE_SETTINGS", EMULATOR_ID)
-        assert 'Starting: Intent { act=android.settings.DATE_SETTINGS }' in output, \
-            "Failed to start Date and Time settings!"
+        assert 'Starting: Intent { act=android.settings.DATE_SETTINGS }' in output, "Failed to change timezone!"
 
         # Change TimeZone
         time.sleep(15)
@@ -332,7 +331,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # Open the test app again
         output = Adb.run("shell am start -n org.nativescript.TestApp/com.tns.NativeScriptActivity", EMULATOR_ID)
         assert 'Starting: Intent { cmp=org.nativescript.TestApp/com.tns.NativeScriptActivity }' in output, \
-            "Failed to start Nativescript app!"
+            "Failed to change timezone!"
         time.sleep(15)
 
         Device.click(device_id=EMULATOR_ID, text="TAP", timeout=30)
