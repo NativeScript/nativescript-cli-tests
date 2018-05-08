@@ -175,9 +175,12 @@ class RunAndroidEmulatorTests(BaseClass):
 
         strings = ['Project successfully prepared', 'Project successfully built',
                    'Successfully installed on device with identifier',
-                   'Successfully started on device with identifier',
-                   'JS:', EMULATOR_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120)
+                   'Successfully started on device with identifier', EMULATOR_ID]
+
+        # https://github.com/NativeScript/android-runtime/issues/1024
+        not_existing_log = ['JS:']
+        Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_log, timeout=120,
+                         clean_log=False)
 
         # Verify app looks is update after changes in js, css and xml
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
