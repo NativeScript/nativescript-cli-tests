@@ -188,7 +188,7 @@ class BuildAndroidTests(BaseClass):
         output = File.read(self.app_name_dash + "/" + TnsAsserts.PLATFORM_ANDROID_SRC_MAIN_PATH + "AndroidManifest.xml")
         assert app_identifier in output.lower()
 
-    def test_301_build_project_with_space(self):
+    def test_301_build_project_with_space_release(self):
         Tns.create_app(self.app_name_space)
         Tns.platform_add_android(
             attributes={"--path": "\"" + self.app_name_space + "\"", "--frameworkPath": ANDROID_PACKAGE})
