@@ -422,7 +422,6 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/assets")
         assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/java")
         assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/res/values")
-        # Tns.build_android(attributes={"--path": self.app_name})
 
         Tns.run_tns_command("build android", attributes={"--path": self.app_name})
 
@@ -438,3 +437,20 @@ class BuildAndroidTests(BaseClass):
                            "/platforms/android/app/build/outputs/apk/x86Demo/debug/app-x86-demo-debug.apk")
         assert File.exists(self.app_name +
                            "/platforms/android/app/build/outputs/apk/x86Full/debug/app-x86-full-debug.apk")
+
+    def test_463_generated_classes_not_be_deleted_on_rebuild(self):
+        # https: // github.com / NativeScript / nativescript - cli / issues / 3560
+        target = os.path.join(self.app_name, 'app')
+        source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-904', 'MyActivity.js')
+        Folder.copy(source, target)
+
+        output = Tns.build_android(attributes={"--path": self.app_name})
+
+        assert File.exists(self.app_name + "/app/MyActivity.js")
+        assert File.exists(self.app_name + "/platforms/android/app/src/main/java/com/tns/MyActivity.java")
+
+        File.remove(self.app_name + '/app/MyActivity.js')
+
+        Tns.build_android(attributes={"--path": self.app_name})
+
+        assert not File.exists(self.app_name + "/platforms/android/app/src/main/java/com/tns/MyActivity.java")
