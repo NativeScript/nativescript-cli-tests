@@ -13,6 +13,7 @@ pip install flaky
 pip install uiautomator
 pip install Pillow
 pip install pytesseract
+pip install pytz
 brew install tesseract --all-languages
 ```
 
