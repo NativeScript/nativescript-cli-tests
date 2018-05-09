@@ -320,7 +320,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # Open Date and time settings to change the timezone
         output = Adb.run("shell am start -a android.settings.DATE_SETTINGS", EMULATOR_ID)
         assert 'Starting: Intent { act=android.settings.DATE_SETTINGS }' in output, \
-            "Failed to start Date and Time settings!"
+            "Failed to start Date and Time settings activity!"
 
         # Change TimeZone
         time.sleep(15)
@@ -332,7 +332,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # Open the test app again
         output = Adb.run("shell am start -n org.nativescript.TestApp/com.tns.NativeScriptActivity", EMULATOR_ID)
         assert 'Starting: Intent { cmp=org.nativescript.TestApp/com.tns.NativeScriptActivity }' in output, \
-            "Failed to start Nativescript app!"
+            "Failed to start Nativescript test app activity!"
         time.sleep(15)
 
         Device.click(device_id=EMULATOR_ID, text="TAP", timeout=30)
