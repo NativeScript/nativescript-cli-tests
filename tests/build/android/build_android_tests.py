@@ -438,7 +438,7 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.app_name +
                            "/platforms/android/app/build/outputs/apk/x86Full/debug/app-x86-full-debug.apk")
 
-    def test_462_classes_not_cleaned_on_rebuild(self):
+    def test_463_generated_classes_not_be_deleted_on_rebuild(self):
         # https: // github.com / NativeScript / nativescript - cli / issues / 3560
         target = os.path.join(self.app_name, 'app')
         source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-904', 'MyActivity.js')
