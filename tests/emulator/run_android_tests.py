@@ -178,9 +178,12 @@ class RunAndroidEmulatorTests(BaseClass):
 
         strings = ['Project successfully prepared', 'Project successfully built',
                    'Successfully installed on device with identifier',
-                   'Successfully started on device with identifier',
-                   'JS:', EMULATOR_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120)
+                   'Successfully started on device with identifier', EMULATOR_ID]
+
+        # https://github.com/NativeScript/android-runtime/issues/1024
+        not_existing_log = ['JS:']
+        Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_log, timeout=120,
+                         clean_log=False)
 
         # Verify app looks is update after changes in js, css and xml
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
@@ -287,6 +290,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # Change app package.json so it contains the options for remove V8 date cache
         source_js = os.path.join('data', "issues", 'android-runtime-961', 'package.json')
         target_js = os.path.join(self.app_name, 'app', 'package.json')
+        
         File.copy(src=source_js, dest=target_js)
 
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
@@ -333,6 +337,7 @@ class RunAndroidEmulatorTests(BaseClass):
         output = Adb.run("shell am start -n org.nativescript.TestApp/com.tns.NativeScriptActivity", EMULATOR_ID)
         assert 'Starting: Intent { cmp=org.nativescript.TestApp/com.tns.NativeScriptActivity }' in output, \
             "Failed to start Nativescript test app activity!"
+          
         time.sleep(15)
 
         Device.click(device_id=EMULATOR_ID, text="TAP", timeout=30)

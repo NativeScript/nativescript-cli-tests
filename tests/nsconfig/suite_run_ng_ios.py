@@ -8,7 +8,7 @@ from tests.nsconfig.create_apps.create_ns_config_apps import CreateNSConfigApps
 from tests.nsconfig.run_ios_ng_tests import RunIOSSimulatorTestsNG
 
 
-class SuiteRunAndroidNG(BaseClass):
+class SuiteRunIOSNG(BaseClass):
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
@@ -92,6 +92,6 @@ class SuiteRunAndroidNG(BaseClass):
         File.remove("RenameAppResLSNG.ipa")
         pass
 
-    def run_android_01(self):
+    def run_ios_01(self):
         BuildiOSNGTests()
         RunIOSSimulatorTestsNG()
