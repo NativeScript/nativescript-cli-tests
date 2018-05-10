@@ -444,7 +444,7 @@ class BuildAndroidTests(BaseClass):
         source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-904', 'MyActivity.js')
         Folder.copy(source, target)
 
-        output = Tns.build_android(attributes={"--path": self.app_name})
+        Tns.build_android(attributes={"--path": self.app_name})
 
         assert File.exists(self.app_name + "/app/MyActivity.js")
         assert File.exists(self.app_name + "/platforms/android/app/src/main/java/com/tns/MyActivity.java")
