@@ -321,6 +321,25 @@ class BuildAndroidTests(BaseClass):
         assert "# tns build android" in output
         assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, self.release_apk))
 
+    def test_410_generated_classes_not_be_deleted_on_rebuild(self):
+        # https: // github.com / NativeScript / nativescript - cli / issues / 3560
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
+                           assert_success=False)
+        target = os.path.join(self.app_name, 'app')
+        source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-904', 'MyActivity.js')
+        Folder.copy(source, target)
+
+        Tns.build_android(attributes={"--path": self.app_name})
+
+        assert File.exists(self.app_name + "/app/MyActivity.js")
+        assert File.exists(self.app_name + "/platforms/android/app/src/main/java/com/tns/MyActivity.java")
+
+        File.remove(self.app_name + '/app/MyActivity.js')
+
+        Tns.build_android(attributes={"--path": self.app_name})
+
+        assert not File.exists(self.app_name + "/platforms/android/app/src/main/java/com/tns/MyActivity.java")
+
     @unittest.skip("will change step of test")
     def test_440_binding_text_exists(self):
         # https: // github.com / NativeScript / android - runtime / issues / 833
@@ -437,22 +456,3 @@ class BuildAndroidTests(BaseClass):
                            "/platforms/android/app/build/outputs/apk/x86Demo/debug/app-x86-demo-debug.apk")
         assert File.exists(self.app_name +
                            "/platforms/android/app/build/outputs/apk/x86Full/debug/app-x86-full-debug.apk")
-
-    def test_463_generated_classes_not_be_deleted_on_rebuild(self):
-        # https: // github.com / NativeScript / nativescript - cli / issues / 3560
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
-                           assert_success=False)
-        target = os.path.join(self.app_name, 'app')
-        source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-904', 'MyActivity.js')
-        Folder.copy(source, target)
-
-        Tns.build_android(attributes={"--path": self.app_name})
-
-        assert File.exists(self.app_name + "/app/MyActivity.js")
-        assert File.exists(self.app_name + "/platforms/android/app/src/main/java/com/tns/MyActivity.java")
-
-        File.remove(self.app_name + '/app/MyActivity.js')
-
-        Tns.build_android(attributes={"--path": self.app_name})
-
-        assert not File.exists(self.app_name + "/platforms/android/app/src/main/java/com/tns/MyActivity.java")
