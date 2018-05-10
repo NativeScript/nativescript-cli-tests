@@ -440,6 +440,8 @@ class BuildAndroidTests(BaseClass):
 
     def test_463_generated_classes_not_be_deleted_on_rebuild(self):
         # https: // github.com / NativeScript / nativescript - cli / issues / 3560
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
+                           assert_success=False)
         target = os.path.join(self.app_name, 'app')
         source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-904', 'MyActivity.js')
         Folder.copy(source, target)
