@@ -54,8 +54,14 @@ class BaseClass(unittest.TestCase):
         if os.path.isdir(src):
             try:
                 shutil.copytree(src, dest)
-                shutil.rmtree(os.path.join(dest, "platforms"), ignore_errors=True)
-                shutil.rmtree(os.path.join(dest, "node_modules"), ignore_errors=True)
+                try:
+                    shutil.rmtree(os.path.join(dest, "platforms"))
+                except Exception as e:
+                    print (e)
+                try:
+                    shutil.rmtree(os.path.join(dest, "node_modules"))
+                except Exception as e:
+                    print (e)
             except:
                 print "Failed to backup {0}".format(cls.app_name)
         else:
