@@ -325,6 +325,7 @@ class BuildAndroidTests(BaseClass):
         # https: // github.com / NativeScript / nativescript - cli / issues / 3560
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
                            assert_success=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
         target = os.path.join(self.app_name, 'app')
         source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-904', 'MyActivity.js')
         Folder.copy(source, target)
