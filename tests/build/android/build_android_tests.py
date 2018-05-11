@@ -328,7 +328,7 @@ class BuildAndroidTests(BaseClass):
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
         target = os.path.join(self.app_name, 'app')
         source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-904', 'MyActivity.js')
-        Folder.copy(source, target)
+        File.copy(source, target)
 
         Tns.build_android(attributes={"--path": self.app_name})
 
