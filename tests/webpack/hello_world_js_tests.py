@@ -108,7 +108,8 @@ class WebPackHelloWorldJS(BaseClass):
                                       "--bundle": "",
                                       "--env.snapshot": ""})
 
-        verification_errors = Helpers.verify_size(app_name=self.app_name, config="js-android-bundle-snapshot")
+        verification_errors = Helpers.verify_size(app_name=self.app_name, config="js-android-bundle-snapshot",
+                                                  check_embedded_script_size=True)
         Helpers.run_android_via_adb(app_name=self.app_name, image=self.image_original)
         self.assertEqual([], verification_errors)
 
@@ -124,7 +125,8 @@ class WebPackHelloWorldJS(BaseClass):
                                       "--env.uglify": "",
                                       "--env.snapshot": ""})
 
-        verification_errors = Helpers.verify_size(app_name=self.app_name, config="js-android-bundle-uglify-snapshot")
+        verification_errors = Helpers.verify_size(app_name=self.app_name, config="js-android-bundle-uglify-snapshot",
+                                                  check_embedded_script_size=True)
         Helpers.run_android_via_adb(app_name=self.app_name, image=self.image_original)
         self.assertEqual([], verification_errors)
 

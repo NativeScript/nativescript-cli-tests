@@ -118,12 +118,16 @@ class Helpers(object):
                             tolerance=tolerance)
 
     @staticmethod
-    def get_android_size(app_name):
+    def get_android_size(app_name, check_embedded_script_size=False):
         base_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH)
         apk_path = Helpers.get_apk_path(app_name=app_name, config="release")
         bundle_js_size = File.get_size(os.path.join(base_path, "bundle.js"))
         vendor_size = File.get_size(os.path.join(base_path, "vendor.js"))
         app_size = File.get_size(apk_path)
+
+        if check_embedded_script_size:
+            embedded_script_size = File.get_size(os.path.join(base_path, "_embedded_script_.js"))
+            return bundle_js_size, vendor_size, app_size, embedded_script_size
 
         return bundle_js_size, vendor_size, app_size
 
@@ -153,13 +157,15 @@ class Helpers(object):
         return assertion_error
 
     @staticmethod
-    def assert_sizes(expected_sizes, actual_sizes):
+    def assert_sizes(expected_sizes, actual_sizes, check_embedded_script_size=False):
         verification_errors = []
         assertion_error = ''
         print "Config: " + str(expected_sizes[0])
         print "Actual bundle.js size: " + str(actual_sizes[0])
         print "Actual vendor.js size: " + str(actual_sizes[1])
         print "Actual app size: " + str(actual_sizes[2])
+        if check_embedded_script_size:
+            print "Actual _embedded_script_.js size: " + str(actual_sizes[3])
         assertion_error = Helpers.assert_size(expected_sizes[1], actual_sizes[0], 10, "Actual bundle.js size:")
         if assertion_error != '':
             verification_errors.append(assertion_error)
@@ -172,12 +178,21 @@ class Helpers(object):
         if assertion_error != '':
             verification_errors.append(assertion_error)
             assertion_error = ''
+
+        if check_embedded_script_size:
+            assertion_error = Helpers.assert_size(expected_sizes[4], actual_sizes[3], 10,
+                                                  "Actual _embedded_script_.js size:")
+            if assertion_error != '':
+                verification_errors.append(assertion_error)
+                assertion_error = ''
+
         return verification_errors
 
     @staticmethod
-    def verify_size(app_name, config):
+    def verify_size(app_name, config, check_embedded_script_size=False):
         if "android" in config:
-            actual_sizes = Helpers.get_android_size(app_name=app_name)
+            actual_sizes = Helpers.get_android_size(app_name=app_name,
+                                                    check_embedded_script_size=check_embedded_script_size)
         if "ios" in config:
             actual_sizes = Helpers.get_ios_size(app_name=app_name)
 
@@ -188,5 +203,6 @@ class Helpers(object):
             if config == item[0]:
                 expected_sizes = item
         verification_errors = []
-        verification_errors = Helpers.assert_sizes(actual_sizes=actual_sizes, expected_sizes=expected_sizes)
+        verification_errors = Helpers.assert_sizes(actual_sizes=actual_sizes, expected_sizes=expected_sizes,
+                                                   check_embedded_script_size=check_embedded_script_size)
         return verification_errors
