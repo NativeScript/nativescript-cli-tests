@@ -33,6 +33,17 @@ from core.tns.tns_verifications import TnsAsserts
 
 class RunIOSSimulatorTests(BaseClass):
     SIMULATOR_ID = ''
+    one_hundred_symbols_string = "123456789012345678901234567890123456789012345678901234567890" \
+                                 "1234567890123456789012345678901234567890"
+    very_long_string = ''
+    for x in range(0, 30):
+        very_long_string = very_long_string + one_hundred_symbols_string
+
+    max_long_string = ''
+    for x in range(0, 9):
+        max_long_string = max_long_string + one_hundred_symbols_string
+    max_long_string = max_long_string + "1234567890123456789012345678901234567890123456789012345678901234567890" \
+                                        "123456789"
 
     @classmethod
     def setUpClass(cls):
@@ -138,27 +149,6 @@ class RunIOSSimulatorTests(BaseClass):
                             "]"
 
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
-
-        one_hundred_symbols_string = "123456789012345678901234567890123456789012345678901234567890" \
-                                     "1234567890123456789012345678901234567890"
-
-        very_long_string = one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string;
-
-        max_long_string = one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                          + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                          + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                          + "1234567890123456789012345678901234567890123456789012345678901234567890" \
-                            "123456789";
-
         strings = ['Project successfully built',
                    'Successfully installed on device with identifier', self.SIMULATOR_ID,
                    "CONSOLE LOG",
@@ -186,13 +176,13 @@ class RunIOSSimulatorTests(BaseClass):
                    "Button(8)",
                    "-1 text {",
                    john_obj2,
-                   max_long_string,
+                   self.max_long_string,
                    "CONSOLE DEBUG Time:",
                    "### TEST END ###"
                    ]
 
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
-        assert very_long_string not in log
+        assert self.very_long_string not in log
 
     def test_181_tns_run_ios_console_dir(self):
         """
@@ -210,27 +200,6 @@ class RunIOSSimulatorTests(BaseClass):
                    "==== object dump end ===="
 
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
-
-        one_hundred_symbols_string = "123456789012345678901234567890123456789012345678901234567890" \
-                                     "1234567890123456789012345678901234567890"
-
-        very_long_string = one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                           + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string;
-
-        max_long_string = one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                          + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                          + one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string \
-                          + "1234567890123456789012345678901234567890123456789012345678901234567890" \
-                            "123456789";
-
         strings = ['Project successfully built',
                    'Successfully installed on device with identifier', self.SIMULATOR_ID,
                    "true",
@@ -239,12 +208,12 @@ class RunIOSSimulatorTests(BaseClass):
                    "undefined",
                    "-1",
                    "text",
-                   max_long_string,
+                   self.max_long_string,
                    john_obj
                    ]
 
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
-        assert very_long_string not in log
+        assert self.very_long_string not in log
 
     def test_200_tns_run_ios_break_and_fix_app(self):
         """
