@@ -14,16 +14,11 @@ function pageLoaded(args) {
     var button = new buttonModule.Button();
 
     var one_hundred_symbols_string="1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
-    var very_long_string = one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string +
-    one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string +
-    one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string +
-    one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string +
-    one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string +
-    one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string +
-    one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string +
-    one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string +
-    one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string +
-    one_hundred_symbols_string + one_hundred_symbols_string + one_hundred_symbols_string;
+    var very_long_string = "";
+
+    for (i = 0; i < 30; i++) {
+        very_long_string = very_long_string + one_hundred_symbols_string;
+    }
 
     console.log(very_long_string);
 
