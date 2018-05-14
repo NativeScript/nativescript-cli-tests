@@ -331,7 +331,7 @@ class RunAndroidEmulatorTests(BaseClass):
         time.sleep(20)
         Device.click(device_id=EMULATOR_ID, text="Select time zone", timeout=15)
         time.sleep(25)
-        Device.click(device_id=EMULATOR_ID, text="Pacific Daylight Time", timeout=15)
+        Device.click(device_id=EMULATOR_ID, text="Pacific Daylight Time", timeout=60)
         time.sleep(10)
 
         # Open the test app again
