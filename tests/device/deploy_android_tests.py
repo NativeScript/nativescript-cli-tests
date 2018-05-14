@@ -43,7 +43,7 @@ class DeployAndroidTests(BaseClass):
 
     def test_001_deploy_android(self):
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
-        output = Tns.deploy_android(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=180)
+        output = Tns.deploy_android(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=240)
 
         device_ids = Device.get_ids(platform=Platform.ANDROID)
         for device_id in device_ids:
