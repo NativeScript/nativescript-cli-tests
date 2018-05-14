@@ -311,6 +311,7 @@ class RunAndroidEmulatorTests(BaseClass):
         date_to_find_gmt = time_utc.strftime('%a %b %d %Y %H:.{2}:.{2}') + " GMT\+0000 \(UTC\)"
 
         Device.click(device_id=EMULATOR_ID, text="TAP", timeout=30)
+        Tns.wait_for_log(log_file=log, string_list=["GMT+0000 (UTC)"], timeout=180, check_interval=10, clean_log=False)
 
         # Assert date time is correct
         if re.search(date_to_find_gmt, str(file.read(file(log)))):
@@ -327,11 +328,11 @@ class RunAndroidEmulatorTests(BaseClass):
             "Failed to start Date and Time settings activity!"
 
         # Change TimeZone
-        time.sleep(15)
-        Device.click(device_id=EMULATOR_ID, text="Select time zone", timeout=5)
-        time.sleep(15)
-        Device.click(device_id=EMULATOR_ID, text="Pacific Daylight Time", timeout=5)
-        time.sleep(5)
+        time.sleep(20)
+        Device.click(device_id=EMULATOR_ID, text="Select time zone", timeout=15)
+        time.sleep(25)
+        Device.click(device_id=EMULATOR_ID, text="Pacific Daylight Time", timeout=15)
+        time.sleep(10)
 
         # Open the test app again
         output = Adb.run("shell am start -n org.nativescript.TestApp/com.tns.NativeScriptActivity", EMULATOR_ID)
@@ -341,7 +342,8 @@ class RunAndroidEmulatorTests(BaseClass):
         time.sleep(15)
 
         Device.click(device_id=EMULATOR_ID, text="TAP", timeout=30)
-
+        Tns.wait_for_log(log_file=log, string_list=["GMT-0700 (PDT)"], timeout=180, check_interval=10,
+                         clean_log=False)
         # Generate regex for asserting date and time
         date_to_find_los_angeles = los_angeles_time.strftime('%a %b %d %Y %H:.{2}:.{2}') + " GMT\-0700 \(PDT\)"
 
