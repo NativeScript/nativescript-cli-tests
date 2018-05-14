@@ -351,7 +351,7 @@ class RunAndroidEmulatorTests(BaseClass):
         if re.search(date_to_find_los_angeles, str(file.read(file(log)))):
             print "Date was correct!"
         else:
-            assert 1 == 2, 'Date {0} was not found! \n Log: \n {1}'.format(date_to_find_gmt, file.read(file(log)))
+            assert 1 == 2, 'Date {0} was not found! \n Log: \n {1}'.format(date_to_find_los_angeles, file.read(file(log)))
 
     def test_200_tns_run_android_break_and_fix_app(self):
         """
