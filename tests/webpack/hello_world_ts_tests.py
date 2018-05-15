@@ -146,7 +146,8 @@ class WebPackHelloWorldTS(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=120)
         Helpers.android_screen_match(image=self.image_change)
 
         # Revert changes
@@ -155,7 +156,8 @@ class WebPackHelloWorldTS(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=120)
         Helpers.android_screen_match(image=self.image_original)
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
@@ -173,7 +175,8 @@ class WebPackHelloWorldTS(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=120)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change)
 
         # Revert changes
@@ -182,7 +185,8 @@ class WebPackHelloWorldTS(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=120)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
 
     def test_210_run_android_with_bundle_uglify_sync_changes(self):
@@ -201,7 +205,8 @@ class WebPackHelloWorldTS(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=120)
         Helpers.android_screen_match(image=self.image_change)
 
         # Revert changes
@@ -210,7 +215,8 @@ class WebPackHelloWorldTS(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=120)
         Helpers.android_screen_match(image=self.image_original)
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
@@ -229,7 +235,7 @@ class WebPackHelloWorldTS(BaseClass):
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
-                         timeout=60)
+                         timeout=120)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change, timeout=60)
 
         # Revert changes
