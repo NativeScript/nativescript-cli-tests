@@ -16,7 +16,7 @@ from core.settings.settings import OUTPUT_FOLDER, TEST_RUN_HOME, IOS_PACKAGE
 from core.tns.tns import Tns
 from core.settings.settings import ANDROID_PACKAGE, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS
-
+from os import listdir
 
 class BaseClass(unittest.TestCase):
     app_name = "TestApp"
@@ -53,9 +53,12 @@ class BaseClass(unittest.TestCase):
         dest = os.path.join(artifacts_folder, cls.app_name)
         if os.path.isdir(src):
             try:
-                shutil.copytree(src, dest)
-                shutil.rmtree(os.path.join(dest, "platforms"))
-                shutil.rmtree(os.path.join(dest, "node_modules"))
+                for file_or_folder in listdir(src):
+                    if os.path.isdir(os.path.join(src, file_or_folder)):
+                        if file_or_folder != "platforms" and file_or_folder != "node_modules":
+                            shutil.copytree(os.path.join(src, file_or_folder), os.path.join(dest, file_or_folder))
+                    else:
+                        shutil.copyfile(os.path.join(src, file_or_folder), os.path.join(dest, file_or_folder))
             except Exception as e:
                 print "Failed to backup {0}. Exception is {1}.".format(cls.app_name, e)
         else:
