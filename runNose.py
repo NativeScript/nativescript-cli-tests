@@ -80,6 +80,10 @@ if __name__ == '__main__':
         disable_crash_report()
         get_test_packages(platform=Platform.BOTH)
         Simulator.reset()
+
+        if "8." in Xcode.get_version():
+            SIMULATOR_SDK = '10.0'
+
         Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
         Xcode.cleanup_cache()  # Clean Xcode cache folders
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
