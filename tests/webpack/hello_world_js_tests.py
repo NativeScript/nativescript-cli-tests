@@ -147,7 +147,7 @@ class WebPackHelloWorldJS(BaseClass):
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
                          timeout=120)
-        Helpers.android_screen_match(image=self.image_change)
+        Helpers.android_screen_match(image=self.image_change, timeout=120)
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, self.js_change)
@@ -157,7 +157,7 @@ class WebPackHelloWorldJS(BaseClass):
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
                          timeout=120)
-        Helpers.android_screen_match(image=self.image_original)
+        Helpers.android_screen_match(image=self.image_original, timeout=120)
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_200_run_ios_with_bundle_sync_changes(self):
