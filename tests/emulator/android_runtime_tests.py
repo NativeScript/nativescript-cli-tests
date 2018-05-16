@@ -12,7 +12,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
-
+from core.tns.tns_platform_type import Platform
 
 class RuntimeTests(BaseClass):
     custom_js_file = os.path.join(BaseClass.app_name, "app", "my-custom-class.js")
@@ -25,6 +25,10 @@ class RuntimeTests(BaseClass):
         BaseClass.setUpClass(cls.__name__)
         Emulator.ensure_available()
         Folder.cleanup('./' + cls.app_name)
+
+    def tearDown(self):
+        Tns.kill()
+        BaseClass.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
@@ -65,3 +69,34 @@ class RuntimeTests(BaseClass):
         log_string = File.read(log)
         assert "TNS.Native" in log_string, "__enableVerboseLogging() do not enable TNS.Native logs!"
         assert "TNS.Java" in log_string, "__enableVerboseLogging() do not enable TNS.Java logs!"
+
+    def test_301_native_package_starting_with_in_are_working(self):
+        """
+         Test that native packages starting with in could be accessed
+        """
+
+        # Change main-page.js so it contains only logging information
+        source_js = os.path.join('data', "issues", 'android-runtime-1046', 'main-page.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-page.js')
+        File.copy(src=source_js, dest=target_js)
+        # Change app app.gradle so it contains the dependencies to com.github.myinnos:AwesomeImagePicker:1.0.2
+        source_js = os.path.join('data', "issues", 'android-runtime-1046', 'app.gradle')
+        target_js = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
+        File.copy(src=source_js, dest=target_js)
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application'
+                   ]
+
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
+        try:
+            Tns.wait_for_log(log_file=log, string_list=["###TEST PASSED###"], timeout=60, check_interval=10,
+                             clean_log=False)
+        except Exception as e:
+            print str(e)
+            assert 1 == 2, 'Native packages starting with in could not be accessed'
