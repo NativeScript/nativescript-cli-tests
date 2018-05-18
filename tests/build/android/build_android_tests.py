@@ -7,6 +7,7 @@ import unittest
 from zipfile import ZipFile
 
 from core.base_class.BaseClass import BaseClass
+from core.java.java import Java
 from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
@@ -161,6 +162,7 @@ class BuildAndroidTests(BaseClass):
         TnsAsserts.prepared(self.app_name, platform=Platform.ANDROID, output=output, prepare=Prepare.INCREMENTAL)
         Tns.build_android(attributes={"--path": self.app_name})
 
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_202_build_android_with_log_trace_and_platform_not_added_or_empty(self):
         """'tns build android' with log trace options should output more logs."""
         Tns.create_app(self.app_no_platform)
@@ -367,6 +369,7 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/android.d.ts")
         assert File.exists(self.app_name + "/_helpers.d.ts")
 
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_450_resources_update_android(self):
         target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
         source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-34')
@@ -386,6 +389,7 @@ class BuildAndroidTests(BaseClass):
 
         Tns.build_android(attributes={"--path": self.app_name})
 
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_451_resources_update(self):
         target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
         source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-34')
@@ -404,6 +408,7 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/res/values")
         Tns.build_android(attributes={"--path": self.app_name})
 
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_460_include_gradle_flavor(self):
         #https://github.com/NativeScript/android-runtime/pull/937
         #https: // github.com / NativeScript / nativescript - cli / pull / 3467
@@ -428,6 +433,7 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.app_name +
                            "/platforms/android/app/build/outputs/apk/x86Full/debug/app-x86-full-debug.apk")
 
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_461_include_gradle_flavor_update_resources(self):
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
                             assert_success=False)
