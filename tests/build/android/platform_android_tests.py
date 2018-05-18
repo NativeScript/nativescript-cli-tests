@@ -31,6 +31,7 @@ class PlatformAndroidTests(BaseClass):
         BaseClass.setUp(self)
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
 
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_100_platform_add_android(self):
         """ Default `tns platform add` command"""
         Tns.platform_add_android(attributes={"--path": self.app_name})
@@ -39,6 +40,7 @@ class PlatformAndroidTests(BaseClass):
         """ Add platform from local package"""
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_120_platform_add_android_inside_project(self):
         """ Add platform inside project folder (not using --path)"""
         Folder.navigate_to(self.app_name)
