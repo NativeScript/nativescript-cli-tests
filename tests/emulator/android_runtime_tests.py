@@ -71,7 +71,7 @@ class RuntimeTests(BaseClass):
         assert "TNS.Native" in log_string, "__enableVerboseLogging() do not enable TNS.Native logs!"
         assert "TNS.Java" in log_string, "__enableVerboseLogging() do not enable TNS.Java logs!"
     
-  def test_301_native_package_starting_with_in_are_working(self):
+    def test_301_native_package_starting_with_in_are_working(self):
         """
          Test that native packages starting with in could be accessed
         """
@@ -102,7 +102,7 @@ class RuntimeTests(BaseClass):
             print str(e)
             assert 1 == 2, 'Native packages starting with in could not be accessed'
             
-  def test_302_check_if_class_implements_java_interface(self):
+    def test_302_check_if_class_implements_java_interface(self):
         """
          Test if java class implements java interface
          https://github.com/NativeScript/android-runtime/issues/739
