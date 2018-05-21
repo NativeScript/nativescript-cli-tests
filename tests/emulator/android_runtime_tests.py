@@ -70,7 +70,7 @@ class RuntimeTests(BaseClass):
         log_string = File.read(log)
         assert "TNS.Native" in log_string, "__enableVerboseLogging() do not enable TNS.Native logs!"
         assert "TNS.Java" in log_string, "__enableVerboseLogging() do not enable TNS.Java logs!"
-    
+
     def test_301_native_package_starting_with_in_are_working(self):
         """
          Test that native packages starting with in could be accessed
