@@ -11,7 +11,6 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID
 from core.tns.tns import Tns
-from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from core.tns.tns_platform_type import Platform
 
