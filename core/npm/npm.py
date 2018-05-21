@@ -40,7 +40,9 @@ class Npm(object):
     def install(package='', option='', folder=None, log_level=CommandLogLevel.FULL):
         if package is None:
             raise NameError('Package can not be None.')
-        return Npm.__run_npm_command('i {0} {1}'.format(package, option), folder=folder, log_level=log_level)
+        command = 'i {0} {1}'.format(package, option)
+        output = Npm.__run_npm_command(command, folder=folder, log_level=log_level)
+        assert "ERR!" not in output, "`npm " + command + "` failed with: \n" + output
 
     @staticmethod
     def uninstall(package, option='', folder=None, log_level=CommandLogLevel.FULL):

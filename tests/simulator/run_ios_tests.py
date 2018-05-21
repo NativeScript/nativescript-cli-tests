@@ -33,6 +33,17 @@ from core.tns.tns_verifications import TnsAsserts
 
 class RunIOSSimulatorTests(BaseClass):
     SIMULATOR_ID = ''
+    one_hundred_symbols_string = "123456789012345678901234567890123456789012345678901234567890" \
+                                 "1234567890123456789012345678901234567890"
+    very_long_string = ''
+    for x in range(0, 30):
+        very_long_string = very_long_string + one_hundred_symbols_string
+
+    max_long_string = ''
+    for x in range(0, 9):
+        max_long_string = max_long_string + one_hundred_symbols_string
+    max_long_string = max_long_string + "1234567890123456789012345678901234567890123456789012345678901234567890" \
+                                        "123456789"
 
     @classmethod
     def setUpClass(cls):
@@ -45,6 +56,7 @@ class RunIOSSimulatorTests(BaseClass):
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
         Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_PACKAGE})
+        Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
 
     def setUp(self):
@@ -164,11 +176,13 @@ class RunIOSSimulatorTests(BaseClass):
                    "Button(8)",
                    "-1 text {",
                    john_obj2,
+                   self.max_long_string,
                    "CONSOLE DEBUG Time:",
                    "### TEST END ###"
                    ]
 
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+        assert self.very_long_string not in log
 
     def test_181_tns_run_ios_console_dir(self):
         """
@@ -194,10 +208,12 @@ class RunIOSSimulatorTests(BaseClass):
                    "undefined",
                    "-1",
                    "text",
+                   self.max_long_string,
                    john_obj
                    ]
 
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+        assert self.very_long_string not in log
 
     def test_200_tns_run_ios_break_and_fix_app(self):
         """

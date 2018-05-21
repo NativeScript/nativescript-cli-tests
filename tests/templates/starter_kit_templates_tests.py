@@ -170,7 +170,7 @@ class StarterKitsTests(BaseClass):
         log = Tns.run_android(attributes={'--path': demo,
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
+                         timeout=240)
         Helpers.android_screen_match(image=demo + '_home', tolerance=1.0)
         if "-ng" in demo or "-ts" in demo:
             Helpers.wait_typescript_watcher()
@@ -224,7 +224,7 @@ class StarterKitsTests(BaseClass):
                                           '--bundle': '',
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
+                         timeout=240)
         Helpers.android_screen_match(image=demo + '_home', tolerance=1.0)
         Helpers.wait_webpack_watcher()
 

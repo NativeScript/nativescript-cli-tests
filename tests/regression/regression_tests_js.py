@@ -65,7 +65,8 @@ class RegressionTestsJS(BaseClass):
     def test_100_run_android(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=['Project successfully built', 'Successfully installed'], timeout=90)
+        Tns.wait_for_log(log_file=log, string_list=['Project successfully built', 'Successfully installed'],
+                         timeout=180)
         Helpers.android_screen_match(image=self.image_original)
 
         # Change JS, XML and CSS

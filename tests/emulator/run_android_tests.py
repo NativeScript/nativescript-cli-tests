@@ -41,6 +41,16 @@ import pytz
 class RunAndroidEmulatorTests(BaseClass):
     source_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
     temp_app = os.path.join(TEST_RUN_HOME, 'data', BaseClass.app_name)
+    one_hundred_symbols_string = "123456789012345678901234567890123456789012345678901234567890" \
+                                 "1234567890123456789012345678901234567890"
+    very_long_string = ''
+    for x in range(0, 30):
+        very_long_string = very_long_string + one_hundred_symbols_string
+
+    max_long_string = ''
+    for x in range(0, 10):
+        max_long_string = max_long_string + one_hundred_symbols_string
+    max_long_string = max_long_string + "123456789012345678901234"
 
     @classmethod
     def setUpClass(cls):
@@ -201,7 +211,6 @@ class RunAndroidEmulatorTests(BaseClass):
 
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
-
         strings = ['Project successfully built',
                    'Successfully installed on device with identifier', EMULATOR_ID,
                    'Successfully synced application',
@@ -229,11 +238,13 @@ class RunAndroidEmulatorTests(BaseClass):
                    "\"age\": 34",
                    "}, text, 42]",
                    "Time:",
+                   self.max_long_string,
                    "### TEST END ###"
                    ]
 
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
         assert "1 equals 1" not in log
+        assert self.very_long_string not in log
 
     def test_181_tns_run_android_console_dir(self):
         """
@@ -259,10 +270,12 @@ class RunAndroidEmulatorTests(BaseClass):
                    "==== object dump start ====",
                    "name: \"John\"",
                    "age: \"34\"",
-                   "==== object dump end ===="
+                   "==== object dump end ====",
+                   self.max_long_string
                    ]
 
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
+        assert self.very_long_string not in log
 
     def test_182_tns_run_android_new_date_work_as_expected_when_changing_timezone(self):
         """
@@ -290,7 +303,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # Change app package.json so it contains the options for remove V8 date cache
         source_js = os.path.join('data', "issues", 'android-runtime-961', 'package.json')
         target_js = os.path.join(self.app_name, 'app', 'package.json')
-        
+
         File.copy(src=source_js, dest=target_js)
 
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
@@ -338,7 +351,7 @@ class RunAndroidEmulatorTests(BaseClass):
         output = Adb.run("shell am start -n org.nativescript.TestApp/com.tns.NativeScriptActivity", EMULATOR_ID)
         assert 'Starting: Intent { cmp=org.nativescript.TestApp/com.tns.NativeScriptActivity }' in output, \
             "Failed to start Nativescript test app activity!"
-          
+
         time.sleep(15)
 
         Device.click(device_id=EMULATOR_ID, text="TAP", timeout=30)

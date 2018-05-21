@@ -7,6 +7,7 @@ import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.git.git import Git
+from core.java.java import Java
 from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
@@ -180,6 +181,7 @@ class PrepareAndroidTests(BaseClass):
         assert "Invalid platform windows. Valid platforms are ios or android." in output
 
     @unittest.skipIf(CURRENT_OS == OSType.LINUX, "Skip on Linux")
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_401_prepare_project_with_many_dependencies(self):
         """
         Test for https://github.com/NativeScript/nativescript-cli/issues/2561
