@@ -7,6 +7,7 @@ import unittest
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
+from core.java.java import Java
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_PACKAGE, TNS_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_PATH, \
@@ -91,6 +92,7 @@ class DeployAndroidTests(BaseClass):
         for device_id in device_ids:
             assert device_id in output
 
+    @unittest.skipIf(Java.version() !="1.8", "Runonly if Java version is 8.")
     def test_300_deploy_android_platform_not_added(self):
         Tns.create_app(app_name=self.app_name_noplatform)
         output = Tns.deploy_android(attributes={"--path": self.app_name_noplatform, "--justlaunch": ""}, timeout=240)
