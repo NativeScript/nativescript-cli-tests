@@ -172,6 +172,7 @@ class BuildAndroidTests(BaseClass):
         assert "[DEBUG]" in output
         assert "FAILURE" not in output
 
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_300_build_project_with_dash_and_ios_inspector_added(self):
         """
         Verify we can build projects with dashes.
@@ -321,12 +322,13 @@ class BuildAndroidTests(BaseClass):
         output = Tns.build_android(attributes={"--release": "", "--path": self.app_name}, assert_success=False)
         assert "When producing a release build, you need to specify all --key-store-* options." in output
         assert "# tns build android" in output
-        assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, self.release_apk))
+        assert not File.exists(
+            os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, self.release_apk))
 
     def test_410_generated_classes_not_be_deleted_on_rebuild(self):
         # https: // github.com / NativeScript / nativescript - cli / issues / 3560
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
-                           assert_success=False)
+                            assert_success=False)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
         target = os.path.join(self.app_name, 'app')
         source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-904', 'MyActivity.js')
@@ -364,7 +366,7 @@ class BuildAndroidTests(BaseClass):
         Folder.cleanup(self.app_ts_name)
 
     def test_441_android_typings(self):
-        #Build with --androidTypings got nothing #3381
+        # Build with --androidTypings got nothing #3381
         Tns.run_tns_command("build android --androidTypings", attributes={"--path": self.app_name})
         assert File.exists(self.app_name + "/android.d.ts")
         assert File.exists(self.app_name + "/_helpers.d.ts")
@@ -410,10 +412,10 @@ class BuildAndroidTests(BaseClass):
 
     @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_460_include_gradle_flavor(self):
-        #https://github.com/NativeScript/android-runtime/pull/937
-        #https: // github.com / NativeScript / nativescript - cli / pull / 3467
+        # https://github.com/NativeScript/android-runtime/pull/937
+        # https: // github.com / NativeScript / nativescript - cli / pull / 3467
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
-                                     assert_success=False)
+                            assert_success=False)
         source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-pr-937', 'app.gradle')
         target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
         File.copy(src=source, dest=target)

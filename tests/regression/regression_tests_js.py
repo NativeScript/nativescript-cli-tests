@@ -1,8 +1,10 @@
 import os
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
+from core.java.java import Java
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.settings.settings import TEST_RUN_HOME, CURRENT_OS, SIMULATOR_NAME, \
@@ -13,6 +15,7 @@ from core.tns.tns import Tns
 from tests.webpack.helpers.helpers import Helpers
 
 
+@unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
 class RegressionTestsJS(BaseClass):
     SIMULATOR_ID = ""
 
