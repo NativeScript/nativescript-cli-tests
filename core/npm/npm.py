@@ -43,6 +43,7 @@ class Npm(object):
         command = 'i {0} {1}'.format(package, option)
         output = Npm.__run_npm_command(command, folder=folder, log_level=log_level)
         assert "ERR!" not in output, "`npm " + command + "` failed with: \n" + output
+        return output
 
     @staticmethod
     def uninstall(package, option='', folder=None, log_level=CommandLogLevel.FULL):
