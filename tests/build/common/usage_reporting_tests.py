@@ -21,12 +21,20 @@ class UsageReportingTests(BaseClass):
         output = Tns.run_tns_command("usage-reporting enable")
         assert enabled.format(usage_reporting, "now ") in output
 
+        # Check there is message for tracking in Google Analytics
+        output = Tns.run_tns_command("doctor", timeout=180, log_trace=True)
+        assert "Will send the following information to Google Analytics" in output
+
         output = Tns.run_tns_command("usage-reporting status")
         assert enabled.format(usage_reporting, "") in output
 
     def test_002_usage_reporting_disable(self):
         output = Tns.run_tns_command("usage-reporting disable")
         assert disabled.format(usage_reporting, "now ") in output
+
+        # Check there is no any message for tracking in Google Analytics
+        output = Tns.run_tns_command("doctor", timeout=180, log_trace=True)
+        assert "Will send the following information to Google Analytics" not in output
 
         output = Tns.run_tns_command("usage-reporting status")
         assert disabled.format(usage_reporting, "") in output

@@ -36,10 +36,6 @@ class LogtraceTests(BaseClass):
 
     def test_102_platform_add_log_trace(self):
         Tns.create_app(self.app_name, update_modules=False)
-
-        # Disable tracking in Google Analytics https://github.com/NativeScript/nativescript-cli/issues/3536
-        Tns.run_tns_command("usage-reporting disable")
-
         output = Tns.platform_add_android(attributes={"--path": self.app_name}, log_trace=True)
         assert "Looking for project in" in output
         assert "Project directory is" in output
@@ -47,6 +43,3 @@ class LogtraceTests(BaseClass):
         assert "Installed Android Targets" in output
         assert "Using Android SDK" in output
         assert "Project successfully created" in output
-
-        # Check there is no any messages for tracking in Google Analytics
-        assert "Will send the following information to Google Analytics" not in output
