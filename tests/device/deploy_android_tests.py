@@ -92,7 +92,8 @@ class DeployAndroidTests(BaseClass):
         for device_id in device_ids:
             assert device_id in output
 
-    @unittest.skipIf(Java.version() !="1.8", "Runonly if Java version is 8.")
+    # TODO: Remove skipping after release 4.1.0
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_300_deploy_android_platform_not_added(self):
         Tns.create_app(app_name=self.app_name_noplatform)
         output = Tns.deploy_android(attributes={"--path": self.app_name_noplatform, "--justlaunch": ""}, timeout=240)

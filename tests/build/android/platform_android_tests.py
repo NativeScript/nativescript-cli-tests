@@ -31,6 +31,7 @@ class PlatformAndroidTests(BaseClass):
         BaseClass.setUp(self)
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
 
+    # TODO: Remove skipping after release 4.1.0
     @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_100_platform_add_android(self):
         """ Default `tns platform add` command"""
@@ -40,6 +41,7 @@ class PlatformAndroidTests(BaseClass):
         """ Add platform from local package"""
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
+    # TODO: Remove skipping after release 4.1.0
     @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_120_platform_add_android_inside_project(self):
         """ Add platform inside project folder (not using --path)"""
@@ -74,6 +76,7 @@ class PlatformAndroidTests(BaseClass):
         Tns.platform_update(platform=Platform.ANDROID, version="2.5.0", attributes={"--path": self.app_name})
         TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.5.0\""])
 
+    # TODO: Remove skipping after release 4.1.0
     @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_210_platform_update_android_when_platform_not_added(self):
         """`platform update` should work even if platform is not added"""
