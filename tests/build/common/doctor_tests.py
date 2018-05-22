@@ -40,7 +40,8 @@ class DoctorTests(BaseClass):
         assert "Javac is installed and is configured properly." in output
         assert "The Java Development Kit (JDK) is installed and is configured properly." in output
         if CURRENT_OS != OSType.OSX:
-            assert "Local builds for iOS can be executed only on a macOS system." in output
+            assert "Local builds for iOS can be executed only on a macOS system. To build for iOS on a different " \
+                   "operating system, you can use the NativeScript cloud infrastructure." in output
         else:
             assert "Xcode is installed and is configured properly." in output
             assert "xcodeproj is installed and is configured properly." in output
