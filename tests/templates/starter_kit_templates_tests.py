@@ -232,7 +232,8 @@ class StarterKitsTests(BaseClass):
         StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.ANDROID, device_id=EMULATOR_ID)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         check_interval=5, timeout=120)
         Helpers.android_screen_match(image=demo + '_sync')
 
         # Revert changes
@@ -250,7 +251,7 @@ class StarterKitsTests(BaseClass):
         log = Tns.run_ios(attributes={'--path': demo, '--emulator': '', '--bundle': ''}, wait=False,
                           assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=240)
+                         timeout=240, check_interval=5)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=1.0)
         Helpers.wait_webpack_watcher()
 
@@ -258,7 +259,8 @@ class StarterKitsTests(BaseClass):
         StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.IOS, device_id=self.SIMULATOR_ID)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         check_interval=5, timeout=120)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_sync')
 
         # Revert changes
