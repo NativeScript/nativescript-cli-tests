@@ -81,11 +81,11 @@ class DeviceIOSTests(BaseClass):
 
         # Verify list-applications command list org.nativescript.TestApp
         for device_id in self.DEVICE_IDS:
-            output = Tns.run_tns_command("device list-applications", attributes={"--device": self.DEVICE_ID})
+            output = Tns.run_tns_command("device list-applications", attributes={"--device": device_id})
             assert Tns.get_app_id(self.app_name) in output
 
         # Get logs
         log = Tns.run_tns_command("device log", attributes={"--device": self.DEVICE_ID}, wait=False)
-        Tns.wait_for_log(log_file=log, string_list=['>:'], timeout=30, clean_log=False)
+        Tns.wait_for_log(log_file=log, string_list=['>:'], timeout=90, clean_log=False)
         output = File.read(log)
         assert "<Notice>:" in output or "<Error>:" in output
