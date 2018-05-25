@@ -55,7 +55,7 @@ class DeviceIOSTests(BaseClass):
         for device_id in self.DEVICE_IDS:
             assert device_id in output
 
-    def test_002_device_list(self):
+    def test_002_device_list_available_devices(self):
         output = Tns.run_tns_command("device ios --available-devices", attributes={"--path": self.app_name})
         assert SIMULATOR_NAME in output
         assert SIMULATOR_TYPE in output
