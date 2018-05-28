@@ -61,6 +61,7 @@ class RunIOSSimulatorTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
+        self.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
         Folder.cleanup(self.app_name)
         Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
 
@@ -514,9 +515,13 @@ class RunIOSSimulatorTests(BaseClass):
         assert "Multiple errors were thrown" not in output
         assert "fail" not in output
 
+    @unittest.skip("Ignore because of https://github.com/NativeScript/nativescript-cli/issues/3625")
     def test_404_run_on_invalid_device_id(self):
+        Simulator.stop()
         output = Tns.run_ios(attributes={'--path': self.app_name, '--device': 'fakeId', '--justlaunch': ''},
                              assert_success=False)
+        assert not Simulator.wait_for_simulator(
+            timeout=10), "Simulator should not be started after run `tns run ios --device <invalid_device_id>`"
         TnsAsserts.invalid_device(output=output)
 
     @unittest.skipIf(Device.get_count(platform=Platform.IOS) > 0 or Device.get_count(platform=Platform.ANDROID) > 0,
