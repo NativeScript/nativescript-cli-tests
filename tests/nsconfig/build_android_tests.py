@@ -43,12 +43,13 @@ class BuildAndroidTests(BaseClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/RenameApp")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppRes", TEST_RUN_HOME + "/RenameAppRes")
         else:
-            CreateNSConfigApps.createApps(cls.__name__)
+            CreateNSConfigApps.createApps()
             if not File.exists(TEST_RUN_HOME + "/ChangeAppLocation"):
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocation", TEST_RUN_HOME + "/ChangeAppLocation")
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndName",
                             TEST_RUN_HOME + "/ChangeAppLocationAndName")
-                Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocation", TEST_RUN_HOME + "/ChangeAppResLocation")
+                Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocation",
+                            TEST_RUN_HOME + "/ChangeAppResLocation")
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRoot",
                             TEST_RUN_HOME + "/ChangeAppResLocationInRoot")
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameApp", TEST_RUN_HOME + "/RenameApp")
@@ -105,13 +106,6 @@ class BuildAndroidTests(BaseClass):
         # Configs are respected
         assert 'debug' in File.read(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, 'config.json'))
 
-        # And new platform specific file and verify next build is ok (test for issue #2697)
-        # src = os.path.join(app_name, 'app', 'app.js')
-        # dest_1 = os.path.join(app_name, 'app', 'new.android.js')
-        # dest_2 = os.path.join(app_name, 'app', 'new.ios.js')
-        # File.copy(src=src, dest=dest_1)
-        # File.copy(src=src, dest=dest_2)
-
         # Verify incremental native build
         before_build = datetime.datetime.now()
         output = Tns.build_android(attributes={"--path": self.app_name})
@@ -153,7 +147,7 @@ class BuildAndroidTests(BaseClass):
         assert output.count("Gradle build...") is 2, "Only one gradle build is triggered."
         assert build_time > 10, "Clean build takes less then 15 sec."
         assert build_time < 90, "Clean build takes more than 90 sec."
-    #
+
     @parameterized.expand([
         'ChangeAppLocation',
         'ChangeAppLocationAndName',
@@ -164,7 +158,6 @@ class BuildAndroidTests(BaseClass):
     ])
     def test_002_build_android_release(self, app_name):
         self.app_name = app_name
-        # self.platforms_android = self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID
 
         Tns.build_android(attributes={"--path": self.app_name,
                                       "--keyStorePath": ANDROID_KEYSTORE_PATH,

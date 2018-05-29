@@ -28,19 +28,21 @@ class DebugAndroidEmulatorTests(BaseClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
                         TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
                         TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
         else:
-            CreateNSConfigApps.createAppsLiveSync(cls.__name__)
+            CreateNSConfigApps.createAppsLiveSync()
 
         if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS"):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
                         TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
                         TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
@@ -69,7 +71,8 @@ class DebugAndroidEmulatorTests(BaseClass):
         Folder.cleanup("RenameAppLS")
         Folder.cleanup("RenameAppResLS")
 
-    def __verify_debugger_start(self, log):
+    @staticmethod
+    def __verify_debugger_start(log):
         strings = [EMULATOR_ID, 'NativeScript Debugger started', 'To start debugging, open the following URL in Chrome',
                    'chrome-devtools', 'localhost:4000']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
@@ -78,7 +81,8 @@ class DebugAndroidEmulatorTests(BaseClass):
         assert "detached" not in output
         assert "did not start in time" not in output
 
-    def __verify_debugger_attach(self, log):
+    @staticmethod
+    def __verify_debugger_attach(log):
         strings = [EMULATOR_ID, 'To start debugging', 'Chrome', 'chrome-devtools', 'localhost:4000']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
         output = File.read(file_path=log, print_content=True)
@@ -120,7 +124,7 @@ class DebugAndroidEmulatorTests(BaseClass):
         """
 
         log = Tns.debug_android(attributes={'--path': app_name, '--debug-brk': '', '--emulator': ''})
-        self.__verify_debugger_start(log)
+        DebugAndroidEmulatorTests.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=EMULATOR_NAME, tolerance=3.0, device_id=EMULATOR_ID,
@@ -147,7 +151,7 @@ class DebugAndroidEmulatorTests(BaseClass):
 
         # Attach debugger
         log = Tns.debug_android(attributes={'--path': app_name, '--start': '', '--emulator': ''})
-        self.__verify_debugger_attach(log=log)
+        DebugAndroidEmulatorTests.__verify_debugger_attach(log=log)
 
     @parameterized.expand([
         'ChangeAppLocationLS',

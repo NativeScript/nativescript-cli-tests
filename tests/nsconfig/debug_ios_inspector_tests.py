@@ -43,19 +43,21 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
                         TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
                         TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
         else:
-            CreateNSConfigApps.createAppsLiveSync(cls.__name__)
+            CreateNSConfigApps.createAppsLiveSync()
 
         if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS"):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
                         TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
                         TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
@@ -111,7 +113,8 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         Folder.cleanup("RenameAppResLS.app")
         File.remove("RenameAppResLS.ipa")
 
-    def __verify_debugger_start(self, log):
+    @staticmethod
+    def __verify_debugger_start(log):
         strings = ["Frontend client connected", "Backend socket created", "NativeScript debugger attached"]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
         time.sleep(10)
@@ -121,7 +124,8 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         assert "NativeScript debugger detached" not in output
         assert Process.is_running('NativeScript Inspector')
 
-    def __verify_debugger_attach(self, log):
+    @staticmethod
+    def __verify_debugger_attach(log):
         strings = ["Frontend client connected", "Backend socket created"]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
         time.sleep(10)
@@ -145,7 +149,7 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         Default `tns debug ios` starts debugger (do not stop at the first code statement)
         """
         log = Tns.debug_ios(attributes={'--path': app_name, '--emulator': '', '--inspector': ''})
-        self.__verify_debugger_start(log)
+        DebugiOSInspectorSimulatorTests.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=SIMULATOR_NAME,
@@ -169,7 +173,7 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
 
         log = Tns.debug_ios(
             attributes={'--path': app_name, '--emulator': '', '--debug-brk': '', '--inspector': ''})
-        self.__verify_debugger_start(log)
+        DebugiOSInspectorSimulatorTests.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=SIMULATOR_NAME, tolerance=3.0, device_id=self.SIMULATOR_ID,
@@ -200,7 +204,7 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
 
         # Attach debugger
         log = Tns.debug_ios(attributes={'--path': app_name, '--emulator': '', '--start': '', '--inspector': ''})
-        self.__verify_debugger_attach(log=log)
+        DebugiOSInspectorSimulatorTests.__verify_debugger_attach(log=log)
 
         # Uninstall the app so that to avoid "Address already in use" when trying to debug on the same simulator
         Simulator.stop_application("org.nativescript." + app_name)
@@ -237,7 +241,7 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         `tns debug ios` should be able to run with livesync
         """
         log = Tns.debug_ios(attributes={'--path': app_name, '--emulator': '', '--inspector': ''})
-        self.__verify_debugger_start(log)
+        DebugiOSInspectorSimulatorTests.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=SIMULATOR_NAME,

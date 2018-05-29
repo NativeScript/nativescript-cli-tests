@@ -48,19 +48,21 @@ class DebugiOSChromeSimulatorTests(BaseClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
                         TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
                         TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
         else:
-            CreateNSConfigApps.createAppsLiveSync(cls.__name__)
+            CreateNSConfigApps.createAppsLiveSync()
 
         if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS"):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
                         TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
                         TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
@@ -106,9 +108,10 @@ class DebugiOSChromeSimulatorTests(BaseClass):
     def attach_chrome(log, mode=DebugMode.DEFAULT, port="41000"):
         """
         Attach chrome dev tools and verify logs
-        :type log: Log file of `tns debug ios` command.
+        :param log: log file with tns output.
+        :param mode: DebugMode enum value (START or DEFAULT).
+        :param port: debugger port
         """
-
         # Check initial logs
         strings = ["Setting up debugger proxy...", "Press Ctrl + C to terminate, or disconnect.",
                    "Opened localhost", "To start debugging, open the following URL in Chrome"]

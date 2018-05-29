@@ -12,39 +12,40 @@ class SuiteRunIOSNG(BaseClass):
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
-        CreateNSConfigApps.createAppsNG(cls.__name__)
-        CreateNSConfigApps.createAppsLiveSyncNG(cls.__name__)
+        CreateNSConfigApps.createAppsNG()
+        CreateNSConfigApps.createAppsLiveSyncNG()
 
-        # add platform
+        # Add platform
         Tns.platform_add_ios(attributes={"--path": CreateNSConfigApps.app_name_change_app_location_ng,
-                                             "--frameworkPath": IOS_PACKAGE})
+                                         "--frameworkPath": IOS_PACKAGE})
 
         Tns.platform_add_ios(attributes={"--path": CreateNSConfigApps.app_name_change_app_location_and_name_ng,
-                                             "--frameworkPath": IOS_PACKAGE})
+                                         "--frameworkPath": IOS_PACKAGE})
 
         Tns.platform_add_ios(attributes={"--path": CreateNSConfigApps.app_name_change_app_res_location_ng,
-                                             "--frameworkPath": IOS_PACKAGE})
+                                         "--frameworkPath": IOS_PACKAGE})
 
         Tns.platform_add_ios(attributes={"--path": CreateNSConfigApps.app_name_change_app_res_location_in_root_ng,
-                                             "--frameworkPath": IOS_PACKAGE})
+                                         "--frameworkPath": IOS_PACKAGE})
 
-        Tns.platform_add_ios(attributes={"--path": CreateNSConfigApps.app_name_rename_app_ng, "--frameworkPath": IOS_PACKAGE})
+        Tns.platform_add_ios(
+            attributes={"--path": CreateNSConfigApps.app_name_rename_app_ng, "--frameworkPath": IOS_PACKAGE})
 
         Tns.platform_add_ios(
             attributes={"--path": CreateNSConfigApps.app_name_rename_app_res_ng, "--frameworkPath": IOS_PACKAGE})
 
         # add platform livesync
         Tns.platform_add_ios(attributes={"--path": CreateNSConfigApps.app_name_change_app_location_ls_ng,
-                                             "--frameworkPath": IOS_PACKAGE})
+                                         "--frameworkPath": IOS_PACKAGE})
 
         Tns.platform_add_ios(attributes={"--path": CreateNSConfigApps.app_name_change_app_location_and_name_ls_ng,
-                                             "--frameworkPath": IOS_PACKAGE})
+                                         "--frameworkPath": IOS_PACKAGE})
 
         Tns.platform_add_ios(attributes={"--path": CreateNSConfigApps.app_name_change_app_res_location_ls_ng,
-                                             "--frameworkPath": IOS_PACKAGE})
+                                         "--frameworkPath": IOS_PACKAGE})
 
         Tns.platform_add_ios(attributes={"--path": CreateNSConfigApps.app_name_change_app_res_location_in_root_ls_ng,
-                                             "--frameworkPath": IOS_PACKAGE})
+                                         "--frameworkPath": IOS_PACKAGE})
 
         Tns.platform_add_ios(
             attributes={"--path": CreateNSConfigApps.app_name_rename_app_ls_ng, "--frameworkPath": IOS_PACKAGE})

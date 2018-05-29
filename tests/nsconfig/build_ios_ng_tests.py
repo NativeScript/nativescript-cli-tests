@@ -22,18 +22,21 @@ class BuildiOSNGTests(BaseClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationNG", TEST_RUN_HOME + "/ChangeAppLocationNG")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameNG",
                         TEST_RUN_HOME + "/ChangeAppLocationAndNameNG")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationNG", TEST_RUN_HOME + "/ChangeAppResLocationNG")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationNG",
+                        TEST_RUN_HOME + "/ChangeAppResLocationNG")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootNG",
                         TEST_RUN_HOME + "/ChangeAppResLocationInRootNG")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppNG", TEST_RUN_HOME + "/RenameAppNG")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResNG", TEST_RUN_HOME + "/RenameAppResNG")
         else:
-            CreateNSConfigApps.createAppsNG(cls.__name__)
+            CreateNSConfigApps.createAppsNG()
             if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationNG"):
-                Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationNG", TEST_RUN_HOME + "/ChangeAppLocationNG")
+                Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationNG",
+                            TEST_RUN_HOME + "/ChangeAppLocationNG")
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameNG",
                             TEST_RUN_HOME + "/ChangeAppLocationAndNameNG")
-                Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationNG", TEST_RUN_HOME + "/ChangeAppResLocationNG")
+                Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationNG",
+                            TEST_RUN_HOME + "/ChangeAppResLocationNG")
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootNG",
                             TEST_RUN_HOME + "/ChangeAppResLocationInRootNG")
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppNG", TEST_RUN_HOME + "/RenameAppNG")

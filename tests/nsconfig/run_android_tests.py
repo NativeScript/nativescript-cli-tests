@@ -40,13 +40,14 @@ class RunAndroidEmulatorTests(BaseClass):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS",
                         TEST_RUN_HOME + "/ChangeAppLocationAndNameLS")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS", TEST_RUN_HOME + "/ChangeAppResLocationLS")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS",
+                        TEST_RUN_HOME + "/ChangeAppResLocationLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS",
                         TEST_RUN_HOME + "/ChangeAppResLocationInRootLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLS", TEST_RUN_HOME + "/RenameAppLS")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLS", TEST_RUN_HOME + "/RenameAppResLS")
         else:
-            CreateNSConfigApps.createAppsLiveSync(cls.__name__)
+            CreateNSConfigApps.createAppsLiveSync()
 
         if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLS"):
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
@@ -106,7 +107,7 @@ class RunAndroidEmulatorTests(BaseClass):
          ['new_folder/app/main-page.xml', 'TAP', 'TEST'],
          ['new_folder/app/app.css', '42', '99'],
          os.path.join('ChangeAppLocationLS', 'new_folder', 'app', 'App_Resources', 'Android',
-                          'AndroidManifest.xml')),
+                      'AndroidManifest.xml')),
         ('ChangeAppLocationAndNameLS',
          ['my folder/my app/main-view-model.js', 'taps', 'clicks'],
          ['my folder/my app/main-page.xml', 'TAP', 'TEST'],

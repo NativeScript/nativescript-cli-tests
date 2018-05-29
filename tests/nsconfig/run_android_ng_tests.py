@@ -30,21 +30,25 @@ class RunAndroidEmulatorTestsNG(BaseClass):
 
         if File.exists(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG"):
             assert "ChangeAppLocationLSNG" in TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG"
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG", TEST_RUN_HOME + "/ChangeAppLocationLSNG")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG",
+                        TEST_RUN_HOME + "/ChangeAppLocationLSNG")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLSNG",
                         TEST_RUN_HOME + "/ChangeAppLocationAndNameLSNG")
-            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLSNG", TEST_RUN_HOME + "/ChangeAppResLocationLSNG")
+            Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLSNG",
+                        TEST_RUN_HOME + "/ChangeAppResLocationLSNG")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLSNG",
                         TEST_RUN_HOME + "/ChangeAppResLocationInRootLSNG")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLSNG", TEST_RUN_HOME + "/RenameAppLSNG")
             Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppResLSNG", TEST_RUN_HOME + "/RenameAppResLSNG")
         else:
-            CreateNSConfigApps.createAppsLiveSyncNG(cls.__name__)
+            CreateNSConfigApps.createAppsLiveSyncNG()
             if not File.exists(TEST_RUN_HOME + "/ChangeAppLocationLSNG"):
-                Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG", TEST_RUN_HOME + "/ChangeAppLocationLSNG")
+                Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG",
+                            TEST_RUN_HOME + "/ChangeAppLocationLSNG")
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLSNG",
                             TEST_RUN_HOME + "/ChangeAppLocationAndNameLSNG")
-                Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLSNG", TEST_RUN_HOME + "/ChangeAppResLocationLSNG")
+                Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLSNG",
+                            TEST_RUN_HOME + "/ChangeAppResLocationLSNG")
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLSNG",
                             TEST_RUN_HOME + "/ChangeAppResLocationInRootLSNG")
                 Folder.copy(TEST_RUN_HOME + "/data/Projects/RenameAppLSNG", TEST_RUN_HOME + "/RenameAppLSNG")

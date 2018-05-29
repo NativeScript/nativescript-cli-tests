@@ -40,8 +40,7 @@ class CreateNSConfigApps(unittest.TestCase):
     failures = 0
 
     @classmethod
-    def createApps(cls, class_name):
-
+    def createApps(cls):
         base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
 
         # Initial create of all projects
@@ -113,7 +112,8 @@ class CreateNSConfigApps(unittest.TestCase):
         proj_root = os.path.join(cls.app_name_change_app_location)
         app_path = os.path.join(proj_root, 'app')
 
-        File.copy(os.path.join(base_src, cls.app_name_change_app_location, 'nsconfig.json', ), cls.app_name_change_app_location)
+        File.copy(os.path.join(base_src, cls.app_name_change_app_location, 'nsconfig.json', ),
+                  cls.app_name_change_app_location)
         Folder.create(os.path.join(proj_root, "new_folder"))
         Folder.move(app_path, os.path.join(proj_root, 'new_folder'))
 
@@ -145,10 +145,6 @@ class CreateNSConfigApps(unittest.TestCase):
         File.copy(os.path.join(base_src, cls.app_name_change_app_res_location_in_root, 'nsconfig.json'),
                   cls.app_name_change_app_res_location_in_root)
         Folder.move(app_res_path, proj_root)
-        # Tns.platform_add_android(attributes={"--path": cls.app_name_change_app_res_location_in_root,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
-        # Tns.platform_add_ios(attributes={"--path": cls.app_name_change_app_res_location_in_root,
-        #                                  "--frameworkPath": IOS_PACKAGE})
 
         # Change app/ to renamed_app/
         proj_root = os.path.join(cls.app_name_rename_app)
@@ -156,8 +152,6 @@ class CreateNSConfigApps(unittest.TestCase):
 
         File.copy(os.path.join(base_src, cls.app_name_rename_app, 'nsconfig.json'), cls.app_name_rename_app)
         os.rename(app_path, os.path.join(proj_root, 'renamed_app'))
-        # Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app, "--frameworkPath": ANDROID_PACKAGE})
-        # Tns.platform_add_ios(attributes={"--path": cls.app_name_rename_app, "--frameworkPath": IOS_PACKAGE})
 
         # Change App_Resources/ to My_App_Resources/
         proj_root = os.path.join(cls.app_name_rename_app_res)
@@ -166,13 +160,15 @@ class CreateNSConfigApps(unittest.TestCase):
 
         File.copy(os.path.join(base_src, cls.app_name_rename_app_res, 'nsconfig.json'), cls.app_name_rename_app_res)
         os.rename(app_res_path, os.path.join(app_path, 'My_App_Resources'))
-        # Tns.platform_add_android(attributes={"--path": cls.app_name_rename_app_res, "--frameworkPath": ANDROID_PACKAGE})
-        # Tns.platform_add_ios(attributes={"--path": cls.app_name_rename_app_res, "--frameworkPath": IOS_PACKAGE})
 
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location, TEST_RUN_HOME + "/data/Projects/ChangeAppLocation")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_and_name, TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndName")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocation")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_in_root, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRoot")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppLocation")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_and_name,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndName")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppResLocation")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_in_root,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRoot")
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app, TEST_RUN_HOME + "/data/Projects/RenameApp")
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_res, TEST_RUN_HOME + "/data/Projects/RenameAppRes")
 
@@ -197,7 +193,7 @@ class CreateNSConfigApps(unittest.TestCase):
         pass
 
     @classmethod
-    def createAppsLiveSync(cls, class_name):
+    def createAppsLiveSync(cls):
         base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
 
         # Initial create of all projects
@@ -276,12 +272,10 @@ class CreateNSConfigApps(unittest.TestCase):
         proj_root = os.path.join(app_name_change_app_location_ls)
         app_path = os.path.join(proj_root, 'app')
 
-        File.copy(os.path.join(base_src, app_name_change_app_location_ls, 'nsconfig.json', ), app_name_change_app_location_ls)
+        File.copy(os.path.join(base_src, app_name_change_app_location_ls, 'nsconfig.json', ),
+                  app_name_change_app_location_ls)
         Folder.create(os.path.join(proj_root, "new_folder"))
         Folder.move(app_path, os.path.join(proj_root, 'new_folder'))
-        # Tns.platform_add_android(attributes={"--path": app_name_change_app_location_ls,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
-        # Tns.platform_add_ios(attributes={"--path": app_name_change_app_location_ls, "--frameworkPath": IOS_PACKAGE})
 
         # Change app/ name and place to be 'my folder/my app'
         proj_root = os.path.join(app_name_change_app_location_and_name_ls)
@@ -292,10 +286,6 @@ class CreateNSConfigApps(unittest.TestCase):
         Folder.create(os.path.join(proj_root, "my folder"))
         os.rename(app_path, os.path.join(proj_root, "my app"))
         Folder.move(os.path.join(proj_root, "my app"), os.path.join(proj_root, "my folder"))
-        # Tns.platform_add_android(attributes={"--path": app_name_change_app_location_and_name_ls,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
-        # Tns.platform_add_ios(
-        #     attributes={"--path": app_name_change_app_location_and_name_ls, "--frameworkPath": IOS_PACKAGE})
 
         # Change App_Resources/ location to be 'app/res/App_Resources'
         proj_root = os.path.join(app_name_change_app_res_location_ls)
@@ -306,9 +296,6 @@ class CreateNSConfigApps(unittest.TestCase):
                   app_name_change_app_res_location_ls)
         Folder.create(os.path.join(app_path, 'res'))
         Folder.move(app_res_path, os.path.join(app_path, 'res'))
-        # Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location_ls,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
-        # Tns.platform_add_ios(attributes={"--path": app_name_change_app_res_location_ls, "--frameworkPath": IOS_PACKAGE})
 
         # Change App_Resources/ location to be in project root/App_Resources
         proj_root = os.path.join(app_name_change_app_res_location_in_root_ls)
@@ -318,10 +305,6 @@ class CreateNSConfigApps(unittest.TestCase):
         File.copy(os.path.join(base_src, app_name_change_app_res_location_in_root_ls, 'nsconfig.json'),
                   app_name_change_app_res_location_in_root_ls)
         Folder.move(app_res_path, proj_root)
-        # Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location_in_root_ls,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
-        # Tns.platform_add_ios(
-        #     attributes={"--path": app_name_change_app_res_location_in_root_ls, "--frameworkPath": IOS_PACKAGE})
 
         # Change app/ to renamed_app/
         proj_root = os.path.join(app_name_rename_app_ls)
@@ -329,8 +312,6 @@ class CreateNSConfigApps(unittest.TestCase):
 
         File.copy(os.path.join(base_src, app_name_rename_app_ls, 'nsconfig.json'), app_name_rename_app_ls)
         os.rename(app_path, os.path.join(proj_root, 'renamed_app'))
-        # Tns.platform_add_android(attributes={"--path": app_name_rename_app_ls, "--frameworkPath": ANDROID_PACKAGE})
-        # Tns.platform_add_ios(attributes={"--path": app_name_rename_app_ls, "--frameworkPath": IOS_PACKAGE})
 
         # Change App_Resources/ to My_App_Resources/
         proj_root = os.path.join(app_name_rename_app_res_ls)
@@ -339,15 +320,18 @@ class CreateNSConfigApps(unittest.TestCase):
 
         File.copy(os.path.join(base_src, app_name_rename_app_res_ls, 'nsconfig.json'), app_name_rename_app_res_ls)
         os.rename(app_res_path, os.path.join(app_path, 'My_App_Resources'))
-        # Tns.platform_add_android(attributes={"--path": app_name_rename_app_res_ls, "--frameworkPath": ANDROID_PACKAGE})
-        # Tns.platform_add_ios(attributes={"--path": app_name_rename_app_res_ls, "--frameworkPath": IOS_PACKAGE})
 
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_ls, TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_and_name_ls, TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_ls, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_in_root_ls, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_ls,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_and_name_ls,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLS")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_ls,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLS")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_in_root_ls,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLS")
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_ls, TEST_RUN_HOME + "/data/Projects/RenameAppLS")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_res_ls, TEST_RUN_HOME + "/data/Projects/RenameAppResLS")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_res_ls,
+                    TEST_RUN_HOME + "/data/Projects/RenameAppResLS")
 
         Folder.cleanup("ChangeAppLocationLS")
         Folder.cleanup("ChangeAppLocationAndNameLS")
@@ -369,7 +353,7 @@ class CreateNSConfigApps(unittest.TestCase):
         File.remove("RenameAppResLS.ipa")
 
     @classmethod
-    def createAppsNG(cls, class_name):
+    def createAppsNG(cls):
         base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
 
         # Initial create of all projects
@@ -441,11 +425,10 @@ class CreateNSConfigApps(unittest.TestCase):
         proj_root = os.path.join(app_name_change_app_location_ng)
         app_path = os.path.join(proj_root, 'app')
 
-        File.copy(os.path.join(base_src, app_name_change_app_location_ng, 'nsconfig.json', ), app_name_change_app_location_ng)
+        File.copy(os.path.join(base_src, app_name_change_app_location_ng, 'nsconfig.json', ),
+                  app_name_change_app_location_ng)
         Folder.create(os.path.join(proj_root, "new_folder"))
         Folder.move(app_path, os.path.join(proj_root, 'new_folder'))
-        # Tns.platform_add_android(attributes={"--path": app_name_change_app_location_ng,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
 
         # Change app/ name and place to be 'my folder/my app'
         proj_root = os.path.join(app_name_change_app_location_and_name_ng)
@@ -456,8 +439,6 @@ class CreateNSConfigApps(unittest.TestCase):
         Folder.create(os.path.join(proj_root, "my folder"))
         os.rename(app_path, os.path.join(proj_root, "my app"))
         Folder.move(os.path.join(proj_root, "my app"), os.path.join(proj_root, "my folder"))
-        # Tns.platform_add_android(attributes={"--path": app_name_change_app_location_and_name_ng,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
 
         # Change App_Resources/ location to be 'app/res/App_Resources'
         proj_root = os.path.join(app_name_change_app_res_location_ng)
@@ -468,8 +449,6 @@ class CreateNSConfigApps(unittest.TestCase):
                   app_name_change_app_res_location_ng)
         Folder.create(os.path.join(app_path, 'res'))
         Folder.move(app_res_path, os.path.join(app_path, 'res'))
-        # Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location_ng,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
 
         # Change App_Resources/ location to be in project root/App_Resources
         proj_root = os.path.join(app_name_change_app_res_location_in_root_ng)
@@ -479,8 +458,6 @@ class CreateNSConfigApps(unittest.TestCase):
         File.copy(os.path.join(base_src, app_name_change_app_res_location_in_root_ng, 'nsconfig.json'),
                   app_name_change_app_res_location_in_root_ng)
         Folder.move(app_res_path, proj_root)
-        # Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location_in_root_ng,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
 
         # Change app/ to renamed_app/
         proj_root = os.path.join(app_name_rename_app_ng)
@@ -488,7 +465,6 @@ class CreateNSConfigApps(unittest.TestCase):
 
         File.copy(os.path.join(base_src, app_name_rename_app_ng, 'nsconfig.json'), app_name_rename_app_ng)
         os.rename(app_path, os.path.join(proj_root, 'renamed_app'))
-        # Tns.platform_add_android(attributes={"--path": app_name_rename_app_ng, "--frameworkPath": ANDROID_PACKAGE})
 
         # Change App_Resources/ to My_App_Resources/
         proj_root = os.path.join(app_name_rename_app_res_ng)
@@ -497,14 +473,18 @@ class CreateNSConfigApps(unittest.TestCase):
 
         File.copy(os.path.join(base_src, app_name_rename_app_res_ng, 'nsconfig.json'), app_name_rename_app_res_ng)
         os.rename(app_res_path, os.path.join(app_path, 'My_App_Resources'))
-        # Tns.platform_add_android(attributes={"--path": app_name_rename_app_res_ng, "--frameworkPath": ANDROID_PACKAGE})
 
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppLocationNG")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_and_name_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameNG")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationNG")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_in_root_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_ng,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppLocationNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_and_name_ng,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_ng,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_in_root_ng,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootNG")
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_ng, TEST_RUN_HOME + "/data/Projects/RenameAppNG")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_res_ng, TEST_RUN_HOME + "/data/Projects/RenameAppResNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_res_ng,
+                    TEST_RUN_HOME + "/data/Projects/RenameAppResNG")
 
         Folder.cleanup("ChangeAppLocationNG")
         Folder.cleanup("ChangeAppLocationAndNameNG")
@@ -527,7 +507,7 @@ class CreateNSConfigApps(unittest.TestCase):
         pass
 
     @classmethod
-    def createAppsLiveSyncNG(cls, class_name):
+    def createAppsLiveSyncNG(cls):
         base_src = os.path.join(os.getcwd(), 'data', 'nsconfig')
 
         # Initial create of all projects
@@ -577,10 +557,13 @@ class CreateNSConfigApps(unittest.TestCase):
         # Rename the app
         File.replace(
             os.path.join(app_name_change_app_res_location_in_root_ls_ng, 'package.json'),
-            "org.nativescript.ChangeAppLocationLSNG", "org.nativescript." + app_name_change_app_res_location_in_root_ls_ng)
+            "org.nativescript.ChangeAppLocationLSNG",
+            "org.nativescript." + app_name_change_app_res_location_in_root_ls_ng)
         File.replace(
-            os.path.join(app_name_change_app_res_location_in_root_ls_ng, 'app', 'App_Resources', 'Android', 'app.gradle'),
-            "org.nativescript.ChangeAppLocationLSNG", "org.nativescript." + app_name_change_app_res_location_in_root_ls_ng)
+            os.path.join(app_name_change_app_res_location_in_root_ls_ng, 'app', 'App_Resources', 'Android',
+                         'app.gradle'),
+            "org.nativescript.ChangeAppLocationLSNG",
+            "org.nativescript." + app_name_change_app_res_location_in_root_ls_ng)
 
         app_name_rename_app_ls_ng = "RenameAppLSNG"
         Folder.cleanup(app_name_rename_app_ls_ng)
@@ -610,11 +593,10 @@ class CreateNSConfigApps(unittest.TestCase):
         proj_root = os.path.join(app_name_change_app_location_ls_ng)
         app_path = os.path.join(proj_root, 'app')
 
-        File.copy(os.path.join(base_src, app_name_change_app_location_ls_ng, 'nsconfig.json', ), app_name_change_app_location_ls_ng)
+        File.copy(os.path.join(base_src, app_name_change_app_location_ls_ng, 'nsconfig.json', ),
+                  app_name_change_app_location_ls_ng)
         Folder.create(os.path.join(proj_root, "new_folder"))
         Folder.move(app_path, os.path.join(proj_root, 'new_folder'))
-        # Tns.platform_add_android(attributes={"--path": app_name_change_app_location_ls_ng,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
 
         # Change app/ name and place to be 'my folder/my app'
         proj_root = os.path.join(app_name_change_app_location_and_name_ls_ng)
@@ -625,8 +607,6 @@ class CreateNSConfigApps(unittest.TestCase):
         Folder.create(os.path.join(proj_root, "my folder"))
         os.rename(app_path, os.path.join(proj_root, "my app"))
         Folder.move(os.path.join(proj_root, "my app"), os.path.join(proj_root, "my folder"))
-        # Tns.platform_add_android(attributes={"--path": app_name_change_app_location_and_name_ls_ng,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
 
         # Change App_Resources/ location to be 'app/res/App_Resources'
         proj_root = os.path.join(app_name_change_app_res_location_ls_ng)
@@ -637,8 +617,6 @@ class CreateNSConfigApps(unittest.TestCase):
                   app_name_change_app_res_location_ls_ng)
         Folder.create(os.path.join(app_path, 'res'))
         Folder.move(app_res_path, os.path.join(app_path, 'res'))
-        # Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location_ls_ng,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
 
         # Change App_Resources/ location to be in project root/App_Resources
         proj_root = os.path.join(app_name_change_app_res_location_in_root_ls_ng)
@@ -648,8 +626,6 @@ class CreateNSConfigApps(unittest.TestCase):
         File.copy(os.path.join(base_src, app_name_change_app_res_location_in_root_ls_ng, 'nsconfig.json'),
                   app_name_change_app_res_location_in_root_ls_ng)
         Folder.move(app_res_path, proj_root)
-        # Tns.platform_add_android(attributes={"--path": app_name_change_app_res_location_in_root_ls_ng,
-        #                                      "--frameworkPath": ANDROID_PACKAGE})
 
         # Change app/ to renamed_app/
         proj_root = os.path.join(app_name_rename_app_ls_ng)
@@ -657,7 +633,6 @@ class CreateNSConfigApps(unittest.TestCase):
 
         File.copy(os.path.join(base_src, app_name_rename_app_ls_ng, 'nsconfig.json'), app_name_rename_app_ls_ng)
         os.rename(app_path, os.path.join(proj_root, 'renamed_app'))
-        # Tns.platform_add_android(attributes={"--path": app_name_rename_app_ls_ng, "--frameworkPath": ANDROID_PACKAGE})
 
         # Change App_Resources/ to My_App_Resources/
         proj_root = os.path.join(app_name_rename_app_res_ls_ng)
@@ -666,14 +641,18 @@ class CreateNSConfigApps(unittest.TestCase):
 
         File.copy(os.path.join(base_src, app_name_rename_app_res_ls_ng, 'nsconfig.json'), app_name_rename_app_res_ls_ng)
         os.rename(app_res_path, os.path.join(app_path, 'My_App_Resources'))
-        # Tns.platform_add_android(attributes={"--path": app_name_rename_app_res_ls_ng, "--frameworkPath": ANDROID_PACKAGE})
 
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_ls_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_and_name_ls_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLSNG")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_ls_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLSNG")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_in_root_ls_ng, TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLSNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_ls_ng,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLSNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_location_and_name_ls_ng,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppLocationAndNameLSNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_ls_ng,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationLSNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_change_app_res_location_in_root_ls_ng,
+                    TEST_RUN_HOME + "/data/Projects/ChangeAppResLocationInRootLSNG")
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_ls_ng, TEST_RUN_HOME + "/data/Projects/RenameAppLSNG")
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_res_ls_ng, TEST_RUN_HOME + "/data/Projects/RenameAppResLSNG")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name_rename_app_res_ls_ng,
+                    TEST_RUN_HOME + "/data/Projects/RenameAppResLSNG")
 
         Folder.cleanup("ChangeAppLocationLSNG")
         Folder.cleanup("ChangeAppLocationAndNameLSNG")
