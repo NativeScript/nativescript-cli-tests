@@ -50,7 +50,6 @@ class PlatformAndroidTests(BaseClass):
         Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
         TnsAsserts.platform_added(self.app_name, platform=Platform.ANDROID, output=output)
 
-    # @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_130_platform_remove_and_platform_add_android_custom_version(self):
         """Verify platform add supports custom versions"""
 
@@ -64,7 +63,7 @@ class PlatformAndroidTests(BaseClass):
         # Add custom version with tag
         Tns.platform_add_android(version="rc", attributes={"--path": self.app_name})
 
-    # @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_200_platform_update_android(self):
         """Update platform"""
 
@@ -84,7 +83,7 @@ class PlatformAndroidTests(BaseClass):
                                      assert_success=False)
         TnsAsserts.platform_added(self.app_name, platform=Platform.ANDROID, output=output)
 
-    # @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_220_platform_clean_android(self):
         """Prepare after `platform clean` should add the same version that was before clean"""
 
@@ -103,7 +102,7 @@ class PlatformAndroidTests(BaseClass):
         assert "Project successfully created" in output
         assert "Successfully installed plugin tns-core-modules" in output
 
-    # @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_230_tns_update(self):
         """ Default `tns platform add` command"""
         Tns.platform_add_android(attributes={"--path": self.app_name}, version="latest")
