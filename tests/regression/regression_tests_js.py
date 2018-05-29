@@ -73,17 +73,17 @@ class RegressionTestsJS(BaseClass):
         Helpers.android_screen_match(image=self.image_original)
 
         # Change JS, XML and CSS
-        ReplaceHelper.replace(self.app_name, self.js_change)
-        ReplaceHelper.replace(self.app_name, self.xml_change)
-        ReplaceHelper.replace(self.app_name, self.css_change)
+        ReplaceHelper.replace(self.app_name, self.js_change, sleep=10)
+        ReplaceHelper.replace(self.app_name, self.xml_change, sleep=10)
+        ReplaceHelper.replace(self.app_name, self.css_change, sleep=10)
 
         # Verify application looks correct
         Helpers.android_screen_match(image=self.image_change)
 
         # Revert changes
-        ReplaceHelper.rollback(self.app_name, self.js_change)
-        ReplaceHelper.rollback(self.app_name, self.xml_change)
-        ReplaceHelper.rollback(self.app_name, self.css_change)
+        ReplaceHelper.rollback(self.app_name, self.js_change, sleep=10)
+        ReplaceHelper.rollback(self.app_name, self.xml_change, sleep=10)
+        ReplaceHelper.rollback(self.app_name, self.css_change, sleep=10)
 
         # Verify application looks correct
         Helpers.android_screen_match(image=self.image_original)
