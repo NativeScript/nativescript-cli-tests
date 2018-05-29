@@ -108,7 +108,7 @@ class RuntimeTests(BaseClass):
          https://github.com/NativeScript/android-runtime/issues/739
         """
         # Change main-page.js so it contains only logging information
-        source_js = os.path.join('data', "issues", 'android-runtime-739', 'java', 'main-page.js')
+        source_js = os.path.join('data', "issues", 'android-runtime-739', 'javascript', 'main-page.js')
         target_js = os.path.join(self.app_name, 'app', 'main-page.js')
         File.copy(src=source_js, dest=target_js)
 
@@ -136,7 +136,7 @@ class RuntimeTests(BaseClass):
          https://github.com/NativeScript/android-runtime/issues/739
         """
         # Change main-page.js so it contains only logging information
-        source_js = os.path.join('data', "issues", 'android-runtime-739', 'javascript', 'main-page.js')
+        source_js = os.path.join('data', "issues", 'android-runtime-739', 'java', 'main-page.js')
         target_js = os.path.join(self.app_name, 'app', 'main-page.js')
         File.copy(src=source_js, dest=target_js)
 
