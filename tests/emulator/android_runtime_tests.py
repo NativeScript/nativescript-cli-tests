@@ -129,3 +129,23 @@ class RuntimeTests(BaseClass):
             assert 1 == 2, 'Check(instanceof) for java class implements java interface does not work' \
                            '(myRunnable instanceof java.lang.Runnable)'
 
+    def test_303_support_HeapByteBuffer_to_ArrayBuffer(self):
+        """
+         Test support HeapByteBuffer to ArrayBuffer
+         https://github.com/NativeScript/android-runtime/issues/1060
+        """
+        # Change main-page.js so it contains only logging information
+        source_js = os.path.join('data', "issues", 'android-runtime-1060', 'main-page.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-page.js')
+        File.copy(src=source_js, dest=target_js)
+
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+
+        Tns.wait_for_log(log_file=log, string_list=['Successfully synced application'], timeout=240, check_interval=10, clean_log=False)
+        try:
+            Tns.wait_for_log(log_file=log, string_list=["###TEST PASSED###"], timeout=60, check_interval=10,
+                             clean_log=False)
+        except Exception as e:
+            print str(e)
+            assert 1 == 2, 'HeapByteBuffer to ArrayBuffer conversion is not working'
