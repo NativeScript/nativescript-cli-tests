@@ -138,6 +138,8 @@ class PrepareAndroidTests(BaseClass):
         ng_path = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, '@angular', 'core')
         assert File.exists(ng_path), "Scoped dependencies are flattened, please see #1783!"
 
+    # TODO: Remove Java related skipping after nativescript-facebook/demo uses android >= 4.1.0
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows")
     def test_320_prepare_scoped_plugins(self):
         """
