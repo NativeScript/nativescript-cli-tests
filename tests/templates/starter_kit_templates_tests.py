@@ -148,20 +148,27 @@ class StarterKitsTests(BaseClass):
     @parameterized.expand(DEMOS)
     def test_000_prepare_apps(self, demo):
         Tns.create_app(demo, attributes={"--template": "https://github.com/NativeScript/" + demo})
+
         Tns.platform_add_android(attributes={"--path": demo, "--frameworkPath": ANDROID_PACKAGE})
+
         if "-ng" in demo:
             Tns.update_angular(demo)
         if "-ng" in demo or "-ts" in demo:
             Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev', folder=demo)
             Npm.install(package=TYPESCRIPT_PACKAGE, option='--save-dev', folder=demo)
         Npm.uninstall(package="nativescript-dev-webpack", option='--save-dev', folder=demo)
+
         # Old webpack adds old webpack config. Cleanup to make sure we get the new config.
         File.remove(os.path.join(TEST_RUN_HOME, demo, 'webpack.config.js'))
         Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=demo)
         Npm.uninstall(package="nativescript-dev-sass", option='--save-dev', folder=demo)
         Npm.install(package=SASS_PACKAGE, option='--save-dev', folder=demo)
+
+        Tns.build_android(attributes={'--path': demo})
+
         if CURRENT_OS == OSType.OSX:
             Tns.platform_add_ios(attributes={'--path': demo, '--frameworkPath': IOS_PACKAGE})
+            Tns.build_ios(attributes={'--path': demo})
 
     @parameterized.expand(DEMOS)
     def test_100_run_android(self, demo):
