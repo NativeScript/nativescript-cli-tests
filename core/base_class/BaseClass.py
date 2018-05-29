@@ -3,6 +3,7 @@ import shutil
 import sys
 import time
 import unittest
+from os import listdir
 
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
@@ -10,13 +11,12 @@ from core.gradle.gradle import Gradle
 from core.logger import Logger
 from core.osutils.file import File
 from core.osutils.folder import Folder
+from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.osutils.screen import Screen
-from core.settings.settings import OUTPUT_FOLDER, TEST_RUN_HOME, IOS_PACKAGE
+from core.settings.settings import OUTPUT_FOLDER, TEST_RUN_HOME, CURRENT_OS
 from core.tns.tns import Tns
-from core.settings.settings import ANDROID_PACKAGE, \
-    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS
-from os import listdir
+
 
 class BaseClass(unittest.TestCase):
     app_name = "TestApp"
@@ -100,10 +100,10 @@ class BaseClass(unittest.TestCase):
         Gradle.kill()
         Process.kill('node')
         Process.kill('adb')
-        Process.kill('NativeScript Inspector')
-        Process.kill('Safari')
-        Process.kill('Xcode')
-        Process.kill_by_commandline('adb')
+        if CURRENT_OS == OSType.OSX:
+            Process.kill('NativeScript Inspector')
+            Process.kill('Safari')
+            Process.kill('Xcode')
 
         if class_name is not None:
             logfile = os.path.join('out', class_name + '.txt')
@@ -151,9 +151,10 @@ class BaseClass(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        Process.kill('NativeScript Inspector')
-        Process.kill('Safari')
         Tns.kill()
-        Simulator.stop()
         Emulator.stop()
         Gradle.kill()
+        if CURRENT_OS == OSType.OSX:
+            Process.kill('NativeScript Inspector')
+            Process.kill('Safari')
+            Simulator.stop()

@@ -79,6 +79,7 @@ class Tns(object):
         """
         Kill all running `tns` processes
         """
+        print "Kill all tns processes."
         Process.kill(proc_name='node', proc_cmdline='tns')
         time.sleep(1)
         Process.kill_by_commandline('tns')
@@ -123,7 +124,6 @@ class Tns(object):
 
         if folder is not None:
             Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
-
 
         return output
 
