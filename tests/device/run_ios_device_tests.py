@@ -16,6 +16,7 @@ TODO: Add tests for:
 """
 
 import os
+import unittest
 from datetime import datetime
 from time import sleep
 
@@ -201,9 +202,11 @@ class RunIOSDeviceTests(BaseClass):
         for device_id in self.DEVICES:
             assert app_id + " on device " + device_id not in output, 'App is deployed on {0} device.'.format(device_id)
 
+    @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-cli/issues/3644")
     def test_320_tns_run_ios_specific_device(self):
         """
         `tns run ios --device` should run only on specified device
+        This will also verify justlaunch release console after it completes.
         """
         self.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
         output = Tns.run_ios(attributes={'--path': self.app_name, '--device': self.DEVICE_ID, '--justlaunch': ''},
