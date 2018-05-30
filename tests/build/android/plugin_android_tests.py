@@ -4,6 +4,7 @@ Test for plugin commands in context of Android
 
 import os
 import time
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.helpers.adb import Adb
@@ -129,6 +130,7 @@ class PluginsAndroidTests(BaseClass):
         output = Tns.run_tns_command("plugin", attributes={"--path": self.app_name})
         assert tns_plugin in output
 
+    @unittest.skip("Temporary issues with jcenter.")
     def test_390_plugin_with_promise_in_hooks(self):
         Tns.plugin_add("nativescript-fabric@1.0.6", attributes={"--path": self.app_name})
         output = Tns.prepare_android(attributes={"--path": self.app_name}, assert_success=False)

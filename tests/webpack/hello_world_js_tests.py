@@ -68,8 +68,7 @@ class WebPackHelloWorldJS(BaseClass):
 
         ReplaceHelper.replace(app_name, WebPackHelloWorldJS.css_change, sleep=10)
         if platform == Platform.ANDROID:
-            strings = ['Successfully transferred app.css', 'Successfully synced application']
-            Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
+            Tns.wait_for_log(log_file=log, string_list=['app.css'], clean_log=False)
 
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
                          timeout=120)

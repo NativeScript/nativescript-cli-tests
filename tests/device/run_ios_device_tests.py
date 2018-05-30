@@ -16,6 +16,7 @@ TODO: Add tests for:
 """
 
 import os
+import unittest
 from datetime import datetime
 from time import sleep
 
@@ -201,9 +202,11 @@ class RunIOSDeviceTests(BaseClass):
         for device_id in self.DEVICES:
             assert app_id + " on device " + device_id not in output, 'App is deployed on {0} device.'.format(device_id)
 
+    @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-cli/issues/3644")
     def test_320_tns_run_ios_specific_device(self):
         """
         `tns run ios --device` should run only on specified device
+        This will also verify justlaunch release console after it completes.
         """
         self.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
         output = Tns.run_ios(attributes={'--path': self.app_name, '--device': self.DEVICE_ID, '--justlaunch': ''},
@@ -292,14 +295,3 @@ class RunIOSDeviceTests(BaseClass):
         strings = ['Successfully installed', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TEST"), "XML changes not synced on device!"
-
-    def test_404_tns_run_ios_on_not_existing_device_should_not_start_simualtor(self):
-        """
-        `tns run ios --device fakeID` should show error and emulator should not be started (test for issue #2728)
-        """
-        Simulator.stop()
-        output = Tns.run_ios(attributes={'--path': self.app_name, '--device': 'fakeID', '--justlaunch': ''},
-                             assert_success=False)
-        TnsAsserts.invalid_device(output=output)
-        sleep(10)
-        assert not Simulator.is_running()[0], 'iOS Simulator started by `tns run ios --device fakeID`!'
