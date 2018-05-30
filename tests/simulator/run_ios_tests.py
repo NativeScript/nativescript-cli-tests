@@ -500,7 +500,7 @@ class RunIOSSimulatorTests(BaseClass):
                "<string>org.nativescript.myapp</string>"
         info = os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'Info.plist')
         File.replace(file_path=info, str1=str1, str2=str2)
-        output = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''})
+        output = Tns.run_ios(attributes={'--path': self.app_name, '--justlaunch': ''})
         assert "[WARNING]: The CFBundleIdentifier key inside the 'Info.plist' will be overriden" in output
         assert "Successfully synced application org.nativescript.TestApp" in output
 
@@ -511,8 +511,7 @@ class RunIOSSimulatorTests(BaseClass):
         destination_path = os.path.join(TEST_RUN_HOME, "folder with spaces", "Test App")
         Folder.cleanup(folder=destination_path)
         Folder.copy(src=self.app_name, dst=destination_path)
-        output = Tns.run_ios(
-            attributes={'--path': "\"" + destination_path + "\"", '--emulator': '', '--justlaunch': ''})
+        output = Tns.run_ios(attributes={'--path': "\"" + destination_path + "\"", '--justlaunch': ''})
         assert "Multiple errors were thrown" not in output
         assert "fail" not in output
 
