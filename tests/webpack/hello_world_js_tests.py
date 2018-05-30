@@ -4,6 +4,7 @@ from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
+from core.osutils.file import File
 from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_KEYSTORE_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, CURRENT_OS, \
@@ -82,11 +83,28 @@ class WebPackHelloWorldJS(BaseClass):
 
     @staticmethod
     def revert_changes(app_name, log, platform):
-        # Revert changes
-        ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.js_change, sleep=10)
-        ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.xml_change, sleep=10)
-        ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.css_change, sleep=10)
+        # Clean old logs
+        if CURRENT_OS is not OSType.WINDOWS:
+            File.write(file_path=log, text="")
 
+        # Revert changes
+        ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.xml_change, sleep=10)
+        Tns.wait_for_log(log_file=log, string_list=['main-page.xml'], clean_log=False)
+        if platform == Platform.ANDROID:
+            text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TAP')
+            assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
+
+        ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.js_change, sleep=10)
+        Tns.wait_for_log(log_file=log, string_list=['main-view-model.js'], clean_log=False)
+        if platform == Platform.ANDROID:
+            text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left', timeout=20)
+            assert text_changed, 'Changes in TS file not applied (UI is not refreshed).'
+
+        ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.css_change, sleep=10)
+        Tns.wait_for_log(log_file=log, string_list=['app.css'], clean_log=False)
+
+        ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.css_change, sleep=10)
+        Tns.wait_for_log(log_file=log, string_list=['app.css'], clean_log=False)
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
                          timeout=60)
@@ -131,10 +149,6 @@ class WebPackHelloWorldJS(BaseClass):
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_100_ios_build_release_with_bundle_and_uglify(self):
-        # Hack due to https://github.com/NativeScript/nativescript-cli/issues/3415
-        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name})
-        Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_PACKAGE})
-
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
                                   "--env.uglify": ""})
 
@@ -179,7 +193,7 @@ class WebPackHelloWorldJS(BaseClass):
                                           "--bundle": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
+                         timeout=240)
         Helpers.android_screen_match(image=self.image_original, timeout=120)
         Helpers.wait_webpack_watcher()
 
@@ -191,7 +205,7 @@ class WebPackHelloWorldJS(BaseClass):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': ''}, wait=False,
                           assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
-                         timeout=240)
+                         timeout=240, check_interval=10)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
         Helpers.wait_webpack_watcher()
 
