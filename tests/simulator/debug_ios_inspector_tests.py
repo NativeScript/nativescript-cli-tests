@@ -38,6 +38,7 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
                        update_modules=True)
         Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_PACKAGE})
         Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--save-dev', folder=cls.app_name)
+        Tns.build_ios(attributes={"--path": cls.app_name})
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -56,33 +57,27 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         BaseClass.tearDownClass()
         Folder.cleanup(cls.app_name)
 
-    def __verify_debugger_start(self, log):
+    @staticmethod
+    def __verify_debugger_attach(log, app_started=True):
         strings = ["Frontend client connected", "Backend socket created", "NativeScript debugger attached"]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=90, check_interval=10, clean_log=False)
         time.sleep(10)
         output = File.read(log)
         assert "Frontend socket closed" not in output
         assert "Backend socket closed" not in output
         assert "NativeScript debugger detached" not in output
         assert Process.is_running('NativeScript Inspector')
-
-    def __verify_debugger_attach(self, log):
-        strings = ["Frontend client connected", "Backend socket created"]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
-        time.sleep(10)
-        output = File.read(log)
-        assert "NativeScript debugger attached" not in output  # This is not in output when you attach to running app
-        assert "Frontend socket closed" not in output
-        assert "Backend socket closed" not in output
-        assert "NativeScript debugger detached" not in output
-        assert Process.is_running('NativeScript Inspector')
+        if app_started:
+            assert "Page loaded 1 time" in output, "Page not reloaded, this is bug!"
+        else:
+            assert "Page loaded 1 time" not in output, "Page reloaded, this is bug!"
 
     def test_001_debug_ios_simulator(self):
         """
         Default `tns debug ios` starts debugger (do not stop at the first code statement)
         """
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--inspector': ''})
-        self.__verify_debugger_start(log)
+        DebugiOSInspectorSimulatorTests.__verify_debugger_attach(log)
 
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=SIMULATOR_NAME,
@@ -95,7 +90,9 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
 
         log = Tns.debug_ios(
             attributes={'--path': self.app_name, '--emulator': '', '--debug-brk': '', '--inspector': ''})
-        self.__verify_debugger_start(log)
+        DebugiOSInspectorSimulatorTests.__verify_debugger_attach(log, app_started=False)
+        # In this case `app_started` is False because app is not loaded when using '--debug-brk'.
+        # '--debug-brk' stops before app loaded.
 
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=SIMULATOR_NAME, tolerance=3.0, device_id=self.SIMULATOR_ID,
@@ -107,7 +104,7 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
         """
 
         # Run the app and ensure it works
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': '', '--inspector': ''},
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
                           assert_success=False, timeout=30)
         TnsAsserts.prepared(app_name=self.app_name, platform=Platform.IOS, output=log, prepare=Prepare.SKIP)
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
@@ -115,14 +112,15 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
 
         # Attach debugger
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--start': '', '--inspector': ''})
-        self.__verify_debugger_attach(log=log)
+        DebugiOSInspectorSimulatorTests.__verify_debugger_attach(log, app_started=False)
+        # In this case `app_started` is False because we are attaching to running app and we should not restart it.
 
     def test_100_debug_ios_simulator_with_livesync(self):
         """
         `tns debug ios` should be able to run with livesync
         """
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--emulator': '', '--inspector': ''})
-        self.__verify_debugger_start(log)
+        DebugiOSInspectorSimulatorTests.__verify_debugger_attach(log)
 
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=SIMULATOR_NAME,
