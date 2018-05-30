@@ -288,10 +288,11 @@ class RunIOSDeviceTests(BaseClass):
 
         # Uninstall app while `tns run` is running
         Device.uninstall_app(app_prefix='org.nativescript.', platform=Platform.IOS)
-        sleep(5)
+        sleep(10)
 
         # Change XML and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
+        Tns.wait_for_log(log_file=log, string_list=[], timeout=30)  # Just to cleanup log file
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=10)
         strings = ['Successfully installed', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TEST"), "XML changes not synced on device!"
