@@ -74,15 +74,15 @@ class StarterKitsTests(BaseClass):
             ReplaceHelper.replace(demo, self.xml_change)
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text=xml, timeout=20), "Failed to apply XML changes!"
-        ReplaceHelper.replace(demo, self.sass_root_level_variable_change)
+        ReplaceHelper.replace(demo, self.sass_root_level_variable_change, sleep=10)
         if platform == Platform.ANDROID:
-            ReplaceHelper.replace(demo, self.sass_root_level_android_change)
+            ReplaceHelper.replace(demo, self.sass_root_level_android_change, sleep=10)
         else:
-            ReplaceHelper.replace(demo, self.sass_root_level_ios_change)
+            ReplaceHelper.replace(demo, self.sass_root_level_ios_change, sleep=10)
         if '-ng' in demo:
-            ReplaceHelper.replace(demo, self.sass_nested_level_change_ng)
+            ReplaceHelper.replace(demo, self.sass_nested_level_change_ng, sleep=10)
         else:
-            ReplaceHelper.replace(demo, self.sass_nested_level_change)
+            ReplaceHelper.replace(demo, self.sass_nested_level_change, sleep=10)
 
     @staticmethod
     def revert_changes(self, demo, platform, device_id):
@@ -113,15 +113,15 @@ class StarterKitsTests(BaseClass):
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text="Browse",
                                             timeout=20), "Failed to rollback XML changes!"
-        ReplaceHelper.rollback(demo, self.sass_root_level_variable_change)
+        ReplaceHelper.rollback(demo, self.sass_root_level_variable_change, sleep=10)
         if platform == Platform.ANDROID:
-            ReplaceHelper.rollback(demo, self.sass_root_level_android_change)
+            ReplaceHelper.rollback(demo, self.sass_root_level_android_change, sleep=10)
         else:
-            ReplaceHelper.rollback(demo, self.sass_root_level_ios_change)
+            ReplaceHelper.rollback(demo, self.sass_root_level_ios_change, sleep=10)
         if '-ng' in demo:
-            ReplaceHelper.rollback(demo, self.sass_nested_level_change_ng)
+            ReplaceHelper.rollback(demo, self.sass_nested_level_change_ng, sleep=10)
         else:
-            ReplaceHelper.rollback(demo, self.sass_nested_level_change)
+            ReplaceHelper.rollback(demo, self.sass_nested_level_change, sleep=10)
 
     @classmethod
     def setUpClass(cls):
