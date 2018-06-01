@@ -1,52 +1,24 @@
 """
 This file contains all the commons.
 """
-
 import os
-import threading
+import signal
+import subprocess
 import time
 from datetime import datetime
 
+from core.osutils.subprocess_utils import subprocess_utils
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.os_type import OSType
-from core.osutils.process import Process
-from core.settings.settings import OUTPUT_FILE, COMMAND_TIMEOUT, TEST_LOG, OUTPUT_FILE_ASYNC, CURRENT_OS
+from core.settings.settings import OUTPUT_FILE, COMMAND_TIMEOUT, TEST_LOG, OUTPUT_FILE_ASYNC, CURRENT_OS, \
+    PROCESS_STARTED
 
 
 def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=CommandLogLevel.FULL):
-    """
-    Execute command in shell.
-    :param command: Command to be executed.
-    :param timeout: Timeout for command execution.
-    :param output:
-    :param wait: Specify if method should wait until command execution complete.
-    :param log_level: CommandLogLevel value (SILENT, COMMAND_ONLY, FULL).
-    :return: If wait=True return output of the command, else return path to file where command writes log.
-    """
-
-    def fork_it():
-        """
-        This function will be emulate in a parallel thread.
-
-        You can redirect the output to one place and the errors to another:
-        # dir file.xxx > output.msg 2> output.err
-
-        You can print the errors and standard output to a single file
-        by using the "&1" command to redirect the output for STDERR to STDOUT
-        and then sending the output from STDOUT to a file:
-        # dir file.xxx 1> output.msg 2>&1
-        """
-
-        # execute command
-        # print "Thread started"
-        if output:
-            os.system(command + ' 1> ' + out_file + ' 2>&1')
-        else:
-            os.system(command)
-
     # If wait=False log should be writen
     out_file = OUTPUT_FILE
+
     if not wait:
         time_string = "_" + datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
         out_file = OUTPUT_FILE_ASYNC.replace('.', time_string + '.')
@@ -56,6 +28,9 @@ def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=Comm
             command = command + " 1> " + out_file + " 2>&1 &"
         else:
             command = command + " &> " + out_file + " 2>&1 &"
+    else:
+        if output:
+            command = command + ' 1> ' + out_file + ' 2>&1'
 
     # remove output.txt
     try:
@@ -75,19 +50,39 @@ def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=Comm
         if not wait:
             timeout = 10
 
-    # prepare command line
-    thread = threading.Thread(target=fork_it)
-    thread.start()
+    new_subprocess = subprocess.Popen(command,
+                                      stdin=subprocess.PIPE,
+                                      stdout=subprocess.PIPE,
+                                      stderr=subprocess.PIPE,
+                                      # runs in the child
+                                      # process before
+                                      # the exec(), putting
+                                      # the child process into
+                                      # its own process group
+                                      preexec_fn=os.setpgrp,
+                                      shell=True,
+                                      cwd=None,
+                                      env=None)
+    pgid = os.getpgid(new_subprocess.pid)
+    if timeout is not None:
 
-    # wait for thread to finish or timeout
-    thread.join(timeout)
+        if signal.getsignal(signal.SIGALRM) not in (None, signal.SIG_IGN, signal.SIG_DFL):
+            # someone is using a SIGALRM handler!
+            ValueError("SIGALRM handler already in use!")
 
-    # kill thread if it exceed the timeout
-    if thread.is_alive():
-        if wait:
-            Process.kill_by_commandline(command.partition(' ')[0].rpartition(os.sep)[-1])
-            thread.join()
-            raise NameError('Process has timed out at ' + time.strftime("%X"))
+        prevAlarmHandler = signal.getsignal(signal.SIGALRM)
+
+        signal.signal(signal.SIGALRM,
+                      lambda sig, frame: subprocess_utils.kill(pgid, prevAlarmHandler))
+
+        # setup handler before scheduling signal, to eliminate a race
+        signal.alarm(timeout)
+
+    if wait:
+        e = subprocess_utils.wait_process(new_subprocess, prevAlarmHandler)
+        subprocess_utils.kill(pgid, prevAlarmHandler)
+    else:
+        PROCESS_STARTED.append(pgid)
 
     # get whenever exist in the pipe ?
     pipe_output = 'NOT_COLLECTED'

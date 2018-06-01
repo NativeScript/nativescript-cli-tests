@@ -5,9 +5,11 @@ Process utils.
 import time
 
 import psutil
+import signal
 
+from core.osutils.subprocess_utils import subprocess_utils
 from core.osutils.os_type import OSType
-from core.settings.settings import CURRENT_OS
+from core.settings.settings import CURRENT_OS, PROCESS_STARTED
 
 
 class Process(object):
@@ -133,3 +135,10 @@ class Process(object):
             except:
                 continue
             print "{0}  {1}".format(name, cmdline)
+
+    @staticmethod
+    def kill_all_runned_process():
+        print 'Stop all runned process.'
+        prevAlarmHandler = signal.getsignal(signal.SIGALRM)
+        for proc in PROCESS_STARTED:
+            subprocess_utils.kill(proc, prevAlarmHandler)

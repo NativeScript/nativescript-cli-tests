@@ -154,6 +154,7 @@ class BaseClass(unittest.TestCase):
         Tns.kill()
         Emulator.stop()
         Gradle.kill()
+        Process.kill_all_runned_process()
         if CURRENT_OS == OSType.OSX:
             Process.kill('NativeScript Inspector')
             Process.kill('Safari')
