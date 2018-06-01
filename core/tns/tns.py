@@ -219,7 +219,7 @@ class Tns(object):
             attributes_to_string = "".join("{0} {1}".format(k, v))
         attr = {}
         if not any(s in attributes_to_string for s in ("--ng", "--template", "--tsc")):
-            if BRANCH is "master":
+            if BRANCH == "master":
                 attr = {"--template": SUT_FOLDER + os.path.sep + "tns-template-hello-world.tgz"}
             else:
                 attr = {"--template": "tns-template-hello-world"}
