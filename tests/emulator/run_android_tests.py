@@ -364,7 +364,8 @@ class RunAndroidEmulatorTests(BaseClass):
         if re.search(date_to_find_los_angeles, str(file.read(file(log)))):
             print "Date was correct!"
         else:
-            assert 1 == 2, 'Date {0} was not found! \n Log: \n {1}'.format(date_to_find_los_angeles, file.read(file(log)))
+            assert 1 == 2, 'Date {0} was not found! \n Log: \n {1}'.format(date_to_find_los_angeles,
+                                                                           file.read(file(log)))
 
     def test_200_tns_run_android_break_and_fix_app(self):
         """
@@ -699,6 +700,39 @@ class RunAndroidEmulatorTests(BaseClass):
             Emulator.ensure_available()
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
+
+    def test_355_tns_run_android_changes_in_app_resources_rebuild_app(self):
+        """
+        https://github.com/NativeScript/nativescript-cli/issues/3658
+        In case when some change occurs in App_Resources/iOS and tns run android command is executed,
+        the application is fully rebuild when it should not.
+        """
+
+        # Run app twice and check the second time it's not rebuild
+        log1 = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                               assert_success=False)
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application']
+        Tns.wait_for_log(log_file=log1, string_list=strings, timeout=180, check_interval=10, clean_log=False)
+
+        log2 = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                               assert_success=False)
+        strings_skipping_prepare = ['Skipping prepare', 'Refreshing application',
+                   'Successfully synced application']
+        Tns.wait_for_log(log_file=log2, string_list=strings, timeout=180, check_interval=10, clean_log=False)
+
+        # Make change in App_Resources/iOS folder
+        app_resources_file = os.path.join(self.app_name, "app", "App_Resources", "iOS", "Assets.xcassets",
+                                          "Contents.json")
+        file_to_change = os.path.join("data", "issues", "nativescript-cli-3658", "Contents.json")
+        File.copy(file_to_change, app_resources_file)
+
+        # Run again the app and ensure it's not rebuild
+        log3 = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                               assert_success=False)
+        Tns.wait_for_log(log_file=log3, string_list=strings_skipping_prepare, timeout=180, check_interval=10, clean_log=False)
+        assert 'Building project' not in log3, "Project is rebuilt when it should not."
 
     def test_360_tns_run_android_with_jar_file_in_plugin(self):
         """
