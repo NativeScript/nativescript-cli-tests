@@ -718,7 +718,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         log2 = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                                assert_success=False)
-        strings = ['Skipping prepare', 'Refreshing application',
+        strings_skipping_prepare = ['Skipping prepare', 'Refreshing application',
                    'Successfully synced application']
         Tns.wait_for_log(log_file=log2, string_list=strings, timeout=180, check_interval=10, clean_log=False)
 
@@ -731,9 +731,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # Run again the app and ensure it's not rebuild
         log3 = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                                assert_success=False)
-        strings = ['Skipping prepare', 'Refreshing application',
-                   'Successfully synced application']
-        Tns.wait_for_log(log_file=log3, string_list=strings, timeout=180, check_interval=10, clean_log=False)
+        Tns.wait_for_log(log_file=log3, string_list=strings_skipping_prepare, timeout=180, check_interval=10, clean_log=False)
         assert 'Building project' not in log3, "Project is rebuilt when it should not."
 
     def test_360_tns_run_android_with_jar_file_in_plugin(self):
