@@ -421,6 +421,35 @@ class RunIOSSimulatorTests(BaseClass):
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
 
+    def test_360_tns_run_ios_changes_in_app_resources_rebuild_app(self):
+        """
+        https://github.com/NativeScript/nativescript-cli/issues/3658
+        In case when some change occurs in App_Resources/Android and tns run ios command is executed,
+        the application is fully rebuild when it should not.
+        """
+
+        # Run app twice and check the second time it's not rebuild
+        log1 = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=log1, string_list=strings, timeout=150, check_interval=10, clean_log=False)
+
+        log2 = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+        strings = ['Skipping prepare', 'Successfully transferred all files', 'Refreshing application',
+                   'Successfully synced application']
+        Tns.wait_for_log(log_file=log2, string_list=strings, timeout=150, check_interval=10, clean_log=False)
+
+        # Make change in App_Resources/Android folder
+        app_resources_file = os.path.join(self.app_name, "app", "App_Resources", "Android", "values",
+                                          "colors.xml")
+        file_to_change = os.path.join("data", "issues", "nativescript-cli-3658", "colors.xml")
+        File.copy(file_to_change, app_resources_file)
+
+        # Run again the app and ensure it's not rebuild
+        log3 = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+        strings = ['Skipping prepare', 'Successfully synced application', self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=log3, string_list=strings, timeout=150, check_interval=10, clean_log=False)
+        assert 'Building project' not in log3, "Project is rebuilt when it should not."
+
     def test_370_tns_run_plugin_add(self):
         """
         `tns run ios` should do full rebuild after plugin is added.
