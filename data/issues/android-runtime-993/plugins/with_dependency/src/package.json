@@ -1,0 +1,10 @@
+{
+    "name": "mylib",
+    "version": "1.0.0",
+    "description": "Test",
+    "nativescript": {
+        "platforms": {
+            "android": "4.1.0"
+        }
+    }
+}
