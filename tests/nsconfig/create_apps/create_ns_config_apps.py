@@ -1,9 +1,10 @@
 import os
 import unittest
 
+from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TEST_RUN_HOME
+from core.settings.settings import TEST_RUN_HOME, TYPESCRIPT_PACKAGE, WEBPACK_PACKAGE, SASS_PACKAGE
 from core.tns.tns import Tns
 
 
@@ -359,6 +360,19 @@ class CreateNSConfigApps(unittest.TestCase):
         # Initial create of all projects
         app_name_change_app_location_ng = "ChangeAppLocationNG"
         Tns.create_app_ng(app_name=app_name_change_app_location_ng)
+        Tns.update_angular(app_name_change_app_location_ng)
+        Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev',
+                      folder=app_name_change_app_location_ng)
+        Npm.install(package=TYPESCRIPT_PACKAGE, option='--save-dev', folder=app_name_change_app_location_ng)
+        Npm.uninstall(package="nativescript-dev-webpack", option='--save-dev', folder=app_name_change_app_location_ng)
+
+        # Old webpack adds old webpack config. Cleanup to make sure we get the new config.
+        File.remove(os.path.join(TEST_RUN_HOME, app_name_change_app_location_ng, 'webpack.config.js'))
+        Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=app_name_change_app_location_ng)
+        Npm.uninstall(package="nativescript-dev-sass", option='--save-dev', folder=app_name_change_app_location_ng)
+        Npm.install(package=SASS_PACKAGE, option='--save-dev', folder=app_name_change_app_location_ng)
+        File.remove(TEST_RUN_HOME + "/" + app_name_change_app_location_ng + "/"
+            + "node_modules/.bin/babylon")
 
         # Create the other projects using the initial setup but in different folder
         app_name_change_app_location_and_name_ng = "ChangeAppLocationAndNameNG"
@@ -513,6 +527,19 @@ class CreateNSConfigApps(unittest.TestCase):
         # Initial create of all projects
         app_name_change_app_location_ls_ng = "ChangeAppLocationLSNG"
         Tns.create_app_ng(app_name=app_name_change_app_location_ls_ng)
+        Tns.update_angular(app_name_change_app_location_ls_ng)
+        Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev',
+                      folder=app_name_change_app_location_ls_ng)
+        Npm.install(package=TYPESCRIPT_PACKAGE, option='--save-dev', folder=app_name_change_app_location_ls_ng)
+        Npm.uninstall(package="nativescript-dev-webpack", option='--save-dev', folder=app_name_change_app_location_ls_ng)
+
+        # Old webpack adds old webpack config. Cleanup to make sure we get the new config.
+        File.remove(os.path.join(TEST_RUN_HOME, app_name_change_app_location_ls_ng, 'webpack.config.js'))
+        Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=app_name_change_app_location_ls_ng)
+        Npm.uninstall(package="nativescript-dev-sass", option='--save-dev', folder=app_name_change_app_location_ls_ng)
+        Npm.install(package=SASS_PACKAGE, option='--save-dev', folder=app_name_change_app_location_ls_ng)
+        File.remove(TEST_RUN_HOME + "/" + app_name_change_app_location_ls_ng + "/"
+                    + "node_modules/.bin/babylon")
 
         # Copy the app folder (app is modified in order to get some console logs on loaded)
         source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'app')
