@@ -6,6 +6,7 @@ import os
 from core.base_class.BaseClass import BaseClass
 from core.osutils.command import run
 from core.osutils.folder import Folder
+from core.osutils.file import File
 from core.osutils.image_utils import ImageUtils
 from core.osutils.os_type import OSType
 from core.settings.settings import CURRENT_OS, TEST_RUN_HOME
@@ -141,6 +142,22 @@ class ResourcesGenerateTests(BaseClass):
         assert "Splash screens generation completed" in output
 
         ResourcesGenerateTests.check_splashes(app_resources_android, app_resources_ios)
+
+    def test_003_tns_resources_generate_icons_apetools(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/3666
+        Folder.cleanup(os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'Assets.xcassets',
+                                    'AppIcon.appiconset'))
+        folder = os.path.join(TEST_RUN_HOME, "data", "images", "resources_generate", "apetool",
+                              "AppIcon.appiconset")
+        destination = os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'Assets.xcassets', 'AppIcon.appiconset')
+        Folder.copy(folder, destination)
+        icon_path = os.path.join(self.app_name, "app", "App_Resources", "iOS", "Assets.xcassets",
+                                 "AppIcon.appiconset", "Icon-76x76@2x.png")
+
+        output = run("tns resources generate icons \"" + icon_path + "\"" + " --path " + self.app_name)
+        assert "Generating icons" in output
+        assert "Icons generation completed" in output
+        assert "Invalid settings specified for the resizer." not in output
 
     def test_100_tns_resources_generate_icons_old_template_structure(self):
         app_resources_android = os.path.join(TEST_RUN_HOME, self.app_based_on_old_template, self.app_resources_old)
