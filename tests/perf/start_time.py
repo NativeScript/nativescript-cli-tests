@@ -11,6 +11,7 @@ from core.device.helpers.adb import Adb
 from core.device.simulator import Simulator
 from core.git.git import Git
 from core.npm.npm import Npm
+from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_PACKAGE, TYPESCRIPT_PACKAGE, WEBPACK_PACKAGE, ANDROID_KEYSTORE_PATH, \
@@ -100,6 +101,12 @@ class PerfTests(BaseClass):
             Adb.start_app(device_id=self.DEVICE_ID, app_id=app_id)
             sleep(5)
             Device.wait_until_app_is_running(device_id=self.DEVICE_ID, app_id=app_id, timeout=10)
+            if "timeline" in apk and "actual" in type_of_run:
+                command = 'logcat -d | grep \'Timeline: Modules: Displayed\''
+                output = Adb.run(command=command, device_id=self.DEVICE_ID, log_level=CommandLogLevel.SILENT)
+                assert 'Timeline: Modules: Displayed' in output, \
+                    "Timeline is not working! Log: " + output
+                print "Timeline is working! Log:" + output
             current_start_time = int(Device.get_start_time(self.DEVICE_ID, app_id=app_id))
             start_time = start_time + current_start_time
 
@@ -114,6 +121,12 @@ class PerfTests(BaseClass):
             Adb.start_app(device_id=self.DEVICE_ID, app_id=app_id)
             sleep(5)
             Device.wait_until_app_is_running(device_id=self.DEVICE_ID, app_id=app_id, timeout=10)
+            if "timeline" in apk and "actual" in type_of_run:
+                command = 'logcat -d | grep \'Timeline: Modules: Displayed\''
+                output = Adb.run(command=command, device_id=self.DEVICE_ID, log_level=CommandLogLevel.SILENT)
+                assert 'Timeline: Modules: Displayed' in output, \
+                    "Timeline is not working! Log: " + output
+                print "Timeline is working! Log:" + output
             current_second_start_time = int(Device.get_start_time(self.DEVICE_ID, app_id=app_id))
             second_start = second_start + current_second_start_time
 
@@ -188,12 +201,28 @@ class PerfTests(BaseClass):
 
         Tns.build_android(attributes=attributes)
         apk = Helpers.get_apk_path(app_name=self.app_name, config='release')
-        destination = os.path.join(TEST_RUN_HOME, "{0}-{1}.apk".format(demo.split('/')[-1], config))
-        destination_info = os.path.join(TEST_RUN_HOME, "{0}-{1}.txt".format(demo.split('/')[-1], config))
+        if "timeline" in config:
+            destination = os.path.join(TEST_RUN_HOME, "release-apps", "{0}-{1}.apk".format(demo.split('/')[-1], config))
+            destination_info = os.path.join(TEST_RUN_HOME, "release-apps",
+                                            "{0}-{1}.txt".format(demo.split('/')[-1], config))
+        else:
+            destination = os.path.join(TEST_RUN_HOME, "{0}-{1}.apk".format(demo.split('/')[-1], config))
+            destination_info = os.path.join(TEST_RUN_HOME, "{0}-{1}.txt".format(demo.split('/')[-1], config))
         File.remove(destination)
         File.remove(destination_info)
         File.copy(src=apk, dest=destination)
         File.write(file_path=destination_info, text=Tns.get_app_id(self.app_name))
+        if "timeline" in config:
+            package_json = os.path.join(self.app_name, 'app', 'package.json')
+            File.replace(package_json, "\"main\": \"main.js\"", "\"main\": \"main.js\",\"profiling\": \"timeline\"")
+            Tns.build_android(attributes=attributes)
+            apk = Helpers.get_apk_path(app_name=self.app_name, config='release')
+            destination = os.path.join(TEST_RUN_HOME, "{0}-{1}.apk".format(demo.split('/')[-1], config))
+            destination_info = os.path.join(TEST_RUN_HOME, "{0}-{1}.txt".format(demo.split('/')[-1], config))
+            File.remove(destination)
+            File.remove(destination_info)
+            File.copy(src=apk, dest=destination)
+            File.write(file_path=destination_info, text=Tns.get_app_id(self.app_name))
 
     @parameterized.expand(DATA)
     def test_start_time(self, demo, config, device_name, device_id, first_start, second_start):
