@@ -85,7 +85,7 @@ class RunIOSSimulatorTests(BaseClass):
 
         # Verify app looks correct inside simulator
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='livesync-hello-world_home', timeout=60)
 
         # Change JS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
@@ -104,7 +104,7 @@ class RunIOSSimulatorTests(BaseClass):
 
         # Verify application looks correct
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
-                            expected_image='livesync-hello-world_js_css_xml')
+                            expected_image='livesync-hello-world_js_css_xml', timeout=60)
 
         # Rollback all the changes
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
@@ -121,7 +121,7 @@ class RunIOSSimulatorTests(BaseClass):
 
         # Verify app looks correct inside simulator
         Device.screen_match(device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home')
+                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home', timeout=60)
 
     def test_180_tns_run_ios_console_log(self):
         """
