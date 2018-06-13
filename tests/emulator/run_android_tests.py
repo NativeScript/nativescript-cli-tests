@@ -277,95 +277,96 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
         assert self.very_long_string not in log
 
-    # def test_182_tns_run_android_new_date_work_as_expected_when_changing_timezone(self):
-    #     """
-    #      Test new date is working as expected. Test in different timezones
-    #     """
-    #     output = Adb.run("shell settings put global auto_time_zone 0", EMULATOR_ID)
-    #     assert '' in output, "Failed to change auto timezone!"
-    #
-    #     output = Adb.run("shell settings put system time_12_24 24", EMULATOR_ID)
-    #     assert '' in output, "Failed to change system format to 24!"
-    #
-    #     output = Adb.run("shell settings put global time_zone UTC", EMULATOR_ID)
-    #     assert '' in output, "Failed to change timezone!"
-    #     output = Adb.run("shell setprop persist.sys.timezone UTC", EMULATOR_ID)
-    #     assert '' in output, "Failed to change timezone!"
-    #
-    #     # Change main-page.js so it contains only logging information
-    #     source_js = os.path.join('data', "issues", 'android-runtime-961', 'main-page.js')
-    #     target_js = os.path.join(self.app_name, 'app', 'main-page.js')
-    #     File.copy(src=source_js, dest=target_js)
-    #     # Change main-view-model.js so it contains the new date logging functionality
-    #     source_js = os.path.join('data', "issues", 'android-runtime-961', 'main-view-model.js')
-    #     target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
-    #     File.copy(src=source_js, dest=target_js)
-    #     # Change app package.json so it contains the options for remove V8 date cache
-    #     source_js = os.path.join('data', "issues", 'android-runtime-961', 'package.json')
-    #     target_js = os.path.join(self.app_name, 'app', 'package.json')
-    #
-    #     File.copy(src=source_js, dest=target_js)
-    #
-    #     log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
-    #                           assert_success=False)
-    #
-    #     strings = ['Project successfully built',
-    #                'Successfully installed on device with identifier', EMULATOR_ID,
-    #                'Successfully synced application',
-    #                "### TEST END ###"
-    #                ]
-    #
-    #     Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
-    #
-    #     # Get UTC date and time
-    #     time_utc = datetime.datetime.utcnow()
-    #
-    #     # Generate regex for asserting date and time
-    #     date_to_find_gmt = time_utc.strftime('%a %b %d %Y %H:.{2}:.{2}') + " GMT\+0000 \(UTC\)"
-    #
-    #     Device.click(device_id=EMULATOR_ID, text="TAP", timeout=30)
-    #     Tns.wait_for_log(log_file=log, string_list=["GMT+0000 (UTC)"], timeout=180, check_interval=10, clean_log=False)
-    #
-    #     # Assert date time is correct
-    #     if re.search(date_to_find_gmt, str(file.read(file(log)))):
-    #         print "Date was correct!"
-    #     else:
-    #         assert 1 == 2, 'Date {0} was not found! \n Log: \n {1}'.format(date_to_find_gmt, file.read(file(log)))
-    #
-    #     # Get Los Angeles date and time
-    #     los_angeles_time = time_utc.replace(tzinfo=pytz.utc).astimezone(pytz.timezone("America/Los_Angeles"))
-    #
-    #     # Open Date and time settings to change the timezone
-    #     output = Adb.run("shell am start -a android.settings.DATE_SETTINGS", EMULATOR_ID)
-    #     assert 'Starting: Intent { act=android.settings.DATE_SETTINGS }' in output, \
-    #         "Failed to start Date and Time settings activity!"
-    #
-    #     # Change TimeZone
-    #     time.sleep(20)
-    #     Device.click(device_id=EMULATOR_ID, text="Select time zone", timeout=15)
-    #     time.sleep(25)
-    #     Device.click(device_id=EMULATOR_ID, text="Pacific Daylight Time", timeout=60)
-    #     time.sleep(10)
-    #
-    #     # Open the test app again
-    #     output = Adb.run("shell am start -n org.nativescript.TestApp/com.tns.NativeScriptActivity", EMULATOR_ID)
-    #     assert 'Starting: Intent { cmp=org.nativescript.TestApp/com.tns.NativeScriptActivity }' in output, \
-    #         "Failed to start Nativescript test app activity!"
-    #
-    #     time.sleep(15)
-    #
-    #     Device.click(device_id=EMULATOR_ID, text="TAP", timeout=30)
-    #     Tns.wait_for_log(log_file=log, string_list=["GMT-0700 (PDT)"], timeout=180, check_interval=10,
-    #                      clean_log=False)
-    #     # Generate regex for asserting date and time
-    #     date_to_find_los_angeles = los_angeles_time.strftime('%a %b %d %Y %H:.{2}:.{2}') + " GMT\-0700 \(PDT\)"
-    #
-    #     # Assert date time is correct
-    #     if re.search(date_to_find_los_angeles, str(file.read(file(log)))):
-    #         print "Date was correct!"
-    #     else:
-    #         assert 1 == 2, 'Date {0} was not found! \n Log: \n {1}'.format(date_to_find_los_angeles,
-    #                                                                        file.read(file(log)))
+    @unittest.skip("Problems with CI")
+    def test_182_tns_run_android_new_date_work_as_expected_when_changing_timezone(self):
+        """
+         Test new date is working as expected. Test in different timezones
+        """
+        output = Adb.run("shell settings put global auto_time_zone 0", EMULATOR_ID)
+        assert '' in output, "Failed to change auto timezone!"
+
+        output = Adb.run("shell settings put system time_12_24 24", EMULATOR_ID)
+        assert '' in output, "Failed to change system format to 24!"
+
+        output = Adb.run("shell settings put global time_zone UTC", EMULATOR_ID)
+        assert '' in output, "Failed to change timezone!"
+        output = Adb.run("shell setprop persist.sys.timezone UTC", EMULATOR_ID)
+        assert '' in output, "Failed to change timezone!"
+
+        # Change main-page.js so it contains only logging information
+        source_js = os.path.join('data', "issues", 'android-runtime-961', 'main-page.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-page.js')
+        File.copy(src=source_js, dest=target_js)
+        # Change main-view-model.js so it contains the new date logging functionality
+        source_js = os.path.join('data', "issues", 'android-runtime-961', 'main-view-model.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
+        File.copy(src=source_js, dest=target_js)
+        # Change app package.json so it contains the options for remove V8 date cache
+        source_js = os.path.join('data', "issues", 'android-runtime-961', 'package.json')
+        target_js = os.path.join(self.app_name, 'app', 'package.json')
+
+        File.copy(src=source_js, dest=target_js)
+
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application',
+                   "### TEST END ###"
+                   ]
+
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
+
+        # Get UTC date and time
+        time_utc = datetime.datetime.utcnow()
+
+        # Generate regex for asserting date and time
+        date_to_find_gmt = time_utc.strftime('%a %b %d %Y %H:.{2}:.{2}') + " GMT\+0000 \(UTC\)"
+
+        Device.click(device_id=EMULATOR_ID, text="TAP", timeout=30)
+        Tns.wait_for_log(log_file=log, string_list=["GMT+0000 (UTC)"], timeout=180, check_interval=10, clean_log=False)
+
+        # Assert date time is correct
+        if re.search(date_to_find_gmt, str(file.read(file(log)))):
+            print "Date was correct!"
+        else:
+            assert 1 == 2, 'Date {0} was not found! \n Log: \n {1}'.format(date_to_find_gmt, file.read(file(log)))
+
+        # Get Los Angeles date and time
+        los_angeles_time = time_utc.replace(tzinfo=pytz.utc).astimezone(pytz.timezone("America/Los_Angeles"))
+
+        # Open Date and time settings to change the timezone
+        output = Adb.run("shell am start -a android.settings.DATE_SETTINGS", EMULATOR_ID)
+        assert 'Starting: Intent { act=android.settings.DATE_SETTINGS }' in output, \
+            "Failed to start Date and Time settings activity!"
+
+        # Change TimeZone
+        time.sleep(20)
+        Device.click(device_id=EMULATOR_ID, text="Select time zone", timeout=15)
+        time.sleep(25)
+        Device.click(device_id=EMULATOR_ID, text="Pacific Daylight Time", timeout=60)
+        time.sleep(10)
+
+        # Open the test app again
+        output = Adb.run("shell am start -n org.nativescript.TestApp/com.tns.NativeScriptActivity", EMULATOR_ID)
+        assert 'Starting: Intent { cmp=org.nativescript.TestApp/com.tns.NativeScriptActivity }' in output, \
+            "Failed to start Nativescript test app activity!"
+
+        time.sleep(15)
+
+        Device.click(device_id=EMULATOR_ID, text="TAP", timeout=30)
+        Tns.wait_for_log(log_file=log, string_list=["GMT-0700 (PDT)"], timeout=180, check_interval=10,
+                         clean_log=False)
+        # Generate regex for asserting date and time
+        date_to_find_los_angeles = los_angeles_time.strftime('%a %b %d %Y %H:.{2}:.{2}') + " GMT\-0700 \(PDT\)"
+
+        # Assert date time is correct
+        if re.search(date_to_find_los_angeles, str(file.read(file(log)))):
+            print "Date was correct!"
+        else:
+            assert 1 == 2, 'Date {0} was not found! \n Log: \n {1}'.format(date_to_find_los_angeles,
+                                                                           file.read(file(log)))
 
     def test_200_tns_run_android_break_and_fix_app(self):
         """
