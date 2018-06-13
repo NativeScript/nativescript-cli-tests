@@ -27,3 +27,17 @@ NativeScript/sample-Groceries,default,Nexus5x,016d37cd3fe7c676,6348,4017
 NativeScript/sample-Groceries,webpack,Nexus5x,016d37cd3fe7c676,3218,3095
 NativeScript/sample-Groceries,webpack-snapshot,Nexus5x,016d37cd3fe7c676,2561,2113
 NativeScript/sample-Groceries,timeline,Nexus5x,016d37cd3fe7c676,6348,4017
+NativeScript/template-hello-world,default,Nexus5x,0257afc3cd7e91f2,1897,1504
+NativeScript/template-hello-world,webpack,Nexus5x,0257afc3cd7e91f2,1693,1523
+NativeScript/template-hello-world,webpack-snapshot,Nexus5x,0257afc3cd7e91f2,1335,1119
+NativeScript/template-hello-world-ng,default,Nexus5x,0257afc3cd7e91f2,5950,3539
+NativeScript/template-hello-world-ng,webpack,Nexus5x,0257afc3cd7e91f2,3163,2950
+NativeScript/template-hello-world-ng,webpack-snapshot,Nexus5x,0257afc3cd7e91f2,2171,1976
+nativescript-vue/nativescript-vue-template,default,Nexus5x,0257afc3cd7e91f2,1992,1603
+NativeScript/nativescript-sdk-examples-ng,default,Nexus5x,0257afc3cd7e91f2,6348,3561
+NativeScript/nativescript-sdk-examples-ng,webpack,Nexus5x,0257afc3cd7e91f2,3218,2887
+NativeScript/nativescript-sdk-examples-ng,webpack-snapshot,Nexus5x,0257afc3cd7e91f2,2561,2077
+NativeScript/sample-Groceries,default,Nexus5x,0257afc3cd7e91f2,6348,4017
+NativeScript/sample-Groceries,webpack,Nexus5x,0257afc3cd7e91f2,3218,3095
+NativeScript/sample-Groceries,webpack-snapshot,Nexus5x,0257afc3cd7e91f2,2561,2113
+NativeScript/sample-Groceries,timeline,Nexus5x,0257afc3cd7e91f2,6348,4017
