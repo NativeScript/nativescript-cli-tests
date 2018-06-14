@@ -108,8 +108,16 @@ class Simulator(object):
 
         # Fire start command
         print "Open Simulator.app with {0}".format(sim_id)
-        start_command = "open {0} --args -CurrentDeviceUDID {1}".format(Simulator.__get_sim_location(), sim_id)
-        run(command=start_command, log_level=CommandLogLevel.SILENT)
+
+        check_sim_app_running = run(command='ps aux|grep \"Simulator.app\"', timeout=60,
+                                    log_level=CommandLogLevel.SILENT)
+        if Simulator.__get_sim_location() in check_sim_app_running:
+            run(command='xcrun simctl boot {0}'.format(sim_id), timeout=60, log_level=CommandLogLevel.SILENT)
+        else:
+            start_command = "open {0} --args -CurrentDeviceUDID {1}".format(Simulator.__get_sim_location(),
+                                                                                    sim_id)
+            run(command=start_command, log_level=CommandLogLevel.SILENT)
+
         print 'Simulator {0} is booting now...'.format(name)
 
         # Wait until simulator boot
