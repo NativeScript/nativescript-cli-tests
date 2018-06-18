@@ -44,6 +44,7 @@ class RunIOSSimulatorTests(BaseClass):
         max_long_string = max_long_string + one_hundred_symbols_string
     max_long_string = max_long_string + "1234567890123456789012345678901234567890123456789012345678901234567890" \
                                         "123456789"
+    plugin_path = os.path.join(TEST_RUN_HOME, 'data', 'plugins', 'sample-plugin', 'src')
 
     @classmethod
     def setUpClass(cls):
@@ -503,8 +504,7 @@ class RunIOSSimulatorTests(BaseClass):
         """
 
         # Add plugin with specific dependencies
-        plugin_path = os.path.join(TEST_RUN_HOME, 'data', 'plugins', 'sample-plugin', 'src')
-        Tns.plugin_add(plugin_path, attributes={"--path": self.app_name})
+        Tns.plugin_add(self.plugin_path, attributes={"--path": self.app_name})
 
         # `tns run ios` and wait until app is deployed
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
@@ -514,6 +514,29 @@ class RunIOSSimulatorTests(BaseClass):
         folder_path = os.path.join(os.getcwd(), self.app_name, "platforms", "ios", self.app_name, "app",
                                    "tns_modules", "nativescript-ui-core")
         assert Folder.exists(folder_path), "Cannot find folder: " + folder_path
+
+        # Verify app looks correct inside simulator
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
+    def test_385_tns_run_ios_source_code_in_ios_part_plugin(self):
+        """
+        https://github.com/NativeScript/nativescript-cli/issues/3650
+        """
+
+        # Add plugin with source code in iOS part of the plugin
+        Tns.plugin_add(self.plugin_path, attributes={"--path": self.app_name})
+
+        # Replace main-page.js to call method from the source code of the plugin
+        source_js = os.path.join('data', "issues", 'nativescript-cli-3650', 'main-page.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-page.js')
+        File.copy(src=source_js, dest=target_js)
+
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.SIMULATOR_ID,
+                   'Hey!']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
 
         # Verify app looks correct inside simulator
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
