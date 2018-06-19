@@ -15,7 +15,6 @@ from core.settings.settings import EMULATOR_NAME, EMULATOR_ID, ANDROID_PACKAGE
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from sikuli import *
-# import os.sikuli.script.ImagePath
 
 
 class DebugAndroidEmulatorTests(BaseClass):
@@ -31,7 +30,7 @@ class DebugAndroidEmulatorTests(BaseClass):
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
         Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_PACKAGE})
-        Tns.build_android(attributes={'--path': cls.app_name})
+        # Tns.build_android(attributes={'--path': cls.app_name})
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -73,10 +72,13 @@ class DebugAndroidEmulatorTests(BaseClass):
         self.__verify_debugger_start(log)
 
         # Verify app starts and do not stop on first line of code
-        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+        # Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+        #                     expected_image='livesync-hello-world_home')
+        url = run(command="grep chrome-devtools " + log)
+        Chrome.start(url)
 
-        click()
+
+        click("Elements")
 
 
 
