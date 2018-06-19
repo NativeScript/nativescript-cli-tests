@@ -569,7 +569,6 @@ class RunIOSSimulatorTests(BaseClass):
         assert "Multiple errors were thrown" not in output
         assert "fail" not in output
 
-    @unittest.skip("Ignore because of https://github.com/NativeScript/nativescript-cli/issues/3625")
     def test_404_tns_run_ios_on_not_existing_device_should_not_start_simulator(self):
         Simulator.stop()
         output = Tns.run_ios(attributes={'--path': self.app_name, '--device': 'fakeId', '--justlaunch': ''},
