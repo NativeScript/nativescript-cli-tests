@@ -16,7 +16,6 @@ TODO: Add tests for:
 """
 
 import os
-import unittest
 from datetime import datetime
 from time import sleep
 
