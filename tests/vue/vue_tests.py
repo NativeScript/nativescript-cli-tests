@@ -104,7 +104,8 @@ class VueTests(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=90, check_interval=5)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change)
 
         # Revert changes
@@ -113,5 +114,6 @@ class VueTests(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=90, check_interval=5)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
