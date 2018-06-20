@@ -350,6 +350,19 @@ class RunIOSSimulatorTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_js_css_xml')
 
+    def test_315_tns_run_ios_change_appResources_check_per_platform(self):
+        #https://github.com/NativeScript/nativescript-cli/pull/3619
+        output = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=output, string_list=strings, timeout=150, check_interval=10)
+
+        source = os.path.join('data', 'issues', 'nativescript-cli-3619', 'icon-1025.png')
+        target = os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'Assets.xcassets', 'AppIcon.appiconset')
+        File.copy(source, target)
+        strings = ['Xcode build' ]
+        Tns.wait_for_log(log_file=output, string_list=strings, clean_log=False)
+        assert "Gradle build" not in output
+
     def test_330_tns_run_ios_sync_all_files(self):
         """
         Verify '--syncAllFiles' option will sync all files, including node modules.
