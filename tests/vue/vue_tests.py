@@ -70,7 +70,7 @@ class VueTests(BaseClass):
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
-        Helpers.android_screen_match(image=self.image_original)
+        Helpers.android_screen_match(image=self.image_original, timeout=90)
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.js_change)
@@ -78,8 +78,9 @@ class VueTests(BaseClass):
         ReplaceHelper.replace(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors)
-        Helpers.android_screen_match(image=self.image_change)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=90, check_interval=5)
+        Helpers.android_screen_match(image=self.image_change, timeout=90)
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, self.js_change)
@@ -87,16 +88,17 @@ class VueTests(BaseClass):
         ReplaceHelper.rollback(self.app_name, self.css_change)
 
         # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors)
-        Helpers.android_screen_match(image=self.image_original)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         timeout=90, check_interval=5)
+        Helpers.android_screen_match(image=self.image_original, timeout=90)
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_200_run_ios_and_sync_changes(self):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False,
                           assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors,
-                         timeout=240)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
+                         timeout=240, check_interval=5)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=90)
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(self.app_name, self.js_change)
@@ -106,7 +108,7 @@ class VueTests(BaseClass):
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors,
                          timeout=90, check_interval=5)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_change, timeout=90)
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, self.js_change)
@@ -116,4 +118,4 @@ class VueTests(BaseClass):
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors,
                          timeout=90, check_interval=5)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=90)
