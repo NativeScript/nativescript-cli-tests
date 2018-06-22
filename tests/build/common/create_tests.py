@@ -39,6 +39,7 @@ class CreateTests(BaseClass):
         Folder.cleanup('folder')
         Folder.cleanup(cls.app_name_dash)
         Folder.cleanup(cls.app_name_space)
+        Folder.cleanup(cls.app_name)
 
     def test_000_create_app_like_real_user(self):
         """Create app like real user."""
@@ -110,6 +111,13 @@ class CreateTests(BaseClass):
         output = Tns.create_app(self.app_name_app, assert_success=False, update_modules=False)
         assert "You cannot build applications named '" + self.app_name_app + "' in Xcode." in output
 
+    def test_009_create_app_default(self):
+        Folder.cleanup(self.app_name)
+        output = Tns.run_tns_command("create " + self.app_name, attributes={"--default": ""})
+        TnsAsserts.created(self.app_name, output=output)
+        assert "Now you can navigate to your project with $ cd {0}".format(self.app_name) in output
+        assert "After that you can run it on device/emulator by executing $ tns run <platform>" in output
+
     @parameterized.expand([
         "tns-template-hello-world",
         "https://github.com/NativeScript/template-hello-world.git",
@@ -120,6 +128,8 @@ class CreateTests(BaseClass):
         "tsc",
         "ng",
         "angular",
+        "default",
+        "default@4.0.0"
     ])
     def test_200_create_project_with_template(self, template_source):
         """Create app should be possible with --template and npm packages, git repos and aliases"""
