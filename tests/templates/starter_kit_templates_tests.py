@@ -296,3 +296,59 @@ class StarterKitsTests(BaseClass):
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home')
+
+    @parameterized.expand(DEMOS)
+    def test_300_run_android_bundle_uglify_aot_snapshot(self, demo):
+        self.app_name = demo
+        Tns.kill()
+        log = Tns.run_android(attributes={'--path': demo,
+                                          '--bundle': '', '--env.uglify': '', '--env.aot': '', '--env.snapshot': '',
+                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
+                         timeout=240, check_interval=5)
+        Helpers.android_screen_match(image=demo + '_home', tolerance=1.0)
+        Helpers.wait_webpack_watcher()
+
+        # Apply changes
+        StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.ANDROID, device_id=EMULATOR_ID)
+
+        # Verify application looks correct
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         check_interval=5, timeout=120)
+        Helpers.android_screen_match(image=demo + '_sync')
+
+        # Revert changes
+        StarterKitsTests.revert_changes(self=self, demo=demo, platform=Platform.ANDROID, device_id=EMULATOR_ID)
+
+        # Verify application looks correct
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Helpers.android_screen_match(image=demo + '_home')
+
+    @parameterized.expand(DEMOS)
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_300_run_ios_bundle_uglify_aot(self, demo):
+        self.app_name = demo
+        Tns.kill()
+        log = Tns.run_ios(
+            attributes={'--path': demo, '--emulator': '', '--bundle': '', '--env.uglify': '', '--env.aot': ''},
+            wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
+                         timeout=240, check_interval=5)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=1.0)
+        Helpers.wait_webpack_watcher()
+
+        # Apply changes
+        StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.IOS, device_id=self.SIMULATOR_ID)
+
+        # Verify application looks correct
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         check_interval=5, timeout=120)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_sync')
+
+        # Revert changes
+        StarterKitsTests.revert_changes(self=self, demo=demo, platform=Platform.IOS,
+                                        device_id=self.SIMULATOR_ID)
+
+        # Verify application looks correct
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home')

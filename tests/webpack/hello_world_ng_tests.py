@@ -136,7 +136,8 @@ class WebPackHelloWorldNG(BaseClass):
                                       "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
                                       "--release": "",
                                       "--bundle": "",
-                                      "--env.uglify": ""})
+                                      "--env.uglify": "",
+                                      "--env.aot": ""})
 
         verification_errors = Helpers.verify_size(app_name=self.app_name, config="ng-android-bundle-uglify")
         Helpers.run_android_via_adb(app_name=self.app_name, image=self.image_original)
@@ -145,7 +146,7 @@ class WebPackHelloWorldNG(BaseClass):
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_100_ios_build_release_with_bundle_and_uglify(self):
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
-                                  "--env.uglify": ""})
+                                  "--env.uglify": "", "--env.aot": ""})
 
         verification_errors = Helpers.verify_size(app_name=self.app_name, config="ng-ios-bundle-uglify")
         self.assertEqual([], verification_errors)
@@ -176,6 +177,7 @@ class WebPackHelloWorldNG(BaseClass):
                                       "--release": "",
                                       "--bundle": "",
                                       "--env.uglify": "",
+                                      "--env.aot": "",
                                       "--env.snapshot": ""})
 
         verification_errors = Helpers.verify_size(app_name=self.app_name, config="ng-android-bundle-uglify-snapshot",
@@ -209,8 +211,7 @@ class WebPackHelloWorldNG(BaseClass):
 
     def test_210_run_android_with_bundle_uglify_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          "--env.uglify": "",
+                                          "--bundle": "", "--env.uglify": "", "--env.aot": "", "--env.snapshot": "",
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
@@ -222,8 +223,9 @@ class WebPackHelloWorldNG(BaseClass):
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_210_run_ios_with_bundle_uglify_sync_changes(self):
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': ''},
-                          wait=False, assert_success=False)
+        log = Tns.run_ios(
+            attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': '', "--env.aot": ""},
+            wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp, not_existing_string_list=Helpers.wp_errors,
                          timeout=240)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
