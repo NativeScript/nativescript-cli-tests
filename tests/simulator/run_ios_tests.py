@@ -588,7 +588,7 @@ class RunIOSSimulatorTests(BaseClass):
         output = Tns.run_ios(attributes={'--path': self.app_name, '--device': 'fakeId', '--justlaunch': ''},
                              assert_success=False)
         assert not Simulator.wait_for_simulator(
-            timeout=10), "Simulator should not be started after run `tns run ios --device <invalid_device_id>`"
+            timeout=10)[0], "Simulator should not be started after run `tns run ios --device <invalid_device_id>`"
         TnsAsserts.invalid_device(output=output)
 
     @unittest.skipIf(Device.get_count(platform=Platform.IOS) > 0 or Device.get_count(platform=Platform.ANDROID) > 0,
