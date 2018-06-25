@@ -114,7 +114,7 @@ class CreateTests(BaseClass):
 
     def test_009_create_app_default(self):
         Folder.cleanup(self.app_name)
-        output = Tns.run_tns_command("create " + self.app_name, attributes={"--default": ""})
+        output = Tns.create_app(self.app_name, attributes={"--default": ""}, update_modules=False)
         TnsAsserts.created(self.app_name, output=output)
         assert "Now you can navigate to your project with $ cd {0}".format(self.app_name) in output
         assert "After that you can run it on device/emulator by executing $ tns run <platform>" in output
@@ -128,7 +128,7 @@ class CreateTests(BaseClass):
         Folder.cleanup("template-hello-world/App_Resources")
         File.replace(file_path=TEST_RUN_HOME + "/template-hello-world/package.json",
                      str1="tns-template-hello-world", str2="test-tns-template-hello-world")
-        path = "/Users/mivanova/Projects/nativescript-cli-tests/template-hello-world"
+        path = os.path.join(TEST_RUN_HOME, 'template-hello-world')
         output = Tns.run_tns_command("create " + self.app_name, attributes={"--template": path})
         TnsAsserts.created(self.app_name, output=output)
         Folder.cleanup("template-hello-world")
