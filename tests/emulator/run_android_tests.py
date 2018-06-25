@@ -587,6 +587,20 @@ class RunAndroidEmulatorTests(BaseClass):
 
         Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
 
+    def test_315_tns_run_android_change_appResources_check_per_platform(self):
+        #https://github.com/NativeScript/nativescript-cli/pull/3619
+        output = Tns.run_android(attributes={'--path': self.app_name}, wait=False, assert_success=False)
+        strings = ['Successfully installed on device with identifier',
+                   'Successfully synced application', EMULATOR_ID,]
+        Tns.wait_for_log(log_file=output, string_list=strings, timeout=120, check_interval=10)
+
+        source = os.path.join('data', 'issues', 'nativescript-cli-3619', 'hello.png')
+        target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'drawable-hdpi')
+        File.copy(source, target)
+        strings = ['Gradle build' ]
+        Tns.wait_for_log(log_file=output, string_list=strings, clean_log=False)
+        assert "Xcode build" not in output
+
     def test_320_tns_run_android_no_watch(self):
         """
          * --no-watch - If set, changes in your code will not be reflected during the execution of this command.
