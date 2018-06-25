@@ -87,24 +87,24 @@ class WebPackHelloWorldJS(BaseClass):
         if CURRENT_OS is not OSType.WINDOWS:
             File.write(file_path=log, text="")
 
-        # Revert changes
+        # Revert XML changes
         ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.xml_change, sleep=10)
         Tns.wait_for_log(log_file=log, string_list=['main-page.xml'], clean_log=False)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TAP')
             assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
 
+        # Revert JS changes
         ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.js_change, sleep=10)
         Tns.wait_for_log(log_file=log, string_list=['main-view-model.js'], clean_log=False)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left', timeout=20)
             assert text_changed, 'Changes in TS file not applied (UI is not refreshed).'
 
+        # Revert CSS changes
         ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.css_change, sleep=10)
         Tns.wait_for_log(log_file=log, string_list=['app.css'], clean_log=False)
 
-        ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.css_change, sleep=10)
-        Tns.wait_for_log(log_file=log, string_list=['app.css'], clean_log=False)
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
                          timeout=60)
