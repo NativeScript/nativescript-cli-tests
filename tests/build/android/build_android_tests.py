@@ -433,6 +433,7 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.app_name +
                            "/platforms/android/app/build/outputs/apk/x86Full/debug/app-x86-full-debug.apk")
 
+    @unittest.skip("templates are with new structure")
     def test_461_include_gradle_flavor_update_resources(self):
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
                             assert_success=False)
