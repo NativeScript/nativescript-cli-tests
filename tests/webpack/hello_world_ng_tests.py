@@ -251,8 +251,8 @@ class WebPackHelloWorldNG(BaseClass):
         Helpers.android_screen_match(image=self.image_original, timeout=120)
         Helpers.wait_webpack_watcher()
 
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID, aot=True)
+        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID, aot=True)
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_220_run_ios_with_bundle_uglify_aot_sync_changes(self):
