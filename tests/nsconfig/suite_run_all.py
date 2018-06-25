@@ -136,10 +136,3 @@ class SuiteRunAll(BaseClass):
         DebugAndroidEmulatorTests()
         DebugiOSInspectorSimulatorTests()
         DebugiOSChromeSimulatorTests()
-<<<<<<< Updated upstream
-=======
-        BuildiOSNGTests()
-        BuildAndroidNGTests()
-        RunIOSSimulatorTestsNG()
-        RunAndroidEmulatorTestsNG()
->>>>>>> Stashed changes
