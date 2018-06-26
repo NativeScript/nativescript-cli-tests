@@ -370,6 +370,30 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/android.d.ts")
         assert File.exists(self.app_name + "/_helpers.d.ts")
 
+    def test_442_include_gradle_flavor(self):
+        # https://github.com/NativeScript/android-runtime/pull/937
+        # https://github.com/NativeScript/nativescript-cli/pull/3467
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
+                            assert_success=False)
+        source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-pr-937', 'app.gradle')
+        target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
+        File.copy(src=source, dest=target)
+
+        Tns.run_tns_command("build android", attributes={"--path": self.app_name})
+
+        assert File.exists(self.app_name +
+                           "/platforms/android/app/build/outputs/apk/arm64Demo/debug/app-arm64-demo-debug.apk")
+        assert File.exists(self.app_name +
+                           "/platforms/android/app/build/outputs/apk/arm64Full/debug/app-arm64-full-debug.apk")
+        assert File.exists(self.app_name +
+                           "/platforms/android/app/build/outputs/apk/armDemo/debug/app-arm-demo-debug.apk")
+        assert File.exists(self.app_name +
+                           "/platforms/android/app/build/outputs/apk/armFull/debug/app-arm-full-debug.apk")
+        assert File.exists(self.app_name +
+                           "/platforms/android/app/build/outputs/apk/x86Demo/debug/app-x86-demo-debug.apk")
+        assert File.exists(self.app_name +
+                           "/platforms/android/app/build/outputs/apk/x86Full/debug/app-x86-full-debug.apk")
+
     @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_450_resources_update_android(self):
         target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
@@ -409,31 +433,7 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/res/values")
         Tns.build_android(attributes={"--path": self.app_name})
 
-    def test_460_include_gradle_flavor(self):
-        # https://github.com/NativeScript/android-runtime/pull/937
-        # https://github.com/NativeScript/nativescript-cli/pull/3467
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
-                            assert_success=False)
-        source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-pr-937', 'app.gradle')
-        target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
-        File.copy(src=source, dest=target)
-
-        Tns.run_tns_command("build android", attributes={"--path": self.app_name})
-
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/arm64Demo/debug/app-arm64-demo-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/arm64Full/debug/app-arm64-full-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/armDemo/debug/app-arm-demo-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/armFull/debug/app-arm-full-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/x86Demo/debug/app-x86-demo-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/x86Full/debug/app-x86-full-debug.apk")
-
-    @unittest.skip("templates are with new structure")
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_461_include_gradle_flavor_update_resources(self):
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
                             assert_success=False)

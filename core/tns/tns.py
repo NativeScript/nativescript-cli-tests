@@ -627,6 +627,9 @@ class Tns(object):
 
     @staticmethod
     def debug_ios(attributes={}, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None):
+        if "--emulator" not in attributes.keys():
+            attr = {"--provision": PROVISIONING}
+            attributes.update(attr)
         log_file = Tns.run_tns_command("debug ios", attributes=attributes, log_trace=log_trace, timeout=timeout,
                                        tns_path=tns_path, wait=False)
         return log_file
