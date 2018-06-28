@@ -6,6 +6,7 @@ import time
 
 import pytesseract
 from PIL import Image
+import atomac
 
 from core.device.device_type import DeviceType
 from core.device.helpers.adb import Adb
@@ -241,8 +242,13 @@ class Device(object):
         device_type = Device.__get_device_type(device_id)
         if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
             UIAuto.click(device_id=device_id, text=text, timeout=timeout)
+        elif device_type == DeviceType.SIMULATOR:
+            simulator = atomac.getAppRefByBundleId("com.apple.iphonesimulator")
+            window = simulator.windows()[0]
+            element = window.findFirstR(AXTitle=text)
+            element.Press()
         else:
-            raise NotImplementedError("Click on text not implemented for iOS devices and simulators.")
+            raise NotImplementedError("Click on text not implemented for iOS devices.")
 
     @staticmethod
     def ensure_available(platform):
