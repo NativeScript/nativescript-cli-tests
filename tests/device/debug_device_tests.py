@@ -127,5 +127,6 @@ class DebugBothPlatformsTests(BaseClass):
     def test_002_tns_run_ios(self):
         log = Tns.debug_ios(attributes={'--path': self.app_name})
         self.attach_chrome(log)
-        Tns.wait_for_log(log_file=log, clean_log=False)
+        strings = ['Successfully started on device with identifier']
+        Tns.wait_for_log(log_file=log, string_list= strings, clean_log=False)
         self.assert_not_detached(log)
