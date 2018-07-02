@@ -86,8 +86,8 @@ class Device(object):
             type = type.replace('ProductType:', '').strip(' ')
             device_name = type
 
-        print "Verify {0} looks correct...".format(expected_image)
         expected_image_original_path = os.path.join("data", "images", device_name, "{0}.png".format(expected_image))
+        print "Verify {0} looks correct...".format(expected_image_original_path)
         actual_image_path = os.path.join(OUTPUT_FOLDER, "images", device_name, "{0}_actual.png".format(expected_image))
         diff_image_path = os.path.join(OUTPUT_FOLDER, "images", device_name, "{0}_diff.png".format(expected_image))
         expected_image_path = os.path.join(OUTPUT_FOLDER, "images", device_name,
@@ -244,9 +244,21 @@ class Device(object):
             UIAuto.click(device_id=device_id, text=text, timeout=timeout)
         elif device_type == DeviceType.SIMULATOR:
             simulator = atomac.getAppRefByBundleId("com.apple.iphonesimulator")
-            window = simulator.windows()[0]
-            element = window.findFirstR(AXTitle=text)
-            element.Press()
+            windows = simulator.findAll(AXRole='AXWindow')
+            names = list()
+
+            # Get all simulator's windows names
+            for window in windows:
+                names.append(window.AXTitle)
+
+            sim_title = Simulator.get_name(device_id)
+
+            # Get the full name of the window where the click will be performed
+            for name in names:
+                if sim_title in name:
+                    window = simulator.findFirstR(AXTitle=name)
+                    element = window.findFirstR(AXTitle=text)
+                    element.Press()
         else:
             raise NotImplementedError("Click on text not implemented for iOS devices.")
 

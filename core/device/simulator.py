@@ -8,7 +8,8 @@ from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.process import Process
-from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME, SIMULATOR_TYPE, SIMULATOR_SDK
+from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME, SIMULATOR_TYPE, SIMULATOR_SDK, SIMULATOR_NAME_2, \
+    SIMULATOR_TYPE_2, SIMULATOR_SDK_2
 
 
 class Simulator(object):
@@ -71,6 +72,21 @@ class Simulator(object):
             return lines[0].split('(')[-1].split(')')[0]
 
     @staticmethod
+    def get_name(simulator_id):
+        """
+        Find simulator name by Simulator GUID
+        :param simulator_id: Simulator GUID
+        :return: Simulator name
+        """
+        output = run(command='xcrun simctl list | grep {0}'.format(simulator_id), log_level=CommandLogLevel.SILENT)
+
+        if output:
+            sim_name = output.split()[0]
+            return sim_name
+        else:
+            raise AssertionError("Can not find device with id {0}".format(simulator_id))
+
+    @staticmethod
     def create(name, device_type, ios_version):
         """
         Create iOS Simulator.
@@ -115,7 +131,7 @@ class Simulator(object):
             run(command='xcrun simctl boot {0}'.format(sim_id), timeout=60, log_level=CommandLogLevel.SILENT)
         else:
             start_command = "open {0} --args -CurrentDeviceUDID {1}".format(Simulator.__get_sim_location(),
-                                                                                    sim_id)
+                                                                            sim_id)
             run(command=start_command, log_level=CommandLogLevel.SILENT)
 
         print 'Simulator {0} is booting now...'.format(name)
@@ -128,7 +144,11 @@ class Simulator(object):
         else:
             # Retry once...
             Simulator.reset()
-            Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
+            if name == SIMULATOR_NAME:
+                Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
+            elif name == SIMULATOR_NAME_2:
+                Simulator.create(SIMULATOR_NAME_2, SIMULATOR_TYPE_2, SIMULATOR_SDK_2)
+
             print 'Retry booting simulator...'.format(name)
             run(command=start_command, log_level=CommandLogLevel.SILENT)
             found, simulator_id = Simulator.wait_for_simulator(simulator_name=name, timeout=timeout)
@@ -251,7 +271,7 @@ class Simulator(object):
         """
         delete_output = ""
         output = run(command='xcrun simctl list | grep \'{0}\''.format(name), log_level=CommandLogLevel.SILENT)
-        while (SIMULATOR_NAME in output) and ('Invalid' not in output):
+        while (name in output) and ('Invalid' not in output):
             if 'Booted' in output:
                 run('xcrun simctl shutdown \'{0}\''.format(name), log_level=CommandLogLevel.SILENT)
                 Simulator.stop()
