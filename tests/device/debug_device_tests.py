@@ -83,10 +83,6 @@ class DebugBothPlatformsTests(BaseClass):
             strings.append(ios_device_id)
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
 
-        # Verify app is deployed and running on all available android devices
-        for device_id in self.IOS_DEVICES:
-            Device.wait_until_app_is_running(app_id=Tns.get_app_id(self.app_name), device_id=device_id, timeout=30)
-
         log = Tns.debug_ios(attributes={'--path': self.app_name})
         self.__verify_debugger_start(log)
 
