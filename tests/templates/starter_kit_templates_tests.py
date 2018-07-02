@@ -10,11 +10,13 @@ from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
+from core.git.git import Git
+from core.json.json_utils import Json
 from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_PACKAGE, IOS_PACKAGE, TYPESCRIPT_PACKAGE, \
-    CURRENT_OS, WEBPACK_PACKAGE, EMULATOR_ID, SIMULATOR_NAME, SASS_PACKAGE, TEST_RUN_HOME
+    CURRENT_OS, WEBPACK_PACKAGE, EMULATOR_ID, SIMULATOR_NAME, SASS_PACKAGE, TEST_RUN_HOME, SUT_FOLDER
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -147,22 +149,39 @@ class StarterKitsTests(BaseClass):
 
     @parameterized.expand(DEMOS)
     def test_000_prepare_apps(self, demo):
-        Tns.create_app(demo, attributes={"--template": "https://github.com/NativeScript/" + demo})
 
+        # Clone template
+        demo_repo = "git@github.com:NativeScript/{0}.git".format(demo)
+        demo_local_path = os.path.join(SUT_FOLDER, demo)
+        demo_tgz = os.path.join(SUT_FOLDER, demo + '.tgz')
+        Git.clone_repo(repo_url=demo_repo, local_folder=demo_local_path)
+
+        # Replace versions and pack
+        json_path = os.path.join(demo_local_path, "package.json")
+        Json.replace(file_path=json_path, key="nativescript-dev-webpack", value="next")
+        Json.replace(file_path=json_path, key="nativescript-dev-typescript", value="next")
+        Json.replace(file_path=json_path, key="nativescript-dev-sass", value="next")
+        Npm.pack(folder=demo_local_path, output_file=demo_tgz)
+
+        # Create app from updated template and add platform
+        Tns.create_app(demo, attributes={"--template": demo_tgz})
         Tns.platform_add_android(attributes={"--path": demo, "--frameworkPath": ANDROID_PACKAGE})
 
         if "-ng" in demo:
             Tns.update_angular(demo)
         if "-ng" in demo or "-ts" in demo:
-            Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev', folder=demo)
-            Npm.install(package=TYPESCRIPT_PACKAGE, option='--save-dev', folder=demo)
-        Npm.uninstall(package="nativescript-dev-webpack", option='--save-dev', folder=demo)
+            if "@next" not in TYPESCRIPT_PACKAGE:
+                Npm.uninstall(package="nativescript-dev-typescript", option='--save-dev', folder=demo)
+                Npm.install(package=TYPESCRIPT_PACKAGE, option='--save-dev', folder=demo)
 
-        # Old webpack adds old webpack config. Cleanup to make sure we get the new config.
-        File.remove(os.path.join(TEST_RUN_HOME, demo, 'webpack.config.js'))
-        Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=demo)
-        Npm.uninstall(package="nativescript-dev-sass", option='--save-dev', folder=demo)
-        Npm.install(package=SASS_PACKAGE, option='--save-dev', folder=demo)
+        # Handle custom webpack and sass packages
+        if "@next" not in WEBPACK_PACKAGE:
+            Npm.uninstall(package="nativescript-dev-webpack", option='--save-dev', folder=demo)
+            File.remove(os.path.join(TEST_RUN_HOME, demo, 'webpack.config.js'))
+            Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=demo)
+        if "@next" not in SASS_PACKAGE:
+            Npm.uninstall(package="nativescript-dev-sass", option='--save-dev', folder=demo)
+            Npm.install(package=SASS_PACKAGE, option='--save-dev', folder=demo)
 
         Tns.build_android(attributes={'--path': demo})
 
@@ -257,6 +276,62 @@ class StarterKitsTests(BaseClass):
         Tns.kill()
         log = Tns.run_ios(attributes={'--path': demo, '--emulator': '', '--bundle': ''}, wait=False,
                           assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
+                         timeout=240, check_interval=5)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=1.0)
+        Helpers.wait_webpack_watcher()
+
+        # Apply changes
+        StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.IOS, device_id=self.SIMULATOR_ID)
+
+        # Verify application looks correct
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         check_interval=5, timeout=120)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_sync')
+
+        # Revert changes
+        StarterKitsTests.revert_changes(self=self, demo=demo, platform=Platform.IOS,
+                                        device_id=self.SIMULATOR_ID)
+
+        # Verify application looks correct
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home')
+
+    @parameterized.expand(DEMOS)
+    def test_300_run_android_bundle_uglify_aot_snapshot(self, demo):
+        self.app_name = demo
+        Tns.kill()
+        log = Tns.run_android(attributes={'--path': demo,
+                                          '--bundle': '', '--env.uglify': '', '--env.aot': '', '--env.snapshot': '',
+                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
+                         timeout=240, check_interval=5)
+        Helpers.android_screen_match(image=demo + '_home', tolerance=1.0)
+        Helpers.wait_webpack_watcher()
+
+        # Apply changes
+        StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.ANDROID, device_id=EMULATOR_ID)
+
+        # Verify application looks correct
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
+                         check_interval=5, timeout=120)
+        Helpers.android_screen_match(image=demo + '_sync')
+
+        # Revert changes
+        StarterKitsTests.revert_changes(self=self, demo=demo, platform=Platform.ANDROID, device_id=EMULATOR_ID)
+
+        # Verify application looks correct
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
+        Helpers.android_screen_match(image=demo + '_home')
+
+    @parameterized.expand(DEMOS)
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_300_run_ios_bundle_uglify_aot(self, demo):
+        self.app_name = demo
+        Tns.kill()
+        log = Tns.run_ios(
+            attributes={'--path': demo, '--emulator': '', '--bundle': '', '--env.uglify': '', '--env.aot': ''},
+            wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=5)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=1.0)

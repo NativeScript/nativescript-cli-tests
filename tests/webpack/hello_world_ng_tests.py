@@ -56,7 +56,7 @@ class WebPackHelloWorldNG(BaseClass):
         BaseClass.tearDownClass()
 
     @staticmethod
-    def apply_changes(app_name, log, platform):
+    def apply_changes(app_name, log, platform, aot=False):
 
         # Change JS, XML and CSS
         ReplaceHelper.replace(app_name, WebPackHelloWorldNG.ts_change, sleep=10)
@@ -66,7 +66,10 @@ class WebPackHelloWorldNG(BaseClass):
             assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
 
         ReplaceHelper.replace(app_name, WebPackHelloWorldNG.html_change, sleep=10)
-        Tns.wait_for_log(log_file=log, string_list=['items.component.html'], clean_log=False)
+        if aot:
+            Tns.wait_for_log(log_file=log, string_list=['main.aot.ts'], clean_log=False)
+        else:
+            Tns.wait_for_log(log_file=log, string_list=['items.component.html'], clean_log=False)
 
         ReplaceHelper.replace(app_name, WebPackHelloWorldNG.css_change, sleep=10)
         Tns.wait_for_log(log_file=log, string_list=['app.css'], clean_log=False)
@@ -82,14 +85,17 @@ class WebPackHelloWorldNG(BaseClass):
                                      timeout=120)
 
     @staticmethod
-    def revert_changes(app_name, log, platform):
+    def revert_changes(app_name, log, platform, aot=False):
         # Clean old logs
         if CURRENT_OS is not OSType.WINDOWS:
             File.write(file_path=log, text="")
 
         # Revert changes
         ReplaceHelper.rollback(app_name, WebPackHelloWorldNG.html_change, sleep=20)
-        Tns.wait_for_log(log_file=log, string_list=['items.component.html'], clean_log=False)
+        if aot:
+            Tns.wait_for_log(log_file=log, string_list=['main.aot.ts'], clean_log=False)
+        else:
+            Tns.wait_for_log(log_file=log, string_list=['items.component.html'], clean_log=False)
 
         ReplaceHelper.rollback(app_name, WebPackHelloWorldNG.ts_change, sleep=10)
         Tns.wait_for_log(log_file=log, string_list=['item.service.'], clean_log=False)
@@ -136,7 +142,8 @@ class WebPackHelloWorldNG(BaseClass):
                                       "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
                                       "--release": "",
                                       "--bundle": "",
-                                      "--env.uglify": ""})
+                                      "--env.uglify": "",
+                                      "--env.aot": ""})
 
         verification_errors = Helpers.verify_size(app_name=self.app_name, config="ng-android-bundle-uglify")
         Helpers.run_android_via_adb(app_name=self.app_name, image=self.image_original)
@@ -145,7 +152,7 @@ class WebPackHelloWorldNG(BaseClass):
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_100_ios_build_release_with_bundle_and_uglify(self):
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
-                                  "--env.uglify": ""})
+                                  "--env.uglify": "", "--env.aot": ""})
 
         verification_errors = Helpers.verify_size(app_name=self.app_name, config="ng-ios-bundle-uglify")
         self.assertEqual([], verification_errors)
@@ -176,6 +183,7 @@ class WebPackHelloWorldNG(BaseClass):
                                       "--release": "",
                                       "--bundle": "",
                                       "--env.uglify": "",
+                                      "--env.aot": "",
                                       "--env.snapshot": ""})
 
         verification_errors = Helpers.verify_size(app_name=self.app_name, config="ng-android-bundle-uglify-snapshot",
@@ -231,3 +239,30 @@ class WebPackHelloWorldNG(BaseClass):
 
         self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
+
+    def test_220_run_android_with_bundle_uglify_aot_sync_changes(self):
+        log = Tns.run_android(attributes={'--path': self.app_name,
+                                          "--bundle": "",
+                                          "--env.uglify": "",
+                                          "--env.aot": "",
+                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
+                         timeout=180)
+        Helpers.android_screen_match(image=self.image_original, timeout=120)
+        Helpers.wait_webpack_watcher()
+
+        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID, aot=True)
+        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID, aot=True)
+
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_220_run_ios_with_bundle_uglify_aot_sync_changes(self):
+        log = Tns.run_ios(
+            attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': '', '--env.aot': ''},
+            wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp, not_existing_string_list=Helpers.wp_errors,
+                         timeout=240)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
+        Helpers.wait_webpack_watcher()
+
+        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS, aot=True)
+        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS, aot=True)

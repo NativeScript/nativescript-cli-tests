@@ -57,9 +57,10 @@ class Npm(object):
 
     @staticmethod
     def cache_clean():
+        npm_clean_command = "npm cache clean"
+        if Npm.version() > 4:
+            npm_clean_command = npm_clean_command + " -f"
         print "Clean npm cache."
-        if CURRENT_OS == OSType.WINDOWS:
-            run(command="npm cache clean")
-        else:
-            run(command="npm cache clean")
+        run(npm_clean_command)
+        if CURRENT_OS != OSType.WINDOWS:
             run(command="rm -rf ~/.npm/tns*")

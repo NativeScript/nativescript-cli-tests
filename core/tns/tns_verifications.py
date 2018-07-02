@@ -1,9 +1,9 @@
 """
 Verifications for NativeScript projects.
 """
-import json
 import os
 
+from core.json.json_utils import Json
 from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -27,27 +27,6 @@ class TnsAsserts(object):
     PLATFORM_ANDROID_APP_PATH = os.path.join(PLATFORM_ANDROID_SRC_MAIN_PATH, 'assets', 'app/')
     PLATFORM_ANDROID_NPM_MODULES_PATH = os.path.join(PLATFORM_ANDROID_APP_PATH, 'tns_modules/')
     PLATFORM_ANDROID_TNS_MODULES_PATH = os.path.join(PLATFORM_ANDROID_NPM_MODULES_PATH, 'tns-core-modules/')
-
-    @staticmethod
-    def __read_json(path):
-        """
-        Read content of json file.
-        :param path: Path to file.
-        :return: Content of file as json object.
-        """
-
-        # This is to handle test for app with space.
-        # In this case we put app name inside ''.
-        path = path.replace('\'', '')
-        path = path.replace('\"', '')
-
-        # Check if file exists
-        assert File.exists(path), 'Failed to find file: ' + path
-
-        # Read it...
-        with open(path) as json_file:
-            data = json.load(json_file)
-        return data
 
     @staticmethod
     def _get_ios_app_path(app_name):
@@ -252,7 +231,7 @@ class TnsAsserts(object):
         :return: package.json as json object.
         """
         path = os.path.join(app_name, 'package.json')
-        return TnsAsserts.__read_json(path=path)
+        return Json.read(file_path=path)
 
     @staticmethod
     def get_tsconfig_json(app_name):
@@ -262,7 +241,7 @@ class TnsAsserts(object):
         :return: package.json as json object.
         """
         path = os.path.join(app_name, 'tsconfig.json')
-        return TnsAsserts.__read_json(path=path)
+        return Json.read(file_path=path)
 
     @staticmethod
     def prepared(app_name, platform=Platform.BOTH, output=None, prepare=Prepare.FULL):
