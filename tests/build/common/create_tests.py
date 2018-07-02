@@ -5,11 +5,12 @@ import os
 import unittest
 
 from nose_parameterized import parameterized
-
+from core.git.git import Git
 from core.base_class.BaseClass import BaseClass
 from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
+from core.settings.settings import TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 
@@ -39,6 +40,7 @@ class CreateTests(BaseClass):
         Folder.cleanup('folder')
         Folder.cleanup(cls.app_name_dash)
         Folder.cleanup(cls.app_name_space)
+        Folder.cleanup(cls.app_name)
 
     def test_000_create_app_like_real_user(self):
         """Create app like real user."""
@@ -110,6 +112,27 @@ class CreateTests(BaseClass):
         output = Tns.create_app(self.app_name_app, assert_success=False, update_modules=False)
         assert "You cannot build applications named '" + self.app_name_app + "' in Xcode." in output
 
+    def test_009_create_app_default(self):
+        Folder.cleanup(self.app_name)
+        output = Tns.create_app(self.app_name, attributes={"--default": ""}, update_modules=False)
+        TnsAsserts.created(self.app_name, output=output)
+        assert "Now you can navigate to your project with $ cd {0}".format(self.app_name) in output
+        assert "After that you can run it on device/emulator by executing $ tns run <platform>" in output
+
+    def test_010_create_app_remove_app_resources(self):
+        #creates valid project from local directory template
+        Folder.cleanup("template-hello-world")
+        Folder.cleanup(self.app_name)
+        Git.clone_repo(repo_url='git@github.com:NativeScript/template-hello-world.git',
+                       local_folder="template-hello-world")
+        Folder.cleanup("template-hello-world/App_Resources")
+        File.replace(file_path=TEST_RUN_HOME + "/template-hello-world/package.json",
+                     str1="tns-template-hello-world", str2="test-tns-template-hello-world")
+        path = os.path.join(TEST_RUN_HOME, 'template-hello-world')
+        output = Tns.run_tns_command("create " + self.app_name, attributes={"--template": path})
+        TnsAsserts.created(self.app_name, output=output)
+        Folder.cleanup("template-hello-world")
+
     @parameterized.expand([
         "tns-template-hello-world",
         "https://github.com/NativeScript/template-hello-world.git",
@@ -120,6 +143,8 @@ class CreateTests(BaseClass):
         "tsc",
         "ng",
         "angular",
+        "default",
+        "default@4.0.0"
     ])
     def test_200_create_project_with_template(self, template_source):
         """Create app should be possible with --template and npm packages, git repos and aliases"""
