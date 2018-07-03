@@ -125,7 +125,7 @@ class CreateTests(BaseClass):
         Folder.cleanup(self.app_name)
         Git.clone_repo(repo_url='git@github.com:NativeScript/template-hello-world.git',
                        local_folder="template-hello-world")
-        Folder.cleanup("template-hello-world/App_Resources")
+        Folder.cleanup(os.path.join(TEST_RUN_HOME + '/template-hello-world/App_Resources'))
         File.replace(file_path=TEST_RUN_HOME + "/template-hello-world/package.json",
                      str1="tns-template-hello-world", str2="test-tns-template-hello-world")
         path = os.path.join(TEST_RUN_HOME, 'template-hello-world')
