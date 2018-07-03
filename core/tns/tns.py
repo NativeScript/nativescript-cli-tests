@@ -51,7 +51,7 @@ class Tns(object):
         elif platform is Platform.IOS:
             return app_name.replace(" ", "").replace("-", "").replace("_", "").replace("\"", "")
         else:
-            raise "Invalid platform!"
+            raise Exception("Invalid platform!")
 
     @staticmethod
     def __get_app_name_from_attributes(attributes={}):
@@ -99,7 +99,8 @@ class Tns(object):
         return json.get('nativescript').get('id')
 
     @staticmethod
-    def run_tns_command(command, tns_path=None, attributes={}, log_trace=False, timeout=COMMAND_TIMEOUT, wait=True):
+    def run_tns_command(command, tns_path=None, attributes={}, log_trace=False, timeout=COMMAND_TIMEOUT, wait=True,
+                        measureTime=False):
         cmd = TNS_PATH + " " + command
         if tns_path is not None:
             cmd = tns_path + " " + command
@@ -108,6 +109,9 @@ class Tns(object):
                 cmd += " " + k + " " + v
         if log_trace:
             cmd += " --log trace"
+
+        if measureTime:
+            cmd = "TIME " + cmd
         print cmd
         output = run(command=cmd, timeout=timeout, wait=wait)
         return output
@@ -205,7 +209,7 @@ class Tns(object):
 
     @staticmethod
     def create_app(app_name, attributes={}, log_trace=False, assert_success=True, update_modules=True,
-                   force_clean=True):
+                   force_clean=True, measureTime=False):
 
         if force_clean:
             if File.exists(app_name):
@@ -225,9 +229,10 @@ class Tns(object):
                 attr = {"--template": "tns-template-hello-world"}
         attr.update(attributes)
         if app_name is None:
-            output = Tns.run_tns_command("create ", attributes=attr, log_trace=log_trace)
+            output = Tns.run_tns_command("create ", attributes=attr, log_trace=log_trace, measureTime=measureTime)
         else:
-            output = Tns.run_tns_command("create \"" + app_name + "\"", attributes=attr, log_trace=log_trace)
+            output = Tns.run_tns_command("create \"" + app_name + "\"", attributes=attr, log_trace=log_trace,
+                                         measureTime=measureTime)
         if assert_success:
             TnsAsserts.created(app_name=app_name, output=output)
         if update_modules:
@@ -292,7 +297,7 @@ class Tns(object):
 
     @staticmethod
     def platform_add(platform=Platform.NONE, version=None, attributes={}, assert_success=True, log_trace=False,
-                     tns_path=None):
+                     tns_path=None, measureTime=False):
 
         platform_string = Tns.__get_platform_string(platform)
 
@@ -300,7 +305,7 @@ class Tns(object):
             platform_string = platform_string + "@" + version
 
         output = Tns.run_tns_command("platform add " + platform_string, attributes=attributes, log_trace=log_trace,
-                                     tns_path=tns_path)
+                                     tns_path=tns_path, measureTime=measureTime)
 
         # Verify platforms added
         app_name = Tns.__get_app_name_from_attributes(attributes)
@@ -354,17 +359,21 @@ class Tns(object):
         return output
 
     @staticmethod
-    def platform_add_android(version=None, attributes={}, assert_success=True, log_trace=False, tns_path=None):
+    def platform_add_android(version=None, attributes={}, assert_success=True, log_trace=False, tns_path=None,
+                             measureTime=False):
         return Tns.platform_add(platform=Platform.ANDROID, version=version, attributes=attributes,
                                 assert_success=assert_success,
                                 log_trace=log_trace,
-                                tns_path=tns_path)
+                                tns_path=tns_path,
+                                measureTime=measureTime)
 
     @staticmethod
-    def platform_add_ios(version=None, attributes={}, assert_success=True, log_trace=False, tns_path=None):
+    def platform_add_ios(version=None, attributes={}, assert_success=True, log_trace=False, tns_path=None,
+                         measureTime=False):
         return Tns.platform_add(Platform.IOS, version=version, attributes=attributes, assert_success=assert_success,
                                 log_trace=log_trace,
-                                tns_path=tns_path)
+                                tns_path=tns_path,
+                                measureTime=measureTime)
 
     @staticmethod
     def platform_list(attributes={}, log_trace=False, tns_path=None):
@@ -415,8 +424,9 @@ class Tns(object):
         return output
 
     @staticmethod
-    def build_android(attributes={}, assert_success=True, tns_path=None, log_trace=False):
-        output = Tns.run_tns_command("build android", attributes=attributes, tns_path=tns_path, log_trace=log_trace)
+    def build_android(attributes={}, assert_success=True, tns_path=None, log_trace=False, measureTime=False):
+        output = Tns.run_tns_command("build android", attributes=attributes, tns_path=tns_path, log_trace=log_trace,
+                                     measureTime=measureTime)
         if assert_success:
             # Verify output of build command
             assert "Project successfully built" in output, "Build failed!" + os.linesep + output
@@ -468,7 +478,7 @@ class Tns(object):
         return output
 
     @staticmethod
-    def build_ios(attributes={}, assert_success=True, tns_path=None, log_trace=False):
+    def build_ios(attributes={}, assert_success=True, tns_path=None, log_trace=False, measureTime=False):
 
         if "--teamId" not in attributes.keys() \
                 and "--team-id" not in attributes.keys() \
@@ -476,7 +486,7 @@ class Tns(object):
             attr = {"--provision": PROVISIONING}
             attributes.update(attr)
 
-        output = Tns.run_tns_command("build ios", attributes=attributes, tns_path=tns_path, log_trace=log_trace)
+        output = Tns.run_tns_command("build ios", attributes=attributes, tns_path=tns_path, log_trace=log_trace, measureTime=measureTime)
 
         app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
         app_name = app_name.replace("\"", "")  # Handle projects with space
