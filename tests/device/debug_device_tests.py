@@ -112,12 +112,6 @@ class DebugBothPlatformsTests(BaseClass):
         for android_device_id in self.ANDROID_DEVICES:
             strings.append(android_device_id)
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
-
-        # Verify app is deployed and running on all available android devices
-        for device_id in self.ANDROID_DEVICES:
-            Device.wait_until_app_is_running(app_id=Tns.get_app_id(self.app_name), device_id=device_id, timeout=30)
-
-        log = Tns.debug_android(attributes={'--path': self.app_name})
         self.__verify_debugger_start(log)
 
         # Get Chrome URL and open it
