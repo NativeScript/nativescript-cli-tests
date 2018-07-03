@@ -1,7 +1,7 @@
 Repo,Config,Platform,FirstStart,SecondStart
-NativeScript/template-hello-world,default,android,45,24,105
-NativeScript/template-hello-world,webpack,android,38,25,76
-NativeScript/template-hello-world,webpack-snapshot,android,36,25,130
+NativeScript/template-hello-world,default,android,58,7,53
+NativeScript/template-hello-world,webpack,android,58,7,45
+NativeScript/template-hello-world,webpack-snapshot,android,58,7,50
 NativeScript/template-hello-world-ng,default,android,1,1,1
 NativeScript/template-hello-world-ng,webpack,android,1,1,1
 NativeScript/template-hello-world-ng,webpack-snapshot,android,1,1,1
@@ -13,8 +13,8 @@ NativeScript/sample-Groceries,default,android,1,1,1
 NativeScript/sample-Groceries,webpack,android,1,1,1
 NativeScript/sample-Groceries,webpack-snapshot,android,1,1,1
 NativeScript/sample-Groceries,timeline,android,1,1,1
-NativeScript/template-hello-world,default,ios,50,13,57
-NativeScript/template-hello-world,webpack,ios,51,12,85
+NativeScript/template-hello-world,default,ios,58,14,38
+NativeScript/template-hello-world,webpack,ios,58,14,68
 NativeScript/template-hello-world-ng,default,ios,1,1,1
 NativeScript/template-hello-world-ng,webpack,ios,1,1,1
 nativescript-vue/nativescript-vue-template,default,ios,1,1,1
