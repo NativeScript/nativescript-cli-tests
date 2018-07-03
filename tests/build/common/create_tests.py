@@ -10,9 +10,11 @@ from core.base_class.BaseClass import BaseClass
 from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
+from core.osutils.os_type import OSType
 from core.settings.settings import TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
+from core.settings.settings import CURRENT_OS
 
 
 class CreateTests(BaseClass):
@@ -119,6 +121,7 @@ class CreateTests(BaseClass):
         assert "Now you can navigate to your project with $ cd {0}".format(self.app_name) in output
         assert "After that you can run it on device/emulator by executing $ tns run <platform>" in output
 
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows temporary")
     def test_010_create_app_remove_app_resources(self):
         #creates valid project from local directory template
         Folder.cleanup("template-hello-world")
