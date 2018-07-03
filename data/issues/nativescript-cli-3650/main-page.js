@@ -6,6 +6,6 @@ function pageLoaded(args) {
     console.log("Page loaded " + ++count + " times.");
     
     var objTC = new TestClass();
-    objTC.sayHey();
+    console.log(objTC.sayHey());
 }
 exports.pageLoaded = pageLoaded;

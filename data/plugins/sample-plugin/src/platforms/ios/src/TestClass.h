@@ -2,6 +2,6 @@
 
 @interface TestClass : NSObject
 
-- (void)sayHey;
+- (NSString *)sayHey;
 
 @end
