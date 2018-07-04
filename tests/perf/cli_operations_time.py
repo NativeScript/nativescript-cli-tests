@@ -171,7 +171,8 @@ class PerfBuildTests(BaseClass):
                 Npm.cache_clean()
                 sleep(10)
                 Folder.cleanup(self.app_name)
-                Git.clone_repo(repo_url="https://github.com/" + demo, local_folder=self.app_name)
+                tns_create_log = Tns.create_app(self.app_name, attributes={"--template": "https://github.com/" + demo},
+                                                measureTime=True)
                 if "android" in platform:
                     Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
                                         assert_success=False)
