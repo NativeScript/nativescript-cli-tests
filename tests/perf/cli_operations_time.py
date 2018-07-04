@@ -171,8 +171,7 @@ class PerfBuildTests(BaseClass):
                 Npm.cache_clean()
                 sleep(10)
                 Folder.cleanup(self.app_name)
-                tns_create_log = Tns.create_app(self.app_name, attributes={"--template": "https://github.com/" + demo},
-                                                measureTime=True)
+                Git.clone_repo(repo_url="https://github.com/" + demo, local_folder=self.app_name)
                 if "android" in platform:
                     Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
                                         assert_success=False)
@@ -212,26 +211,27 @@ class PerfBuildTests(BaseClass):
                 tns_build_log = Tns.build_android(attributes=attributes, measureTime=True)
             else:
                 tns_build_log = Tns.build_ios(attributes=attributes, measureTime=True)
-
-            actual_tns_create_time += PerfBuildTests.get_time(tns_create_log)
+            if tns_create_log:
+                actual_tns_create_time += PerfBuildTests.get_time(tns_create_log)
             actual_tns_platform_add_time += PerfBuildTests.get_time(tns_platform_add_log)
             actual_tns_build_time += PerfBuildTests.get_time(tns_build_log)
             run('rm -rf {0}'.format(self.app_name))
 
-        actual_tns_create_time = actual_tns_create_time / perf_loop
+        if actual_tns_create_time != 0.0:
+            actual_tns_create_time = actual_tns_create_time / perf_loop
         actual_tns_platform_add_time = actual_tns_platform_add_time / perf_loop
         actual_tns_build_time = actual_tns_build_time / perf_loop
         verification_errors = []
         PerfBuildTests.report_add_data(demo, config, platform, expected_tns_create_time, actual_tns_create_time,
                                        expected_tns_platform_add_time,
                                        actual_tns_platform_add_time, expected_tns_build_time, actual_tns_build_time)
-
-        message = "Tns create project command for platform {1} for {0} with {4} configuration is {3} s. " \
+        if actual_tns_create_time != 0.0:
+            message = "Tns create project command for platform {1} for {0} with {4} configuration is {3} s. " \
                   "The expected time is {2} s.".format(demo,
                                                        platform, expected_tns_create_time,
                                                        actual_tns_create_time, config)
-
-        verification_errors = PerfBuildTests.assert_time(expected=expected_tns_create_time,
+        if actual_tns_create_time != 0.0:
+            verification_errors = PerfBuildTests.assert_time(expected=expected_tns_create_time,
                                                          actual=actual_tns_create_time,
                                                          tolerance=20,
                                                          error_message=message, verification_errors=verification_errors)
