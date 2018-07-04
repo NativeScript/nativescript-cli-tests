@@ -2,6 +2,7 @@
 Test for building projects with iOS platform
 """
 import os
+import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.simulator import Simulator
@@ -125,6 +126,7 @@ class BuildiOSTests(BaseClass):
         output = File.read(self.app_name_dash + os.sep + "package.json")
         assert app_identifier in output
 
+    @unittest.skip("Temporary ignore: https://github.com/NativeScript/NativeScript/issues/6026")
     def test_301_build_ios_with_space(self):
         Tns.create_app(self.app_name_space)
         Tns.platform_add_ios(attributes={"--path": "\"" + self.app_name_space + "\"",
