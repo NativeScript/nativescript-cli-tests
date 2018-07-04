@@ -2,8 +2,8 @@
 
 @implementation TestClass
 
-- (void)sayHey{
-      NSLog(@"Hey!");
+- (NSString *)sayHey{
+      return @"Hey!";
 }
 
 @end
