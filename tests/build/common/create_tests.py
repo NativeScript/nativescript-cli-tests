@@ -188,7 +188,7 @@ class CreateTests(BaseClass):
         output = Tns.create_app(self.app_name, attributes={"--template": "invalidEntry"},
                                 assert_success=False, update_modules=False)
         assert "successfully created" not in output
-        assert "npm ERR!" in output
+        assert "Not Found" in output
         assert "404" in output
 
     def test_401_create_project_with_empty_template_path(self):
