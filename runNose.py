@@ -81,7 +81,7 @@ if __name__ == '__main__':
         get_test_packages(platform=Platform.BOTH)
         Simulator.reset()
 
-        if "8." in Xcode.get_version():
+        if Xcode.get_version() < 9:
             SIMULATOR_SDK = '10.0'
 
         Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
