@@ -509,12 +509,14 @@ class Tns(object):
                 if Xcode.get_version() < 10:
                     assert "CONFIGURATION Release" in output
                 else:
-                    assert '"-configuration" "Release"' in output
+                    if log_trace:
+                        assert '"-configuration" "Release"' in output
             else:
                 if Xcode.get_version() < 10:
                     assert "CONFIGURATION Debug" in output
                 else:
-                    assert '"-configuration" "Debug"' in output
+                    if log_trace:
+                        assert '"-configuration" "Debug"' in output
 
             # Verify simulator/device builds
             device_folder = app_name + "/platforms/ios/build/device/"
