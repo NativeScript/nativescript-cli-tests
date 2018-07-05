@@ -20,5 +20,5 @@ class Xcode(object):
         Get Xcode version
         :return: Version as string.
         """
-        output = run(command="xcodebuild -version | grep Xcode", log_level=CommandLogLevel.SILENT)
-        return output.replace("Xcode ", "")
+        output = run(command="xcodebuild -version | head -n 1 | sed -e 's/Xcode //'", log_level=CommandLogLevel.SILENT)
+        return int(output.split('.')[0])
