@@ -76,6 +76,8 @@ class StarterKitsTests(BaseClass):
             ReplaceHelper.replace(demo, self.xml_change)
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text=xml, timeout=20), "Failed to apply XML changes!"
+
+        # Change SASS files.
         ReplaceHelper.replace(demo, self.sass_root_level_variable_change, sleep=10)
         if platform == Platform.ANDROID:
             ReplaceHelper.replace(demo, self.sass_root_level_android_change, sleep=10)
