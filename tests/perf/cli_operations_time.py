@@ -233,7 +233,7 @@ class PerfBuildTests(BaseClass):
         if actual_tns_create_time != 0.0:
             verification_errors = PerfBuildTests.assert_time(expected=expected_tns_create_time,
                                                          actual=actual_tns_create_time,
-                                                         tolerance=20,
+                                                         tolerance=25,
                                                          error_message=message, verification_errors=verification_errors)
 
         message = "Tns platform add command for platform {1} for {0} with {4} configuration is {3} s. " \
@@ -242,7 +242,7 @@ class PerfBuildTests(BaseClass):
 
         verification_errors = PerfBuildTests.assert_time(expected=expected_tns_platform_add_time,
                                                          actual=actual_tns_platform_add_time,
-                                                         tolerance=20,
+                                                         tolerance=25,
                                                          error_message=message, verification_errors=verification_errors)
         message = "Tns build command for platform {1} for {0} with {4} configuration is {3} s. " \
                   "The expected time is {2} s.".format(demo, platform, expected_tns_build_time,
