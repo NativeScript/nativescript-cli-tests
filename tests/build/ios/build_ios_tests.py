@@ -21,7 +21,7 @@ from core.xcode.xcode import Xcode
 class BuildiOSTests(BaseClass):
     app_name_dash = "test-app"
     app_name_space = "Test App"
-    app_name_noplatform = "Test_AppNoPlatform"
+    app_name_no_platform = "Test_AppNoPlatform"
     app_name_ios = "testapp_ios"
 
     @classmethod
@@ -35,15 +35,14 @@ class BuildiOSTests(BaseClass):
 
         Xcode.cleanup_cache()
 
-
     def setUp(self):
         BaseClass.setUp(self)
         Simulator.stop()
         Folder.cleanup(self.app_name_dash)
         Folder.cleanup(self.app_name_space)
         Folder.cleanup(self.app_name_ios)
-        Folder.cleanup(self.app_name_noplatform)
-        Folder.cleanup(self.app_name_noplatform + '/platforms/ios/build')
+        Folder.cleanup(self.app_name_no_platform)
+        Folder.cleanup(self.app_name_no_platform + '/platforms/ios/build')
 
         Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
 
@@ -57,7 +56,7 @@ class BuildiOSTests(BaseClass):
         File.remove("TestApp.ipa")
 
         Folder.cleanup(cls.app_name)
-        Folder.cleanup(cls.app_name_noplatform)
+        Folder.cleanup(cls.app_name_no_platform)
         Folder.cleanup(cls.app_name_dash)
         Folder.cleanup(cls.app_name_space)
 
@@ -114,8 +113,8 @@ class BuildiOSTests(BaseClass):
         assert File.exists(self.app_name + "/platforms/ios/build/emulator/TestApp.app")
 
     def test_210_build_ios_platform_not_added_or_platforms_deleted(self):
-        Tns.create_app(self.app_name_noplatform)
-        Tns.build_ios(attributes={"--path": self.app_name_noplatform})
+        Tns.create_app(self.app_name_no_platform)
+        Tns.build_ios(attributes={"--path": self.app_name_no_platform})
 
     def test_300_build_ios_with_dash(self):
         Tns.create_app(self.app_name_dash)
@@ -185,8 +184,8 @@ class BuildiOSTests(BaseClass):
         assert "doesn't include the aps-environment and inter-app-audio entitlements" in output
 
     def test_400_build_ios_with_wrong_param(self):
-        Tns.create_app(self.app_name_noplatform)
-        output = Tns.build_ios(attributes={"--path": self.app_name_noplatform, "--" + invalid: ""},
+        Tns.create_app(self.app_name_no_platform)
+        output = Tns.build_ios(attributes={"--path": self.app_name_no_platform, "--" + invalid: ""},
                                assert_success=False)
         assert invalid_option.format(invalid) in output
         assert error not in output.lower()

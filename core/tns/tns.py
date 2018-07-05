@@ -486,7 +486,8 @@ class Tns(object):
             attr = {"--provision": PROVISIONING}
             attributes.update(attr)
 
-        output = Tns.run_tns_command("build ios", attributes=attributes, tns_path=tns_path, log_trace=log_trace, measureTime=measureTime)
+        output = Tns.run_tns_command("build ios", attributes=attributes, tns_path=tns_path, log_trace=log_trace,
+                                     measureTime=measureTime)
 
         app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
         app_name = app_name.replace("\"", "")  # Handle projects with space
@@ -505,9 +506,15 @@ class Tns(object):
 
             # Verify release/debug builds
             if "--release" in attributes.keys():
-                assert "CONFIGURATION Release" in output
+                if Xcode.get_version() < 10:
+                    assert "CONFIGURATION Release" in output
+                else:
+                    assert '"-configuration" "Release"' in output
             else:
-                assert "CONFIGURATION Debug" in output
+                if Xcode.get_version() < 10:
+                    assert "CONFIGURATION Debug" in output
+                else:
+                    assert '"-configuration" "Debug"' in output
 
             # Verify simulator/device builds
             device_folder = app_name + "/platforms/ios/build/device/"
@@ -531,7 +538,7 @@ class Tns(object):
                     assert "build/emulator/" + app_id + ".app" in output
                 else:
                     # Xcode 8.* output contains some warnings for images, so we will assert only on Xcode 9.*
-                    if "9." in Xcode.get_version():
+                    if Xcode.get_version() >= 9:
                         assert "CompileStoryboard" not in output, "Native build out is displayed!"
                         assert "CompileAssetCatalog" not in output, "Native build out is displayed!"
                         assert "ProcessInfoPlistFile" not in output, "Native build out is displayed!"
