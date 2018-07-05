@@ -76,6 +76,8 @@ class StarterKitsTests(BaseClass):
             ReplaceHelper.replace(demo, self.xml_change)
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text=xml, timeout=20), "Failed to apply XML changes!"
+
+        # Change SASS files.
         ReplaceHelper.replace(demo, self.sass_root_level_variable_change, sleep=10)
         if platform == Platform.ANDROID:
             ReplaceHelper.replace(demo, self.sass_root_level_android_change, sleep=10)
@@ -260,7 +262,7 @@ class StarterKitsTests(BaseClass):
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
                          check_interval=5, timeout=120)
-        Helpers.android_screen_match(image=demo + '_sync')
+        Helpers.android_screen_match(image=demo + '_bundle_sync')
 
         # Revert changes
         StarterKitsTests.revert_changes(self=self, demo=demo, platform=Platform.ANDROID, device_id=EMULATOR_ID)
@@ -287,7 +289,7 @@ class StarterKitsTests(BaseClass):
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
                          check_interval=5, timeout=120)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_sync')
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_bundle_sync')
 
         # Revert changes
         StarterKitsTests.revert_changes(self=self, demo=demo, platform=Platform.IOS,
