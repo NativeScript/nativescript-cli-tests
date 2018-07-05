@@ -258,7 +258,10 @@ class Device(object):
                 if sim_title in name:
                     window = simulator.findFirstR(AXTitle=name)
                     element = window.findFirstR(AXTitle=text)
-                    element.Press()
+                    if element is not None:
+                        element.Press()
+                    else:
+                        raise TypeError("Cannot find element with text {0}".format(text))
         else:
             raise NotImplementedError("Click on text not implemented for iOS devices.")
 
