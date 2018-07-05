@@ -151,6 +151,10 @@ class WebPackHelloWorldNG(BaseClass):
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_100_ios_build_release_with_bundle_and_uglify(self):
+        # Hack to workaround https://github.com/NativeScript/nativescript-dev-webpack/issues/602
+        Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": ""})
+        # ...remove the live above when the issues is fixed.
+
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
                                   "--env.uglify": "", "--env.aot": ""})
 
