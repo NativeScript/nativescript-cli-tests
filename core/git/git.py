@@ -1,5 +1,6 @@
 from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
+from core.osutils.folder import Folder
 
 
 class Git(object):
@@ -10,6 +11,7 @@ class Git(object):
         :param branch: Branch
         :param local_folder: Local folder
         """
+        Folder.cleanup(folder=local_folder)
         command = 'git clone ' + repo_url + ' ' + local_folder
         if branch is not None:
             command = command + ' -b ' + branch

@@ -144,7 +144,6 @@ class ResourcesGenerateTests(BaseClass):
 
         ResourcesGenerateTests.check_splashes(app_resources_android, app_resources_ios)
 
-    @unittest.skip("wait merge")
     def test_003_tns_resources_generate_icons_apetools(self):
         #https://github.com/NativeScript/nativescript-cli/issues/3666
         Folder.cleanup(os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'Assets.xcassets',

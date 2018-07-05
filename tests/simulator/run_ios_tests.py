@@ -44,6 +44,7 @@ class RunIOSSimulatorTests(BaseClass):
         max_long_string = max_long_string + one_hundred_symbols_string
     max_long_string = max_long_string + "1234567890123456789012345678901234567890123456789012345678901234567890" \
                                         "123456789"
+    plugin_path = os.path.join(TEST_RUN_HOME, 'data', 'plugins', 'sample-plugin', 'src')
 
     @classmethod
     def setUpClass(cls):
@@ -353,6 +354,19 @@ class RunIOSSimulatorTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_js_css_xml')
 
+    def test_315_tns_run_ios_change_appResources_check_per_platform(self):
+        # https://github.com/NativeScript/nativescript-cli/pull/3619
+        output = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=output, string_list=strings, timeout=150, check_interval=10)
+
+        source = os.path.join('data', 'issues', 'nativescript-cli-3619', 'icon-1025.png')
+        target = os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'Assets.xcassets', 'AppIcon.appiconset')
+        File.copy(source, target)
+        strings = ['Xcode build']
+        Tns.wait_for_log(log_file=output, string_list=strings, clean_log=False)
+        assert "Gradle build" not in output
+
     def test_330_tns_run_ios_sync_all_files(self):
         """
         Verify '--syncAllFiles' option will sync all files, including node modules.
@@ -507,8 +521,7 @@ class RunIOSSimulatorTests(BaseClass):
         """
 
         # Add plugin with specific dependencies
-        plugin_path = os.path.join(TEST_RUN_HOME, 'data', 'plugins', 'sample-plugin', 'src')
-        Tns.plugin_add(plugin_path, attributes={"--path": self.app_name})
+        Tns.plugin_add(self.plugin_path, attributes={"--path": self.app_name})
 
         # `tns run ios` and wait until app is deployed
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
@@ -523,7 +536,34 @@ class RunIOSSimulatorTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
-    def test_385_tns_run_ios_console_log_on_multiple_simulators(self):
+    def test_385_tns_run_ios_source_code_in_ios_part_plugin(self):
+        """
+        https://github.com/NativeScript/nativescript-cli/issues/3650
+        """
+
+        # Add plugin with source code in iOS part of the plugin
+        Tns.plugin_add(self.plugin_path, attributes={"--path": self.app_name})
+
+        # Replace main-page.js to call method from the source code of the plugin
+        source_js = os.path.join('data', "issues", 'nativescript-cli-3650', 'main-page.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-page.js')
+        File.copy(src=source_js, dest=target_js)
+
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.SIMULATOR_ID,
+                   'Hey!']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+
+        # Verify app looks correct inside simulator
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
+    def test_387_tns_run_ios_console_log_on_multiple_simulators(self):
+        """
+        https://github.com/NativeScript/nativescript-cli/issues/3529
+        """
+
         # Start one more simulator
         Simulator.start(SIMULATOR_NAME_2)
         SIMULATOR_ID_2 = Simulator.ensure_available(simulator_name=SIMULATOR_NAME_2)
@@ -578,13 +618,12 @@ class RunIOSSimulatorTests(BaseClass):
         assert "Multiple errors were thrown" not in output
         assert "fail" not in output
 
-    @unittest.skip("Ignore because of https://github.com/NativeScript/nativescript-cli/issues/3625")
     def test_404_tns_run_ios_on_not_existing_device_should_not_start_simulator(self):
         Simulator.stop()
         output = Tns.run_ios(attributes={'--path': self.app_name, '--device': 'fakeId', '--justlaunch': ''},
                              assert_success=False)
         assert not Simulator.wait_for_simulator(
-            timeout=10), "Simulator should not be started after run `tns run ios --device <invalid_device_id>`"
+            timeout=10)[0], "Simulator should not be started after run `tns run ios --device <invalid_device_id>`"
         TnsAsserts.invalid_device(output=output)
 
     @unittest.skipIf(Device.get_count(platform=Platform.IOS) > 0 or Device.get_count(platform=Platform.ANDROID) > 0,

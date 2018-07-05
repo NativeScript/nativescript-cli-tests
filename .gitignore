@@ -17,7 +17,6 @@ nosetests.xml
 Payload
 /workspace/*
 verified_plugins/data/*.csv
-nativescript-*
 package-lock.json
 template-master-detail
 template-master-detail-ts

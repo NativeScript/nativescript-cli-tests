@@ -43,7 +43,7 @@ class RegressionTestsJS(BaseClass):
 
     def setUp(self):
         Tns.kill()
-        BaseClass.tearDown(self)
+        BaseClass.setUp(self)
 
     def tearDown(self):
         BaseClass.tearDown(self)
