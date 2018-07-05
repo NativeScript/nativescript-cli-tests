@@ -10,7 +10,7 @@ from core.tns.tns_platform_type import Platform
 from tests.helpers.debug_chrome import DebugChromeHelpers
 
 
-class DebugBothPlatformsTests(BaseClass):
+class DebugOnDevice(BaseClass):
     ANDROID_DEVICE_ID = Device.get_id(platform=Platform.ANDROID)
     IOS_DEVICE_ID = Device.get_id(platform=Platform.IOS)
 
@@ -43,7 +43,7 @@ class DebugBothPlatformsTests(BaseClass):
     def test_001_debug_android(self):
         log = Tns.debug_android(attributes={'--path': self.app_name, '--device': self.ANDROID_DEVICE_ID})
         strings = [self.ANDROID_DEVICE_ID, 'Successfully installed on device with identifier']
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         DebugChromeHelpers.verify_debugger_started(log)
 
         # Get Chrome URL and open it
