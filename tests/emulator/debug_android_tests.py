@@ -2,7 +2,6 @@
 Tests for `tns debug android` executed on Android Emulator.
 """
 import os
-import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.chrome.chrome import Chrome
@@ -14,6 +13,7 @@ from core.osutils.folder import Folder
 from core.settings.settings import EMULATOR_NAME, EMULATOR_ID, ANDROID_PACKAGE
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
+from tests.helpers.debug_chrome import DebugChromeHelpers
 
 
 class DebugAndroidEmulatorTests(BaseClass):
@@ -45,30 +45,12 @@ class DebugAndroidEmulatorTests(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()
 
-    def __verify_debugger_start(self, log):
-        strings = [EMULATOR_ID, 'NativeScript Debugger started', 'To start debugging, open the following URL in Chrome',
-                   'chrome-devtools', 'localhost:4000']
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
-        output = File.read(file_path=log, print_content=True)
-        assert "closed" not in output
-        assert "detached" not in output
-        assert "did not start in time" not in output
-
-    def __verify_debugger_attach(self, log):
-        strings = [EMULATOR_ID, 'To start debugging', 'Chrome', 'chrome-devtools', 'localhost:4000']
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
-        output = File.read(file_path=log, print_content=True)
-        assert "closed" not in output
-        assert "detached" not in output
-        assert "did not start in time" not in output
-        assert "NativeScript Debugger started" not in output
-
     def test_001_debug_android(self):
         """
         Default `tns debug android` starts debugger (do not stop at the first code statement)
         """
         log = Tns.debug_android(attributes={'--path': self.app_name, '--emulator': ''})
-        self.__verify_debugger_start(log)
+        DebugChromeHelpers.verify_debugger_started(log)
 
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
@@ -80,7 +62,7 @@ class DebugAndroidEmulatorTests(BaseClass):
         """
 
         log = Tns.debug_android(attributes={'--path': self.app_name, '--debug-brk': '', '--emulator': ''})
-        self.__verify_debugger_start(log)
+        DebugChromeHelpers.verify_debugger_started(log)
 
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=EMULATOR_NAME, tolerance=3.0, device_id=EMULATOR_ID,
@@ -99,7 +81,7 @@ class DebugAndroidEmulatorTests(BaseClass):
 
         # Attach debugger
         log = Tns.debug_android(attributes={'--path': self.app_name, '--start': '', '--emulator': ''})
-        self.__verify_debugger_attach(log=log)
+        DebugChromeHelpers.verify_debugger_attach(log=log)
 
     def test_100_debug_android_should_start_emulator_if_there_is_no_device(self):
         """
@@ -127,7 +109,7 @@ class DebugAndroidEmulatorTests(BaseClass):
 
         Tns.build_android(attributes={'--path': self.app_name})
         log = Tns.debug_android(attributes={'--path': self.app_name, '--emulator': ''})
-        self.__verify_debugger_start(log)
+        DebugChromeHelpers.verify_debugger_started(log)
 
         # Verify app is running
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
