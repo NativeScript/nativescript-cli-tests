@@ -42,18 +42,26 @@ class PerfBuildTests(BaseClass):
 
     @staticmethod
     def assert_time(expected, actual, tolerance=20, error_message="Startup time is not expected.",
-                    verification_errors=[]):
+                    verification_errors=[], asert_full_time=True):
         print "Actual startup: " + str(actual)
         print "Expected startup: " + str(expected)
         x = int(expected)
         y = int(actual)
-        if actual >= 0:
-            diff = abs(x - y) * 1.00
-            try:
-                assert diff <= x * tolerance * 0.01, error_message
-            except AssertionError, e:
-                verification_errors.append(str(e))
-            return verification_errors
+        if asert_full_time:
+            if actual >= 0:
+                diff = abs(x - y) * 1.00
+                try:
+                    assert diff <= x * tolerance * 0.01, error_message
+                except AssertionError, e:
+                    verification_errors.append(str(e))
+        else:
+            if actual >= 0:
+                max_time = x + ((x * tolerance) * 0.01)
+                try:
+                    assert y <= max_time, error_message
+                except AssertionError, e:
+                    verification_errors.append(str(e))
+        return verification_errors
 
     @staticmethod
     def report_add_column_titles():
@@ -227,14 +235,16 @@ class PerfBuildTests(BaseClass):
                                        actual_tns_platform_add_time, expected_tns_build_time, actual_tns_build_time)
         if actual_tns_create_time != 0.0:
             message = "Tns create project command for platform {1} for {0} with {4} configuration is {3} s. " \
-                  "The expected time is {2} s.".format(demo,
-                                                       platform, expected_tns_create_time,
-                                                       actual_tns_create_time, config)
+                      "The expected time is {2} s.".format(demo,
+                                                           platform, expected_tns_create_time,
+                                                           actual_tns_create_time, config)
         if actual_tns_create_time != 0.0:
             verification_errors = PerfBuildTests.assert_time(expected=expected_tns_create_time,
-                                                         actual=actual_tns_create_time,
-                                                         tolerance=25,
-                                                         error_message=message, verification_errors=verification_errors)
+                                                             actual=actual_tns_create_time,
+                                                             tolerance=20,
+                                                             error_message=message,
+                                                             verification_errors=verification_errors,
+                                                             asert_full_time=False)
 
         message = "Tns platform add command for platform {1} for {0} with {4} configuration is {3} s. " \
                   "The expected time is {2} s.".format(demo, platform, expected_tns_platform_add_time,
