@@ -14,8 +14,13 @@ from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME, SIMULATOR_TYPE
 class Simulator(object):
     @staticmethod
     def __get_sim_location():
-        xcode_location = run(command='xcode-select -p', log_level=CommandLogLevel.SILENT).strip()
-        sim_location = xcode_location + '/Applications/Simulator.app/Contents/MacOS/Simulator'
+        output = run(command='xcrun --show-sdk-path', log_level=CommandLogLevel.SILENT).strip()
+        xcode_location = ''
+        for paths in output.split('/'):
+            xcode_location = xcode_location + paths + '/'
+            if "Xcode" in paths:
+                break
+        sim_location = xcode_location + 'Contents/Developer/Applications/Simulator.app'
         print "Simulator Application: " + sim_location
         return sim_location
 
