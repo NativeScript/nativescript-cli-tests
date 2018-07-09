@@ -1,5 +1,6 @@
-from aetypes import Enum
 from time import sleep
+
+from enum import Enum
 
 from core.chrome.chrome import Chrome
 from core.osutils.command import run

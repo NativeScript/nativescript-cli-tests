@@ -150,7 +150,11 @@ class TnsAsserts(object):
         # Verify console output is correct
         if output is not None:
             assert 'Copying template files...' in output
-            assert 'Project successfully created.' in output
+            if platform is Platform.ANDROID:
+                assert 'Platform android successfully added' in output
+            if platform is Platform.IOS:
+                assert 'Platform ios successfully added.' in output
+            assert 'Project successfully created.' not in output
 
         # This is to handle test for app with space.
         # In this case we put app name inside ''.
