@@ -149,10 +149,6 @@ class TnsAsserts(object):
 
         # Verify console output is correct
         if output is not None:
-            if platform is Platform.ANDROID:
-                assert 'tns-android' in output
-            if platform is Platform.IOS:
-                assert 'tns-ios' in output
             assert 'Copying template files...' in output
             assert 'Project successfully created.' in output
 
