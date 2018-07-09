@@ -67,9 +67,10 @@ class PerfBuildTests(BaseClass):
     def report_add_column_titles():
 
         with open('perfResults.csv', 'a+') as csvfile:
-            fieldnames = ['app_name', 'configuration', 'platform', 'action', 'expected_first_start',
-                          'actual_first_start',
-                          'expected_second_start', 'actual_second_start']
+            fieldnames = ['app_name', 'configuration', 'platform', 'expected_tns_create_time',
+                          'actual_tns_create_time',
+                          'expected_tns_platform_add_time', 'actual_tns_platform_add_time',
+                          'expected_tns_build_time', 'actual_tns_build_time']
 
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
