@@ -150,7 +150,8 @@ class TnsAsserts(object):
         # Verify console output is correct
         if output is not None:
             assert 'Copying template files...' in output
-            assert 'Project successfully created.' in output
+            assert 'Platform {0} successfully added.'.format(platform) in output
+            assert 'Project successfully created.' not in output
 
         # This is to handle test for app with space.
         # In this case we put app name inside ''.
