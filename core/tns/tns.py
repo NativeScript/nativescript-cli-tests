@@ -343,7 +343,7 @@ class Tns(object):
                 assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID))
             if platform is Platform.IOS:
                 assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_IOS))
-            assert "Project successfully created" in output
+            assert "Platform {0} successfully added".format(platform_string) in output
         return output
 
     @staticmethod
@@ -664,7 +664,7 @@ class Tns(object):
     def install(attributes={}, assert_success=True, tns_path=None):
         output = Tns.run_tns_command("install", attributes=attributes, tns_path=tns_path)
         if assert_success:
-            assert "Project successfully created" in output
+            assert "Platform android successfully added" in output or "Platform ios successfully added" in output
         return output
 
     @staticmethod

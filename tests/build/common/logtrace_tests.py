@@ -42,4 +42,4 @@ class LogtraceTests(BaseClass):
         assert "Package: " + self.app_id in output
         assert "Installed Android Targets" in output
         assert "Using Android SDK" in output
-        assert "Platform android successfully added." in output
+        assert "Platform android successfully added" in output

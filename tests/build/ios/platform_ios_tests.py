@@ -8,7 +8,6 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_PACKAGE, \
     CURRENT_OS, OSType, ANDROID_PACKAGE
-from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
@@ -83,7 +82,7 @@ class PlatformiOSTests(BaseClass):
     def test_330_platform_update_ios_platform_not_added(self):
         Tns.create_app(self.app_name)
         output = Tns.platform_update(platform="ios", attributes={"--path": self.app_name}, assert_success=False)
-        assert successfully_created in output
+        assert "Platform ios successfully added" in output
         assert not Folder.is_empty(self.app_name + "/platforms/ios/internal/metadata-generator")
 
     def test_390_LSApplicationQueriesSchemes_merged(self):

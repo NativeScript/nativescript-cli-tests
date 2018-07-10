@@ -44,6 +44,6 @@ class DeployiOSTests(BaseClass):
         Tns.create_app(app_name=self.app_name)
         output = Tns.deploy_ios(attributes={"--path": self.app_name, "--justlaunch": ""}, timeout=180)
         assert copy_template_files in output
-        assert "Installing tns-ios" in output
+        assert "Platform ios successfully added" in output
         # This is the first time we build the project -> we need a prepare
         assert successfully_prepared in output

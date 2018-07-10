@@ -2,13 +2,10 @@
 Tests for deploy command
 """
 import os
-import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
-from core.java.java import Java
-from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_PACKAGE, TNS_PATH, ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_PATH, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID
@@ -98,7 +95,7 @@ class DeployAndroidTests(BaseClass):
 
         # It is brand new project and we need a prepare for first run
         assert copy_template_files in output
-        assert "Installing tns-android" in output
+        assert "Platform android successfully added" in output
         assert successfully_prepared in output
 
         device_ids = Device.get_ids(platform=Platform.ANDROID)
