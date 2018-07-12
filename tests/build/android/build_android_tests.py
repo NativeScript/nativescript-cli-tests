@@ -127,8 +127,9 @@ class BuildAndroidTests(BaseClass):
         output = Tns.build_android(attributes={"--path": self.app_name, "--clean": ""})
         after_build = datetime.datetime.now()
         build_time = (after_build - before_build).total_seconds()
-        assert "Gradle build..." in output, "Gradle build not called."
-        assert output.count("Gradle build...") is 2, "Only one gradle build is triggered."
+        assert "Gradle clean..." in output, "Gradle clean is not called."
+        assert "Gradle build..." in output, "Gradle build is not called."
+        assert output.count("Gradle build...") is 1, "More than 1 gradle build is triggered."
         assert build_time > 10, "Clean build takes less then 15 sec."
         assert build_time < 90, "Clean build takes more than 90 sec."
 
