@@ -153,7 +153,7 @@ class TnsAsserts(object):
             if platform is Platform.ANDROID:
                 assert 'Platform android successfully added' in output
             if platform is Platform.IOS:
-                assert 'Platform ios successfully added.' in output
+                assert 'Platform ios successfully added' in output
             assert 'Project successfully created.' not in output
 
         # This is to handle test for app with space.
@@ -284,12 +284,11 @@ class TnsAsserts(object):
                 assert 'Project successfully created' not in output
             if prepare is Prepare.FIRST_TIME:
                 _full_prepare()
-                assert 'Installing' in output
-                assert 'Project successfully created' in output
                 if platform is Platform.ANDROID or platform is Platform.BOTH:
-                    assert 'tns-android' in output
+                    assert 'Platform android successfully added' in output
                 if platform is Platform.IOS or platform is Platform.BOTH:
-                    assert 'tns-ios' in output
+                    assert 'Platform ios successfully added' in output
+                assert 'Project successfully created' not in output
 
         if platform is Platform.ANDROID or platform is Platform.BOTH:
             app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH)

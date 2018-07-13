@@ -93,7 +93,7 @@ class PlatformAndroidTests(BaseClass):
         assert "Platform android successfully removed" in output
         assert "Successfully removed plugin tns-core-modules" in output
         assert "Successfully removed plugin tns-core-modules-widgets" in output
-        assert "Project successfully created" in output
+        assert "Platform android successfully added" in output
         assert "Successfully installed plugin tns-core-modules" in output
 
     @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
@@ -170,12 +170,11 @@ class PlatformAndroidTests(BaseClass):
         assert "Platform android already added" in output
 
     def test_421_platform_add_android_wrong_option(self):
-
         # frameworkPath point to missing file
         output = Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": "invalidFile.tgz"},
                                           assert_success=False)
-        assert "npm ERR!" in output or "exit code" in output
-        assert "invalidFile.tgz" in output
+        assert "Invalid frameworkPath: invalidFile.tgz" in output
+        assert "Please ensure the specified frameworkPath exists." in output
 
         # Wrong frameworkPath option
         output = Tns.platform_add_android(attributes={"--path": self.app_name, "--" + invalid: "tns-android.tgz"},
@@ -188,7 +187,6 @@ class PlatformAndroidTests(BaseClass):
         assert "Usage" in output
 
     def test_430_platform_remove_missing_invalid_or_empty_platform(self):
-
         output = Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
                                      assert_success=False)
         assert "The platform android is not added to this project"
