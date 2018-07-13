@@ -1,6 +1,6 @@
 Repo,Config,Platform,FirstStart,SecondStart
 NativeScript/template-hello-world,default,android,45,4.5,53
-NativeScript/template-hello-world,webpack,android,45,4,5,45
+NativeScript/template-hello-world,webpack,android,45,4.5,45
 NativeScript/template-hello-world,webpack-snapshot,android,45,4.5,50
 NativeScript/template-hello-world-ng,default,android,45,4.5,89
 NativeScript/template-hello-world-ng,webpack,android,45,4.5,64
