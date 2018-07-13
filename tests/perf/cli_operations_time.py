@@ -45,8 +45,8 @@ class PerfBuildTests(BaseClass):
                     verification_errors=[], asert_full_time=True):
         print "Actual startup: " + str(actual)
         print "Expected startup: " + str(expected)
-        x = int(expected)
-        y = int(actual)
+        x = float(expected)
+        y = float(actual)
         if asert_full_time:
             if actual >= 0:
                 diff = abs(x - y) * 1.00
