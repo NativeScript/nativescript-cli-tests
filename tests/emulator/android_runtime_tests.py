@@ -64,7 +64,7 @@ class RuntimeTests(BaseClass):
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
         strings = ['Project successfully built', 'Successfully installed on device with identifier', EMULATOR_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         sleep(10)
 
         log_string = File.read(log)
@@ -97,7 +97,7 @@ class RuntimeTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         try:
             Tns.wait_for_log(log_file=log, string_list=["###TEST PASSED###"],
-                             timeout=120, check_interval=10, clean_log=False)
+                             timeout=240, check_interval=10, clean_log=False)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'Native packages starting with in could not be accessed'
@@ -124,7 +124,7 @@ class RuntimeTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         try:
             Tns.wait_for_log(log_file=log, string_list=["### TEST PASSED ###"],
-                             timeout=120, check_interval=10, clean_log=False)
+                             timeout=240, check_interval=10, clean_log=False)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'Javascript : Check(instanceof) for java class implements java interface does not work' \
@@ -152,7 +152,7 @@ class RuntimeTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         try:
             Tns.wait_for_log(log_file=log, string_list=["### TEST PASSED ###"],
-                             timeout=120, check_interval=10, clean_log=False)
+                             timeout=240, check_interval=10, clean_log=False)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'JAVA : Check(instanceof) for java class implements java interface does not work' \
@@ -174,7 +174,7 @@ class RuntimeTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=['Successfully synced application'], timeout=240, check_interval=10,
                          clean_log=False)
         try:
-            Tns.wait_for_log(log_file=log, string_list=["###TEST PASSED###"], timeout=60, check_interval=10,
+            Tns.wait_for_log(log_file=log, string_list=["###TEST PASSED###"], timeout=240, check_interval=10,
                              clean_log=False)
         except Exception as e:
             print str(e)
@@ -207,7 +207,7 @@ class RuntimeTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         try:
             Tns.wait_for_log(log_file=log, string_list=["###TEST COMPILE PASSED###"],
-                             timeout=120, check_interval=10, clean_log=False)
+                             timeout=240, check_interval=10, clean_log=False)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'Native packages could not be used with compile in app.gradle'
@@ -239,7 +239,7 @@ class RuntimeTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         try:
             Tns.wait_for_log(log_file=log, string_list=["###TEST IMPLEMENTATION PASSED###"],
-                             timeout=120, check_interval=10, clean_log=False)
+                             timeout=240, check_interval=10, clean_log=False)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'Native packages could not be used with implementation in app.gradle'
@@ -271,7 +271,7 @@ class RuntimeTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         try:
             Tns.wait_for_log(log_file=log, string_list=["###TEST API PASSED###"],
-                             timeout=120, check_interval=10, clean_log=False)
+                             timeout=240, check_interval=10, clean_log=False)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'Native packages could not be used with api in app.gradle'
@@ -317,7 +317,7 @@ class RuntimeTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         try:
             Tns.wait_for_log(log_file=log, string_list=["###TEST COMPILE PLUGIN PASSED###"],
-                             timeout=120, check_interval=10, clean_log=False)
+                             timeout=240, check_interval=10, clean_log=False)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'Native packages could not be used in plugin with compile in include gradle'
@@ -369,7 +369,7 @@ class RuntimeTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         try:
             Tns.wait_for_log(log_file=log, string_list=["###TEST IMPLEMENTATION PLUGIN PASSED###"],
-                             timeout=120, check_interval=10, clean_log=False)
+                             timeout=240, check_interval=10, clean_log=False)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'Native packages could not be used in plugin with implementation in include gradle'
@@ -420,7 +420,7 @@ class RuntimeTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         try:
             Tns.wait_for_log(log_file=log, string_list=["###TEST API PLUGIN PASSED###"],
-                             timeout=120, check_interval=10, clean_log=False)
+                             timeout=240, check_interval=10, clean_log=False)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'Native packages could not be used in plugin with api in include gradle'
@@ -464,7 +464,7 @@ class RuntimeTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         try:
             Tns.wait_for_log(log_file=log, string_list=["###TEST ARR PLUGIN PASSED###"],
-                             timeout=120, check_interval=10, clean_log=False)
+                             timeout=240, check_interval=10, clean_log=False)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'Native packages could not be used in arr plugin'
