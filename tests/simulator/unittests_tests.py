@@ -86,5 +86,5 @@ class UnittestsSimulator(BaseClass):
 
         output = Tns.run_tns_command("test ios", attributes={"--emulator": "", "--path": self.app_name},
                                      log_trace=True, wait=False)
-        strings = ['JavaScript stack trace', 'assert@undefined']
+        strings = ['JavaScript stack trace', '@file:///app/tests/example.js:5:25']
         Tns.wait_for_log(log_file=output, string_list=strings, timeout=90)
