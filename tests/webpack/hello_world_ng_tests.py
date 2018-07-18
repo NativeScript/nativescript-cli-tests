@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from core.base_class.BaseClass import BaseClass
@@ -6,6 +7,7 @@ from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.npm.npm import Npm
 from core.osutils.file import File
+from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_KEYSTORE_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, CURRENT_OS, \
@@ -64,6 +66,11 @@ class WebPackHelloWorldNG(BaseClass):
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='Stegen Ter', timeout=20)
             assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
+
+        plugin_path = os.path.join(app_name, 'node_modules', 'nativescript-camera')
+        if Folder.exists(plugin_path):
+            assert "Building project" not in log, "Unexpected build was triggered."
+            assert "Gradle build" not in log, "Unexpected gradle build was triggered."
 
         ReplaceHelper.replace(app_name, WebPackHelloWorldNG.html_change, sleep=10)
         if aot:
@@ -270,3 +277,21 @@ class WebPackHelloWorldNG(BaseClass):
 
         self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS, aot=True)
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS, aot=True)
+
+    def test_230_run_android_with_bundle_add_plugin_sync_changes(self):
+        """
+        https://github.com/NativeScript/nativescript-cli/issues/3707
+        """
+
+        Tns.plugin_add("nativescript-camera", attributes={"--path": self.app_name})
+
+        log = Tns.run_android(attributes={'--path': self.app_name,
+                                          "--bundle": "",
+                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
+                         timeout=240, check_interval=10)
+        Helpers.android_screen_match(image=self.image_original, timeout=120)
+        Helpers.wait_webpack_watcher()
+
+        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
