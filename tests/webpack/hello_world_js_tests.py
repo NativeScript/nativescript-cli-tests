@@ -197,7 +197,7 @@ class WebPackHelloWorldJS(BaseClass):
     def test_200_run_android_with_bundle_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
+                                          '--device': EMULATOR_ID}, wait=False, assert_success=False, log_trace=True)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240)
         Helpers.android_screen_match(image=self.image_original, timeout=120)
@@ -222,7 +222,7 @@ class WebPackHelloWorldJS(BaseClass):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
                                           "--env.uglify": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
+                                          '--device': EMULATOR_ID}, wait=False, assert_success=False, log_trace=True)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
         Helpers.android_screen_match(image=self.image_original, timeout=120)
@@ -248,7 +248,7 @@ class WebPackHelloWorldJS(BaseClass):
                                           "--bundle": "",
                                           "--env.uglify": "",
                                           "--env.aot": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
+                                          '--device': EMULATOR_ID}, wait=False, assert_success=False, log_trace=True)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
         Helpers.android_screen_match(image=self.image_original, timeout=120)
