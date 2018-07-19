@@ -33,7 +33,13 @@ class PlatformAndroidTests(BaseClass):
 
     def test_100_platform_add_android(self):
         """ Default `tns platform add` command"""
-        Tns.platform_add_android(attributes={"--path": self.app_name})
+        output = Tns.platform_add_android(attributes={"--path": self.app_name})
+        # after release 4.2 uncomment following asserts
+        #https://github.com/NativeScript/nativescript-cli/issues/3718
+        # assert "babel-traverse" not in output
+        # assert "babel-types" not in output
+        # assert "babylon" not in output
+        # assert "lazy" not in output
 
     def test_110_platform_add_android_framework_path(self):
         """ Add platform from local package"""
