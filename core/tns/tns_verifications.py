@@ -82,7 +82,6 @@ class TnsAsserts(object):
             assert File.exists(app_name + '/node_modules/tns-core-modules/LICENSE')
             assert File.exists(app_name + '/node_modules/tns-core-modules/xml/xml.js')
             assert File.exists(app_name + '/node_modules/nativescript-theme-core')
-            assert Folder.is_empty(app_name + '/platforms')
 
             # Assert content of package.json
             app_id = app_name.replace(' ', '').replace('_', '').replace('-', '').rsplit('/')[-1]
