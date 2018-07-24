@@ -203,7 +203,7 @@ class Tns(object):
             pass
         else:
             print "AppResources not found. Will copy from default template..."
-            src = os.path.join(TEST_RUN_HOME, "sut", "template-hello-world", "App_Resources")
+            src = os.path.join(TEST_RUN_HOME, "sut", "template-hello-world", "app", "App_Resources")
             dest = os.path.join(TEST_RUN_HOME, path, "app", "App_Resources")
             Folder.copy(src, dest)
 
