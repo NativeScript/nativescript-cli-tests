@@ -139,7 +139,7 @@ class InitAndInstallTests(BaseClass):
         Npm.install(package="gulp", option="--save-dev", folder=BaseClass.app_name)
         Npm.install(package="lodash", option="--save", folder=BaseClass.app_name)
 
-        source = os.path.join(SUT_FOLDER, "template-hello-world")
+        source = os.path.join(SUT_FOLDER, "template-hello-world", "app")
         dest = os.path.join(self.app_name, "app")
         Folder.copy(source, dest)
 
