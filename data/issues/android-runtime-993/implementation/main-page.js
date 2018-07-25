@@ -9,9 +9,18 @@ function onNavigatingTo(args) {
     console.log("### TEST START ###");
     var context = utils.ad.getApplicationContext();
     var myIntent = new android.content.Intent(context, AlbumSelectActivity.class);
-    myIntent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_LIMIT, 5); // set limit for image selection
+    myIntent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_LIMIT, 20); // set limit for image selection
     application.android.foregroundActivity.startActivityForResult(myIntent, ConstantsCustomGallery.REQUEST_CODE);
+    sleep(2000);
     console.log("###TEST IMPLEMENTATION PASSED###");
     console.log("### TEST END ###");
 }
 exports.onNavigatingTo = onNavigatingTo;
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}

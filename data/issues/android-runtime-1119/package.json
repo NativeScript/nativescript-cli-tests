@@ -1,0 +1,9 @@
+{
+  "name": "verbose-hello-world",
+  "main": "app.js",
+  "version": "1.7.0",
+  "android": {
+    "v8Flags": "--expose_gc",
+    "autoCatchJSMethodNativeCalls": true
+  }
+}
