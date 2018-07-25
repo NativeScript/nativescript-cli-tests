@@ -68,7 +68,6 @@ class RuntimeTests(BaseClass):
         strings = ['Project successfully built', 'Successfully installed on device with identifier', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         time.sleep(10)
-
         log_string = File.read(log)
         assert "TNS.Native" in log_string, "__enableVerboseLogging() do not enable TNS.Native logs!"
         assert "TNS.Java" in log_string, "__enableVerboseLogging() do not enable TNS.Java logs!"
@@ -356,14 +355,10 @@ class RuntimeTests(BaseClass):
         plugin_path = os.path.join(TEST_RUN_HOME, 'data', "issues", 'android-runtime-993', "plugins",
                                    'without_dependency', 'src')
         Tns.plugin_remove("mylib", assert_success=False, attributes={"--path": self.app_name})
-        time.sleep(5)
         output = Tns.plugin_add(plugin_path, assert_success=False, attributes={"--path": self.app_name})
         assert "Successfully installed plugin mylib" in output, "mylib plugin not installed correctly!"
-        time.sleep(10)
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
-        time.sleep(5)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-        time.sleep(10)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
 
@@ -408,14 +403,10 @@ class RuntimeTests(BaseClass):
         plugin_path = os.path.join(TEST_RUN_HOME, 'data', "issues", 'android-runtime-993', "plugins",
                                    'without_dependency', 'src')
         Tns.plugin_remove("mylib", assert_success=False, attributes={"--path": self.app_name})
-        time.sleep(5)
         output = Tns.plugin_add(plugin_path, assert_success=False, attributes={"--path": self.app_name})
         assert "Successfully installed plugin mylib" in output, "mylib plugin not installed correctly!"
-        time.sleep(10)
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
-        time.sleep(5)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-        time.sleep(10)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
 
@@ -453,14 +444,10 @@ class RuntimeTests(BaseClass):
         plugin_path = os.path.join(TEST_RUN_HOME, 'data', "issues", 'android-runtime-993', "plugins",
                                    'with_dependency', 'src')
         Tns.plugin_remove("mylib", assert_success=False, attributes={"--path": self.app_name})
-        time.sleep(5)
         output = Tns.plugin_add(plugin_path, assert_success=False, attributes={"--path": self.app_name})
         assert "Successfully installed plugin mylib" in output, "mylib plugin not installed correctly!"
-        time.sleep(10)
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
-        time.sleep(5)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-        time.sleep(10)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
 
@@ -493,14 +480,10 @@ class RuntimeTests(BaseClass):
             File.remove(target_js, True)
         plugin_path = os.path.join(TEST_RUN_HOME, 'data', "issues", 'android-runtime-1104', "plugin", 'src')
         Tns.plugin_remove("mylib", assert_success=False, attributes={"--path": self.app_name})
-        time.sleep(5)
         output = Tns.plugin_add(plugin_path, assert_success=False, attributes={"--path": self.app_name})
         assert "Successfully installed plugin mylib" in output, "mylib plugin not installed correctly!"
-        time.sleep(10)
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
-        time.sleep(5)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-        time.sleep(10)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
 
@@ -512,7 +495,7 @@ class RuntimeTests(BaseClass):
                    ]
 
         try:
-            Tns.wait_for_log(log_file=log, string_list=strings, timeout=100, check_interval=10, clean_log=False)
+            Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'Should not be able to build with plugin which minsdk version is 23!'
@@ -530,14 +513,10 @@ class RuntimeTests(BaseClass):
         File.copy(src=source_js, dest=target_js)
         plugin_path = os.path.join(TEST_RUN_HOME, 'data', "issues", 'android-runtime-1104', "plugin", 'src')
         Tns.plugin_remove("mylib", assert_success=False, attributes={"--path": self.app_name})
-        time.sleep(5)
         output = Tns.plugin_add(plugin_path, assert_success=False, attributes={"--path": self.app_name})
         assert "Successfully installed plugin mylib" in output, "mylib plugin not installed correctly!"
-        time.sleep(10)
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
-        time.sleep(5)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-        time.sleep(10)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
 
@@ -547,7 +526,6 @@ class RuntimeTests(BaseClass):
                    ]
 
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
-        time.sleep(10)
         try:
             Tns.wait_for_log(log_file=log, string_list=["### TEST SHOULD NOT CRASH ###"],
                              timeout=100, check_interval=10, clean_log=False)
@@ -573,14 +551,10 @@ class RuntimeTests(BaseClass):
         File.copy(src=source_xml, dest=target_xml)
         plugin_path = os.path.join(TEST_RUN_HOME, 'data', "issues", 'android-runtime-1104', "plugin", 'src')
         Tns.plugin_remove("mylib", assert_success=False, attributes={"--path": self.app_name})
-        time.sleep(5)
         output = Tns.plugin_add(plugin_path, assert_success=False, attributes={"--path": self.app_name})
         assert "Successfully installed plugin mylib" in output, "mylib plugin not installed correctly!"
-        time.sleep(10)
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
-        time.sleep(5)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-        time.sleep(10)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
 
@@ -590,7 +564,6 @@ class RuntimeTests(BaseClass):
                    ]
 
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
-        time.sleep(10)
         try:
             Tns.wait_for_log(log_file=log, string_list=["### TEST SHOULD NOT CRASH ###"],
                              timeout=100, check_interval=10, clean_log=False)
@@ -616,14 +589,10 @@ class RuntimeTests(BaseClass):
         File.copy(src=source_xml, dest=target_xml)
         plugin_path = os.path.join(TEST_RUN_HOME, 'data', "issues", 'android-runtime-1104', "plugin", 'src')
         Tns.plugin_remove("mylib", assert_success=False, attributes={"--path": self.app_name})
-        time.sleep(5)
         output = Tns.plugin_add(plugin_path, assert_success=False, attributes={"--path": self.app_name})
         assert "Successfully installed plugin mylib" in output, "mylib plugin not installed correctly!"
-        time.sleep(10)
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
-        time.sleep(5)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-        time.sleep(10)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
 
@@ -636,7 +605,7 @@ class RuntimeTests(BaseClass):
             ]
 
         try:
-            Tns.wait_for_log(log_file=log, string_list=strings, timeout=100, check_interval=10, clean_log=False)
+            Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'Test minSdk in AndroidManifest set to 17 and app.gradle set to 23 fails!'
@@ -659,14 +628,10 @@ class RuntimeTests(BaseClass):
         File.copy(src=source_xml, dest=target_xml)
         plugin_path = os.path.join(TEST_RUN_HOME, 'data', "issues", 'android-runtime-1104', "plugin", 'src')
         Tns.plugin_remove("mylib", assert_success=False, attributes={"--path": self.app_name})
-        time.sleep(5)
         output = Tns.plugin_add(plugin_path, assert_success=False, attributes={"--path": self.app_name})
         assert "Successfully installed plugin mylib" in output, "mylib plugin not installed correctly!"
-        time.sleep(10)
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
-        time.sleep(5)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-        time.sleep(10)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
 
@@ -676,7 +641,6 @@ class RuntimeTests(BaseClass):
                    ]
 
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
-        time.sleep(10)
         try:
             Tns.wait_for_log(log_file=log, string_list=["### TEST SHOULD NOT CRASH ###"],
                              timeout=100, check_interval=10, clean_log=False)
@@ -704,9 +668,7 @@ class RuntimeTests(BaseClass):
 
         Tns.plugin_remove("mylib", assert_success=False, attributes={"--path": self.app_name})
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
-        time.sleep(5)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-        time.sleep(10)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
 
@@ -724,7 +686,7 @@ class RuntimeTests(BaseClass):
                        "Caused by: java.lang.Exception: Failed resolving method createTempFile on class java.io.File"]
             Tns.wait_for_log(log_file=log, string_list=strings,
                              timeout=100, check_interval=10, clean_log=False)
-            Helpers.android_screen_match("No-crash-image", timeout=120)
+            Helpers.android_screen_match("No-crash-image", timeout=120, tolerance=1)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'Native crash should not crash the app when autoCatchJSMethodNativeCalls used fails!'
