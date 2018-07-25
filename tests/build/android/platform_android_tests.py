@@ -146,6 +146,8 @@ class PlatformAndroidTests(BaseClass):
 
     def test_390_platform_list(self):
         """Platform list command should list installed platforms and if app is prepared for those platforms"""
+        # issue with v2 of templates - workaround with remove ios platform
+        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
 
         # `tns platform list` on brand new project
         output = Tns.platform_list(attributes={"--path": self.app_name})
