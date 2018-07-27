@@ -820,7 +820,7 @@ class RunAndroidEmulatorTests(BaseClass):
         https://github.com/NativeScript/nativescript-cli/issues/3610
         """
         Tns.plugin_add("nativescript-camera", attributes={"--path": self.app_name})
-        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--syncAllFiles': ''}, wait=False,
                               assert_success=False)
 
         strings = ['Project successfully built',
@@ -832,11 +832,11 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
-        copy_aar = os.path.join('data', 'plugins', 'TNSListView-release.aar')
-        paste_aar = os.path.join(self.app_name, 'app', 'node_modules', 'nativescript-camera', 'platforms', )
+        copy_aar = os.path.join(TEST_RUN_HOME, 'data', 'plugins', 'TNSListView-release.aar')
+        paste_aar = os.path.join(self.app_name, 'node_modules', 'nativescript-camera', 'platforms', 'android')
 
         File.copy(src=copy_aar, dest=paste_aar)
-
+        # Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
         strings = ['Project successfully built',
                    'Successfully installed on device with identifier', EMULATOR_ID,
                    'Successfully synced application']
