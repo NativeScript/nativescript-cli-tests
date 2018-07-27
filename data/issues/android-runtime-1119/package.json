@@ -4,6 +4,6 @@
   "version": "1.7.0",
   "android": {
     "v8Flags": "--expose_gc",
-    "autoCatchJSMethodNativeCalls": true
+    "discardUncaughtJsExceptions": true
   }
 }
