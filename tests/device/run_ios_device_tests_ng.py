@@ -90,7 +90,7 @@ class RunIOSDeviceTestsNG(BaseClass):
         not_existing_strings = ['Application loaded!']  # This is to verify app is NOT restarted.
         Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_strings)
         sleep(15)
-        text_changed = Device.wait_for_text(device_id=self.DEVICE_ID, text="1", timeout=5)
+        text_changed = Device.wait_for_text(device_id=self.DEVICE_ID, text="Stegen Ter", timeout=5)
         assert not text_changed, 'Changes in HTML file not applied (UI is not refreshed).'
 
         # Change CSS and wait until app is synced
