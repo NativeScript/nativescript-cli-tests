@@ -1,8 +1,8 @@
 config, bundle_js_size, vendor_size, app_size, embedded_script
-js-android-bundle, 13720, 1322519, 11970149
+js-android-bundle, 15262, 1310777, 11935681
 js-android-bundle-uglify, 5399, 599756, 11864549
-js-android-bundle-snapshot, 6710, 0, 14634878, 1331672
-js-android-bundle-uglify-snapshot, 2885, 0, 13926722, 609605
+js-android-bundle-snapshot, 8262, 0, 14669254, 1323568
+js-android-bundle-uglify-snapshot, 3326, 0, 14002738, 605695
 js-ios-bundle, 14882, 1394512, 13923559
 js-ios-bundle-uglify, 5302, 627447, 13849336
 ts-android-bundle, 15771, 1310777, 11935749
