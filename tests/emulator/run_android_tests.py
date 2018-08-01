@@ -65,18 +65,17 @@ class RunAndroidEmulatorTests(BaseClass):
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
         Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_PACKAGE})
-        Folder.cleanup(cls.temp_app)
-        Folder.copy(cls.source_app, cls.temp_app)
+        Folder.cleanup(cls.app_name)
+        Folder.copy(TEST_RUN_HOME + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
 
     def setUp(self):
         BaseClass.setUp(self)
-
+        Folder.cleanup(self.app_name)
+        Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
 
     def tearDown(self):
         Tns.kill()
         BaseClass.tearDown(self)
-        # Folder.cleanup(self.source_app)
-        # Folder.copy(self.temp_app, self.source_app)
         Folder.cleanup('TestApp2')
 
     @classmethod
