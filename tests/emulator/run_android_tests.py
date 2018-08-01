@@ -37,6 +37,8 @@ import re
 import datetime
 import pytz
 
+from tests.webpack.helpers.helpers import Helpers
+
 
 class RunAndroidEmulatorTests(BaseClass):
     source_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
@@ -152,7 +154,8 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # `tns run android --release` and wait until app is deployed
         # IMPORTANT NOTE: `tns run android --release` Do NOT livesync by design!
-        Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
+        Helpers.emulator_cleanup(app_name=self.app_name)
+        # Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           '--device': EMULATOR_ID,
                                           '--keyStorePath': ANDROID_KEYSTORE_PATH,
