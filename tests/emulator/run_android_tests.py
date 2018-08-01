@@ -14,7 +14,8 @@ If emulator is not started and device is not connected `tns run android` should 
 import os
 import time
 import unittest
-
+import re
+import datetime
 import nose
 
 from core.base_class.BaseClass import BaseClass
@@ -33,11 +34,6 @@ from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_prepare_type import Prepare
 from core.tns.tns_verifications import TnsAsserts
-import re
-import datetime
-import pytz
-
-from tests.webpack.helpers.helpers import Helpers
 
 
 class RunAndroidEmulatorTests(BaseClass):
@@ -69,7 +65,6 @@ class RunAndroidEmulatorTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-        Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
         Folder.cleanup(self.app_name)
         Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
 
