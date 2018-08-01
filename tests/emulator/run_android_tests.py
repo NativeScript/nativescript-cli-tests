@@ -70,12 +70,13 @@ class RunAndroidEmulatorTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-        Folder.cleanup(self.source_app)
-        Folder.copy(self.temp_app, self.source_app)
+
 
     def tearDown(self):
         Tns.kill()
         BaseClass.tearDown(self)
+        Folder.cleanup(self.source_app)
+        Folder.copy(self.temp_app, self.source_app)
         Folder.cleanup('TestApp2')
 
     @classmethod
