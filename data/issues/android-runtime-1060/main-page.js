@@ -1,12 +1,14 @@
 var createViewModel = require("./main-view-model").createViewModel;
 
 function onNavigatingTo(args) {
+    console.log("###TEST START###");
     var page = args.object;
     page.bindingContext = createViewModel();
     var bb = java.nio.ByteBuffer.allocate(12);
     var ab = ArrayBuffer.from(bb);
-    sleep(2000);
+    sleep(3000);
     console.log("###TEST PASSED###");
+    console.log("###TEST END###");
 }
 exports.onNavigatingTo = onNavigatingTo;
 
