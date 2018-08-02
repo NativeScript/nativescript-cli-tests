@@ -66,8 +66,8 @@ class RunAndroidEmulatorTests(BaseClass):
 
     def setUp(self):
         BaseClass.setUp(self)
-        # Folder.cleanup(self.app_name)
-        # Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
+        Folder.cleanup(self.app_name)
+        Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/" + self.app_name)
         # Folder.copy(self.temp_app, self.source_app)
 
     # def tearDown(self):
@@ -153,7 +153,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # `tns run android --release` and wait until app is deployed
         # IMPORTANT NOTE: `tns run android --release` Do NOT livesync by design!
         # Helpers.emulator_cleanup(app_name=self.app_name)
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        # Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           '--device': EMULATOR_ID,
