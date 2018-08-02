@@ -56,7 +56,7 @@ class RunAndroidEmulatorTests(BaseClass):
         BaseClass.setUpClass(cls.__name__)
         # Tns.kill()
         # Emulator.stop()
-        # Emulator.ensure_available()
+        Emulator.ensure_available()
         # Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Tns.create_app(cls.app_name,
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')})
@@ -82,7 +82,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
     def test_001_tns_run_android_js_css_xml_manifest(self):
         # """Make valid changes in JS,CSS and XML"""
-        Folder.navigate_to(self.app_name)
+        # Folder.navigate_to(self.app_name)
         # `tns run android` and wait until app is deployed
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
