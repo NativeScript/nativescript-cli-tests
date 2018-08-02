@@ -61,7 +61,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.create_app(cls.app_name,
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')})
         Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_PACKAGE})
-        # Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
         # Folder.copy(cls.source_app, cls.temp_app)
 
     def setUp(self):
@@ -83,7 +83,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
 
     def test_001_tns_run_android_js_css_xml_manifest(self):
-        """Make valid changes in JS,CSS and XML"""
+        # """Make valid changes in JS,CSS and XML"""
 
         # `tns run android` and wait until app is deployed
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
