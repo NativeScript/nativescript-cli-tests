@@ -17,6 +17,7 @@ import unittest
 import re
 import datetime
 import nose
+import pytz
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -37,8 +38,8 @@ from core.tns.tns_verifications import TnsAsserts
 
 
 class RunAndroidEmulatorTests(BaseClass):
-    source_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
-    temp_app = os.path.join(TEST_RUN_HOME, "data", BaseClass.app_name)
+    # source_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
+    # temp_app = os.path.join(TEST_RUN_HOME, "data", BaseClass.app_name)
     one_hundred_symbols_string = "123456789012345678901234567890123456789012345678901234567890" \
                                  "1234567890123456789012345678901234567890"
     very_long_string = ''
@@ -69,11 +70,10 @@ class RunAndroidEmulatorTests(BaseClass):
         Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
         # Folder.copy(self.temp_app, self.source_app)
 
-    def tearDown(self):
-        Tns.kill()
-        BaseClass.tearDown(self)
-        # Folder.cleanup(self.app_name)
-        Folder.cleanup('TestApp2')
+    # def tearDown(self):
+    #     Tns.kill()
+    #     BaseClass.tearDown(self)
+    #     Folder.cleanup('TestApp2')
 
     @classmethod
     def tearDownClass(cls):
@@ -154,14 +154,15 @@ class RunAndroidEmulatorTests(BaseClass):
         # IMPORTANT NOTE: `tns run android --release` Do NOT livesync by design!
         # Helpers.emulator_cleanup(app_name=self.app_name)
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          '--device': EMULATOR_ID,
-                                          '--keyStorePath': ANDROID_KEYSTORE_PATH,
-                                          '--keyStorePassword': ANDROID_KEYSTORE_PASS,
-                                          '--keyStoreAlias': ANDROID_KEYSTORE_ALIAS,
-                                          '--keyStoreAliasPassword': ANDROID_KEYSTORE_ALIAS_PASS,
-                                          '--release': ''}, wait=False, assert_success=False)
-
+        # log = Tns.run_android(attributes={'--path': self.app_name,
+        #                                   '--device': EMULATOR_ID,
+        #                                   '--keyStorePath': ANDROID_KEYSTORE_PATH,
+        #                                   '--keyStorePassword': ANDROID_KEYSTORE_PASS,
+        #                                   '--keyStoreAlias': ANDROID_KEYSTORE_ALIAS,
+        #                                   '--keyStoreAliasPassword': ANDROID_KEYSTORE_ALIAS_PASS,
+        #                                   '--release': ''}, wait=False, assert_success=False)
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
         strings = ['Project successfully prepared', 'Project successfully built',
                    'Successfully installed on device with identifier', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
