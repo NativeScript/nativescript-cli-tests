@@ -2,8 +2,8 @@
   "name": "verbose-hello-world",
   "main": "app.js",
   "version": "1.7.0",
+  "discardUncaughtJsExceptions": true,
   "android": {
-    "v8Flags": "--expose_gc",
-    "discardUncaughtJsExceptions": true
+    "v8Flags": "--expose_gc"
   }
 }
