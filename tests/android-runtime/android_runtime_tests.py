@@ -678,7 +678,7 @@ class RuntimeTests(BaseClass):
                    ]
 
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
-        time.sleep(20)
+        time.sleep(40)
         Device.click(device_id=EMULATOR_ID, text="TAP", timeout=20)
         time.sleep(15)
         try:
