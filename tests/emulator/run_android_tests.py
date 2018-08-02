@@ -77,12 +77,12 @@ class RunAndroidEmulatorTests(BaseClass):
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
-        Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
+        # Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
         Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
 
     def test_001_tns_run_android_js_css_xml_manifest(self):
         # """Make valid changes in JS,CSS and XML"""
-
+        Folder.navigate_to(self.app_name)
         # `tns run android` and wait until app is deployed
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
@@ -148,6 +148,7 @@ class RunAndroidEmulatorTests(BaseClass):
     def test_100_tns_run_android_release(self):
         """Make valid changes in JS,CSS and HTML"""
         # `tns run android --release` and wait until app is deployed
+        Folder.navigate_to(self.app_name)
         # IMPORTANT NOTE: `tns run android --release` Do NOT livesync by design!
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
         log = Tns.run_android(attributes={'--path': self.app_name,
