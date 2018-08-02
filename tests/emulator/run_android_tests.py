@@ -79,7 +79,6 @@ class RunAndroidEmulatorTests(BaseClass):
     def tearDownClass(cls):
         BaseClass.tearDownClass()
         Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
-        BaseClass.tearDownClass()
         Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
 
     def test_001_tns_run_android_js_css_xml_manifest(self):
@@ -149,7 +148,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
     def test_100_tns_run_android_release(self):
         """Make valid changes in JS,CSS and HTML"""
-
+        Folder.navigate_to(self.app_name)
         # `tns run android --release` and wait until app is deployed
         # IMPORTANT NOTE: `tns run android --release` Do NOT livesync by design!
         # Helpers.emulator_cleanup(app_name=self.app_name)
@@ -205,7 +204,7 @@ class RunAndroidEmulatorTests(BaseClass):
         """
          Test console info, warn, error, assert, trace, time and logging of different objects.
         """
-
+        Folder.navigate_to(self.app_name)
         # Change main-page.js so it contains console logging
         source_js = os.path.join('data', 'console-log', 'main-page.js')
         target_js = os.path.join(self.app_name, 'app', 'main-page.js')
