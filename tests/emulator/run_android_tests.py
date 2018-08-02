@@ -63,10 +63,11 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_PACKAGE})
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
         # Folder.copy(cls.source_app, cls.temp_app)
+        Folder.cleanup(cls.app_name)
 
     def setUp(self):
         BaseClass.setUp(self)
-        Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
+        # Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
 
         # Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/" + self.app_name)
         Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
@@ -84,7 +85,7 @@ class RunAndroidEmulatorTests(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
         Folder.cleanup(cls.app_name)
-        # Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
+        Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
 
     def test_001_tns_run_android_js_css_xml_manifest(self):
         # """Make valid changes in JS,CSS and XML"""
