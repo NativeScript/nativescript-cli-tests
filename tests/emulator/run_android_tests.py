@@ -60,31 +60,26 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Tns.create_app(cls.app_name,
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')})
-        Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_PACKAGE})
+        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
         Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
-        # Folder.copy(cls.source_app, cls.temp_app)
-        Folder.cleanup(cls.app_name)
 
     def setUp(self):
         BaseClass.setUp(self)
-        # Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
-
-        # Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/" + self.app_name)
-        Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
-        # Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/" + self.app_name)
-        # Folder.copy(self.temp_app, self.source_app)
-
-    def tearDown(self):
-        # Tns.kill()
-        BaseClass.tearDown(self)
+        Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
         Folder.cleanup(self.app_name)
-        # Folder.cleanup('TestApp2')
+        Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
+
+    # def tearDown(self):
+    #     # Tns.kill()
+    #     BaseClass.tearDown(self)
+    #     Folder.cleanup(self.app_name)
+    #     # Folder.cleanup('TestApp2')
 
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
         Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
-        Folder.cleanup(cls.app_name)
+        BaseClass.tearDownClass()
         Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
 
     def test_001_tns_run_android_js_css_xml_manifest(self):
