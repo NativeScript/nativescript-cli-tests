@@ -68,7 +68,8 @@ class RunAndroidEmulatorTests(BaseClass):
         BaseClass.setUp(self)
         Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
         Folder.cleanup(self.app_name)
-        Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/" + self.app_name)
+        # Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/" + self.app_name)
+        Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
         # Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/" + self.app_name)
         # Folder.copy(self.temp_app, self.source_app)
 
