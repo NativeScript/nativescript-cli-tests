@@ -69,16 +69,15 @@ class RunAndroidEmulatorTests(BaseClass):
         Folder.cleanup(self.app_name)
         Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
 
-    # def tearDown(self):
-    #     # Tns.kill()
-    #     BaseClass.tearDown(self)
-    #     Folder.cleanup(self.app_name)
-    #     # Folder.cleanup('TestApp2')
+    def tearDown(self):
+        # Tns.kill()
+        BaseClass.tearDown(self)
+        Folder.cleanup('TestApp2')
 
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
-        # Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
+        Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
         Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
 
     def test_001_tns_run_android_js_css_xml_manifest(self):
@@ -148,11 +147,8 @@ class RunAndroidEmulatorTests(BaseClass):
 
     def test_100_tns_run_android_release(self):
         """Make valid changes in JS,CSS and HTML"""
-        Folder.navigate_to(self.app_name)
         # `tns run android --release` and wait until app is deployed
         # IMPORTANT NOTE: `tns run android --release` Do NOT livesync by design!
-        # Helpers.emulator_cleanup(app_name=self.app_name)
-        # Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           '--device': EMULATOR_ID,
