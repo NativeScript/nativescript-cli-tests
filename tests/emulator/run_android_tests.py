@@ -67,16 +67,17 @@ class RunAndroidEmulatorTests(BaseClass):
     def setUp(self):
         BaseClass.setUp(self)
         Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
-        Folder.cleanup(self.app_name)
+
         # Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/" + self.app_name)
         Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
         # Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/" + self.app_name)
         # Folder.copy(self.temp_app, self.source_app)
 
-    # def tearDown(self):
-    #     Tns.kill()
-    #     BaseClass.tearDown(self)
-    #     Folder.cleanup('TestApp2')
+    def tearDown(self):
+        # Tns.kill()
+        BaseClass.tearDown(self)
+        Folder.cleanup(self.app_name)
+        # Folder.cleanup('TestApp2')
 
     @classmethod
     def tearDownClass(cls):
