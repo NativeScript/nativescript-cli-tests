@@ -54,10 +54,10 @@ class RunAndroidEmulatorTests(BaseClass):
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
-        Tns.kill()
-        Emulator.stop()
-        Emulator.ensure_available()
-        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
+        # Tns.kill()
+        # Emulator.stop()
+        # Emulator.ensure_available()
+        # Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Tns.create_app(cls.app_name,
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')})
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
@@ -78,7 +78,7 @@ class RunAndroidEmulatorTests(BaseClass):
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
-        Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
+        # Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
         Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
 
     def test_001_tns_run_android_js_css_xml_manifest(self):
