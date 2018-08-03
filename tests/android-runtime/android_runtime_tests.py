@@ -648,9 +648,9 @@ class RuntimeTests(BaseClass):
             print str(e)
             assert 1 == 2, 'Test minSdk in AndroidManifest set to 23 and app.gradle set to 17 fails!'
 
-    def test_317_check_native_crash_will_not_crash_when_autoCatchJSMethodNativeCalls_used(self):
+    def test_317_check_native_crash_will_not_crash_when_discardUncaughtJsExceptions_used(self):
         """
-         Test native crash will not crash the app when autoCatchJSMethodNativeCalls used
+         Test native crash will not crash the app when discardUncaughtJsExceptions used
          https://github.com/NativeScript/android-runtime/issues/1119
         """
         source_js = os.path.join('data', "issues", 'android-runtime-1119', 'main-page.js')
@@ -689,4 +689,4 @@ class RuntimeTests(BaseClass):
             Helpers.android_screen_match("No-crash-image", timeout=120, tolerance=1)
         except Exception as e:
             print str(e)
-            assert 1 == 2, 'Native crash should not crash the app when autoCatchJSMethodNativeCalls used fails!'
+            assert 1 == 2, 'Native crash should not crash the app when discardUncaughtJsExceptions used fails!'
