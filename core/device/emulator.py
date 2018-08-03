@@ -13,7 +13,7 @@ from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import EMULATOR_NAME, EMULATOR_PORT, EMULATOR_ID, CURRENT_OS
 
-EMULATOR_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'emulator', 'qemu', 'windows-x86_64', 'qemu-system-i386.exe')
+EMULATOR_PATH = os.path.join(os.environ.get('ANDROID_HOME'), 'emulator', 'emulator')
 
 
 class Emulator(object):
