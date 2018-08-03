@@ -57,8 +57,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Folder.copy(cls.source_app, cls.temp_app)
 
     def setUp(self):
-		print 'tearDown - log 0'
-		Process.kill('adb')
+	print 'tearDown - log 0'
+	Process.kill('adb')
         print 'setUP - log 1'
         BaseClass.setUp(self)
         print 'setUP - log 2'
@@ -68,8 +68,8 @@ class RunAndroidEmulatorTests(BaseClass):
         print 'setUP - log 4'
 
     def tearDown(self):
-		print 'tearDown - log 0'
-		Process.kill('adb')
+	print 'tearDown - log 0'
+	Process.kill('adb')
         print 'tearDown - log 1'
         Tns.kill()
         print 'tearDown - log 2'
@@ -77,7 +77,7 @@ class RunAndroidEmulatorTests(BaseClass):
         print 'tearDown - log 3'
         Folder.cleanup('TestApp2')
         print 'tearDown - log 4'
-		Process.kill('adb')
+	Process.kill('adb')
         print 'tearDown - log 5'
 		
     @classmethod
