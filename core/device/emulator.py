@@ -47,9 +47,14 @@ class Emulator(object):
         :param timeout: Time to wait until emulator boot.
         """
         print 'Starting emulator {0}'.format(emulator_name)
-        start_command = EMULATOR_PATH + ' -avd ' + emulator_name + ' -port ' + port
+
+        if CURRENT_OS == OSType.WINDOWS:
+            start_command = 'START /B ' + EMULATOR_PATH + ' -avd ' + emulator_name + ' -port ' + port
+        else:
+            start_command = EMULATOR_PATH + ' -avd ' + emulator_name + ' -port ' + port
+
         if wipe_data:
-            start_command = start_command + ' -wipe-data'
+            start_command += ' -wipe-data'
         log_file = run(start_command, timeout=timeout, wait=False, log_level=CommandLogLevel.COMMAND_ONLY)
 
         # Check if emulator is running
