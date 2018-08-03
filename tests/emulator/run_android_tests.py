@@ -11,11 +11,14 @@ Run should sync all the changes correctly:
 If emulator is not started and device is not connected `tns run android` should start emulator.
 """
 
+import datetime
 import os
+import re
 import time
 import unittest
 
 import nose
+import pytz
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -33,9 +36,6 @@ from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_prepare_type import Prepare
 from core.tns.tns_verifications import TnsAsserts
-import re
-import datetime
-import pytz
 
 
 class RunAndroidEmulatorTests(BaseClass):
@@ -45,12 +45,12 @@ class RunAndroidEmulatorTests(BaseClass):
                                  "1234567890123456789012345678901234567890"
     very_long_string = ''
     for x in range(0, 30):
-        very_long_string = very_long_string + one_hundred_symbols_string
+        very_long_string += one_hundred_symbols_string
 
     max_long_string = ''
     for x in range(0, 10):
-        max_long_string = max_long_string + one_hundred_symbols_string
-    max_long_string = max_long_string + "123456789012345678901234"
+        max_long_string += one_hundred_symbols_string
+    max_long_string += "123456789012345678901234"
 
     @classmethod
     def setUpClass(cls):
@@ -67,14 +67,22 @@ class RunAndroidEmulatorTests(BaseClass):
         Folder.copy(cls.source_app, cls.temp_app)
 
     def setUp(self):
+        print 'setUP - log 1'
         BaseClass.setUp(self)
+        print 'setUP - log 2'
         Folder.cleanup(self.source_app)
+        print 'setUP - log 3'
         Folder.copy(self.temp_app, self.source_app)
+        print 'setUP - log 4'
 
     def tearDown(self):
+        print 'tearDown - log 1'
         Tns.kill()
+        print 'tearDown - log 2'
         BaseClass.tearDown(self)
+        print 'tearDown - log 3'
         Folder.cleanup('TestApp2')
+        print 'tearDown - log 4'
 
     @classmethod
     def tearDownClass(cls):
@@ -588,16 +596,16 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
 
     def test_315_tns_run_android_change_appResources_check_per_platform(self):
-        #https://github.com/NativeScript/nativescript-cli/pull/3619
+        # Test for https://github.com/NativeScript/nativescript-cli/pull/3619
         output = Tns.run_android(attributes={'--path': self.app_name}, wait=False, assert_success=False)
         strings = ['Successfully installed on device with identifier',
-                   'Successfully synced application', EMULATOR_ID,]
+                   'Successfully synced application', EMULATOR_ID, ]
         Tns.wait_for_log(log_file=output, string_list=strings, timeout=120, check_interval=10)
 
         source = os.path.join('data', 'issues', 'nativescript-cli-3619', 'hello.png')
         target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'drawable-hdpi')
         File.copy(source, target)
-        strings = ['Gradle build' ]
+        strings = ['Gradle build']
         Tns.wait_for_log(log_file=output, string_list=strings, clean_log=False)
         assert "Xcode build" not in output
 
