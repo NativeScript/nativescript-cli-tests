@@ -73,6 +73,8 @@ class RunAndroidEmulatorTests(BaseClass):
 
     def tearDown(self):
         Tns.kill()
+        if CURRENT_OS == OSType.WINDOWS:
+            Emulator.stop()
         BaseClass.tearDown(self)
         Folder.cleanup('TestApp2')
 
