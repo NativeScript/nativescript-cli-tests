@@ -20,6 +20,7 @@ import unittest
 import nose
 import pytz
 
+from core.osutils.process import Process
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
