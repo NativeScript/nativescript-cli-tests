@@ -41,6 +41,16 @@ from core.tns.tns_verifications import TnsAsserts
 class RunAndroidEmulatorTests(BaseClass):
     source_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
     temp_app = os.path.join(TEST_RUN_HOME, 'data', BaseClass.app_name)
+    one_hundred_symbols_string = "123456789012345678901234567890123456789012345678901234567890" \
+                                 "1234567890123456789012345678901234567890"
+    very_long_string = ''
+    for x in range(0, 30):
+        very_long_string = very_long_string + one_hundred_symbols_string
+
+    max_long_string = ''
+    for x in range(0, 10):
+        max_long_string = max_long_string + one_hundred_symbols_string
+    max_long_string = max_long_string + "123456789012345678901234"
 
     @classmethod
     def setUpClass(cls):
@@ -205,17 +215,6 @@ class RunAndroidEmulatorTests(BaseClass):
          Test console info, warn, error, assert, trace, time and logging of different objects.
         """
 
-        one_hundred_symbols_string = "123456789012345678901234567890123456789012345678901234567890" \
-                                     "1234567890123456789012345678901234567890"
-        very_long_string = ''
-        for x in range(0, 30):
-            very_long_string += one_hundred_symbols_string
-
-        max_long_string = ''
-        for x in range(0, 10):
-            max_long_string += one_hundred_symbols_string
-        max_long_string += "123456789012345678901234"
-
         # Change main-page.js so it contains console logging
         source_js = os.path.join('data', 'console-log', 'main-page.js')
         target_js = os.path.join(self.app_name, 'app', 'main-page.js')
@@ -283,11 +282,11 @@ class RunAndroidEmulatorTests(BaseClass):
                    "name: \"John\"",
                    "age: \"34\"",
                    "==== object dump end ====",
-                   max_long_string
+                   self.max_long_string
                    ]
 
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
-        assert very_long_string not in log
+        assert self.very_long_string not in log
 
     @unittest.skip("Problems with CI")
     def test_182_tns_run_android_new_date_work_as_expected_when_changing_timezone(self):
@@ -832,7 +831,8 @@ class RunAndroidEmulatorTests(BaseClass):
         https://github.com/NativeScript/nativescript-cli/issues/3610
         """
         Tns.plugin_add("nativescript-camera", attributes={"--path": self.app_name})
-        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--syncAllFiles': ''}, wait=False,
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--syncAllFiles': ''},
+                              wait=False,
                               assert_success=False)
 
         strings = ['Project successfully built',
