@@ -836,7 +836,6 @@ class RunAndroidEmulatorTests(BaseClass):
         paste_aar = os.path.join(self.app_name, 'node_modules', 'nativescript-camera', 'platforms', 'android')
 
         File.copy(src=copy_aar, dest=paste_aar)
-        # Folder.copy(TEST_RUN_HOME + "/data/Projects/ChangeAppLocationLS", TEST_RUN_HOME + "/ChangeAppLocationLS")
         strings = ['Project successfully built',
                    'Successfully installed on device with identifier', EMULATOR_ID,
                    'Successfully synced application']
