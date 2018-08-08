@@ -72,6 +72,19 @@ class PrepareAndroidTests(BaseClass):
         assert "main-page.xml has syntax errors." in output
         assert "unclosed xml attribute" in output
 
+    @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows")
+    def test_210_platform_not_need_remove_after_bitcode_error(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/3741
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        Folder.navigate_to(self.app_name + "/app")
+        path = os.path.join(self.app_name + "/app")
+        run("touch a")
+        run("ln -s a b")
+        run("rm a")
+        Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
+        output = Tns.prepare_android(attributes={"--path": self.app_name})
+        assert "Project successfully prepared" in output
+
     def test_300_prepare_android_remove_old_files(self):
         Tns.prepare_android(attributes={"--path": self.app_name})
 
