@@ -826,6 +826,37 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
+    def test_380_tns_run_android_livesync_aar_file_changes(self):
+        """
+        App should not crash when reference .jar or/and .aar file in App_Resources/Android/libs
+        https://github.com/NativeScript/nativescript-cli/issues/3610
+        """
+        Tns.plugin_add("nativescript-camera", attributes={"--path": self.app_name})
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--syncAllFiles': ''}, wait=False,
+                              assert_success=False)
+
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
+
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
+        copy_aar = os.path.join(TEST_RUN_HOME, 'data', 'plugins', 'TNSListView-release.aar')
+        paste_aar = os.path.join(self.app_name, 'node_modules', 'nativescript-camera', 'platforms', 'android')
+
+        File.copy(src=copy_aar, dest=paste_aar)
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
+
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
     @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-cli/issues/2825")
     def test_390_tns_run_android_should_warn_if_package_ids_do_not_match(self):
         """
