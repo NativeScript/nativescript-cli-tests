@@ -14,13 +14,8 @@ from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME, SIMULATOR_TYPE
 class Simulator(object):
     @staticmethod
     def __get_sim_location():
-        output = run(command='xcrun --show-sdk-path', log_level=CommandLogLevel.SILENT).strip()
-        xcode_location = ''
-        for paths in output.split('/'):
-            xcode_location = xcode_location + paths + '/'
-            if "Xcode" in paths:
-                break
-        sim_location = xcode_location + 'Contents/Developer/Applications/Simulator.app'
+        xcode_location = run(command='xcode-select -p', log_level=CommandLogLevel.SILENT).strip()
+        sim_location = xcode_location + '/Applications/Simulator.app/Contents/MacOS/Simulator'
         print "Simulator Application: " + sim_location
         return sim_location
 
@@ -106,11 +101,15 @@ class Simulator(object):
         if sim_id is None:
             raise AssertionError("Unable to find device with name " + name)
 
-        # Fire start command
-        print "Open Simulator.app with {0}".format(sim_id)
-        start_command = "open {0} --args -CurrentDeviceUDID {1}".format(Simulator.__get_sim_location(), sim_id)
-        run(command=start_command, log_level=CommandLogLevel.SILENT)
-        print 'Simulator {0} is booting now...'.format(name)
+        # Start simulator via commandline
+        run(command="xcrun simctl boot " + sim_id, log_level=CommandLogLevel.SILENT)
+
+        # Start GUI
+        if Process.is_running('Simulator.app'):
+            print "Simulator GUI is already running."
+        else:
+            print "Start simulator GUI."
+            run(command="open -a Simulator", log_level=CommandLogLevel.SILENT)
 
         # Wait until simulator boot
         found, simulator_id = Simulator.wait_for_simulator(simulator_name=name, timeout=timeout)
@@ -118,26 +117,7 @@ class Simulator(object):
             print 'Simulator {0} with id {1} is up and running!'.format(name, simulator_id)
             return simulator_id
         else:
-            # Retry once...
-            Simulator.reset()
-            Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
-            print 'Retry booting simulator...'.format(name)
-            run(command=start_command, log_level=CommandLogLevel.SILENT)
-            found, simulator_id = Simulator.wait_for_simulator(simulator_name=name, timeout=timeout)
-            if found:
-                print 'Simulator {0} with id {1} is up and running!'.format(name, simulator_id)
-                return simulator_id
-            else:
-                print "Mem usage:"
-                run(command="top -l 1 -s 0 | grep PhysMem", log_level=CommandLogLevel.FULL)
-                print "Nodes:"
-                run(command="df -i", log_level=CommandLogLevel.FULL)
-                print "Running processes:"
-                run(command="ps -ef | wc -l", log_level=CommandLogLevel.FULL)
-                print "--------------------------"
-                run(command="ps -ef", log_level=CommandLogLevel.FULL)
-                print "--------------------------"
-                raise NameError('Failed to boot {0}!'.format(name))
+            raise NameError('Failed to boot {0}!'.format(name))
 
     @staticmethod
     def is_running(simulator_name=None):
