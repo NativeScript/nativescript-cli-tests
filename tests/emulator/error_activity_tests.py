@@ -10,6 +10,8 @@ Verify that:
 import os
 import unittest
 
+from flaky import flaky
+
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
 from core.device.helpers.adb import Adb
@@ -50,6 +52,7 @@ class AndroidErrorActivityTests(BaseClass):
         BaseClass.tearDownClass()
         Emulator.stop()
 
+    @flaky(min_passes=14, max_runs=15)
     @unittest.skipIf(CURRENT_OS == OSType.LINUX, "Temporary ignore on Linux.")
     def test_200_error_activity_shown_on_error(self):
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
@@ -64,16 +67,16 @@ class AndroidErrorActivityTests(BaseClass):
         assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Logcat"), "Error activity not found!"
         assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Error: Kill the app!"), "Error activity not found!"
 
-    def test_400_no_error_activity_in_release_builds(self):
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          '--device': EMULATOR_ID,
-                                          '--keyStorePath': ANDROID_KEYSTORE_PATH,
-                                          '--keyStorePassword': ANDROID_KEYSTORE_PASS,
-                                          '--keyStoreAlias': ANDROID_KEYSTORE_ALIAS,
-                                          '--keyStoreAliasPassword': ANDROID_KEYSTORE_ALIAS_PASS,
-                                          '--release': ''}, wait=False, assert_success=False)
-        strings = ['Project successfully built', 'Successfully installed on device with identifier', EMULATOR_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
-
-        error = Adb.wait_for_text(device_id=EMULATOR_ID, text="Exception")
-        assert not error, "Error activity found in release build!"
+    # def test_400_no_error_activity_in_release_builds(self):
+    #     log = Tns.run_android(attributes={'--path': self.app_name,
+    #                                       '--device': EMULATOR_ID,
+    #                                       '--keyStorePath': ANDROID_KEYSTORE_PATH,
+    #                                       '--keyStorePassword': ANDROID_KEYSTORE_PASS,
+    #                                       '--keyStoreAlias': ANDROID_KEYSTORE_ALIAS,
+    #                                       '--keyStoreAliasPassword': ANDROID_KEYSTORE_ALIAS_PASS,
+    #                                       '--release': ''}, wait=False, assert_success=False)
+    #     strings = ['Project successfully built', 'Successfully installed on device with identifier', EMULATOR_ID]
+    #     Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
+    #
+    #     error = Adb.wait_for_text(device_id=EMULATOR_ID, text="Exception")
+    #     assert not error, "Error activity found in release build!"
