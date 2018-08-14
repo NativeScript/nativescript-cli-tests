@@ -31,7 +31,7 @@ from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_PACKAGE, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASS, \
     ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, EMULATOR_NAME, CURRENT_OS, TEST_RUN_HOME
-from core.tns.replace_helper import ReplaceHelper
+from tests.helpers.livesync_helper import LivesyncHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_prepare_type import Prepare
@@ -59,31 +59,16 @@ class RunAndroidEmulatorTests(BaseClass):
         Emulator.stop()
         Emulator.ensure_available()
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
-        if CURRENT_OS != OSType.WINDOWS:
-            Tns.create_app(cls.app_name,
-                           attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
-                           update_modules=True)
-            Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_PACKAGE})
-            Folder.cleanup(cls.temp_app)
-            Folder.copy(cls.source_app, cls.temp_app)
 
     def setUp(self):
         BaseClass.setUp(self)
-        Folder.cleanup(self.source_app)
-        if CURRENT_OS != OSType.WINDOWS:
-            Folder.copy(self.temp_app, self.source_app)
-        else:
-            Tns.create_app(self.app_name,
-                           attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
-                           update_modules=True)
-            Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_PACKAGE})
-            Emulator.ensure_available()
+        Tns.create_app(self.app_name)
+        Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_PACKAGE})
 
     def tearDown(self):
         Tns.kill()
-        if CURRENT_OS == OSType.WINDOWS:
-            Emulator.stop()
         BaseClass.tearDown(self)
+        Folder.cleanup('TestApp')
         Folder.cleanup('TestApp2')
 
     @classmethod
@@ -92,7 +77,6 @@ class RunAndroidEmulatorTests(BaseClass):
         Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
         Folder.cleanup(cls.temp_app)
 
-    @unittest.skip('temp')
     def test_001_tns_run_android_js_css_xml_manifest(self):
         """Make valid changes in JS,CSS and XML"""
 
@@ -106,63 +90,66 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
         # Change JS and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
+        LivesyncHelper.replace(self.app_name, LivesyncHelper.CHANGE_JS, sleep=10)
         strings = ['Successfully transferred main-view-model.js', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
         text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 clicks left', timeout=20)
         assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
 
         # Change XML and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
+        LivesyncHelper.replace(self.app_name, LivesyncHelper.CHANGE_XML, sleep=3)
         strings = ['Successfully transferred main-page.xml', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
         text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TEST')
         assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
 
         # Change CSS and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
+        LivesyncHelper.replace(self.app_name, LivesyncHelper.CHANGE_CSS, sleep=3)
         strings = ['Successfully transferred app.css', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify application looks correct
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_js_css_xml')
+                            expected_image='hello-world-js-js-css-xml')
 
         # Rollback all the changes
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
+        LivesyncHelper.rollback(self.app_name, LivesyncHelper.CHANGE_JS, sleep=10)
         strings = ['Successfully transferred main-view-model.js', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
+        LivesyncHelper.rollback(self.app_name, LivesyncHelper.CHANGE_CSS, sleep=3)
         strings = ['Successfully transferred app.css', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
+        LivesyncHelper.rollback(self.app_name, LivesyncHelper.CHANGE_XML, sleep=3)
         strings = ['Successfully transferred main-page.xml', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
         # Changes in App_Resources should rebuild native project
-        res_path = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'AndroidManifest.xml')
+        res_path = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'src', 'main', 'AndroidManifest.xml')
         File.replace(res_path, '17', '19')
         strings = ['Preparing project', 'Building project', 'Gradle build', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=60)
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
     def test_100_tns_run_android_release(self):
         """Make valid changes in JS,CSS and HTML"""
 
         # `tns run android --release` and wait until app is deployed
         # IMPORTANT NOTE: `tns run android --release` Do NOT livesync by design!
+        copy = os.path.join(TEST_RUN_HOME,'data', 'folders', 'main-page.js')
+        paste = os.path.join(self.app_name, 'app')
+        Folder.copy(copy, paste)
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           '--device': EMULATOR_ID,
@@ -178,15 +165,15 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME,
-                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
+                            device_id=EMULATOR_ID, expected_image='hello-world-js')
 
         # Kills `tns run android --release`
         Tns.kill()
 
         # Replace files
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS)
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS)
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML)
+        LivesyncHelper.replace(self.app_name, LivesyncHelper.CHANGE_JS)
+        LivesyncHelper.replace(self.app_name, LivesyncHelper.CHANGE_CSS)
+        LivesyncHelper.replace(self.app_name, LivesyncHelper.CHANGE_XML)
 
         # Run `tns run android --release` again and make sure changes above are applied
         log = Tns.run_android(attributes={'--path': self.app_name,
@@ -208,7 +195,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks is update after changes in js, css and xml
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_js_css_xml')
+                            expected_image='hello-world-js-js-css-xml')
 
     def test_180_tns_run_android_console_logging(self):
         """
@@ -242,8 +229,7 @@ class RunAndroidEmulatorTests(BaseClass):
                    "Assertion failed:  false == true",
                    "Assertion failed:  empty string evaluates to 'false'",
                    "Trace: console.trace() called",
-                   "at pageLoaded",
-                   "Button(8)",
+                   "Button(",
                    "-1 text {",
                    "[1, 5, 12.5, {", "\"name\": \"John\",",
                    "\"age\": 34",
@@ -384,7 +370,9 @@ class RunAndroidEmulatorTests(BaseClass):
         Make changes in xml that break the app and then changes that fix the app.
         Add/remove js files that break the app and then fix it.
         """
-
+        copy = os.path.join(TEST_RUN_HOME, 'data', 'folders', 'main-page.js')
+        paste = os.path.join(self.app_name, 'app')
+        Folder.copy(copy, paste)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
         strings = ['Project successfully prepared', 'Project successfully built',
@@ -393,10 +381,10 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
         # Break the app with invalid xml changes
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML_INVALID_SYNTAX)
+        LivesyncHelper.replace(self.app_name, LivesyncHelper.CHANGE_XML_INVALID_SYNTAX)
 
         # Verify console notify user for broken xml
         strings = ['main-page.xml has syntax errors', 'unclosed xml attribute',
@@ -405,13 +393,13 @@ class RunAndroidEmulatorTests(BaseClass):
         assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Exception", timeout=30), "Error activity not found!"
 
         # Revert changes
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML_INVALID_SYNTAX)
+        LivesyncHelper.rollback(self.app_name, LivesyncHelper.CHANGE_XML_INVALID_SYNTAX)
         strings = ['Successfully transferred main-page.xml', 'Successfully synced application', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
         # Delete app.js and verify app crash with error activiry dialog
         app_js_original_path = os.path.join(self.app_name, 'app', 'app.js')
@@ -430,7 +418,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
     def test_210_run_android_add_remove_files_and_folders(self):
         """
@@ -445,7 +433,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
         # Add new files
         new_file_name = 'main-page2.xml'
@@ -473,7 +461,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Add folder
         new_folder_name = 'test2'
-        source_file = os.path.join(self.app_name, 'app', 'test')
+        source_file = os.path.join(TEST_RUN_HOME, 'data', 'folders', 'test')
         destination_file = os.path.join(self.app_name, 'app', new_folder_name)
         Folder.copy(source_file, destination_file)
         strings = ['Successfully transferred test.txt', EMULATOR_ID]
@@ -498,7 +486,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_290_tns_run_android_should_refresh_images(self):
@@ -538,7 +526,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # Execute `tns run android --path TNS_App --justlaunch` and verify app looks correct on emulator
         Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--justlaunch': ''})
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
         # Execute `tns run android --path TNS_App --justlaunch` again
         # without any changes on app under test and verify incremental prepare works
@@ -548,12 +536,12 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
         # Replace JS, XML and CSS files
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS)
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS)
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML)
+        LivesyncHelper.replace(self.app_name, LivesyncHelper.CHANGE_JS)
+        LivesyncHelper.replace(self.app_name, LivesyncHelper.CHANGE_CSS)
+        LivesyncHelper.replace(self.app_name, LivesyncHelper.CHANGE_XML)
 
         # Run `tns run android` after file changes (this should trigger incremental prepare).
         output = Tns.run_android(attributes={'--path': self.app_name, '--justlaunch': ''}, assert_success=False)
@@ -562,7 +550,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks is update after changes in js, css and xml
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_js_css_xml')
+                            expected_image='hello-world-js-js-css-xml')
 
     def test_310_tns_run_android_clean_builds(self):
         """
@@ -581,7 +569,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
 
         # Verify if changes are applied and then build with `--clean` it will apply changes on attached device
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS)
+        LivesyncHelper.replace(self.app_name, LivesyncHelper.CHANGE_JS)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID,
                                           '--justlaunch': '', '--clean': ''})
         assert 'Skipping prepare' not in log, "Prepare skipped when change files and run `tns run android --clean`"
@@ -590,7 +578,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.wait_for_text(device_id=EMULATOR_ID, text='52 taps left')
 
         # Verify if changes are applied and then build with `--clean` it will apply changes on attached device
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS)
+        LivesyncHelper.rollback(self.app_name, LivesyncHelper.CHANGE_JS)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID,
                                           '--justlaunch': '', '--clean': ''})
         assert 'Skipping prepare' not in log
@@ -618,6 +606,9 @@ class RunAndroidEmulatorTests(BaseClass):
         """
 
         # `tns run android --no-watch` and wait until app is deployed
+        copy = os.path.join(TEST_RUN_HOME, 'data', 'folders', 'main-page.js')
+        paste = os.path.join(self.app_name, 'app')
+        Folder.copy(copy, paste)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--no-watch': ''},
                               wait=False, assert_success=False)
         strings = ['Successfully installed on device with identifier',
@@ -647,20 +638,23 @@ class RunAndroidEmulatorTests(BaseClass):
         """
         Verify '--syncAllFiles' option will sync all files, including node modules.
         """
+        copy = os.path.join(TEST_RUN_HOME, 'data', 'folders', 'main-page.js')
+        paste = os.path.join(self.app_name, 'app')
+        Folder.copy(copy, paste)
         Tns.build_android(attributes={'--path': self.app_name})
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--syncAllFiles': ''},
                               wait=False, assert_success=False)
         strings = ['Successfully synced application', EMULATOR_ID, 'JS:']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=60, check_interval=10)
 
-        ReplaceHelper.replace(app_name=self.app_name, file_change=ReplaceHelper.CHANGE_TNS_MODULES)
+        LivesyncHelper.replace(app_name=self.app_name, file_change=LivesyncHelper.CHANGE_TNS_MODULES)
 
         strings = ['Successfully transferred application-common.js', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Delete log during livesync not possible on Windows.")
     def test_340_tns_run_should_not_sync_hidden_files(self):
@@ -676,7 +670,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
         # Clean log (this will not work on windows since file is locked)
         File.write(file_path=log, text="")
@@ -709,7 +703,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
     def test_350_tns_run_android_should_start_emulator(self):
         """
@@ -726,7 +720,7 @@ class RunAndroidEmulatorTests(BaseClass):
             Emulator.ensure_available()
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
-
+    #
     def test_355_tns_run_android_changes_in_app_resources_rebuild_app(self):
         """
         https://github.com/NativeScript/nativescript-cli/issues/3658
@@ -788,7 +782,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
     def test_370_tns_run_android_with_jar_and_aar_files_in_app_res(self):
         """
@@ -823,7 +817,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
     def test_380_tns_run_android_livesync_aar_file_changes(self):
         """
@@ -842,7 +836,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
         copy_aar = os.path.join(TEST_RUN_HOME, 'data', 'plugins', 'TNSListView-release.aar')
         paste_aar = os.path.join(self.app_name, 'node_modules', 'nativescript-camera', 'platforms', 'android')
@@ -855,7 +849,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
+                            expected_image='hello-world-js')
 
     @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-cli/issues/2825")
     def test_390_tns_run_android_should_warn_if_package_ids_do_not_match(self):
