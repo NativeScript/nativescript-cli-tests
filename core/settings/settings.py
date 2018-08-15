@@ -60,8 +60,14 @@ if "Darwin" in platform.platform():
 TEST_RUN_HOME = os.getcwd()
 
 # Test packages location from env. variables
-BASE_PACKAGE_PATH = os.environ.get("BASE_PACKAGE_PATH", "/tns-dist")
-BRANCH = os.environ.get("BRANCH", "master").lower()
+BASE_PACKAGE_PATH = os.environ.get("BASE_PACKAGE", "Missing")
+if "Missing" in BASE_PACKAGE_PATH:
+    BASE_PACKAGE_PATH = os.environ.get("BASE_PACKAGE_PATH", "/tns-dist")
+
+BRANCH = os.environ.get("CLI_PACKAGES_BRANCH", "missing").lower()
+if "missing" in BRANCH :
+    BRANCH = os.environ.get("BRANCH", "master").lower()
+
 if "release" in BRANCH:
     SHARE_BRANCH = "Release"
     TAG = "rc"
