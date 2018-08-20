@@ -224,7 +224,7 @@ class RunIOSDeviceTests(BaseClass):
         TnsAsserts.prepared(app_name=self.app_name, output=output, platform=Platform.IOS, prepare=Prepare.SKIP)
         assert self.SIMULATOR_ID in output, 'Application is NOT deployed on emulator specified by --device option!'
         for device_id in self.DEVICES:
-            assert device_id not in output, \
+            assert "Successfully installed on device with identifier {0}".format(device_id) not in output, \
                 'Application is deployed on {0} while it should be only on {1}'.format(device_id, self.SIMULATOR_ID)
 
     def test_330_tns_run_ios_after_rebuild_of_native_project(self):
