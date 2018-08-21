@@ -67,6 +67,7 @@ class RegressionTestsJS(BaseClass):
                                       "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
                                       "--release": ""})
 
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_002_build_ios(self):
         Tns.build_ios(attributes={"--path": self.app_name}, log_trace=True)
         Tns.build_ios(attributes={"--path": self.app_name, "--release": ""}, log_trace=True)
