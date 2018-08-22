@@ -147,6 +147,3 @@ class RegressionTestsJS(BaseClass):
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": ""})
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
                                   "--env.uglify": "", "--env.aot": ""})
-
-        # verification_errors = Helpers.verify_size(app_name=self.app_name, config="js-ios-bundle-uglify")
-        # self.assertEqual([], verification_errors)
