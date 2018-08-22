@@ -145,5 +145,3 @@ class RegressionTestsJS(BaseClass):
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_200_ios_build_release_with_bundle_and_uglify(self):
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": ""})
-        Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": "",
-                                  "--env.uglify": "", "--env.aot": ""})
