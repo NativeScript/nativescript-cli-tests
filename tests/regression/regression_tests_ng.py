@@ -65,6 +65,7 @@ class RegressionTestsNG(BaseClass):
                                       "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
                                       "--release": ""})
 
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_002_build_ios(self):
         Tns.build_ios(attributes={'--path': self.app_name})
 
@@ -90,6 +91,7 @@ class RegressionTestsNG(BaseClass):
         # Verify application looks correct
         Helpers.android_screen_match(image=self.image_original, timeout=80)
 
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_101_run_ios(self):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False,
                           assert_success=False)
