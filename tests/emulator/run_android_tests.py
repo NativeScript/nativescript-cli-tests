@@ -120,11 +120,11 @@ class RunAndroidEmulatorTests(BaseClass):
         strings = ['Successfully transferred main-view-model.js', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        LivesyncHelper.rollback(self.app_name, LivesyncHelper.CHANGE_CSS, sleep=3)
+        LivesyncHelper.rollback(self.app_name, LivesyncHelper.CHANGE_CSS, sleep=10)
         strings = ['Successfully transferred app.css', 'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180)
 
-        LivesyncHelper.rollback(self.app_name, LivesyncHelper.CHANGE_XML, sleep=3)
+        LivesyncHelper.rollback(self.app_name, LivesyncHelper.CHANGE_XML, sleep=10)
         strings = ['Successfully transferred main-page.xml', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
