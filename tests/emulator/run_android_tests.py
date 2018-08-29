@@ -77,6 +77,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
         Folder.cleanup(cls.temp_app)
 
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_001_tns_run_android_js_css_xml_manifest(self):
         """Make valid changes in JS,CSS and XML"""
 
@@ -89,8 +90,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
 
         # Verify app looks correct inside emulator
-        # Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-        #                     expected_image='hello-world-js')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='hello-world-js')
 
         # Change JS and wait until app is synced
         LivesyncHelper.replace(self.app_name, LivesyncHelper.CHANGE_JS, sleep=10)
@@ -112,8 +113,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify application looks correct
-        # Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-        #                     expected_image='hello-world-js-js-css-xml')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='hello-world-js-js-css-xml')
 
         # Rollback all the changes
         LivesyncHelper.rollback(self.app_name, LivesyncHelper.CHANGE_JS, sleep=10)
@@ -129,8 +130,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify app looks correct inside emulator
-        # Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-        #                     expected_image='hello-world-js')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='hello-world-js')
 
         # Changes in App_Resources should rebuild native project
         res_path = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'src', 'main', 'AndroidManifest.xml')
@@ -139,8 +140,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=60)
 
         # Verify app looks correct inside emulator
-        # Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-        #                     expected_image='hello-world-js')
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='hello-world-js')
 
     def test_100_tns_run_android_release(self):
         """Make valid changes in JS,CSS and HTML"""
