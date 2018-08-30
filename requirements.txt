@@ -1,0 +1,9 @@
+nose
+psutil
+nose_parameterized
+enum34
+flaky
+uiautomator
+Pillow
+pytesseract
+pytz
