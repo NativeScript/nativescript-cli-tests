@@ -51,7 +51,9 @@ class AndroidErrorActivityTests(BaseClass):
         Emulator.stop()
 
     @unittest.skipIf(CURRENT_OS == OSType.LINUX, "Temporary ignore on Linux.")
+    @unittest.skip("https://github.com/NativeScript/nativescript-cli/issues/3812")
     def test_200_error_activity_shown_on_error(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/3812
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
         strings = ['Project successfully built',

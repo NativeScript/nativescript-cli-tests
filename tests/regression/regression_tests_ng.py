@@ -2,6 +2,7 @@ import os
 import unittest
 
 from core.base_class.BaseClass import BaseClass
+from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.java.java import Java
@@ -64,6 +65,10 @@ class RegressionTestsNG(BaseClass):
                                       "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
                                       "--release": ""})
 
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_002_build_ios(self):
+        Tns.build_ios(attributes={'--path': self.app_name})
+
     def test_100_run_android(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
@@ -86,6 +91,13 @@ class RegressionTestsNG(BaseClass):
         # Verify application looks correct
         Helpers.android_screen_match(image=self.image_original, timeout=80)
 
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_101_run_ios(self):
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False,
+                          assert_success=False)
+        strings = ['Successfully synced application', self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=90, check_interval=10, clean_log=False)
+
     def test_200_build_android_webpack(self):
         Tns.build_android(attributes={"--path": self.app_name,
                                       "--keyStorePath": ANDROID_KEYSTORE_PATH,
@@ -97,3 +109,7 @@ class RegressionTestsNG(BaseClass):
                                       "--env.uglify": "",
                                       "--env.snapshot": ""})
         Helpers.run_android_via_adb(app_name=self.app_name, config="release", image=self.image_original)
+
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_200_ios_build_release_with_bundle(self):
+        Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": ""})

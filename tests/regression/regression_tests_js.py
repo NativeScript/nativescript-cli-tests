@@ -2,9 +2,11 @@ import os
 import unittest
 
 from core.base_class.BaseClass import BaseClass
+from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.java.java import Java
+from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.settings.settings import TEST_RUN_HOME, CURRENT_OS, SIMULATOR_NAME, \
@@ -65,6 +67,15 @@ class RegressionTestsJS(BaseClass):
                                       "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS,
                                       "--release": ""})
 
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_002_build_ios(self):
+        Tns.build_ios(attributes={"--path": self.app_name}, log_trace=True)
+        Tns.build_ios(attributes={"--path": self.app_name, "--release": ""}, log_trace=True)
+
+        # Verify no aar and frameworks in platforms folder
+        assert not File.pattern_exists(self.app_name + "/platforms/ios", "*.aar")
+        assert not File.pattern_exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules", "*.framework")
+
     def test_100_run_android(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           '--device': EMULATOR_ID}, wait=False, assert_success=False)
@@ -88,6 +99,37 @@ class RegressionTestsJS(BaseClass):
         # Verify application looks correct
         Helpers.android_screen_match(image=self.image_original, timeout=80)
 
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_101_tns_run_ios(self):
+        """Make valid changes in JS,CSS and XML"""
+
+        # `tns run ios` and wait until app is deployed
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+
+        # Verify app looks correct inside simulator
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='hello-world-js', timeout=60)
+
+        # Change JS and wait until app is synced
+        ReplaceHelper.replace(self.app_name, self.js_change, sleep=10)
+        ReplaceHelper.replace(self.app_name, self.xml_change, sleep=3)
+        ReplaceHelper.replace(self.app_name, self.css_change, sleep=3)
+
+        # Verify application looks correct
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='hello-world-js-js-css-xml', timeout=60)
+
+        # Rollback all the changes
+        ReplaceHelper.rollback(self.app_name, self.js_change, sleep=10)
+        ReplaceHelper.rollback(self.app_name, self.xml_change, sleep=3)
+        ReplaceHelper.rollback(self.app_name, self.css_change, sleep=3)
+
+        # Verify app looks correct inside simulator
+        Device.screen_match(device_name=SIMULATOR_NAME,
+                            device_id=self.SIMULATOR_ID, expected_image='hello-world-js', timeout=60)
+
     def test_200_build_android_webpack(self):
         Tns.build_android(attributes={"--path": self.app_name,
                                       "--keyStorePath": ANDROID_KEYSTORE_PATH,
@@ -99,3 +141,7 @@ class RegressionTestsJS(BaseClass):
                                       "--env.uglify": "",
                                       "--env.snapshot": ""})
         Helpers.run_android_via_adb(app_name=self.app_name, config="release", image=self.image_original)
+
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
+    def test_200_ios_build_release_with_bundle_and_uglify(self):
+        Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": "", "--bundle": ""})
