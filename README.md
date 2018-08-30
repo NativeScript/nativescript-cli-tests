@@ -4,21 +4,14 @@ The NativeScript CLI integration tests
 ## Software Prerequisites
 Install [Python](https://www.python.org/downloads/) 2.7.*
 
-Install dependencies
+Install pip dependencies
 ```
-pip install psutil 
-pip install nose_parameterized
-pip install enum34
-pip install flaky
-pip install uiautomator
-pip install Pillow
-pip install pytesseract
-pip install pytz
-brew install tesseract --all-languages
+pip install -r requirements.txt --user
 ```
 
-iOS Only: Install ideviceinstaller
+Install brew dependencies (required only for iOS physical devices)
 ```
+brew install tesseract --all-languages
 brew install ideviceinstaller --HEAD
 brew install libimobiledevice --HEAD
 (for iOS11 support) brew install https://gist.github.com/Haraguroicha/0dee2ee29c7376999178c5392080c16e/raw/libimobiledevice.rb --HEAD --with-ios11
