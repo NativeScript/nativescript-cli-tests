@@ -150,7 +150,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # IMPORTANT NOTE: `tns run android --release` Do NOT livesync by design!
         copy = os.path.join(TEST_RUN_HOME,'data', 'folders', 'main-page.js')
         paste = os.path.join(self.app_name, 'app')
-        Folder.copy(copy, paste)
+        File.copy(copy, paste)
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           '--device': EMULATOR_ID,
