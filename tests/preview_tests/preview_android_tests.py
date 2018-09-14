@@ -9,7 +9,7 @@ from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
     ANDROID_PATH, IOS_PATH, SUT_FOLDER, CLI_PATH, IOS_INSPECTOR_PATH, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK, \
     TEST_RUN_HOME, PREVIEW_APP_PATH_ANDROID, PREVIEW_APP_PATH_IOS, EMULATOR_ID
 
-class PreviewCommandTests(BaseClass):
+class PreviewCommandTestsAndroid(BaseClass):
 
     #DEVICE_ID = Device.get_id(platform=Platform.ANDROID)
 
