@@ -51,26 +51,17 @@ class Preview(object):
         """Get preview URL form tns log.This is the url you need to load in Preview app
            in order to see and sync your project"""
         url = re.findall("(nsplay[^\s']+)", output)[0]
-              
-        #print 'Found @@@@@@@@@@@@@@@@@@@@@@@@@@@@' +url
         url = urllib.unquote(url)
-        #print 'Encoded @@@@@@@@@@@@@@@@@@@@@@@@@@@@' + url
         url=url.replace('?', '\?')
         url=url.replace('&', '\&')
-        #print 'Replaced ###########################' + url
         return url 
 
     @staticmethod
-    def run_app(url, emulator_id, platform=Platform.BOTH):
+    def run_app(url, emulator_id, platform):
         """Runs your project in the Preview App on simulator or emulator"""
         if platform is Platform.IOS:
             cmd = "xcrun simctl openurl {0} {1}.".format(emulator_id, url)
             output = run(command=cmd, log_level=CommandLogLevel.COMMAND_ONLY)
         elif platform is Platform.ANDROID:
-            cmd = 'adb -s {0} shell am start -a android.intent.action.VIEW -d "{1}" org.nativescript.preview.'.format(emulator_id, url)
-            output = run(command=cmd, log_level=CommandLogLevel.COMMAND_ONLY)
-        elif platform is Platform.BOTH:        
-            cmd = "xcrun simctl openurl {0} {1}.".format(emulator_id, url)
-            output = run(command=cmd, log_level=CommandLogLevel.COMMAND_ONLY)
-            cmd = "adb -s {0} shell am start -a android.intent.action.VIEW -d {1} org.nativescript.preview.".format(emulator_id, url)
+            cmd = 'adb -s {0} shell am start -a android.intent.action.VIEW -d "{1}" org.nativescript.preview'.format(emulator_id, url)
             output = run(command=cmd, log_level=CommandLogLevel.COMMAND_ONLY)

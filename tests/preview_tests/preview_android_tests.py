@@ -47,7 +47,7 @@ class PreviewCommandTests(BaseClass):
         Preview.run_app(url, EMULATOR_ID, platform=Platform.ANDROID)
                               
         strings = ['Start syncing changes for platform android',
-                   'Project successfully prepared (android)', EMULATOR_ID,
+                   'Project successfully prepared (android)',
                    'Successfully synced changes for platform android']
         Tns.wait_for_log(log_file=output, string_list=strings, timeout=180, check_interval=10)
 
