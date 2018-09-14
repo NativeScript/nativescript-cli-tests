@@ -26,7 +26,7 @@ from core.tns.tns_platform_type import Platform
 from tests.nsconfig.create_apps.create_ns_config_apps import CreateNSConfigApps
 
 
-class RunAndroidEmulatorTests(BaseClass):
+class RunAndroidEmulatorNGTests(BaseClass):
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
