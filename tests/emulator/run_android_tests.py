@@ -373,7 +373,7 @@ class RunAndroidEmulatorTests(BaseClass):
         """
         copy = os.path.join(TEST_RUN_HOME, 'data', 'folders', 'main-page.js')
         paste = os.path.join(self.app_name, 'app')
-        Folder.copy(copy, paste)
+        File.copy(copy, paste)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
         strings = ['Project successfully prepared', 'Project successfully built',
@@ -609,7 +609,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # `tns run android --no-watch` and wait until app is deployed
         copy = os.path.join(TEST_RUN_HOME, 'data', 'folders', 'main-page.js')
         paste = os.path.join(self.app_name, 'app')
-        Folder.copy(copy, paste)
+        File.copy(copy, paste)
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--no-watch': ''},
                               wait=False, assert_success=False)
         strings = ['Successfully installed on device with identifier',
@@ -641,7 +641,7 @@ class RunAndroidEmulatorTests(BaseClass):
         """
         copy = os.path.join(TEST_RUN_HOME, 'data', 'folders', 'main-page.js')
         paste = os.path.join(self.app_name, 'app')
-        Folder.copy(copy, paste)
+        File.copy(copy, paste)
         Tns.build_android(attributes={'--path': self.app_name})
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--syncAllFiles': ''},
                               wait=False, assert_success=False)
