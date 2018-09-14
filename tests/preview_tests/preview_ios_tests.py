@@ -1,6 +1,6 @@
 from core.base_class.BaseClass import BaseClass
 from core.preview_app.preview import Preview
-from core.device.emulator import Emulator
+from core.device.simulator import Simulator
 from core.tns.tns import Tns
 from core.device.device import Device
 from core.osutils.file import File
@@ -17,14 +17,13 @@ class PreviewCommandTestsIos(BaseClass):
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
         Tns.kill()
-        Emulator.stop()
         Simulator.stop()
         cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
         
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.IOS)
 
         Preview.get_app_packages()
-        Preview.install(EMULATOR_ID, platform=Platform.IOS)
+        Preview.install(SIMULATOR_ID, platform=Platform.IOS)
 
         Tns.create_app(cls.app_name, update_modules=False)
 

@@ -32,10 +32,13 @@ class Preview(object):
         """Copy Preview App packages from Shares to local folder"""
         shutil.copy2(PREVIEW_APP_PATH_ANDROID.strip(), SUT_FOLDER)        
         shutil.copy2(PREVIEW_APP_PATH_IOS.strip(), SUT_FOLDER)
+        """Unpack the .tgz file to get the nsplaydev.app"""
+        File.unpack_tar(PREVIEW_APP_PATH_IOS, SUT_FOLDER)
+
 
     @staticmethod
     def install(device_id, platform=Platform.BOTH):
-        "Installs Preview App on emulator and simulator"
+        """Installs Preview App on emulator and simulator"""
         package_android = File.find(base_path = SUT_FOLDER, file_name="app-universal-release")
         package_ios = File.find(base_path = SUT_FOLDER, file_name="nsplaydev")
         if platform is Platform.IOS:
