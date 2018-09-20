@@ -151,8 +151,10 @@ class TnsAsserts(object):
             assert 'Copying template files...' in output
             if platform is Platform.ANDROID:
                 assert 'Platform android successfully added' in output
-            if platform is Platform.IOS:
+            if platform is Platform.IOS and CURRENT_OS == OSType.OSX:
                 assert 'Platform ios successfully added' in output
+            else: 
+                assert 'Applications for platform ios can not be built on this OS'
             assert 'Project successfully created.' not in output
 
         # This is to handle test for app with space.
