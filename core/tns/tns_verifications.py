@@ -148,7 +148,6 @@ class TnsAsserts(object):
 
         # Verify console output is correct
         if output is not None:
-            assert 'Copying template files...' in output
             if platform is Platform.ANDROID:
                 assert 'Platform android successfully added' in output
             if platform is Platform.IOS and CURRENT_OS == OSType.OSX:
