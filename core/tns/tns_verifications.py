@@ -168,7 +168,10 @@ class TnsAsserts(object):
         if platform is Platform.ANDROID or platform is Platform.BOTH:
             assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID))
         if platform is Platform.IOS or platform is Platform.BOTH:
-            assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_IOS))
+            if CURRENT_OS == OSType.OSX:
+                assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_IOS))
+            else: 
+                assert not File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_IOS))
 
     @staticmethod
     def platform_list_status(output=None, prepared=Platform.NONE, added=Platform.NONE):
