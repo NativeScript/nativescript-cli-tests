@@ -32,15 +32,30 @@ class Preview(object):
         """Copy Preview App packages from Shares to local folder"""
         shutil.copy2(PREVIEW_APP_PATH_ANDROID.strip(), SUT_FOLDER)        
         shutil.copy2(PREVIEW_APP_PATH_IOS.strip(), SUT_FOLDER)
+        shutil.copy2(PLAYGROUND_APP_PATH_IOS.strip(), SUT_FOLDER)
         """Unpack the .tgz file to get the nsplaydev.app"""
         File.unpack_tar(PREVIEW_APP_PATH_IOS, SUT_FOLDER)
+        File.unpack_tar(PLAYGROUND_APP_PATH_IOS, SUT_FOLDER)
 
 
     @staticmethod
-    def install(device_id, platform=Platform.BOTH):
+    def install_preview_app(device_id, platform=Platform.BOTH):
         """Installs Preview App on emulator and simulator"""
-        package_android = File.find(base_path = SUT_FOLDER, file_name="app-universal-release")
-        package_ios = File.find(base_path = SUT_FOLDER, file_name="nsplaydev")
+        package_android = File.find(base_path = SUT_FOLDER, file_name="app-universal-release.apk")
+        package_ios = os.path.join(SUT_FOLDER, 'nsplaydev.app')
+        if platform is Platform.IOS:
+            Simulator.install(package_ios)
+        elif platform is Platform.ANDROID: 
+            Adb.install(package_android, device_id)
+        elif platform is Platform.BOTH: 
+            Adb.install(package_android, device_id)
+            Simulator.install(package_ios)
+
+    @staticmethod
+    def install_playground_app(device_id, platform=Platform.BOTH):
+        """Installs Playground App on emulator and simulator"""
+        package_android = os.path.join(SUT_FOLDER, "app-release.apk")
+        package_ios = os.path.join(SUT_FOLDER, 'nsplay.app')
         if platform is Platform.IOS:
             Simulator.install(package_ios)
         elif platform is Platform.ANDROID: 
