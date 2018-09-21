@@ -8,6 +8,7 @@ import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.helpers.adb import Adb
+from core.json.json_utils import Json
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -118,6 +119,25 @@ class PluginsAndroidTests(BaseClass):
         assert "nativescript-telerik-ui" in output
 
         Tns.build_android(attributes={"--path": self.app_name})
+
+    def test_220_build_plugin_with_same_gradle_version_as_android_runtime(self):
+        plugin_path = os.path.join(TEST_RUN_HOME, 'data', 'plugins', 'sample-plugin', 'src')
+        Tns.plugin_add(plugin_path, attributes={"--path": self.app_name})
+
+        output = Tns.build_android(attributes={"--path": self.app_name}, log_trace=True)
+
+        app_json = TnsAsserts.get_package_json(self.app_name)
+        android_runtime = app_json.get('nativescript').get('tns-android').get('version')
+
+        path = os.path.join('sut', 'package', 'package.json')
+        android_runtime_json = Json.read(file_path=path)
+        gradle_version = android_runtime_json.get('gradle').get('version')
+        gradle_android = android_runtime_json.get('gradle').get('android')
+
+        message = "Got gradle versions {" + "\"gradleVersion\":\"{0}\",\"gradleAndroidPluginVersion\":\"{1}\"".format(
+            gradle_version, gradle_android) + "} " + "from runtime v{0}".format(android_runtime)
+
+        assert message in output
 
     def test_300_build_app_with_plugin_added_outside_project(self):
         Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name}, assert_success=False)
