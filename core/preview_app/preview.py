@@ -83,3 +83,11 @@ class Preview(object):
         elif platform is Platform.ANDROID:
             cmd = 'adb -s {0} shell am start -a android.intent.action.VIEW -d "{1}" org.nativescript.preview'.format(emulator_id, url)
             output = run(command=cmd, log_level=CommandLogLevel.COMMAND_ONLY)
+
+    @staticmethod
+    def dismiss_simulator_alert():
+        """When preview url is loaded in simulator there is alert for confirmation.
+           This method will dismiss it. It is implemented only for one instance of simulator for the moment"""
+        dismiss_sim_alert = os.path.join(TEST_RUN_HOME, 'core', 'device', 'helpers', 'send_enter_to_simulator.scpt')
+        command = "osascript " + dismiss_sim_alert
+        run(command, log_level=CommandLogLevel.FULL)

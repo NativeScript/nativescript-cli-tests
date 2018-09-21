@@ -23,8 +23,7 @@ class PreviewCommandTestsIos(BaseClass):
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.IOS)
 
         Preview.get_app_packages()
-        Preview.install_preview_app(SIMULATOR_ID, platform=Platform.IOS)
-        Preview.install_playground_app(SIMULATOR_ID, platform=Platform.IOS)
+        Preview.install_preview_app(cls.SIMULATOR_ID, platform=Platform.IOS)
 
         Tns.create_app(cls.app_name, update_modules=False)
 
