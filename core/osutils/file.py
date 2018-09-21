@@ -6,6 +6,7 @@ import fnmatch
 import os
 import shutil
 import time
+import tarfile
 
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
@@ -184,3 +185,11 @@ class File(object):
             return os.path.getsize(file_path)
         else:
             raise IOError("{0} not found!".format(file_path))
+    
+    @staticmethod
+    def unpack_tar(file_path, dest_dir):
+        try:
+            tarFile = tarfile.open(file_path, 'r:gz')
+            tarFile.extractall(dest_dir)
+        except:
+            print "Failed to unpack .tar file {0}".format(file_path)

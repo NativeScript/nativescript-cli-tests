@@ -641,6 +641,16 @@ class Tns(object):
         return output
 
     @staticmethod
+    def preview(attributes={}, assert_success=True, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None, wait=True):
+        
+        output = Tns.run_tns_command("preview", attributes=attributes, log_trace=log_trace, timeout=timeout,
+                                     tns_path=tns_path, wait=wait)
+        if assert_success:
+            assert "Generating qrcode for url https://play.nativescript.org/" in output
+            assert "Press c to display the QR code of the current application." in output
+        return output
+
+    @staticmethod
     def debug_android(attributes={}, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None):
         log_file = Tns.run_tns_command("debug android", attributes=attributes, log_trace=log_trace, timeout=timeout,
                                        tns_path=tns_path, wait=False)
