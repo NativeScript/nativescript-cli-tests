@@ -1,13 +1,18 @@
 from core.base_class.BaseClass import BaseClass
+
 from core.preview_app.preview import Preview
+
 from core.device.simulator import Simulator
+
 from core.tns.tns import Tns
+
 from core.device.device import Device
+
 from core.osutils.file import File
+
 from core.tns.tns_platform_type import Platform
-from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
-    ANDROID_PATH, IOS_PATH, SUT_FOLDER, CLI_PATH, IOS_INSPECTOR_PATH, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK, \
-    TEST_RUN_HOME, PREVIEW_APP_PATH_ANDROID, PREVIEW_APP_PATH_IOS, EMULATOR_ID
+
+from core.settings.settings import SUT_FOLDER, SIMULATOR_NAME, TEST_RUN_HOME
 
 class PreviewCommandTestsIos(BaseClass):
 
@@ -48,11 +53,11 @@ class PreviewCommandTestsIos(BaseClass):
                    'Press c to display the QR code of the current application'
                    ]
         Tns.wait_for_log(log_file=output, string_list=strings, timeout=180, check_interval=10, clean_log=False)
-        
+
         log = File.read(output)
         url = Preview.get_url(log)
 
-        Preview.run_app(url, SIMULATOR_ID, platform=Platform.IOS)
+        Preview.run_app(url, self.SIMULATOR_ID, platform=Platform.IOS)
                               
         strings = ['Start syncing changes for platform ios',
                    'Project successfully prepared (ios)',

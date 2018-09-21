@@ -51,6 +51,10 @@ class PreviewCommandTestsAndroid(BaseClass):
         # `tns preview` and take the app url and open it in Preview App
         output = Tns.preview(attributes={'--path': self.app_name}, wait=False,
                         log_trace=True,assert_success=False)
+        strings = ['Generating qrcode for url https://play.nativescript.org/',
+                   'Press c to display the QR code of the current application'
+                   ]
+        Tns.wait_for_log(log_file=output, string_list=strings, timeout=180, check_interval=10, clean_log=False)
         log = File.read(output)
         url = Preview.get_url(log)
         Preview.run_app(url, EMULATOR_ID, platform=Platform.ANDROID)
