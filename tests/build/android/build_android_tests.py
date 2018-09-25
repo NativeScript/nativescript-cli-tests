@@ -108,6 +108,9 @@ class BuildAndroidTests(BaseClass):
         archive = ZipFile(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, self.debug_apk))
         archive.extractall(self.app_name + "/temp")
         archive.close()
+        # Ceanup META-INF folder. It contains com.android.support.... files which are expected to be there due to 
+        # https://github.com/NativeScript/nativescript-cli/pull/3923
+        Folder.cleanup(os.path.join(self.app_name, "temp", "META-INF"))
         assert not File.pattern_exists(self.app_name + "/temp", "*.aar")
         assert not File.pattern_exists(self.app_name + "/temp", "*.plist")
         assert not File.pattern_exists(self.app_name + "/temp", "*.android.*")
