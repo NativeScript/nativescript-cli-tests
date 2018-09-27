@@ -53,7 +53,6 @@ class AndroidErrorActivityTests(BaseClass):
     @unittest.skipIf(CURRENT_OS == OSType.LINUX, "Temporary ignore on Linux.")
     @unittest.skip("https://github.com/NativeScript/nativescript-cli/issues/3812")
     def test_200_error_activity_shown_on_error(self):
-        #https://github.com/NativeScript/nativescript-cli/issues/3812
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
         strings = ['Project successfully built',
@@ -77,5 +76,7 @@ class AndroidErrorActivityTests(BaseClass):
         strings = ['Project successfully built', 'Successfully installed on device with identifier', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
 
+        crash = Adb.wait_for_text(device_id=EMULATOR_ID, text="Unfortunately")
+        assert crash, "Crash dialog NOT displayed."
         error = Adb.wait_for_text(device_id=EMULATOR_ID, text="Exception")
         assert not error, "Error activity found in release build!"
