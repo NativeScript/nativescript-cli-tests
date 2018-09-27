@@ -92,7 +92,6 @@ class RunAndroidEmulatorTests(BaseClass):
         Emulator.stop()  # We need this because of test_400_tns_run_android_respect_adb_errors
         Folder.cleanup(cls.temp_app)
 
-    @unittest.skip('temp')
     def test_001_tns_run_android_js_css_xml_manifest(self):
         """Make valid changes in JS,CSS and XML"""
 
