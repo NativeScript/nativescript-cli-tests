@@ -714,7 +714,7 @@ class RunAndroidEmulatorTests(BaseClass):
         """
         `tns run android` should start emulator if device is not connected.
         """
-        count = Device.get_count(platform=Platform.ANDROID)
+        count = len(Adb.get_devices(include_emulators=False))
         if count == 0:
             Emulator.stop()
             Tns.build_android(attributes={'--path': self.app_name})
@@ -904,7 +904,9 @@ class RunAndroidEmulatorTests(BaseClass):
         """
         Tns.create_app(self.app_name, update_modules=True)
         Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_PACKAGE})
-        File.replace(file_path=self.app_name + "/app/App_Resources/Android/app.gradle", str1="applicationId", str2="x")
+        File.replace(file_path=self.app_name + "/app/App_Resources/Android/src/main/AndroidManifest.xml",
+                     str1="android:name=",
+                     str2="android:name123=")
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
         strings = ['FAILURE', 'Build failed with an exception', 'gradlew failed with exit code 1']
