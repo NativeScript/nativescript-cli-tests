@@ -440,8 +440,9 @@ class Tns(object):
             # Verify apk packages
             app_name = Tns.__get_app_name_from_attributes(attributes=attributes)
             Tns.__get_platform_string(platform=Platform.ANDROID)
-            android_version = str(TnsAsserts.get_platform_version(app_name=app_name, platform='android'))
-            if android_version.startswith('4.'):
+            android_version_string = str(TnsAsserts.get_platform_version(app_name=app_name, platform='android'))
+            android_major_version = int(android_version_string.split('-')[0].split('.')[0])
+            if android_major_version > 3:
                 apk_name = "app"
                 debug_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, apk_name)
                 release_app_path = os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, apk_name)
@@ -462,7 +463,7 @@ class Tns(object):
                 assert "Webpack compilation complete" not in output
                 # remove strings from modules version e.g. ../ for shares
                 modules_version = str(TnsAsserts.get_modules_version(app_name)).replace(
-                    '^', '').replace('~','').replace('../', '').replace('file:', '')
+                    '^', '').replace('~', '').replace('../', '').replace('file:', '')
                 modules_json_in_platforms = File.read(
                     os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH, 'package.json'))
                 assert modules_version in modules_json_in_platforms, \
@@ -642,7 +643,6 @@ class Tns(object):
 
     @staticmethod
     def preview(attributes={}, assert_success=True, log_trace=False, timeout=COMMAND_TIMEOUT, tns_path=None, wait=True):
-        
         output = Tns.run_tns_command("preview", attributes=attributes, log_trace=log_trace, timeout=timeout,
                                      tns_path=tns_path, wait=wait)
         if assert_success:
