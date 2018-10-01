@@ -392,6 +392,19 @@ class Tns(object):
         return output
 
     @staticmethod
+    def plugin_create(name, attributes={}, log_trace=False, assert_success=True, tns_path=None):
+        output = Tns.run_tns_command("plugin create " + name, attributes=attributes, log_trace=log_trace,
+                                     tns_path=tns_path)
+        if assert_success:
+            if "/src" in name:
+                short_name = name.rsplit('@', 1)[0].replace("/src", "").split(os.sep)[-1]
+            else:
+                short_name = name.rsplit('@', 1)[0].replace(".tgz", "").split(os.sep)[-1]
+            assert "Solution for {0}".format(short_name) + " was successfully created." in output
+            # assert "Solution for {0}".format(name.replace("@" + TAG, "")) was successfully created."
+        return output
+
+    @staticmethod
     def plugin_remove(name, attributes={}, log_trace=False, assert_success=True, tns_path=None):
         output = Tns.run_tns_command("plugin remove " + name, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
