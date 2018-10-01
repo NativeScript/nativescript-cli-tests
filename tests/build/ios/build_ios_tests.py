@@ -79,6 +79,12 @@ class BuildiOSTests(BaseClass):
         Folder.cleanup("Payload")
         assert "Architectures in the fat file: Payload/TestApp.app/TestApp are: armv7 arm64" in output
 
+    def test_100_build_xcode10_without_build_xcconfig(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/3912
+        file = os.path.join(self.app_name, 'app', 'App_Resources', 'iOS', 'build.xcconfig')
+        File.remove(file)
+        Tns.build_ios(attributes={"--path": self.app_name}, log_trace=True)
+
     def test_190_build_ios_distribution_provisions(self):
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
 
