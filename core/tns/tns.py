@@ -508,18 +508,13 @@ class Tns(object):
                 assert "CodeSign" not in output, "Native build out is displayed even without --log trace"
 
             # Verify release/debug builds
+            # TODO: Check it on file level
             if "--release" in attributes.keys():
-                if Xcode.get_version() < 10:
-                    assert "CONFIGURATION Release" in output
-                else:
-                    if log_trace:
-                        assert '"-configuration" "Release"' in output
+                if Xcode.get_version() >= 10 and log_trace:
+                    assert '"-configuration" "Release"' in output
             else:
-                if Xcode.get_version() < 10:
-                    assert "CONFIGURATION Debug" in output
-                else:
-                    if log_trace:
-                        assert '"-configuration" "Debug"' in output
+                if Xcode.get_version() >= 10 and log_trace:
+                    assert '"-configuration" "Debug"' in output
 
             # Verify simulator/device builds
             device_folder = app_name + "/platforms/ios/build/device/"
