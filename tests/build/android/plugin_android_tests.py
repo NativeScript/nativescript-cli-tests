@@ -8,6 +8,7 @@ import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.helpers.adb import Adb
+from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -37,71 +38,75 @@ class PluginsAndroidTests(BaseClass):
         Folder.cleanup(self.app_name)
         Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
 
-    # def test_100_plugin_add_before_platform_add_android(self):
-    #     Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
-    #     Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name})
-    #
-    #     assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
-    #     assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
-    #
-    #     output = File.read(self.app_name + "/package.json")
-    #     assert "org.nativescript.TestApp" in output
-    #     assert "dependencies" in output
-    #     assert "tns-plugin" in output
-    #
-    # def test_101_plugin_add_after_platform_add_android(self):
-    #     Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name})
-    #
-    #     assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
-    #     assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
-    #
-    #     output = File.read(self.app_name + "/package.json")
-    #     assert "org.nativescript.TestApp" in output
-    #     assert "dependencies" in output
-    #     assert "tns-plugin" in output
-    #
-    # def test_102_plugin_add_inside_project(self):
-    #     current_dir = os.getcwd()
-    #     os.chdir(os.path.join(current_dir, self.app_name))
-    #     output = run(os.path.join("..", TNS_PATH) + " plugin add tns-plugin")
-    #     os.chdir(current_dir)
-    #     assert "Successfully installed plugin tns-plugin" in output
-    #
-    #     assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
-    #     assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
-    #
-    #     output = File.read(self.app_name + "/package.json")
-    #     assert "org.nativescript.TestApp" in output
-    #     assert "dependencies" in output
-    #     assert "tns-plugin" in output
-    #
-    #     Tns.build_android(attributes={"--path": self.app_name}, log_trace=True)
-    #     assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH + "/app-debug.apk")
-    #     assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "/tns-plugin/index.js")
-    #
-    # def test_103_check_android_manifest_merged(self):
-    #     plugin_name = "nativescript-barcodescanner"
-    #     Tns.plugin_add(plugin_name, attributes={"--path": self.app_name})
-    #     Tns.build_android(attributes={"--path": self.app_name})
-    #     apk_path = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, "app-debug.apk")
-    #     output = Adb.get_package_permission(apk_path)
-    #     assert "android.permission.READ_EXTERNAL_STORAGE" in output
-    #     assert "android.permission.WRITE_EXTERNAL_STORAGE" in output
-    #     assert "android.permission.INTERNET" in output
-    #     assert "android.permission.FLASHLIGHT" in output
-    #     assert "android.permission.CAMERA" in output
+    def test_100_plugin_add_before_platform_add_android(self):
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name})
+
+        assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
+        assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
+
+        output = File.read(self.app_name + "/package.json")
+        assert "org.nativescript.TestApp" in output
+        assert "dependencies" in output
+        assert "tns-plugin" in output
+
+    def test_101_plugin_add_after_platform_add_android(self):
+        Tns.plugin_add("tns-plugin", attributes={"--path": self.app_name})
+
+        assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
+        assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
+
+        output = File.read(self.app_name + "/package.json")
+        assert "org.nativescript.TestApp" in output
+        assert "dependencies" in output
+        assert "tns-plugin" in output
+
+    def test_102_plugin_add_inside_project(self):
+        current_dir = os.getcwd()
+        os.chdir(os.path.join(current_dir, self.app_name))
+        output = run(os.path.join("..", TNS_PATH) + " plugin add tns-plugin")
+        os.chdir(current_dir)
+        assert "Successfully installed plugin tns-plugin" in output
+
+        assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
+        assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
+
+        output = File.read(self.app_name + "/package.json")
+        assert "org.nativescript.TestApp" in output
+        assert "dependencies" in output
+        assert "tns-plugin" in output
+
+        Tns.build_android(attributes={"--path": self.app_name}, log_trace=True)
+        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH + "/app-debug.apk")
+        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "/tns-plugin/index.js")
+
+    def test_103_check_android_manifest_merged(self):
+        plugin_name = "nativescript-barcodescanner"
+        Tns.plugin_add(plugin_name, attributes={"--path": self.app_name})
+        Tns.build_android(attributes={"--path": self.app_name})
+        apk_path = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, "app-debug.apk")
+        output = Adb.get_package_permission(apk_path)
+        assert "android.permission.READ_EXTERNAL_STORAGE" in output
+        assert "android.permission.WRITE_EXTERNAL_STORAGE" in output
+        assert "android.permission.INTERNET" in output
+        assert "android.permission.FLASHLIGHT" in output
+        assert "android.permission.CAMERA" in output
 
     def test_104_plugin_create_android(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/1945
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         output = Tns.plugin_create("nativescript-ui-listview", attributes={"--path": self.app_name})
+        Tns.build_android(attributes={"--path": self.app_name})
+        assert not File.exists(self.app_name + "/nativescript-ui-listview/src/scripts/postclone.js")
 
-        # assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
-        # assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
-        #
-        # output = File.read(self.app_name + "/package.json")
-        # assert "org.nativescript.TestApp" in output
-        # assert "dependencies" in output
-        assert "tns-plugin" in output
+    def test_105_plugin_create_android_custom_plugin(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/1945
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        output = Tns.plugin_create("nativescript-ui-listview",
+                                   attributes={"--path": self.app_name, "--template":
+                                       "https://github.com/NativeScript/nativescript-plugin-seed/tarball/master"})
+        Tns.build_android(attributes={"--path": self.app_name})
+        assert not File.exists(self.app_name + "/nativescript-ui-listview/src/scripts/postclone.js")
 
     def test_201_plugin_add_before_platform_add_android_and_build(self):
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
@@ -141,6 +146,25 @@ class PluginsAndroidTests(BaseClass):
         # Verify plugin command list used plugins
         output = Tns.run_tns_command("plugin", attributes={"--path": self.app_name})
         assert tns_plugin in output
+
+    def test_310_plugin_platforms_should_not_exist_in_tnsmodules(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/3932
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        Tns.plugin_add("nativescript-ui-listview", attributes={"--path": self.app_name}, assert_success=False)
+        Folder.cleanup(self.app_name + "/node_modules")
+        File.remove(self.app_name + "/package.json")
+        copy = os.path.join('data', 'issues', 'nativescript-cli-3932', 'nativescript-ui-listview')
+        paste = os.path.join(self.app_name + '/' + 'nativescript-ui-listview')
+        Folder.copy(copy, paste)
+        File.copy(TEST_RUN_HOME + "/data/issues/nativescript-cli-3932/package.json", TEST_RUN_HOME + "/TestApp")
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+        Folder.navigate_to(self.app_name + "/nativescript-ui-listview")
+        Npm.install(option='--ignore-scripts')
+        Folder.navigate_to(TEST_RUN_HOME)
+        Tns.build_android(attributes={"--path": self.app_name})
+
+        app_path = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH)
+        assert not File.exists(os.path.join(app_path, 'nativescript-ui-listview', 'node_modules', 'nativescript-ui-core', 'platforms'))
 
     @unittest.skip("Temporary issues with jcenter.")
     def test_390_plugin_with_promise_in_hooks(self):
