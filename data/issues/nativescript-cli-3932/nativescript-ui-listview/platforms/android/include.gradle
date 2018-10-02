@@ -1,0 +1,10 @@
+android {
+	
+}
+
+def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "23.3.0"
+
+dependencies {
+	compile "com.android.support:appcompat-v7:$supportVersion"
+	compile "com.android.support:recyclerview-v7:$supportVersion"
+}

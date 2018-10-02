@@ -6,6 +6,7 @@ import os
 import time
 
 from core.base_class.BaseClass import BaseClass
+from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
@@ -44,27 +45,43 @@ class PluginsiOSTests(BaseClass):
         BaseClass.tearDown(self)
         Folder.cleanup(self.app_name)
 
-    def test_100_plugin_add_before_platform_add_ios(self):
-        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
-        output = Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})
-        assert "Successfully installed plugin tns-plugin" in output
-        assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
-        assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
-        output = run("cat " + self.app_name + "/package.json")
-        assert app_identifier in output.lower()
-        assert "dependencies" in output
-        assert tns_plugin in output
+    # def test_100_plugin_add_before_platform_add_ios(self):
+    #     Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
+    #     output = Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})
+    #     assert "Successfully installed plugin tns-plugin" in output
+    #     assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
+    #     assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
+    #     output = run("cat " + self.app_name + "/package.json")
+    #     assert app_identifier in output.lower()
+    #     assert "dependencies" in output
+    #     assert tns_plugin in output
+    #
+    # def test_101_plugin_add_after_platform_add_ios(self):
+    #     Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})
+    #
+    #     assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
+    #     assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
+    #
+    #     output = File.read(self.app_name + "/package.json")
+    #     assert app_identifier in output.lower()
+    #     assert "dependencies" in output
+    #     assert tns_plugin in output
 
-    def test_101_plugin_add_after_platform_add_ios(self):
-        Tns.plugin_add(tns_plugin, attributes={"--path": self.app_name})
+    def test_104_plugin_create_ios(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/1945
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        output = Tns.plugin_create("nativescript-ui-listview", attributes={"--path": self.app_name})
+        Tns.build_ios(attributes={"--path": self.app_name})
+        assert not File.exists(self.app_name + "/nativescript-ui-listview/src/scripts/postclone.js")
 
-        assert File.exists(self.app_name + "/node_modules/tns-plugin/index.js")
-        assert File.exists(self.app_name + "/node_modules/tns-plugin/package.json")
-
-        output = File.read(self.app_name + "/package.json")
-        assert app_identifier in output.lower()
-        assert "dependencies" in output
-        assert tns_plugin in output
+    def test_105_plugin_create_ios_custom_plugin(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/1945
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        output = Tns.plugin_create("nativescript-ui-listview",
+                                   attributes={"--path": self.app_name, "--template":
+                                       "https://github.com/NativeScript/nativescript-plugin-seed/tarball/master"})
+        Tns.build_ios(attributes={"--path": self.app_name})
+        assert not File.exists(self.app_name + "/nativescript-ui-listview/src/scripts/postclone.js")
 
     def test_201_plugin_add_before_platform_add_ios(self):
         Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
@@ -180,6 +197,24 @@ class PluginsiOSTests(BaseClass):
         assert File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "nativescript-appversion/appversion.js"))
         assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "nativescript-appversion/appversion.android.js"))
         assert not File.exists(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, "nativescript-appversion/appversion.ios.js"))
+
+    def test_311_plugin_platforms_should_not_exist_in_tnsmodules(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/3932
+        Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
+        Tns.plugin_add("nativescript-ui-listview", attributes={"--path": self.app_name}, assert_success=False)
+        Folder.cleanup(self.app_name + "/node_modules")
+        File.remove(self.app_name + "/package.json")
+        copy = os.path.join('data', 'issues', 'nativescript-cli-3932', 'nativescript-ui-listview')
+        paste = os.path.join(self.app_name + '/' + 'nativescript-ui-listview')
+        Folder.copy(copy, paste)
+        File.copy(TEST_RUN_HOME + "/data/issues/nativescript-cli-3932/package.json", TEST_RUN_HOME + "/TestApp")
+        Tns.platform_add_ios(attributes={"--path": self.app_name, "--frameworkPath": IOS_PACKAGE})
+        Folder.navigate_to(self.app_name + "/nativescript-ui-listview")
+        Npm.install(option='--ignore-scripts')
+        Folder.navigate_to(TEST_RUN_HOME)
+        Tns.build_ios(attributes={"--path": self.app_name})
+
+        assert not File.exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules/nativescript-ui-listview/node_modules/nativescript-ui-core/platforms")
 
     def test_320_CFBundleURLTypes_overridden_from_plugin(self):
         """
