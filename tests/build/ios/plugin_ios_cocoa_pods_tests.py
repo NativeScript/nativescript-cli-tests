@@ -149,7 +149,7 @@ class PluginsiOSPodsTests(BaseClass):
 
         output = Tns.prepare_ios(attributes={"--path": self.app_name}, assert_success=False)
         assert "Installing pods..." in output
-        assert "Command pod failed with exit code 1" in output
+        assert "'pod install' command failed" in output
         assert "pod 'InvalidPod'" in File.read(self.app_name + "/platforms/ios/Podfile")
 
         assert not File.exists(self.app_name + "/platforms/ios/TestApp.xcworkspace")
