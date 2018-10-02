@@ -136,6 +136,10 @@ class CreateTests(BaseClass):
         TnsAsserts.created(self.app_name, output=output)
         Folder.cleanup("template-hello-world")
 
+    def test_011_create_app_scoped_packages(self):
+        output = Tns.run_tns_command("create TestApp", attributes={"--template": "@angular/core"})
+        assert "Command npm install" not in output
+
     @parameterized.expand([
         "tns-template-hello-world",
         "https://github.com/NativeScript/template-hello-world.git",
