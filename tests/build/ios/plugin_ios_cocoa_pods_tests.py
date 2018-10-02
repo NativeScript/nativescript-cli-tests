@@ -97,7 +97,7 @@ class PluginsiOSPodsTests(BaseClass):
 
         # This deployment target comes from the CLI
         output = File.read(self.app_name + "/platforms/ios/TestApp.xcodeproj/project.pbxproj")
-        assert "IPHONEOS_DEPLOYMENT_TARGET = 8.0;" in output
+        assert "IPHONEOS_DEPLOYMENT_TARGET = 9.0;" in output
         # This deployment target comes from the Podfile - platform :ios, '8.1'
 
         Tns.build_ios(attributes={"--path": self.app_name})
@@ -132,7 +132,7 @@ class PluginsiOSPodsTests(BaseClass):
 
         # This deployment target comes from the CLI
         output = File.read(self.app_name + "/platforms/ios/TestApp.xcodeproj/project.pbxproj")
-        assert "IPHONEOS_DEPLOYMENT_TARGET = 8.0;" in output
+        assert "IPHONEOS_DEPLOYMENT_TARGET = 9.0;" in output
         # This deployment target comes from the Podfile - platform :ios, '8.1'
 
         Tns.build_ios(attributes={"--path": self.app_name, "--release": "", "--for-device": ""})
