@@ -108,7 +108,7 @@ class BuildAndroidTests(BaseClass):
         archive = ZipFile(os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH, self.debug_apk))
         archive.extractall(self.app_name + "/temp")
         archive.close()
-        # Ceanup META-INF folder. It contains com.android.support.... files which are expected to be there due to 
+        # Ceanup META-INF folder. It contains com.android.support.... files which are expected to be there due to
         # https://github.com/NativeScript/nativescript-cli/pull/3923
         Folder.cleanup(os.path.join(self.app_name, "temp", "META-INF"))
         assert not File.pattern_exists(self.app_name + "/temp", "*.aar")
@@ -251,22 +251,6 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.debug_apk)
         File.remove(self.debug_apk)
 
-    def test_390_build_project_with_foursquare_android_oauth(self):
-        # This is required when build with different SDK
-        Folder.cleanup(self.app_name)
-        Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-
-        # Add foursquare native library as dependency
-        source = os.path.join('data', 'issues', 'android-runtime-755', 'app.gradle')
-        target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
-        File.copy(src=source, dest=target)
-
-        # Build the project
-        output = Tns.build_android(attributes={"--path": self.app_name}, assert_success=False)
-        assert ':asbg:generateBindings', 'Static Binding Generator not executed'
-        assert 'cannot access its superclass' not in output
-
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows, because tar is not available")
     def test_399_build_project_with_gz_file(self):
         # This is required when build with different SDK
@@ -320,75 +304,11 @@ class BuildAndroidTests(BaseClass):
         assert not File.exists(
             os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, self.release_apk))
 
-    def test_410_generated_classes_not_be_deleted_on_rebuild(self):
-        # https: // github.com / NativeScript / nativescript - cli / issues / 3560
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
-                            assert_success=False)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-        target = os.path.join(self.app_name, 'app')
-        source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-904', 'MyActivity.js')
-        File.copy(source, target)
-
-        Tns.build_android(attributes={"--path": self.app_name})
-
-        assert File.exists(self.app_name + "/app/MyActivity.js")
-        assert File.exists(self.app_name + "/platforms/android/app/src/main/java/com/tns/MyActivity.java")
-
-        File.remove(self.app_name + '/app/MyActivity.js')
-
-        Tns.build_android(attributes={"--path": self.app_name})
-
-        assert File.exists(self.app_name + "/platforms/android/app/src/main/java/com/tns/MyActivity.java")
-
-    @unittest.skip("will change step of test")
-    def test_440_binding_text_exists(self):
-        # https: // github.com / NativeScript / android - runtime / issues / 833
-        Tns.create_app_ts(self.app_ts_name)
-
-        Tns.create_app(self.app_name)
-        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-
-        Folder.cleanup(os.path.join(self.app_name, 'app'))
-        copy = os.path.join(self.app_ts_name, 'app')
-        paste = self.app_name
-        Folder.move(copy, paste)
-
-        Tns.build_android(attributes={"--path": self.app_name})
-        bindings_path = os.path.join(self.app_name, 'platforms', 'android', 'build-tools', 'sbg-bindings.txt')
-        binding = os.stat(bindings_path)
-        assert binding.st_size > 15000
-        print binding.st_size
-        Folder.cleanup(self.app_ts_name)
-
     def test_441_android_typings(self):
         # Build with --androidTypings got nothing #3381
         Tns.run_tns_command("build android --androidTypings", attributes={"--path": self.app_name})
         assert File.exists(self.app_name + "/android.d.ts")
         assert File.exists(self.app_name + "/android-declarations.d.ts")
-
-    def test_442_include_gradle_flavor(self):
-        # https://github.com/NativeScript/android-runtime/pull/937
-        # https://github.com/NativeScript/nativescript-cli/pull/3467
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
-                            assert_success=False)
-        source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-pr-937', 'app.gradle')
-        target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
-        File.copy(src=source, dest=target)
-
-        Tns.run_tns_command("build android", attributes={"--path": self.app_name})
-
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/arm64Demo/debug/app-arm64-demo-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/arm64Full/debug/app-arm64-full-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/armDemo/debug/app-arm-demo-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/armFull/debug/app-arm-full-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/x86Demo/debug/app-x86-demo-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/x86Full/debug/app-x86-full-debug.apk")
 
     @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_450_resources_update_android(self):
@@ -428,34 +348,3 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/java")
         assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/res/values")
         Tns.build_android(attributes={"--path": self.app_name})
-
-    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
-    def test_461_include_gradle_flavor_update_resources(self):
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
-                            assert_success=False)
-        source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-pr-937', 'app.gradle')
-        target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
-        File.copy(src=source, dest=target)
-        output = Tns.run_tns_command("resources update", attributes={"--path": self.app_name})
-
-        assert File.exists(self.app_name + "/app/App_Resources/Android-Pre-v4/app.gradle")
-        assert File.exists(self.app_name + "/app/App_Resources/Android/app.gradle")
-        assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/AndroidManifest.xml")
-        assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/assets")
-        assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/java")
-        assert File.exists(self.app_name + "/app/App_Resources/Android/src/main/res/values")
-
-        Tns.run_tns_command("build android", attributes={"--path": self.app_name})
-
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/arm64Demo/debug/app-arm64-demo-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/arm64Full/debug/app-arm64-full-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/armDemo/debug/app-arm-demo-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/armFull/debug/app-arm-full-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/x86Demo/debug/app-x86-demo-debug.apk")
-        assert File.exists(self.app_name +
-                           "/platforms/android/app/build/outputs/apk/x86Full/debug/app-x86-full-debug.apk")
