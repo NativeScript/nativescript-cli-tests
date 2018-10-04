@@ -755,6 +755,12 @@ class RuntimeTests(BaseClass):
 
     @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_421_include_gradle_flavor_update_resources(self):
+        # Use Android runtime version 3.4.1 which is not compatible with java 10
+        target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
+        source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-34')
+        Folder.cleanup(target_app)
+        Folder.copy(source_app, target_app)
+
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
                             assert_success=False)
         source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-pr-937', 'app.gradle')
