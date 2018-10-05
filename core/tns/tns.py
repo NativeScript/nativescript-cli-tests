@@ -392,16 +392,42 @@ class Tns(object):
         return output
 
     @staticmethod
-    def plugin_create(name, attributes={}, log_trace=False, assert_success=True, tns_path=None):
+    def plugin_create(name, attributes={}, log_trace=False, assert_success=True, tns_path=None, force_clean=True):
+        # Detect folder where plugin should be created
+        path = attributes.get("--path")
+        # noinspection PyUnusedLocal
+        folder = path
+        if path is None:
+            path = name
+            folder = name
+        else:
+            folder = path + os.sep + name
+
+        # Clean target location
+        if force_clean:
+            Folder.cleanup(folder=path)
+
+        # Execute plugin create command
         output = Tns.run_tns_command("plugin create " + name, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
+
         if assert_success:
-            if "/src" in name:
-                short_name = name.rsplit('@', 1)[0].replace("/src", "").split(os.sep)[-1]
-            else:
-                short_name = name.rsplit('@', 1)[0].replace(".tgz", "").split(os.sep)[-1]
-            assert "Solution for {0}".format(short_name) + " was successfully created." in output
-            # assert "Solution for {0}".format(name.replace("@" + TAG, "")) was successfully created."
+            # Verify command output
+            assert "Will now rename some files" in output, "Post clone script not executed."
+            assert "Screenshots removed" in output, "Post clone script not executed."
+            assert "Solution for {0}".format(name) + " was successfully created" in output, 'Missing message in output.'
+            assert "https://docs.nativescript.org/plugins/building-plugins" in output, 'Link to docs is missing.'
+
+            # Verify created files and folders
+            plugin_root = os.path.join(TEST_RUN_HOME, folder)
+            readme = os.path.join(plugin_root, "README.md")
+            src = os.path.join(plugin_root, "src")
+            demo = os.path.join(plugin_root, "demo")
+            post_clone_script = os.path.join(src, "scripts", "postclone.js")
+            assert File.exists(readme), 'README.md do not exists.'
+            assert not Folder.is_empty(src), 'src folder should exists and should not be empty.'
+            assert not Folder.is_empty(demo), 'demo folder should exists and should not be empty.'
+            assert not File.exists(post_clone_script), 'Post clone script should not exists in plugin src folder.'
         return output
 
     @staticmethod
