@@ -755,11 +755,7 @@ class RuntimeTests(BaseClass):
 
     def test_421_include_gradle_flavor_update_resources(self):
         # Use Android runtime version 3.4.1 which is not compatible with java 10
-        Folder.cleanup(BaseClass.app_name + "/" + TnsAsserts.PLATFORM_ANDROID + '/build/outputs')
-        File.remove("app-debug.apk")
-        File.remove("app-release.apk")
-        Folder.cleanup('temp')
-        target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
+        target_app = os.path.join(TEST_RUN_HOME, self.app_name)
         source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-34')
         Folder.cleanup(target_app)
         Folder.copy(source_app, target_app)
@@ -769,7 +765,7 @@ class RuntimeTests(BaseClass):
         source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-pr-937', 'app.gradle')
         target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
         File.copy(src=source, dest=target)
-        output = Tns.run_tns_command("resources update", attributes={"--path": self.app_name})
+        Tns.run_tns_command("resources update", attributes={"--path": self.app_name})
 
         assert File.exists(self.app_name + "/app/App_Resources/Android-Pre-v4/app.gradle")
         assert File.exists(self.app_name + "/app/App_Resources/Android/app.gradle")
