@@ -31,14 +31,14 @@ class RuntimeTests(BaseClass):
         Emulator.ensure_available()
         Folder.cleanup('./' + cls.app_name)
 
-    # def tearDown(self):
-    #     Tns.kill()
-    #     BaseClass.tearDown(self)
-    #
-    # @classmethod
-    # def tearDownClass(cls):
-    #     BaseClass.tearDownClass()
-    #     Folder.cleanup(cls.app_name)
+    def tearDown(self):
+        Tns.kill()
+        BaseClass.tearDown(self)
+
+    @classmethod
+    def tearDownClass(cls):
+        BaseClass.tearDownClass()
+        Folder.cleanup(cls.app_name)
 
     def test_200_calling_custom_generated_classes_declared_in_manifest(self):
         Tns.create_app(self.app_name, attributes={"--template": os.path.join("data", "apps", "sbg-test-app.tgz")})
