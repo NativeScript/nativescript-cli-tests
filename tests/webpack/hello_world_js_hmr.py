@@ -15,7 +15,7 @@ from core.tns.tns_platform_type import Platform
 from tests.webpack.helpers.helpers import Helpers
 
 
-class WebPackHelloWorldJS(BaseClass):
+class RunAndroidEmulatorTestsHMR(BaseClass):
     SIMULATOR_ID = ""
 
     image_original = 'hello-world-js'
@@ -56,18 +56,25 @@ class WebPackHelloWorldJS(BaseClass):
     @staticmethod
     def apply_changes(app_name, log, platform):
 
+        not_found_list = []
         # Change JS, XML and CSS
-        ReplaceHelper.replace(app_name, WebPackHelloWorldJS.js_change, sleep=10)
+        ReplaceHelper.replace(app_name, RunAndroidEmulatorTestsHMR.js_change, sleep=10)
+        strings = ['JS: HMR: The following modules were updated:', './main-view-model.js',
+                   'JS: HMR: App is up to date.', 'Successfully transferred bundle.{0}'.format(not_found_list)]
+        Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 clicks left', timeout=20)
             assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
 
-        ReplaceHelper.replace(app_name, WebPackHelloWorldJS.xml_change, sleep=10)
+        ReplaceHelper.replace(app_name, RunAndroidEmulatorTestsHMR.xml_change, sleep=10)
+        strings = ['Refreshing application...', 'JS: HMR: Checking for updates to the bundle.',
+                   './main-page.xml']
+        Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TEST')
             assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
 
-        ReplaceHelper.replace(app_name, WebPackHelloWorldJS.css_change, sleep=10)
+        ReplaceHelper.replace(app_name, RunAndroidEmulatorTestsHMR.css_change, sleep=10)
         if platform == Platform.ANDROID:
             Tns.wait_for_log(log_file=log, string_list=['app.css'], clean_log=False)
 
@@ -76,10 +83,32 @@ class WebPackHelloWorldJS(BaseClass):
 
         # Verify application looks correct
         if platform == Platform.ANDROID:
-            Helpers.android_screen_match(image=WebPackHelloWorldJS.image_change, timeout=120)
+            Helpers.android_screen_match(image=RunAndroidEmulatorTestsHMR.image_change, timeout=120)
         if platform == Platform.IOS:
-            Helpers.ios_screen_match(sim_id=WebPackHelloWorldJS.SIMULATOR_ID, image=WebPackHelloWorldJS.image_change,
+            Helpers.ios_screen_match(sim_id=RunAndroidEmulatorTestsHMR.SIMULATOR_ID, image=RunAndroidEmulatorTestsHMR.image_change,
                                      timeout=120)
+
+    @staticmethod
+    def apply_changes_js(app_name, log, platform):
+        # Change JS
+        ReplaceHelper.replace(app_name, RunAndroidEmulatorTestsHMR.js_change, sleep=10)
+        strings = ['JS: HMR: The following modules were updated:', './main-view-model.js',
+                   'JS: HMR: App is up to date.']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+        if platform == Platform.ANDROID:
+            text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 clicks left', timeout=20)
+            assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
+
+    @staticmethod
+    def apply_changes_xml(app_name, log, platform):
+        # Change XML
+        ReplaceHelper.replace(app_name, RunAndroidEmulatorTestsHMR.xml_change, sleep=10)
+        strings = ['Refreshing application...', 'JS: HMR: Checking for updates to the bundle.',
+                   './main-page.xml']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+        if platform == Platform.ANDROID:
+            text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TEST')
+            assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
 
     @staticmethod
     def revert_changes(app_name, log, platform):
@@ -88,36 +117,85 @@ class WebPackHelloWorldJS(BaseClass):
             File.write(file_path=log, text="")
 
         # Revert XML changes
-        ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.xml_change, sleep=10)
-        Tns.wait_for_log(log_file=log, string_list=['main-page.xml'], clean_log=False)
+        ReplaceHelper.rollback(app_name, RunAndroidEmulatorTestsHMR.xml_change, sleep=10)
+        strings = ['Refreshing application...', 'JS: HMR: Checking for updates to the bundle.',
+                   './main-page.xml']
+        Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TAP')
             assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
 
         # Revert JS changes
-        ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.js_change, sleep=10)
-        Tns.wait_for_log(log_file=log, string_list=['main-view-model.js'], clean_log=False)
+        ReplaceHelper.rollback(app_name, RunAndroidEmulatorTestsHMR.js_change, sleep=10)
+        strings = ['JS: HMR: The following modules were updated:', './main-view-model.js',
+                   'JS: HMR: App is up to date.']
+        Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left', timeout=20)
-            assert text_changed, 'Changes in TS file not applied (UI is not refreshed).'
+            assert text_changed, 'JS: HMR: The following modules were updated:'
 
         # Revert CSS changes
-        ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.css_change, sleep=10)
+        ReplaceHelper.rollback(app_name, RunAndroidEmulatorTestsHMR.css_change, sleep=10)
         Tns.wait_for_log(log_file=log, string_list=['app.css'], clean_log=False)
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
                          timeout=60)
         if platform == Platform.ANDROID:
-            Helpers.android_screen_match(image=WebPackHelloWorldJS.image_original, timeout=120)
+            Helpers.android_screen_match(image=RunAndroidEmulatorTestsHMR.image_original, timeout=120)
         if platform == Platform.IOS:
-            Helpers.ios_screen_match(sim_id=WebPackHelloWorldJS.SIMULATOR_ID, image=WebPackHelloWorldJS.image_original,
+            Helpers.ios_screen_match(sim_id=RunAndroidEmulatorTestsHMR.SIMULATOR_ID, image=RunAndroidEmulatorTestsHMR.image_original,
                                      timeout=120)
 
     def test_001_android_run_hmr(self):
-        log = Tns.run_android(attributes={"--path": self.app_name})
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
+                        assert_success=False)
+
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run_hmr, not_existing_string_list=Helpers.wp_errors_hmr,
+                         timeout=240)
+        Helpers.android_screen_match(image=self.image_original, timeout=120)
+
+        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+
+    def test_001_ios_run_hmr(self):
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
+                        assert_success=False)
+
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run_hmr, not_existing_string_list=Helpers.wp_errors_hmr,
+                         timeout=240)
+        Helpers.ios_screen_match(image=self.image_original, timeout=120)
+
+        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+
+    def test_002_android_run_hmr_uninstall_app(self):
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
+                        assert_success=False)
+
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run_hmr, not_existing_string_list=Helpers.wp_errors_hmr,
+                         timeout=240)
+        Helpers.android_screen_match(image=self.image_original, timeout=120)
+
+        self.apply_changes_js(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+
+        # Uninstall app while `tns run` is running
+        Device.uninstall_app(app_prefix='org.nativescript.', platform=Platform.ANDROID)
+
+        self.apply_changes_xml(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+
+        # Verify application looks correct
+        if Platform == Platform.ANDROID:
+            Helpers.android_screen_match(image=RunAndroidEmulatorTestsHMR.image_change, timeout=120)
+
+    def test_003_android_run_hmr_delete_file(self):
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
+                        assert_success=False)
 
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240)
         Helpers.android_screen_match(image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher()
+        File.remove(self.app_name + 'app', 'main-view-model.js')
+
+        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)

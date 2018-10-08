@@ -16,6 +16,12 @@ class Helpers(object):
     no_wp_run = ['Successfully installed']
     no_wp_sync = ['Successfully synced application']
     wp = ['Webpack compilation complete']
+    wp_run_hmr = ['Webpack compilation complete', 'Successfully installed', 'JS: HMR: Sync',
+              'JS: HMR: Hot Module Replacement Enabled. Waiting for signal.']
+    wp_sync_hmr = ['Webpack compilation complete', 'Successfully synced application',
+               'JS: HMR: Checking for updates to the bundle.']
+    wp_errors_hmr = ['Module build failed', 'ENOENT']
+
     wp_run = ['Webpack compilation complete', 'Successfully installed']
     wp_sync = ['Webpack compilation complete', 'Successfully synced application']
     wp_sync_snapshot = ['Webpack compilation complete', 'Successfully synced app', 'Stripping the snapshot flag.']
