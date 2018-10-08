@@ -74,7 +74,7 @@ class PrepareAndroidTests(BaseClass):
 
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows")
     def test_210_platform_not_need_remove_after_bitcode_error(self):
-        #https://github.com/NativeScript/nativescript-cli/issues/3741
+        # https://github.com/NativeScript/nativescript-cli/issues/3741
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         Folder.navigate_to(self.app_name + "/app")
         path = os.path.join(self.app_name + "/app")
@@ -151,6 +151,7 @@ class PrepareAndroidTests(BaseClass):
         ng_path = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH, '@angular', 'core')
         assert File.exists(ng_path), "Scoped dependencies are flattened, please see #1783!"
 
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8 because of old android runtime.")
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows")
     def test_320_prepare_scoped_plugins(self):
         """
@@ -194,7 +195,7 @@ class PrepareAndroidTests(BaseClass):
         assert "Invalid platform windows. Valid platforms are ios or android." in output
 
     @unittest.skipIf(CURRENT_OS == OSType.LINUX, "Skip on Linux")
-    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
+    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8 because of old android runtime.")
     def test_401_prepare_project_with_many_dependencies(self):
         """
         Test for https://github.com/NativeScript/nativescript-cli/issues/2561

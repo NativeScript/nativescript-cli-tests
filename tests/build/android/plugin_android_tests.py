@@ -8,6 +8,7 @@ import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.helpers.adb import Adb
+from core.java.java import Java
 from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
@@ -80,6 +81,7 @@ class PluginsAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH + "/app-debug.apk")
         assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "/tns-plugin/index.js")
 
+    @unittest.skipIf(Java.version() != "1.8", "nativescript-barcodescanner is not compatible with java 10+")
     def test_103_check_android_manifest_merged(self):
         plugin_name = "nativescript-barcodescanner"
         Tns.plugin_add(plugin_name, attributes={"--path": self.app_name})
