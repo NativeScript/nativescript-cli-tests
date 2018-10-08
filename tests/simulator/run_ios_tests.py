@@ -124,6 +124,24 @@ class RunIOSSimulatorTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home', timeout=60)
 
+    def test_120_tns_run_ios_delete_file_check_platforms(self):
+        # https://github.com/NativeScript/nativescript-cli/issues/3984
+        # Files are not deleted from platforms folder on `tns run` command
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
+        file_delete = os.path.join(self.app_name + '/' + 'app', 'main-view-model.js')
+        File.remove(file_delete)
+        assert not File.exists(file_delete)
+        platform_file = os.path.join(self.app_name + '/' + 'platforms', 'ios', + self.app_name, 'app',
+                                     'main-view-model.js')
+        assert not File.exists(platform_file)
+
     def test_180_tns_run_ios_console_log(self):
         """
          Test console info, warn, error, assert, trace, time and logging of different objects.
