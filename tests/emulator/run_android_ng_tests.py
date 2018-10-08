@@ -213,3 +213,29 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         # Verify console.time() works
         console_time = ['JS: startup:']
         Tns.wait_for_log(log_file=log, string_list=console_time)
+
+    def test_290_tns_run_android_delete_node_modules(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/3944
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+
+        # Verify the app is running
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10)
+
+        Tns.kill()
+        node_modules = os.path.join(self.app_name + '/' + 'node_modules')
+        Folder.cleanup(node_modules)
+
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+
+        # Verify the app is running
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10)
+        assert "Cannot find module 'nativescript-angular/hooks/before-livesync'" not in log
+
