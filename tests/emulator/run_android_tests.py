@@ -227,6 +227,7 @@ class RunAndroidEmulatorTests(BaseClass):
         File.remove(file_delete)
         assert not File.exists(file_delete)
         platform_file = os.path.join(self.app_name + '/' + 'platforms', 'android', 'app', 'src', 'main', 'assets', 'app', 'main-view-model.js')
+        time.sleep(5)
         assert not File.exists(platform_file)
 
     def test_180_tns_run_android_console_logging(self):
