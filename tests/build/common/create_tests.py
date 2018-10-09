@@ -213,7 +213,7 @@ class CreateTests(BaseClass):
         """Create project without name should show friendly error message"""
 
         output = Tns.run_tns_command("create ")
-        assert "You need to provide all the required parameters." in output
+        assert "You must specify <App name> when creating a new project" in output
         assert "# tns create" in output
 
     def test_404_create_project_with_template_and_ng(self):
