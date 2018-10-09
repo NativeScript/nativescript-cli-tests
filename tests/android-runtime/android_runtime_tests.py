@@ -775,3 +775,4 @@ class RuntimeTests(BaseClass):
         assert "JSParser Error: Not enough or too many arguments passed(0) when trying to extend interface: " \
                "java.util.List in file: main-page" in log
         assert "Execution failed for task ':app:runSbg'" in log
+
