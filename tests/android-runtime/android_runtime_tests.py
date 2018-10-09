@@ -741,6 +741,8 @@ class RuntimeTests(BaseClass):
         target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
         File.copy(src=source, dest=target)
 
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+
         Tns.run_tns_command("build android", attributes={"--path": self.app_name})
 
         assert File.exists(self.app_name +
