@@ -3,7 +3,6 @@ Test for specific needs of Android runtime.
 """
 import os
 import time
-import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
@@ -16,7 +15,6 @@ from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from tests.webpack.helpers.helpers import Helpers
-from core.java.java import Java
 
 
 class RuntimeTests(BaseClass):
@@ -489,12 +487,13 @@ class RuntimeTests(BaseClass):
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
 
-        strings = ['uses-sdk:minSdkVersion 17 cannot be smaller than version 23 declared in library [:com.tns-release:]',
-                   'as the library might be using APIs not available in 17',
-                   'Suggestion: use a compatible library with a minSdk of at most 17',
-                   'or increase this project\'s minSdk version to at least 23',
-                   'or use tools:overrideLibrary="com.example.comtns" to force usage (may lead to runtime failures)'
-                   ]
+        strings = [
+            'uses-sdk:minSdkVersion 17 cannot be smaller than version 23 declared in library [:com.tns-release:]',
+            'as the library might be using APIs not available in 17',
+            'Suggestion: use a compatible library with a minSdk of at most 17',
+            'or increase this project\'s minSdk version to at least 23',
+            'or use tools:overrideLibrary="com.example.comtns" to force usage (may lead to runtime failures)'
+            ]
 
         try:
             Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
@@ -544,10 +543,11 @@ class RuntimeTests(BaseClass):
         target_js = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
         if File.exists(target_js):
             File.remove(target_js, True)
-        source_js = os.path.join('data', "issues", 'android-runtime-1104', 'default_gradle','app.gradle')
+        source_js = os.path.join('data', "issues", 'android-runtime-1104', 'default_gradle', 'app.gradle')
         File.copy(src=source_js, dest=target_js)
         source_xml = os.path.join('data', 'issues', 'android-runtime-1104', 'AndroidManifest.xml')
-        target_xml = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', "src", "main",'AndroidManifest.xml')
+        target_xml = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', "src", "main",
+                                  'AndroidManifest.xml')
         if File.exists(target_js):
             File.remove(target_js, True)
         File.copy(src=source_xml, dest=target_xml)
@@ -582,10 +582,12 @@ class RuntimeTests(BaseClass):
         target_js = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
         if File.exists(target_js):
             File.remove(target_js, True)
-        source_js = os.path.join('data', "issues", 'android-runtime-1104','app.gradle')
+        source_js = os.path.join('data', "issues", 'android-runtime-1104', 'app.gradle')
         File.copy(src=source_js, dest=target_js)
-        source_xml = os.path.join('data', 'issues', 'android-runtime-1104', "api17_AndroidManifest", 'AndroidManifest.xml')
-        target_xml = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', "src", "main",'AndroidManifest.xml')
+        source_xml = os.path.join('data', 'issues', 'android-runtime-1104', "api17_AndroidManifest",
+                                  'AndroidManifest.xml')
+        target_xml = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', "src", "main",
+                                  'AndroidManifest.xml')
         if File.exists(target_js):
             File.remove(target_js, True)
         File.copy(src=source_xml, dest=target_xml)
@@ -604,7 +606,7 @@ class RuntimeTests(BaseClass):
             'Suggestion: use a compatible library with a minSdk of at most 17',
             'or increase this project\'s minSdk version to at least 23',
             'or use tools:overrideLibrary="com.example.comtns" to force usage (may lead to runtime failures)'
-            ]
+        ]
 
         try:
             Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
@@ -621,10 +623,11 @@ class RuntimeTests(BaseClass):
         target_js = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
         if File.exists(target_js):
             File.remove(target_js, True)
-        source_js = os.path.join('data', "issues", 'android-runtime-1104', 'api17_gradle','app.gradle')
+        source_js = os.path.join('data', "issues", 'android-runtime-1104', 'api17_gradle', 'app.gradle')
         File.copy(src=source_js, dest=target_js)
         source_xml = os.path.join('data', 'issues', 'android-runtime-1104', 'AndroidManifest.xml')
-        target_xml = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', "src", "main",'AndroidManifest.xml')
+        target_xml = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', "src", "main",
+                                  'AndroidManifest.xml')
         if File.exists(target_js):
             File.remove(target_js, True)
         File.copy(src=source_xml, dest=target_xml)
@@ -738,6 +741,8 @@ class RuntimeTests(BaseClass):
         target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
         File.copy(src=source, dest=target)
 
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+
         Tns.run_tns_command("build android", attributes={"--path": self.app_name})
 
         assert File.exists(self.app_name +
@@ -752,3 +757,24 @@ class RuntimeTests(BaseClass):
                            "/platforms/android/app/build/outputs/apk/x86Demo/debug/app-x86-demo-debug.apk")
         assert File.exists(self.app_name +
                            "/platforms/android/app/build/outputs/apk/x86Full/debug/app-x86-full-debug.apk")
+
+    def test_430_verify_JSParser_in_SBG_is_failing_the_build_when_there_is_an_error(self):
+        """
+         JSParser in SBG fail the build when there is an error
+        https://github.com/NativeScript/android-runtime/issues/1152
+        """
+
+        # Change main-page.js with sbg Error
+        source_js = os.path.join('data', "issues", 'android-runtime-1152', 'main-page.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-page.js')
+        File.copy(src=source_js, dest=target_js)
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+        log = Tns.build_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID},
+                                assert_success=False)
+
+        assert "FAILURE: Build failed with an exception" in log
+        assert "JSParser Error: Not enough or too many arguments passed(0) when trying to extend interface: " \
+               "java.util.List in file: main-page" in log
+        assert "Execution failed for task ':app:runSbg'" in log
+
