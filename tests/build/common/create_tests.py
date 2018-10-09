@@ -52,7 +52,7 @@ class CreateTests(BaseClass):
         output = Tns.run_tns_command("create " + self.app_name)
         TnsAsserts.created(self.app_name, output=output)
         assert "Now you can navigate to your project with $ cd {0}".format(self.app_name) in output
-        assert "After that you can run it on device/emulator by executing $ tns run <platform>" in output
+        assert "After that you can preview it on device by executing $ tns preview" in output
 
     def test_001_create_app(self):
         """Create app with --template and update modules"""
@@ -119,7 +119,7 @@ class CreateTests(BaseClass):
         output = Tns.create_app(self.app_name, attributes={"--default": ""}, update_modules=False)
         TnsAsserts.created(self.app_name, output=output)
         assert "Now you can navigate to your project with $ cd {0}".format(self.app_name) in output
-        assert "After that you can run it on device/emulator by executing $ tns run <platform>" in output
+        assert "After that you can preview it on device by executing $ tns preview" in output
 
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows temporary")
     def test_010_create_app_remove_app_resources(self):
