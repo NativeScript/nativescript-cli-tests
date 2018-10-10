@@ -198,9 +198,7 @@ class RunAndroidEmulatorTestsNG(BaseClass):
                               assert_success=False)
 
         # Verify the app is running
-        strings = ['Project successfully built',
-                   'Successfully installed on device with identifier', EMULATOR_ID,
-                   'Successfully synced application',
+        strings = ['Successfully synced application',
                    'Application loaded!',
                    'Home page loaded!']
 
@@ -220,9 +218,7 @@ class RunAndroidEmulatorTestsNG(BaseClass):
                               assert_success=False)
 
         # Verify the app is running
-        strings = ['Project successfully built',
-                   'Successfully installed on device with identifier', EMULATOR_ID,
-                   'Successfully synced application']
+        strings = ['Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10)
 
         Tns.kill()
