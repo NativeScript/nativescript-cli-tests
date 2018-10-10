@@ -35,8 +35,8 @@ class RunIOSDeviceTestsNG(BaseClass):
         Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_PACKAGE})
 
         # Copy the app folder (app is modified in order to get some console logs on loaded)
-        source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'app')
-        target = os.path.join(cls.app_name, 'app')
+        source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'src')
+        target = os.path.join(cls.app_name, 'src')
         Folder.cleanup(target)
         Folder.copy(src=source, dst=target)
 

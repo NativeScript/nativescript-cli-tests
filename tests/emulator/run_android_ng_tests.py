@@ -32,7 +32,7 @@ class RunAndroidEmulatorTestsNG(BaseClass):
 
         # Create default NG app (to get right dependencies from package.json)
         Tns.create_app_ng(cls.app_name)
-        Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_PACKAGE})
+        Tns.platform_add_android(attributes={'--path': cls.app_name, '--frameworkPath': ANDROID_PACKAGE}) 
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -51,11 +51,11 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         """Make valid changes in JS,CSS and XML"""
 
         # Copy the app folder (app is modified in order to get some console logs on loaded)
-        source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'app')
-        target = os.path.join(self.app_name, 'app')
+        source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'src')
+        target = os.path.join(self.app_name, 'src')
         Folder.cleanup(target)
         Folder.copy(src=source, dst=target)
-
+        
         # `tns run android` and wait until app is deployed
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
@@ -156,21 +156,21 @@ class RunAndroidEmulatorTestsNG(BaseClass):
         """Test for https://github.com/NativeScript/android-runtime/issues/761"""
 
         # Copy the app folder (app is modified in order to get some console logs on loaded)
-        source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'app')
-        target = os.path.join(self.app_name, 'app')
+        source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'src')
+        target = os.path.join(self.app_name, 'src')
         Folder.cleanup(target)
         Folder.copy(src=source, dst=target)
-
+        
         source_html = os.path.join('data', 'issues', 'android-runtime-761', 'items.component.html')
-        target_html = os.path.join(self.app_name, 'app', 'item', 'items.component.html')
+        target_html = os.path.join(self.app_name, 'src', 'app', 'item', 'items.component.html')
         File.copy(src=source_html, dest=target_html)
 
         source_ts = os.path.join('data', 'issues', 'android-runtime-761', 'items.component.ts')
-        target_ts = os.path.join(self.app_name, 'app', 'item', 'items.component.ts')
+        target_ts = os.path.join(self.app_name, 'src', 'app', 'item', 'items.component.ts')
         File.copy(src=source_ts, dest=target_ts)
 
         source_xml = os.path.join('data', 'issues', 'android-runtime-761', 'AndroidManifest.xml')
-        target_xml = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'AndroidManifest.xml')
+        target_xml = os.path.join(self.app_name, 'App_Resources', 'Android', 'src', 'main', 'AndroidManifest.xml')
         File.copy(src=source_xml, dest=target_xml)
 
         # Verify the app is running
@@ -183,14 +183,14 @@ class RunAndroidEmulatorTestsNG(BaseClass):
 
     def test_280_tns_run_android_console_time(self):
         # Copy the app folder (app is modified in order to get some console logs on loaded)
-        source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'app')
-        target = os.path.join(self.app_name, 'app')
+        source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'src')
+        target = os.path.join(self.app_name, 'src')
         Folder.cleanup(target)
         Folder.copy(src=source, dst=target)
 
         # Replace app.component.ts to use console.time() and console.timeEnd()
         source = os.path.join('data', 'issues', 'ios-runtime-843', 'app.component.ts')
-        target = os.path.join(self.app_name, 'app', 'app.component.ts')
+        target = os.path.join(self.app_name, 'src', 'app', 'app.component.ts')
         File.copy(src=source, dest=target)
 
         # `tns run android` and wait until app is deployed
