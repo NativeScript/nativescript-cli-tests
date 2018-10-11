@@ -24,9 +24,9 @@ class WebPackHelloWorldNG(BaseClass):
     image_original = 'hello-world-ng'
     image_change = 'hello-world-ng-js-css-xml'
 
-    html_change = ['app/item/items.component.html', '[text]="item.name"', '[text]="item.id"']
-    ts_change = ['app/item/item.service.ts', 'Ter Stegen', 'Stegen Ter']
-    css_change = ['app/app.css', 'core.light.css', 'core.dark.css']
+    html_change = ['src/app/item/items.component.html', '[text]="item.name"', '[text]="item.id"']
+    ts_change = ['src/app/item/item.service.ts', 'Ter Stegen', 'Stegen Ter']
+    css_change = ['src/app.css', 'core.light.css', 'core.dark.css']
 
     @classmethod
     def setUpClass(cls):
@@ -38,6 +38,7 @@ class WebPackHelloWorldNG(BaseClass):
         Npm.install(package=TYPESCRIPT_PACKAGE, option='--save-dev', folder=cls.app_name)
         Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
+        Folder.cleanup(cls.app_name + '/app')
 
         if CURRENT_OS == OSType.OSX:
             Simulator.stop()
@@ -213,7 +214,7 @@ class WebPackHelloWorldNG(BaseClass):
     def test_200_run_android_with_bundle_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
+                                          '--device': EMULATOR_ID}, wait=False, assert_success=False, log_trace=True)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=10)
         Helpers.android_screen_match(image=self.image_original, timeout=120)

@@ -61,8 +61,8 @@ class Helpers(object):
                     print "Params:"
                     print cmdline
                     if CURRENT_OS != OSType.WINDOWS:
-                        assert "--env.appResourcesPath=app/App_Resources" in cmdline
-                        assert "--env.appPath=app" in cmdline
+                        assert "--env.appResourcesPath=App_Resources" in cmdline
+                        assert "--env.appPath=src" in cmdline
                     break
                 if (running is False) and (time.time() > end_time):
                     raise NameError("Webpack with watcher is not running in {0} seconds.", timeout)
