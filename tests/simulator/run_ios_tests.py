@@ -138,8 +138,7 @@ class RunIOSSimulatorTests(BaseClass):
         file_delete = os.path.join(self.app_name + '/' + 'app', 'main-view-model.js')
         File.remove(file_delete)
         assert not File.exists(file_delete)
-        platform_file = os.path.join(self.app_name + '/' + 'platforms', 'ios', + self.app_name + '/' + 'app',
-                                     'main-view-model.js')
+        platform_file = os.path.join(self.app_name, 'platforms', 'ios', self.app_name, 'app', 'main-view-model.js')
         assert not File.exists(platform_file)
 
     def test_180_tns_run_ios_console_log(self):
