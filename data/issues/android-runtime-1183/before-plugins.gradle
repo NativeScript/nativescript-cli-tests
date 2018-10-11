@@ -1,0 +1,1 @@
+println 'MESSAGE: Before plugins gradle is applied!'

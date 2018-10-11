@@ -732,6 +732,28 @@ class RuntimeTests(BaseClass):
         assert ':asbg:generateBindings', 'Static Binding Generator not executed'
         assert 'cannot access its superclass' not in output
 
+    def test_360_applying_before_plugins_gradle(self):
+        """
+        Applying before-plugin.gradle file before plugin's include.gradle
+
+        https://github.com/NativeScript/android-runtime/issues/1183
+        """
+
+        source = os.path.join('data', 'issues', 'android-runtime-1183', 'before-plugins.gradle')
+        target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android')
+        File.copy(src=source, dest=target)
+
+        plugin_path = os.path.join(TEST_RUN_HOME, 'data', 'plugins', 'sample-plugin', 'src')
+        Tns.plugin_add(plugin_path, attributes={"--path": self.app_name})
+
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
+                            assert_success=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+
+        output = Tns.build_android(attributes={"--path": self.app_name}, assert_success=False)
+        messages = "MESSAGE: Before plugins gradle is applied!\nMESSAGE: Plugin include gradle is applied!"
+        assert messages in output, "FAIL: before-plugins.gradle is NOT applied correctly!"
+
     def test_420_include_gradle_flavor(self):
         # https://github.com/NativeScript/android-runtime/pull/937
         # https://github.com/NativeScript/nativescript-cli/pull/3467
@@ -777,4 +799,3 @@ class RuntimeTests(BaseClass):
         assert "JSParser Error: Not enough or too many arguments passed(0) when trying to extend interface: " \
                "java.util.List in file: main-page" in log
         assert "Execution failed for task ':app:runSbg'" in log
-
