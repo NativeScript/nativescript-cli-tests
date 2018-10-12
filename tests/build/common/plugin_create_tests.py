@@ -8,7 +8,7 @@ import unittest
 from core.base_class.BaseClass import BaseClass
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
-from core.settings.settings import ANDROID_PACKAGE, CURRENT_OS, IOS_PACKAGE
+from core.settings.settings import CURRENT_OS
 from core.tns.tns import Tns
 
 
