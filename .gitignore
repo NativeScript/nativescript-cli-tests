@@ -21,5 +21,6 @@ package-lock.json
 template-master-detail
 template-master-detail-ts
 template-master-detail-ng
+nativescript-test-plugin
 *.apk
 *.txt
