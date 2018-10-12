@@ -124,6 +124,7 @@ class RunIOSSimulatorTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home', timeout=60)
 
+    @unittest.skip("Incorrect path")
     def test_120_tns_run_ios_delete_file_check_platforms(self):
         # https://github.com/NativeScript/nativescript-cli/issues/3984
         # Files are not deleted from platforms folder on `tns run` command
