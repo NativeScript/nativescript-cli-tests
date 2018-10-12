@@ -61,6 +61,34 @@ class Helpers(object):
                     print "Params:"
                     print cmdline
                     if CURRENT_OS != OSType.WINDOWS:
+                        assert "--env.appResourcesPath=app/App_Resources" in cmdline
+                        assert "--env.appPath=app" in cmdline
+                    break
+                if (running is False) and (time.time() > end_time):
+                    raise NameError("Webpack with watcher is not running in {0} seconds.", timeout)
+            time.sleep(5)
+            return running
+        else:
+            time.sleep(20)
+            return True
+
+    @staticmethod
+    def wait_webpack_watcher_ng(timeout=60):
+        if CURRENT_OS != OSType.WINDOWS:
+            running = False
+            end_time = time.time() + timeout
+            while not running:
+                time.sleep(5)
+                webpack_cmd = "node_modules/webpack/bin/webpack.js"
+                if CURRENT_OS == OSType.WINDOWS:
+                    webpack_cmd = "webpack"
+                running = Process.is_running_by_commandline(webpack_cmd)
+                if running:
+                    running = True
+                    cmdline = Process.get_proc_by_commandline(webpack_cmd).cmdline()
+                    print "Params:"
+                    print cmdline
+                    if CURRENT_OS != OSType.WINDOWS:
                         assert "--env.appResourcesPath=App_Resources" in cmdline
                         assert "--env.appPath=src" in cmdline
                     break

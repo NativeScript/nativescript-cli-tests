@@ -218,7 +218,7 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=10)
         Helpers.android_screen_match(image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher()
+        Helpers.wait_webpack_watcher_ng()
 
         self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
@@ -230,7 +230,7 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher()
+        Helpers.wait_webpack_watcher_ng()
 
         self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
@@ -243,7 +243,7 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
         Helpers.android_screen_match(image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher()
+        Helpers.wait_webpack_watcher_ng()
 
         self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
@@ -255,7 +255,7 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp, not_existing_string_list=Helpers.wp_errors,
                          timeout=240)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher()
+        Helpers.wait_webpack_watcher_ng()
 
         self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
@@ -269,7 +269,7 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=180)
         Helpers.android_screen_match(image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher()
+        Helpers.wait_webpack_watcher_ng()
 
         self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID, aot=True)
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID, aot=True)
@@ -282,7 +282,7 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp, not_existing_string_list=Helpers.wp_errors,
                          timeout=240)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher()
+        Helpers.wait_webpack_watcher_ng()
 
         self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS, aot=True)
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS, aot=True)
@@ -300,7 +300,7 @@ class WebPackHelloWorldNG(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=10)
         Helpers.android_screen_match(image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher()
+        Helpers.wait_webpack_watcher_ng()
 
         self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
