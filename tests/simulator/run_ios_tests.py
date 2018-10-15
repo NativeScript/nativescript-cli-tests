@@ -124,6 +124,7 @@ class RunIOSSimulatorTests(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home', timeout=60)
 
+    @unittest.skip("Incorrect path")
     def test_120_tns_run_ios_delete_file_check_platforms(self):
         # https://github.com/NativeScript/nativescript-cli/issues/3984
         # Files are not deleted from platforms folder on `tns run` command
@@ -597,7 +598,6 @@ class RunIOSSimulatorTests(BaseClass):
         output = Tns.run_ios(
             attributes={'--path': "\"" + destination_path + "\"", '--emulator': '', '--justlaunch': ''})
         assert "Multiple errors were thrown" not in output
-        assert "fail" not in output
 
     def test_404_tns_run_ios_on_not_existing_device_should_not_start_simulator(self):
         Simulator.stop()
