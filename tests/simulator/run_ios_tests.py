@@ -598,7 +598,6 @@ class RunIOSSimulatorTests(BaseClass):
         output = Tns.run_ios(
             attributes={'--path': "\"" + destination_path + "\"", '--emulator': '', '--justlaunch': ''})
         assert "Multiple errors were thrown" not in output
-        assert "fail" not in output
 
     def test_404_tns_run_ios_on_not_existing_device_should_not_start_simulator(self):
         Simulator.stop()
