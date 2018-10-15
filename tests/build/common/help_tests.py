@@ -186,8 +186,7 @@ class HelpTests(BaseClass):
         assert "add" in output
         assert "remove" in output
         assert "update" in output
-        assert "find" in output
-        assert "search" in output
+        assert "create" in output
         assert "Attributes" in output
 
     def test_114_device_log_help(self):
