@@ -69,7 +69,8 @@ if "missing" in BRANCH :
     BRANCH = os.environ.get("BRANCH", "master").lower()
 
 if "release" in BRANCH:
-    SHARE_BRANCH = "Release"
+    SHARE_BRANCH = "RC"
+    SHARE_BRANCH_INSPECTOR = "Release"
     TAG = "rc"
 else:
     SHARE_BRANCH = "Stable"
@@ -85,7 +86,7 @@ IOS_PATH = os.environ.get("IOS_PATH", os.path.join(BASE_PACKAGE_PATH, "tns-ios",
 TNS_MODULES_PATH = os.environ.get("TNS_MODULES_PATH",
                                   os.path.join(BASE_PACKAGE_PATH, "tns-modules", SHARE_BRANCH, "tns-core-modules.tgz"))
 IOS_INSPECTOR_PATH = os.environ.get("IOS_INSPECTOR_PATH",
-                                    os.path.join(BASE_PACKAGE_PATH, "tns-ios-inspector", SHARE_BRANCH,
+                                    os.path.join(BASE_PACKAGE_PATH, "tns-ios-inspector", SHARE_BRANCH_INSPECTOR,
                                                  "tns-ios-inspector.tgz"))
 
 # Set source location for Preview App packages
