@@ -2,10 +2,12 @@
 Test for plugin commands in context of Android
 """
 import os
+import unittest
 
 from nose_parameterized import parameterized
 
 from core.base_class.BaseClass import BaseClass
+from core.java.java import Java
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_PACKAGE, TEST_RUN_HOME
@@ -45,6 +47,7 @@ class PluginsAndroidDataDrivenTests(BaseClass):
         BaseClass.tearDownClass()
 
     @parameterized.expand(PLUGIN_DEMOS)
+    @unittest.skipIf(Java.version() != "1.8", "Some of test plugins are not compatible with java 10+")
     def test_200_plugin(self, plugin, verification, comment):
         print "Test case: " + comment
         Folder.cleanup(self.app_name)

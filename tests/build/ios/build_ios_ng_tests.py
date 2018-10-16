@@ -26,6 +26,6 @@ class BuildiOSNGTests(BaseClass):
 
     def test_200_build_ios_ng_project_release_fordevice(self):
         Tns.build_ios(attributes={"--path": self.app_name, "--for-device": "", "--release": ""})
-        platform_folder = os.path.join(self.app_name, 'platforms', 'ios', self.app_name, 'app', 'item')
+        platform_folder = os.path.join(self.app_name, 'platforms', 'ios', self.app_name, 'app', 'app', 'item')
         assert File.pattern_exists(platform_folder, '*.js'), "JS files not found!"
         assert not File.pattern_exists(platform_folder, '*.ts'), "TS files found!"

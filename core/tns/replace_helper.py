@@ -14,9 +14,9 @@ class ReplaceHelper(object):
 
     CHANGE_XML_INVALID_SYNTAX = ['app/main-page.xml', '</Page>', '</Page']
 
-    NG_CHANGE_TS = ['app/item/item.service.ts', 'Ter Stegen', 'Stegen Ter']
-    NG_CHANGE_CSS = ['app/app.css', 'core.light.css', 'core.dark.css']
-    NG_CHANGE_HTML = ['app/item/items.component.html', '[text]="item.name"', '[text]="item.id"']
+    NG_CHANGE_TS = ['src/app/item/item.service.ts', 'Ter Stegen', 'Stegen Ter']
+    NG_CHANGE_CSS = ['src/app.css', 'core.light.css', 'core.dark.css']
+    NG_CHANGE_HTML = ['src/app/item/items.component.html', '[text]="item.name"', '[text]="item.id"']
 
     @staticmethod
     def replace(app_name, file_change, sleep=1):

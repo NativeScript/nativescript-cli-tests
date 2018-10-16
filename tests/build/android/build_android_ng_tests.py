@@ -32,6 +32,6 @@ class BuildAndroidNGTests(BaseClass):
                                       "--release": "",
                                       "--path": self.app_name
                                       })
-        platform_folder = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, 'item')
+        platform_folder = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "app", 'item')
         assert File.pattern_exists(platform_folder, '*.js'), "JS files not found!"
         assert not File.pattern_exists(platform_folder, '*.ts'), "TS files found!"

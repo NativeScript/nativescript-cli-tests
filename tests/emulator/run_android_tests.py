@@ -209,6 +209,27 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_js_css_xml')
 
+    def test_120_tns_run_android_delete_file_check_platforms(self):
+        #https://github.com/NativeScript/nativescript-cli/issues/3984
+        #Files are not deleted from platforms folder on `tns run` command
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
+
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
+        file_delete = os.path.join(self.app_name + '/' + 'app', 'main-view-model.js')
+        File.remove(file_delete)
+        assert not File.exists(file_delete)
+        platform_file = os.path.join(self.app_name + '/' + 'platforms', 'android', 'app', 'src', 'main', 'assets', 'app', 'main-view-model.js')
+        time.sleep(5)
+        assert not File.exists(platform_file)
+
     def test_180_tns_run_android_console_logging(self):
         """
          Test console info, warn, error, assert, trace, time and logging of different objects.

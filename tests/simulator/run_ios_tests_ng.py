@@ -30,8 +30,8 @@ class RunIOSSimulatorTestsNG(BaseClass):
         Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_PACKAGE})
 
         # Copy the app folder (app is modified in order to get some console logs on loaded)
-        source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'app')
-        target = os.path.join(cls.app_name, 'app')
+        source = os.path.join('data', 'apps', 'livesync-hello-world-ng', 'src')
+        target = os.path.join(cls.app_name, 'src')
         Folder.cleanup(target)
         Folder.copy(src=source, dst=target)
 
@@ -50,11 +50,10 @@ class RunIOSSimulatorTestsNG(BaseClass):
 
     def test_001_tns_run_ios(self):
         # `tns run ios` and wait until app is deployed
-        Tns.build_ios(attributes={'--path': self.app_name})
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False,
                           assert_success=False)
-        strings = ['Successfully synced application', self.SIMULATOR_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=90, check_interval=10, clean_log=False)
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.SIMULATOR_ID]
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
 
         # Verify initial state of the app
         assert Device.wait_for_text(device_id=self.SIMULATOR_ID, text="Ter Stegen",
@@ -67,7 +66,7 @@ class RunIOSSimulatorTestsNG(BaseClass):
     def test_280_tns_run_ios_console_time(self):
         # Replace app.component.ts to use console.time() and console.timeEnd()
         source = os.path.join('data', 'issues', 'ios-runtime-843', 'app.component.ts')
-        target = os.path.join(self.app_name, 'app', 'app.component.ts')
+        target = os.path.join(self.app_name,'src', 'app', 'app.component.ts')
         File.copy(src=source, dest=target)
 
         # `tns run ios` and wait until app is deployed
@@ -88,7 +87,7 @@ class RunIOSSimulatorTestsNG(BaseClass):
     def test_290_tns_run_ios_console_dir(self):
         # Replace app.component.ts to use console.time() and console.timeEnd()
         source = os.path.join('data', 'issues', 'ios-runtime-875', 'items.component.ts')
-        target = os.path.join(self.app_name, 'app', 'item', 'items.component.ts')
+        target = os.path.join(self.app_name,'src', 'app', 'item', 'items.component.ts')
         File.copy(src=source, dest=target)
 
         # `tns run ios` and wait until app is deployed

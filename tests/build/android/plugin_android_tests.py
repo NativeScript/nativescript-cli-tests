@@ -8,6 +8,7 @@ import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.device.helpers.adb import Adb
+from core.java.java import Java
 from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
@@ -80,6 +81,7 @@ class PluginsAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_DEBUG_PATH + "/app-debug.apk")
         assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH + "/tns-plugin/index.js")
 
+    @unittest.skipIf(Java.version() != "1.8", "nativescript-barcodescanner is not compatible with java 10+")
     def test_103_check_android_manifest_merged(self):
         plugin_name = "nativescript-barcodescanner"
         Tns.plugin_add(plugin_name, attributes={"--path": self.app_name})
@@ -91,22 +93,6 @@ class PluginsAndroidTests(BaseClass):
         assert "android.permission.INTERNET" in output
         assert "android.permission.FLASHLIGHT" in output
         assert "android.permission.CAMERA" in output
-
-    def test_104_plugin_create_android(self):
-        #https://github.com/NativeScript/nativescript-cli/issues/1945
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
-        output = Tns.plugin_create("nativescript-ui-listview", attributes={"--path": self.app_name})
-        Tns.build_android(attributes={"--path": self.app_name})
-        assert not File.exists(self.app_name + "/nativescript-ui-listview/src/scripts/postclone.js")
-
-    def test_105_plugin_create_android_custom_plugin(self):
-        #https://github.com/NativeScript/nativescript-cli/issues/1945
-        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
-        output = Tns.plugin_create("nativescript-ui-listview",
-                                   attributes={"--path": self.app_name, "--template":
-                                       "https://github.com/NativeScript/nativescript-plugin-seed/tarball/master"})
-        Tns.build_android(attributes={"--path": self.app_name})
-        assert not File.exists(self.app_name + "/nativescript-ui-listview/src/scripts/postclone.js")
 
     def test_201_plugin_add_before_platform_add_android_and_build(self):
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
@@ -147,8 +133,8 @@ class PluginsAndroidTests(BaseClass):
         output = Tns.run_tns_command("plugin", attributes={"--path": self.app_name})
         assert tns_plugin in output
 
-    def test_310_plugin_platforms_should_not_exist_in_tnsmodules(self):
-        #https://github.com/NativeScript/nativescript-cli/issues/3932
+    def test_310_plugin_platforms_should_not_exist_in_tns_modules(self):
+        # https://github.com/NativeScript/nativescript-cli/issues/3932
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
         Tns.plugin_add("nativescript-ui-listview", attributes={"--path": self.app_name}, assert_success=False)
         Folder.cleanup(self.app_name + "/node_modules")
@@ -164,7 +150,8 @@ class PluginsAndroidTests(BaseClass):
         Tns.build_android(attributes={"--path": self.app_name})
 
         app_path = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH)
-        assert not File.exists(os.path.join(app_path, 'nativescript-ui-listview', 'node_modules', 'nativescript-ui-core', 'platforms'))
+        assert not File.exists(
+            os.path.join(app_path, 'nativescript-ui-listview', 'node_modules', 'nativescript-ui-core', 'platforms'))
 
     @unittest.skip("Temporary issues with jcenter.")
     def test_390_plugin_with_promise_in_hooks(self):

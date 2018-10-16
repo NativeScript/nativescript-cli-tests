@@ -493,7 +493,7 @@ class RuntimeTests(BaseClass):
             'Suggestion: use a compatible library with a minSdk of at most 17',
             'or increase this project\'s minSdk version to at least 23',
             'or use tools:overrideLibrary="com.example.comtns" to force usage (may lead to runtime failures)'
-            ]
+        ]
 
         try:
             Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
@@ -732,6 +732,50 @@ class RuntimeTests(BaseClass):
         assert ':asbg:generateBindings', 'Static Binding Generator not executed'
         assert 'cannot access its superclass' not in output
 
+    def test_350_sgb_fails_generating_custom_activity(self):
+        """
+        Static Binding Generator fails if class has static properties that are used within the class
+        https://github.com/NativeScript/android-runtime/issues/1160
+        """
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
+                            assert_success=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+
+        source = os.path.join('data', "issues", 'android-runtime-1160', 'testActivity.android.js')
+        target = os.path.join(self.app_name, 'app')
+        File.copy(src=source, dest=target)
+
+        Tns.build_android(attributes={"--path": self.app_name}, assert_success=False)
+        activity_class_path = os.path.join(self.app_name, "platforms", "android", "app", "src", "main", "java", "com",
+                                           "test")
+
+        if File.exists(os.path.join(activity_class_path, "Activity.java")):
+            assert True
+        else:
+            assert False, "Fail: Custom activity class is NOT generated in {0} !".format(activity_class_path)
+
+    def test_360_applying_before_plugins_gradle(self):
+        """
+        Applying before-plugin.gradle file before plugin's include.gradle
+
+        https://github.com/NativeScript/android-runtime/issues/1183
+        """
+
+        source = os.path.join('data', 'issues', 'android-runtime-1183', 'before-plugins.gradle')
+        target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android')
+        File.copy(src=source, dest=target)
+
+        plugin_path = os.path.join(TEST_RUN_HOME, 'data', 'plugins', 'sample-plugin', 'src')
+        Tns.plugin_add(plugin_path, attributes={"--path": self.app_name})
+
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
+                            assert_success=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+
+        output = Tns.build_android(attributes={"--path": self.app_name}, assert_success=False)
+        messages = "MESSAGE: Before plugins gradle is applied!\nMESSAGE: Plugin include gradle is applied!"
+        assert messages in output, "FAIL: before-plugins.gradle is NOT applied correctly!"
+
     def test_420_include_gradle_flavor(self):
         # https://github.com/NativeScript/android-runtime/pull/937
         # https://github.com/NativeScript/nativescript-cli/pull/3467
@@ -740,6 +784,8 @@ class RuntimeTests(BaseClass):
         source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-pr-937', 'app.gradle')
         target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
         File.copy(src=source, dest=target)
+
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         Tns.run_tns_command("build android", attributes={"--path": self.app_name})
 

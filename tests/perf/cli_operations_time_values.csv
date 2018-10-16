@@ -14,9 +14,9 @@ NativeScript/sample-Groceries,webpack,android,1,4.5,68
 NativeScript/sample-Groceries,webpack-snapshot,android,1,4.5,73
 NativeScript/sample-Groceries,timeline,android,1,4.5,70
 NativeScript/template-hello-world,default,ios,45,11,38
-NativeScript/template-hello-world,webpack,ios,45,11,60
+NativeScript/template-hello-world,webpack,ios,45,11,45
 NativeScript/template-hello-world-ng,default,ios,45,11,52
-NativeScript/template-hello-world-ng,webpack,ios,45,11,70
+NativeScript/template-hello-world-ng,webpack,ios,45,11,55
 nativescript-vue/nativescript-vue-template,default,ios,24,11,29
 NativeScript/nativescript-sdk-examples-ng,default,ios,1,11,55
 NativeScript/nativescript-sdk-examples-ng,webpack,ios,1,11,105
