@@ -74,6 +74,7 @@ if "release" in BRANCH:
     TAG = "rc"
 else:
     SHARE_BRANCH = "Stable"
+    SHARE_BRANCH_INSPECTOR = "Stable"
     TAG = "next"
 
 # Set source location of separate package based on base path
