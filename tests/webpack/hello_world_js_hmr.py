@@ -13,9 +13,11 @@ from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from tests.webpack.helpers.helpers import Helpers
+import hashlib
+import re
 
 
-class RunAndroidEmulatorTestsHMR(BaseClass):
+class RunTestsHMR(BaseClass):
     SIMULATOR_ID = ""
 
     image_original = 'hello-world-js'
@@ -24,6 +26,7 @@ class RunAndroidEmulatorTestsHMR(BaseClass):
     xml_change = ['app/main-page.xml', 'TAP', 'TEST']
     js_change = ['app/main-view-model.js', 'taps', 'clicks']
     css_change = ['app/app.css', '18', '32']
+    result = re.match()
 
     @classmethod
     def setUpClass(cls):
@@ -58,23 +61,27 @@ class RunAndroidEmulatorTestsHMR(BaseClass):
 
         not_found_list = []
         # Change JS, XML and CSS
-        ReplaceHelper.replace(app_name, RunAndroidEmulatorTestsHMR.js_change, sleep=10)
-        strings = ['JS: HMR: The following modules were updated:', './main-view-model.js',
-                   'JS: HMR: App is up to date.', 'Successfully transferred bundle.{0}'.format(not_found_list)]
+        ReplaceHelper.replace(app_name, RunTestsHMR.js_change, sleep=10)
+        strings = ['JS: HMR: The following modules were updated:', './main-view-model.js', './main-page.js',
+                   'Successfully transferred bundle.',
+                   'JS: HMR: Successfully applied update with hmr hash ']
+        # strings = ['JS: HMR: The following modules were updated:', './main-view-model.js', './main-page.js',
+        #            'Successfully transferred bundle.{0}.hot-update.js'.format(hash()),
+        #            'JS: HMR: Successfully applied update with hmr hash {0}'.format(hashlib.sha1)]
         Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 clicks left', timeout=20)
             assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
 
-        ReplaceHelper.replace(app_name, RunAndroidEmulatorTestsHMR.xml_change, sleep=10)
-        strings = ['Refreshing application...', 'JS: HMR: Checking for updates to the bundle.',
-                   './main-page.xml']
+        ReplaceHelper.replace(app_name, RunTestsHMR.xml_change, sleep=10)
+        strings = ['Refreshing application...', 'JS: HMR: Checking for updates to the bundle with hmr hash {0}.',
+                   './main-page.xml', 'JS: HMR: Successfully applied update with hmr hash {0}']
         Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TEST')
             assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
 
-        ReplaceHelper.replace(app_name, RunAndroidEmulatorTestsHMR.css_change, sleep=10)
+        ReplaceHelper.replace(app_name, RunTestsHMR.css_change, sleep=10)
         if platform == Platform.ANDROID:
             Tns.wait_for_log(log_file=log, string_list=['app.css'], clean_log=False)
 
@@ -83,15 +90,15 @@ class RunAndroidEmulatorTestsHMR(BaseClass):
 
         # Verify application looks correct
         if platform == Platform.ANDROID:
-            Helpers.android_screen_match(image=RunAndroidEmulatorTestsHMR.image_change, timeout=120)
+            Helpers.android_screen_match(image=RunTestsHMR.image_change, timeout=120)
         if platform == Platform.IOS:
-            Helpers.ios_screen_match(sim_id=RunAndroidEmulatorTestsHMR.SIMULATOR_ID, image=RunAndroidEmulatorTestsHMR.image_change,
+            Helpers.ios_screen_match(sim_id=RunTestsHMR.SIMULATOR_ID, image=RunTestsHMR.image_change,
                                      timeout=120)
 
     @staticmethod
     def apply_changes_js(app_name, log, platform):
         # Change JS
-        ReplaceHelper.replace(app_name, RunAndroidEmulatorTestsHMR.js_change, sleep=10)
+        ReplaceHelper.replace(app_name, RunTestsHMR.js_change, sleep=10)
         strings = ['JS: HMR: The following modules were updated:', './main-view-model.js',
                    'JS: HMR: App is up to date.']
         Tns.wait_for_log(log_file=log, string_list=strings)
@@ -102,7 +109,7 @@ class RunAndroidEmulatorTestsHMR(BaseClass):
     @staticmethod
     def apply_changes_xml(app_name, log, platform):
         # Change XML
-        ReplaceHelper.replace(app_name, RunAndroidEmulatorTestsHMR.xml_change, sleep=10)
+        ReplaceHelper.replace(app_name, RunTestsHMR.xml_change, sleep=10)
         strings = ['Refreshing application...', 'JS: HMR: Checking for updates to the bundle.',
                    './main-page.xml']
         Tns.wait_for_log(log_file=log, string_list=strings)
@@ -117,7 +124,7 @@ class RunAndroidEmulatorTestsHMR(BaseClass):
             File.write(file_path=log, text="")
 
         # Revert XML changes
-        ReplaceHelper.rollback(app_name, RunAndroidEmulatorTestsHMR.xml_change, sleep=10)
+        ReplaceHelper.rollback(app_name, RunTestsHMR.xml_change, sleep=10)
         strings = ['Refreshing application...', 'JS: HMR: Checking for updates to the bundle.',
                    './main-page.xml']
         Tns.wait_for_log(log_file=log, string_list=strings)
@@ -126,7 +133,7 @@ class RunAndroidEmulatorTestsHMR(BaseClass):
             assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
 
         # Revert JS changes
-        ReplaceHelper.rollback(app_name, RunAndroidEmulatorTestsHMR.js_change, sleep=10)
+        ReplaceHelper.rollback(app_name, RunTestsHMR.js_change, sleep=10)
         strings = ['JS: HMR: The following modules were updated:', './main-view-model.js',
                    'JS: HMR: App is up to date.']
         Tns.wait_for_log(log_file=log, string_list=strings)
@@ -135,16 +142,16 @@ class RunAndroidEmulatorTestsHMR(BaseClass):
             assert text_changed, 'JS: HMR: The following modules were updated:'
 
         # Revert CSS changes
-        ReplaceHelper.rollback(app_name, RunAndroidEmulatorTestsHMR.css_change, sleep=10)
+        ReplaceHelper.rollback(app_name, RunTestsHMR.css_change, sleep=10)
         Tns.wait_for_log(log_file=log, string_list=['app.css'], clean_log=False)
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
                          timeout=60)
         if platform == Platform.ANDROID:
-            Helpers.android_screen_match(image=RunAndroidEmulatorTestsHMR.image_original, timeout=120)
+            Helpers.android_screen_match(image=RunTestsHMR.image_original, timeout=120)
         if platform == Platform.IOS:
-            Helpers.ios_screen_match(sim_id=RunAndroidEmulatorTestsHMR.SIMULATOR_ID, image=RunAndroidEmulatorTestsHMR.image_original,
+            Helpers.ios_screen_match(sim_id=RunTestsHMR.SIMULATOR_ID, image=RunTestsHMR.image_original,
                                      timeout=120)
 
     def test_001_android_run_hmr(self):
@@ -186,7 +193,7 @@ class RunAndroidEmulatorTestsHMR(BaseClass):
 
         # Verify application looks correct
         if Platform == Platform.ANDROID:
-            Helpers.android_screen_match(image=RunAndroidEmulatorTestsHMR.image_change, timeout=120)
+            Helpers.android_screen_match(image=RunTestsHMR.image_change, timeout=120)
 
     def test_003_android_run_hmr_delete_file(self):
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
