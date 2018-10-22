@@ -13,8 +13,8 @@ from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from tests.webpack.helpers.helpers import Helpers
-import hashlib
-import re
+# import hashlib
+# import re
 
 
 class RunTestsHMR(BaseClass):
@@ -26,7 +26,6 @@ class RunTestsHMR(BaseClass):
     xml_change = ['app/main-page.xml', 'TAP', 'TEST']
     js_change = ['app/main-view-model.js', 'taps', 'clicks']
     css_change = ['app/app.css', '18', '32']
-    result = re.match()
 
     @classmethod
     def setUpClass(cls):
@@ -74,8 +73,8 @@ class RunTestsHMR(BaseClass):
             assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
 
         ReplaceHelper.replace(app_name, RunTestsHMR.xml_change, sleep=10)
-        strings = ['Refreshing application...', 'JS: HMR: Checking for updates to the bundle with hmr hash {0}.',
-                   './main-page.xml', 'JS: HMR: Successfully applied update with hmr hash {0}']
+        strings = ['Refreshing application on device', 'JS: HMR: Checking for updates to the bundle with hmr hash',
+                   './main-page.xml', 'JS: HMR: Successfully applied update with hmr hash']
         Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TEST')
@@ -125,8 +124,8 @@ class RunTestsHMR(BaseClass):
 
         # Revert XML changes
         ReplaceHelper.rollback(app_name, RunTestsHMR.xml_change, sleep=10)
-        strings = ['Refreshing application...', 'JS: HMR: Checking for updates to the bundle.',
-                   './main-page.xml']
+        strings = ['JS: HMR: Sync...', 'Refreshing application on device', './main-page.xml',
+                   'JS: HMR: Checking for updates to the bundle with hmr hash']
         Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TAP')
@@ -134,8 +133,8 @@ class RunTestsHMR(BaseClass):
 
         # Revert JS changes
         ReplaceHelper.rollback(app_name, RunTestsHMR.js_change, sleep=10)
-        strings = ['JS: HMR: The following modules were updated:', './main-view-model.js',
-                   'JS: HMR: App is up to date.']
+        strings = ['JS: HMR: The following modules were updated:', './main-view-model.js', './main-page.js',
+                   'Successfully transferred bundle.', 'JS: HMR: Successfully applied update with hmr hash ']
         Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left', timeout=20)
@@ -166,7 +165,7 @@ class RunTestsHMR(BaseClass):
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
 
     def test_001_ios_run_hmr(self):
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--hmr': ''}, wait=False,
                         assert_success=False)
 
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run_hmr, not_existing_string_list=Helpers.wp_errors_hmr,
