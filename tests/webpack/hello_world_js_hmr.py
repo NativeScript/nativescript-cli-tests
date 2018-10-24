@@ -1,5 +1,7 @@
 import unittest
 
+import os
+
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
@@ -98,8 +100,9 @@ class RunTestsHMR(BaseClass):
     def apply_changes_js(app_name, log, platform):
         # Change JS
         ReplaceHelper.replace(app_name, RunTestsHMR.js_change, sleep=10)
-        strings = ['JS: HMR: The following modules were updated:', './main-view-model.js',
-                   'JS: HMR: App is up to date.']
+        strings = ['JS: HMR: The following modules were updated:', './main-view-model.js', './main-page.js',
+                   'Successfully transferred bundle.',
+                   'JS: HMR: Successfully applied update with hmr hash ']
         Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 clicks left', timeout=20)
@@ -107,10 +110,10 @@ class RunTestsHMR(BaseClass):
 
     @staticmethod
     def apply_changes_xml(app_name, log, platform):
-        # Change XML
+        # Change XML after uninstall app from device
         ReplaceHelper.replace(app_name, RunTestsHMR.xml_change, sleep=10)
-        strings = ['Refreshing application...', 'JS: HMR: Checking for updates to the bundle.',
-                   './main-page.xml']
+        strings = ['Refreshing application on device',
+                   'JS: HMR: Sync...','JS: HMR: Hot Module Replacement Enabled. Waiting for signal.']
         Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TEST')
@@ -164,7 +167,7 @@ class RunTestsHMR(BaseClass):
         self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
 
-    def test_001_ios_run_hmr(self):
+    def test_002_ios_run_hmr(self):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--hmr': ''}, wait=False,
                         assert_success=False)
 
@@ -172,10 +175,10 @@ class RunTestsHMR(BaseClass):
                          timeout=240)
         Helpers.ios_screen_match(image=self.image_original, timeout=120)
 
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
+        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
 
-    def test_002_android_run_hmr_uninstall_app(self):
+    def test_003_android_run_hmr_uninstall_app(self):
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
                         assert_success=False)
 
@@ -194,14 +197,52 @@ class RunTestsHMR(BaseClass):
         if Platform == Platform.ANDROID:
             Helpers.android_screen_match(image=RunTestsHMR.image_change, timeout=120)
 
-    def test_003_android_run_hmr_delete_file(self):
-        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
-                        assert_success=False)
-
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
+    def test_004_ios_run_hmr_uninstall_app(self):
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--hmr': ''}, wait=False,
+                            assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run_hmr, not_existing_string_list=Helpers.wp_errors_hmr,
                          timeout=240)
-        Helpers.android_screen_match(image=self.image_original, timeout=120)
-        File.remove(self.app_name + 'app', 'main-view-model.js')
+        Helpers.ios_screen_match(image=self.image_original, timeout=120)
 
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+        self.apply_changes_js(app_name=self.app_name, log=log, platform=Platform.IOS)
+
+        # Uninstall app while `tns run` is running
+        Device.uninstall_app(app_prefix='org.nativescript.', platform=Platform.IOS)
+
+        self.apply_changes_xml(app_name=self.app_name, log=log, platform=Platform.IOS)
+
+    def test_005_android_run_hmr_console_log(self):
+        source_js = os.path.join('data', "issues", 'console-log-hmr', 'main-view-model.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
+        File.copy(src=source_js, dest=target_js)
+
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
+                                      assert_success=False)
+        strings = ['JS: LOG']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+
+        Helpers.android_screen_match(image=self.image_original, timeout=120)
+
+    def test_006_ios_run_hmr_console_log(self):
+        source_js = os.path.join('data', "issues", 'console-log-hmr', 'main-view-model.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
+        File.copy(src=source_js, dest=target_js)
+
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--hmr': ''}, wait=False,
+                                assert_success=False)
+        strings = ['JS: LOG']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+
+        Helpers.ios_screen_match(image=self.image_original, timeout=120)
+
+    # def test_007_android_run_hmr_delete_file(self):
+    #     log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
+    #                     assert_success=False)
+    #
+    #     Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
+    #                      timeout=240)
+    #     Helpers.android_screen_match(image=self.image_original, timeout=120)
+    #     File.remove(self.app_name + 'app', 'main-view-model.js')
+    #
+    #     self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+    #     self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
