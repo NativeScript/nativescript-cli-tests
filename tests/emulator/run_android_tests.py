@@ -888,7 +888,7 @@ class RunAndroidEmulatorTests(BaseClass):
         assert "org.nativescript.MyApp" in File.read(app_gradle), "Failed to replace bundle identifier."
 
         output = Tns.run_android(attributes={'--path': self.app_name, '--justlaunch': ''})
-        assert "The Application identifier is different from the one inside 'package.json' file." in output
+        assert "WARNING: The Application identifier is different from the one inside \"package.json\" file." in output
         assert "NativeScript CLI might not work properly." in output
         assert "Project successfully built" in output
 
