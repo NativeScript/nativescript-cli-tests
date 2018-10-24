@@ -877,7 +877,6 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
-    @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-cli/issues/2825")
     def test_390_tns_run_android_should_warn_if_package_ids_do_not_match(self):
         """
         If bundle identifiers in package.json and app.gradle do not match CLI should warn the user.
