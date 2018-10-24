@@ -227,8 +227,7 @@ class BuildAndroidTests(BaseClass):
         Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
-
-        Tns.build_android(attributes={"--compileSdk": "27", "--path": self.app_name})
+        Tns.build_android(attributes={"--compileSdk": "28", "--path": self.app_name})
 
     def test_313_build_android_with_invalid_compile_sdk(self):
         # This is required when build with different SDK
