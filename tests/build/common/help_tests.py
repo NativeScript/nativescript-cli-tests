@@ -13,9 +13,6 @@ class HelpTests(BaseClass):
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
-        Tns.create_app(cls.app_name)
-        Tns.platform_add_ios(attributes={"--path": cls.app_name, "--frameworkPath": IOS_PACKAGE})
-        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
     def setUp(self):
         BaseClass.setUp(self)
@@ -39,19 +36,20 @@ class HelpTests(BaseClass):
     def test_102_create_app_help(self):
         output = Tns.run_tns_command("create --help")
 
-        HelpTests.verify_help(output)
+        assert "Template" in output
+        assert "Synopsis" in output
         assert "create" in output
         assert "Options" in output
-        assert "Attributes" in output
-        assert "Angular template" in output
-        assert "Create from default" in output
+        assert "Arguments" in output
+        assert "Angular based" in output
+        assert "predefined template" in output
 
     def test_103_platform_add_help(self):
         output = Tns.run_tns_command("platform add --help")
 
         HelpTests.verify_help(output)
         assert "platform add" in output
-        assert "Attributes" in output
+        assert "Arguments" in output
         assert "Options" in output
         assert "Android latest" in output
 
@@ -69,10 +67,10 @@ class HelpTests(BaseClass):
 
         if CURRENT_OS == OSType.OSX:
             assert "ios" in output
-            assert "Attributes" in output
+            assert "Arguments" in output
         else:
             assert "ios" not in output
-            assert "Attributes" not in output
+            assert "Arguments" not in output
 
     def test_105_update_help(self):
         output = Tns.run_tns_command("platform update --help")
@@ -80,7 +78,7 @@ class HelpTests(BaseClass):
         HelpTests.verify_help(output)
         assert "platform update" in output
         assert "Android selected runtime" in output
-        assert "Attributes" in output
+        assert "Arguments" in output
 
         if CURRENT_OS == OSType.OSX:
             assert "iOS latest runtime" in output
@@ -96,10 +94,10 @@ class HelpTests(BaseClass):
 
         if CURRENT_OS == OSType.OSX:
             assert "ios" in output
-            assert "Attributes" in output
+            assert "Arguments" in output
         else:
             assert "ios" not in output
-            assert "Attributes" not in output
+            assert "Arguments" not in output
 
     def test_107_build_help(self):
         output = Tns.run_tns_command("build --help")
@@ -110,25 +108,25 @@ class HelpTests(BaseClass):
 
         if CURRENT_OS == OSType.OSX:
             assert "ios" in output
-            assert "Attributes" in output
+            assert "Arguments" in output
         else:
             assert "ios" not in output
-            assert "Attributes" not in output
+            assert "Arguments" not in output
 
     def test_108_deploy_help(self):
         output = Tns.run_tns_command("deploy --help")
 
-        HelpTests.verify_help(output)
+        assert "Description" in output
         assert "deploy" in output
         assert "device" in output
         assert "release" in output
-        assert "Attributes" in output
 
         if CURRENT_OS == OSType.OSX:
-            assert "Options for iOS" in output
-            assert "Options for Android" in output
+            HelpTests.verify_help(output)
+            assert "Deploy on iOS" in output
+            assert "Deploy on Android" in output
         else:
-            assert "Options for iOS" not in output
+            assert "Deploy on iOS" not in output
             assert "Options" in output
 
     def test_109_run_help(self):
@@ -139,7 +137,13 @@ class HelpTests(BaseClass):
         assert "Options" in output
         assert "release" in output
         assert "device" in output
-        assert "Attributes" in output
+
+        if CURRENT_OS == OSType.OSX:
+            assert "ios" in output
+            assert "Arguments" in output
+        else:
+            assert "ios" not in output
+            assert "Arguments" not in output
 
     def test_110_debug_help(self):
         output = Tns.run_tns_command("debug --help")
@@ -150,10 +154,10 @@ class HelpTests(BaseClass):
 
         if CURRENT_OS == OSType.OSX:
             assert "ios" in output
-            assert "Attributes" in output
+            assert "Arguments" in output
         else:
             assert "ios" not in output
-            assert "Attributes" not in output
+            assert "Arguments" not in output
 
     def test_111_test_help(self):
         output = Tns.run_tns_command("test --help")
@@ -164,10 +168,10 @@ class HelpTests(BaseClass):
 
         if CURRENT_OS == OSType.OSX:
             assert "ios" in output
-            assert "Attributes" in output
+            assert "Arguments" in output
         else:
             assert "ios" not in output
-            assert "Attributes" not in output
+            assert "Arguments" not in output
 
     def test_112_install_help(self):
         output = Tns.run_tns_command("install -h")
@@ -187,7 +191,7 @@ class HelpTests(BaseClass):
         assert "remove" in output
         assert "update" in output
         assert "create" in output
-        assert "Attributes" in output
+        assert "Arguments" in output
 
     def test_114_device_log_help(self):
         output = Tns.run_tns_command("device log --help")
@@ -196,10 +200,9 @@ class HelpTests(BaseClass):
         assert "device log" in output
         assert "Options" in output
         assert "device" in output
-        assert "Attributes" in output
 
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
-    def test_115_device_log_help(self):
+    def test_115_run_ios_help(self):
         output = Tns.run_tns_command("run ios --help")
 
         HelpTests.verify_help(output)
@@ -207,8 +210,9 @@ class HelpTests(BaseClass):
         assert "env.*" in output
         assert "bundle" in output
         assert "justlaunch" in output
+        assert "sdk" in output
 
-    def test_116_device_log_help(self):
+    def test_116_run_android_help(self):
         output = Tns.run_tns_command("run android --help")
 
         HelpTests.verify_help(output)
@@ -216,3 +220,4 @@ class HelpTests(BaseClass):
         assert "env.*" in output
         assert "bundle" in output
         assert "justlaunch" in output
+        assert "key-store-path" in output
