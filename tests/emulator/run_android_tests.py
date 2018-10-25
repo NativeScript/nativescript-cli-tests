@@ -618,6 +618,24 @@ class RunAndroidEmulatorTests(BaseClass):
 
         Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
 
+    @unittest.skip("https://github.com/NativeScript/nativescript-cli/issues/2670")
+    def test_311_tns_run_android_clean_livesync(self):
+        #remove skip after check issue
+        #https://github.com/NativeScript/nativescript-cli/issues/2670
+        Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--justlaunch': ''})
+
+        # Verify `--clean` without any changes rebuild native project (and runs properly)
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--clean': ''},
+                              wait=False, assert_success=False)
+        strings = ['Gradle clean...']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
+        time.sleep(10)
+
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML)
+        strings = ['Skipping prepare.']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10, clean_log=False)
+        assert "Gradle clean..." not in log
+
     def test_315_tns_run_android_change_appResources_check_per_platform(self):
         # https://github.com/NativeScript/nativescript-cli/pull/3619
         output = Tns.run_android(attributes={'--path': self.app_name}, wait=False, assert_success=False)
