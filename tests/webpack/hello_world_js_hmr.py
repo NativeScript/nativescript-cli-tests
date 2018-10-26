@@ -120,6 +120,17 @@ class RunTestsHMR(BaseClass):
             assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
 
     @staticmethod
+    def revert_changes_xml(app_name, log, platform):
+        # Change XML after uninstall app from device
+        ReplaceHelper.rollback(app_name, RunTestsHMR.xml_change, sleep=10)
+        strings = ['Refreshing application on device',
+                   'JS: HMR: Sync...','JS: HMR: Hot Module Replacement Enabled. Waiting for signal.']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+        if platform == Platform.ANDROID:
+            text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TAP')
+            assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
+
+    @staticmethod
     def revert_changes(app_name, log, platform):
         # Clean old logs
         if CURRENT_OS is not OSType.WINDOWS:
@@ -167,6 +178,7 @@ class RunTestsHMR(BaseClass):
         self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
 
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_002_ios_run_hmr(self):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--hmr': ''}, wait=False,
                         assert_success=False)
@@ -197,6 +209,7 @@ class RunTestsHMR(BaseClass):
         if Platform == Platform.ANDROID:
             Helpers.android_screen_match(image=RunTestsHMR.image_change, timeout=120)
 
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_004_ios_run_hmr_uninstall_app(self):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--hmr': ''}, wait=False,
                             assert_success=False)
@@ -210,6 +223,7 @@ class RunTestsHMR(BaseClass):
         Device.uninstall_app(app_prefix='org.nativescript.', platform=Platform.IOS)
 
         self.apply_changes_xml(app_name=self.app_name, log=log, platform=Platform.IOS)
+        self.revert_changes_xml(app_name=self.app_name, log=log, platform=Platform.IOS)
 
     def test_005_android_run_hmr_console_log(self):
         source_js = os.path.join('data', "issues", 'console-log-hmr', 'main-view-model.js')
@@ -221,8 +235,9 @@ class RunTestsHMR(BaseClass):
         strings = ['JS: LOG']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        Helpers.android_screen_match(image=self.image_original, timeout=120)
+        Helpers.android_screen_match(image=self.image_change, timeout=120)
 
+    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_006_ios_run_hmr_console_log(self):
         source_js = os.path.join('data', "issues", 'console-log-hmr', 'main-view-model.js')
         target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
