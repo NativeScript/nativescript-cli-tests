@@ -185,7 +185,7 @@ class RunTestsHMR(BaseClass):
 
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run_hmr, not_existing_string_list=Helpers.wp_errors_hmr,
                          timeout=240)
-        Helpers.ios_screen_match(image=self.image_original, timeout=120)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
 
         self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
@@ -216,7 +216,7 @@ class RunTestsHMR(BaseClass):
                             assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run_hmr, not_existing_string_list=Helpers.wp_errors_hmr,
                          timeout=240)
-        Helpers.ios_screen_match(image=self.image_original, timeout=120)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
 
         self.apply_changes_js(app_name=self.app_name, log=log, platform=Platform.IOS)
 
@@ -249,7 +249,7 @@ class RunTestsHMR(BaseClass):
         strings = ['LOG Hello']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        Helpers.ios_screen_match(image=self.image_original, timeout=120)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
 
     # def test_007_android_run_hmr_delete_file(self):
     #     log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
