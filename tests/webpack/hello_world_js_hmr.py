@@ -233,7 +233,7 @@ class RunTestsHMR(BaseClass):
 
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
                                       assert_success=False)
-        strings = ['JS: LOG']
+        strings = ['LOG Hello']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         Helpers.android_screen_match(image=self.image_change, timeout=120)
@@ -246,7 +246,7 @@ class RunTestsHMR(BaseClass):
 
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--hmr': ''}, wait=False,
                                 assert_success=False)
-        strings = ['JS: LOG']
+        strings = ['LOG Hello']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         Helpers.ios_screen_match(image=self.image_original, timeout=120)

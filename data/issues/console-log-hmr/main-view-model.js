@@ -12,7 +12,7 @@ function createViewModel() {
     var viewModel = new Observable();
     viewModel.counter = 42;
     viewModel.message = getMessage(viewModel.counter);
-    console.log("LOG");
+    console.log("LOG Hello");
 
     viewModel.onTap = function() {
         this.counter--;
