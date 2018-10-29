@@ -235,6 +235,7 @@ class WebPackHelloWorldNG(BaseClass):
         self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
 
+    @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-angular/issues/1572")
     def test_210_run_android_with_bundle_uglify_sync_changes(self):
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           "--bundle": "",
@@ -248,6 +249,7 @@ class WebPackHelloWorldNG(BaseClass):
         self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
         self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
 
+    @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-angular/issues/1572")
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_210_run_ios_with_bundle_uglify_sync_changes(self):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': ''},
