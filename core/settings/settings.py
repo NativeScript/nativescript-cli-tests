@@ -70,11 +70,11 @@ if "missing" in BRANCH :
 
 if "release" in BRANCH:
     SHARE_BRANCH = "RC"
-    SHARE_BRANCH_INSPECTOR = "Release"
+    SHARE_BRANCH_INSPECTOR = "RC"
     TAG = "rc"
 else:
     SHARE_BRANCH = "Stable"
-    SHARE_BRANCH_INSPECTOR = "Stable"
+    SHARE_BRANCH_INSPECTOR = "Master"
     TAG = "next"
 
 # Set source location of separate package based on base path
