@@ -120,6 +120,26 @@ class RunTestsHMR(BaseClass):
             assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
 
     @staticmethod
+    def revert_changes_js(app_name, log, platform):
+        # Change JS
+        ReplaceHelper.rollback(app_name, RunTestsHMR.js_change, sleep=10)
+        strings = ['HMR: The following modules were updated:', './main-view-model.js', './main-page.js',
+                   'Successfully transferred bundle.', 'HMR: Successfully applied update with hmr hash ']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+        if platform == Platform.ANDROID:
+            text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left', timeout=20)
+            assert text_changed, 'Changes in JS file not applied (UI is not refreshed)'
+
+        ReplaceHelper.rollback(app_name, RunTestsHMR.js_change, sleep=10)
+        strings = ['HMR: The following modules were updated:', './main-view-model.js', './main-page.js',
+                   'Successfully transferred bundle.',
+                   'HMR: Successfully applied update with hmr hash ']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+        if platform == Platform.ANDROID:
+            text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 clicks left', timeout=20)
+            assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
+
+    @staticmethod
     def revert_changes_xml(app_name, log, platform):
         # Change XML after uninstall app from device
         ReplaceHelper.rollback(app_name, RunTestsHMR.xml_change, sleep=10)
@@ -203,8 +223,7 @@ class RunTestsHMR(BaseClass):
         # Uninstall app while `tns run` is running
         Device.uninstall_app(app_prefix='org.nativescript.', platform=Platform.ANDROID)
 
-        self.apply_changes_xml(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-        self.revert_changes_xml(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+        self.revert_changes_js(app_name=self.app_name, log=log, platform=Platform.ANDROID)
 
         # Verify application looks correct
         if Platform == Platform.ANDROID:
@@ -222,6 +241,8 @@ class RunTestsHMR(BaseClass):
 
         # Uninstall app while `tns run` is running
         Device.uninstall_app(app_prefix='org.nativescript.', platform=Platform.IOS)
+
+        self.revert_changes_js(app_name=self.app_name, log=log, platform=Platform.IOS)
 
         self.apply_changes_xml(app_name=self.app_name, log=log, platform=Platform.IOS)
         self.revert_changes_xml(app_name=self.app_name, log=log, platform=Platform.IOS)
