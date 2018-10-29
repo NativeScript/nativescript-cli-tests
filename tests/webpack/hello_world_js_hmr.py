@@ -130,15 +130,6 @@ class RunTestsHMR(BaseClass):
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left', timeout=20)
             assert text_changed, 'Changes in JS file not applied (UI is not refreshed)'
 
-        ReplaceHelper.rollback(app_name, RunTestsHMR.js_change, sleep=10)
-        strings = ['HMR: The following modules were updated:', './main-view-model.js', './main-page.js',
-                   'Successfully transferred bundle.',
-                   'HMR: Successfully applied update with hmr hash ']
-        Tns.wait_for_log(log_file=log, string_list=strings)
-        if platform == Platform.ANDROID:
-            text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 clicks left', timeout=20)
-            assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
-
     @staticmethod
     def revert_changes_xml(app_name, log, platform):
         # Change XML after uninstall app from device
