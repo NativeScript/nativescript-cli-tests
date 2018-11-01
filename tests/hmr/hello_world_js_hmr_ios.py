@@ -36,7 +36,6 @@ class HelloWorldJSHMRIOS(BaseClass):
 
     def setUp(self):
         Tns.kill()
-        Helpers.emulator_cleanup(app_name=self.app_name)
         BaseClass.setUp(self)
 
     def tearDown(self):
