@@ -18,7 +18,7 @@ class HelpersHMR(object):
     no_wp_run = ['Successfully installed']
     no_wp_sync = ['Successfully synced application']
     wp = ['Webpack compilation complete']
-    run_hmr = ['Webpack compilation complete', 'Successfully installed', 'HMR: Sync',
+    run_hmr = ['Webpack compilation complete', 'Successfully installed', 'HMR: Sync...',
               'HMR: Hot Module Replacement Enabled. Waiting for signal.']
     run_hmr_with_platforms = ['Webpack compilation complete', 'HMR: Sync',
                'HMR: Hot Module Replacement Enabled. Waiting for signal.', 'Successfully synced application',
