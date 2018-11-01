@@ -29,10 +29,10 @@ class HelloWorldJSHMRIOS(BaseClass):
         BaseClass.setUpClass(cls.__name__)
         Simulator.stop()
         cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
-        Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_PACKAGE})
 
         Tns.create_app(cls.app_name, update_modules=True)
         Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=cls.app_name)
+        Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_PACKAGE})
 
     def setUp(self):
         Tns.kill()
