@@ -52,7 +52,7 @@ class HelloWorldJSHMRIOS(BaseClass):
 
         Tns.wait_for_log(log_file=log, string_list=HelpersHMR.run_hmr, not_existing_string_list=HelpersHMR.errors_hmr,
                          timeout=240)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=HelpersHMR.image_original, timeout=120)
+        Helpers.ios_screen_match(sim_id=HelpersHMR.SIMULATOR_ID, image=HelpersHMR.image_original, timeout=120)
 
         HelpersHMR.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
         HelpersHMR.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
@@ -62,7 +62,7 @@ class HelloWorldJSHMRIOS(BaseClass):
                             assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=HelpersHMR.run_hmr_with_platforms, not_existing_string_list=HelpersHMR.errors_hmr,
                          timeout=240)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=HelpersHMR.image_original, timeout=120)
+        Helpers.ios_screen_match(sim_id=HelpersHMR.SIMULATOR_ID, image=HelpersHMR.image_original, timeout=120)
 
         HelpersHMR.apply_changes_js(app_name=self.app_name, log=log, platform=Platform.IOS)
 
@@ -70,7 +70,7 @@ class HelloWorldJSHMRIOS(BaseClass):
         Device.uninstall_app(app_prefix='org.nativescript.', platform=Platform.IOS)
 
         HelpersHMR.revert_changes_js(app_name=self.app_name, log=log, platform=Platform.IOS)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=HelpersHMR.image_original, timeout=120)
+        Helpers.ios_screen_match(sim_id=HelpersHMR.SIMULATOR_ID, image=HelpersHMR.image_original, timeout=120)
 
     def test_003_ios_run_hmr_console_log(self):
         source_js = os.path.join('data', "issues", 'console-log-hmr', 'main-view-model.js')
@@ -82,7 +82,7 @@ class HelloWorldJSHMRIOS(BaseClass):
         strings = ['LOG Hello']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=HelpersHMR.image_original, timeout=120)
+        Helpers.ios_screen_match(sim_id=HelpersHMR.SIMULATOR_ID, image=HelpersHMR.image_original, timeout=120)
 
     # def test_004_android_run_hmr_delete_file(self):
     #     log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
