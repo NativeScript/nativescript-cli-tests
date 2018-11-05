@@ -4,6 +4,7 @@ from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
+from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_KEYSTORE_PATH, \
@@ -32,7 +33,9 @@ class WebPackHelloWorldJS(BaseClass):
         Emulator.ensure_available()
 
         Tns.create_app(cls.app_name, update_modules=True)
-        Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=cls.app_name)
+        Npm.uninstall(package="nativescript-dev-webpack", option='--save-dev', folder=cls.app_name)
+        Npm.install(package=WEBPACK_PACKAGE, option='--save-dev', folder=cls.app_name)
+        Npm.install()
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         if CURRENT_OS == OSType.OSX:
