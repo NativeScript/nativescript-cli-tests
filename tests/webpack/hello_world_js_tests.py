@@ -33,9 +33,6 @@ class WebPackHelloWorldJS(BaseClass):
         Emulator.ensure_available()
 
         Tns.create_app(cls.app_name, update_modules=True)
-        Npm.uninstall(package="nativescript-dev-webpack", option='--save-dev', folder=cls.app_name)
-        Npm.install(package=WEBPACK_PACKAGE, option='--save-dev', folder=cls.app_name)
-        Npm.install()
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         if CURRENT_OS == OSType.OSX:

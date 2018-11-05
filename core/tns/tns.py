@@ -166,7 +166,7 @@ class Tns(object):
         Npm.uninstall(package="nativescript-angular", option="--save", folder=path)
         output = Npm.install(package=ANGULAR_PACKAGE, option="--save", folder=path)
         if Npm.version() > 3:
-            assert "ERR" not in output, "Something went wrong when modules are installed."
+            assert "ERR" not in output, "Something went wrong when angular are installed."
 
         # Update NG dependencies
         update_script = os.path.join(TEST_RUN_HOME, path,
@@ -194,7 +194,7 @@ class Tns(object):
         Npm.uninstall(package="nativescript-dev-webpack", option="--save-dev", folder=path)
         output = Npm.install(package=WEBPACK_PACKAGE, option="--save", folder=path)
         if Npm.version() > 3:
-            assert "ERR" not in output, "Something went wrong when modules are installed."
+            assert "ERR" not in output, "Something went wrong when webpack are installed."
 
         # Update webpack dependencies
         update_script = os.path.join(TEST_RUN_HOME, path,
@@ -226,7 +226,7 @@ class Tns(object):
                                      "node_modules", ".bin", "ns-upgrade-tsconfig")
 
         if Npm.version() > 3:
-            assert "ERR" not in output, "Something went wrong when modules are installed."
+            assert "ERR" not in output, "Something went wrong when typescript are installed."
 
         return output
 
