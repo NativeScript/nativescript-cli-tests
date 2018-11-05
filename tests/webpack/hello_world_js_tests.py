@@ -272,6 +272,7 @@ class WebPackHelloWorldJS(BaseClass):
 
     def test_400_build_with_bundle_without_plugin(self):
         Tns.create_app(self.app_name)
+        Npm.uninstall(package="nativescript-dev-webpack", option="--save-dev", folder=self.app_name)
         output = Tns.build_android(attributes={"--path": self.app_name, "--bundle": ""}, assert_success=False)
         assert "Passing --bundle requires a bundling plugin." in output
         assert "No bundling plugin found or the specified bundling plugin is invalid." in output
