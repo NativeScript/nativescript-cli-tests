@@ -618,7 +618,6 @@ class RunAndroidEmulatorTests(BaseClass):
 
         Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
 
-    @unittest.skip("https://github.com/NativeScript/nativescript-cli/issues/2670")
     def test_311_tns_run_android_clean_livesync(self):
         #remove skip after check issue
         #https://github.com/NativeScript/nativescript-cli/issues/2670
