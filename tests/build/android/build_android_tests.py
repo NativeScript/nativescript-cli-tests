@@ -176,6 +176,25 @@ class BuildAndroidTests(BaseClass):
         assert "[DEBUG]" in output
         assert "FAILURE" not in output
 
+    def test_205_build_android_abi_split(self):
+        #https://github.com/NativeScript/nativescript-cli-tests/issues/119
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        copy = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'nativescript-cli-abi-split', 'app.gradle')
+        paste = os.path.join(self.app_name, 'app', 'App_Resources', 'Android')
+        Folder.copy(copy, paste)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+        Tns.run_tns_command("build android", attributes={"--path": self.app_name})
+        assert File.exists(self.app_name +
+                           "/platforms/android/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk")
+        assert File.exists(self.app_name +
+                           "/platforms/android/app/build/outputs/apk/debug/app-armeabi-v7a-debug.apk")
+        assert File.exists(self.app_name +
+                           "/platforms/android/app/build/outputs/apk/debug/app-universal-debug.apk")
+        assert File.exists(self.app_name +
+                           "/platforms/android/app/build/outputs/apk/debug/app-x86-debug.apk")
+        assert File.exists(self.app_name +
+                           "/platforms/android/app/build/outputs/apk/debug/output.json")
+
     @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
     def test_300_build_project_with_dash_and_ios_inspector_added(self):
         """
