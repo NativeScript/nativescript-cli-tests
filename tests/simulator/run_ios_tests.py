@@ -23,7 +23,7 @@ from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import IOS_PACKAGE, SIMULATOR_NAME, TEST_RUN_HOME
+from core.settings.settings import IOS_PACKAGE, SIMULATOR_NAME, TEST_RUN_HOME, SIMULATOR_NAME_2
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -69,6 +69,10 @@ class RunIOSSimulatorTests(BaseClass):
     def tearDown(self):
         Tns.kill()
         BaseClass.tearDown(self)
+
+        if Simulator.is_running(SIMULATOR_NAME_2)[0]:
+            sim_id = Simulator.is_running(SIMULATOR_NAME_2)[1]
+            Simulator.stop(sim_id)
 
     @classmethod
     def tearDownClass(cls):
@@ -572,6 +576,43 @@ class RunIOSSimulatorTests(BaseClass):
         # Verify app looks correct inside simulator
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_home')
+
+    def test_387_tns_run_ios_console_log_on_multiple_simulators(self):
+        """
+        https://github.com/NativeScript/nativescript-cli/issues/3529
+        """
+
+        # Start one more simulator
+        Simulator.start(SIMULATOR_NAME_2)
+        SIMULATOR_ID_2 = Simulator.ensure_available(simulator_name=SIMULATOR_NAME_2)
+
+        # Add console logging when tap the button
+        source_js = os.path.join('data', "issues", 'nativescript-cli-3529', 'main-view-model.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
+        File.copy(src=source_js, dest=target_js)
+
+        # `tns run ios` and wait until app is deployed on both simulators
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier \'{0}\''.format(self.SIMULATOR_ID),
+                   'Successfully installed on device with identifier \'{0}\''.format(SIMULATOR_ID_2)]
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10)
+
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home', timeout=60)
+        Device.click(self.SIMULATOR_ID, 'TAP', timeout=60)
+        Tns.wait_for_log(log_file=log, string_list=['The button was clicked!'], timeout=120)
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='hello-world_home_after_tap', timeout=60)
+
+        Device.screen_match(device_name=SIMULATOR_NAME_2, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home', timeout=60)
+        Device.click(SIMULATOR_ID_2, 'TAP', timeout=60)
+        Tns.wait_for_log(log_file=log, string_list=['The button was clicked!'], timeout=120)
+        Device.screen_match(device_name=SIMULATOR_NAME_2, device_id=SIMULATOR_ID_2,
+                            expected_image='hello-world_home_after_tap', timeout=60)
+
+        Simulator.stop(SIMULATOR_ID_2)
 
     def test_390_tns_run_ios_should_warn_if_package_ids_do_not_match(self):
         """
