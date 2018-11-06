@@ -6,6 +6,7 @@ import time
 
 import pytesseract
 from PIL import Image
+import atomac
 
 from core.device.device_type import DeviceType
 from core.device.helpers.adb import Adb
@@ -85,8 +86,8 @@ class Device(object):
             type = type.replace('ProductType:', '').strip(' ')
             device_name = type
 
-        print "Verify {0} looks correct...".format(expected_image)
         expected_image_original_path = os.path.join("data", "images", device_name, "{0}.png".format(expected_image))
+        print "Verify {0} looks correct...".format(expected_image_original_path)
         actual_image_path = os.path.join(OUTPUT_FOLDER, "images", device_name, "{0}_actual.png".format(expected_image))
         diff_image_path = os.path.join(OUTPUT_FOLDER, "images", device_name, "{0}_diff.png".format(expected_image))
         expected_image_path = os.path.join(OUTPUT_FOLDER, "images", device_name,
@@ -241,8 +242,25 @@ class Device(object):
         device_type = Device.__get_device_type(device_id)
         if (device_type == DeviceType.EMULATOR) or (device_type == DeviceType.ANDROID):
             UIAuto.click(device_id=device_id, text=text, timeout=timeout)
+        elif device_type == DeviceType.SIMULATOR:
+            simulator = atomac.getAppRefByBundleId("com.apple.iphonesimulator")
+            windows = simulator.findAll(AXRole='AXWindow')
+            names = list()
+            # Get all simulator's windows names
+            for window in windows:
+                names.append(window.AXTitle)
+            sim_title = Simulator.get_name(device_id)
+            # Get the full name of the window where the click will be performed
+            for name in names:
+                if sim_title in name:
+                    window = simulator.findFirstR(AXTitle=name)
+                    element = window.findFirstR(AXTitle=text)
+                    if element is not None:
+                        element.Press()
+                    else:
+                        raise TypeError("Cannot find element with text {0}".format(text))
         else:
-            raise NotImplementedError("Click on text not implemented for iOS devices and simulators.")
+            raise NotImplementedError("Click on text not implemented for iOS devices.")
 
     @staticmethod
     def ensure_available(platform):

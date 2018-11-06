@@ -15,7 +15,7 @@ from core.osutils.command import run
 from core.osutils.folder import Folder
 from core.settings.settings import OUTPUT_FOLDER, CURRENT_OS, OSType, \
     ANDROID_PATH, IOS_PATH, SUT_FOLDER, CLI_PATH, IOS_INSPECTOR_PATH, SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK, \
-    TEST_RUN_HOME
+    TEST_RUN_HOME, SIMULATOR_NAME_2, SIMULATOR_TYPE_2, SIMULATOR_SDK_2
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.xcode.xcode import Xcode
@@ -85,6 +85,7 @@ if __name__ == '__main__':
             SIMULATOR_SDK = '10.0'
 
         Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
+        Simulator.create(SIMULATOR_NAME_2, SIMULATOR_TYPE_2, SIMULATOR_SDK_2)
         Xcode.cleanup_cache()  # Clean Xcode cache folders
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.IOS)
