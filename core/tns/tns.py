@@ -271,7 +271,6 @@ class Tns(object):
             TnsAsserts.created(app_name=app_name, output=output)
         if update_modules:
             Tns.update_modules(path)
-            Tns.update_webpack(path=app_name)
         Tns.ensure_app_resources(path)
         return output
 
@@ -296,7 +295,6 @@ class Tns(object):
                                 update_modules=update_modules)
         if update_modules:
             Tns.update_typescript(path=app_name)
-            Tns.update_webpack(path=app_name)
         if assert_success:
             TnsAsserts.created_ts(app_name=app_name, output=output)
         return output
@@ -319,7 +317,6 @@ class Tns(object):
         if update_modules:
             Tns.update_angular(path=app_name)
             Tns.update_typescript(path=app_name)
-            Tns.update_webpack(path=app_name)
 
         if assert_success:
             if Npm.version() < 5:
