@@ -16,7 +16,9 @@ from core.tns.tns_platform_type import Platform
 
 from core.tns.replace_helper import ReplaceHelper
 
-from core.settings.settings import TEST_RUN_HOME, EMULATOR_ID, EMULATOR_NAME, WEBPACK_PACKAGE,SUT_FOLDER
+from core.settings.settings import TEST_RUN_HOME, EMULATOR_ID, EMULATOR_NAME, WEBPACK_PACKAGE, SUT_FOLDER, \
+    ANDROID_PACKAGE
+
 
 class PreviewCommandTestsAndroid(BaseClass):
     app_webpack_name = "TestAppWebpack"
@@ -338,4 +340,30 @@ class PreviewCommandTestsAndroid(BaseClass):
         text_changed = Device.wait_for_text(device_id=self.EMULATOR_ID_SECOND, text='42 clicks left', timeout=30)
         assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
 
-    
+    def test_300_tns_preview_android_platform_add(self):
+        """Make valid changes in JS,CSS and XML"""
+
+        # `tns preview` and take the app url and open it in Preview App
+        Tns.create_app(self.app_platform)
+        log = Tns.preview(attributes={'--path': self.app_name}, wait=False,
+                          log_trace=True, assert_success=False)
+        strings = [
+            'Use NativeScript Playground app and scan the QR code above to preview the application on your device']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
+        output = File.read(log)
+        url = Preview.get_url(output)
+        Preview.run_app(url, EMULATOR_ID, platform=Platform.ANDROID)
+
+        strings = ['Start syncing changes for platform android',
+                   'Project successfully prepared (android)',
+                   'Successfully synced changes for platform android']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
+
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home_preview')
+
+        Tns.kill()
+
+        output = Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+        assert "Platform android successfully added." in output
