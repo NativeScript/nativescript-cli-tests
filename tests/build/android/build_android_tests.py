@@ -222,6 +222,13 @@ class BuildAndroidTests(BaseClass):
             self.app_name_space + "/" + TnsAsserts.PLATFORM_ANDROID_SRC_MAIN_PATH + "AndroidManifest.xml")
         assert app_identifier in output.lower()
 
+    def test_302_build_project_with_space_debug_with_plugin(self):
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": "\"" + self.app_name_space + "\""}, assert_success=False)
+
+        Npm.install(package="nativescript-mapbox", option="--save", folder="\"" + self.app_name_space + "\"")
+        output = Tns.build_android(attributes={"--path": "\"" + self.app_name_space + "\""})
+        assert "Project successfully built" in output
+
     def test_310_build_android_with_custom_compile_sdk_new(self):
         # This is required when build with different SDK
         Folder.cleanup(self.app_name)
