@@ -5,12 +5,13 @@ import os
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
+from core.device.helpers.adb import Adb
 from core.device.simulator import Simulator
 from core.osutils.file import File
 from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_KEYSTORE_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, CURRENT_OS, \
-    IOS_PACKAGE, SIMULATOR_NAME, ANDROID_PACKAGE, WEBPACK_PACKAGE
+    IOS_PACKAGE, SIMULATOR_NAME, ANDROID_PACKAGE, WEBPACK_PACKAGE, EMULATOR_NAME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -80,19 +81,40 @@ class HelloWorldJSHMRAndroid(BaseClass):
         HelpersHMR.revert_changes_js(app_name=self.app_name, log=log, platform=Platform.ANDROID)
         Helpers.android_screen_match(image=HelpersHMR.image_original, timeout=120)
 
-    def test_003_android_run_hmr_console_log(self):
-        source_js = os.path.join('data', "issues", 'console-log-hmr', 'main-view-model.js')
-        target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
-        File.copy(src=source_js, dest=target_js)
-
+    def test_003_android_run_hmr_wrong_xml(self):
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
-                                      assert_success=False)
-        strings = ['LOG Hello']
-        Tns.wait_for_log(log_file=log, string_list=strings)
+                              assert_success=False)
+        # Break the app with invalid xml changes
+        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML_INVALID_SYNTAX)
 
-        Helpers.android_screen_match(image=HelpersHMR.image_original, timeout=120)
+        # Verify console notify user for broken xml
+        strings = ['com.tns.NativeScriptException', 'Parsing XML at', 'Successfully synced application', EMULATOR_ID]
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
+        assert Adb.wait_for_text(device_id=EMULATOR_ID, text="Exception", timeout=30), "Error activity not found!"
 
-    # def test_004_android_run_hmr_delete_file(self):
+        # Revert changes
+        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML_INVALID_SYNTAX)
+        strings = ['JS: HMR: Sync...', 'JS: HMR: Hot Module Replacement Enabled. Waiting for signal.',
+                   'Successfully synced application', EMULATOR_ID]
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
+
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
+
+    # def test_008_android_run_hmr_console_log(self):
+    #     source_js = os.path.join('data', "issues", 'console-log-hmr', 'main-view-model.js')
+    #     target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
+    #     File.copy(src=source_js, dest=target_js)
+    #
+    #     log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
+    #                                   assert_success=False)
+    #     strings = ['LOG Hello']
+    #     Tns.wait_for_log(log_file=log, string_list=strings)
+    #
+    #     Helpers.android_screen_match(image=HelpersHMR.image_original, timeout=120)
+    #
+    # def test_009_android_run_hmr_delete_file(self):
     #     log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
     #                     assert_success=False)
     #

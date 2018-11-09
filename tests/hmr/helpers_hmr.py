@@ -11,6 +11,7 @@ from core.settings.settings import EMULATOR_ID, EMULATOR_NAME, SIMULATOR_NAME, T
 from core.tns.tns import Tns
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns_platform_type import Platform
+from tests.hmr.hello_world_js_hmr_ios import HelloWorldJSHMRIOS
 from tests.webpack.helpers.helpers import Helpers
 
 
@@ -77,7 +78,7 @@ class HelpersHMR(object):
         if platform == Platform.ANDROID:
             Helpers.android_screen_match(image=HelpersHMR.image_change, timeout=120)
         if platform == Platform.IOS:
-            Helpers.ios_screen_match(sim_id=HelpersHMR.SIMULATOR_ID, image=HelpersHMR.image_change,
+            Helpers.ios_screen_match(sim_id=HelloWorldJSHMRIOS.setUpClass().SIMULATOR_ID, image=HelpersHMR.image_change,
                                      timeout=120)
 
     @staticmethod
@@ -159,5 +160,5 @@ class HelpersHMR(object):
         if platform == Platform.ANDROID:
             Helpers.android_screen_match(image=HelpersHMR.image_original, timeout=120)
         if platform == Platform.IOS:
-            Helpers.ios_screen_match(sim_id=HelpersHMR.SIMULATOR_ID, image=HelpersHMR.image_original,
+            Helpers.ios_screen_match(sim_id=HelloWorldJSHMRIOS.SIMULATOR_ID, image=HelpersHMR.image_original,
                                      timeout=120)
