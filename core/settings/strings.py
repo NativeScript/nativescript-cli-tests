@@ -1,4 +1,4 @@
-from os import path
+import os
 # Folders
 # Console output
 # Core
@@ -31,7 +31,7 @@ frontend_connected = "Frontend client connected"
 
 # Project
 successfully_created = "Project successfully created"
-test_file_created = "Example test file created in app/tests"
+test_file_created = "Example test file created in {0}".format(os.path.join('app','tests'))
 run_tests_using = "Run your tests using the \"$ tns test <platform>\" command."
 successfully_prepared = "Project successfully prepared"
 successfully_built = "Project successfully built"
