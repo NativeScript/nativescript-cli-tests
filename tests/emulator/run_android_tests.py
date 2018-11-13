@@ -157,6 +157,7 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
 
+    @unittest.skip("https://github.com/NativeScript/nativescript-cli/issues/4126")
     def test_100_tns_run_android_release(self):
         """Make valid changes in JS,CSS and HTML"""
 
