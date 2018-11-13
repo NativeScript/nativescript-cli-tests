@@ -22,6 +22,16 @@ class Helpers(object):
                'HMR: Checking for updates to the bundle.']
     wp_errors_hmr = ['Module build failed', 'ENOENT']
 
+    #HMR
+    run_hmr = ['Webpack compilation complete', 'Successfully installed', 'HMR: Sync...',
+              'HMR: Hot Module Replacement Enabled. Waiting for signal.']
+    run_hmr_with_platforms = ['Webpack compilation complete', 'HMR: Sync...',
+               'HMR: Hot Module Replacement Enabled. Waiting for signal.', 'Successfully synced application',
+                              'Refreshing application on device']
+    sync_hmr = ['Webpack compilation complete', 'Successfully synced application',
+               'HMR: Checking for updates to the bundle.']
+    errors_hmr = ['Module build failed', 'ENOENT']
+
     wp_run = ['Webpack compilation complete', 'Successfully installed']
     wp_sync = ['Webpack compilation complete', 'Successfully synced application']
     wp_sync_snapshot = ['Webpack compilation complete', 'Successfully synced app', 'Stripping the snapshot flag.']

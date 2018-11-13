@@ -54,7 +54,11 @@ class HelloWorldJSHMRIOS(BaseClass):
         Helpers.wait_webpack_watcher()
 
         HelpersHMR.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=HelpersHMR.image_change,
+                                 timeout=120)
         HelpersHMR.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=HelpersHMR.image_original,
+                                 timeout=120)
 
     def test_002_ios_run_hmr_uninstall_app(self):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--hmr': ''}, wait=False,
@@ -67,13 +71,31 @@ class HelloWorldJSHMRIOS(BaseClass):
         HelpersHMR.apply_changes_js(app_name=self.app_name, log=log, platform=Platform.IOS)
 
         # Uninstall app while `tns run` is running
-        Device.uninstall_app(app_prefix='org.nativescript.', platform=Platform.IOS)
+        Simulator.uninstall("org.nativescript." + self.app_name)
 
         HelpersHMR.revert_changes_js(app_name=self.app_name, log=log, platform=Platform.IOS)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=HelpersHMR.image_original, timeout=120)
         Helpers.wait_webpack_watcher()
 
-    def test_003_ios_run_hmr_console_log(self):
+    @unittest.skip("https://github.com/NativeScript/nativescript-cli/issues/4123")
+    def test_003_ios_run_hmr_wrong_xml(self):
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--hmr': ''}, wait=False,
+                            assert_success=False)
+        Tns.wait_for_log(log_file=log, string_list=HelpersHMR.run_hmr_with_platforms, not_existing_string_list=HelpersHMR.errors_hmr,
+                         timeout=240)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=HelpersHMR.image_original, timeout=120)
+        Helpers.wait_webpack_watcher()
+
+        HelpersHMR.apply_changes_js(app_name=self.app_name, log=log, platform=Platform.IOS)
+
+        # Uninstall app while `tns run` is running
+        Simulator.uninstall("org.nativescript." + self.app_name)
+
+        HelpersHMR.revert_changes_js(app_name=self.app_name, log=log, platform=Platform.IOS)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=HelpersHMR.image_original, timeout=120)
+        Helpers.wait_webpack_watcher()
+
+    def test_008_ios_run_hmr_console_log(self):
         source_js = os.path.join('data', "issues", 'console-log-hmr', 'main-view-model.js')
         target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
         File.copy(src=source_js, dest=target_js)

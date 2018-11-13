@@ -11,7 +11,6 @@ from core.settings.settings import EMULATOR_ID, EMULATOR_NAME, SIMULATOR_NAME, T
 from core.tns.tns import Tns
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns_platform_type import Platform
-from tests.hmr.hello_world_js_hmr_ios import HelloWorldJSHMRIOS
 from tests.webpack.helpers.helpers import Helpers
 
 
@@ -77,9 +76,9 @@ class HelpersHMR(object):
         # Verify application looks correct
         if platform == Platform.ANDROID:
             Helpers.android_screen_match(image=HelpersHMR.image_change, timeout=120)
-        if platform == Platform.IOS:
-            Helpers.ios_screen_match(sim_id=HelloWorldJSHMRIOS.setUpClass().SIMULATOR_ID, image=HelpersHMR.image_change,
-                                     timeout=120)
+        # if platform == Platform.IOS:
+        #     Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=HelpersHMR.image_change,
+        #                              timeout=120)
 
     @staticmethod
     def apply_changes_js(app_name, log, platform):
@@ -109,7 +108,7 @@ class HelpersHMR(object):
         # Change JS
         ReplaceHelper.rollback(app_name, HelpersHMR.js_change, sleep=10)
         strings = ['Refreshing application on device',
-                   'HMR: Sync...','JS: HMR: Hot Module Replacement Enabled. Waiting for signal.']
+                   'HMR: Sync...','HMR: Hot Module Replacement Enabled. Waiting for signal.']
         Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left', timeout=20)
@@ -159,6 +158,6 @@ class HelpersHMR(object):
                          timeout=60)
         if platform == Platform.ANDROID:
             Helpers.android_screen_match(image=HelpersHMR.image_original, timeout=120)
-        if platform == Platform.IOS:
-            Helpers.ios_screen_match(sim_id=HelloWorldJSHMRIOS.SIMULATOR_ID, image=HelpersHMR.image_original,
-                                     timeout=120)
+        # if platform == Platform.IOS:
+        #     Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=HelpersHMR.image_original,
+        #                              timeout=120)
