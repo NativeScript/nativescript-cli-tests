@@ -249,8 +249,8 @@ class RunAndroidEmulatorTests(BaseClass):
                    'Successfully started on device with identifier', EMULATOR_ID]
 
         # Verify app looks is update after changes in js, css and xml
-        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='livesync-hello-world_js_css_xml')
+        Device.screen_match(device_name=EMULATOR_NAME,
+                            device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
 
     def test_120_tns_run_android_delete_file_check_platforms(self):
         #https://github.com/NativeScript/nativescript-cli/issues/3984
