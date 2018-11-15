@@ -12,6 +12,8 @@ from core.device.device import Device
 
 from core.osutils.file import File
 
+from core.osutils.folder import Folder
+
 from core.tns.tns_platform_type import Platform
 
 from core.settings.settings import SUT_FOLDER, SIMULATOR_NAME, TEST_RUN_HOME, WEBPACK_PACKAGE, \
@@ -47,6 +49,7 @@ class PreviewCommandTestsIos(BaseClass):
         Tns.create_app(BaseClass.app_name,
                            attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                            update_modules=True)
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
         
         """We need new project because we need app with long imports to test preview with --bundle"""
         Tns.create_app(cls.app_webpack_name,attributes={"--template": os.path.join(SUT_FOLDER, "template-hello-world")})
@@ -55,9 +58,13 @@ class PreviewCommandTestsIos(BaseClass):
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
+        Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
 
     def setUp(self):
         BaseClass.setUp(self)
+        Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
+        Folder.cleanup(self.app_name)
+        Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
 
     def tearDown(self):
         BaseClass.tearDown(self)
