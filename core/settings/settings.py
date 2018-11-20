@@ -92,10 +92,10 @@ IOS_INSPECTOR_PATH = os.environ.get("IOS_INSPECTOR_PATH",
 
 # Set source location for Preview App packages
 
-PREVIEW_APP_PATH_IOS = os.environ.get("PREVIEW_APP_PATH_IOS", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play-dev", "nsplaydev.tgz"))
-PREVIEW_APP_PATH_ANDROID = os.environ.get("PREVIEW_APP_PATH_ANDROID", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play-dev", 'app-universal-release.apk'))
-PLAYGROUND_APP_PATH_IOS =  os.environ.get("PLAYGROUND_APP_PATH_IOS", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play", "nsplay.tgz"))
-PLAYGROUND_APP_PATH_ANDROID =  os.environ.get("PLAYGROUND_APP_PATH_ANDROID", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play", "app-release.apk"))
+PREVIEW_APP_PATH_IOS = os.environ.get("PREVIEW_APP_PATH_IOS", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play-dev", "debug", "nsplaydev.tgz"))
+PREVIEW_APP_PATH_ANDROID = os.environ.get("PREVIEW_APP_PATH_ANDROID", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play-dev", "debug", 'app-universal-release.apk'))
+PLAYGROUND_APP_PATH_IOS =  os.environ.get("PLAYGROUND_APP_PATH_IOS", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play", "debug", "nsplay.tgz"))
+PLAYGROUND_APP_PATH_ANDROID =  os.environ.get("PLAYGROUND_APP_PATH_ANDROID", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play", "debug", "app-release.apk"))
             
 # Root folder for local packages
 SUT_FOLDER = os.path.join(TEST_RUN_HOME, "sut")
