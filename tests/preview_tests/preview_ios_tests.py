@@ -87,10 +87,9 @@ class PreviewCommandTestsIos(BaseClass):
         """On ios simulator allert which has to be accepted is shown first, so we need to dissmiss it"""
         time.sleep(2)
         Preview.dismiss_simulator_alert()
-                              
-        strings = ['Start syncing changes for platform ios',
-                   'Project successfully prepared (ios)',
-                   'Successfully synced changes for platform ios']
+
+        strings = ['Start sending initial files for platform ios',
+                   'Successfully sent initial files for platform ios']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
 
         # Verify app looks correct inside simulator
@@ -147,9 +146,8 @@ class PreviewCommandTestsIos(BaseClass):
                               
         strings = ['Running webpack for ios',
                    'Webpack build done',
-                   'Start syncing changes for platform ios',
-                   'Project successfully prepared (ios)',
-                   'Successfully synced changes for platform ios']
+                   'Start sending initial files for platform ios',
+                   'Successfully sent initial files for platform ios']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
 
         # Verify app looks correct inside emulator
@@ -210,8 +208,8 @@ class PreviewCommandTestsIos(BaseClass):
         url = Preview.get_url(output)
         Preview.run_app(url, self.SIMULATOR_ID, platform=Platform.IOS)
                               
-        strings = ['Start syncing changes for platform ios',
-                   'Successfully synced changes for platform ios']
+        strings = ['Start sending initial files for platform ios',
+                   'Successfully sent initial files for platform ios']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
 
         # Change main-page.js so it contains console logging
@@ -274,8 +272,8 @@ class PreviewCommandTestsIos(BaseClass):
         time.sleep(2)
         Preview.dismiss_simulator_alert()
                               
-        strings = ['Start syncing changes for platform ios',
-                   'Successfully synced changes for platform ios']
+        strings = ['Start sending initial files for platform ios',
+                   'Successfully sent initial files for platform ios']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
 
         # Verify app looks correct inside simulator
@@ -284,8 +282,8 @@ class PreviewCommandTestsIos(BaseClass):
 
         Preview.run_app(url, EMULATOR_ID, platform=Platform.ANDROID)
                               
-        strings = ['Start syncing changes for platform android',
-                   'Successfully synced changes for platform android']
+        strings = ['Start sending initial files for platform android',
+                   'Successfully sent initial files for platform android']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
 
         # Verify app looks correct inside emulator
