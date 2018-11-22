@@ -680,6 +680,8 @@ class RunAndroidEmulatorTests(BaseClass):
 
     def test_315_tns_run_android_change_appResources_check_per_platform(self):
         # https://github.com/NativeScript/nativescript-cli/pull/3619
+        Folder.cleanup(self.source_app)
+        Folder.copy(self.temp_app, self.source_app)
         output = Tns.run_android(attributes={'--path': self.app_name}, wait=False, assert_success=False)
         strings = ['Successfully installed on device with identifier',
                    'Successfully synced application', EMULATOR_ID, ]
