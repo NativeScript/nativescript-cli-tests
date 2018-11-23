@@ -74,10 +74,9 @@ class PreviewCommandTestsAndroid(BaseClass):
         output = File.read(log)
         url = Preview.get_url(output)
         Preview.run_app(url, EMULATOR_ID, platform=Platform.ANDROID)
-                              
-        strings = ['Start syncing changes for platform android',
-                   'Project successfully prepared (android)',
-                   'Successfully synced changes for platform android']
+
+        strings = ['Start sending initial files for platform android',
+                   'Successfully sent initial files for platform android']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
 
         # Verify app looks correct inside emulator
@@ -138,9 +137,8 @@ class PreviewCommandTestsAndroid(BaseClass):
                               
         strings = ['Running webpack for android',
                    'Webpack build done',
-                   'Start syncing changes for platform android',
-                   'Project successfully prepared (android)',
-                   'Successfully synced changes for platform android']
+                   'Start sending initial files for platform android',
+                   'Successfully sent initial files for platform android']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
 
         # Verify app looks correct inside emulator
@@ -200,8 +198,8 @@ class PreviewCommandTestsAndroid(BaseClass):
         url = Preview.get_url(output)
         Preview.run_app(url, EMULATOR_ID, platform=Platform.ANDROID)
                               
-        strings = ['Start syncing changes for platform android',
-                   'Successfully synced changes for platform android']
+        strings = ['Start sending initial files for platform android',
+                   'Successfully sent initial files for platform android']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
 
         # Change main-page.js so it contains console logging
@@ -257,9 +255,10 @@ class PreviewCommandTestsAndroid(BaseClass):
         output = File.read(log)
         url = Preview.get_url(output)
         Preview.run_app(url, EMULATOR_ID, platform=Platform.ANDROID)
-                              
-        strings = ['Start syncing changes for platform android',
-                   'Successfully synced changes for platform android']
+
+        strings = ['Start sending initial files for platform android',
+                   'Successfully sent initial files for platform android']
+
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
 
         # Verify warnings for plugins
@@ -284,9 +283,10 @@ class PreviewCommandTestsAndroid(BaseClass):
         output = File.read(log)
         url = Preview.get_url(output)
         Preview.run_app(url, EMULATOR_ID, platform=Platform.ANDROID)
-                              
-        strings = ['Start syncing changes for platform android',
-                   'Successfully synced changes for platform android']
+
+        strings = ['Start sending initial files for platform android',
+                   'Successfully sent initial files for platform android']
+
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=True)
 
         # Tap on the button and verify the change in the app 
@@ -315,9 +315,10 @@ class PreviewCommandTestsAndroid(BaseClass):
         output = File.read(log)
         url = Preview.get_url(output)
         Preview.run_app(url, EMULATOR_ID, platform=Platform.ANDROID)
-                              
-        strings = ['Start syncing changes for platform android',
-                   'Successfully synced changes for platform android']
+
+        strings = ['Start sending initial files for platform android',
+                   'Successfully sent initial files for platform android']
+
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=True)
 
         # Verify app looks correct inside emulator
