@@ -255,9 +255,7 @@ class PreviewCommandTestsAndroid(BaseClass):
         output = File.read(log)
         url = Preview.get_url(output)
         Preview.run_app(url, EMULATOR_ID, platform=Platform.ANDROID)
-                              
-        # strings = ['Start syncing changes for platform android',
-        #            'Successfully synced changes for platform android']
+
         strings = ['Start sending initial files for platform android',
                    'Successfully sent initial files for platform android']
 
@@ -285,9 +283,7 @@ class PreviewCommandTestsAndroid(BaseClass):
         output = File.read(log)
         url = Preview.get_url(output)
         Preview.run_app(url, EMULATOR_ID, platform=Platform.ANDROID)
-                              
-        # strings = ['Start syncing changes for platform android',
-        #            'Successfully synced changes for platform android']
+
         strings = ['Start sending initial files for platform android',
                    'Successfully sent initial files for platform android']
 
@@ -319,9 +315,7 @@ class PreviewCommandTestsAndroid(BaseClass):
         output = File.read(log)
         url = Preview.get_url(output)
         Preview.run_app(url, EMULATOR_ID, platform=Platform.ANDROID)
-                              
-        # strings = ['Start syncing changes for platform android',
-        #            'Successfully synced changes for platform android']
+
         strings = ['Start sending initial files for platform android',
                    'Successfully sent initial files for platform android']
 
