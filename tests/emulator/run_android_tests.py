@@ -680,8 +680,15 @@ class RunAndroidEmulatorTests(BaseClass):
 
     def test_315_tns_run_android_change_appResources_check_per_platform(self):
         # https://github.com/NativeScript/nativescript-cli/pull/3619
-        Folder.cleanup(self.source_app)
-        Folder.copy(self.temp_app, self.source_app)
+        if CURRENT_OS != OSType.WINDOWS:
+            Folder.cleanup(self.source_app)
+            Folder.copy(self.temp_app, self.source_app)
+        else:
+            Tns.create_app(self.app_name,
+                           attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
+                           update_modules=True)
+            Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_PACKAGE})
+
         output = Tns.run_android(attributes={'--path': self.app_name}, wait=False, assert_success=False)
         strings = ['Successfully installed on device with identifier',
                    'Successfully synced application', EMULATOR_ID, ]
