@@ -269,7 +269,7 @@ class Tns(object):
             TnsAsserts.created(app_name=app_name, output=output)
         if update_modules:
             Tns.update_modules(path)
-        Tns.ensure_app_resources(path)
+        # Tns.ensure_app_resources(path)
         return output
 
     @staticmethod

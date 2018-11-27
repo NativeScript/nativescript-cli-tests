@@ -38,9 +38,15 @@ class StarterKitsTests(BaseClass):
     ts_change_ng = ['src/app/cars/shared/car.model.ts', 'this.name = options.name;', 'this.name = "SyncJSTest";']
     sass_root_level_variable_change = ['app/_app-variables.scss', '$accent-dark: #3A53FF !default;',
                                        '$accent-dark: #FF6666 !default;']
+    sass_root_level_variable_change_ng = ['src/_app-variables.scss', '$accent-dark: #3A53FF !default;',
+                                       '$accent-dark: #FF6666 !default;']
     sass_root_level_android_change = ["app/app.android.scss", "@import 'app-common';",
                                       "@import 'app-common'; .text-primary {color: black;}"]
+    sass_root_level_android_change_ng = ["src/app.android.scss", "@import 'app-common';",
+                                      "@import 'app-common'; .text-primary {color: black;}"]
     sass_root_level_ios_change = ["app/app.ios.scss", "@import 'app-common';",
+                                  "@import 'app-common'; .text-primary {color: black;}"]
+    sass_root_level_ios_change_ng = ["src/app.ios.scss", "@import 'app-common';",
                                   "@import 'app-common'; .text-primary {color: black;}"]
     sass_nested_level_change = ['app/cars/_cars-list-common.scss', 'padding: 8 15 4 15;', 'padding: 50 50 50 50;']
     sass_nested_level_change_ng = ['src/app/cars/_car-list.component.scss', 'padding: 8 15 4 15;', 'padding: 50 50 50 50;']
@@ -79,15 +85,20 @@ class StarterKitsTests(BaseClass):
                 assert Device.wait_for_text(device_id=device_id, text=xml, timeout=20), "Failed to apply XML changes!"
 
         # Change SASS files.
-        ReplaceHelper.replace(demo, self.sass_root_level_variable_change, sleep=10)
-        if platform == Platform.ANDROID:
-            ReplaceHelper.replace(demo, self.sass_root_level_android_change, sleep=10)
-        else:
-            ReplaceHelper.replace(demo, self.sass_root_level_ios_change, sleep=10)
         if '-ng' in demo:
+            ReplaceHelper.replace(demo, self.sass_root_level_variable_change_ng, sleep=10)
             ReplaceHelper.replace(demo, self.sass_nested_level_change_ng, sleep=10)
+            if platform == Platform.ANDROID:
+                ReplaceHelper.replace(demo, self.sass_root_level_android_change_ng, sleep=10)
+            else:
+                ReplaceHelper.replace(demo, self.sass_root_level_ios_change_ng, sleep=10)
         else:
+            ReplaceHelper.replace(demo, self.sass_root_level_variable_change, sleep=10)
             ReplaceHelper.replace(demo, self.sass_nested_level_change, sleep=10)
+            if platform == Platform.ANDROID:
+                ReplaceHelper.replace(demo, self.sass_root_level_android_change, sleep=10)
+            else:
+                ReplaceHelper.replace(demo, self.sass_root_level_ios_change, sleep=10)
 
     @staticmethod
     def revert_changes(self, demo, platform, device_id):
@@ -118,15 +129,22 @@ class StarterKitsTests(BaseClass):
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text="Browse",
                                             timeout=20), "Failed to rollback XML changes!"
-        ReplaceHelper.rollback(demo, self.sass_root_level_variable_change, sleep=10)
-        if platform == Platform.ANDROID:
-            ReplaceHelper.rollback(demo, self.sass_root_level_android_change, sleep=10)
-        else:
-            ReplaceHelper.rollback(demo, self.sass_root_level_ios_change, sleep=10)
+       
+       # Change SASS files.
         if '-ng' in demo:
+            ReplaceHelper.rollback(demo, self.sass_root_level_variable_change_ng, sleep=10)
             ReplaceHelper.rollback(demo, self.sass_nested_level_change_ng, sleep=10)
+            if platform == Platform.ANDROID:
+                ReplaceHelper.rollback(demo, self.sass_root_level_android_change_ng, sleep=10)
+            else:
+                ReplaceHelper.rollback(demo, self.sass_root_level_ios_change_ng, sleep=10)
         else:
+            ReplaceHelper.rollback(demo, self.sass_root_level_variable_change, sleep=10)
             ReplaceHelper.rollback(demo, self.sass_nested_level_change, sleep=10)
+            if platform == Platform.ANDROID:
+                ReplaceHelper.rollback(demo, self.sass_root_level_android_change, sleep=10)
+            else:
+                ReplaceHelper.rollback(demo, self.sass_root_level_ios_change, sleep=10)
 
     @classmethod
     def setUpClass(cls):
