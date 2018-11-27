@@ -32,9 +32,10 @@ class StarterKitsTests(BaseClass):
 
     xml_change = ['app/cars/cars-list-page.xml', 'Browse', 'Best Car Ever!']
     html_change = ['app/cars/car-list.component.html', 'Browse', 'Best Car Ever!']
+    html_change_ng = ['src/app/cars/car-list.component.html', 'Browse', 'Best Car Ever!']
     js_change = ['app/cars/shared/car-model.js', 'name: options.name,', 'name: "SyncJSTest",']
     ts_change = ['app/cars/shared/car-model.ts', 'this._name = options.name;', 'this._name = "SyncJSTest";']
-    ts_change_ng = ['app/cars/shared/car.model.ts', 'this.name = options.name;', 'this.name = "SyncJSTest";']
+    ts_change_ng = ['src/app/cars/shared/car.model.ts', 'this.name = options.name;', 'this.name = "SyncJSTest";']
     sass_root_level_variable_change = ['app/_app-variables.scss', '$accent-dark: #3A53FF !default;',
                                        '$accent-dark: #FF6666 !default;']
     sass_root_level_android_change = ["app/app.android.scss", "@import 'app-common';",
@@ -42,7 +43,7 @@ class StarterKitsTests(BaseClass):
     sass_root_level_ios_change = ["app/app.ios.scss", "@import 'app-common';",
                                   "@import 'app-common'; .text-primary {color: black;}"]
     sass_nested_level_change = ['app/cars/_cars-list-common.scss', 'padding: 8 15 4 15;', 'padding: 50 50 50 50;']
-    sass_nested_level_change_ng = ['app/cars/_car-list.component.scss', 'padding: 8 15 4 15;', 'padding: 50 50 50 50;']
+    sass_nested_level_change_ng = ['src/app/cars/_car-list.component.scss', 'padding: 8 15 4 15;', 'padding: 50 50 50 50;']
     SIMULATOR_ID = ""
 
     @staticmethod
@@ -57,7 +58,7 @@ class StarterKitsTests(BaseClass):
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text="SyncJSTest",
                                             timeout=30), "Failed to apply TS changes"
-            ReplaceHelper.replace(demo, self.html_change)
+            ReplaceHelper.replace(demo, self.html_change_ng)
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text=xml, timeout=20), "Failed to apply XML changes!"
         elif '-ts' in demo:
@@ -95,7 +96,7 @@ class StarterKitsTests(BaseClass):
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text="Ford",
                                             timeout=30), "Failed to rollback TS changes"
-            ReplaceHelper.rollback(demo, self.html_change)
+            ReplaceHelper.rollback(demo, self.html_change_ng)
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text="Browse",
                                             timeout=20), "Failed to rollback XML changes!"
