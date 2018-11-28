@@ -273,7 +273,10 @@ class StarterKitsTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=5)
         Helpers.android_screen_match(image=demo + '_home', tolerance=1.0)
-        Helpers.wait_webpack_watcher()
+        if "-ng" in demo:
+            Helpers.wait_webpack_watcher_ng()
+        else:
+            Helpers.wait_webpack_watcher()
 
         # Apply changes
         StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.ANDROID, device_id=EMULATOR_ID)
@@ -300,7 +303,11 @@ class StarterKitsTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=5)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=1.0)
-        Helpers.wait_webpack_watcher()
+        
+        if "-ng" in demo:
+            Helpers.wait_webpack_watcher_ng()
+        else:
+            Helpers.wait_webpack_watcher()
 
         # Apply changes
         StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.IOS, device_id=self.SIMULATOR_ID)
@@ -328,7 +335,10 @@ class StarterKitsTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=5)
         Helpers.android_screen_match(image=demo + '_home', tolerance=1.0)
-        Helpers.wait_webpack_watcher()
+        if "-ng" in demo:
+            Helpers.wait_webpack_watcher_ng()
+        else:
+            Helpers.wait_webpack_watcher()
 
         # Apply changes
         StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.ANDROID, device_id=EMULATOR_ID)
@@ -356,7 +366,10 @@ class StarterKitsTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=5)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=1.0)
-        Helpers.wait_webpack_watcher()
+        if "-ng" in demo:
+            Helpers.wait_webpack_watcher_ng()
+        else:
+            Helpers.wait_webpack_watcher()
 
         # Apply changes
         StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.IOS, device_id=self.SIMULATOR_ID)
