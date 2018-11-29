@@ -118,6 +118,9 @@ TYPESCRIPT_PACKAGE = resolve_package("nativescript-dev-typescript", "nativescrip
 ANGULAR_PACKAGE = resolve_package("nativescript-angular", "nativescript-angular@next")
 MODULES_PACKAGE = resolve_package("tns-core-modules", "tns-core-modules@{0}".format(TAG))
 
+# Package manager
+USE_YARN = os.environ.get("USE_YARN", "False")
+
 # Output settings
 OUTPUT_FOLDER = TEST_RUN_HOME + os.path.sep + "out"
 OUTPUT_FILE = os.path.join(OUTPUT_FOLDER, 'output.txt')

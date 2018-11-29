@@ -13,7 +13,7 @@ from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import COMMAND_TIMEOUT, TNS_PATH, TAG, TEST_RUN_HOME, CURRENT_OS, \
     SUT_FOLDER, PROVISIONING, BRANCH, MODULES_PACKAGE, ANGULAR_PACKAGE, TYPESCRIPT_PACKAGE, UPDATE_WEBPACK_PATH, \
-    WEBPACK_PACKAGE
+    WEBPACK_PACKAGE, USE_YARN
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
@@ -111,7 +111,8 @@ class Tns(object):
                 cmd += " " + k + " " + v
         if log_trace:
             cmd += " --log trace"
-
+        if USE_YARN == "True":
+            cmd += " --yarn"
         if measureTime:
             cmd = "TIME " + cmd
         print cmd
