@@ -69,10 +69,12 @@ if "missing" in BRANCH :
     BRANCH = os.environ.get("BRANCH", "master").lower()
 
 if "release" in BRANCH:
-    SHARE_BRANCH = "Release"
+    SHARE_BRANCH = "RC"
+    SHARE_BRANCH_INSPECTOR = "RC"
     TAG = "rc"
 else:
     SHARE_BRANCH = "Stable"
+    SHARE_BRANCH_INSPECTOR = "Master"
     TAG = "next"
 
 # Set source location of separate package based on base path
@@ -85,15 +87,15 @@ IOS_PATH = os.environ.get("IOS_PATH", os.path.join(BASE_PACKAGE_PATH, "tns-ios",
 TNS_MODULES_PATH = os.environ.get("TNS_MODULES_PATH",
                                   os.path.join(BASE_PACKAGE_PATH, "tns-modules", SHARE_BRANCH, "tns-core-modules.tgz"))
 IOS_INSPECTOR_PATH = os.environ.get("IOS_INSPECTOR_PATH",
-                                    os.path.join(BASE_PACKAGE_PATH, "tns-ios-inspector", SHARE_BRANCH,
+                                    os.path.join(BASE_PACKAGE_PATH, "tns-ios-inspector", SHARE_BRANCH_INSPECTOR,
                                                  "tns-ios-inspector.tgz"))
 
 # Set source location for Preview App packages
 
-PREVIEW_APP_PATH_IOS = os.environ.get("PREVIEW_APP_PATH_IOS", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play-dev", "nsplaydev.tgz"))
-PREVIEW_APP_PATH_ANDROID = os.environ.get("PREVIEW_APP_PATH_ANDROID", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play-dev", 'app-universal-release.apk'))
-PLAYGROUND_APP_PATH_IOS =  os.environ.get("PLAYGROUND_APP_PATH_IOS", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play", "nsplay.tgz"))
-PLAYGROUND_APP_PATH_ANDROID =  os.environ.get("PLAYGROUND_APP_PATH_ANDROID", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play", "app-release.apk"))
+PREVIEW_APP_PATH_IOS = os.environ.get("PREVIEW_APP_PATH_IOS", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play-dev", "debug", "nsplaydev.tgz"))
+PREVIEW_APP_PATH_ANDROID = os.environ.get("PREVIEW_APP_PATH_ANDROID", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play-dev", "debug", 'app-universal-release.apk'))
+PLAYGROUND_APP_PATH_IOS =  os.environ.get("PLAYGROUND_APP_PATH_IOS", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play", "debug", "nsplay.tgz"))
+PLAYGROUND_APP_PATH_ANDROID =  os.environ.get("PLAYGROUND_APP_PATH_ANDROID", os.path.join(BASE_PACKAGE_PATH, "Playground", "ns-play", "debug", "app-release.apk"))
             
 # Root folder for local packages
 SUT_FOLDER = os.path.join(TEST_RUN_HOME, "sut")

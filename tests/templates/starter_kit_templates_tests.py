@@ -32,17 +32,24 @@ class StarterKitsTests(BaseClass):
 
     xml_change = ['app/cars/cars-list-page.xml', 'Browse', 'Best Car Ever!']
     html_change = ['app/cars/car-list.component.html', 'Browse', 'Best Car Ever!']
+    html_change_ng = ['src/app/cars/car-list.component.html', 'Browse', 'Best Car Ever!']
     js_change = ['app/cars/shared/car-model.js', 'name: options.name,', 'name: "SyncJSTest",']
     ts_change = ['app/cars/shared/car-model.ts', 'this._name = options.name;', 'this._name = "SyncJSTest";']
-    ts_change_ng = ['app/cars/shared/car.model.ts', 'this.name = options.name;', 'this.name = "SyncJSTest";']
+    ts_change_ng = ['src/app/cars/shared/car.model.ts', 'this.name = options.name;', 'this.name = "SyncJSTest";']
     sass_root_level_variable_change = ['app/_app-variables.scss', '$accent-dark: #3A53FF !default;',
+                                       '$accent-dark: #FF6666 !default;']
+    sass_root_level_variable_change_ng = ['src/_app-variables.scss', '$accent-dark: #3A53FF !default;',
                                        '$accent-dark: #FF6666 !default;']
     sass_root_level_android_change = ["app/app.android.scss", "@import 'app-common';",
                                       "@import 'app-common'; .text-primary {color: black;}"]
+    sass_root_level_android_change_ng = ["src/app.android.scss", "@import 'app-common';",
+                                      "@import 'app-common'; .text-primary {color: black;}"]
     sass_root_level_ios_change = ["app/app.ios.scss", "@import 'app-common';",
                                   "@import 'app-common'; .text-primary {color: black;}"]
+    sass_root_level_ios_change_ng = ["src/app.ios.scss", "@import 'app-common';",
+                                  "@import 'app-common'; .text-primary {color: black;}"]
     sass_nested_level_change = ['app/cars/_cars-list-common.scss', 'padding: 8 15 4 15;', 'padding: 50 50 50 50;']
-    sass_nested_level_change_ng = ['app/cars/_car-list.component.scss', 'padding: 8 15 4 15;', 'padding: 50 50 50 50;']
+    sass_nested_level_change_ng = ['src/app/cars/_car-list.component.scss', 'padding: 8 15 4 15;', 'padding: 50 50 50 50;']
     SIMULATOR_ID = ""
 
     @staticmethod
@@ -57,7 +64,7 @@ class StarterKitsTests(BaseClass):
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text="SyncJSTest",
                                             timeout=30), "Failed to apply TS changes"
-            ReplaceHelper.replace(demo, self.html_change)
+            ReplaceHelper.replace(demo, self.html_change_ng)
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text=xml, timeout=20), "Failed to apply XML changes!"
         elif '-ts' in demo:
@@ -78,15 +85,20 @@ class StarterKitsTests(BaseClass):
                 assert Device.wait_for_text(device_id=device_id, text=xml, timeout=20), "Failed to apply XML changes!"
 
         # Change SASS files.
-        ReplaceHelper.replace(demo, self.sass_root_level_variable_change, sleep=10)
-        if platform == Platform.ANDROID:
-            ReplaceHelper.replace(demo, self.sass_root_level_android_change, sleep=10)
-        else:
-            ReplaceHelper.replace(demo, self.sass_root_level_ios_change, sleep=10)
         if '-ng' in demo:
+            ReplaceHelper.replace(demo, self.sass_root_level_variable_change_ng, sleep=10)
             ReplaceHelper.replace(demo, self.sass_nested_level_change_ng, sleep=10)
+            if platform == Platform.ANDROID:
+                ReplaceHelper.replace(demo, self.sass_root_level_android_change_ng, sleep=10)
+            else:
+                ReplaceHelper.replace(demo, self.sass_root_level_ios_change_ng, sleep=10)
         else:
+            ReplaceHelper.replace(demo, self.sass_root_level_variable_change, sleep=10)
             ReplaceHelper.replace(demo, self.sass_nested_level_change, sleep=10)
+            if platform == Platform.ANDROID:
+                ReplaceHelper.replace(demo, self.sass_root_level_android_change, sleep=10)
+            else:
+                ReplaceHelper.replace(demo, self.sass_root_level_ios_change, sleep=10)
 
     @staticmethod
     def revert_changes(self, demo, platform, device_id):
@@ -95,7 +107,7 @@ class StarterKitsTests(BaseClass):
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text="Ford",
                                             timeout=30), "Failed to rollback TS changes"
-            ReplaceHelper.rollback(demo, self.html_change)
+            ReplaceHelper.rollback(demo, self.html_change_ng)
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text="Browse",
                                             timeout=20), "Failed to rollback XML changes!"
@@ -117,15 +129,22 @@ class StarterKitsTests(BaseClass):
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text="Browse",
                                             timeout=20), "Failed to rollback XML changes!"
-        ReplaceHelper.rollback(demo, self.sass_root_level_variable_change, sleep=10)
-        if platform == Platform.ANDROID:
-            ReplaceHelper.rollback(demo, self.sass_root_level_android_change, sleep=10)
-        else:
-            ReplaceHelper.rollback(demo, self.sass_root_level_ios_change, sleep=10)
+       
+       # Change SASS files.
         if '-ng' in demo:
+            ReplaceHelper.rollback(demo, self.sass_root_level_variable_change_ng, sleep=10)
             ReplaceHelper.rollback(demo, self.sass_nested_level_change_ng, sleep=10)
+            if platform == Platform.ANDROID:
+                ReplaceHelper.rollback(demo, self.sass_root_level_android_change_ng, sleep=10)
+            else:
+                ReplaceHelper.rollback(demo, self.sass_root_level_ios_change_ng, sleep=10)
         else:
+            ReplaceHelper.rollback(demo, self.sass_root_level_variable_change, sleep=10)
             ReplaceHelper.rollback(demo, self.sass_nested_level_change, sleep=10)
+            if platform == Platform.ANDROID:
+                ReplaceHelper.rollback(demo, self.sass_root_level_android_change, sleep=10)
+            else:
+                ReplaceHelper.rollback(demo, self.sass_root_level_ios_change, sleep=10)
 
     @classmethod
     def setUpClass(cls):
@@ -254,7 +273,10 @@ class StarterKitsTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=5)
         Helpers.android_screen_match(image=demo + '_home', tolerance=1.0)
-        Helpers.wait_webpack_watcher()
+        if "-ng" in demo:
+            Helpers.wait_webpack_watcher_ng()
+        else:
+            Helpers.wait_webpack_watcher()
 
         # Apply changes
         StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.ANDROID, device_id=EMULATOR_ID)
@@ -281,7 +303,11 @@ class StarterKitsTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=5)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=1.0)
-        Helpers.wait_webpack_watcher()
+        
+        if "-ng" in demo:
+            Helpers.wait_webpack_watcher_ng()
+        else:
+            Helpers.wait_webpack_watcher()
 
         # Apply changes
         StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.IOS, device_id=self.SIMULATOR_ID)
@@ -309,7 +335,10 @@ class StarterKitsTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=5)
         Helpers.android_screen_match(image=demo + '_home', tolerance=1.0)
-        Helpers.wait_webpack_watcher()
+        if "-ng" in demo:
+            Helpers.wait_webpack_watcher_ng()
+        else:
+            Helpers.wait_webpack_watcher()
 
         # Apply changes
         StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.ANDROID, device_id=EMULATOR_ID)
@@ -337,7 +366,10 @@ class StarterKitsTests(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=5)
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=1.0)
-        Helpers.wait_webpack_watcher()
+        if "-ng" in demo:
+            Helpers.wait_webpack_watcher_ng()
+        else:
+            Helpers.wait_webpack_watcher()
 
         # Apply changes
         StarterKitsTests.apply_changes(self=self, demo=demo, platform=Platform.IOS, device_id=self.SIMULATOR_ID)

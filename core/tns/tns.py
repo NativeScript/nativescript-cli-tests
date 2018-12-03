@@ -12,7 +12,8 @@ from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import COMMAND_TIMEOUT, TNS_PATH, TAG, TEST_RUN_HOME, CURRENT_OS, \
-    SUT_FOLDER, PROVISIONING, BRANCH, MODULES_PACKAGE, ANGULAR_PACKAGE, TYPESCRIPT_PACKAGE, UPDATE_WEBPACK_PATH
+    SUT_FOLDER, PROVISIONING, BRANCH, MODULES_PACKAGE, ANGULAR_PACKAGE, TYPESCRIPT_PACKAGE, UPDATE_WEBPACK_PATH, \
+    WEBPACK_PACKAGE
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
@@ -155,7 +156,7 @@ class Tns(object):
         """
         Update modules for {N} project
         :param path: Path to {N} project
-        :return: Output of command that update tns-core-modules plugin.
+        :return: Output of command that update nativescript-angular plugin.
         """
 
         # Escape path with spaces
@@ -165,15 +166,38 @@ class Tns(object):
         Npm.uninstall(package="nativescript-angular", option="--save", folder=path)
         output = Npm.install(package=ANGULAR_PACKAGE, option="--save", folder=path)
         if Npm.version() > 3:
-            assert "ERR" not in output, "Something went wrong when modules are installed."
+            assert "ERR" not in output, "Something went wrong when angular are installed."
 
         # Update NG dependencies
         update_script = os.path.join(TEST_RUN_HOME, path,
-                                     "node_modules", "nativescript-angular", "bin", "update-app-ng-deps")
-        if CURRENT_OS is OSType.WINDOWS:
-            update_script = "node " + update_script
+                                     "node_modules", ".bin", "update-app-ng-deps")
         update_out = run(update_script)
         assert "Angular dependencies updated" in update_out
+        Npm.install(folder=path)
+
+        return output
+
+    @staticmethod
+    def update_webpack(path):
+        """
+        Update modules for {N} project
+        :param path: Path to {N} project
+        :return: Output of command that update nativescript-dev-webpack plugin.
+        """
+
+        # Escape path with spaces
+        if " " in path:
+            path = "\"" + path + "\""
+
+        Npm.uninstall(package="nativescript-dev-webpack", option="--save-dev", folder=path)
+        output = Npm.install(package=WEBPACK_PACKAGE, option="--save", folder=path)
+        if Npm.version() > 3:
+            assert "ERR" not in output, "Something went wrong when webpack are installed."
+
+        # Update webpack dependencies
+        update_script = os.path.join(TEST_RUN_HOME, path,
+                                     "node_modules", ".bin", "update-ns-webpack --deps --configs")
+        run(update_script)
         Npm.install(folder=path)
 
         return output
@@ -183,7 +207,7 @@ class Tns(object):
         """
         Update modules for {N} project
         :param path: Path to {N} project
-        :return: Output of command that update tns-core-modules plugin.
+        :return: Output of command that update nativescript-typescript plugin.
         """
 
         # Escape path with spaces
@@ -192,8 +216,13 @@ class Tns(object):
 
         Npm.uninstall(package="nativescript-typescript", option="--save", folder=path)
         output = Npm.install(package=TYPESCRIPT_PACKAGE, option="--save", folder=path)
+
+        # Update TS dependencies
+        update_script = os.path.join(TEST_RUN_HOME, path,
+                                     "node_modules", ".bin", "ns-upgrade-tsconfig")
+
         if Npm.version() > 3:
-            assert "ERR" not in output, "Something went wrong when modules are installed."
+            assert "ERR" not in output, "Something went wrong when typescript are installed."
 
         return output
 
@@ -238,7 +267,7 @@ class Tns(object):
             TnsAsserts.created(app_name=app_name, output=output)
         if update_modules:
             Tns.update_modules(path)
-        Tns.ensure_app_resources(path)
+        # Tns.ensure_app_resources(path)
         return output
 
     @staticmethod

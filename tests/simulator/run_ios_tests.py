@@ -526,30 +526,6 @@ class RunIOSSimulatorTests(BaseClass):
         assert 'BUILD SUCCEEDED' not in File.read(log), "Change of CSS files after plugin add is not incremental!"
         File.write(file_path=log, text="")  # Clean log file
 
-    def test_380_tns_run_ios_plugin_dependencies(self):
-        """
-        issue https://github.com/NativeScript/ios-runtime/issues/890
-        Check app is running when reference plugin A - plugin A depends on plugin B which depends on plugin C.
-        Plugin A has dependency only to plugin B.
-        Old behavior (version < 4.0.0) was in plugin A to reference plugin B and C.
-        """
-
-        # Add plugin with specific dependencies
-        Tns.plugin_add(self.plugin_path, attributes={"--path": self.app_name})
-
-        # `tns run ios` and wait until app is deployed
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
-        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.SIMULATOR_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
-
-        folder_path = os.path.join(os.getcwd(), self.app_name, "platforms", "ios", self.app_name, "app",
-                                   "tns_modules", "nativescript-ui-core")
-        assert Folder.exists(folder_path), "Cannot find folder: " + folder_path
-
-        # Verify app looks correct inside simulator
-        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
-                            expected_image='livesync-hello-world_home')
-
     def test_385_tns_run_ios_source_code_in_ios_part_plugin(self):
         """
         https://github.com/NativeScript/nativescript-cli/issues/3650

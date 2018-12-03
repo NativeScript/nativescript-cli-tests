@@ -55,7 +55,7 @@ class IDevice(object):
         lines = output.splitlines()
         for line in lines:
             if app_prefix in line:
-                app_name = line.split(",")[0].replace(" ", "")
+                app_name = line.split(",")[0].split("-")[0].replace(" ", "")
                 uninstall_result = run("ideviceinstaller -u {0} -U {1}".format(device_id, app_name), timeout=120)
                 if "Complete" in uninstall_result:
                     print "{0} application successfully uninstalled.".format(app_prefix)

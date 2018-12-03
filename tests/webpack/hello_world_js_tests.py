@@ -4,6 +4,7 @@ from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
+from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_KEYSTORE_PATH, \
@@ -32,7 +33,7 @@ class WebPackHelloWorldJS(BaseClass):
         Emulator.ensure_available()
 
         Tns.create_app(cls.app_name, update_modules=True)
-        Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=cls.app_name)
+        Tns.update_webpack(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         if CURRENT_OS == OSType.OSX:
@@ -272,6 +273,7 @@ class WebPackHelloWorldJS(BaseClass):
 
     def test_400_build_with_bundle_without_plugin(self):
         Tns.create_app(self.app_name)
+        Npm.uninstall(package="nativescript-dev-webpack", option="--save-dev", folder=self.app_name)
         output = Tns.build_android(attributes={"--path": self.app_name, "--bundle": ""}, assert_success=False)
         assert "Passing --bundle requires a bundling plugin." in output
         assert "No bundling plugin found or the specified bundling plugin is invalid." in output

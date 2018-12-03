@@ -21,7 +21,7 @@ from core.osutils.command_log_level import CommandLogLevel
 
 from core.osutils.command import run
 
-from core.settings.settings import  SUT_FOLDER, PREVIEW_APP_PATH_ANDROID, PREVIEW_APP_PATH_IOS, EMULATOR_ID
+from core.settings.settings import  SUT_FOLDER, PREVIEW_APP_PATH_ANDROID, PREVIEW_APP_PATH_IOS, EMULATOR_ID,TEST_RUN_HOME,PLAYGROUND_APP_PATH_IOS
 
 class Preview(object):
 
@@ -30,13 +30,15 @@ class Preview(object):
         """Copy Preview App packages from Shares to local folder"""
         shutil.copy2(PREVIEW_APP_PATH_ANDROID.strip(), SUT_FOLDER)        
         shutil.copy2(PREVIEW_APP_PATH_IOS.strip(), SUT_FOLDER)
+        shutil.copy2(PLAYGROUND_APP_PATH_IOS.strip(), SUT_FOLDER)
         """Unpack the .tgz file to get the nsplaydev.app"""
-        File.unpack_tar(PREVIEW_APP_PATH_IOS, SUT_FOLDER)
+        File.unpack_tar(os.path.join(SUT_FOLDER, 'nsplaydev.tgz'), SUT_FOLDER)
+        File.unpack_tar(os.path.join(SUT_FOLDER, 'nsplay.tgz'), SUT_FOLDER)
 
     @staticmethod
     def install_preview_app(device_id, platform=Platform.BOTH):
         """Installs Preview App on emulator and simulator"""
-        package_android = File.find(base_path = SUT_FOLDER, file_name="app-universal-release.apk")
+        package_android = os.path.join(SUT_FOLDER, 'app-universal-release.apk')
         package_ios = os.path.join(SUT_FOLDER, 'nsplaydev.app')
         if platform is Platform.IOS:
             Simulator.install(package_ios)
