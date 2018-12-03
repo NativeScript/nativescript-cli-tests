@@ -197,8 +197,6 @@ class Tns(object):
         # Update webpack dependencies
         update_script = os.path.join(TEST_RUN_HOME, path,
                                      "node_modules", ".bin", "update-ns-webpack --deps --configs")
-        if CURRENT_OS is OSType.WINDOWS:
-            update_script = "node " + update_script
         run(update_script)
         Npm.install(folder=path)
 
