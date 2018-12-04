@@ -30,13 +30,12 @@ class Npm(object):
 
     @staticmethod
     def version():
-        if USE_YARN is True:
+        if USE_YARN is 'True':
             version = run('yarn -v', log_level=CommandLogLevel.SILENT)
             return int(version.split('.')[0])
         else:
             version = run('npm -v', log_level=CommandLogLevel.SILENT)
             return int(version.split('.')[0])
-
 
     @staticmethod
     def pack(folder, output_file):
@@ -52,7 +51,7 @@ class Npm(object):
 
     @staticmethod
     def install(package='', option='', folder=None, log_level=CommandLogLevel.FULL):
-        if USE_YARN is True:
+        if USE_YARN is 'True':
             if package is None:
                 raise NameError('Package can not be None.')
             command = 'add {0} {1}'.format(package, option)
@@ -69,7 +68,7 @@ class Npm(object):
 
     @staticmethod
     def uninstall(package, option='', folder=None, log_level=CommandLogLevel.FULL):
-        if USE_YARN is True:
+        if USE_YARN is 'True':
             if package is None or package is '':
                 raise NameError('Package can not be None.')
             return Npm.__run_yarn_command('remove {0} {1}'.format(package, option), folder=folder, log_level=log_level)
@@ -80,14 +79,14 @@ class Npm(object):
 
     @staticmethod
     def get_version(package):
-        if USE_YARN is True:
+        if USE_YARN is 'True':
             return Npm.__run_yarn_command('info {0} version'.format(package), log_level=CommandLogLevel.SILENT)
         else:
             return Npm.__run_npm_command('show {0} version'.format(package), log_level=CommandLogLevel.SILENT)
 
     @staticmethod
     def cache_clean():
-        if USE_YARN is True:
+        if USE_YARN is 'True':
             yarn_clean_command = "yarn cache clean"
             print "Clean npm cache."
             run(yarn_clean_command)
