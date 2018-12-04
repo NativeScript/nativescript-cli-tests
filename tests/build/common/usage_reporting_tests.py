@@ -11,6 +11,7 @@ from core.tns.tns import Tns
 
 
 class UsageReportingTests(BaseClass):
+    config = os.path.join(TEST_RUN_HOME, 'node_modules', 'nativescript', 'config', 'config.json')
 
     @classmethod
     def setUpClass(cls):
@@ -23,9 +24,8 @@ class UsageReportingTests(BaseClass):
     def test_001_usage_reporting_enable(self):
         output = Tns.run_tns_command("usage-reporting enable")
         assert enabled.format(usage_reporting, "now ") in output
-        config = os.path.join(TEST_RUN_HOME, 'node_modules', 'nativescript', 'config', 'config.json')
-        assert "GA_TRACKING_ID" in File.read(config)
-        assert "UA-111455-44" in File.read(config)
+        assert "GA_TRACKING_ID" in File.read(self.config)
+        assert "UA-111455-44" in File.read(self.config)
 
         # Check there is message for tracking in Google Analytics
         output = Tns.run_tns_command("doctor", timeout=180, log_trace=True)
@@ -45,9 +45,8 @@ class UsageReportingTests(BaseClass):
     def test_002_usage_reporting_disable(self):
         output = Tns.run_tns_command("usage-reporting disable")
         assert disabled.format(usage_reporting, "now ") in output
-        config = os.path.join(TEST_RUN_HOME, 'node_modules', 'nativescript', 'config', 'config.json')
-        assert "GA_TRACKING_ID" in File.read(config)
-        assert "UA-111455-44" in File.read(config)
+        assert "GA_TRACKING_ID" in File.read(self.config)
+        assert "UA-111455-44" in File.read(self.config)
 
         # Check there is no any message for tracking in Google Analytics
         output = Tns.run_tns_command("doctor", timeout=180, log_trace=True)
