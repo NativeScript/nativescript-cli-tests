@@ -88,7 +88,7 @@ class Npm(object):
     def cache_clean():
         if USE_YARN == "True":
             yarn_clean_command = "yarn cache clean"
-            print "Clean npm cache."
+            print "Clean yarn cache."
             run(yarn_clean_command)
             if CURRENT_OS != OSType.WINDOWS:
                 run(command="rm -rf ~/.yarn/tns*")

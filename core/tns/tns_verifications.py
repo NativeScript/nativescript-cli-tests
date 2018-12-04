@@ -71,7 +71,7 @@ class TnsAsserts(object):
         # Assert console output is ok
         if output is not None:
             app = app_name.rsplit('/')[-1]
-            if USE_YARN is not 'True':
+            if USE_YARN != "True":
                 if Npm.version() < 5:
                     assert 'nativescript-theme-core' in output
             assert 'Project {0} was successfully created'.format(app) in output, 'Failed to create {0}'.format(app)
