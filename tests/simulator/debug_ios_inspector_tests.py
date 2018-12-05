@@ -133,16 +133,14 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
                    'Frontend client connected', 'Backend socket created', 'NativeScript debugger attached']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        # Change XML and wait until app is synced
+        # Change XML and wait until app is synced. App doesn't restart from 5.1.0 version
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
-        strings = ['Successfully transferred', 'main-page.xml',
-                   'Backend socket created', 'NativeScript debugger attached', 'CONSOLE LOG']
+        strings = ['Successfully transferred', 'main-page.xml', 'CONSOLE LOG']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
-        # Change CSS and wait until app is synced
+        # Change CSS and wait until app is synced. App doesn't restart from 5.1.0 version
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
-        strings = ['Successfully transferred', 'app.css', 'Backend socket created',
-                   'NativeScript debugger attached', 'CONSOLE LOG']
+        strings = ['Successfully transferred', 'app.css', 'CONSOLE LOG']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify application looks correct

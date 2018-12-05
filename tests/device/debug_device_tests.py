@@ -44,7 +44,7 @@ class DebugOnDevice(BaseClass):
         log = Tns.debug_android(attributes={'--path': self.app_name, '--device': self.ANDROID_DEVICE_ID})
         strings = [self.ANDROID_DEVICE_ID, 'Successfully installed on device with identifier']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
-        DebugChromeHelpers.verify_debugger_started(log)
+        DebugChromeHelpers.verify_debugger_started_first(log)
 
         # Get Chrome URL and open it
         url = run(command="grep chrome-devtools " + log)
@@ -53,6 +53,6 @@ class DebugOnDevice(BaseClass):
     def test_002_debug_ios(self):
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--device': self.IOS_DEVICE_ID})
         DebugChromeHelpers.attach_chrome(log)
-        strings = [self.IOS_DEVICE_ID, 'Successfully started on device with identifier']
+        strings = [self.IOS_DEVICE_ID, 'Successfully installed on device with identifier']
         Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
         DebugChromeHelpers.assert_not_detached(log)
