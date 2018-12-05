@@ -53,6 +53,6 @@ class DebugOnDevice(BaseClass):
     def test_002_debug_ios(self):
         log = Tns.debug_ios(attributes={'--path': self.app_name, '--device': self.IOS_DEVICE_ID})
         DebugChromeHelpers.attach_chrome(log)
-        strings = [self.IOS_DEVICE_ID, 'Successfully started on device with identifier']
+        strings = [self.IOS_DEVICE_ID, 'Successfully installed on device with identifier']
         Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
         DebugChromeHelpers.assert_not_detached(log)
