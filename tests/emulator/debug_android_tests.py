@@ -50,7 +50,7 @@ class DebugAndroidEmulatorTests(BaseClass):
         Default `tns debug android` starts debugger (do not stop at the first code statement)
         """
         log = Tns.debug_android(attributes={'--path': self.app_name, '--emulator': ''})
-        DebugChromeHelpers.verify_debugger_started(log)
+        DebugChromeHelpers.verify_debugger_started_first(log)
 
         # Verify app starts and do not stop on first line of code
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
@@ -109,7 +109,7 @@ class DebugAndroidEmulatorTests(BaseClass):
 
         Tns.build_android(attributes={'--path': self.app_name})
         log = Tns.debug_android(attributes={'--path': self.app_name, '--emulator': ''})
-        DebugChromeHelpers.verify_debugger_started(log)
+        DebugChromeHelpers.verify_debugger_started_first(log)
 
         # Verify app is running
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,

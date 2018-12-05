@@ -74,6 +74,17 @@ class DebugChromeHelpers(object):
         assert "did not start in time" not in output
 
     @staticmethod
+    def verify_debugger_started_first(log):
+        # when you start 'tns debug android' for first time, missing: 'NativeScript Debugger started',
+        strings = ['To start debugging, open the following URL in Chrome',
+                   'chrome-devtools', 'localhost:4000']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
+        output = File.read(file_path=log, print_content=True)
+        assert "closed" not in output
+        assert "detached" not in output
+        assert "did not start in time" not in output
+
+    @staticmethod
     def verify_debugger_attach(log):
         strings = ['To start debugging', 'Chrome', 'chrome-devtools', 'localhost:4000']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
