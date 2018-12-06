@@ -29,7 +29,7 @@ class RegressionTestsJS(BaseClass):
     css_change = ['app/app.css', '18', '32']
 
     target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
-    source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-34')
+    source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-41')
 
     @classmethod
     def setUpClass(cls):

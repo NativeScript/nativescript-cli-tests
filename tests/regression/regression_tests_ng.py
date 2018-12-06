@@ -28,7 +28,7 @@ class RegressionTestsNG(BaseClass):
     css_change = ['app/app.css', 'core.light.css', 'core.dark.css']
 
     target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
-    source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-ng-34')
+    source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-ng-41')
 
     @classmethod
     def setUpClass(cls):
