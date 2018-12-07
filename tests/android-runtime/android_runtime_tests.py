@@ -799,7 +799,7 @@ class RuntimeTests(BaseClass):
             print str(e)
             assert 1 == 2, 'Test public method in abstract interface could be called fails for api25!'
 
-    def test_322_calling_custom_generated_classes_declared_in_manifest(self):
+    def test_322_extends_method_is_working_in_non_native_inheritance(self):
         """
         Test __extends is working non native inheritance
         https://github.com/NativeScript/android-runtime/issues/1181
