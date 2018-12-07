@@ -732,11 +732,125 @@ class RuntimeTests(BaseClass):
         assert ':asbg:generateBindings', 'Static Binding Generator not executed'
         assert 'cannot access its superclass' not in output
 
+
+    def test_320_check_public_method_in_abstract_interface_could_be_called_api23(self):
+        """
+         Test public method in abstract interface could be called
+         https://github.com/NativeScript/android-runtime/issues/1157
+        """
+
+        source_js = os.path.join('data', "issues", 'android-runtime-1157', 'main-page.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-page.js')
+        if File.exists(target_js):
+            File.remove(target_js, True)
+        File.copy(src=source_js, dest=target_js)
+        plugin_path = os.path.join(TEST_RUN_HOME, 'data', "issues", 'android-runtime-1157', 'API23', 'src')
+        Tns.plugin_remove("mylib", assert_success=False, attributes={"--path": self.app_name})
+        output = Tns.plugin_add(plugin_path, assert_success=False, attributes={"--path": self.app_name})
+        assert "Successfully installed plugin mylib" in output, "mylib plugin not installed correctly!"
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application'
+                   ]
+
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
+        try:
+            Tns.wait_for_log(log_file=log, string_list=["###TEST CALL PUBLIC METHOD IN ABSTRACT INTERFACE PASSED###"],
+                             timeout=100, check_interval=10, clean_log=False)
+        except Exception as e:
+            print str(e)
+            assert 1 == 2, 'Test public method in abstract interface could be called fails for api23!'
+
+    def test_321_check_public_method_in_abstract_interface_could_be_called_api25(self):
+        """
+         Test public method in abstract interface could be called
+         https://github.com/NativeScript/android-runtime/issues/1157
+        """
+
+        source_js = os.path.join('data', "issues", 'android-runtime-1157', 'main-page.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-page.js')
+        if File.exists(target_js):
+            File.remove(target_js, True)
+        File.copy(src=source_js, dest=target_js)
+        plugin_path = os.path.join(TEST_RUN_HOME, 'data', "issues", 'android-runtime-1157', 'API25', 'src')
+        Tns.plugin_remove("mylib", assert_success=False, attributes={"--path": self.app_name})
+        output = Tns.plugin_add(plugin_path, assert_success=False, attributes={"--path": self.app_name})
+        assert "Successfully installed plugin mylib" in output, "mylib plugin not installed correctly!"
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application'
+                   ]
+
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
+        try:
+            Tns.wait_for_log(log_file=log, string_list=["###TEST CALL PUBLIC METHOD IN ABSTRACT INTERFACE PASSED###"],
+                             timeout=100, check_interval=10, clean_log=False)
+        except Exception as e:
+            print str(e)
+            assert 1 == 2, 'Test public method in abstract interface could be called fails for api25!'
+
+    def test_322_extends_method_is_working_in_non_native_inheritance(self):
+        """
+        Test __extends is working non native inheritance
+        https://github.com/NativeScript/android-runtime/issues/1181
+        """
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name, attributes={"--vue":""})
+        Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_PACKAGE, "--path": self.app_name})
+
+        source_js = os.path.join('data', "issues", 'android-runtime-1181', 'js', 'app.js')
+        target_js = os.path.join(self.app_name, 'app', 'app.js')
+        if File.exists(target_js):
+            File.remove(target_js, True)
+        File.copy(src=source_js, dest=target_js)
+
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, "--bundle":""}, wait=False,
+                                      assert_success=False)
+        strings = ['Project successfully built',
+                    'Successfully installed on device with identifier', EMULATOR_ID,
+                    'Successfully synced application'
+                    ]
+
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
+
+        try:
+            Tns.wait_for_log(log_file=log, string_list=["'NativeScript-Vue has \"Vue.config.silent\" set to true, to see output logs set it to false.'"],
+                        timeout=100, check_interval=10, clean_log=False)
+        except Exception as e:
+            print str(e)
+            assert 1 == 2, 'Test __extends is working non native inheritance ts code fails!'
+
+        source_js = os.path.join('data', "issues", 'android-runtime-1181', 'ts', 'app.js')
+        target_js = os.path.join(self.app_name, 'app', 'app.js')
+        if File.exists(target_js):
+            File.remove(target_js, True)
+        File.copy(src=source_js, dest=target_js)
+
+        try:
+            Tns.wait_for_log(log_file=log, string_list=[
+                "'NativeScript-Vue has \"Vue.config.silent\" set to true, to see output logs set it to false.'"],
+                        timeout=100, check_interval=10, clean_log=False)
+        except Exception as e:
+            print str(e)
+            assert 1 == 2, 'Test extends is working non native inheritance fails for js code!'
+
     def test_350_sgb_fails_generating_custom_activity(self):
         """
         Static Binding Generator fails if class has static properties that are used within the class
         https://github.com/NativeScript/android-runtime/issues/1160
         """
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name)
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
                             assert_success=False)
         Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
