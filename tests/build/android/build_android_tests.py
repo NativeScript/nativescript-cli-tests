@@ -329,7 +329,7 @@ class BuildAndroidTests(BaseClass):
     @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_450_resources_update_android(self):
         target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
-        source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-34')
+        source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-41')
         Folder.cleanup(target_app)
         Folder.copy(source_app, target_app)
 
@@ -349,7 +349,7 @@ class BuildAndroidTests(BaseClass):
     @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_451_resources_update(self):
         target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
-        source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-34')
+        source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-41')
         Folder.cleanup(target_app)
         Folder.copy(source_app, target_app)
 
