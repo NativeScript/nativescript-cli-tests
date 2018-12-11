@@ -326,7 +326,7 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/android.d.ts")
         assert File.exists(self.app_name + "/android-declarations.d.ts")
 
-    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
+    @unittest.skip("temporary stop this test")
     def test_450_resources_update_android(self):
         target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
         source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-41')
@@ -346,7 +346,7 @@ class BuildAndroidTests(BaseClass):
 
         Tns.build_android(attributes={"--path": self.app_name})
 
-    @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
+    @unittest.skip("temporary stop this test")
     def test_451_resources_update(self):
         target_app = os.path.join(TEST_RUN_HOME, BaseClass.app_name)
         source_app = os.path.join(TEST_RUN_HOME, 'data', 'apps', 'test-app-js-41')
