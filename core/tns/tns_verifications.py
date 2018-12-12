@@ -101,8 +101,9 @@ class TnsAsserts(object):
         TnsAsserts.created(app_name=app_name, output=output)
 
         # Assert output contains TypeScript plugin
-        if Npm.version() < 5:
-            assert 'nativescript-dev-typescript' in output
+        if USE_YARN != "True":
+            if Npm.version() < 5:
+                assert 'nativescript-dev-typescript' in output
 
         # Assert files added with TypeScript plugin
         ts_config = os.path.join(app_name, 'tsconfig.json')
