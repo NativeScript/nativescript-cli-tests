@@ -1,17 +1,10 @@
+import os
 import unittest
 
-import os
-
 from core.base_class.BaseClass import BaseClass
-from core.device.device import Device
-from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.osutils.file import File
-from core.osutils.os_type import OSType
-from core.settings.settings import ANDROID_KEYSTORE_PATH, \
-    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, CURRENT_OS, \
-    IOS_PACKAGE, SIMULATOR_NAME, ANDROID_PACKAGE, WEBPACK_PACKAGE
-from core.tns.replace_helper import ReplaceHelper
+from core.settings.settings import IOS_PACKAGE, SIMULATOR_NAME, WEBPACK_PACKAGE, EMULATOR_ID
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from tests.hmr.helpers_hmr import HelpersHMR
@@ -107,14 +100,15 @@ class HelloWorldJSHMRIOS(BaseClass):
 
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=HelpersHMR.image_original, timeout=120)
 
-    # def test_004_android_run_hmr_delete_file(self):
-    #     log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
-    #                     assert_success=False)
-    #
-    #     Tns.wait_for_log(log_file=log, string_list=HelpersHMR.wp_run, not_existing_string_list=HelpersHMR.wp_errors,
-    #                      timeout=240)
-    #     HelpersHMR.android_screen_match(image=self.image_original, timeout=120)
-    #     File.remove(self.app_name + 'app', 'main-view-model.js')
-    #
-    #     self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-    #     self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+    @unittest.skip("Don't clear behavior")
+    def test_004_android_run_hmr_delete_file(self):
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--hmr': ''}, wait=False,
+                        assert_success=False)
+
+        Tns.wait_for_log(log_file=log, string_list=HelpersHMR.wp_run, not_existing_string_list=HelpersHMR.wp_errors,
+                         timeout=240)
+        HelpersHMR.android_screen_match(image=self.image_original, timeout=120)
+        File.remove(self.app_name + 'app', 'main-view-model.js')
+
+        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
