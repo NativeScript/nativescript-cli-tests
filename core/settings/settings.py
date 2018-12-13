@@ -122,6 +122,7 @@ MODULES_PACKAGE = resolve_package("tns-core-modules", "tns-core-modules@{0}".for
 OUTPUT_FOLDER = TEST_RUN_HOME + os.path.sep + "out"
 OUTPUT_FILE = os.path.join(OUTPUT_FOLDER, 'output.txt')
 OUTPUT_FILE_ASYNC = os.path.join(OUTPUT_FOLDER, 'output_async.txt')
+ERR_FILE_ASYNC = os.path.join(OUTPUT_FOLDER, 'err_async.txt')
 TEST_LOG = os.path.join(OUTPUT_FOLDER, 'testLog.txt')
 VERBOSE_LOG = os.path.join(OUTPUT_FOLDER, 'verboseLog.txt')
 

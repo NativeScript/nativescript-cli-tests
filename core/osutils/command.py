@@ -11,7 +11,7 @@ from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
-from core.settings.settings import OUTPUT_FILE, COMMAND_TIMEOUT, TEST_LOG, OUTPUT_FILE_ASYNC, CURRENT_OS
+from core.settings.settings import OUTPUT_FILE, COMMAND_TIMEOUT, TEST_LOG, OUTPUT_FILE_ASYNC, CURRENT_OS, ERR_FILE_ASYNC
 
 
 def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=CommandLogLevel.FULL):
@@ -47,15 +47,17 @@ def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=Comm
 
     # If wait=False log should be writen
     out_file = OUTPUT_FILE
+    err_file = ERR_FILE_ASYNC
     if not wait:
         time_string = "_" + datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
         out_file = OUTPUT_FILE_ASYNC.replace('.', time_string + '.')
+        err_file = ERR_FILE_ASYNC.replace('.', time_string + '.')
         if CURRENT_OS is OSType.WINDOWS:
             command = command + " 1> " + out_file + " 2>&1"
         elif CURRENT_OS is OSType.LINUX:
             command = command + " 1> " + out_file + " 2>&1 &"
         else:
-            command = command + " &> " + out_file + " 2>&1 &"
+            command = command + " &> " + out_file + " 2>" + err_file + " &"
 
     # remove output.txt
     try:
