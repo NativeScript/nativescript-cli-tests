@@ -56,6 +56,9 @@ class PreviewCommandTestsIos(BaseClass):
         Tns.create_app(cls.app_webpack_name,attributes={"--template": os.path.join(SUT_FOLDER, "template-hello-world")})
         Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=cls.app_webpack_name)
 
+        """Create angular app"""
+        Tns.create_app_ng(cls.app_angular_name)
+
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
@@ -132,9 +135,6 @@ class PreviewCommandTestsIos(BaseClass):
         # Verify app looks correct inside simulator
         Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home', timeout=6)
-
-        """Create angular app"""
-        Tns.create_app_ng(cls.app_angular_name)
             
     def test_002_tns_preview_ios_webpack_js_css_xml(self):
         """Make valid changes in JS,CSS and XML"""
@@ -210,10 +210,10 @@ class PreviewCommandTestsIos(BaseClass):
         url = Preview.get_url(output)
         Preview.run_app(url, self.SIMULATOR_ID, platform=Platform.IOS)
                               
-        strings = ['Running webpack for android',
+        strings = ['Running webpack for ios',
                    'Webpack build done',
-                   'Start sending initial files for platform android',
-                   'Successfully sent initial files for platform android']
+                   'Start sending initial files for platform ios',
+                   'Successfully sent initial files for platform ios']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
         Device.wait_for_text(device_id=self.SIMULATOR_ID, text="Ter Stegen", timeout=20)
         # Verify app looks correct inside emulator
