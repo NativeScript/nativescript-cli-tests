@@ -218,7 +218,7 @@ class PreviewCommandTestsIos(BaseClass):
         Device.wait_for_text(device_id=self.SIMULATOR_ID, text="Ter Stegen", timeout=20)
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
-                            expected_image='ng-hello-world-home-white')
+                            expected_image='hello-world-ng-preview')
 
         # Change TS and wait until app is synced
         ReplaceHelper.replace(self.app_angular_name, ReplaceHelper.NG_CHANGE_TS, sleep=10)
@@ -261,7 +261,7 @@ class PreviewCommandTestsIos(BaseClass):
         Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
 
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
-                            expected_image='ng-hello-world-home-white', tolerance=5.0)
+                            expected_image='hello-world-ng-preview', tolerance=5.0)
 
     @unittest.skip("Skip because of https://github.com/NativeScript/ios-runtime/issues/1009")
     def test_180_tns_preview_ios_console_logging(self):
