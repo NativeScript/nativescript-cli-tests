@@ -242,7 +242,7 @@ class PreviewCommandTestsIos(BaseClass):
         # Verify app is synced 
         strings = ['File change detected. Starting incremental webpack compilation', 'Webpack build done','Successfully synced']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID, expected_image='ng-hello-world-home-dark',
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID, expected_image='ng-hello-world-home-dark_preview',
                             tolerance=5.0)
         
         # Revert TS and wait until app is synced
