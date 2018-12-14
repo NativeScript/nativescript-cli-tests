@@ -22,6 +22,7 @@ from core.settings.settings import TEST_RUN_HOME, EMULATOR_ID, EMULATOR_NAME, WE
 
 class PreviewCommandTestsAndroid(BaseClass):
     app_webpack_name = "TestAppWebpack"
+    app_angular_name = "TestAppNG"
     css_change_webpack = ['app/app.css', '18', '32']
     EMULATOR_ID_SECOND = "emulator-5556"
     EMULATOR_NAME_SECOND = "Emulator-Api24-Default"
@@ -47,6 +48,9 @@ class PreviewCommandTestsAndroid(BaseClass):
         """We need new project because we need app with long imports to test preview with --bundle"""
         Tns.create_app(cls.app_webpack_name,attributes={"--template": os.path.join(SUT_FOLDER, "template-hello-world")})
         Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=cls.app_webpack_name)
+
+        """Create angular app"""
+        Tns.create_app_ng(cls.app_angular_name)
 
     @classmethod
     def tearDownClass(cls):
@@ -184,6 +188,71 @@ class PreviewCommandTestsAndroid(BaseClass):
         #Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='hello-world-js')
+
+    def test_003_tns_preview_android_ng_webpack_ts_css_html(self):
+        """Make valid changes in TS,CSS and HTML"""
+        
+        # `tns preview` and take the app url and open it in Preview App
+        log = Tns.preview(attributes={'--path': self.app_angular_name,'--bundle':'' }, wait=False,
+                        log_trace=True,assert_success=False)
+        strings = ['Use NativeScript Playground app and scan the QR code above to preview the application on your device']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
+        output = File.read(log)
+        url = Preview.get_url(output)
+        Preview.run_app(url, EMULATOR_ID, platform=Platform.ANDROID)
+                              
+        strings = ['Running webpack for android',
+                   'Webpack build done',
+                   'Start sending initial files for platform android',
+                   'Successfully sent initial files for platform android']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
+        Device.wait_for_text(device_id=EMULATOR_ID, text="Ter Stegen", timeout=20)
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='ng-hello-world-home-white')
+
+        # Change TS and wait until app is synced
+        ReplaceHelper.replace(self.app_angular_name, ReplaceHelper.NG_CHANGE_TS, sleep=10)
+        strings = ['File change detected. Starting incremental webpack compilation', 'Webpack build done','Successfully synced']
+        Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text="Stegen Ter", timeout=20)
+        assert text_changed, 'Changes in TS file not applied (UI is not refreshed).'
+       
+        # Change HTML and wait until app is synced
+        ReplaceHelper.replace(self.app_angular_name, ReplaceHelper.NG_CHANGE_HTML, sleep=10)
+
+        # Verify app is synced 
+        strings = ['File change detected. Starting incremental webpack compilation', 'Webpack build done','Successfully synced']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='7', timeout=30)
+        assert text_changed, 'Changes in HTML file not applied (UI is not refreshed).'
+       
+       # Change CSS and wait until app is synced
+        ReplaceHelper.replace(self.app_angular_name, ReplaceHelper.NG_CHANGE_CSS, sleep=10)
+
+        # Verify app is synced 
+        strings = ['File change detected. Starting incremental webpack compilation', 'Webpack build done','Successfully synced']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image='ng-hello-world-home-dark',
+                            tolerance=5.0)
+        
+        # Revert TS and wait until app is synced
+        ReplaceHelper.rollback(self.app_angular_name, ReplaceHelper.NG_CHANGE_TS, sleep=10)
+        strings = ['File change detected. Starting incremental webpack compilation', 'Webpack build done','Successfully synced']
+        Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
+
+        # Revert HTML and wait until app is synced
+        ReplaceHelper.rollback(self.app_angular_name, ReplaceHelper.NG_CHANGE_HTML, sleep=10)
+        strings = ['File change detected. Starting incremental webpack compilation', 'Webpack build done','Successfully synced']
+        Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
+
+        # Revert CSS and wait until app is synced
+        ReplaceHelper.rollback(self.app_angular_name, ReplaceHelper.NG_CHANGE_CSS, sleep=10)
+        strings = ['File change detected. Starting incremental webpack compilation', 'Webpack build done','Successfully synced']
+        Tns.wait_for_log(log_file=log, string_list=strings, clean_log=False)
+
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='ng-hello-world-home-white', tolerance=5.0)
 
     def test_180_tns_preview_android_console_logging(self):
         """
@@ -345,5 +414,3 @@ class PreviewCommandTestsAndroid(BaseClass):
         # Verify app is synced on second emulator
         text_changed = Device.wait_for_text(device_id=self.EMULATOR_ID_SECOND, text='42 clicks left', timeout=30)
         assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
-
-    
