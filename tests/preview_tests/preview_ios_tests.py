@@ -233,7 +233,7 @@ class PreviewCommandTestsIos(BaseClass):
         # Verify app is synced 
         strings = ['File change detected. Starting incremental webpack compilation', 'Webpack build done','Successfully synced']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Device.wait_for_text(device_id=self.SIMULATOR_ID, text="10")
+        text_changed = Device.wait_for_text(device_id=self.SIMULATOR_ID, text='11')
         assert text_changed, 'Changes in HTML file not applied (UI is not refreshed).'
        
        # Change CSS and wait until app is synced
