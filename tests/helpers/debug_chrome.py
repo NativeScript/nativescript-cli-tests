@@ -37,7 +37,7 @@ class DebugChromeHelpers(object):
         # Attach Chrome DevTools
         url = run(command="grep chrome-devtools " + log)
         text_log = File.read(log)
-        assert "chrome-devtools://devtools/remote" in text_log, "Debug url not printed in output of 'tns debug ios'."
+        assert "chrome-devtools://devtools/bundle" in text_log, "Debug url not printed in output of 'tns debug ios'."
         assert "localhost:" + port in text_log, "Wrong port of debug url:" + url
         Chrome.start(url)
 
