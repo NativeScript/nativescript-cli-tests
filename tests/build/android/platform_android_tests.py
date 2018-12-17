@@ -98,7 +98,6 @@ class PlatformAndroidTests(BaseClass):
     def verify_update(self, output):
         assert "Platform android successfully removed" in output
         assert "Successfully removed plugin tns-core-modules" in output
-        assert "Successfully removed plugin tns-core-modules-widgets" in output
         assert "Platform android successfully added" in output
         assert "Successfully installed plugin tns-core-modules" in output
 
