@@ -67,6 +67,16 @@ class Npm(object):
             return output
 
     @staticmethod
+    def yarn_install(package='', option='', folder=None, log_level=CommandLogLevel.FULL):
+        if package is None:
+            raise NameError('Package can not be None.')
+        command = 'install {0} {1}'.format(package, option)
+        output = Npm.__run_yarn_command(command, folder=folder, log_level=log_level)
+        assert "error" not in output, "`yarn " + command + "` failed with: \n" + output
+        return output
+
+
+    @staticmethod
     def uninstall(package, option='', folder=None, log_level=CommandLogLevel.FULL):
         if USE_YARN == "True":
             if package is None or package is '':
