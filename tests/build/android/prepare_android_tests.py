@@ -13,7 +13,7 @@ from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
-from core.settings.settings import ANDROID_PACKAGE, TNS_PATH, TEST_RUN_HOME, CURRENT_OS
+from core.settings.settings import ANDROID_PACKAGE, TNS_PATH, TEST_RUN_HOME, CURRENT_OS, USE_YARN
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -202,19 +202,35 @@ class PrepareAndroidTests(BaseClass):
         """
         Folder.cleanup(self.app_name)
         Tns.create_app_ng(app_name=self.app_name, template_version="2.5.0", update_modules=False)
-        Npm.uninstall(package="tns-core-modules", option="--save-dev", folder=self.app_name)
-        Npm.uninstall(package="nativescript-dev-android-snapshot", option="--save-dev", folder=self.app_name)
-        Npm.uninstall(package="nativescript-dev-typescript", option="--save-dev", folder=self.app_name)
-        Npm.install(package="tns-core-modules@2.5.0", option="--save-dev", folder=self.app_name)
-        Npm.install(package="nativescript-dev-typescript@0.3", option="--save-dev", folder=self.app_name)
-        Npm.install(package="lodash", option="--save", folder=self.app_name)
-        Npm.install(package="moment", option="--save", folder=self.app_name)
-        Npm.install(package="nativescript-cardview", option="--save", folder=self.app_name)
-        Npm.install(package="nativescript-sqlite", option="--save", folder=self.app_name)
-        Npm.install(package="nativescript-statusbar", option="--save", folder=self.app_name)
-        Npm.install(package="nativescript-websockets", option="--save", folder=self.app_name)
-        Npm.install(package="number-generator", option="--save", folder=self.app_name)
-        Npm.install(package="eslint", option="--save", folder=self.app_name)
-        Npm.install(package="eslint-plugin-compat", option="--save", folder=self.app_name)
+        if USE_YARN == "True":
+            Npm.uninstall(package="tns-core-modules", option="--dev", folder=self.app_name)
+            Npm.uninstall(package="nativescript-dev-android-snapshot", option="--dev", folder=self.app_name)
+            Npm.uninstall(package="nativescript-dev-typescript", option="--dev", folder=self.app_name)
+            Npm.install(package="tns-core-modules@2.5.0", option="--dev", folder=self.app_name)
+            Npm.install(package="nativescript-dev-typescript@0.3", option="--dev", folder=self.app_name)
+            Npm.install(package="lodash", folder=self.app_name)
+            Npm.install(package="moment", folder=self.app_name)
+            Npm.install(package="nativescript-cardview", folder=self.app_name)
+            Npm.install(package="nativescript-sqlite", folder=self.app_name)
+            Npm.install(package="nativescript-statusbar", folder=self.app_name)
+            Npm.install(package="nativescript-websockets", folder=self.app_name)
+            Npm.install(package="number-generator",  folder=self.app_name)
+            Npm.install(package="eslint", folder=self.app_name)
+            Npm.install(package="eslint-plugin-compat", folder=self.app_name)
+        else:
+            Npm.uninstall(package="tns-core-modules", option="--save-dev", folder=self.app_name)
+            Npm.uninstall(package="nativescript-dev-android-snapshot", option="--save-dev", folder=self.app_name)
+            Npm.uninstall(package="nativescript-dev-typescript", option="--save-dev", folder=self.app_name)
+            Npm.install(package="tns-core-modules@2.5.0", option="--save-dev", folder=self.app_name)
+            Npm.install(package="nativescript-dev-typescript@0.3", option="--save-dev", folder=self.app_name)
+            Npm.install(package="lodash", option="--save", folder=self.app_name)
+            Npm.install(package="moment", option="--save", folder=self.app_name)
+            Npm.install(package="nativescript-cardview", option="--save", folder=self.app_name)
+            Npm.install(package="nativescript-sqlite", option="--save", folder=self.app_name)
+            Npm.install(package="nativescript-statusbar", option="--save", folder=self.app_name)
+            Npm.install(package="nativescript-websockets", option="--save", folder=self.app_name)
+            Npm.install(package="number-generator", option="--save", folder=self.app_name)
+            Npm.install(package="eslint", option="--save", folder=self.app_name)
+            Npm.install(package="eslint-plugin-compat", option="--save", folder=self.app_name)
         Tns.platform_add_android(version="2.5.0", attributes={"--path": self.app_name})
         Tns.prepare_android(attributes={"--path": self.app_name}, log_trace=True)
