@@ -13,7 +13,7 @@ from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, ANDROID_PACKAGE, TEST_RUN_HOME
+from core.settings.settings import TNS_PATH, ANDROID_PACKAGE, TEST_RUN_HOME, USE_YARN
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -65,7 +65,10 @@ class PluginsAndroidTests(BaseClass):
     def test_102_plugin_add_inside_project(self):
         current_dir = os.getcwd()
         os.chdir(os.path.join(current_dir, self.app_name))
-        output = run(os.path.join("..", TNS_PATH) + " plugin add tns-plugin")
+        if USE_YARN == "True":
+            output = run(os.path.join("..", TNS_PATH) + " plugin add tns-plugin --yarn")
+        else:
+            output = run(os.path.join("..", TNS_PATH) + " plugin add tns-plugin")
         os.chdir(current_dir)
         assert "Successfully installed plugin tns-plugin" in output
 
@@ -164,8 +167,10 @@ class PluginsAndroidTests(BaseClass):
 
     def test_400_plugin_add_invalid_plugin(self):
         output = Tns.plugin_add("fakePlugin", attributes={"--path": self.app_name}, assert_success=False)
-        assert "npm ERR!" in output
-
+        if USE_YARN == "True":
+            assert "error" in output
+        else:
+            assert "npm ERR!" in output
         output = Tns.plugin_add("wd", attributes={"--path": self.app_name}, assert_success=False)
         assert "wd is not a valid NativeScript plugin" in output
         assert "Verify that the plugin package.json file contains a nativescript key and try again" in output
@@ -187,9 +192,13 @@ class PluginsAndroidTests(BaseClass):
         assert File.exists(self.app_name + "/node_modules/nativescript-socket.io")
 
         output = Tns.plugin_remove("nativescript-socket.io", attributes={"--path": self.app_name}, log_trace=True)
-        assert "stdout: removed 1 package" in output
+
         assert "Successfully removed plugin nativescript-socket.io" in output
-        assert "Exec npm uninstall nativescript-socket.io --save" in output
+        if USE_YARN =="True":
+            assert "Exec yarn remove nativescript-socket.io --save" in output
+        else:
+            assert "stdout: removed 1 package" in output
+            assert "Exec npm uninstall nativescript-socket.io --save" in output
 
         output = File.read(self.app_name + "/package.json")
         assert "nativescript-socket.io" not in output

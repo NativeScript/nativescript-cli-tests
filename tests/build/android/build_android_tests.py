@@ -14,7 +14,7 @@ from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import ANDROID_PACKAGE, TNS_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS, \
-    OSType, TEST_RUN_HOME
+    OSType, TEST_RUN_HOME, USE_YARN
 from core.settings.strings import *
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
@@ -184,7 +184,10 @@ class BuildAndroidTests(BaseClass):
         """
         Tns.create_app(self.app_name_dash)
         Tns.platform_add_android(attributes={"--path": self.app_name_dash, "--frameworkPath": ANDROID_PACKAGE})
-        Npm.install(package="tns-ios-inspector", option='--save-dev', folder=self.app_name_dash)
+        if USE_YARN == "True":
+            Npm.install(package="tns-ios-inspector", option='--dev', folder=self.app_name_dash)
+        else:
+            Npm.install(package="tns-ios-inspector", option='--save-dev', folder=self.app_name_dash)
         Tns.build_android(attributes={"--path": self.app_name_dash})
 
         # Verify project id

@@ -13,7 +13,7 @@ from core.osutils.os_type import OSType
 from core.osutils.process import Process
 from core.settings.settings import COMMAND_TIMEOUT, TNS_PATH, TAG, TEST_RUN_HOME, CURRENT_OS, \
     SUT_FOLDER, PROVISIONING, BRANCH, MODULES_PACKAGE, ANGULAR_PACKAGE, TYPESCRIPT_PACKAGE, UPDATE_WEBPACK_PATH, \
-    WEBPACK_PACKAGE
+    WEBPACK_PACKAGE, USE_YARN
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 from core.xcode.xcode import Xcode
@@ -111,7 +111,8 @@ class Tns(object):
                 cmd += " " + k + " " + v
         if log_trace:
             cmd += " --log trace"
-
+        if USE_YARN == "True":
+            cmd += " --yarn"
         if measureTime:
             cmd = "TIME " + cmd
         print cmd
@@ -147,8 +148,9 @@ class Tns(object):
 
         Npm.uninstall(package="tns-core-modules", option="--save", folder=path)
         output = Npm.install(package=MODULES_PACKAGE, option="--save", folder=path)
-        if Npm.version() > 3:
-            assert "ERR" not in output, "Something went wrong when modules are installed."
+        if USE_YARN != "True":
+            if Npm.version() > 3:
+                assert "ERR" not in output, "Something went wrong when modules are installed."
         return output
 
     @staticmethod
@@ -165,8 +167,9 @@ class Tns(object):
 
         Npm.uninstall(package="nativescript-angular", option="--save", folder=path)
         output = Npm.install(package=ANGULAR_PACKAGE, option="--save", folder=path)
-        if Npm.version() > 3:
-            assert "ERR" not in output, "Something went wrong when angular are installed."
+        if USE_YARN != "True":
+            if Npm.version() > 3:
+                assert "ERR" not in output, "Something went wrong when angular are installed."
 
         # Update NG dependencies
         update_script = os.path.join(TEST_RUN_HOME, path,
@@ -191,8 +194,9 @@ class Tns(object):
 
         Npm.uninstall(package="nativescript-dev-webpack", option="--save-dev", folder=path)
         output = Npm.install(package=WEBPACK_PACKAGE, option="--save", folder=path)
-        if Npm.version() > 3:
-            assert "ERR" not in output, "Something went wrong when webpack are installed."
+        if USE_YARN != "True":
+            if Npm.version() > 3:
+                assert "ERR" not in output, "Something went wrong when webpack are installed."
 
         # Update webpack dependencies
         update_script = os.path.join(TEST_RUN_HOME, path,
@@ -220,9 +224,9 @@ class Tns(object):
         # Update TS dependencies
         update_script = os.path.join(TEST_RUN_HOME, path,
                                      "node_modules", ".bin", "ns-upgrade-tsconfig")
-
-        if Npm.version() > 3:
-            assert "ERR" not in output, "Something went wrong when typescript are installed."
+        if USE_YARN != "True":
+            if Npm.version() > 3:
+                assert "ERR" not in output, "Something went wrong when typescript are installed."
 
         return output
 
@@ -315,13 +319,14 @@ class Tns(object):
             Tns.update_typescript(path=app_name)
 
         if assert_success:
-            if Npm.version() < 5:
-                assert "nativescript-angular" in output
-            assert File.exists(os.path.join(app_name, 'node_modules', 'nativescript-theme-core'))
-            package_json = File.read(os.path.join(app_name, 'package.json'))
-            assert "tns-core-modules" in package_json
-            assert "nativescript-angular" in package_json
-            assert "nativescript-dev-typescript" in package_json
+            if USE_YARN != "True":
+                if Npm.version() < 5:
+                    assert "nativescript-angular" in output
+                assert File.exists(os.path.join(app_name, 'node_modules', 'nativescript-theme-core'))
+                package_json = File.read(os.path.join(app_name, 'package.json'))
+                assert "tns-core-modules" in package_json
+                assert "nativescript-angular" in package_json
+                assert "nativescript-dev-typescript" in package_json
 
         return output
 
