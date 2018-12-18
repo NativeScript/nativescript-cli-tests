@@ -56,7 +56,7 @@ class Npm(object):
                 raise NameError('Package can not be None.')
             command = 'add {0} {1}'.format(package, option)
             output = Npm.__run_yarn_command(command, folder=folder, log_level=log_level)
-            assert "error" not in output, "`yarn " + command + "` failed with: \n" + output
+            assert "ERR!" not in output, "`yarn " + command + "` failed with: \n" + output
             return output
         else:
             if package is None:
