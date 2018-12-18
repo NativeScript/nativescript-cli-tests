@@ -192,9 +192,12 @@ class Tns(object):
         if " " in path:
             path = "\"" + path + "\""
 
-        Npm.uninstall(package="nativescript-dev-webpack", option="--save-dev", folder=path)
-        output = Npm.install(package=WEBPACK_PACKAGE, option="--save", folder=path)
-        if USE_YARN != "True":
+        if USE_YARN == "True":
+            Npm.uninstall(package="nativescript-dev-webpack", option="--dev", folder=path)
+            output = Npm.install(package=WEBPACK_PACKAGE, folder=path)
+        else:
+            Npm.uninstall(package="nativescript-dev-webpack", option="--save-dev", folder=path)
+            output = Npm.install(package=WEBPACK_PACKAGE, option="--save", folder=path)
             if Npm.version() > 3:
                 assert "ERR" not in output, "Something went wrong when webpack are installed."
 
