@@ -148,7 +148,7 @@ class Tns(object):
 
         if USE_YARN == "True":
             Npm.uninstall(package="tns-core-modules", folder=path)
-            output = Npm.yarn_install(package=MODULES_PACKAGE, folder=path)
+            output = Npm.install(package=MODULES_PACKAGE, folder=path)
         else:
             Npm.uninstall(package="tns-core-modules", option="--save", folder=path)
             output = Npm.install(package=MODULES_PACKAGE, option="--save", folder=path)
@@ -170,7 +170,7 @@ class Tns(object):
 
         if USE_YARN == "True":
             Npm.uninstall(package="nativescript-angular", folder=path)
-            output = Npm.yarn_install(package=ANGULAR_PACKAGE, folder=path)
+            output = Npm.install(package=ANGULAR_PACKAGE, folder=path)
         else:
             Npm.uninstall(package="nativescript-angular", option="--save", folder=path)
             output = Npm.install(package=ANGULAR_PACKAGE, option="--save", folder=path)
@@ -182,7 +182,11 @@ class Tns(object):
                                      "node_modules", ".bin", "update-app-ng-deps")
         update_out = run(update_script)
         assert "Angular dependencies updated" in update_out
-        Npm.install(folder=path)
+
+        if USE_YARN == "True":
+            Npm.yarn_install(folder=path)
+        else:
+            Npm.install(folder=path)
 
         return output
 
@@ -212,9 +216,9 @@ class Tns(object):
                                      "node_modules", ".bin", "update-ns-webpack --deps --configs")
         run(update_script)
         if USE_YARN == "True":
-            Npm.install(folder=path)
-        else:
             Npm.yarn_install(folder=path)
+        else:
+            Npm.install(folder=path)
         return output
 
     @staticmethod
@@ -243,9 +247,9 @@ class Tns(object):
                                      "node_modules", ".bin", "ns-upgrade-tsconfig")
         run(update_script)
         if USE_YARN == "True":
-            Npm.install(folder=path)
-        else:
             Npm.yarn_install(folder=path)
+        else:
+            Npm.install(folder=path)
 
         return output
 
