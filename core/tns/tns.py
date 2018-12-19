@@ -235,7 +235,7 @@ class Tns(object):
 
         if USE_YARN == "True":
             Npm.uninstall(package="nativescript-typescript", folder=path)
-            output = Npm.yarn_install(package=TYPESCRIPT_PACKAGE, folder=path)
+            output = Npm.install(package=TYPESCRIPT_PACKAGE, folder=path)
         else:
             Npm.uninstall(package="nativescript-typescript", option="--save", folder=path)
             output = Npm.install(package=TYPESCRIPT_PACKAGE, option="--save", folder=path)
