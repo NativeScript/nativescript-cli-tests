@@ -10,7 +10,8 @@ from core.device.emulator import Emulator
 from core.device.helpers.adb import Adb
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID, TEST_RUN_HOME
+from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID, TEST_RUN_HOME, ANDROID_KEYSTORE_PASS, \
+    ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
@@ -732,7 +733,6 @@ class RuntimeTests(BaseClass):
         assert ':asbg:generateBindings', 'Static Binding Generator not executed'
         assert 'cannot access its superclass' not in output
 
-
     def test_320_check_public_method_in_abstract_interface_could_be_called_api23(self):
         """
          Test public method in abstract interface could be called
@@ -805,7 +805,7 @@ class RuntimeTests(BaseClass):
         https://github.com/NativeScript/android-runtime/issues/1181
         """
         Folder.cleanup(self.app_name)
-        Tns.create_app(self.app_name, attributes={"--vue":""})
+        Tns.create_app(self.app_name, attributes={"--vue": ""})
         Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_PACKAGE, "--path": self.app_name})
 
         source_js = os.path.join('data', "issues", 'android-runtime-1181', 'js', 'app.js')
@@ -814,18 +814,19 @@ class RuntimeTests(BaseClass):
             File.remove(target_js, True)
         File.copy(src=source_js, dest=target_js)
 
-        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, "--bundle":""}, wait=False,
-                                      assert_success=False)
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, "--bundle": ""}, wait=False,
+                              assert_success=False)
         strings = ['Project successfully built',
-                    'Successfully installed on device with identifier', EMULATOR_ID,
-                    'Successfully synced application'
-                    ]
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application'
+                   ]
 
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
 
         try:
-            Tns.wait_for_log(log_file=log, string_list=["'NativeScript-Vue has \"Vue.config.silent\" set to true, to see output logs set it to false.'"],
-                        timeout=100, check_interval=10, clean_log=False)
+            Tns.wait_for_log(log_file=log, string_list=[
+                "'NativeScript-Vue has \"Vue.config.silent\" set to true, to see output logs set it to false.'"],
+                             timeout=100, check_interval=10, clean_log=False)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'Test __extends is working non native inheritance ts code fails!'
@@ -839,7 +840,7 @@ class RuntimeTests(BaseClass):
         try:
             Tns.wait_for_log(log_file=log, string_list=[
                 "'NativeScript-Vue has \"Vue.config.silent\" set to true, to see output logs set it to false.'"],
-                        timeout=100, check_interval=10, clean_log=False)
+                             timeout=100, check_interval=10, clean_log=False)
         except Exception as e:
             print str(e)
             assert 1 == 2, 'Test extends is working non native inheritance fails for js code!'
@@ -890,9 +891,51 @@ class RuntimeTests(BaseClass):
         messages = "MESSAGE: Before plugins gradle is applied!\nMESSAGE: Plugin include gradle is applied!"
         assert messages in output, "FAIL: before-plugins.gradle is NOT applied correctly!"
 
+    def test_370_snapshots_with_ABI_splits(self):
+        """
+        Snapshots with ABI splits do not work since Android Runtime 4.1.0
+
+        https://github.com/NativeScript/android-runtime/issues/1234
+        """
+
+        Folder.cleanup(self.app_name)
+        Tns.create_app_ng(self.app_name)
+
+        # if CURRENT_OS == OSType.OSX:
+        source_webpack_config = os.path.join('data', 'issues', 'android-runtime-1234', CURRENT_OS.name,
+                                             'webpack.config.js')
+        target_webpack_config = os.path.join(self.app_name, 'webpack.config.js')
+        File.copy(src=source_webpack_config, dest=target_webpack_config)
+
+        source_app_gradle = os.path.join('data', 'issues', 'android-runtime-1234', 'app.gradle')
+        target_app_gradle = os.path.join(self.app_name, 'App_Resources', 'Android')
+        File.copy(src=source_app_gradle, dest=target_app_gradle)
+
+        Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_PACKAGE})
+        log = Tns.run_android(
+            attributes={"--path": self.app_name, "--env.snapshot": "", "--bundle": "", "--release": "",
+                        "--keyStorePath": ANDROID_KEYSTORE_PATH,
+                        "--keyStorePassword": ANDROID_KEYSTORE_PASS,
+                        "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
+                        "--keyStoreAliasPassword": ANDROID_KEYSTORE_ALIAS_PASS})
+
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application',
+                   'Application loaded!',
+                   'Home page loaded!']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=480, check_interval=10, clean_log=False)
+
+        # Verify initial state of the app
+        assert Device.wait_for_text(device_id=EMULATOR_ID, text="Ter Stegen",
+                                    timeout=20), 'Hello-world NG App failed to start or it does not look correct!'
+
     def test_420_include_gradle_flavor(self):
         # https://github.com/NativeScript/android-runtime/pull/937
         # https://github.com/NativeScript/nativescript-cli/pull/3467
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name)
+
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
                             assert_success=False)
         source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-pr-937', 'app.gradle')
