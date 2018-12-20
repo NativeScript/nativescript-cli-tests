@@ -81,8 +81,11 @@ if __name__ == '__main__':
         get_test_packages(platform=Platform.BOTH)
         Simulator.reset()
 
+        if Xcode.get_version() < 10:
+            SIMULATOR_SDK = '11.0'
         if Xcode.get_version() < 9:
             SIMULATOR_SDK = '10.0'
+        
 
         Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
         Xcode.cleanup_cache()  # Clean Xcode cache folders

@@ -268,7 +268,7 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
 
         # Verify application looks correct
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
-                            expected_image='livesync-hello-world_js_css_xml')
+                            expected_image='livesync-hello-world_js_css_xml', tolerance=0.26)
 
         assert Process.is_running('NativeScript Inspector')
 

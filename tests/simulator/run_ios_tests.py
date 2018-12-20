@@ -42,8 +42,8 @@ class RunIOSSimulatorTests(BaseClass):
     max_long_string = ''
     for x in range(0, 9):
         max_long_string = max_long_string + one_hundred_symbols_string
-    max_long_string = max_long_string + "1234567890123456789012345678901234567890123456789012345678901234567890" \
-                                        "123456789"
+    max_long_string = max_long_string + "12345678901234567890123456789012345678901234567890123456789012345678901"
+                                        
     plugin_path = os.path.join(TEST_RUN_HOME, 'data', 'plugins', 'sample-plugin', 'src')
 
     @classmethod
@@ -105,7 +105,7 @@ class RunIOSSimulatorTests(BaseClass):
 
         # Verify application looks correct
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
-                            expected_image='livesync-hello-world_js_css_xml', timeout=60)
+                            expected_image='livesync-hello-world_js_css_xml', timeout=60, tolerance=0.26)
 
         # Rollback all the changes
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
@@ -366,7 +366,7 @@ class RunIOSSimulatorTests(BaseClass):
 
         # Verify app looks is update after changes in js, css and xml
         Device.screen_match(device_name=SIMULATOR_NAME,
-                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_js_css_xml')
+                            device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_js_css_xml', tolerance=0.26)
 
     def test_315_tns_run_ios_change_appResources_check_per_platform(self):
         # https://github.com/NativeScript/nativescript-cli/pull/3619
