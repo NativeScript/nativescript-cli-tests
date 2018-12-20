@@ -10,7 +10,7 @@ from core.device.emulator import Emulator
 from core.device.helpers.adb import Adb
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID, TEST_RUN_HOME
+from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID, TEST_RUN_HOME, EMULATOR_NAME
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
@@ -890,9 +890,48 @@ class RuntimeTests(BaseClass):
         messages = "MESSAGE: Before plugins gradle is applied!\nMESSAGE: Plugin include gradle is applied!"
         assert messages in output, "FAIL: before-plugins.gradle is NOT applied correctly!"
 
+    def test_390_code_cache_option(self):
+        """
+        CodeCache option is broken since Android Runtime 4.1.0
+
+        https://github.com/NativeScript/android-runtime/issues/1235
+        """
+
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name)
+        source_js = os.path.join('data', "issues", 'android-runtime-1235', 'package.json')
+        target_js = os.path.join(self.app_name, 'app', 'package.json')
+        File.copy(src=source_js, dest=target_js)
+
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+
+        # `tns run android` and wait until app is deployed
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
+
+        code_cache_files =['app.js.cache', 'main-page.js.cache', 'main-view-model.js.cache']
+        app_id = Tns.get_app_id(app_name=self.app_name)
+
+        # Check that for each .js file, there's a corresponding .js.cache file created on the device
+        for code_cache_file in code_cache_files:
+            error_message = '{0} file is not found on {1}'.format(code_cache_file, EMULATOR_ID)
+            path = 'app/{0}'.format(code_cache_file)
+            assert Adb.path_exists(device_id=EMULATOR_ID, package_id=app_id, path=path), error_message
+
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='hello-world-js')
+
     def test_420_include_gradle_flavor(self):
         # https://github.com/NativeScript/android-runtime/pull/937
         # https://github.com/NativeScript/nativescript-cli/pull/3467
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name)
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name},
                             assert_success=False)
         source = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-pr-937', 'app.gradle')
@@ -935,3 +974,5 @@ class RuntimeTests(BaseClass):
         assert "JSParser Error: Not enough or too many arguments passed(0) when trying to extend interface: " \
                "java.util.List in file: main-page" in log
         assert "Execution failed for task ':app:runSbg'" in log
+
+
