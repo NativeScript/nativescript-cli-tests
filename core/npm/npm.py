@@ -55,6 +55,8 @@ class Npm(object):
             if package is None:
                 raise NameError('Package can not be None.')
             command = 'add {0} {1}'.format(package, option)
+            if package == '':
+                command = 'install {0} {1}'.format(package, option)
             output = Npm.__run_yarn_command(command, folder=folder, log_level=log_level)
             assert "ERR!" not in output, "`yarn " + command + "` failed with: \n" + output
             return output
@@ -90,7 +92,7 @@ class Npm(object):
     @staticmethod
     def get_version(package):
         if USE_YARN == "True":
-            return Npm.__run_yarn_command('info {0} version'.format(package), log_level=CommandLogLevel.SILENT)
+            return Npm.__run_yarn_command('info {0} version -s'.format(package), log_level=CommandLogLevel.SILENT)
         else:
             return Npm.__run_npm_command('show {0} version'.format(package), log_level=CommandLogLevel.SILENT)
 
