@@ -4,7 +4,7 @@ Tests for --log trace option.
 
 from core.base_class.BaseClass import BaseClass
 from core.osutils.folder import Folder
-from core.settings.settings import CURRENT_OS, OSType
+from core.settings.settings import CURRENT_OS, OSType, USE_YARN
 from core.tns.tns import Tns
 
 
@@ -27,11 +27,14 @@ class LogtraceTests(BaseClass):
         output = Tns.create_app(self.app_name, log_trace=True, update_modules=False)
         assert "Creating a new NativeScript project with name " + self.app_name in output
         assert "and id org.nativescript.{0} at location".format(self.app_name.replace("_", "")) in output
-
-        if CURRENT_OS == OSType.WINDOWS:
-            assert 'spawn: npm.cmd "install"' in output
+        
+        if USE_YARN == "True":
+                assert 'spawn: yarn' in output
         else:
-            assert 'spawn: npm "install"' in output
+            if CURRENT_OS == OSType.WINDOWS:
+                assert 'spawn: npm.cmd "install"' in output 
+            else:
+                assert 'spawn: npm "install"' in output
         assert "Project " + self.app_name + " was successfully created" in output
 
     def test_102_platform_add_log_trace(self):
