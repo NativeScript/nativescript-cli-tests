@@ -51,13 +51,12 @@ def run(command, timeout=COMMAND_TIMEOUT, output=True, wait=True, log_level=Comm
     if not wait:
         time_string = "_" + datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
         out_file = OUTPUT_FILE_ASYNC.replace('.', time_string + '.')
-        err_file = ERR_FILE_ASYNC.replace('.', time_string + '.')
         if CURRENT_OS is OSType.WINDOWS:
             command = command + " 1> " + out_file + " 2>&1"
         elif CURRENT_OS is OSType.LINUX:
             command = command + " 1> " + out_file + " 2>&1 &"
         else:
-            command = command + " &> " + out_file + " 2>" + err_file + " &"
+            command = command + " &> " + out_file + " 2>&1 &"
 
     # remove output.txt
     try:
