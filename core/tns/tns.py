@@ -769,6 +769,7 @@ class Tns(object):
         while time.time() < t_end:
             not_found_list = []
             log = File.read(log_file)
+            log = str(log.decode('utf8').encode('utf8')).strip()
             for item in string_list:
                 if item in log:
                     print "'{0}' found.".format(item)
