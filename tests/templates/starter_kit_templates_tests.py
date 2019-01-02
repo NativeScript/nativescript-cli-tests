@@ -39,17 +39,18 @@ class StarterKitsTests(BaseClass):
     sass_root_level_variable_change = ['app/_app-variables.scss', '$accent-dark: #3A53FF !default;',
                                        '$accent-dark: #FF6666 !default;']
     sass_root_level_variable_change_ng = ['src/_app-variables.scss', '$accent-dark: #3A53FF !default;',
-                                       '$accent-dark: #FF6666 !default;']
+                                          '$accent-dark: #FF6666 !default;']
     sass_root_level_android_change = ["app/app.android.scss", "@import 'app-common';",
                                       "@import 'app-common'; .text-primary {color: black;}"]
     sass_root_level_android_change_ng = ["src/app.android.scss", "@import 'app-common';",
-                                      "@import 'app-common'; .text-primary {color: black;}"]
+                                         "@import 'app-common'; .text-primary {color: black;}"]
     sass_root_level_ios_change = ["app/app.ios.scss", "@import 'app-common';",
                                   "@import 'app-common'; .text-primary {color: black;}"]
     sass_root_level_ios_change_ng = ["src/app.ios.scss", "@import 'app-common';",
-                                  "@import 'app-common'; .text-primary {color: black;}"]
+                                     "@import 'app-common'; .text-primary {color: black;}"]
     sass_nested_level_change = ['app/cars/_cars-list-common.scss', 'padding: 8 15 4 15;', 'padding: 50 50 50 50;']
-    sass_nested_level_change_ng = ['src/app/cars/_car-list.component.scss', 'padding: 8 15 4 15;', 'padding: 50 50 50 50;']
+    sass_nested_level_change_ng = ['src/app/cars/_car-list.component.scss', 'padding: 8 15 4 15;',
+                                   'padding: 50 50 50 50;']
     SIMULATOR_ID = ""
 
     @staticmethod
@@ -129,8 +130,8 @@ class StarterKitsTests(BaseClass):
             if platform == Platform.ANDROID:
                 assert Device.wait_for_text(device_id=device_id, text="Browse",
                                             timeout=20), "Failed to rollback XML changes!"
-       
-       # Change SASS files.
+
+        # Change SASS files.
         if '-ng' in demo:
             ReplaceHelper.rollback(demo, self.sass_root_level_variable_change_ng, sleep=10)
             ReplaceHelper.rollback(demo, self.sass_nested_level_change_ng, sleep=10)
@@ -244,7 +245,7 @@ class StarterKitsTests(BaseClass):
         log = Tns.run_ios(attributes={'--path': demo, '--emulator': ''}, wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=5)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=1.0)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=0.5)
         if "-ng" in demo or "-ts" in demo:
             Helpers.wait_typescript_watcher()
 
@@ -253,7 +254,7 @@ class StarterKitsTests(BaseClass):
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_sync')
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_sync', tolerance=0.25)
 
         # Revert changes
         StarterKitsTests.revert_changes(self=self, demo=demo, platform=Platform.IOS,
@@ -261,7 +262,7 @@ class StarterKitsTests(BaseClass):
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.no_wp_sync, not_existing_string_list=Helpers.wp_errors)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home')
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=0.5)
 
     @parameterized.expand(DEMOS)
     def test_200_run_android_bundle(self, demo):
@@ -302,8 +303,8 @@ class StarterKitsTests(BaseClass):
                           assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=5)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=1.0)
-        
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=0.5)
+
         if "-ng" in demo:
             Helpers.wait_webpack_watcher_ng()
         else:
@@ -315,7 +316,7 @@ class StarterKitsTests(BaseClass):
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
                          check_interval=5, timeout=120)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_sync')
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_sync', tolerance=0.25)
 
         # Revert changes
         StarterKitsTests.revert_changes(self=self, demo=demo, platform=Platform.IOS,
@@ -323,7 +324,7 @@ class StarterKitsTests(BaseClass):
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home')
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=0.5)
 
     @parameterized.expand(DEMOS)
     def test_300_run_android_bundle_uglify_aot_snapshot(self, demo):
@@ -365,7 +366,7 @@ class StarterKitsTests(BaseClass):
             wait=False, assert_success=False)
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
                          timeout=240, check_interval=5)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=1.0)
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=0.5)
         if "-ng" in demo:
             Helpers.wait_webpack_watcher_ng()
         else:
@@ -377,7 +378,7 @@ class StarterKitsTests(BaseClass):
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
                          check_interval=5, timeout=120)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_sync')
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_sync', tolerance=0.25)
 
         # Revert changes
         StarterKitsTests.revert_changes(self=self, demo=demo, platform=Platform.IOS,
@@ -385,4 +386,4 @@ class StarterKitsTests(BaseClass):
 
         # Verify application looks correct
         Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home')
+        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=demo + '_home', tolerance=0.5)
