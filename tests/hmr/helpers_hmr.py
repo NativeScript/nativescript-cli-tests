@@ -18,9 +18,9 @@ class HelpersHMR(object):
     no_wp_run = ['Successfully installed']
     no_wp_sync = ['Successfully synced application']
     wp = ['Webpack compilation complete']
-    run_hmr = ['Webpack compilation complete', 'Successfully installed', 'HMR: Sync...',
+    run_hmr = ['Webpack compilation complete', 'Successfully installed',
               'HMR: Hot Module Replacement Enabled. Waiting for signal.']
-    run_hmr_with_platforms = ['Webpack compilation complete', 'HMR: Sync...',
+    run_hmr_with_platforms = ['Webpack compilation complete',
                'HMR: Hot Module Replacement Enabled. Waiting for signal.', 'Successfully synced application',
                               'Refreshing application on device']
     sync_hmr = ['Webpack compilation complete', 'Successfully synced application',
@@ -96,8 +96,7 @@ class HelpersHMR(object):
     def apply_changes_xml(app_name, log, platform):
         # Change XML after uninstall app from device
         ReplaceHelper.replace(app_name, HelpersHMR.xml_change, sleep=10)
-        strings = ['Refreshing application on device',
-                   'HMR: Sync...','JS: HMR: Hot Module Replacement Enabled. Waiting for signal.']
+        strings = ['Refreshing application on device', 'JS: HMR: Hot Module Replacement Enabled. Waiting for signal.']
         Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TEST')
@@ -107,8 +106,7 @@ class HelpersHMR(object):
     def revert_changes_js(app_name, log, platform):
         # Change JS
         ReplaceHelper.rollback(app_name, HelpersHMR.js_change, sleep=10)
-        strings = ['Refreshing application on device',
-                   'HMR: Sync...','HMR: Hot Module Replacement Enabled. Waiting for signal.']
+        strings = ['Refreshing application on device', 'HMR: Hot Module Replacement Enabled. Waiting for signal.']
         Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left', timeout=20)
@@ -118,8 +116,7 @@ class HelpersHMR(object):
     def revert_changes_xml(app_name, log, platform):
         # Change XML after uninstall app from device
         ReplaceHelper.rollback(app_name, HelpersHMR.xml_change, sleep=10)
-        strings = ['HMR: Sync...', 'Refreshing application on device',
-                   'HMR: Checking for updates to the bundle with hmr hash']
+        strings = ['Refreshing application on device', 'HMR: Checking for updates to the bundle with hmr hash']
         Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:
             text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TAP')
@@ -133,7 +130,7 @@ class HelpersHMR(object):
 
         # Revert XML changes
         ReplaceHelper.rollback(app_name, HelpersHMR.xml_change, sleep=10)
-        strings = ['HMR: Sync...', 'Refreshing application on device', './main-page.xml',
+        strings = ['Refreshing application on device', './main-page.xml',
                    'HMR: Checking for updates to the bundle with hmr hash']
         Tns.wait_for_log(log_file=log, string_list=strings)
         if platform == Platform.ANDROID:

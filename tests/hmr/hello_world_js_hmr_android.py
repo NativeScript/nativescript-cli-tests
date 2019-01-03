@@ -91,7 +91,7 @@ class HelloWorldJSHMRAndroid(BaseClass):
 
         # Revert changes
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML_INVALID_SYNTAX)
-        strings = ['JS: HMR: Sync...', 'JS: HMR: Hot Module Replacement Enabled. Waiting for signal.',
+        strings = ['JS: HMR: Hot Module Replacement Enabled. Waiting for signal.',
                    'Successfully synced application', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=120, check_interval=10)
 
