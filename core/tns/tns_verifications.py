@@ -111,12 +111,10 @@ class TnsAsserts(object):
         dts = os.path.join(app_name, TnsAsserts.TNS_MODULES, 'tns-core-modules.d.ts')
 
         # Assert content of files added with TypeScript plugin.
-        File.exists(ts_config)
-        File.exists(ref_dts)
-        File.exists(dts)
-        red_tds_content = File.read(ref_dts)
+        assert File.exists(ts_config)
+        assert not File.exists(ref_dts)
+        assert File.exists(dts)
 
-        assert './node_modules/tns-core-modules/tns-core-modules.d.ts' not in red_tds_content
         ts_config_json = TnsAsserts.get_tsconfig_json(app_name=app_name)
         paths = ts_config_json.get('compilerOptions').get('paths')
         assert paths is not None, 'Paths missing in tsconfig.json'
