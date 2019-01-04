@@ -14,7 +14,7 @@ from core.npm.npm import Npm
 from core.osutils.command import run
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, SUT_FOLDER
+from core.settings.settings import TNS_PATH, CURRENT_OS, OSType, TEST_RUN_HOME, SUT_FOLDER, USE_YARN
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
@@ -91,8 +91,12 @@ class InitAndInstallTests(BaseClass):
     def test_205_install_node_modules(self):
         self.test_202_init_path()
 
-        Npm.install(package="gulp", option="--save-dev", folder=BaseClass.app_name)
-        Npm.install(package="lodash", option="--save", folder=BaseClass.app_name)
+        if(USE_YARN == "True"):
+            Npm.install(package="gulp", option="--dev", folder=BaseClass.app_name)
+            Npm.install(package="lodash", folder=BaseClass.app_name)
+        else:
+            Npm.install(package="gulp", option="--save-dev", folder=BaseClass.app_name)
+            Npm.install(package="lodash", option="--save", folder=BaseClass.app_name)
 
         output = File.read(self.app_name + "/package.json")
         assert devDependencies in output
@@ -116,8 +120,12 @@ class InitAndInstallTests(BaseClass):
     def test_300_install_node_modules_if_node_modules_folder_exists(self):
         self.test_202_init_path()
 
-        Npm.install(package="gulp", option="--save-dev", folder=BaseClass.app_name)
-        Npm.install(package="lodash", option="--save", folder=BaseClass.app_name)
+        if (USE_YARN == "True"):
+            Npm.install(package="gulp", option="--dev", folder=BaseClass.app_name)
+            Npm.install(package="lodash", folder=BaseClass.app_name)
+        else:
+            Npm.install(package="gulp", option="--save-dev", folder=BaseClass.app_name)
+            Npm.install(package="lodash", option="--save", folder=BaseClass.app_name)
 
         output = File.read(self.app_name + "/package.json")
         assert devDependencies in output
@@ -136,8 +144,12 @@ class InitAndInstallTests(BaseClass):
         Tns.platform_add_android(attributes={"--path": self.app_name}, version="next")
 
         Npm.install(package='', folder=BaseClass.app_name)
-        Npm.install(package="gulp", option="--save-dev", folder=BaseClass.app_name)
-        Npm.install(package="lodash", option="--save", folder=BaseClass.app_name)
+        if (USE_YARN == "True"):
+            Npm.install(package="gulp", option="--dev", folder=BaseClass.app_name)
+            Npm.install(package="lodash", folder=BaseClass.app_name)
+        else:
+            Npm.install(package="gulp", option="--save-dev", folder=BaseClass.app_name)
+            Npm.install(package="lodash", option="--save", folder=BaseClass.app_name)
 
         source = os.path.join(SUT_FOLDER, "template-hello-world", "app")
         dest = os.path.join(self.app_name, "app")
