@@ -1,0 +1,24 @@
+android {
+  defaultConfig {
+    generatedDensities = []
+    ndk {
+      abiFilters.clear()
+    }
+  }
+  aaptOptions {
+    additionalParameters "--no-version-vectors"
+  }
+  splits {
+    abi {
+        enable true
+        reset()
+        include 'arm64-v8a', 'armeabi-v7a', 'x86'
+        universalApk true
+    }
+  }
+  sourceSets {
+    main {
+        jniLibs.srcDirs = ["$projectDir/libs/jni", "$projectDir/snapshot-build/build/ndk-build/libs"]
+    }
+  }
+}
