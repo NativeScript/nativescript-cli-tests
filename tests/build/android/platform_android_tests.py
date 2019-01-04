@@ -9,7 +9,7 @@ from core.java.java import Java
 from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
-from core.settings.settings import TNS_PATH, ANDROID_PACKAGE, TEST_RUN_HOME
+from core.settings.settings import TNS_PATH, ANDROID_PACKAGE, TEST_RUN_HOME, USE_YARN
 from core.settings.strings import *
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -107,19 +107,22 @@ class PlatformAndroidTests(BaseClass):
         Tns.platform_add_android(attributes={"--path": self.app_name}, version="latest")
 
         output = Tns.update(attributes={"--path": self.app_name})
-        self.verify_update(output)
-        modules_version = Npm.get_version("tns-core-modules")
-        TnsAsserts.package_json_contains(self.app_name, [modules_version])
+        if USE_YARN == "False":
+            self.verify_update(output)
+            modules_version = Npm.get_version("tns-core-modules")
+            TnsAsserts.package_json_contains(self.app_name, [modules_version])
 
-        output = Tns.update(attributes={"3.2.0": "", "--path": self.app_name})
-        self.verify_update(output)
-        TnsAsserts.package_json_contains(self.app_name, ["3.2.0"])
+            output = Tns.update(attributes={"3.2.0": "", "--path": self.app_name})
+            self.verify_update(output)
+            TnsAsserts.package_json_contains(self.app_name, ["3.2.0"])
 
-        Tns.update(attributes={"next": "", "--path": self.app_name})
-        self.verify_update(output)
-        modules_version = Npm.get_version("tns-android@next")
-        android_version = Npm.get_version("tns-core-modules@next")
-        TnsAsserts.package_json_contains(self.app_name, [modules_version, android_version])
+            Tns.update(attributes={"next": "", "--path": self.app_name})
+            self.verify_update(output)
+            modules_version = Npm.get_version("tns-android@next")
+            android_version = Npm.get_version("tns-core-modules@next")
+            TnsAsserts.package_json_contains(self.app_name, [modules_version, android_version])
+        else:
+            self.verify_update(output)
 
     def test_300_set_sdk(self):
         """Platform add android should be able to specify target sdk with `--sdk` option"""
