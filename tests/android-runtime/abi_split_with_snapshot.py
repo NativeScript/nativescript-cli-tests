@@ -67,6 +67,12 @@ class AbiSplitTests(BaseClass):
         app_id = Tns.get_app_id(self.app_name)
         Adb.start_app(EMULATOR_ID, app_id);
         Helpers.android_screen_match(image="abi-split-emulator", timeout=90)
+        Adb.stop_application(EMULATOR_ID, app_id)
+        Adb.uninstall(app_id, EMULATOR_ID)
+        Adb.install(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-universal-release.apk",
+                    EMULATOR_ID)
+        Adb.start_app(EMULATOR_ID, app_id);
+        Helpers.android_screen_match(image="abi-split-emulator", timeout=90)
 
     def test_201_run_app_with_abi_split_and_snapshot_on_32_phone(self):
         Tns.create_app(self.app_name, attributes={"--ng": ""})
