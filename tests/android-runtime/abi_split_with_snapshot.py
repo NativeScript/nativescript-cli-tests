@@ -33,6 +33,7 @@ class AbiSplitTests(BaseClass):
     def test_100_build_app_with_abi_split_and_snapshot(self):
         """
          Test build with abi split and snapshot. Also check if the apk for emulator is working
+         https://github.com/NativeScript/android-runtime/issues/1234
         """
         Tns.create_app(self.app_name, attributes={"--ng": ""})
         Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_PACKAGE, "--path": self.app_name})
@@ -76,6 +77,7 @@ class AbiSplitTests(BaseClass):
     def test_201_run_app_with_abi_split_and_snapshot_on_32_phone(self):
         """
          Test if the apk for arm devices is working
+         https://github.com/NativeScript/android-runtime/issues/1234
         """
         Tns.create_app(self.app_name, attributes={"--ng": ""})
         devices = Adb.get_devices(include_emulators=False)
@@ -97,6 +99,7 @@ class AbiSplitTests(BaseClass):
     def test_202_run_app_with_abi_split_and_snapshot_on_64_phone(self):
         """
          Test if the apk for arm64 devices is working
+         https://github.com/NativeScript/android-runtime/issues/1234
         """
         Tns.create_app(self.app_name, attributes={"--ng": ""})
         devices = Adb.get_devices(include_emulators=False)
