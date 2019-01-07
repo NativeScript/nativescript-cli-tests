@@ -1,24 +1,20 @@
 """
-Test for specific needs of Android runtime.
+Test for specific needs Android ABI Split.
 """
 import os
 
 from core.base_class.BaseClass import BaseClass
 from core.device.emulator import Emulator
-from core.osutils.folder import Folder
+from core.device.helpers.adb import Adb
 from core.osutils.folder import File
+from core.osutils.folder import Folder
+from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
-from core.device.helpers.adb import Adb
-from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID, TEST_RUN_HOME, EMULATOR_NAME
 from tests.webpack.helpers.helpers import Helpers
 
 
 class AbiSplitTests(BaseClass):
-    custom_js_file = os.path.join(BaseClass.app_name, "app", "my-custom-class.js")
-    tns_folder = os.path.join(BaseClass.app_name, TnsAsserts.PLATFORM_ANDROID_SRC_MAIN_PATH, "java", "com", "tns")
-    gen_folder = os.path.join(tns_folder, "gen")
-    generated_java_file = os.path.join(tns_folder, "MyJavaClass.java")
 
     @classmethod
     def setUpClass(cls):
@@ -35,6 +31,9 @@ class AbiSplitTests(BaseClass):
         BaseClass.tearDownClass()
 
     def test_100_build_app_with_abi_split_and_snapshot(self):
+        """
+         Test build with abi split and snapshot. Also check if the apk for emulator is working
+        """
         Tns.create_app(self.app_name, attributes={"--ng": ""})
         Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_PACKAGE, "--path": self.app_name})
         Adb.clear_logcat(device_id=EMULATOR_ID)
@@ -75,34 +74,42 @@ class AbiSplitTests(BaseClass):
         Helpers.android_screen_match(image="abi-split-emulator", timeout=90)
 
     def test_201_run_app_with_abi_split_and_snapshot_on_32_phone(self):
+        """
+         Test if the apk for arm devices is working
+        """
         Tns.create_app(self.app_name, attributes={"--ng": ""})
         devices = Adb.get_devices(include_emulators=False)
 
         phone = ""
         for device in devices:
             if "emulator" not in device:
-                    phone = device
+                phone = device
 
         Adb.install("Test_apks" + "/app-armeabi-v7a-release.apk",
                     phone)
         app_id = Tns.get_app_id(self.app_name)
         Adb.start_app(phone, app_id);
-        Helpers.android_screen_match(image="abi-split-32-phone", timeout=90, device_id=phone, device_name="ARM-32-Phone")
+        Helpers.android_screen_match(image="abi-split-32-phone", timeout=90, device_id=phone,
+                                     device_name="ARM-32-Phone")
         Adb.stop_application(phone, app_id)
         Adb.uninstall(app_id, phone)
 
     def test_202_run_app_with_abi_split_and_snapshot_on_64_phone(self):
+        """
+         Test if the apk for arm64 devices is working
+        """
         Tns.create_app(self.app_name, attributes={"--ng": ""})
         devices = Adb.get_devices(include_emulators=False)
 
         phone = ""
         for device in devices:
             if "emulator" not in device:
-                    phone = device
+                phone = device
         Adb.install("Test_apks" + "/app-arm64-v8a-release.apk",
                     phone)
         app_id = Tns.get_app_id(self.app_name)
         Adb.start_app(phone, app_id);
-        Helpers.android_screen_match(image="abi-split-64-phone",  timeout=90, device_id=phone, device_name="ARM-64-Phone")
+        Helpers.android_screen_match(image="abi-split-64-phone", timeout=90, device_id=phone,
+                                     device_name="ARM-64-Phone")
         Adb.stop_application(phone, app_id)
         Adb.uninstall(app_id, phone)
