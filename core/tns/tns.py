@@ -816,6 +816,9 @@ class Tns(object):
             if 'Unable to sync files' in log:
                 print 'Sync process failed. No need to wait more time!'
                 break
+            if '????????????????????????????' in log:
+                print 'Log seems to be corrupted. No need to wait more time!'
+                break
             if 'errors were thrown' in log:
                 print 'Multiple errors were thrown. No need to wait more time!'
                 break
