@@ -41,6 +41,7 @@ class PreviewCommandTestsIos(BaseClass):
         BaseClass.setUpClass(cls.__name__)
         Tns.kill()
         Simulator.stop()
+        Emulator.stop()
         cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
         
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.IOS)
