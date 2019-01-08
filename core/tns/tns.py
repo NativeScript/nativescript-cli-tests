@@ -558,14 +558,6 @@ class Tns(object):
             # Verify final package contains right modules (or verify bundle when it is used)
             if "--bundle" not in attributes.keys():
                 assert "Webpack compilation complete" not in output
-                # remove strings from modules version e.g. ../ for shares
-                modules_version = str(TnsAsserts.get_modules_version(app_name)).replace(
-                    '^', '').replace('~', '').replace('../', '').replace('file:', '')
-                modules_json_in_platforms = File.read(
-                    os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH, 'package.json'))
-                assert modules_version in modules_json_in_platforms, \
-                    "Platform folder contains wrong tns-core-modules! " + os.linesep + "Modules version: " \
-                    + modules_version + os.linesep + "package.json: " + os.linesep + modules_json_in_platforms
             else:
                 assert "Webpack compilation complete" in output
                 assert "after-prepare" + os.sep + "nativescript-dev-webpack.js" in output
