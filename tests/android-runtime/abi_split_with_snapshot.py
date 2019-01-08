@@ -36,7 +36,7 @@ class AbiSplitTests(BaseClass):
         BaseClass.tearDownClass()
 
     @staticmethod
-    def assertApk(apk, device, app_id, image, device_id=EMULATOR_ID, device_name=EMULATOR_NAME):
+    def assert_apk(apk, device, app_id, image, device_id=EMULATOR_ID, device_name=EMULATOR_NAME):
         Adb.install(apk,
                     device)
         Adb.start_app(device, app_id)
@@ -45,7 +45,7 @@ class AbiSplitTests(BaseClass):
         Adb.uninstall(app_id, device)
 
     @staticmethod
-    def getDevice():
+    def get_device():
         devices = Adb.get_devices(include_emulators=False)
 
         for device in devices:
@@ -94,10 +94,10 @@ class AbiSplitTests(BaseClass):
             self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-universal-release.apk")
         assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-x86-release.apk")
 
-        self.assertApk(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-x86-release.apk",
+        self.assert_apk(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-x86-release.apk",
                        EMULATOR_ID, self.app_id, "abi-split-emulator")
 
-        self.assertApk(
+        self.assert_apk(
             self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-universal-release.apk",
             EMULATOR_ID, self.app_id, "abi-split-emulator")
 
@@ -106,9 +106,9 @@ class AbiSplitTests(BaseClass):
          Test if the apk for arm devices is working
          https://github.com/NativeScript/android-runtime/issues/1234
         """
-        phone = self.getDevice()
+        phone = self.get_device()
 
-        self.assertApk("Test_apks" + "/app-armeabi-v7a-release.apk",
+        self.assert_apk("Test_apks" + "/app-armeabi-v7a-release.apk",
                        phone, self.app_id, "abi-split-32-phone", phone, "ARM-32-Phone")
 
     def test_202_run_app_with_abi_split_and_snapshot_on_64_phone(self):
@@ -116,7 +116,7 @@ class AbiSplitTests(BaseClass):
          Test if the apk for arm64 devices is working
          https://github.com/NativeScript/android-runtime/issues/1234
         """
-        phone = self.getDevice()
+        phone = self.get_device()
 
-        self.assertApk("Test_apks" + "/app-arm64-v8a-release.apk",
+        self.assert_apk("Test_apks" + "/app-arm64-v8a-release.apk",
                        phone, self.app_id, "abi-split-64-phone", phone, "ARM-64-Phone")
