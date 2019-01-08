@@ -84,7 +84,7 @@ class Tns(object):
         print "Kill all tns processes."
         Process.kill(proc_name='node', proc_cmdline=os.sep + 'tns')
         time.sleep(1)
-        Process.kill_by_commandline(os.sep + 'tns')
+        Process.kill(proc_name='node', proc_cmdline=TEST_RUN_HOME.split(os.sep)[-1])
         time.sleep(1)
         Process.kill_by_commandline('webpack.js')
         time.sleep(1)
