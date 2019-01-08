@@ -12,7 +12,7 @@ from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 from tests.webpack.helpers.helpers import Helpers
-
+from sys import platform
 
 class AbiSplitTests(BaseClass):
 
@@ -39,10 +39,19 @@ class AbiSplitTests(BaseClass):
         Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_PACKAGE, "--path": self.app_name})
         Adb.clear_logcat(device_id=EMULATOR_ID)
         old_string = "webpackConfig: config,"
-        new_string = "webpackConfig: config,\
-            targetArchs: [ \"arm\", \"arm64\", \"ia32\" ],\
-            useLibs: true,\
-            androidNdkPath: \"/home/ubuntu/ndkr18b/android-ndk-r18b\""
+        new_string = ""
+
+        if platform == "linux" or platform == "linux2":
+            new_string = "webpackConfig: config,\
+                        targetArchs: [ \"arm\", \"arm64\", \"ia32\" ],\
+                        useLibs: true,\
+                        androidNdkPath: \"/tns-official/NDK/android-ndk-r18b-linux/\""
+        elif platform == "darwin":
+            new_string = "webpackConfig: config,\
+                        targetArchs: [ \"arm\", \"arm64\", \"ia32\" ],\
+                        useLibs: true,\
+                        androidNdkPath: \"/tns-official/NDK/android-ndk-r18b-mac/\""
+
         target_file = os.path.join(self.app_name, 'webpack.config.js')
         File.replace(target_file, old_string, new_string)
         source_js = os.path.join('data', "issues", 'android-runtime-1234', 'app.gradle')
