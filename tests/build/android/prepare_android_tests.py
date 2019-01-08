@@ -196,6 +196,7 @@ class PrepareAndroidTests(BaseClass):
 
     @unittest.skipIf(CURRENT_OS == OSType.LINUX, "Skip on Linux")
     @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8 because of old android runtime.")
+    @unittest.skipIf(USE_YARN == "True", "Can not run with yarn.")
     def test_401_prepare_project_with_many_dependencies(self):
         """
         Test for https://github.com/NativeScript/nativescript-cli/issues/2561
@@ -214,7 +215,7 @@ class PrepareAndroidTests(BaseClass):
             Npm.install(package="nativescript-sqlite", folder=self.app_name)
             Npm.install(package="nativescript-statusbar", folder=self.app_name)
             Npm.install(package="nativescript-websockets", folder=self.app_name)
-            Npm.install(package="number-generator",  folder=self.app_name)
+            Npm.install(package="number-generator", folder=self.app_name)
             Npm.install(package="eslint", folder=self.app_name)
             Npm.install(package="eslint-plugin-compat", folder=self.app_name)
         else:
