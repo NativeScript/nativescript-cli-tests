@@ -17,19 +17,20 @@ class Helpers(object):
     no_wp_sync = ['Successfully synced application']
     wp = ['Webpack compilation complete']
     wp_run_hmr = ['Webpack compilation complete', 'Successfully installed', 'HMR: Sync',
-              'HMR: Hot Module Replacement Enabled. Waiting for signal.']
+                  'HMR: Hot Module Replacement Enabled. Waiting for signal.']
     wp_sync_hmr = ['Webpack compilation complete', 'Successfully synced application',
-               'HMR: Checking for updates to the bundle.']
+                   'HMR: Checking for updates to the bundle.']
     wp_errors_hmr = ['Module build failed', 'ENOENT']
 
-    #HMR
+    # HMR
     run_hmr = ['Webpack compilation complete', 'Successfully installed', 'HMR: Sync...',
-              'HMR: Hot Module Replacement Enabled. Waiting for signal.']
+               'HMR: Hot Module Replacement Enabled. Waiting for signal.']
     run_hmr_with_platforms = ['Webpack compilation complete', 'HMR: Sync...',
-               'HMR: Hot Module Replacement Enabled. Waiting for signal.', 'Successfully synced application',
+                              'HMR: Hot Module Replacement Enabled. Waiting for signal.',
+                              'Successfully synced application',
                               'Refreshing application on device']
     sync_hmr = ['Webpack compilation complete', 'Successfully synced application',
-               'HMR: Checking for updates to the bundle.']
+                'HMR: Checking for updates to the bundle.']
     errors_hmr = ['Module build failed', 'ENOENT']
 
     wp_run = ['Webpack compilation complete', 'Successfully installed']
@@ -210,7 +211,7 @@ class Helpers(object):
         print "Actual app size: " + str(actual_sizes[2])
         if check_embedded_script_size:
             print "Actual _embedded_script_.js size: " + str(actual_sizes[3])
-        assertion_error = Helpers.assert_size(expected_sizes[1], actual_sizes[0], 10, "Actual bundle.js size:")
+        assertion_error = Helpers.assert_size(expected_sizes[1], actual_sizes[0], 25, "Actual bundle.js size:")
         if assertion_error != '':
             verification_errors.append(assertion_error)
             assertion_error = ''

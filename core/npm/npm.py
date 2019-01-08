@@ -77,7 +77,6 @@ class Npm(object):
         assert "error" not in output, "`yarn " + command + "` failed with: \n" + output
         return output
 
-
     @staticmethod
     def uninstall(package, option='', folder=None, log_level=CommandLogLevel.FULL):
         if USE_YARN == "True":

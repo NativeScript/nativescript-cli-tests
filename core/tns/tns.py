@@ -216,6 +216,7 @@ class Tns(object):
                                      "node_modules", ".bin", "update-ns-webpack --deps --configs")
         run(update_script)
         if USE_YARN == "True":
+            Folder.cleanup(folder=os.path.join(TEST_RUN_HOME, path, "node_modules"))
             Npm.yarn_install(folder=path)
         else:
             Npm.install(folder=path)
