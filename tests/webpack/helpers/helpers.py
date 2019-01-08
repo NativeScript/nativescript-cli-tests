@@ -153,8 +153,8 @@ class Helpers(object):
         Adb.start_app(device_id=EMULATOR_ID, app_id=app_id)
 
     @staticmethod
-    def android_screen_match(image, timeout=45, tolerance=0.1):
-        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID, expected_image=image, timeout=timeout,
+    def android_screen_match(image, timeout=45, tolerance=0.1, device_id=EMULATOR_ID, device_name=EMULATOR_NAME):
+        Device.screen_match(device_name=device_name, device_id=device_id, expected_image=image, timeout=timeout,
                             tolerance=tolerance)
 
     @staticmethod
