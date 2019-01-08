@@ -8,11 +8,12 @@ from core.device.emulator import Emulator
 from core.device.helpers.adb import Adb
 from core.osutils.folder import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID
+from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID, EMULATOR_NAME
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 from tests.webpack.helpers.helpers import Helpers
 from sys import platform
+
 
 class AbiSplitTests(BaseClass):
 
@@ -21,21 +22,42 @@ class AbiSplitTests(BaseClass):
         BaseClass.setUpClass(cls.__name__)
         Emulator.ensure_available()
         Folder.cleanup('./' + cls.app_name)
+        Tns.create_app(cls.app_name, attributes={"--ng": ""})
+        cls.app_id = Tns.get_app_id(cls.app_name)
+        devices = Adb.get_devices(include_emulators=False)
+        for device in devices:
+            Adb.uninstall(cls.app_id, device, assert_success=False)
 
     def tearDown(self):
-        Tns.kill()
         BaseClass.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
 
+    @staticmethod
+    def assertApk(apk, device, app_id, image, device_id=EMULATOR_ID, device_name=EMULATOR_NAME):
+        Adb.install(apk,
+                    device)
+        Adb.start_app(device, app_id)
+        Helpers.android_screen_match(image=image, timeout=90, device_id=device_id, device_name=device_name)
+        Adb.stop_application(device, app_id)
+        Adb.uninstall(app_id, device)
+
+    @staticmethod
+    def getDevice():
+        devices = Adb.get_devices(include_emulators=False)
+
+        for device in devices:
+            if "emulator" not in device:
+                return device
+
     def test_100_build_app_with_abi_split_and_snapshot(self):
         """
          Test build with abi split and snapshot. Also check if the apk for emulator is working
          https://github.com/NativeScript/android-runtime/issues/1234
         """
-        Tns.create_app(self.app_name, attributes={"--ng": ""})
+
         Tns.platform_add_android(attributes={"--frameworkPath": ANDROID_PACKAGE, "--path": self.app_name})
         Adb.clear_logcat(device_id=EMULATOR_ID)
         old_string = "webpackConfig: config,"
@@ -71,57 +93,30 @@ class AbiSplitTests(BaseClass):
         assert File.exists(
             self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-universal-release.apk")
         assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-x86-release.apk")
-        Adb.install(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-x86-release.apk",
-                    EMULATOR_ID)
-        app_id = Tns.get_app_id(self.app_name)
-        Adb.start_app(EMULATOR_ID, app_id);
-        Helpers.android_screen_match(image="abi-split-emulator", timeout=90)
-        Adb.stop_application(EMULATOR_ID, app_id)
-        Adb.uninstall(app_id, EMULATOR_ID)
-        Adb.install(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-universal-release.apk",
-                    EMULATOR_ID)
-        Adb.start_app(EMULATOR_ID, app_id);
-        Helpers.android_screen_match(image="abi-split-emulator", timeout=90)
+
+        self.assertApk(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-x86-release.apk",
+                       EMULATOR_ID, self.app_id, "abi-split-emulator")
+
+        self.assertApk(
+            self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-universal-release.apk",
+            EMULATOR_ID, self.app_id, "abi-split-emulator")
 
     def test_201_run_app_with_abi_split_and_snapshot_on_32_phone(self):
         """
          Test if the apk for arm devices is working
          https://github.com/NativeScript/android-runtime/issues/1234
         """
-        Tns.create_app(self.app_name, attributes={"--ng": ""})
-        devices = Adb.get_devices(include_emulators=False)
+        phone = self.getDevice()
 
-        phone = ""
-        for device in devices:
-            if "emulator" not in device:
-                phone = device
-
-        Adb.install("Test_apks" + "/app-armeabi-v7a-release.apk",
-                    phone)
-        app_id = Tns.get_app_id(self.app_name)
-        Adb.start_app(phone, app_id);
-        Helpers.android_screen_match(image="abi-split-32-phone", timeout=90, device_id=phone,
-                                     device_name="ARM-32-Phone")
-        Adb.stop_application(phone, app_id)
-        Adb.uninstall(app_id, phone)
+        self.assertApk("Test_apks" + "/app-armeabi-v7a-release.apk",
+                       phone, self.app_id, "abi-split-32-phone", phone, "ARM-32-Phone")
 
     def test_202_run_app_with_abi_split_and_snapshot_on_64_phone(self):
         """
          Test if the apk for arm64 devices is working
          https://github.com/NativeScript/android-runtime/issues/1234
         """
-        Tns.create_app(self.app_name, attributes={"--ng": ""})
-        devices = Adb.get_devices(include_emulators=False)
+        phone = self.getDevice()
 
-        phone = ""
-        for device in devices:
-            if "emulator" not in device:
-                phone = device
-        Adb.install("Test_apks" + "/app-arm64-v8a-release.apk",
-                    phone)
-        app_id = Tns.get_app_id(self.app_name)
-        Adb.start_app(phone, app_id);
-        Helpers.android_screen_match(image="abi-split-64-phone", timeout=90, device_id=phone,
-                                     device_name="ARM-64-Phone")
-        Adb.stop_application(phone, app_id)
-        Adb.uninstall(app_id, phone)
+        self.assertApk("Test_apks" + "/app-arm64-v8a-release.apk",
+                       phone, self.app_id, "abi-split-64-phone", phone, "ARM-64-Phone")
