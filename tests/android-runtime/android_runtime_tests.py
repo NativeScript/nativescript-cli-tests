@@ -662,6 +662,10 @@ class RuntimeTests(BaseClass):
         target_js = os.path.join(self.app_name, 'app', 'main-page.js')
         File.copy(src=source_js, dest=target_js)
 
+        source_js = os.path.join('data', "issues", 'android-runtime-1119', 'app.js')
+        target_js = os.path.join(self.app_name, 'app', 'app.js')
+        File.copy(src=source_js, dest=target_js)
+
         source_js = os.path.join('data', "issues", 'android-runtime-1119', 'main-view-model.js')
         target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
         File.copy(src=source_js, dest=target_js)

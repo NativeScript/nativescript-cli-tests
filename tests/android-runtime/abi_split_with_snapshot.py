@@ -8,7 +8,7 @@ from core.device.emulator import Emulator
 from core.device.helpers.adb import Adb
 from core.osutils.folder import File
 from core.osutils.folder import Folder
-from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID, EMULATOR_NAME
+from core.settings.settings import ANDROID_PACKAGE, EMULATOR_ID, EMULATOR_NAME, TEST_RUN_HOME
 from core.tns.tns import Tns
 from core.tns.tns_verifications import TnsAsserts
 from tests.webpack.helpers.helpers import Helpers
@@ -21,8 +21,8 @@ class AbiSplitTests(BaseClass):
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
         Emulator.ensure_available()
-        Folder.cleanup('./' + cls.app_name)
-        Tns.create_app(cls.app_name, attributes={"--ng": ""})
+        Folder.cleanup(os.path.join(TEST_RUN_HOME, cls.app_name))
+        Tns.create_app_ng(cls.app_name)
         cls.app_id = Tns.get_app_id(cls.app_name)
         devices = Adb.get_devices(include_emulators=False)
         for device in devices:
@@ -40,7 +40,7 @@ class AbiSplitTests(BaseClass):
         Adb.install(apk,
                     device)
         Adb.start_app(device, app_id)
-        Helpers.android_screen_match(image=image, timeout=90, device_id=device_id, device_name=device_name)
+        Helpers.android_screen_match(image=image, timeout=90, device_id=device_id, device_name=device_name, tolerance=1)
         Adb.stop_application(device, app_id)
         Adb.uninstall(app_id, device)
 
@@ -87,19 +87,25 @@ class AbiSplitTests(BaseClass):
             assert_success=False)
 
         assert File.exists(
-            self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-arm64-v8a-release.apk")
+            os.path.join(TEST_RUN_HOME, self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH,
+                         "app-arm64-v8a-release.apk"))
         assert File.exists(
-            self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-armeabi-v7a-release.apk")
+            os.path.join(TEST_RUN_HOME, self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH,
+                         "app-armeabi-v7a-release.apk"))
         assert File.exists(
-            self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-universal-release.apk")
-        assert File.exists(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-x86-release.apk")
+            os.path.join(TEST_RUN_HOME, self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH,
+                         "app-universal-release.apk"))
+        assert File.exists(os.path.join(TEST_RUN_HOME, self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH,
+                                        "app-x86-release.apk"))
 
-        self.assert_apk(self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-x86-release.apk",
-                       EMULATOR_ID, self.app_id, "abi-split-emulator")
+        self.assert_apk(os.path.join(TEST_RUN_HOME, self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH,
+                                     "app-x86-release.apk"),
+                                     EMULATOR_ID, self.app_id, "abi-split-emulator")
 
         self.assert_apk(
-            self.app_name + "/" + TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH + "/app-universal-release.apk",
-            EMULATOR_ID, self.app_id, "abi-split-emulator")
+            os.path.join(TEST_RUN_HOME, self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH,
+                         "app-universal-release.apk"),
+                         EMULATOR_ID, self.app_id, "abi-split-emulator")
 
     def test_201_run_app_with_abi_split_and_snapshot_on_32_phone(self):
         """
@@ -108,8 +114,10 @@ class AbiSplitTests(BaseClass):
         """
         phone = self.get_device()
 
-        self.assert_apk("Test_apks" + "/app-armeabi-v7a-release.apk",
-                       phone, self.app_id, "abi-split-32-phone", phone, "ARM-32-Phone")
+        self.assert_apk(
+            os.path.join(TEST_RUN_HOME, self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, "Test_apks",
+                         "app-armeabi-v7a-release.apk"),
+            phone, self.app_id, "abi-split-32-phone", phone, "ARM-32-Phone")
 
     def test_202_run_app_with_abi_split_and_snapshot_on_64_phone(self):
         """
@@ -118,5 +126,7 @@ class AbiSplitTests(BaseClass):
         """
         phone = self.get_device()
 
-        self.assert_apk("Test_apks" + "/app-arm64-v8a-release.apk",
-                       phone, self.app_id, "abi-split-64-phone", phone, "ARM-64-Phone")
+        self.assert_apk(
+            os.path.join(TEST_RUN_HOME, self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, "Test_apks",
+                         "app-arm64-v8a-release.apk"),
+            phone, self.app_id, "abi-split-64-phone", phone, "ARM-64-Phone")
