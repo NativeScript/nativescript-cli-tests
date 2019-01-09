@@ -316,7 +316,7 @@ class PreviewCommandTestsIos(BaseClass):
                    "0: pageLoaded",
                    "Button(8)",
                    "-1 text {",
-                   "CONSOLE DEBUG Time:",
+                   "CONSOLE INFO Time:",
                    "### TEST END ###"
                    ]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
