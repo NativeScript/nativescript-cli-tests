@@ -4,6 +4,7 @@
   "version": "1.7.0",
   "discardUncaughtJsExceptions": true,
   "android": {
-    "v8Flags": "--expose_gc"
+    "v8Flags": "--expose_gc",
+    "maxLogcatObjectSize": 9000
   }
 }
