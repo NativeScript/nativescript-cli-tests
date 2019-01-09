@@ -197,7 +197,7 @@ class RunIOSSimulatorTests(BaseClass):
                    "-1 text {",
                    john_obj2,
                    self.max_long_string,
-                   "CONSOLE DEBUG Time:",
+                   "CONSOLE INFO Time:",
                    "### TEST END ###"
                    ]
 

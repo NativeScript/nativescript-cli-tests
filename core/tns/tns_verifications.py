@@ -14,9 +14,9 @@ from core.tns.tns_prepare_type import Prepare
 
 
 class TnsAsserts(object):
-    NODE_MODULES = '/node_modules/'
-    TNS_MODULES = NODE_MODULES + 'tns-core-modules/'
-    HOOKS = '/hooks/'
+    NODE_MODULES = 'node_modules'
+    TNS_MODULES = os.path.join(NODE_MODULES, 'tns-core-modules')
+    HOOKS = 'hooks'
     PLATFORM_IOS = os.path.join('platforms', 'ios/')
     PLATFORM_ANDROID = os.path.join('platforms', 'android/')
     PLATFORM_ANDROID_BUILD = os.path.join(PLATFORM_ANDROID, 'app', 'build')
@@ -121,10 +121,10 @@ class TnsAsserts(object):
         assert '/node_modules/tns-core-modules/' in str(paths), \
             '"/node_modules/tns-core-modules/" not found in paths section iof tsconfig.json'
 
-        assert not Folder.is_empty(app_name + TnsAsserts.NODE_MODULES + '/nativescript-dev-typescript')
-        assert File.exists(app_name + TnsAsserts.HOOKS + 'before-prepare/nativescript-dev-typescript.js')
-        assert File.exists(app_name + TnsAsserts.HOOKS + 'before-watch/nativescript-dev-typescript.js')
-        assert File.exists(app_name + TnsAsserts.NODE_MODULES + 'typescript/bin/tsc')
+        assert not Folder.is_empty(os.path.join(app_name, TnsAsserts.NODE_MODULES, 'nativescript-dev-typescript'))
+        assert File.exists(os.path.join(app_name, TnsAsserts.HOOKS, 'before-prepare', 'nativescript-dev-typescript.js'))
+        assert File.exists(os.path.join(app_name, TnsAsserts.HOOKS, 'before-watch', 'nativescript-dev-typescript.js'))
+        assert File.exists(os.path.join(app_name, TnsAsserts.NODE_MODULES, 'typescript', 'bin', 'tsc'))
 
     @staticmethod
     def created_ng(app_name, output=None):

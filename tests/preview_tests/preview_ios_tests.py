@@ -27,6 +27,8 @@ import os
 
 import unittest
 
+from flaky import flaky
+
 class PreviewCommandTestsIos(BaseClass):
 
     SIMULATOR_ID = ''
@@ -39,6 +41,7 @@ class PreviewCommandTestsIos(BaseClass):
         BaseClass.setUpClass(cls.__name__)
         Tns.kill()
         Simulator.stop()
+        Emulator.stop()
         cls.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
         
         Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.IOS)
@@ -74,6 +77,7 @@ class PreviewCommandTestsIos(BaseClass):
         BaseClass.tearDown(self)
         Tns.kill()
 
+    @flaky(max_runs=3)
     def test_001_tns_preview_ios_js_css_xml(self):
         """Make valid changes in JS,CSS and XML"""
 
@@ -136,6 +140,7 @@ class PreviewCommandTestsIos(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME,
                             device_id=self.SIMULATOR_ID, expected_image='livesync-hello-world_home', timeout=6)
             
+    @flaky(max_runs=3)
     def test_002_tns_preview_ios_webpack_js_css_xml(self):
         """Make valid changes in JS,CSS and XML"""
         
@@ -311,7 +316,7 @@ class PreviewCommandTestsIos(BaseClass):
                    "0: pageLoaded",
                    "Button(8)",
                    "-1 text {",
-                   "CONSOLE DEBUG Time:",
+                   "CONSOLE INFO Time:",
                    "### TEST END ###"
                    ]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
@@ -320,6 +325,7 @@ class PreviewCommandTestsIos(BaseClass):
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_home_preview')
 
+    @flaky(max_runs=3)
     def test_185_tns_preview_on_both_platforms(self):
         """Open project in Preview on both ios and android emulators"""
         # Start android emulator and install Preview App

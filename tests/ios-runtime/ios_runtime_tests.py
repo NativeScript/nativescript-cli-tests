@@ -94,7 +94,7 @@ class IOSRuntimeTests(BaseClass):
                                     timeout=20), 'Hello-world NG App failed to start or it does not look correct!'
 
         # Verify console.time() works - issue https://github.com/NativeScript/ios-runtime/issues/843
-        console_time = ['CONSOLE DEBUG startup:']
+        console_time = ['CONSOLE INFO startup:']
         Tns.wait_for_log(log_file=log, string_list=console_time)
 
     def test_290_tns_run_ios_console_dir(self):

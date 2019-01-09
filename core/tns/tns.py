@@ -84,7 +84,7 @@ class Tns(object):
         print "Kill all tns processes."
         Process.kill(proc_name='node', proc_cmdline=os.sep + 'tns')
         time.sleep(1)
-        Process.kill_by_commandline(os.sep + 'tns')
+        Process.kill(proc_name='node', proc_cmdline=TEST_RUN_HOME.split(os.sep)[-1])
         time.sleep(1)
         Process.kill_by_commandline('webpack.js')
         time.sleep(1)
@@ -216,6 +216,7 @@ class Tns(object):
                                      "node_modules", ".bin", "update-ns-webpack --deps --configs")
         run(update_script)
         if USE_YARN == "True":
+            Folder.cleanup(folder=os.path.join(TEST_RUN_HOME, path, "node_modules"))
             Npm.yarn_install(folder=path)
         else:
             Npm.install(folder=path)
@@ -558,14 +559,6 @@ class Tns(object):
             # Verify final package contains right modules (or verify bundle when it is used)
             if "--bundle" not in attributes.keys():
                 assert "Webpack compilation complete" not in output
-                # remove strings from modules version e.g. ../ for shares
-                modules_version = str(TnsAsserts.get_modules_version(app_name)).replace(
-                    '^', '').replace('~', '').replace('../', '').replace('file:', '')
-                modules_json_in_platforms = File.read(
-                    os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_TNS_MODULES_PATH, 'package.json'))
-                assert modules_version in modules_json_in_platforms, \
-                    "Platform folder contains wrong tns-core-modules! " + os.linesep + "Modules version: " \
-                    + modules_version + os.linesep + "package.json: " + os.linesep + modules_json_in_platforms
             else:
                 assert "Webpack compilation complete" in output
                 assert "after-prepare" + os.sep + "nativescript-dev-webpack.js" in output
@@ -815,6 +808,9 @@ class Tns(object):
                 break
             if 'Unable to sync files' in log:
                 print 'Sync process failed. No need to wait more time!'
+                break
+            if '????????????????????????????' in log:
+                print 'Log seems to be corrupted. No need to wait more time!'
                 break
             if 'errors were thrown' in log:
                 print 'Multiple errors were thrown. No need to wait more time!'
