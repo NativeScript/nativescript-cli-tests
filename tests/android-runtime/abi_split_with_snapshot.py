@@ -100,12 +100,12 @@ class AbiSplitTests(BaseClass):
 
         self.assert_apk(os.path.join(TEST_RUN_HOME, self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH,
                                      "app-x86-release.apk"),
-                                     EMULATOR_ID, self.app_id, "abi-split-emulator")
+                        EMULATOR_ID, self.app_id, "abi-split-emulator")
 
         self.assert_apk(
             os.path.join(TEST_RUN_HOME, self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH,
                          "app-universal-release.apk"),
-                         EMULATOR_ID, self.app_id, "abi-split-emulator")
+            EMULATOR_ID, self.app_id, "abi-split-emulator")
 
     def test_201_run_app_with_abi_split_and_snapshot_on_32_phone(self):
         """
@@ -115,7 +115,7 @@ class AbiSplitTests(BaseClass):
         phone = self.get_device()
 
         self.assert_apk(
-            os.path.join(TEST_RUN_HOME, self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, "Test_apks",
+            os.path.join(TEST_RUN_HOME, "Test_apks",
                          "app-armeabi-v7a-release.apk"),
             phone, self.app_id, "abi-split-32-phone", phone, "ARM-32-Phone")
 
@@ -127,6 +127,6 @@ class AbiSplitTests(BaseClass):
         phone = self.get_device()
 
         self.assert_apk(
-            os.path.join(TEST_RUN_HOME, self.app_name, TnsAsserts.PLATFORM_ANDROID_APK_RELEASE_PATH, "Test_apks",
+            os.path.join(TEST_RUN_HOME, "Test_apks",
                          "app-arm64-v8a-release.apk"),
             phone, self.app_id, "abi-split-64-phone", phone, "ARM-64-Phone")
