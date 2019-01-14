@@ -12,7 +12,7 @@ from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.process import Process
-from core.settings.settings import IOS_PACKAGE, IOS_INSPECTOR_PACKAGE, SIMULATOR_NAME
+from core.settings.settings import IOS_PACKAGE, IOS_INSPECTOR_PACKAGE, SIMULATOR_NAME, USE_YARN
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -37,7 +37,10 @@ class DebugiOSInspectorSimulatorTests(BaseClass):
                        attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
                        update_modules=True)
         Tns.platform_add_ios(attributes={'--path': cls.app_name, '--frameworkPath': IOS_PACKAGE})
-        Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--save-dev', folder=cls.app_name)
+        if USE_YARN == "True":
+            Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--dev', folder=cls.app_name)
+        else:
+            Npm.install(package=IOS_INSPECTOR_PACKAGE, option='--save-dev', folder=cls.app_name)
         Tns.build_ios(attributes={"--path": cls.app_name})
 
     def setUp(self):
