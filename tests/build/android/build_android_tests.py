@@ -390,6 +390,15 @@ class BuildAndroidTests(BaseClass):
         Tns.create_app(self.app_name)
         path_to_aab = os.path.join(self.app_name, "platforms", "android", "app", "build", "outputs", "bundle", "release", "app.aab")
 
+        #Configure app with snapshot optimisations
+        source = os.path.join('data', 'abdoid-app-bundle', 'app.gradle')
+        target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle' )
+        File.copy(src=source, dest=target)
+
+        source = os.path.join('data', 'abdoid-app-bundle', 'webpack.config.js')
+        target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'webpack.config.js' )
+        File.copy(src=source, dest=target)
+
         #env.snapshot is applicable only in release build 
         Tns.build_android(attributes={"--path": self.app_name,
                                       "--keyStorePath": ANDROID_KEYSTORE_PATH,
