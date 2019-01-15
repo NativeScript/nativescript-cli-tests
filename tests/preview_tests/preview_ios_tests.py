@@ -58,6 +58,7 @@ class PreviewCommandTestsIos(BaseClass):
         """We need new project because we need app with long imports to test preview with --bundle"""
         Tns.create_app(cls.app_webpack_name,attributes={"--template": os.path.join(SUT_FOLDER, "template-hello-world")})
         Tns.install_npm(package=WEBPACK_PACKAGE, option='--save-dev', folder=cls.app_webpack_name)
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_webpack_name, TEST_RUN_HOME + "/data/TestAppWebpack")
 
         """Create angular app"""
         Tns.create_app_ng(cls.app_angular_name)
@@ -144,6 +145,10 @@ class PreviewCommandTestsIos(BaseClass):
     def test_002_tns_preview_ios_webpack_js_css_xml(self):
         """Make valid changes in JS,CSS and XML"""
         
+        # Ensure app is in initial state 
+        Folder.cleanup(self.app_webpack_name)
+        Folder.copy(TEST_RUN_HOME + "/data/TestAppWebpack", TEST_RUN_HOME + "/TestAppWebpack")
+
         # `tns preview` and take the app url and open it in Preview App
         log = Tns.preview(attributes={'--path': self.app_webpack_name,'--bundle':'' }, wait=False,
                         log_trace=True,assert_success=False)
