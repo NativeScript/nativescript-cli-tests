@@ -141,3 +141,32 @@ class IOSRuntimeTests(BaseClass):
         # Verify app looks correct inside simulator
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_home')
+
+    def test_385_methods_with_same_name_and_different_parameters(self):
+        """
+        https://github.com/NativeScript/ios-runtime/issues/877
+        PR https://github.com/NativeScript/ios-runtime/pull/1013
+        """
+
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name,
+                       attributes={'--template': os.path.join('data', 'apps', 'livesync-hello-world.tgz')},
+                       update_modules=True)
+        Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_PACKAGE})
+
+        # Add plugin with specific dependencies
+        Tns.plugin_add(self.plugin_path, attributes={"--path": self.app_name})
+
+        # Replace main-page.js to call methods with the same name but different parameters count
+        source_js = os.path.join('data', "issues", 'ios-runtime-877', 'main-page.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-page.js')
+        File.copy(src=source_js, dest=target_js)
+
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.SIMULATOR_ID,
+                   ' SayName no param!', 'SayName with 1 param!', 'SayName with 2 params!']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
+
+        # Verify app looks correct inside simulator
+        Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                            expected_image='livesync-hello-world_home')
