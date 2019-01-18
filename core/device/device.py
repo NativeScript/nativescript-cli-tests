@@ -150,7 +150,7 @@ class Device(object):
         if File.exists(actual_image_path):
             File.remove(actual_image_path)
         Device.get_screen(device_id=device_id, file_path=actual_image_path)
-        image = Image.open(actual_image_path)
+        image = Image.open(actual_image_path).convert('LA')
         text = pytesseract.image_to_string(image)
         return text
 
