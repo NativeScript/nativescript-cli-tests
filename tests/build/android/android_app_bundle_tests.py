@@ -70,7 +70,7 @@ class AndroidAppBundleTests(BaseClass):
 
     def test_001_build_android_app_bundle(self):
         """Build app with android app bundle option. Verify the output(app.aab) and use bundletool to deploy on device"""
-        # This is required to ensure the app is in initial state
+        # Ensure the app is in initial state
         Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
         path_to_aab = os.path.join(self.app_name, "platforms", "android", "app", "build", "outputs", "bundle", "debug", "app.aab")
@@ -88,7 +88,7 @@ class AndroidAppBundleTests(BaseClass):
         # Deploy on device
         self.bundletool_deploy(self.bundletool_path, self.path_to_apks)
         
-        # Start the ap on device
+        # Start the app on device
         Adb.start_app(EMULATOR_ID, "org.nativescript.TestApp")
         
         # Verify app looks correct inside emulator
@@ -99,8 +99,9 @@ class AndroidAppBundleTests(BaseClass):
     def test_002_build_android_app_bundle_env_snapshot(self):
         """Build app with android app bundle option with --bundle and optimisations for snapshot.
            Verify the output(app.aab) and use bundletool to deploy on device."""
+        # This test wil not run on windows because env.snapshot option is not available on that OS
         
-        # This is required to ensure the app is in initial state
+        # Ensure the app is in initial state
         Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
         path_to_aab = os.path.join(self.app_name, "platforms", "android", "app", "build", "outputs", "bundle", "release", "app.aab")
@@ -113,8 +114,6 @@ class AndroidAppBundleTests(BaseClass):
         source = os.path.join('data', 'abdoid-app-bundle', 'webpack.config.js')
         target = os.path.join(self.app_name, 'webpack.config.js' )
         File.copy(src=source, dest=target)
-
-        
 
         #env.snapshot is applicable only in release build 
         output = Tns.build_android(attributes={"--path": self.app_name,
@@ -134,15 +133,13 @@ class AndroidAppBundleTests(BaseClass):
 
         #Verify app can be deployed on emulator via bundletool
         # Use bundletool to create the .apks file
-
         self.bundletool_build(self.bundletool_path, path_to_aab, self.path_to_apks)
         assert File.exists(self.path_to_apks)
-
 
         # Deploy on device
         self.bundletool_deploy(self.bundletool_path, self.path_to_apks)
         
-        # Start the ap on device
+        # Start the app on device
         Adb.start_app(EMULATOR_ID, "org.nativescript.TestApp")
         
         # Verify app looks correct inside emulator
