@@ -6,7 +6,7 @@ import unittest
 
 from core.settings.settings import SUT_FOLDER, EMULATOR_NAME, EMULATOR_ID, \
      ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH,\
-     ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS, OSType, ANDROID_PACKAGE
+     ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS, OSType, ANDROID_PACKAGE, TEST_RUN_HOME
 
 from core.device.helpers.adb import Adb
 
@@ -38,6 +38,7 @@ class AndroidAppBundleTests(BaseClass):
 
         Tns.create_app(BaseClass.app_name)
         Tns.platform_add_android(attributes={"--path": BaseClass.app_name, "--frameworkPath": ANDROID_PACKAGE})
+        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
 
         #Download bundletool
         url = 'https://github.com/google/bundletool/releases/download/0.8.0/bundletool-all-0.8.0.jar'
@@ -46,9 +47,14 @@ class AndroidAppBundleTests(BaseClass):
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
+        Folder.cleanup(TEST_RUN_HOME + "/data/TestApp")
 
     def setUp(self):
         BaseClass.setUp(self)
+        # Ensure app is in initial state
+        Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
+        Folder.cleanup(self.app_name)
+        Folder.copy(TEST_RUN_HOME + "/data/TestApp", TEST_RUN_HOME + "/TestApp")
 
     def tearDown(self):
         BaseClass.tearDown(self)
@@ -70,9 +76,6 @@ class AndroidAppBundleTests(BaseClass):
 
     def test_001_build_android_app_bundle(self):
         """Build app with android app bundle option. Verify the output(app.aab) and use bundletool to deploy on device"""
-        # Ensure the app is in initial state
-        Folder.cleanup(self.app_name)
-        Tns.create_app(self.app_name)
         path_to_aab = os.path.join(self.app_name, "platforms", "android", "app", "build", "outputs", "bundle", "debug", "app.aab")
 
         output = Tns.build_android(attributes={"--path": self.app_name, "--aab":""}, assert_success=False)
@@ -99,11 +102,8 @@ class AndroidAppBundleTests(BaseClass):
     def test_002_build_android_app_bundle_env_snapshot(self):
         """Build app with android app bundle option with --bundle and optimisations for snapshot.
            Verify the output(app.aab) and use bundletool to deploy on device."""
-        # This test wil not run on windows because env.snapshot option is not available on that OS
+        # This test will not run on windows because env.snapshot option is not available on that OS
         
-        # Ensure the app is in initial state
-        Folder.cleanup(self.app_name)
-        Tns.create_app(self.app_name)
         path_to_aab = os.path.join(self.app_name, "platforms", "android", "app", "build", "outputs", "bundle", "release", "app.aab")
       
         #Configure app with snapshot optimisations
