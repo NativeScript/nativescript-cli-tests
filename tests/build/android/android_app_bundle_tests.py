@@ -1,17 +1,23 @@
 import urllib.request
 
-from core.settings.settings import SUT_FOLDER
+from core.settings.settings import SUT_FOLDER, EMULATOR_NAME, EMULATOR_ID
 
 from core.base_class.BaseClass import BaseClass
 
+from core.osutils.command import run
 
-class BuildAndroidTests(BaseClass):
+from core.osutils.command_log_level import CommandLogLevel
+
+
+class AndroidAppBundleTests(BaseClass):
     
     bundletool_path = os.path.join(SUT_FOLDER,"bundletool-all-0.8.0.jar")
 
     @classmethod
     def setUpClass(cls):
         BaseClass.setUpClass(cls.__name__)
+        Emulator.stop()
+        Emulator.ensure_available()
 
         Tns.create_app(cls.app_name)
         Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
@@ -62,6 +68,8 @@ class BuildAndroidTests(BaseClass):
         target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'webpack.config.js' )
         File.copy(src=source, dest=target)
 
+        
+
         #env.snapshot is applicable only in release build 
         Tns.build_android(attributes={"--path": self.app_name,
                                       "--keyStorePath": ANDROID_KEYSTORE_PATH,
@@ -79,6 +87,27 @@ class BuildAndroidTests(BaseClass):
         assert File.exists(path_to_aab)
 
         #Verify app can be deployed on emulator via bundletool
+        # Use bundletool to create the .apks file
+        path_to_apks = os.path.join(self.app_name,'app.apks')
+        build_command = 'java -jar ' + bundletool_path + ' build-apks --bundle=' + path_to_aab + /
+            ' --output=' path_to_apks + ' --ks=' + ANDROID_KEYSTORE_PATH + /
+            ' --ks-pass=' + keyStorePassword + ' --ks-key-alias=' + keyStoreAlias + keyStoreAlias + /
+            ' --key-pass=' + keyStoreAliasPassword
+        log = run(build_command, timeout=timeout, wait=False, log_level=CommandLogLevel.FULL)
+        assert not "error" in output, "create of .apks file failed"
+
+        # deploy on device
+        deploy_command = 'java -jar ' + bundletool_path + ' install-apks --apks=' + path_to_apks
+        command = 'java -jar ' + bundletool_path + ' build-apks --bundle=' + path_to_aab + /
+            ' --output=' path_to_apks + ' --ks=' + ANDROID_KEYSTORE_PATH + /
+            ' --ks-pass=' + keyStorePassword + ' --ks-key-alias=' + keyStoreAlias + keyStoreAlias + /
+            ' --key-pass=' + keyStoreAliasPassword
+        log = run(deploy_command, timeout=timeout, wait=False, log_level=CommandLogLevel.FULL)
+        assert not "error" in output, "deploy of app failed"
+        
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='hello-world-js')
 
 
 
