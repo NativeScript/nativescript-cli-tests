@@ -1,17 +1,34 @@
-import urllib.request
+import os
 
-from core.settings.settings import SUT_FOLDER, EMULATOR_NAME, EMULATOR_ID
+import urllib
+
+import unittest
+
+from core.settings.settings import SUT_FOLDER, EMULATOR_NAME, EMULATOR_ID, \
+     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_PATH,\
+     ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS, OSType, ANDROID_PACKAGE
+
+from core.device.helpers.adb import Adb
 
 from core.base_class.BaseClass import BaseClass
+
+from core.osutils.file import File
+
+from core.device.device import Device
+
+from core.osutils.folder import Folder
 
 from core.osutils.command import run
 
 from core.osutils.command_log_level import CommandLogLevel
 
+from core.device.emulator import Emulator, EMULATOR_ID, EMULATOR_NAME
 
+from core.tns.tns import Tns
 class AndroidAppBundleTests(BaseClass):
     
-    bundletool_path = os.path.join(SUT_FOLDER,"bundletool-all-0.8.0.jar")
+    bundletool_path = os.path.join(SUT_FOLDER,"bundletool.jar")
+    path_to_apks = os.path.join(BaseClass.app_name,'app.apks')
 
     @classmethod
     def setUpClass(cls):
@@ -19,12 +36,12 @@ class AndroidAppBundleTests(BaseClass):
         Emulator.stop()
         Emulator.ensure_available()
 
-        Tns.create_app(cls.app_name)
-        Tns.platform_add_android(attributes={"--path": cls.app_name, "--frameworkPath": ANDROID_PACKAGE})
+        Tns.create_app(BaseClass.app_name)
+        Tns.platform_add_android(attributes={"--path": BaseClass.app_name, "--frameworkPath": ANDROID_PACKAGE})
 
         #Download bundletool
         url = 'https://github.com/google/bundletool/releases/download/0.8.0/bundletool-all-0.8.0.jar'
-        urllib.request.urlretrieve(url, SUT_FOLDER)
+        urllib.urlretrieve(url, os.path.join(SUT_FOLDER, 'bundletool.jar'))
 
     @classmethod
     def tearDownClass(cls):
@@ -37,6 +54,20 @@ class AndroidAppBundleTests(BaseClass):
         BaseClass.tearDown(self)
         Tns.kill()
 
+    @staticmethod
+    def bundletool_build(bundletool_path, path_to_aab, path_to_apks):
+        build_command = ('java -jar {0} build-apks --bundle="{1}" --output="{2}" --ks="{3}" --ks-pass=pass:"{4}" --ks-key-alias="{5}"' \
+                          ' --key-pass=pass:"{6}"').format(bundletool_path, path_to_aab, path_to_apks, ANDROID_KEYSTORE_PATH,
+                        ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS)
+        output = run(build_command, log_level=CommandLogLevel.FULL)
+        assert not "Error" in output, "create of .apks file failed"
+
+    @staticmethod
+    def bundletool_deploy(bundletool_path, path_to_apks):
+        deploy_command = ('java -jar {0} install-apks --apks="{1}"').format(bundletool_path, path_to_apks)
+        output = run(deploy_command, log_level=CommandLogLevel.FULL)
+        assert not "Error" in output, "deploy of app failed"
+
     def test_001_build_android_app_bundle(self):
         """Build app with android app bundle option. Verify the output(app.aab) and use bundletool to deploy on device"""
         # This is required to ensure the app is in initial state
@@ -44,10 +75,25 @@ class AndroidAppBundleTests(BaseClass):
         Tns.create_app(self.app_name)
         path_to_aab = os.path.join(self.app_name, "platforms", "android", "app", "build", "outputs", "bundle", "debug", "app.aab")
 
-        Tns.build_android(attributes={"--path": self.app_name, "--aab":""})
+        output = Tns.build_android(attributes={"--path": self.app_name, "--aab":""}, assert_success=False)
         assert "The build result is located at:" in output
         assert path_to_aab in output
         assert File.exists(path_to_aab)
+
+        #Verify app can be deployed on emulator via bundletool
+        # Use bundletool to create the .apks file
+        self.bundletool_build(self.bundletool_path, path_to_aab, self.path_to_apks)
+        assert File.exists(self.path_to_apks)
+
+        # Deploy on device
+        self.bundletool_deploy(self.bundletool_path, self.path_to_apks)
+        
+        # Start the ap on device
+        Adb.start_app(EMULATOR_ID, "org.nativescript.TestApp")
+        
+        # Verify app looks correct inside emulator
+        app_started = Device.wait_for_text(device_id=EMULATOR_ID, text='TAP')
+        assert app_started, 'App is not started on device'
 
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows")
     def test_002_build_android_app_bundle_env_snapshot(self):
@@ -58,20 +104,20 @@ class AndroidAppBundleTests(BaseClass):
         Folder.cleanup(self.app_name)
         Tns.create_app(self.app_name)
         path_to_aab = os.path.join(self.app_name, "platforms", "android", "app", "build", "outputs", "bundle", "release", "app.aab")
-
+      
         #Configure app with snapshot optimisations
         source = os.path.join('data', 'abdoid-app-bundle', 'app.gradle')
         target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle' )
         File.copy(src=source, dest=target)
 
         source = os.path.join('data', 'abdoid-app-bundle', 'webpack.config.js')
-        target = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'webpack.config.js' )
+        target = os.path.join(self.app_name, 'webpack.config.js' )
         File.copy(src=source, dest=target)
 
         
 
         #env.snapshot is applicable only in release build 
-        Tns.build_android(attributes={"--path": self.app_name,
+        output = Tns.build_android(attributes={"--path": self.app_name,
                                       "--keyStorePath": ANDROID_KEYSTORE_PATH,
                                       "--keyStorePassword": ANDROID_KEYSTORE_PASS,
                                       "--keyStoreAlias": ANDROID_KEYSTORE_ALIAS,
@@ -81,33 +127,27 @@ class AndroidAppBundleTests(BaseClass):
                                       "--env.uglify": "",
                                       "--env.snapshot": "",
                                       "--bundle": ""
-                                      })
+                                      }, assert_success=False)
         assert "The build result is located at:" in output
         assert path_to_aab in output
         assert File.exists(path_to_aab)
 
         #Verify app can be deployed on emulator via bundletool
         # Use bundletool to create the .apks file
-        path_to_apks = os.path.join(self.app_name,'app.apks')
-        build_command = 'java -jar ' + bundletool_path + ' build-apks --bundle=' + path_to_aab + /
-            ' --output=' path_to_apks + ' --ks=' + ANDROID_KEYSTORE_PATH + /
-            ' --ks-pass=' + keyStorePassword + ' --ks-key-alias=' + keyStoreAlias + keyStoreAlias + /
-            ' --key-pass=' + keyStoreAliasPassword
-        log = run(build_command, timeout=timeout, wait=False, log_level=CommandLogLevel.FULL)
-        assert not "error" in output, "create of .apks file failed"
 
-        # deploy on device
-        deploy_command = 'java -jar ' + bundletool_path + ' install-apks --apks=' + path_to_apks
-        command = 'java -jar ' + bundletool_path + ' build-apks --bundle=' + path_to_aab + /
-            ' --output=' path_to_apks + ' --ks=' + ANDROID_KEYSTORE_PATH + /
-            ' --ks-pass=' + keyStorePassword + ' --ks-key-alias=' + keyStoreAlias + keyStoreAlias + /
-            ' --key-pass=' + keyStoreAliasPassword
-        log = run(deploy_command, timeout=timeout, wait=False, log_level=CommandLogLevel.FULL)
-        assert not "error" in output, "deploy of app failed"
+        self.bundletool_build(self.bundletool_path, path_to_aab, self.path_to_apks)
+        assert File.exists(self.path_to_apks)
+
+
+        # Deploy on device
+        self.bundletool_deploy(self.bundletool_path, self.path_to_apks)
+        
+        # Start the ap on device
+        Adb.start_app(EMULATOR_ID, "org.nativescript.TestApp")
         
         # Verify app looks correct inside emulator
-        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
-                            expected_image='hello-world-js')
+        app_started = Device.wait_for_text(device_id=EMULATOR_ID, text='TAP')
+        assert app_started, 'App is not started on device'
 
 
 
