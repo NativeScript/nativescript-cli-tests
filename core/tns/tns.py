@@ -653,8 +653,7 @@ class Tns(object):
                 assert "Webpack compilation complete" not in output
             else:
                 assert "Webpack compilation complete" in output
-                assert "after-prepare/nativescript-dev-webpack.js" in output
-
+ 
         return output
 
     @staticmethod
