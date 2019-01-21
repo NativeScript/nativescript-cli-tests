@@ -63,40 +63,40 @@ def get_repos():
 
 if __name__ == '__main__':
 
-    # # Cleanup files and folders created by the test execution
-    # Folder.cleanup(OUTPUT_FOLDER)
-    # Folder.create(OUTPUT_FOLDER)
-    # Folder.cleanup(SUT_FOLDER)
-    # Folder.cleanup("node_modules")
-    # Npm.cache_clean()
-    # Gradle.kill()
-    # Gradle.cache_clean()
-    # get_repos()
-    # Emulator.stop()  # Stop running emulators
+    # Cleanup files and folders created by the test execution
+    Folder.cleanup(OUTPUT_FOLDER)
+    Folder.create(OUTPUT_FOLDER)
+    Folder.cleanup(SUT_FOLDER)
+    Folder.cleanup("node_modules")
+    Npm.cache_clean()
+    Gradle.kill()
+    Gradle.cache_clean()
+    get_repos()
+    Emulator.stop()  # Stop running emulators
 
-    # # Copy test packages and cleanup
-    # if CURRENT_OS == OSType.OSX:
-    #     Simulator.stop()
-    #     disable_crash_report()
-    #     get_test_packages(platform=Platform.BOTH)
-    #     Simulator.reset()
+    # Copy test packages and cleanup
+    if CURRENT_OS == OSType.OSX:
+        Simulator.stop()
+        disable_crash_report()
+        get_test_packages(platform=Platform.BOTH)
+        Simulator.reset()
 
-    #     if Xcode.get_version() < 10:
-    #         SIMULATOR_SDK = '11.0'
-    #     if Xcode.get_version() < 9:
-    #         SIMULATOR_SDK = '10.0'
+        if Xcode.get_version() < 10:
+            SIMULATOR_SDK = '11.0'
+        if Xcode.get_version() < 9:
+            SIMULATOR_SDK = '10.0'
         
 
-    #     Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
-    #     Xcode.cleanup_cache()  # Clean Xcode cache folders
-    #     Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
-    #     Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.IOS)
-    # else:
-    #     get_test_packages(platform=Platform.ANDROID)
+        Simulator.create(SIMULATOR_NAME, SIMULATOR_TYPE, SIMULATOR_SDK)
+        Xcode.cleanup_cache()  # Clean Xcode cache folders
+        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.ANDROID)
+        Device.uninstall_app(app_prefix="org.nativescript.", platform=Platform.IOS)
+    else:
+        get_test_packages(platform=Platform.ANDROID)
 
-    # # Install CLI
-    # Cli.install()
-    # Tns.disable_reporting()
+    # Install CLI
+    Cli.install()
+    Tns.disable_reporting()
 
     # Add local CLI to PATH
     if CURRENT_OS != OSType.WINDOWS:
