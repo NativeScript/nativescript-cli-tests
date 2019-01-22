@@ -138,7 +138,7 @@ class AndroidAppBundleTests(BaseClass):
         assert File.exists(self.path_to_apks)
 
         # Verify that the correct .so file is included in the package
-        File.unzip(self.path_to_apks, os.path.join(self.app_name, 'apks')
+        File.unzip(self.path_to_apks, os.path.join(self.app_name, 'apks'))
         File.unzip(os.path.join(self.app_name, 'apks', 'splits', 'base-x86.apk'), os.path.join(self.app_name,'base_apk'))
         assert File.exists(os.path.join(self.app_name, 'base_apk', 'lib', 'x86', 'libNativeScript.so'))
 
