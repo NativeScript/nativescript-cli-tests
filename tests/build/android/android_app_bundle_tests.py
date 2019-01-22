@@ -143,7 +143,7 @@ class AndroidAppBundleTests(BaseClass):
         assert File.exists(os.path.join(self.app_name, ,'base_apk', 'lib', 'x86'), 'libNativeScript.so')
 
         # Deploy on device
-        self.bundletool_deploy(self.bundletool_path, self.path_to_apks)
+        self.bundletool_deploy(self.bundletool_path, self.path_to_apks, device_id=EMULATOR_ID)
         
         # Start the app on device
         Adb.start_app(EMULATOR_ID, "org.nativescript.TestApp")
