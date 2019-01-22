@@ -200,6 +200,6 @@ class File(object):
         try:
             zipFile = zipfile.ZipFile(file_path, 'r')
             zipFile.extractall(dest_dir)
-            zipfile.close()
+            zipFile.close()
         except:
             print "Failed to unzip file {0}".format(file_path)
