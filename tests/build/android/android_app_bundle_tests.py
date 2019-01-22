@@ -69,10 +69,11 @@ class AndroidAppBundleTests(BaseClass):
         assert not "Error" in output, "create of .apks file failed"
 
     @staticmethod
-    def bundletool_deploy(bundletool_path, path_to_apks):
-        deploy_command = ('java -jar {0} install-apks --apks="{1}"').format(bundletool_path, path_to_apks)
+    def bundletool_deploy(bundletool_path, path_to_apks, device_id):
+        deploy_command = ('java -jar {0} install-apks --apks="{1}" --device-id={2}').format(bundletool_path, path_to_apks, EMULATOR_ID)
         output = run(deploy_command, log_level=CommandLogLevel.FULL)
         assert not "Error" in output, "deploy of app failed"
+        assert  "The APKs have been extracted in the directory:" in output, "deploy of app failed"
 
     def test_001_build_android_app_bundle(self):
         """Build app with android app bundle option. Verify the output(app.aab) and use bundletool to deploy on device"""
@@ -135,6 +136,11 @@ class AndroidAppBundleTests(BaseClass):
         # Use bundletool to create the .apks file
         self.bundletool_build(self.bundletool_path, path_to_aab, self.path_to_apks)
         assert File.exists(self.path_to_apks)
+
+        # Verify that the correct .so file is included in the package
+        File.unzip(self.path_to_apks, 'apks')
+        File.unzip(os.path.join(self.app_name, 'apks', 'splits', 'base-x86.apk'), 'base_apk')
+        assert File.exists(os.path.join(self.app_name, ,'base_apk', 'lib', 'x86'), 'libNativeScript.so')
 
         # Deploy on device
         self.bundletool_deploy(self.bundletool_path, self.path_to_apks)
