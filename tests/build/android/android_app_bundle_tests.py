@@ -140,7 +140,7 @@ class AndroidAppBundleTests(BaseClass):
         # Verify that the correct .so file is included in the package
         File.unzip(self.path_to_apks, 'apks')
         File.unzip(os.path.join(self.app_name, 'apks', 'splits', 'base-x86.apk'), 'base_apk')
-        assert File.exists(os.path.join(self.app_name, 'base_apk', 'lib', 'x86'), 'libNativeScript.so')
+        assert File.exists(os.path.join(self.app_name, 'base_apk', 'lib', 'x86', 'libNativeScript.so'))
 
         # Deploy on device
         self.bundletool_deploy(self.bundletool_path, self.path_to_apks, device_id=EMULATOR_ID)
