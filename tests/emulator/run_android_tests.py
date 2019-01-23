@@ -94,7 +94,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
     def test_001_tns_run_android_js_css_xml_manifest(self):
         """Make valid changes in JS,CSS and XML"""
-    
+
         # `tns run android` and wait until app is deployed
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
@@ -102,64 +102,64 @@ class RunAndroidEmulatorTests(BaseClass):
                    'Successfully installed on device with identifier', EMULATOR_ID,
                    'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
-    
+
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
-    
+
         # Change JS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
         strings = ['Successfully transferred main-view-model.js', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
         text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 clicks left', timeout=20)
         assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
-    
+
         # Change XML and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
         strings = ['Successfully transferred main-page.xml', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
         text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TEST')
         assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
-    
+
         # Change CSS and wait until app is synced
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
         strings = ['Successfully transferred app.css', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-    
+
         # Verify application looks correct
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_js_css_xml')
-    
+
         # Rollback all the changes
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
         strings = ['Successfully transferred main-view-model.js', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-    
+
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
         strings = ['Successfully transferred app.css', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-    
+
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
         strings = ['Successfully transferred main-page.xml', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
-    
+
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
-    
+
         # Changes in App_Resources should rebuild native project
         res_path = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'AndroidManifest.xml')
         File.replace(res_path, '17', '19')
         strings = ['Preparing project', 'Building project', 'Gradle build', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=60)
-    
+
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_home')
-    
+
     def test_100_tns_run_android_release(self):
         """Make valid changes in JS,CSS and HTML"""
-    
+
         # `tns run android --release` and wait until app is deployed
         # IMPORTANT NOTE: `tns run android --release` Do NOT livesync by design!
         Device.uninstall_app(app_prefix="org.nativescript", platform=Platform.ANDROID)
@@ -170,23 +170,23 @@ class RunAndroidEmulatorTests(BaseClass):
                                           '--keyStoreAlias': ANDROID_KEYSTORE_ALIAS,
                                           '--keyStoreAliasPassword': ANDROID_KEYSTORE_ALIAS_PASS,
                                           '--release': ''}, wait=False, assert_success=False)
-    
+
         strings = ['Project successfully prepared', 'Project successfully built',
                    'Successfully installed on device with identifier', EMULATOR_ID]
         Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10)
-    
+
         # Verify app looks correct inside emulator
         Device.screen_match(device_name=EMULATOR_NAME,
                             device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
-    
+
         # Kills `tns run android --release`
         Tns.kill()
-    
+
         # Replace files
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS)
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS)
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML)
-    
+
         # Run `tns run android --release` again and make sure changes above are applied
         log = Tns.run_android(attributes={'--path': self.app_name,
                                           '--device': EMULATOR_ID,
@@ -195,16 +195,16 @@ class RunAndroidEmulatorTests(BaseClass):
                                           '--keyStoreAlias': ANDROID_KEYSTORE_ALIAS,
                                           '--keyStoreAliasPassword': ANDROID_KEYSTORE_ALIAS_PASS,
                                           '--release': ''}, wait=False, assert_success=False)
-    
+
         strings = ['Project successfully prepared', 'Project successfully built',
                    'Successfully installed on device with identifier',
                    'Successfully started on device with identifier', EMULATOR_ID]
-    
+
         # https://github.com/NativeScript/android-runtime/issues/1024
         not_existing_log = ['JS:']
         Tns.wait_for_log(log_file=log, string_list=strings, not_existing_string_list=not_existing_log, timeout=120,
                          clean_log=False)
-    
+
         # Verify app looks is update after changes in js, css and xml
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='livesync-hello-world_js_css_xml')
@@ -253,8 +253,8 @@ class RunAndroidEmulatorTests(BaseClass):
                             device_id=EMULATOR_ID, expected_image='livesync-hello-world_home')
 
     def test_120_tns_run_android_delete_file_check_platforms(self):
-        #https://github.com/NativeScript/nativescript-cli/issues/3984
-        #Files are not deleted from platforms folder on `tns run` command
+        # https://github.com/NativeScript/nativescript-cli/issues/3984
+        # Files are not deleted from platforms folder on `tns run` command
         log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                               assert_success=False)
         strings = ['Project successfully built',
@@ -269,7 +269,8 @@ class RunAndroidEmulatorTests(BaseClass):
         file_delete = os.path.join(self.app_name + '/' + 'app', 'main-view-model.js')
         File.remove(file_delete)
         assert not File.exists(file_delete)
-        platform_file = os.path.join(self.app_name + '/' + 'platforms', 'android', 'app', 'src', 'main', 'assets', 'app', 'main-view-model.js')
+        platform_file = os.path.join(self.app_name + '/' + 'platforms', 'android', 'app', 'src', 'main', 'assets',
+                                     'app', 'main-view-model.js')
         time.sleep(5)
         assert not File.exists(platform_file)
 
@@ -619,7 +620,8 @@ class RunAndroidEmulatorTests(BaseClass):
         ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML)
 
         # Run `tns run android` after file changes (this should trigger incremental prepare).
-        output = Tns.run_android(attributes={'--path': self.app_name, '--justlaunch': ''}, assert_success=False)
+        output = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--justlaunch': ''},
+                                 assert_success=False)
         TnsAsserts.prepared(app_name=self.app_name, platform=Platform.ANDROID, output=output,
                             prepare=Prepare.INCREMENTAL)
 
@@ -662,8 +664,8 @@ class RunAndroidEmulatorTests(BaseClass):
         Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left')
 
     def test_311_tns_run_android_clean_livesync(self):
-        #remove skip after check issue
-        #https://github.com/NativeScript/nativescript-cli/issues/2670
+        # remove skip after check issue
+        # https://github.com/NativeScript/nativescript-cli/issues/2670
         Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--justlaunch': ''})
 
         # Verify `--clean` without any changes rebuild native project (and runs properly)
@@ -689,7 +691,8 @@ class RunAndroidEmulatorTests(BaseClass):
                            update_modules=True)
             Tns.platform_add_android(attributes={'--path': self.app_name, '--frameworkPath': ANDROID_PACKAGE})
 
-        output = Tns.run_android(attributes={'--path': self.app_name}, wait=False, assert_success=False)
+        output = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID},
+                                 wait=False, assert_success=False)
         strings = ['Successfully installed on device with identifier',
                    'Successfully synced application', EMULATOR_ID, ]
         Tns.wait_for_log(log_file=output, string_list=strings, timeout=120, check_interval=10)
@@ -955,7 +958,7 @@ class RunAndroidEmulatorTests(BaseClass):
         # File.replace(file_path=app_gradle, str1='__PACKAGE__', str2='org.nativescript.MyApp')
         assert "org.nativescript.MyApp" in File.read(app_gradle), "Failed to replace bundle identifier."
 
-        output = Tns.run_android(attributes={'--path': self.app_name, '--justlaunch': ''})
+        output = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--justlaunch': ''})
         assert "WARNING: The Application identifier is different from the one inside \"package.json\" file." in output
         assert "NativeScript CLI might not work properly." in output
         assert "Project successfully built" in output
