@@ -1,0 +1,23 @@
+// Add your native dependencies here:
+
+// Uncomment to add recyclerview-v7 dependency
+//dependencies {
+//	implementation 'com.android.support:recyclerview-v7:+'
+//}
+
+android {  
+  defaultConfig {  
+    generatedDensities = []
+	ndk {
+      abiFilters.clear()
+    }
+  }  
+  aaptOptions {  
+    additionalParameters "--no-version-vectors"  
+  }  
+  sourceSets {
+    main {
+        jniLibs.srcDirs = ["$projectDir/libs/jni", "$projectDir/snapshot-build/build/ndk-build/libs"]
+	}
+  }
+} 

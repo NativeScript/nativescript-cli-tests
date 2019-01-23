@@ -7,6 +7,7 @@ import os
 import shutil
 import time
 import tarfile
+import zipfile
 
 from core.osutils.os_type import OSType
 from core.osutils.process import Process
@@ -193,3 +194,12 @@ class File(object):
             tarFile.extractall(dest_dir)
         except:
             print "Failed to unpack .tar file {0}".format(file_path)
+
+    @staticmethod
+    def unzip(file_path, dest_dir):
+        try:
+            zipFile = zipfile.ZipFile(file_path, 'r')
+            zipFile.extractall(dest_dir)
+            zipFile.close()
+        except:
+            print "Failed to unzip file {0}".format(file_path)
