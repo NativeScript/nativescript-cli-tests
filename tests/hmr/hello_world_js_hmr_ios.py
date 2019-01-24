@@ -8,6 +8,7 @@ from core.settings.settings import IOS_PACKAGE, SIMULATOR_NAME, WEBPACK_PACKAGE,
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from tests.hmr.helpers_hmr import HelpersHMR
+from core.tns.replace_helper import ReplaceHelper
 from tests.webpack.helpers.helpers import Helpers
 from core.device.device import Device
 # import hashlib
@@ -69,8 +70,7 @@ class HelloWorldJSHMRIOS(BaseClass):
         Simulator.uninstall("org.nativescript." + self.app_name)
 
         # Verify app is installed on device again and changes are synced
-        strings = ['Restarting application on device', 'Webpack compilation complete', 'Successfully installed',
-                   'HMR: Hot Module Replacement Enabled. Waiting for signal.']
+        strings = ['Webpack compilation complete', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
         text_changed = Device.wait_for_text(device_id=self.SIMULATOR_ID, text='42 clicks left')
         assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'

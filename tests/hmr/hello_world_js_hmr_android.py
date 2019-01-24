@@ -69,8 +69,7 @@ class HelloWorldJSHMRAndroid(BaseClass):
         Device.uninstall_app(app_prefix='org.nativescript.', platform=Platform.ANDROID)
 
         # Verify app is installed on device again and changes are synced
-        strings = ['Restarting application on device', 'Webpack compilation complete', 'Successfully installed',
-                   'HMR: Hot Module Replacement Enabled. Waiting for signal.']
+        strings = ['Webpack compilation complete', 'Successfully synced application']
         Tns.wait_for_log(log_file=log, string_list=strings)
         text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 clicks left', timeout=30)
         assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
