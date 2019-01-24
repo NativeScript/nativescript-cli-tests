@@ -836,7 +836,7 @@ class RunAndroidEmulatorTests(BaseClass):
 
         log2 = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
                                assert_success=False)
-        strings_skipping_prepare = ['Skipping prepare', 'Successfully synced application']
+        strings_skipping_prepare = ['Skipping prepare', 'Successfully synced application', 'Restarting application']
         Tns.wait_for_log(log_file=log2, string_list=strings_skipping_prepare, timeout=180, check_interval=10,
                          clean_log=False)
 
