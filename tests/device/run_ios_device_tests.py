@@ -112,20 +112,20 @@ class RunIOSDeviceTests(BaseClass):
         # Change CSS and wait until app is synced
         css_change_1 = ['app/app.css', '42', '1']
         ReplaceHelper.replace(self.app_name, css_change_1, sleep=3)
-        strings = ['Successfully transferred', 'app.css', 'Refreshing application']
+        strings = ['Successfully transferred', 'app.css']
         Tns.wait_for_log(log_file=log, string_list=strings)
         sleep(15)
         assert "TEST" not in Device.get_screen_text(device_id=self.DEVICE_ID), "Sync of CSS files failed!"
 
         css_change_2 = ['app/app.css', '1', '42']
         ReplaceHelper.replace(self.app_name, css_change_2, sleep=3)
-        strings = ['Successfully transferred', 'app.css', 'Refreshing application']
+        strings = ['Successfully transferred', 'app.css']
         Tns.wait_for_log(log_file=log, string_list=strings)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TEST"), "Sync of CSS files failed!"
 
         # Rollback JS changes and verify files are synced
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
-        strings = ['Successfully transferred', 'main-view-model.js', 'Refreshing application']
+        strings = ['Successfully transferred', 'main-view-model.js']
         Tns.wait_for_log(log_file=log, string_list=strings)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "JS changes not synced on device!"
 
@@ -135,13 +135,13 @@ class RunIOSDeviceTests(BaseClass):
         File.copy(src=self.app_name + '/' + file_change[0], dest=self.app_name + '/' + file_change[0] + ".bak")
         File.remove(self.app_name + '/' + file_change[0])
         File.copy(src=self.app_name + '/' + file_change[0] + ".bak", dest=self.app_name + '/' + file_change[0])
-        strings = ['Successfully transferred', 'main-page.xml', 'Refreshing application']
+        strings = ['Successfully transferred', 'main-page.xml']
         Tns.wait_for_log(log_file=log, string_list=strings)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="MyTest"), "XML changes not synced on device!"
 
         # Rollback CSS changes and verify files are synced
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
-        strings = ['Successfully transferred', 'app.css', 'Refreshing application']
+        strings = ['Successfully transferred', 'app.css']
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Verify Simulator is not started
@@ -162,13 +162,13 @@ class RunIOSDeviceTests(BaseClass):
         source_file = os.path.join(self.app_name, 'app', 'app.css')
         destination_file = os.path.join(self.app_name, 'app', new_file_name)
         File.copy(source_file, destination_file)
-        strings = ['Successfully transferred', new_file_name, 'Refreshing application']
+        strings = ['Successfully transferred', new_file_name]
         Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Revert changes(rename file and delete file)
         # File.copy(destination_file, source_file)
         # File.remove(destination_file)
-        # strings = ['Successfully transferred', new_file_name, 'Refreshing application']
+        # strings = ['Successfully transferred', new_file_name]
         # Tns.wait_for_log(log_file=log, string_list=strings)
 
         # Add folder
@@ -259,7 +259,7 @@ class RunIOSDeviceTests(BaseClass):
 
         # Rollback all the changes and verify files are synced
         ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
-        strings = ['Successfully transferred', 'main-view-model.js', 'Refreshing application']
+        strings = ['Successfully transferred', 'main-view-model.js']
         Tns.wait_for_log(log_file=log, string_list=strings)
         assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "JS changes not synced on device!"
 

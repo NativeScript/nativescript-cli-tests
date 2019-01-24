@@ -466,8 +466,7 @@ class RunIOSSimulatorTests(BaseClass):
         Tns.wait_for_log(log_file=log1, string_list=strings, timeout=150, check_interval=10, clean_log=False)
 
         log2 = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
-        strings = ['Skipping prepare', 'Successfully transferred all files', 'Refreshing application',
-                   'Successfully synced application']
+        strings = ['Skipping prepare', 'Successfully transferred all files', 'Successfully synced application']
         Tns.wait_for_log(log_file=log2, string_list=strings, timeout=150, check_interval=10, clean_log=False)
 
         # Make change in App_Resources/Android folder
