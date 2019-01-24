@@ -12,6 +12,7 @@ from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
 from tests.hmr.helpers_hmr import HelpersHMR
 from tests.webpack.helpers.helpers import Helpers
+from core.device.device import Device
 # import hashlib
 # import re
 
@@ -62,7 +63,7 @@ class HelloWorldJSHMRAndroid(BaseClass):
         Helpers.android_screen_match(image=HelpersHMR.image_original, timeout=120)
 
         # Change file to trigger livesync
-        ReplaceHelper.replace(app_name, HelpersHMR.js_change, sleep=10)
+        ReplaceHelper.replace(self.app_name, HelpersHMR.js_change, sleep=10)
 
         # Uninstall app while `tns run` is running
         Device.uninstall_app(app_prefix='org.nativescript.', platform=Platform.ANDROID)
