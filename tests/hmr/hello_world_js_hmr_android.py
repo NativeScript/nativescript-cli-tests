@@ -61,10 +61,18 @@ class HelloWorldJSHMRAndroid(BaseClass):
                          timeout=240)
         Helpers.android_screen_match(image=HelpersHMR.image_original, timeout=120)
 
-        HelpersHMR.apply_changes_js(app_name=self.app_name, log=log, platform=Platform.ANDROID)
+        # Change file to trigger livesync
+        ReplaceHelper.replace(app_name, HelpersHMR.js_change, sleep=10)
 
         # Uninstall app while `tns run` is running
         Device.uninstall_app(app_prefix='org.nativescript.', platform=Platform.ANDROID)
+
+        # Verify app is installed on device again and changes are synced
+        strings = ['Restarting application on device', 'Webpack compilation complete', 'Successfully installed',
+                   'HMR: Hot Module Replacement Enabled. Waiting for signal.']
+        Tns.wait_for_log(log_file=log, string_list=strings)
+        text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 clicks left', timeout=30)
+        assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
 
         HelpersHMR.revert_changes_js(app_name=self.app_name, log=log, platform=Platform.ANDROID)
         Helpers.android_screen_match(image=HelpersHMR.image_original, timeout=120)
