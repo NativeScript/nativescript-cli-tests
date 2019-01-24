@@ -83,7 +83,7 @@ class Folder(object):
                 File.copy(f_path, dst)
         else:
             try:
-                shutil.copytree(src, dst)
+                shutil.copytree(src, dst, symlinks=True)
             except OSError as exc:  # python >2.5
                 if exc.errno == errno.ENOTDIR:
                     shutil.copy(src, dst)
