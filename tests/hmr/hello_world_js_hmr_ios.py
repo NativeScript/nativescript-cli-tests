@@ -63,19 +63,15 @@ class HelloWorldJSHMRIOS(BaseClass):
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=HelpersHMR.image_original, timeout=120)
         Helpers.wait_webpack_watcher()
         
-        # Change file to trigger livesync
-        ReplaceHelper.replace(self.app_name, HelpersHMR.js_change, sleep=10)
+        HelpersHMR.apply_changes_js(app_name=self.app_name, log=log, platform=Platform.IOS)
 
         # Uninstall app while `tns run` is running
         Simulator.uninstall("org.nativescript." + self.app_name)
 
-        # Verify app is installed on device again and changes are synced
-        strings = ['Webpack compilation complete', 'Successfully synced application']
+        ReplaceHelper.rollback(self.app_name, HelpersHMR.js_change, sleep=10)
+        strings = ['Restarting application on device', 'HMR: Hot Module Replacement Enabled. Waiting for signal.']
         Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Device.wait_for_text(device_id=self.SIMULATOR_ID, text='42 clicks left')
-        assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
-
-        HelpersHMR.revert_changes_js(app_name=self.app_name, log=log, platform=Platform.IOS)
+        
         Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=HelpersHMR.image_original, timeout=120)
         Helpers.wait_webpack_watcher()
 
