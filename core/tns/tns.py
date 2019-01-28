@@ -608,24 +608,22 @@ class Tns(object):
             # Verify simulator/device builds
             device_folder = os.path.join(app_name, "platforms", "ios", "build", "Debug-iphoneos")
             emu_folder = os.path.join(app_name, "platforms", "ios", "build", "Debug-iphonesimulator")
-            print "device_folder: " + device_folder
-            print "emu_folder: " + emu_folder
 
             # Check device/simulator builds
             if "--forDevice" in attributes.keys() or "--for-device" in attributes.keys():
                 if log_trace:
-                    assert os.path.join(device_folder, app_id, ".app") in output
+                    assert os.path.join(device_folder, app_id + ".app") in output
                     assert "ARCHIVE SUCCEEDED" in output
                     assert "EXPORT SUCCEEDED" in output
                     assert "BUILD SUCCEEDED" not in output
                 else:
                     assert "ARCHIVE SUCCEEDED" not in output, "Native build out is displayed without --log trace"
                     assert "EXPORT SUCCEEDED" not in output, "Native build out is displayed without --log trace"
-                assert File.exists(device_folder + app_id + ".ipa"), "IPA file not found!"
+                assert File.exists(os.path.join(device_folder, app_id + ".ipa"), "IPA file not found!"
             else:
                 if log_trace:
                     assert "BUILD SUCCEEDED" in output
-                    assert os.path.join(emu_folder, app_id, ".app") in output
+                    assert os.path.join(emu_folder, app_id + ".app") in output
                 else:
                     # Xcode 8.* output contains some warnings for images, so we will assert only on Xcode 9.*
                     if Xcode.get_version() >= 9:
@@ -633,7 +631,7 @@ class Tns(object):
                         assert "CompileAssetCatalog" not in output, "Native build out is displayed!"
                         assert "ProcessInfoPlistFile" not in output, "Native build out is displayed!"
                 assert File.exists(app_name + "/platforms/ios/" + app_id + "/" + app_id + "-Prefix.pch")
-                assert File.exists(emu_folder + app_id + ".app")
+                assert File.exists(os.path.join(emu_folder, app_id + ".app"))
 
             # Check signing options
             xcode_project = Tns.__get_xcode_project_file(app_name)
