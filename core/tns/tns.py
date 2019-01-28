@@ -606,13 +606,13 @@ class Tns(object):
                     assert '"-configuration" "Debug"' in output
 
             # Verify simulator/device builds
-            device_folder = app_name + "/platforms/ios/build/device/"
-            emu_folder = app_name + "/platforms/ios/build/emulator/"
+            device_folder = os.path.join(app_name, "platforms", "ios", "build", "Debug-iphoneos")
+            emu_folder = os.path.join(app_name, "platforms", "ios", "build", "Debug-iphonesimulator")
 
             # Check device/simulator builds
             if "--forDevice" in attributes.keys() or "--for-device" in attributes.keys():
                 if log_trace:
-                    assert "build/device/" + app_id + ".app" in output
+                    assert os.path.join(device_folder, app_id, ".app") in output
                     assert "ARCHIVE SUCCEEDED" in output
                     assert "EXPORT SUCCEEDED" in output
                     assert "BUILD SUCCEEDED" not in output
@@ -623,7 +623,7 @@ class Tns(object):
             else:
                 if log_trace:
                     assert "BUILD SUCCEEDED" in output
-                    assert "build/emulator/" + app_id + ".app" in output
+                    assert os.path.join(emu_folder, app_id, ".app") in output
                 else:
                     # Xcode 8.* output contains some warnings for images, so we will assert only on Xcode 9.*
                     if Xcode.get_version() >= 9:
