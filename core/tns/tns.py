@@ -606,8 +606,12 @@ class Tns(object):
                     assert '"-configuration" "Debug"' in output
 
             # Verify simulator/device builds
-            device_folder = os.path.join(app_name, "platforms", "ios", "build", "Debug-iphoneos")
-            emu_folder = os.path.join(app_name, "platforms", "ios", "build", "Debug-iphonesimulator")
+            if "--release" in attributes.keys():
+                device_folder = os.path.join(app_name, "platforms", "ios", "build", "Release-iphoneos")
+                emu_folder = os.path.join(app_name, "platforms", "ios", "build", "Release-iphonesimulator")
+            else:
+                device_folder = os.path.join(app_name, "platforms", "ios", "build", "Debug-iphoneos")
+                emu_folder = os.path.join(app_name, "platforms", "ios", "build", "Debug-iphonesimulator")
 
             # Check device/simulator builds
             if "--forDevice" in attributes.keys() or "--for-device" in attributes.keys():
