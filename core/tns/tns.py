@@ -608,6 +608,8 @@ class Tns(object):
             # Verify simulator/device builds
             device_folder = os.path.join(app_name, "platforms", "ios", "build", "Debug-iphoneos")
             emu_folder = os.path.join(app_name, "platforms", "ios", "build", "Debug-iphonesimulator")
+            print "device_folder: " + device_folder
+            print "emu_folder: " + emu_folder
 
             # Check device/simulator builds
             if "--forDevice" in attributes.keys() or "--for-device" in attributes.keys():
