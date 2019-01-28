@@ -619,7 +619,7 @@ class Tns(object):
                 else:
                     assert "ARCHIVE SUCCEEDED" not in output, "Native build out is displayed without --log trace"
                     assert "EXPORT SUCCEEDED" not in output, "Native build out is displayed without --log trace"
-                assert File.exists(os.path.join(device_folder, app_id + ".ipa"), "IPA file not found!"
+                assert File.exists(os.path.join(device_folder, app_id + ".ipa")), "IPA file not found!"
             else:
                 if log_trace:
                     assert "BUILD SUCCEEDED" in output
