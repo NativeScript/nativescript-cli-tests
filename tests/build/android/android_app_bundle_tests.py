@@ -75,7 +75,7 @@ class AndroidAppBundleTests(BaseClass):
         assert not "Error" in output, "deploy of app failed"
         assert  "The APKs have been extracted in the directory:" in output, "deploy of app failed"
 
-    def test_001_build_android_app_bundle(self):
+    def test_200_build_android_app_bundle(self):
         """Build app with android app bundle option. Verify the output(app.aab) and use bundletool to deploy on device"""
         path_to_aab = os.path.join(self.app_name, "platforms", "android", "app", "build", "outputs", "bundle", "debug", "app.aab")
 
@@ -100,7 +100,7 @@ class AndroidAppBundleTests(BaseClass):
         assert app_started, 'App is not started on device'
 
     @unittest.skipIf(CURRENT_OS == OSType.WINDOWS, "Skip on Windows")
-    def test_002_build_android_app_bundle_env_snapshot(self):
+    def test_205_build_android_app_bundle_env_snapshot(self):
         """Build app with android app bundle option with --bundle and optimisations for snapshot.
            Verify the output(app.aab) and use bundletool to deploy on device."""
         # This test will not run on windows because env.snapshot option is not available on that OS
