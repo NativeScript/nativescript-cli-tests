@@ -73,7 +73,8 @@ class BuildiOSTests(BaseClass):
         assert not File.pattern_exists(self.app_name + "/platforms/ios/TestApp/app/tns_modules", "*.framework")
 
         # Verify ipa has both armv7 and arm64 archs
-        run("mv " + self.app_name + "/platforms/ios/build/device/TestApp.ipa TestApp-ipa.tgz")
+        ipa_path = os.path.join(self.app_name, "platforms", "ios", "build", "Release-iphoneos", "TestApp.ipa")
+        run("mv " + ipa_path + " TestApp-ipa.tgz")
         run("unzip -o TestApp-ipa.tgz")
         output = run("lipo -info Payload/TestApp.app/TestApp")
         Folder.cleanup("Payload")
