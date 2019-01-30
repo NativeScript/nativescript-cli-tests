@@ -114,7 +114,10 @@ class BuildiOSTests(BaseClass):
     def test_200_build_ios_inside_project(self):
         Folder.navigate_to(self.app_name)
         output = Tns.build_ios(tns_path=os.path.join("..", TNS_PATH), attributes={"--path": self.app_name},
-                               assert_success=True, log_trace=True)
+                               assert_success=False, log_trace=True)
+        Folder.navigate_to(TEST_RUN_HOME, relative_from_current_folder=False)
+        assert "build/Debug-iphonesimulator/TestApp.app" in output
+        assert File.exists(self.app_name + "/platforms/ios/build/Debug-iphonesimulator/TestApp.app")
 
     def test_210_build_ios_platform_not_added_or_platforms_deleted(self):
         Tns.create_app(self.app_name_no_platform)
