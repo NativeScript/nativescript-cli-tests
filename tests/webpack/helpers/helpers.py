@@ -178,9 +178,9 @@ class Helpers(object):
 
     @staticmethod
     def get_ios_size(app_name):
-        app_path = os.path.join(app_name, 'platforms', 'ios', 'build', 'archive', app_name + '.xcarchive', 'Products',
+        app_path = os.path.join(app_name, 'platforms', 'ios', 'build', 'Release-iphoneos', app_name + '.xcarchive', 'Products',
                                 'Applications', app_name + '.app')
-        ipa_path = os.path.join(app_name, 'platforms', 'ios', 'build', 'device', app_name + '.ipa')
+        ipa_path = os.path.join(app_name, 'platforms', 'ios', 'build', 'Release-iphoneos', app_name + '.ipa')
 
         bundle_js_size = File.get_size(os.path.join(app_path, "app", "bundle.js"))
         vendor_size = File.get_size(os.path.join(app_path, "app", "vendor.js"))
