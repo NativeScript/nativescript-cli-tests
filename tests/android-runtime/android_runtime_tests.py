@@ -670,7 +670,7 @@ class RuntimeTests(BaseClass):
         target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
         File.copy(src=source_js, dest=target_js)
 
-        # Change app package.json so it contains the options for autoCatchJSMethodNativeCalls
+        # Change app package.json so it contains the options for discardUncaughtJsExceptions
         source_js = os.path.join('data', "issues", 'android-runtime-1119', 'package.json')
         target_js = os.path.join(self.app_name, 'app', 'package.json')
         File.copy(src=source_js, dest=target_js)

@@ -185,16 +185,16 @@ class IOSRuntimeTests(BaseClass):
                        update_modules=True)
         Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_PACKAGE})
 
-        source_js = os.path.join('data', "issues", 'android-runtime-1051', 'app.js')
+        source_js = os.path.join('data', "issues", 'ios-runtime-1051', 'app.js')
         target_js = os.path.join(self.app_name, 'app', 'app.js')
         File.copy(src=source_js, dest=target_js)
 
-        source_js = os.path.join('data', "issues", 'android-runtime-1051', 'main-view-model.js')
+        source_js = os.path.join('data', "issues", 'ios-runtime-1051', 'main-view-model.js')
         target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
         File.copy(src=source_js, dest=target_js)
 
-        # Change app package.json so it contains the options for autoCatchJSMethodNativeCalls
-        source_js = os.path.join('data', "issues", 'android-runtime-1051', 'package.json')
+        # Change app package.json so it contains the options for discardUncaughtJsExceptions
+        source_js = os.path.join('data', "issues", 'ios-runtime-1051', 'package.json')
         target_js = os.path.join(self.app_name, 'app', 'package.json')
         File.copy(src=source_js, dest=target_js)
 
