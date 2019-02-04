@@ -1,19 +1,21 @@
+# -*- coding: utf-8 -*-
 """
 Test for `tns run ios` command with Angular apps (on simulator).
 """
 
 import os
+
 from nose.tools import timed
 
 from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
+from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import IOS_PACKAGE, SIMULATOR_NAME, TEST_RUN_HOME
 from core.tns.tns import Tns
-from core.npm.npm import Npm
 
 
 class IOSRuntimeTests(BaseClass):
@@ -170,3 +172,118 @@ class IOSRuntimeTests(BaseClass):
         # Verify app looks correct inside simulator
         Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
                             expected_image='livesync-hello-world_home')
+
+    def test_386_check_native_crash_will_not_crash_when_discardUncaughtJsExceptions_used(self):
+        """
+            Test native crash will not crash the app when discardUncaughtJsExceptions used
+            https://github.com/NativeScript/ios-runtime/issues/1051
+        """
+
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name,
+                       attributes={'--template': os.path.join('sut', 'tns-template-hello-world.tgz')},
+                       update_modules=True)
+        Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_PACKAGE})
+
+        source_js = os.path.join('data', "issues", 'ios-runtime-1051', 'app.js')
+        target_js = os.path.join(self.app_name, 'app', 'app.js')
+        File.copy(src=source_js, dest=target_js)
+
+        source_js = os.path.join('data', "issues", 'ios-runtime-1051', 'main-view-model.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
+        File.copy(src=source_js, dest=target_js)
+
+        # Change app package.json so it contains the options for discardUncaughtJsExceptions
+        source_js = os.path.join('data', "issues", 'ios-runtime-1051', 'package.json')
+        target_js = os.path.join(self.app_name, 'app', 'package.json')
+        File.copy(src=source_js, dest=target_js)
+
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier',
+                   'Successfully synced application'
+                   ]
+
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
+        try:
+            strings = ["CONSOLE LOG file:///app/app.js:4:16: The folder “not-existing-path” doesn’t exist.",
+                       "JS: 1   contentsOfDirectoryAtPathError@file:///app/main-view-model.js:6:47"
+                       ]
+            Tns.wait_for_log(log_file=log, string_list=strings,
+                             timeout=100, check_interval=10, clean_log=False)
+            Device.screen_match(device_name=SIMULATOR_NAME, device_id=self.SIMULATOR_ID,
+                                expected_image='no-crash-image', tolerance=1)
+        except Exception as e:
+            print str(e)
+            assert 1 == 2, 'Native crash should not crash the app when discardUncaughtJsExceptions is used!'
+
+    def test_387_test_pointers_and_conversions_to_string(self):
+        """
+            Test pointers and conversions to strings
+            https://github.com/NativeScript/ios-runtime/pull/1069
+            https://github.com/NativeScript/ios-runtime/issues/921
+        """
+
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name,
+                       attributes={'--template': os.path.join('sut', 'tns-template-hello-world.tgz')},
+                       update_modules=True)
+        Tns.platform_add_ios(attributes={'--path': self.app_name, '--frameworkPath': IOS_PACKAGE})
+
+        source_js = os.path.join('data', "issues", 'ios-runtime-921', 'special-value', 'main-view-model.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
+        File.copy(src=source_js, dest=target_js)
+
+        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
+
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier',
+                   'Successfully synced application'
+                   ]
+
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=240, check_interval=10, clean_log=False)
+        try:
+            strings = ["<Pointer: 0xfffffffffffffffe>",
+                       "<Pointer: 0xffffffffffffffff>",
+                       "<Pointer: 0x800000000>"]
+
+            Tns.wait_for_log(log_file=log, string_list=strings,
+                             timeout=100, check_interval=10, clean_log=False)
+        except Exception as e:
+            print str(e)
+            assert 1 == 2, '-1 pointer is not correct(interop.Pointer)!'
+
+        source_js = os.path.join('data', "issues", 'ios-runtime-921', 'wrapped-value', 'main-view-model.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
+        File.copy(src=source_js, dest=target_js)
+
+        try:
+            strings = ["wrapped: <Pointer: 0xfffffffffffffffe>",
+                       "wrapped: <Pointer: 0xffffffffffffffff>",
+                       "wrapped: <Pointer: 0x800000000>"]
+
+            Tns.wait_for_log(log_file=log, string_list=strings,
+                             timeout=100, check_interval=10, clean_log=False)
+        except Exception as e:
+            print str(e)
+            assert 1 == 2, 'wrapped pointers are not working correctly(interop.Pointer(new Number(value)))!'
+
+        source_js = os.path.join('data', "issues", 'ios-runtime-921', 'toHexString-and-toDecimalString',
+                                 'main-view-model.js')
+        target_js = os.path.join(self.app_name, 'app', 'main-view-model.js')
+        File.copy(src=source_js, dest=target_js)
+
+        try:
+            strings = ["Hex: 0xfffffffffffffffe",
+                       "Decimal: -2",
+                       "Hex: 0xffffffffffffffff",
+                       "Decimal: -1",
+                       "Hex: 0x800000000",
+                       "Decimal: 34359738368"]
+
+            Tns.wait_for_log(log_file=log, string_list=strings,
+                             timeout=100, check_interval=10, clean_log=False)
+        except Exception as e:
+            print str(e)
+            assert 1 == 2, 'toHexString and toDecimalString are not working correctly!'

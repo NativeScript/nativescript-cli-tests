@@ -1,0 +1,6 @@
+{
+  "name": "hello-world-js",
+  "main": "app.js",
+  "version": "1.7.0",
+  "discardUncaughtJsExceptions": true
+}
