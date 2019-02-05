@@ -979,4 +979,34 @@ class RuntimeTests(BaseClass):
                "java.util.List in file: main-page" in log
         assert "Execution failed for task ':app:runSbg'" in log
 
+    def test_440_verify_no_class_not_found_exception_is_thrown(self):
+        """
+        ClassNotFound exception when calling nested static class with correct argument
+        https://github.com/NativeScript/android-runtime/issues/1195
+        """
+
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name)
+        source_app_gradle = os.path.join('data', "issues", 'android-runtime-1195', 'app.gradle')
+        target_app_gradle = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
+        File.copy(src=source_app_gradle, dest=target_app_gradle)
+
+        source_js = os.path.join('data', "issues", 'android-runtime-1195', 'app.js')
+        target_js = os.path.join(self.app_name, 'app', 'app.js')
+        File.copy(src=source_js, dest=target_js)
+
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+
+        # `tns run android` and wait until app is deployed
+        log = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID}, wait=False,
+                              assert_success=False)
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', EMULATOR_ID,
+                   'Successfully synced application']
+        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10)
+
+        # Verify app looks correct inside emulator
+        Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
+                            expected_image='hello-world-js')
 
