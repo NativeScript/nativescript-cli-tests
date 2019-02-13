@@ -23,6 +23,7 @@ class AbiSplitTests(BaseClass):
         Emulator.ensure_available()
         Folder.cleanup(os.path.join(TEST_RUN_HOME, cls.app_name))
         Tns.create_app_ng(cls.app_name)
+        Tns.update_webpack(cls.app_name)
         cls.app_id = Tns.get_app_id(cls.app_name)
         devices = Adb.get_devices(include_emulators=False)
         for device in devices:
