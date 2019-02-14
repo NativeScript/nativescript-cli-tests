@@ -1,18 +1,18 @@
 config, bundle_js_size, vendor_size, app_size, embedded_script
-js-android-bundle, 13720, 1322519, 11970149
-js-android-bundle-uglify, 5399, 599756, 11864549
-js-android-bundle-snapshot, 6710, 0, 14634878, 1331672
-js-android-bundle-uglify-snapshot, 2885, 0, 13926722, 609605
-js-ios-bundle, 14592, 1450841, 15945209
-js-ios-bundle-uglify, 5292, 654765, 15866885
+js-android-bundle, 14978, 1351284, 13598167
+js-android-bundle-uglify, 5375, 620158, 13524867
+js-android-bundle-snapshot, 6992, 0, 14628556, 624446
+js-android-bundle-uglify-snapshot, 2912, 0, 14628556, 624446
+js-ios-bundle, 14592, 1453196, 16001741
+js-ios-bundle-uglify, 5292, 655961, 15922549
 ts-android-bundle, 15771, 1310777, 11935749
 ts-android-bundle-uglify, 5288, 599756, 11864637
 ts-android-bundle-snapshot, 7948, 0, 14669366, 1323571
 ts-android-bundle-uglify-snapshot, 3207, 0, 14002886, 605698
 ts-ios-bundle, 15966, 1451033, 15953067
 ts-ios-bundle-uglify, 5615, 654869, 15874242
-ng-android-bundle, 22965, 4857785, 12555338
-ng-android-bundle-uglify, 11850, 1251818, 12113670
+ng-android-bundle, 22965, 4857785, 14289427
+ng-android-bundle-uglify, 11850, 1251818, 13697603
 ng-android-bundle-snapshot, 16168, 0, 19316875, 4873317
 ng-android-bundle-uglify-snapshot, 10256, 0, 15825256, 1251818
 ng-ios-bundle, 22856, 5237094, 15977151
