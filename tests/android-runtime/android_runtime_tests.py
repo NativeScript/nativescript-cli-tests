@@ -1010,3 +1010,48 @@ class RuntimeTests(BaseClass):
         Device.screen_match(device_name=EMULATOR_NAME, device_id=EMULATOR_ID,
                             expected_image='hello-world-js')
 
+    def test_450_support_external_buildscript_config_in_app_res_android_folder(self):
+        """
+        Support external buildscript configurations - buildscript.gradle file placed in `App_Resources/Android` folder
+        https://github.com/NativeScript/android-runtime/issues/1279
+        """
+
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name)
+        source_app_gradle = os.path.join('data', 'issues', 'android-runtime-1279', 'app.gradle')
+        target_app_gradle = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
+        File.copy(src=source_app_gradle, dest=target_app_gradle)
+
+        source_buildscript_gradle = os.path.join('data', 'issues', 'android-runtime-1279', 'buildscript.gradle')
+        target_buildscript_gradle = os.path.join(self.app_name, 'app', 'App_Resources', 'Android')
+        File.copy(src=source_buildscript_gradle, dest=target_buildscript_gradle)
+
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+
+        Tns.build_android(attributes={"--path": self.app_name})
+
+    def test_451_support_external_buildscript_config_in_plugin(self):
+        """
+        Support external buildscript configurations - buildscript.gradle file placed in plugin folder
+        https://github.com/NativeScript/android-runtime/issues/1279
+        """
+
+        Folder.cleanup(self.app_name)
+        Tns.create_app(self.app_name)
+        source_app_gradle = os.path.join('data', 'issues', 'android-runtime-1279', 'in-plugin', 'app.gradle')
+        target_app_gradle = os.path.join(self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
+        File.copy(src=source_app_gradle, dest=target_app_gradle)
+
+        source_buildscript_gradle = os.path.join('data', 'issues', 'android-runtime-1279', 'buildscript.gradle')
+        target_buildscript_gradle = os.path.join(self.app_name, 'app', 'App_Resources', 'Android')
+        File.copy(src=source_buildscript_gradle, dest=target_buildscript_gradle)
+
+        plugin_path = os.path.join(TEST_RUN_HOME, 'data', 'issues', 'android-runtime-1279', 'in-plugin',
+                                   'sample-plugin-2', 'src')
+        Tns.plugin_add(plugin_path, attributes={"--path": self.app_name})
+
+        Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name}, assert_success=False)
+        Tns.platform_add_android(attributes={"--path": self.app_name, "--frameworkPath": ANDROID_PACKAGE})
+
+        Tns.build_android(attributes={"--path": self.app_name})
