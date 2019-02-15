@@ -118,8 +118,6 @@ class TnsAsserts(object):
         ts_config_json = TnsAsserts.get_tsconfig_json(app_name=app_name)
         paths = ts_config_json.get('compilerOptions').get('paths')
         assert paths is not None, 'Paths missing in tsconfig.json'
-        assert '/node_modules/tns-core-modules/' in str(paths), \
-            '"/node_modules/tns-core-modules/" not found in paths section iof tsconfig.json'
 
         assert not Folder.is_empty(os.path.join(app_name, TnsAsserts.NODE_MODULES, 'nativescript-dev-typescript'))
         assert File.exists(os.path.join(app_name, TnsAsserts.HOOKS, 'before-prepare', 'nativescript-dev-typescript.js'))
