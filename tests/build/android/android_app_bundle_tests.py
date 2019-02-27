@@ -38,7 +38,8 @@ class AndroidAppBundleTests(BaseClass):
 
         Tns.create_app(BaseClass.app_name)
         Tns.platform_add_android(attributes={"--path": BaseClass.app_name, "--frameworkPath": ANDROID_PACKAGE})
-        Folder.copy(TEST_RUN_HOME + "/" + cls.app_name, TEST_RUN_HOME + "/data/TestApp")
+        Tns.update_webpack(BaseClass.app_name)
+        Folder.copy(os.path.join(TEST_RUN_HOME, BaseClass.app_name), os.path.join(TEST_RUN_HOME, "data", "TestApp"))
 
         #Download bundletool
         url = 'https://github.com/google/bundletool/releases/download/0.8.0/bundletool-all-0.8.0.jar'
