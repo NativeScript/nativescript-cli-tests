@@ -207,7 +207,7 @@ class Tns(object):
             output = Npm.install(package=WEBPACK_PACKAGE, folder=path)
         else:
             Npm.uninstall(package="nativescript-dev-webpack", option="--save-dev", folder=path)
-            output = Npm.install(package=WEBPACK_PACKAGE, option="--save", folder=path)
+            output = Npm.install(package=WEBPACK_PACKAGE, option="--save-dev", folder=path)
             if Npm.version() > 3:
                 assert "ERR" not in output, "Something went wrong when webpack are installed."
 
