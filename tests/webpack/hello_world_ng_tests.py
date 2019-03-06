@@ -5,13 +5,12 @@ from core.base_class.BaseClass import BaseClass
 from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
-from core.npm.npm import Npm
 from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_KEYSTORE_PATH, \
     ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, CURRENT_OS, \
-    IOS_PACKAGE, ANDROID_PACKAGE, SIMULATOR_NAME, WEBPACK_PACKAGE, TYPESCRIPT_PACKAGE
+    IOS_PACKAGE, ANDROID_PACKAGE, SIMULATOR_NAME
 from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
 from core.tns.tns_platform_type import Platform
@@ -208,84 +207,6 @@ class WebPackHelloWorldNG(BaseClass):
                                                   check_embedded_script_size=True)
         Helpers.run_android_via_adb(app_name=self.app_name, image=self.image_original)
         self.assertEqual([], verification_errors)
-
-    def test_200_run_android_with_bundle_sync_changes(self):
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False, log_trace=True)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=240, check_interval=10)
-        Helpers.android_screen_match(image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher_ng()
-
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-
-    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
-    def test_200_run_ios_with_bundle_sync_changes(self):
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': ''}, wait=False,
-                          assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher_ng()
-
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
-
-    @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-angular/issues/1572")
-    def test_210_run_android_with_bundle_uglify_sync_changes(self):
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          "--env.uglify": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.android_screen_match(image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher_ng()
-
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-
-    @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-angular/issues/1572")
-    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
-    def test_210_run_ios_with_bundle_uglify_sync_changes(self):
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': ''},
-                          wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp, not_existing_string_list=Helpers.wp_errors,
-                         timeout=240)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher_ng()
-
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
-
-    def test_220_run_android_with_bundle_uglify_aot_sync_changes(self):
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          "--env.uglify": "",
-                                          "--env.aot": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.android_screen_match(image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher_ng()
-
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID, aot=True)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID, aot=True)
-
-    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
-    def test_220_run_ios_with_bundle_uglify_aot_sync_changes(self):
-        log = Tns.run_ios(
-            attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': '', '--env.aot': ''},
-            wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp, not_existing_string_list=Helpers.wp_errors,
-                         timeout=240)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher_ng()
-
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS, aot=True)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS, aot=True)
 
     def test_230_run_android_with_bundle_add_plugin_sync_changes(self):
         """
