@@ -204,7 +204,7 @@ class Tns(object):
 
         if USE_YARN == "True":
             Npm.uninstall(package="nativescript-dev-webpack", option="--dev", folder=path)
-            output = Npm.install(package=WEBPACK_PACKAGE, folder=path)
+            output = Npm.install(package=WEBPACK_PACKAGE, option="--dev", folder=path)
         else:
             Npm.uninstall(package="nativescript-dev-webpack", option="--save-dev", folder=path)
             output = Npm.install(package=WEBPACK_PACKAGE, option="--save-dev", folder=path)
