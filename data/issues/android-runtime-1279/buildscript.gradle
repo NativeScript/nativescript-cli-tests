@@ -1,0 +1,7 @@
+repositories {
+    google()
+    jcenter()
+}
+dependencies {
+    classpath 'embrace-io:embrace-swazzler:3.1.6'
+}

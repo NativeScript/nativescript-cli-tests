@@ -1,0 +1,13 @@
+{
+  "name": "sample-plugin-2",
+  "version": "1.0.0",
+  "nativescript": {
+    "platforms": {
+      "ios": "5.2.0",
+      "android": "5.2.0"
+    }
+  },
+  "dependencies": {
+        "nativescript-ui-listview": "^5.1.1"
+    }
+}
