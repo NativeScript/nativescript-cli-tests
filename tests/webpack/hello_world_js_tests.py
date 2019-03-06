@@ -1,18 +1,14 @@
 import unittest
 
 from core.base_class.BaseClass import BaseClass
-from core.device.device import Device
 from core.device.emulator import Emulator
 from core.device.simulator import Simulator
 from core.npm.npm import Npm
-from core.osutils.file import File
 from core.osutils.os_type import OSType
 from core.settings.settings import ANDROID_KEYSTORE_PATH, \
-    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, EMULATOR_ID, CURRENT_OS, \
+    ANDROID_KEYSTORE_PASS, ANDROID_KEYSTORE_ALIAS, ANDROID_KEYSTORE_ALIAS_PASS, CURRENT_OS, \
     IOS_PACKAGE, SIMULATOR_NAME, ANDROID_PACKAGE
-from core.tns.replace_helper import ReplaceHelper
 from core.tns.tns import Tns
-from core.tns.tns_platform_type import Platform
 from tests.webpack.helpers.helpers import Helpers
 
 
@@ -53,67 +49,6 @@ class WebPackHelloWorldJS(BaseClass):
     @classmethod
     def tearDownClass(cls):
         BaseClass.tearDownClass()
-
-    @staticmethod
-    def apply_changes(app_name, log, platform):
-
-        # Change JS, XML and CSS
-        ReplaceHelper.replace(app_name, WebPackHelloWorldJS.js_change, sleep=10)
-        if platform == Platform.ANDROID:
-            text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 clicks left', timeout=20)
-            assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
-
-        ReplaceHelper.replace(app_name, WebPackHelloWorldJS.xml_change, sleep=10)
-        if platform == Platform.ANDROID:
-            text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TEST')
-            assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
-
-        ReplaceHelper.replace(app_name, WebPackHelloWorldJS.css_change, sleep=10)
-        if platform == Platform.ANDROID:
-            Tns.wait_for_log(log_file=log, string_list=['app.css'], clean_log=False)
-
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
-                         timeout=120)
-
-        # Verify application looks correct
-        if platform == Platform.ANDROID:
-            Helpers.android_screen_match(image=WebPackHelloWorldJS.image_change, timeout=120)
-        if platform == Platform.IOS:
-            Helpers.ios_screen_match(sim_id=WebPackHelloWorldJS.SIMULATOR_ID, image=WebPackHelloWorldJS.image_change,
-                                     timeout=120)
-
-    @staticmethod
-    def revert_changes(app_name, log, platform):
-        # Clean old logs
-        if CURRENT_OS is not OSType.WINDOWS:
-            File.write(file_path=log, text="")
-
-        # Revert XML changes
-        ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.xml_change, sleep=10)
-        Tns.wait_for_log(log_file=log, string_list=['main-page.xml'], clean_log=False)
-        if platform == Platform.ANDROID:
-            text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='TAP')
-            assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
-
-        # Revert JS changes
-        ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.js_change, sleep=10)
-        Tns.wait_for_log(log_file=log, string_list=['main-view-model.js'], clean_log=False)
-        if platform == Platform.ANDROID:
-            text_changed = Device.wait_for_text(device_id=EMULATOR_ID, text='42 taps left', timeout=20)
-            assert text_changed, 'Changes in TS file not applied (UI is not refreshed).'
-
-        # Revert CSS changes
-        ReplaceHelper.rollback(app_name, WebPackHelloWorldJS.css_change, sleep=10)
-        Tns.wait_for_log(log_file=log, string_list=['app.css'], clean_log=False)
-
-        # Verify application looks correct
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
-                         timeout=60)
-        if platform == Platform.ANDROID:
-            Helpers.android_screen_match(image=WebPackHelloWorldJS.image_original, timeout=120)
-        if platform == Platform.IOS:
-            Helpers.ios_screen_match(sim_id=WebPackHelloWorldJS.SIMULATOR_ID, image=WebPackHelloWorldJS.image_original,
-                                     timeout=120)
 
     def test_001_android_build_release_with_bundle(self):
         Tns.build_android(attributes={"--path": self.app_name,
@@ -194,82 +129,6 @@ class WebPackHelloWorldJS(BaseClass):
                                                   check_embedded_script_size=True)
         Helpers.run_android_via_adb(app_name=self.app_name, image=self.image_original)
         self.assertEqual([], verification_errors)
-
-    def test_200_run_android_with_bundle_sync_changes(self):
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False, log_trace=True)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=240)
-        Helpers.android_screen_match(image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher()
-
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-
-    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
-    def test_200_run_ios_with_bundle_sync_changes(self):
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': ''}, wait=False,
-                          assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_sync, not_existing_string_list=Helpers.wp_errors,
-                         timeout=240, check_interval=10)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher()
-
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
-
-    def test_210_run_android_with_bundle_uglify_sync_changes(self):
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          "--env.uglify": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False, log_trace=True)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.android_screen_match(image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher()
-
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-
-    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
-    def test_210_run_ios_with_bundle_uglify_sync_changes(self):
-        log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': ''},
-                          wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp, not_existing_string_list=Helpers.wp_errors,
-                         timeout=240)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher()
-
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
-
-    def test_220_run_android_with_bundle_uglify_aot_sync_changes(self):
-        log = Tns.run_android(attributes={'--path': self.app_name,
-                                          "--bundle": "",
-                                          "--env.uglify": "",
-                                          "--env.aot": "",
-                                          '--device': EMULATOR_ID}, wait=False, assert_success=False, log_trace=True)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp_run, not_existing_string_list=Helpers.wp_errors,
-                         timeout=180)
-        Helpers.android_screen_match(image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher()
-
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.ANDROID)
-
-    @unittest.skipIf(CURRENT_OS != OSType.OSX, "Run only on macOS.")
-    def test_220_run_ios_with_bundle_uglify_aot_sync_changes(self):
-        log = Tns.run_ios(
-            attributes={'--path': self.app_name, '--emulator': '', '--bundle': '', '--env.uglify': '', '--env.aot': ''},
-            wait=False, assert_success=False)
-        Tns.wait_for_log(log_file=log, string_list=Helpers.wp, not_existing_string_list=Helpers.wp_errors,
-                         timeout=240)
-        Helpers.ios_screen_match(sim_id=self.SIMULATOR_ID, image=self.image_original, timeout=120)
-        Helpers.wait_webpack_watcher()
-
-        self.apply_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
-        self.revert_changes(app_name=self.app_name, log=log, platform=Platform.IOS)
 
     def test_400_build_with_bundle_without_plugin(self):
         Tns.create_app(self.app_name)
