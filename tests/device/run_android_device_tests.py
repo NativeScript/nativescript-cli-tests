@@ -61,59 +61,6 @@ class RunAndroidDeviceTests(BaseClass):
         Emulator.stop()
         BaseClass.tearDownClass()
 
-    def test_001_tns_run_android_js_css_xml(self):
-        """Make valid changes in JS,CSS and XML"""
-
-        # `tns run android` and wait until app is deployed
-        log = Tns.run_android(attributes={'--path': self.app_name}, wait=False, assert_success=False)
-        strings = ['Project successfully built', 'Successfully installed on device with identifier']
-        for device_id in self.DEVICES:
-            strings.append(device_id)
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=180, check_interval=10, clean_log=False)
-
-        # Verify app is deployed and running on all available android devices
-        for device_id in self.DEVICES:
-            Device.wait_until_app_is_running(app_id=Tns.get_app_id(self.app_name), device_id=device_id, timeout=30)
-
-        # Verify emulator is not started
-        assert not Emulator.is_running(EMULATOR_ID), 'Emulator is also started after `tns run android` on device!'
-
-        # Change JS and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
-        strings = ['Successfully transferred main-view-model.js', 'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Device.wait_for_text(device_id=self.DEVICE_ID, text='42 clicks left', timeout=20)
-        assert text_changed, 'Changes in JS file not applied (UI is not refreshed).'
-
-        # Change XML and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
-        strings = ['Successfully transferred main-page.xml', 'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
-        text_changed = Device.wait_for_text(device_id=self.DEVICE_ID, text='TEST')
-        assert text_changed, 'Changes in XML file not applied (UI is not refreshed).'
-
-        # Change CSS and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
-        strings = ['Successfully transferred app.css', 'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
-
-        # Rollback all the changes
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
-        strings = ['Successfully transferred main-view-model.js', 'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
-
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
-        strings = ['Successfully transferred app.css', 'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
-
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
-        strings = ['Successfully transferred main-page.xml', 'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
-
-        # Assert changes are reverted
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text='TAP'), 'Changes in XML file not reverted.'
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text='42 taps left'), 'Changes in JS file not reverted.'
-
     def test_210_tns_run_android_add_remove_files_and_folders(self):
         """
         New files and folders should be synced properly.
@@ -196,25 +143,3 @@ class RunAndroidDeviceTests(BaseClass):
         assert EMULATOR_ID in output
         for device_id in self.DEVICES:
             assert device_id not in output, 'Application is deployed on {0} device.'.format(device_id)
-
-    def test_320_tns_run_android_specific_device(self):
-        """
-        `tns run android --device` should run only on specified device
-        """
-        Emulator.ensure_available()
-        output = Tns.run_android(attributes={'--path': self.app_name, '--device': self.DEVICE_ID, '--justlaunch': ''},
-                                 assert_success=False)
-        TnsAsserts.prepared(app_name=self.app_name, output=output, platform=Platform.ANDROID, prepare=Prepare.SKIP)
-        assert EMULATOR_ID not in output, 'Application is also deployed on emulator!'
-        for device_id in self.DEVICES:
-            if device_id != self.DEVICE_ID:
-                assert device_id not in output, \
-                    'Application is deployed on {0} while it should be only on {1}'.format(device_id, self.DEVICES)
-
-        output = Tns.run_android(attributes={'--path': self.app_name, '--device': EMULATOR_ID, '--justlaunch': ''},
-                                 assert_success=False)
-        TnsAsserts.prepared(app_name=self.app_name, output=output, platform=Platform.ANDROID, prepare=Prepare.SKIP)
-        assert EMULATOR_ID in output, 'Application is NOT deployed on emulator specified by --device option!'
-        for device_id in self.DEVICES:
-            assert device_id not in output, \
-                'Application is deployed on {0} while it should be only on {1}'.format(device_id, EMULATOR_ID)
