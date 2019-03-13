@@ -171,7 +171,7 @@ class RunIOSSimulatorTests(BaseClass):
         log = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': ''}, wait=False, assert_success=False)
         strings = ['Project successfully built',
                    'Successfully installed on device with identifier', self.SIMULATOR_ID,
-                   "CONSOLE LOG",
+                   "CONSOLE LOG file:///app/main-page.js",
                    "true",
                    "false",
                    "null",
@@ -190,7 +190,7 @@ class RunIOSSimulatorTests(BaseClass):
                    "error",
                    "false == true",
                    "empty string evaluates to 'false'",
-                   "CONSOLE TRACE",
+                   "CONSOLE TRACE file:///app/main-page.js",
                    "console.trace() called",
                    "0: pageLoaded",
                    "Button(8)",
