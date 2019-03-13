@@ -74,79 +74,6 @@ class RunIOSDeviceTests(BaseClass):
     def tearDownClass(cls):
         BaseClass.tearDownClass()
 
-    @flaky(max_runs=2)
-    def test_001_tns_run_ios_js_css_xml(self):
-        """Make valid changes in JS,CSS and XML"""
-
-        # `tns run ios` and wait until app is deployed
-        log = Tns.run_ios(attributes={'--path': self.app_name}, wait=False, assert_success=False)
-        strings = ['Project successfully built',
-                   'Successfully installed on device with identifier', self.DEVICE_ID,
-                   'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings, timeout=150, check_interval=10, clean_log=False)
-
-        # Verify app is deployed and running on all available ios devices
-        output = File.read(log)
-        for device_id in self.DEVICES:
-            assert device_id in output, 'Application is not deployed on {0}'.format(device_id)
-
-        # Verify app is running
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "App failed to load!"
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TAP"), "App failed to load!"
-
-        # Verify Simulator is not started
-        assert not Simulator.is_running()[0], 'Device is attached, but emulator is also started after `tns run ios`!'
-
-        # Change JS and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_JS, sleep=3)
-        strings = ['Successfully transferred', 'main-view-model.js', 'Successfully synced application', self.DEVICE_ID]
-        Tns.wait_for_log(log_file=log, string_list=strings)
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="clicks"), "JS changes not synced on device!"
-
-        # Change XML and wait until app is synced
-        ReplaceHelper.replace(self.app_name, ReplaceHelper.CHANGE_XML, sleep=3)
-        strings = ['Successfully transferred', 'main-page.xml', 'Successfully synced application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TEST"), "XML changes not synced on device!"
-
-        # Change CSS and wait until app is synced
-        css_change_1 = ['app/app.css', '42', '1']
-        ReplaceHelper.replace(self.app_name, css_change_1, sleep=3)
-        strings = ['Successfully transferred', 'app.css', 'Refreshing application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
-        sleep(15)
-        assert "TEST" not in Device.get_screen_text(device_id=self.DEVICE_ID), "Sync of CSS files failed!"
-
-        css_change_2 = ['app/app.css', '1', '42']
-        ReplaceHelper.replace(self.app_name, css_change_2, sleep=3)
-        strings = ['Successfully transferred', 'app.css', 'Refreshing application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="TEST"), "Sync of CSS files failed!"
-
-        # Rollback JS changes and verify files are synced
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_JS, sleep=10)
-        strings = ['Successfully transferred', 'main-view-model.js', 'Restarting application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="taps left"), "JS changes not synced on device!"
-
-        # Change XML again
-        file_change = ReplaceHelper.CHANGE_XML
-        File.replace(self.app_name + '/' + file_change[0], "TEST", "MyTest")
-        File.copy(src=self.app_name + '/' + file_change[0], dest=self.app_name + '/' + file_change[0] + ".bak")
-        File.remove(self.app_name + '/' + file_change[0])
-        File.copy(src=self.app_name + '/' + file_change[0] + ".bak", dest=self.app_name + '/' + file_change[0])
-        strings = ['Successfully transferred', 'main-page.xml', 'Refreshing application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
-        assert Device.wait_for_text(device_id=self.DEVICE_ID, text="MyTest"), "XML changes not synced on device!"
-
-        # Rollback CSS changes and verify files are synced
-        ReplaceHelper.rollback(self.app_name, ReplaceHelper.CHANGE_CSS, sleep=3)
-        strings = ['Successfully transferred', 'app.css', 'Refreshing application']
-        Tns.wait_for_log(log_file=log, string_list=strings)
-
-        # Verify Simulator is not started
-        assert not Simulator.is_running()[0], 'Device is attached, but emulator is also started after `tns run ios`!'
-
     def test_210_tns_run_ios_add_remove_files_and_folders(self):
         """
         New files and folders should be synced properly.
@@ -200,32 +127,6 @@ class RunIOSDeviceTests(BaseClass):
         assert app_id + " on device " + self.SIMULATOR_ID in output, "App not deployed on iOS Simulator!"
         for device_id in self.DEVICES:
             assert app_id + " on device " + device_id not in output, 'App is deployed on {0} device.'.format(device_id)
-
-    def test_320_tns_run_ios_specific_device(self):
-        """
-        `tns run ios --device` should run only on specified device
-        This will also verify justlaunch release console after it completes.
-        """
-        self.SIMULATOR_ID = Simulator.ensure_available(simulator_name=SIMULATOR_NAME)
-        output = Tns.run_ios(attributes={'--path': self.app_name, '--device': self.DEVICE_ID, '--justlaunch': ''},
-                             assert_success=False)
-        TnsAsserts.prepared(app_name=self.app_name, output=output, platform=Platform.IOS, prepare=Prepare.INCREMENTAL)
-        app_id = Tns.get_app_id(self.app_name)
-        assert app_id + " on device " + self.DEVICE_ID in output, "App not deployed on specified device!"
-        assert app_id + " on device " + self.SIMULATOR_ID not in output, 'App is also deployed on iOS Simulator!'
-        for device_id in self.DEVICES:
-            if device_id != self.DEVICE_ID:
-                assert app_id + " on device " + device_id not in output, \
-                    'App is deployed on {0} while it should be only on {1}'.format(device_id, self.DEVICES)
-
-        # Second prepare should be skipped, since there are no changes in the project.
-        output = Tns.run_ios(attributes={'--path': self.app_name, '--emulator': '', '--justlaunch': ''},
-                             assert_success=False)
-        TnsAsserts.prepared(app_name=self.app_name, output=output, platform=Platform.IOS, prepare=Prepare.SKIP)
-        assert self.SIMULATOR_ID in output, 'Application is NOT deployed on emulator specified by --device option!'
-        for device_id in self.DEVICES:
-            assert "Successfully installed on device with identifier {0}".format(device_id) not in output, \
-                'Application is deployed on {0} while it should be only on {1}'.format(device_id, self.SIMULATOR_ID)
 
     def test_330_tns_run_ios_after_rebuild_of_native_project(self):
         """
