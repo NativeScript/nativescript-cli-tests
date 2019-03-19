@@ -124,28 +124,6 @@ class PlatformAndroidTests(BaseClass):
         else:
             self.verify_update(output)
 
-    def test_300_set_sdk(self):
-        """Platform add android should be able to specify target sdk with `--sdk` option"""
-        Tns.platform_add_android(attributes={"--path": self.app_name,
-                                             "--frameworkPath": ANDROID_PACKAGE, "--sdk": "19"})
-
-        manifest = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_SRC_MAIN_PATH, "AndroidManifest.xml")
-        output = File.read(manifest)
-        assert "android:minSdkVersion=\"17\"" in output
-        assert "android:targetSdkVersion=\"19\"" in output
-
-    def test_310_set_sdk_not_installed(self):
-        output = Tns.platform_add_android(attributes={"--path": self.app_name,
-                                                      "--frameworkPath": ANDROID_PACKAGE, "--sdk": "29"})
-
-        assert "Support for the selected Android target SDK android-29 is not verified. " + \
-               "Your Android app might not work as expected." in output
-
-        manifest = os.path.join(self.app_name, TnsAsserts.PLATFORM_ANDROID_SRC_MAIN_PATH, "AndroidManifest.xml")
-        output = File.read(manifest)
-        assert "android:minSdkVersion=\"17\"" in output
-        assert "android:targetSdkVersion=\"29\"/>" in output
-
     def test_390_platform_list(self):
         """Platform list command should list installed platforms and if app is prepared for those platforms"""
         # issue with v2 of templates - workaround with remove ios platform
