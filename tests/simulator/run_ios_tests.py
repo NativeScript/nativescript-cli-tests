@@ -192,7 +192,7 @@ class RunIOSSimulatorTests(BaseClass):
                    "empty string evaluates to 'false'",
                    "CONSOLE TRACE file:///app/main-page.js",
                    "console.trace() called",
-                   "0: pageLoaded",
+                   "pageLoaded",
                    "Button(8)",
                    "-1 text {",
                    john_obj2,
