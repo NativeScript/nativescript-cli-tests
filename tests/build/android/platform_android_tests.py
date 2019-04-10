@@ -1,13 +1,11 @@
 """
 Test platform add (android)
 """
-import os
 import unittest
 
 from core.base_class.BaseClass import BaseClass
 from core.java.java import Java
 from core.npm.npm import Npm
-from core.osutils.file import File
 from core.osutils.folder import Folder
 from core.settings.settings import TNS_PATH, ANDROID_PACKAGE, TEST_RUN_HOME, USE_YARN
 from core.settings.strings import *
@@ -16,6 +14,7 @@ from core.tns.tns_platform_type import Platform
 from core.tns.tns_verifications import TnsAsserts
 
 
+# noinspection PyMethodMayBeStatic
 class PlatformAndroidTests(BaseClass):
 
     @classmethod
@@ -33,13 +32,7 @@ class PlatformAndroidTests(BaseClass):
 
     def test_100_platform_add_android(self):
         """ Default `tns platform add` command"""
-        output = Tns.platform_add_android(attributes={"--path": self.app_name})
-        # after release 4.2 uncomment following asserts
-        #https://github.com/NativeScript/nativescript-cli/issues/3718
-        # assert "babel-traverse" not in output
-        # assert "babel-types" not in output
-        # assert "babylon" not in output
-        # assert "lazy" not in output
+        Tns.platform_add_android(attributes={"--path": self.app_name})
 
     def test_110_platform_add_android_framework_path(self):
         """ Add platform from local package"""
@@ -56,8 +49,8 @@ class PlatformAndroidTests(BaseClass):
         """Verify platform add supports custom versions"""
 
         # Add custom version number
-        Tns.platform_add_android(version="2.4.0", attributes={"--path": self.app_name})
-        TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.4.0\""])
+        Tns.platform_add_android(version="5.0.0", attributes={"--path": self.app_name})
+        TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"5.0.0\""])
 
         # Add remove
         Tns.platform_remove(platform=Platform.ANDROID, attributes={"--path": self.app_name})
@@ -69,13 +62,13 @@ class PlatformAndroidTests(BaseClass):
     def test_200_platform_update_android(self):
         """Update platform"""
 
-        # Create project with tns-android@2.4.0
-        Tns.platform_add_android(version="2.4.0", attributes={"--path": self.app_name})
-        TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.4.0\""])
+        # Create project with tns-android@4
+        Tns.platform_add_android(version="4.0.0", attributes={"--path": self.app_name})
+        TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"4.0.0\""])
 
-        # Update platform to 2.5.0
-        Tns.platform_update(platform=Platform.ANDROID, version="2.5.0", attributes={"--path": self.app_name})
-        TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.5.0\""])
+        # Update platform to 5
+        Tns.platform_update(platform=Platform.ANDROID, version="5.0.0", attributes={"--path": self.app_name})
+        TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"5.0.0\""])
 
     def test_210_platform_update_android_when_platform_not_added(self):
         """`platform update` should work even if platform is not added"""
@@ -87,19 +80,13 @@ class PlatformAndroidTests(BaseClass):
     def test_220_platform_clean_android(self):
         """Prepare after `platform clean` should add the same version that was before clean"""
 
-        # Create project with tns-android@2.4.0
-        Tns.platform_add_android(version="2.4.0", attributes={"--path": self.app_name})
-        TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.4.0\""])
+        # Create project with tns-android@5.0.0
+        Tns.platform_add_android(version="5.0.0", attributes={"--path": self.app_name})
+        TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"5.0.0\""])
 
-        # Clean platform and verify platform is 2.4.0
+        # Clean platform and verify platform is 5.0.0
         Tns.platform_clean(platform=Platform.ANDROID, attributes={"--path": self.app_name})
-        TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"2.4.0\""])
-
-    def verify_update(self, output):
-        assert "Platform android successfully removed" in output
-        assert "Successfully removed plugin tns-core-modules" in output
-        assert "Platform android successfully added" in output
-        assert "Successfully installed plugin tns-core-modules" in output
+        TnsAsserts.package_json_contains(self.app_name, ["\"version\": \"5.0.0\""])
 
     @unittest.skipIf(Java.version() != "1.8", "Run only if Java version is 8.")
     def test_230_tns_update(self):
@@ -112,9 +99,9 @@ class PlatformAndroidTests(BaseClass):
             modules_version = Npm.get_version("tns-core-modules")
             TnsAsserts.package_json_contains(self.app_name, [modules_version])
 
-            output = Tns.update(attributes={"3.2.0": "", "--path": self.app_name})
+            output = Tns.update(attributes={"5.0.0": "", "--path": self.app_name})
             self.verify_update(output)
-            TnsAsserts.package_json_contains(self.app_name, ["3.2.0"])
+            TnsAsserts.package_json_contains(self.app_name, ["5.0.0"])
 
             Tns.update(attributes={"next": "", "--path": self.app_name})
             self.verify_update(output)
@@ -193,3 +180,10 @@ class PlatformAndroidTests(BaseClass):
         output = Tns.platform_update(attributes={"--path": self.app_name}, assert_success=False)
         assert no_platform in output
         assert "Usage" in output
+
+    @staticmethod
+    def verify_update(output):
+        assert "Platform android successfully removed" in output
+        assert "Successfully removed plugin tns-core-modules" in output
+        assert "Platform android successfully added" in output
+        assert "Successfully installed plugin tns-core-modules" in output
