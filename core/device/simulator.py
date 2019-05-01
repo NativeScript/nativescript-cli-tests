@@ -8,7 +8,7 @@ from core.osutils.command import run
 from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.process import Process
-from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME, SIMULATOR_TYPE, SIMULATOR_SDK
+from core.settings.settings import SIMULATOR_NAME, TEST_RUN_HOME
 
 
 class Simulator(object):
@@ -64,6 +64,21 @@ class Simulator(object):
             raise AssertionError("Can not find device with id " + simulator_id)
         else:
             return lines[0].split('(')[-1].split(')')[0]
+
+    @staticmethod
+    def get_name(simulator_id):
+        """
+        Find simulator name by Simulator GUID
+        :param simulator_id: Simulator GUID
+        :return: Simulator name
+        """
+        output = run(command='xcrun simctl list | grep {0}'.format(simulator_id), log_level=CommandLogLevel.SILENT)
+        if output:
+            sim_name = output.split()[0]
+            return sim_name
+
+        else:
+            raise AssertionError("Can not find device with id {0}".format(simulator_id))
 
     @staticmethod
     def create(name, device_type, ios_version):
