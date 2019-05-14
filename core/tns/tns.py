@@ -467,7 +467,7 @@ class Tns(object):
             Folder.cleanup(folder=path)
 
         # Execute plugin create command
-        output = Tns.run_tns_command("plugin create " + name, attributes=attributes, log_trace=log_trace,
+        output = Tns.run_tns_command("plugin create --includeTypeScriptDemo=y " + name, attributes=attributes, log_trace=log_trace,
                                      tns_path=tns_path)
 
         if assert_success:
