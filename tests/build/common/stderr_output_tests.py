@@ -19,7 +19,7 @@ class StderrOutputTests(BaseClass):
     def test_001_redirect_strerr_output_to_file(self):
         File.remove('./stderr.txt')
         output = Tns.run_tns_command("run invalidEntry", attributes={" 2> stderr.txt ": ""})
-        assert "No project found at or above" in output
+        assert "The input is not valid sub-command for 'run' command" in output
 
     def test_002_command_option_validation(self):
         output = Tns.run_tns_command("create " + self.app_name, attributes={"--invalidEntry": "tns-app"})

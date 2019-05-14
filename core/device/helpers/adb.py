@@ -2,6 +2,7 @@
 Wrapper around adb
 """
 import os
+import platform
 import re
 import time
 
@@ -10,6 +11,7 @@ from core.osutils.command_log_level import CommandLogLevel
 from core.osutils.file import File
 from core.osutils.os_type import OSType
 from core.settings.settings import CURRENT_OS, EMULATOR_ID
+from core.tns.tns_platform_type import Platform
 
 ANDROID_HOME = os.environ.get('ANDROID_HOME')
 ADB_PATH = os.path.join(ANDROID_HOME, 'platform-tools', 'adb')
@@ -344,7 +346,8 @@ class Adb(object):
             assert "error" not in output.lower(), "Screencap failed with: " + output
         # Transfer image from device to localhost
         output = Adb.run(command="pull /sdcard/{0}.png {1}".format(file_name, file_path), device_id=device_id)
-        assert "100%" in output, "Failed to get {0}. Log: {1}".format(file_name, output)
+        if CURRENT_OS != OSType.LINUX:
+            assert "100%" in output, "Failed to get {0}. Log: {1}".format(file_name, output)
         # Cleanup sdcard
         Adb.run(command="shell rm /sdcard/{0}.png".format(file_name), device_id=device_id)
 
