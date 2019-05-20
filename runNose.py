@@ -44,21 +44,16 @@ def get_repos():
     """
     Clone template-hello-world repositories
     """
-    Git.clone_repo(repo_url='git@github.com:NativeScript/template-hello-world.git',
-                   local_folder=os.path.join(SUT_FOLDER, 'template-hello-world'))
-    Git.clone_repo(repo_url='git@github.com:NativeScript/template-hello-world-ts.git',
-                   local_folder=os.path.join(SUT_FOLDER, 'template-hello-world-ts'))
-
-    # `nativescript-angular` do not longer use release branch
-    Git.clone_repo(repo_url='git@github.com:NativeScript/template-hello-world-ng.git',
-                   local_folder=os.path.join(SUT_FOLDER, 'template-hello-world-ng'))
-
-    Npm.pack(folder=os.path.join(SUT_FOLDER, 'template-hello-world'),
+    templates_folder = os.path.join(SUT_FOLDER, 'nativescript-app-templates')
+    Git.clone_repo(repo_url='git@github.com:NativeScript/nativescript-app-templates.git',
+                   local_folder=os.path.join(SUT_FOLDER, 'nativescript-app-templates'))
+    
+    Npm.pack(folder=os.path.join(templates_folder, 'packages', 'template-hello-world'),
              output_file=os.path.join(SUT_FOLDER, 'tns-template-hello-world.tgz'))
-    Npm.pack(folder=os.path.join(SUT_FOLDER, 'template-hello-world-ts'),
+    Npm.pack(folder=os.path.join(templates_folder, 'packages',  'template-hello-world-ts'),
              output_file=os.path.join(SUT_FOLDER, 'tns-template-hello-world-ts.tgz'))
     Npm.pack(folder=os.path.join(SUT_FOLDER, 'template-hello-world-ng'),
-             output_file=os.path.join(SUT_FOLDER, 'tns-template-hello-world-ng.tgz'))
+             output_file=os.path.join(templates_folder, 'packages',  'tns-template-hello-world-ng.tgz'))
 
 
 if __name__ == '__main__':
