@@ -556,16 +556,13 @@ class Tns(object):
             apk_path = apk_path.replace("\"", "")  # Handle projects with space
             assert File.exists(apk_path), "Apk file does not exist at " + apk_path
 
-            # Verify final package contains right modules (or verify bundle when it is used)
-            if "--bundle" not in attributes.keys():
-                assert "Webpack compilation complete" not in output
-            else:
-                assert "Webpack compilation complete" in output
-                assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "bundle.js"))
-                assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "package.json"))
-                assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "starter.js"))
-                assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "vendor.js"))
-                assert not Folder.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH))
+            # Verify final package contains right modules 
+            assert "Webpack compilation complete" in output
+            assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "bundle.js"))
+            assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "package.json"))
+            assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "starter.js"))
+            assert File.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_APP_PATH, "vendor.js"))
+            assert not Folder.exists(os.path.join(app_name, TnsAsserts.PLATFORM_ANDROID_NPM_MODULES_PATH))
 
         return output
 
@@ -653,10 +650,7 @@ class Tns(object):
                     assert id1 or id2 in xcode_project, "TeamID not passed to Xcode!"
 
             # Verify final package contains right modules (or verify bundle when it is used)
-            if "--bundle" not in attributes.keys():
-                assert "Webpack compilation complete" not in output
-            else:
-                assert "Webpack compilation complete" in output
+            assert "Webpack compilation complete" in output
  
         return output
 
